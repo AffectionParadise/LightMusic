@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>MusicPlayer</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <!-- JMF 框架 -->
+        <!--        <dependency>-->
+        <!--            <groupId>javax.media</groupId>-->
+        <!--            <artifactId>jmf</artifactId>-->
+        <!--            <version>2.1.1e</version>-->
+        <!--        </dependency>-->
+
+        <!-- Jave -->
+        <!--        <dependency>-->
+        <!--            <groupId>ws.schild</groupId>-->
+        <!--            <artifactId>jave-all-deps</artifactId>-->
+        <!--            <version>2.4.6</version>-->
+        <!--        </dependency>-->
+
+        <!-- vlc -->
+        <!--        <dependency>-->
+        <!--            <groupId>uk.co.caprica</groupId>-->
+        <!--            <artifactId>vlcj</artifactId>-->
+        <!--            <version>4.7.0</version>-->
+        <!--        </dependency>-->
+
+        <!-- 为 MP3 写入信息 -->
+        <dependency>
+            <groupId>com.mpatric</groupId>
+            <artifactId>mp3agic</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
+        <!-- jaudiotagger 读取媒体信息 -->
+<!--        <dependency>-->
+<!--            <groupId>org</groupId>-->
+<!--            <artifactId>jaudiotagger</artifactId>-->
+<!--            <version>2.0.3</version>-->
+<!--        </dependency>-->
+
+        <!-- jave 读取媒体文件时长 -->
+        <dependency>
+            <groupId>jave</groupId>
+            <artifactId>jave</artifactId>
+            <version>1.0.2</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/jave-1.0.2.jar</systemPath>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.googlecode.soundlibs</groupId>-->
+        <!--            <artifactId>mp3spi</artifactId>-->
+        <!--            <version>1.9.5.4</version>-->
+        <!--        </dependency>-->
+
+        <!-- thumbnailator 图像处理 -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.17</version>
+        </dependency>
+
+        <!-- jhlabs 图像处理 -->
+        <dependency>
+            <groupId>com.jhlabs</groupId>
+            <artifactId>filters</artifactId>
+            <version>2.0.235</version>
+        </dependency>
+
+        <!-- 读取 Webp 图像 -->
+<!--        <dependency>-->
+<!--            <groupId>org.sejda.imageio</groupId>-->
+<!--            <artifactId>webp-imageio</artifactId>-->
+<!--            <version>0.1.6</version>-->
+<!--        </dependency>-->
+
+        <!-- 读取 jpeg 图像 -->
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-jpeg</artifactId>
+            <version>3.8.3</version>
+        </dependency>
+
+        <!-- HuTool -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.3</version>
+        </dependency>
+
+        <!-- Json 解析 -->
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>2.4</version>
+            <classifier>jdk15</classifier>
+        </dependency>
+
+        <!-- Json 美化 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+
+        <!-- Jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.2</version>
+        </dependency>
+
+        <!-- cpdetector 检测文件编码格式 -->
+        <dependency>
+            <groupId>cpdetector</groupId>
+            <artifactId>cpdetector</artifactId>
+            <version>1.0.10</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/cpdetector_1.0.10.jar</systemPath>
+        </dependency>
+
+        <!-- cpdetector 的插件 chardet -->
+        <dependency>
+            <groupId>chardet</groupId>
+            <artifactId>chardet</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/chardet-1.0.jar</systemPath>
+        </dependency>
+
+        <!-- cpdetector 的插件 antlr -->
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>3.0b5</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/antlr-2.7.4.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+        </dependency>
+
+        <!-- 中文转拼音 -->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
+        <!-- 繁简切换 -->
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>opencc4j</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+
+        <!-- 日语转罗马音 -->
+        <dependency>
+            <groupId>com.andree-surya</groupId>
+            <artifactId>moji4j</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+<!--        &lt;!&ndash; emoji 处理 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.vdurmont</groupId>-->
+<!--            <artifactId>emoji-java</artifactId>-->
+<!--            <version>5.1.1</version>-->
+<!--        </dependency>-->
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>libs</directory>
+                <targetPath>BOOT-INF/libs/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <!-- 项目打成 jar 用 -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <showWarnings>true</showWarnings>
+                    <compilerArgs>
+                        <arg>-extdirs</arg>
+                        <arg>${project.basedir}/libs;D:/EdgeDownloads/openjfx-18_windows-x64_bin-sdk/javafx-sdk-18/lib</arg>
+                    </compilerArgs>
+<!--                    <compilerArguments>-->
+<!--                        <extdirs>${project.basedir}/libs</extdirs>-->
+<!--                        <extdirs>C:\Program Files\Java\javafx-sdk-15.0.1\lib</extdirs>-->
+<!--                    </compilerArguments>-->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <!-- 后缀 -->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <!-- 主类 -->
+                        <manifest>
+                            <mainClass>net.doge.ui.PlayerFrame</mainClass>
+                        </manifest>
+                    </archive>
+                    <!-- 配置文件路径 -->
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>copy-dependencies</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy-dependencies</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <outputDirectory>${project.build.directory}/libs</outputDirectory>-->
+<!--                            <overWriteReleases>false</overWriteReleases>-->
+<!--                            <overWriteSnapshots>false</overWriteSnapshots>-->
+<!--                            <overWriteIfNewer>true</overWriteIfNewer>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="javafx-bin">
+    <CLASSES />
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/../../../../EdgeDownloads/openjfx-18_windows-x64_bin-sdk/javafx-sdk-18/bin" />
+    </NATIVE>
+    <SOURCES />
+  </library>
+</component>
