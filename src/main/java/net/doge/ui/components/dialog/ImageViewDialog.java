@@ -1,5 +1,6 @@
 package net.doge.ui.components.dialog;
 
+import cn.hutool.core.collection.ListUtil;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.DirectoryChooser;
@@ -17,6 +18,7 @@ import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.ControlInputListener;
 import net.doge.ui.renderers.DefaultCatalogListRenderer;
 import net.doge.utils.ImageUtils;
+import net.doge.utils.ListUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -27,6 +29,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -97,6 +101,7 @@ public abstract class ImageViewDialog extends JDialog {
     private PlayerFrame f;
     private UIStyle style;
     private CommonResult<String> results;
+    private List<String> cursors = new LinkedList<>();
     private int p = 1;
 
     private int pn = 1;
@@ -206,8 +211,10 @@ public abstract class ImageViewDialog extends JDialog {
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
 
-        // 页数标签
+        // 标签
+        imgLabel.setFont(globalFont);
         pageLabel.setFont(globalFont);
+        imgLabel.setForeground(style.getLabelColor());
         pageLabel.setForeground(style.getLabelColor());
 
         // 上/下一张按钮
@@ -300,6 +307,7 @@ public abstract class ImageViewDialog extends JDialog {
         bottomBox.add(bottomPanel);
         bottomBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
+        cursors.add("");
         // 默认显示第一张
         GlobalExecutors.imageExecutor.submit(() -> {
             if (!showImg(p)) {
@@ -312,19 +320,24 @@ public abstract class ImageViewDialog extends JDialog {
     // 显示第 i 张图片
     boolean showImg(int i) {
         BufferedImage img = getImg(i);
-        if (img == null) return false;
+        pageLabel.setText(String.format("%s / %s", i, results.total));
+        if (img == null) {
+            imgLabel.setIcon(null);
+            imgLabel.setText("图片走丢了T_T");
+            return false;
+        }
         // 调整图像大小适应窗口
         int w = img.getWidth(), mw = WIDTH - 50, mh = HEIGHT - 150;
         if (w > mw) img = ImageUtils.width(img, mw);
         int h = img.getHeight();
         if (h > mh) img = ImageUtils.height(img, mh);
         imgLabel.setIcon(new ImageIcon(img));
-        pageLabel.setText(String.format("%s / %s", i, results.total));
+        imgLabel.setText("");
         return true;
     }
 
     // 请求图片
-    public abstract CommonResult<String> requestImgUrls(int pn, int limit);
+    public abstract CommonResult<String> requestImgUrls(int pn, int limit, String cursor);
 
     // 第一次请求图片失败时调用
     public abstract void requestFailed();
@@ -334,7 +347,12 @@ public abstract class ImageViewDialog extends JDialog {
         try {
             // 请求指定页数的图片
             int dp = i % limit == 0 ? i / limit : i / limit + 1, di = (i - 1) % limit;
-            if (results == null || pn != dp) results = requestImgUrls(pn = dp, limit);
+            if (results == null || pn != dp) {
+                String cursor = results == null || cursors.size() == 1 ? "" : cursors.get(dp - 1);
+                results = requestImgUrls(pn = dp, limit, cursor);
+                String next = results.cursor;
+                if (ListUtils.search(cursors, next) < 0) cursors.add(next);
+            }
             String url = results.data.get(di);
             BufferedImage img = ImageUtils.read(new URL(url));
             // 单独处理 Webp 类型图片

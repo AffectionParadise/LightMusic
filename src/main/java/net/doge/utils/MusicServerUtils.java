@@ -290,7 +290,7 @@ public class MusicServerUtils {
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1003";
     // 关键词搜索专辑 API (堆糖)
     private static final String SEARCH_ALBUM_DT_API
-            = "https://www.duitang.com/napi/album/list/by_search/?include_fields=is_root%2Csource_link%2Citem%2Cbuyable%2Croot_id%2Cstatus%2Clike_count%2Csender%2Calbum%2Ccover" +
+            = "https://www.duitang.com/napi/album/list/by_search/?include_fields=is_root,source_link,item,buyable,root_id,status,like_count,sender,album,cover" +
             "&kw=%s&start=%s&limit=%s&type=album&_type=&_=%s";
 
     // 关键词搜索歌手 API
@@ -381,6 +381,9 @@ public class MusicServerUtils {
     // 关键词搜索用户 API (豆瓣)
     private static final String SEARCH_USER_DB_API
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1005";
+    // 关键词搜索用户 API (堆糖)
+    private static final String SEARCH_USER_DT_API
+            = "https://www.duitang.com/napi/people/list/by_search/?kw=%s&start=%s&limit=%s&type=people&_type=&_=%s";
 
     // 获取评论 API
     private static final String NEW_GET_COMMENTS_API = prefix + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=3";
@@ -433,6 +436,9 @@ public class MusicServerUtils {
     private static final String GET_SHEETS_IMG_API
             = prefix + "/sheet/preview?id=%s";
 
+    // 获取专辑照片 API (堆糖)
+    private static final String GET_ALBUMS_IMG_DT_API
+            = "https://www.duitang.com/napi/vienna/blog/by_album/?album_id=%s&after_id=%s&limit=%s&_=%s";
     // 获取歌手照片 API (豆瓣)
     private static final String GET_ARTISTS_IMG_DB_API
             = "https://movie.douban.com/celebrity/%s/photos/?type=C&start=%s&sortby=like&size=a&subtype=a";
@@ -1889,6 +1895,8 @@ public class MusicServerUtils {
     private static final String USER_PROGRAMS_ME_API = "https://www.missevan.com/person/getusersound?user_id=%s&p=%s&page_size=%s";
     // 用户信息 API (豆瓣)
     private static final String USER_DETAIL_DB_API = "https://www.douban.com/people/%s/";
+    // 用户信息 API (堆糖)
+    private static final String USER_DETAIL_DT_API = "https://www.duitang.com/people/?id=%s";
 
     // 相似歌曲 API
     private static final String SIMILAR_SONG_API = prefix + "/simi/song?id=%s";
@@ -1902,6 +1910,8 @@ public class MusicServerUtils {
     private static final String USER_COLLECTED_PLAYLIST_QQ_API = prefixQQ33 + "/user/collect/songlist?id=%s&pageNo=%s&pageSize=%s";
     // 用户收藏专辑 API (QQ)
     private static final String USER_COLLECTED_ALBUM_QQ_API = prefixQQ33 + "/user/collect/album?id=%s&pageNo=%s&pageSize=%s";
+    // 用户专辑 API (堆糖)
+    private static final String USER_ALBUM_DT_API = "https://www.duitang.com/napi/album/list/by_user/?user_id=%s&start=%s&limit=%s";
     // 用户电台 API
     private static final String USER_RADIO_API = prefix + "/user/audio?uid=%s";
     // 用户电台 API (喜马拉雅)
@@ -4386,7 +4396,8 @@ public class MusicServerUtils {
             String mvInfoBody = resp.body();
             JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
-            t = 40;
+            t = page * limit;
+            if (data.getInt("has_more") == 1) t++;
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -4995,6 +5006,50 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
 
+        // 堆糖
+        Callable<CommonResult<NetUserInfo>> searchUsersDt = () -> {
+            LinkedList<NetUserInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis()))
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray userArray = data.getJSONArray("object_list");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("id");
+                String userName = userJson.getString("username");
+                String gender = "保密";
+                String avatarThumbUrl = userJson.getString("avatar");
+                String avatarUrl = avatarThumbUrl;
+                Integer follow = userJson.getInt("followCount");
+                Integer followed = userJson.getInt("beFollowCount");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.DT);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+                userInfo.setFollow(follow);
+                userInfo.setFollowed(followed);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetUserInfo>>> taskList = new LinkedList<>();
 
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsers));
@@ -5002,6 +5057,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersXm));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersMe));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDb));
+        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDt));
 
         List<List<NetUserInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -5600,6 +5656,35 @@ public class MusicServerUtils {
         }
 
         return new CommonResult<>(imgUrls, total);
+    }
+
+    /**
+     * 获取专辑照片链接
+     */
+    public static CommonResult<String> getAlbumImgUrls(NetAlbumInfo albumInfo, int page, int limit, String cursor) {
+        int source = albumInfo.getSource();
+        String id = albumInfo.getId();
+        LinkedList<String> imgUrls = new LinkedList<>();
+        cursor = StringUtils.encode(cursor);
+        Integer total = 0;
+
+        if (source == NetMusicSource.DT) {
+            String imgInfoBody = HttpRequest.get(String.format(GET_ALBUMS_IMG_DT_API, id, cursor, limit, System.currentTimeMillis()))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(imgInfoBody).getJSONObject("data");
+            JSONArray imgs = data.getJSONArray("object_list");
+            cursor = data.getString("after");
+            total = page * limit;
+            if (data.getInt("more") == 1) total++;
+            else total = (page - 1) * limit + imgs.size();
+            for (int i = 0, len = imgs.size(); i < len; i++) {
+                JSONObject img = imgs.getJSONObject(i);
+                imgUrls.add(img.getJSONObject("photo").getString("path"));
+            }
+        }
+
+        return new CommonResult<>(imgUrls, total, cursor);
     }
 
     /**
@@ -11996,6 +12081,26 @@ public class MusicServerUtils {
 //                userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
         }
+
+        // 堆糖
+        else if (source == NetMusicSource.DT) {
+            String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_DT_API, uid))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(userInfoBody);
+
+            if (!userInfo.hasGender()) userInfo.setGender("保密");
+            if (!userInfo.hasArea()) userInfo.setArea("未知");
+            if (!userInfo.hasSign())
+                userInfo.setSign(doc.select("div.people-desc").text().trim());
+            if (!userInfo.hasFollow())
+                userInfo.setFollow(Integer.parseInt(ReUtil.get("(\\d+)", doc.select("div.people-funs a").first().text(), 1)));
+            if (!userInfo.hasFollowed())
+                userInfo.setFollowed(Integer.parseInt(ReUtil.get("(\\d+)", doc.select("div.people-funs a").last().text(), 1)));
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+            String bgUrl = doc.select("img.header-bg").attr("src");
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgUrl)));
+        }
     }
 
 //    /**
@@ -14096,6 +14201,42 @@ public class MusicServerUtils {
                 albumInfo.setArtist(artist);
                 albumInfo.setPublishTime(pubTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    albumInfo.setCoverImgThumb(coverImgThumb);
+                });
+                res.add(albumInfo);
+            }
+        }
+
+        // 堆糖
+        else if (source == NetMusicSource.DT) {
+            String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DT_API, uid, (page - 1) * limit, limit))
+                    .execute()
+                    .body();
+            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject data = albumInfoJson.getJSONObject("data");
+            JSONArray albumArray = data.getJSONArray("object_list");
+            t = page * limit;
+            if (data.getInt("more") == 1) t++;
+            for (int i = 0, len = albumArray.size(); i < len; i++) {
+                JSONObject albumJson = albumArray.getJSONObject(i);
+
+                String albumId = albumJson.getString("id");
+                String albumName = albumJson.getString("name");
+                String artist = albumJson.getJSONObject("user").getString("username");
+                String publishTime = TimeUtils.msToDate(albumJson.getLong("updated_at_ts") * 1000);
+                String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
+//                Integer songNum = albumJson.getInt("songnum");
+
+                NetAlbumInfo albumInfo = new NetAlbumInfo();
+                albumInfo.setSource(NetMusicSource.DT);
+                albumInfo.setId(albumId);
+                albumInfo.setName(albumName);
+                albumInfo.setArtist(artist);
+                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                albumInfo.setPublishTime(publishTime);
+//                albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);

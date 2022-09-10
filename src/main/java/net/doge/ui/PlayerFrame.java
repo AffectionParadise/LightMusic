@@ -268,6 +268,8 @@ public class PlayerFrame extends JFrame {
     private final String COMMENT_MENU_ITEM_TEXT = "查看评论        ";
     // 右键菜单查看相似专辑文字
     private final String SIMILAR_ALBUM_MENU_ITEM_TEXT = "查看相似专辑        ";
+    // 右键菜单查看专辑照片文字
+    private final String ALBUM_PHOTOS_MENU_ITEM_TEXT = "查看专辑照片        ";
     // 右键菜单查看曲谱文字
     private final String SHEET_MENU_ITEM_TEXT = "查看曲谱        ";
     // 右键菜单搜索这首歌曲文字
@@ -1334,6 +1336,8 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem netAlbumCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
     // 专辑右键菜单：查看相似专辑
     private CustomMenuItem netAlbumSimilarMenuItem = new CustomMenuItem(SIMILAR_ALBUM_MENU_ITEM_TEXT);
+    // 专辑右键菜单：查看专辑照片
+    private CustomMenuItem netAlbumPhotosMenuItem = new CustomMenuItem(ALBUM_PHOTOS_MENU_ITEM_TEXT);
     // 专辑右键菜单：复制名称
     private CustomMenuItem netAlbumCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 在线专辑工具栏
@@ -3300,7 +3304,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 载入本地音乐列表
-    public void loadLocalMusicList(JSONObject config){
+    public void loadLocalMusicList(JSONObject config) {
         JSONArray musicJsonArray = config.optJSONArray(ConfigConstants.MUSIC_LIST);
         if (musicJsonArray != null) {
             for (int i = 0, len = musicJsonArray.size(); i < len; i++) {
@@ -3316,7 +3320,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 载入全部收藏列表
-    public void loadCollectedMusicList(JSONObject config){
+    public void loadCollectedMusicList(JSONObject config) {
         // 载入收藏歌曲列表
         JSONArray collectionJsonArray = config.optJSONArray(ConfigConstants.COLLECTION);
         if (collectionJsonArray != null) {
@@ -9783,6 +9787,42 @@ public class PlayerFrame extends JFrame {
                 }
             });
         });
+        // 查看专辑照片
+        netAlbumPhotosMenuItem.addActionListener(e -> {
+            NetAlbumInfo netAlbumInfo;
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex == TabIndex.NET_ALBUM) netAlbumInfo = netAlbumList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL)
+                netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
+            else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
+            try {
+//                CommonResult<String> results = MusicServerUtils.getArtistImgUrls(netArtistInfo, 1);
+//                List<String> imgUrls = results.data;
+//                Integer total = results.total;
+                imageViewDialog = new ImageViewDialog(THIS, limit) {
+                    @Override
+                    public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                        return MusicServerUtils.getAlbumImgUrls(netAlbumInfo, pn, limit, cursor);
+                    }
+
+                    @Override
+                    public void requestFailed() {
+                        new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                    }
+                };
+                imageViewDialog.showDialog();
+                imageViewDialog = null;
+            } catch (IORuntimeException ioRuntimeException) {
+                // 无网络连接
+                new TipDialog(THIS, NO_NET_MSG).showDialog();
+            } catch (HttpException httpException) {
+                // 请求超时
+                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+            } catch (JSONException jsonException) {
+                // 接口异常
+                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            }
+        });
         // 复制名称
         netAlbumCopyNameMenuItem.addActionListener(e -> {
             Object o;
@@ -9800,6 +9840,7 @@ public class PlayerFrame extends JFrame {
         netAlbumCollectMenuItem.setFont(globalFont);
         netAlbumCommentMenuItem.setFont(globalFont);
         netAlbumSimilarMenuItem.setFont(globalFont);
+        netAlbumPhotosMenuItem.setFont(globalFont);
         netAlbumCopyNameMenuItem.setFont(globalFont);
         // 专辑列表右键菜单项
         netAlbumPopupMenu.add(netAlbumOpenMenuItem);
@@ -9810,6 +9851,7 @@ public class PlayerFrame extends JFrame {
 //        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumCommentMenuItem);
         netAlbumPopupMenu.add(netAlbumSimilarMenuItem);
+        netAlbumPopupMenu.add(netAlbumPhotosMenuItem);
 //        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumCopyNameMenuItem);
         netAlbumList.add(netAlbumPopupMenu);
@@ -10966,7 +11008,7 @@ public class PlayerFrame extends JFrame {
 //                Integer total = results.total;
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
-                    public CommonResult<String> requestImgUrls(int pn, int limit) {
+                    public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
                         return MusicServerUtils.getArtistImgUrls(netArtistInfo, pn);
                     }
 
@@ -12046,7 +12088,7 @@ public class PlayerFrame extends JFrame {
             try {
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
-                    public CommonResult<String> requestImgUrls(int pn, int limit) {
+                    public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
                         return MusicServerUtils.getRadioImgUrls(netRadioInfo, pn);
                     }
 
@@ -12079,7 +12121,7 @@ public class PlayerFrame extends JFrame {
             try {
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
-                    public CommonResult<String> requestImgUrls(int pn, int limit) {
+                    public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
                         return MusicServerUtils.getRadioPosterUrls(netRadioInfo, pn);
                     }
 
@@ -15164,7 +15206,7 @@ public class PlayerFrame extends JFrame {
 //                }
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
-                    public CommonResult<String> requestImgUrls(int pn, int limit) {
+                    public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
                         return MusicServerUtils.getSheetImgUrls(netSheetInfo);
                     }
 
@@ -19677,6 +19719,7 @@ public class PlayerFrame extends JFrame {
         netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
         netAlbumCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
         netAlbumSimilarMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
+        netAlbumPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
         netAlbumCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
 
         netArtistOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, menuItemColor));

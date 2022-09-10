@@ -21,7 +21,7 @@ public class ListUtils {
      */
     public static int search(List list, Object obj) {
         for (int i = 0, len = list.size(); i < len; i++) {
-            if (list.get(i) == obj) {
+            if (list.get(i).equals(obj)) {
                 return i;
             }
         }
