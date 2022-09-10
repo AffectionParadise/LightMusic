@@ -288,6 +288,10 @@ public class MusicServerUtils {
     // 关键词搜索专辑 API (豆瓣)
     private static final String SEARCH_ALBUM_DB_API
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1003";
+    // 关键词搜索专辑 API (堆糖)
+    private static final String SEARCH_ALBUM_DT_API
+            = "https://www.duitang.com/napi/album/list/by_search/?include_fields=is_root%2Csource_link%2Citem%2Cbuyable%2Croot_id%2Cstatus%2Clike_count%2Csender%2Calbum%2Ccover" +
+            "&kw=%s&start=%s&limit=%s&type=album&_type=&_=%s";
 
     // 关键词搜索歌手 API
     private static final String SEARCH_ARTIST_API
@@ -1767,6 +1771,8 @@ public class MusicServerUtils {
     private static final String ALBUM_DETAIL_QI_API = "https://music.91q.com/v1/album/info?albumAssetCode=%s&appid=16073360&timestamp=%s";
     // 专辑信息 API (豆瓣)
     private static final String ALBUM_DETAIL_DB_API = "https://music.douban.com/subject/%s/";
+    // 专辑信息 API (堆糖)
+    private static final String ALBUM_DETAIL_DT_API = "https://www.duitang.com/napi/album/detail/?album_id=%s";
 
     // 歌手信息 API
     private static final String ARTIST_DETAIL_API = prefix + "/artists?id=%s";
@@ -3547,6 +3553,44 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
 
+        // 堆糖
+        Callable<CommonResult<NetAlbumInfo>> searchAlbumsDt = () -> {
+            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
+            String albumInfoBody = resp.body();
+            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject data = albumInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray albumArray = data.getJSONArray("object_list");
+            for (int i = 0, len = albumArray.size(); i < len; i++) {
+                JSONObject albumJson = albumArray.getJSONObject(i);
+
+                String albumId = albumJson.getString("id");
+                String albumName = albumJson.getString("name");
+                String artist = albumJson.getJSONObject("user").getString("username");
+                String publishTime = TimeUtils.msToDate(albumJson.getLong("updated_at_ts") * 1000);
+                String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
+//                Integer songNum = albumJson.getJSONArray("trackList").size();
+
+                NetAlbumInfo albumInfo = new NetAlbumInfo();
+                albumInfo.setSource(NetMusicSource.DT);
+                albumInfo.setId(albumId);
+                albumInfo.setName(albumName);
+                albumInfo.setArtist(artist);
+                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                albumInfo.setPublishTime(publishTime);
+//                albumInfo.setSongNum(songNum);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    albumInfo.setCoverImgThumb(coverImgThumb);
+                });
+                res.add(albumInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetAlbumInfo>>> taskList = new LinkedList<>();
 
         taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbums));
@@ -3556,6 +3600,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsMg));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsQi));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDb));
+        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDt));
 
         List<List<NetAlbumInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -11256,6 +11301,23 @@ public class MusicServerUtils {
 
             albumInfo.setDescription(info + desc + "\n曲目：\n" + tracks);
             GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+        }
+
+        // 堆糖
+        else if (source == NetMusicSource.DT) {
+            String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_DT_API, albumInfo.getId()))
+                    .execute()
+                    .body();
+            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumJson = albumInfoJson.getJSONObject("data");
+
+            String coverImgUrl = albumJson.getJSONArray("covers").getString(0);
+            String description = albumJson.getString("desc");
+//            if (!albumInfo.hasSongNum()) albumInfo.setSongNum(albumJson.getJSONArray("trackList").size());
+            if (!albumInfo.hasPublishTime())
+                albumInfo.setPublishTime(TimeUtils.msToDate(albumJson.getLong("updated_at_ts") * 1000));
+            GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+            albumInfo.setDescription(description);
         }
     }
 
