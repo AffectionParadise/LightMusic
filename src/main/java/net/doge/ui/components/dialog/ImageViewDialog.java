@@ -54,6 +54,8 @@ public abstract class ImageViewDialog extends JDialog {
 
     private final String LAST_IMG = "上一张";
     private final String NEXT_IMG = "下一张";
+    private final String FIRST_IMG = "第一张";
+    private final String LST_IMG = "最后一张";
     private final String SAVE_IMG = "保存图片";
     private final String GO_TIP = "跳页";
 
@@ -61,6 +63,10 @@ public abstract class ImageViewDialog extends JDialog {
     private ImageIcon lastImgIcon = new ImageIcon(SimplePath.ICON_PATH + "lastPage.png");
     // 下一张图标
     private ImageIcon nextImgIcon = new ImageIcon(SimplePath.ICON_PATH + "nextPage.png");
+    // 第一张图标
+    private ImageIcon firstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "firstImg.png");
+    // 最后一张图标
+    private ImageIcon lstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "lastImg.png");
     // 保存图片图标
     private ImageIcon saveImgIcon = new ImageIcon(SimplePath.ICON_PATH + "saveImg.png");
     // 跳页图标
@@ -91,6 +97,8 @@ public abstract class ImageViewDialog extends JDialog {
     private CustomButton goButton = new CustomButton(goIcon);
     public CustomButton nextImgButton = new CustomButton(nextImgIcon);
     private CustomButton saveImgButton = new CustomButton(saveImgIcon);
+    public CustomButton firstImgButton = new CustomButton(firstImgIcon);
+    private CustomButton lstImgButton = new CustomButton(lstImgIcon);
 
     // 底部盒子
     private Box bottomBox = new Box(BoxLayout.Y_AXIS);
@@ -241,11 +249,41 @@ public abstract class ImageViewDialog extends JDialog {
         nextImgButton.setPreferredSize(new Dimension(nextImgIcon.getIconWidth(), nextImgIcon.getIconHeight()));
         nextImgButton.addActionListener(e -> {
             if (results == null) return;
-            if (p == results.total) {
+            if (p >= results.total) {
                 new TipDialog(f, LAST_PAGE_MSG).showDialog();
                 return;
             }
             showImg(++p);
+        });
+        // 第一张/最后一张按钮
+        firstImgButton.setToolTipText(FIRST_IMG);
+        firstImgButton.setFocusPainted(false);
+        firstImgButton.setOpaque(false);
+        firstImgButton.setContentAreaFilled(false);
+        firstImgButton.setIcon(ImageUtils.dye((ImageIcon) firstImgButton.getIcon(), style.getButtonColor()));
+        firstImgButton.addMouseListener(new ButtonMouseListener(firstImgButton, f));
+        firstImgButton.setPreferredSize(new Dimension(firstImgIcon.getIconWidth(), firstImgIcon.getIconHeight()));
+        firstImgButton.addActionListener(e -> {
+            if (p == 1) {
+                new TipDialog(f, FIRST_PAGE_MSG).showDialog();
+                return;
+            }
+            showImg(p = 1);
+        });
+        lstImgButton.setToolTipText(LST_IMG);
+        lstImgButton.setFocusPainted(false);
+        lstImgButton.setOpaque(false);
+        lstImgButton.setContentAreaFilled(false);
+        lstImgButton.setIcon(ImageUtils.dye((ImageIcon) lstImgButton.getIcon(), style.getButtonColor()));
+        lstImgButton.addMouseListener(new ButtonMouseListener(lstImgButton, f));
+        lstImgButton.setPreferredSize(new Dimension(lstImgIcon.getIconWidth(), lstImgIcon.getIconHeight()));
+        lstImgButton.addActionListener(e -> {
+            if (results == null) return;
+            if (p >= results.total) {
+                new TipDialog(f, LAST_PAGE_MSG).showDialog();
+                return;
+            }
+            showImg(p = results.total);
         });
         // 页数框
         pageTextField.addKeyListener(new ControlInputListener());
@@ -298,9 +336,11 @@ public abstract class ImageViewDialog extends JDialog {
         FlowLayout fl = new FlowLayout();
         fl.setHgap(20);
         bottomPanel.setLayout(fl);
+        bottomPanel.add(firstImgButton);
         bottomPanel.add(lastImgButton);
         bottomPanel.add(pageLabel);
         bottomPanel.add(nextImgButton);
+        bottomPanel.add(lstImgButton);
         bottomPanel.add(pageTextField);
         bottomPanel.add(goButton);
         bottomPanel.add(saveImgButton);

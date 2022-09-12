@@ -1,27 +1,55 @@
 package net.doge.ui.components;
 
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.effect.Glow;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import net.doge.constants.SpectrumConstants;
 import net.doge.ui.PlayerFrame;
+import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class SpectrumPanel extends JPanel {
+public class SpectrumPanel extends JFXPanel {
     private boolean drawSpectrum;
 //    private Color currColor;
 //    private int d = 0;
 //    private int t = 0;
 
     private PlayerFrame f;
+//    private Canvas canvas;
+//    private Scene scene;
+//    private GraphicsContext gc;
 
     public SpectrumPanel(PlayerFrame f) {
         this.f = f;
         drawSpectrum = false;
 
         setOpaque(false);
+
+//        initBarGraph();
     }
+
+//    void initBarGraph() {
+//        canvas = new Canvas();
+//        scene = new Scene(new Pane(canvas));
+//        scene.setFill(Color.TRANSPARENT);
+//        setScene(scene);
+//        gc = canvas.getGraphicsContext2D();
+//    }
 
     public void setDrawSpectrum(boolean drawSpectrum) {
         this.drawSpectrum = drawSpectrum;
@@ -73,6 +101,15 @@ public class SpectrumPanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 //        g2d.setColor(currColor);
         g2d.setColor(f.getCurrUIStyle().getSpectrumColor());
+//        if(canvas.getWidth()<=0)canvas.setWidth(pw);
+//        if(canvas.getHeight()<=0)canvas.setHeight(ph);
+//        gc.setFill(ColorUtils.javaFxColor(f.getCurrUIStyle().getSpectrumColor()));
+//        gc.setEffect(null);
+//        gc.clearRect(0, 0, pw, ph);
+//        Glow glow = new Glow();
+//        glow.setLevel(0.5);
+//        gc.setEffect(glow);
+        int style = f.currSpecStyle;
         for (int i = 0, length = specs.length; i < length; i++) {
             // 得到频谱高度并绘制
             int sHeight = (int) specs[i];
@@ -80,6 +117,13 @@ public class SpectrumPanel extends JPanel {
 //                t = (t + 1) % 6;
 //                d = (d + i+10) % 255;
 //            }
+//            gc.fillRoundRect(
+//                    imgX + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
+//                    ph - sHeight,
+//                    SpectrumConstants.BAR_WIDTH,
+//                    sHeight,
+//                    4, 4
+//            );
 //            switch (t) {
 //                case 0:
 //                    currColor = new Color(255, (d + i+10) % 255, 0);
@@ -103,7 +147,7 @@ public class SpectrumPanel extends JPanel {
 //            g2d.setColor(currColor);
             g2d.fillRoundRect(
                     imgX + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
-                    ph - sHeight,
+                    style == SpectrumConstants.GROUND ? ph - sHeight : (ph - sHeight) / 2,
                     SpectrumConstants.BAR_WIDTH,
                     sHeight,
                     4, 4

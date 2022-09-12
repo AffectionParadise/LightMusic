@@ -41,6 +41,8 @@ public class ConfigConstants {
     public final static String FOB_TIME = "fobTime";
     // 速率
     public final static String RATE = "rate";
+    // 频谱样式
+    public final static String SPECTRUM_STYLE = "spectrumStyle";
     // 均衡
     public final static String BALANCE = "balance";
     // 音量

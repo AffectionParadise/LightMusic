@@ -112,6 +112,9 @@ public class SettingDialog extends JDialog {
     private JLabel rateLabel = new JLabel("播放速率：");
     private JComboBox<String> rateComboBox = new JComboBox();
     private String[] rates = {"0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "4x", "8x"};
+    private JPanel specStylePanel = new JPanel();
+    private JLabel specStyleLabel = new JLabel("频谱样式：");
+    private JComboBox<String> specStyleComboBox = new JComboBox();
     private JPanel balancePanel = new JPanel();
     private JLabel balanceLabel = new JLabel("声道平衡：");
     private JComboBox<String> balanceComboBox = new JComboBox();
@@ -265,6 +268,8 @@ public class SettingDialog extends JDialog {
         fobComboBox.setFont(globalFont);
         rateLabel.setFont(globalFont);
         rateComboBox.setFont(globalFont);
+        specStyleLabel.setFont(globalFont);
+        specStyleComboBox.setFont(globalFont);
         balanceLabel.setFont(globalFont);
         balanceComboBox.setFont(globalFont);
         backupLabel.setFont(globalFont);
@@ -282,6 +287,7 @@ public class SettingDialog extends JDialog {
         closeOptionPanel.setLayout(fl);
         fobPanel.setLayout(fl);
         ratePanel.setLayout(fl);
+        specStylePanel.setLayout(fl);
         balancePanel.setLayout(fl);
         backupPanel.setLayout(fl);
 
@@ -297,6 +303,7 @@ public class SettingDialog extends JDialog {
         closeOptionPanel.setBorder(b);
         fobPanel.setBorder(b);
         ratePanel.setBorder(b);
+        specStylePanel.setBorder(b);
         balancePanel.setBorder(b);
         backupPanel.setBorder(b);
 
@@ -313,6 +320,7 @@ public class SettingDialog extends JDialog {
         closeOptionPanel.setOpaque(false);
         fobPanel.setOpaque(false);
         ratePanel.setOpaque(false);
+        specStylePanel.setOpaque(false);
         balancePanel.setOpaque(false);
         backupPanel.setOpaque(false);
 
@@ -327,6 +335,7 @@ public class SettingDialog extends JDialog {
         closeOptionComboBox.setOpaque(false);
         fobComboBox.setOpaque(false);
         rateComboBox.setOpaque(false);
+        specStyleComboBox.setOpaque(false);
         balanceComboBox.setOpaque(false);
 
         // 组件不可聚焦
@@ -334,6 +343,7 @@ public class SettingDialog extends JDialog {
         closeOptionComboBox.setFocusable(false);
         fobComboBox.setFocusable(false);
         rateComboBox.setFocusable(false);
+        specStyleComboBox.setFocusable(false);
         balanceComboBox.setFocusable(false);
 
         // 字体颜色
@@ -348,6 +358,7 @@ public class SettingDialog extends JDialog {
         closeOptionLabel.setForeground(labelColor);
         fobLabel.setForeground(labelColor);
         rateLabel.setForeground(labelColor);
+        specStyleLabel.setForeground(labelColor);
         balanceLabel.setForeground(labelColor);
         backupLabel.setForeground(labelColor);
 
@@ -379,6 +390,7 @@ public class SettingDialog extends JDialog {
         closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f, globalFont, buttonColor));
         fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, globalFont, buttonColor));
         rateComboBox.setUI(new ComboBoxUI(rateComboBox, f, globalFont, buttonColor));
+        specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, globalFont, buttonColor));
         balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, globalFont, buttonColor));
 
         // 下拉框边框
@@ -386,6 +398,7 @@ public class SettingDialog extends JDialog {
         closeOptionComboBox.setBorder(eb);
         fobComboBox.setBorder(eb);
         rateComboBox.setBorder(eb);
+        specStyleComboBox.setBorder(eb);
         balanceComboBox.setBorder(eb);
 
         DirectoryChooser dirChooser = new DirectoryChooser();
@@ -572,6 +585,11 @@ public class SettingDialog extends JDialog {
         ratePanel.add(rateLabel);
         ratePanel.add(rateComboBox);
 
+        specStyleComboBox.addItem("平地式");
+        specStyleComboBox.addItem("悬空式");
+        specStylePanel.add(specStyleLabel);
+        specStylePanel.add(specStyleComboBox);
+
         balanceComboBox.addItem("左声道");
         balanceComboBox.addItem("立体声");
         balanceComboBox.addItem("右声道");
@@ -592,6 +610,7 @@ public class SettingDialog extends JDialog {
         centerPanel.add(closeOptionPanel);
         centerPanel.add(fobPanel);
         centerPanel.add(ratePanel);
+        centerPanel.add(specStylePanel);
         centerPanel.add(balancePanel);
         centerPanel.add(backupPanel);
     }
@@ -606,6 +625,7 @@ public class SettingDialog extends JDialog {
         maxHistoryCountTextField.setText(String.valueOf(f.maxHistoryCount));
         maxSearchHistoryCountTextField.setText(String.valueOf(f.maxSearchHistoryCount));
         closeOptionComboBox.setSelectedIndex(f.currCloseWindowOption);
+        specStyleComboBox.setSelectedIndex(f.currSpecStyle);
         balanceComboBox.setSelectedIndex(Double.valueOf(f.currBalance).intValue() + 1);
     }
 
@@ -658,6 +678,7 @@ public class SettingDialog extends JDialog {
         f.forwardOrBackwardTime = Integer.parseInt(((String) fobComboBox.getSelectedItem()).replace(" 秒", ""));
         f.currRate = Double.parseDouble(((String) rateComboBox.getSelectedItem()).replace("x", ""));
         f.getPlayer().setRate(f.currRate);
+        f.currSpecStyle = specStyleComboBox.getSelectedIndex();
         f.currBalance = balanceComboBox.getSelectedIndex() - 1;
         f.getPlayer().setBalance(f.currBalance);
 

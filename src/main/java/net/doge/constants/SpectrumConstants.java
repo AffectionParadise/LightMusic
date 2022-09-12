@@ -6,6 +6,11 @@ package net.doge.constants;
  * @Date 2020/12/14
  */
 public class SpectrumConstants {
+    // 平地式
+    public static final int GROUND = 0;
+    // 悬空式
+    public static final int ABOVE = 1;
+
     // 播放器更新频谱数量
     public static final int NUM_BANDS = 1024;
     // 播放器更新频谱时间间隔(s)

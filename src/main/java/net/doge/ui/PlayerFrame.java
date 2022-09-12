@@ -666,6 +666,8 @@ public class PlayerFrame extends JFrame {
     public int forwardOrBackwardTime = DEFAULT_FORWARD_OR_BACKWARD_TIME;
     // 当前播放速率
     public double currRate = DEFAULT_RATE;
+    // 当前频谱样式
+    public int currSpecStyle = SpectrumConstants.GROUND;
     // 当前均衡
     public double currBalance = DEFAULT_BALANCE;
     // 最大缓存大小(MB，超出后自动清理)
@@ -2793,6 +2795,8 @@ public class PlayerFrame extends JFrame {
         forwardOrBackwardTime = config.optInt(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入速率
         currRate = config.optDouble(ConfigConstants.RATE, DEFAULT_RATE);
+        // 载入频谱样式
+        currSpecStyle = config.optInt(ConfigConstants.SPECTRUM_STYLE, SpectrumConstants.GROUND);
         // 载入均衡
         currBalance = config.optDouble(ConfigConstants.BALANCE, DEFAULT_BALANCE);
         // 载入音量
@@ -3568,6 +3572,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.FOB_TIME, forwardOrBackwardTime);
         // 存入速率
         config.put(ConfigConstants.RATE, currRate);
+        // 存入频谱样式
+        config.put(ConfigConstants.SPECTRUM_STYLE, currSpecStyle);
         // 存入均衡
         config.put(ConfigConstants.BALANCE, currBalance);
         // 存入音量
@@ -4097,7 +4103,7 @@ public class PlayerFrame extends JFrame {
                         } else if (response == JOptionPane.CANCEL_OPTION) return;
                     }
                     // 添加到歌曲目录
-                    catalogs.add(dir);
+                    if (ListUtils.search(catalogs, dir) < 0) catalogs.add(dir);
 
                     File[] files = dir.listFiles();
                     int audioFileCount = 0;
@@ -17407,10 +17413,12 @@ public class PlayerFrame extends JFrame {
                 ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_SELECTED_TASKS_MSG, "是", "否");
                 dialog.showDialog();
                 if (dialog.getResponse() == JOptionPane.YES_OPTION) {
+                    downloadList.setModel(emptyListModel);
                     for (Task task : tasks) {
                         if (task.isRunning()) task.stop();
                         downloadListModel.removeElement(task);
                     }
+                    downloadList.setModel(downloadListModel);
                     new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
                 }
             }
