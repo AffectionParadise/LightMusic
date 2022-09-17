@@ -10,6 +10,14 @@ public class SpectrumConstants {
     public static final int GROUND = 0;
     // 悬空式
     public static final int ABOVE = 1;
+    // 线段式
+    public static final int LINE = 2;
+    // 曲线式
+    public static final int CURVE = 3;
+    // 山峰式
+    public static final int HILL = 4;
+    // 波浪式
+    public static final int WAVE = 5;
 
     // 播放器更新频谱数量
     public static final int NUM_BANDS = 1024;

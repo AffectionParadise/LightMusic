@@ -587,6 +587,10 @@ public class SettingDialog extends JDialog {
 
         specStyleComboBox.addItem("平地式");
         specStyleComboBox.addItem("悬空式");
+        specStyleComboBox.addItem("折线式");
+        specStyleComboBox.addItem("曲线式");
+        specStyleComboBox.addItem("山峰式");
+        specStyleComboBox.addItem("波浪式");
         specStylePanel.add(specStyleLabel);
         specStylePanel.add(specStyleComboBox);
 

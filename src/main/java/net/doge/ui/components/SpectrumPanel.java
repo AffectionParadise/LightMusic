@@ -21,6 +21,7 @@ import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 
 public class SpectrumPanel extends JFXPanel {
@@ -29,6 +30,7 @@ public class SpectrumPanel extends JFXPanel {
 //    private int d = 0;
 //    private int t = 0;
 
+    private final Stroke stroke = new BasicStroke(3);
     private PlayerFrame f;
 //    private Canvas canvas;
 //    private Scene scene;
@@ -101,6 +103,7 @@ public class SpectrumPanel extends JFXPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 //        g2d.setColor(currColor);
         g2d.setColor(f.getCurrUIStyle().getSpectrumColor());
+        g2d.setStroke(stroke);
 //        if(canvas.getWidth()<=0)canvas.setWidth(pw);
 //        if(canvas.getHeight()<=0)canvas.setHeight(ph);
 //        gc.setFill(ColorUtils.javaFxColor(f.getCurrUIStyle().getSpectrumColor()));
@@ -145,13 +148,72 @@ public class SpectrumPanel extends JFXPanel {
 //                    break;
 //            }
 //            g2d.setColor(currColor);
-            g2d.fillRoundRect(
-                    imgX + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
-                    style == SpectrumConstants.GROUND ? ph - sHeight : (ph - sHeight) / 2,
-                    SpectrumConstants.BAR_WIDTH,
-                    sHeight,
-                    4, 4
-            );
+            switch (style) {
+                case SpectrumConstants.GROUND:
+                    g2d.fillRoundRect(
+                            imgX + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
+                            ph - sHeight,
+                            SpectrumConstants.BAR_WIDTH,
+                            sHeight,
+                            4, 4
+                    );
+                    break;
+                case SpectrumConstants.ABOVE:
+                    g2d.fillRoundRect(
+                            imgX + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
+                            (ph - sHeight) / 2,
+                            SpectrumConstants.BAR_WIDTH,
+                            sHeight,
+                            4, 4
+                    );
+                    break;
+                case SpectrumConstants.LINE:
+                    if (i + 1 >= specs.length) return;
+                    g2d.drawLine(
+                            imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
+                            ph - sHeight,
+                            imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
+                            ph - (int) specs[i + 1]
+                    );
+                    break;
+                case SpectrumConstants.CURVE:
+                    if (i + 1 >= specs.length) return;
+                    int p1x = imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    int p1y = ph - sHeight;
+                    int p2x = imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    int p2y = ph - (int) specs[i + 1];
+                    int p3x = (p1x + p2x) / 2;
+                    GeneralPath path = new GeneralPath();
+                    path.moveTo(p1x, p1y);
+                    path.curveTo(p3x, p1y, p3x, p2y, p2x, p2y);
+                    g2d.draw(path);
+                    break;
+                case SpectrumConstants.HILL:
+                    if (i + 1 >= specs.length) return;
+                    p1x = imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p1y = ph - sHeight;
+                    p2x = imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p2y = ph - (int) specs[i + 1];
+                    Polygon polygon = new Polygon(new int[]{p1x, p1x, p2x, p2x}, new int[]{p1y, ph, ph, p2y}, 4);
+                    g2d.fill(polygon);
+                    break;
+                case SpectrumConstants.WAVE:
+                    if (i + 1 >= specs.length) return;
+                    p1x = imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p1y = ph - sHeight;
+                    p2x = imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p2y = ph - (int) specs[i + 1];
+                    p3x = (p1x + p2x) / 2;
+                    path = new GeneralPath();
+                    path.moveTo(p1x, p1y);
+                    path.curveTo(p3x, p1y, p3x, p2y, p2x, p2y);
+                    path.lineTo(p2x, ph);
+                    path.lineTo(p1x, ph);
+                    path.lineTo(p1x, p1y);
+                    g2d.fill(path);
+                    break;
+            }
+
         }
 //        d++;
 //        graphics.drawImage(spectrumImg, imgX, 0, null);

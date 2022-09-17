@@ -1719,7 +1719,7 @@ public class MusicServerUtils {
     // 歌曲信息 API (猫耳)
     private static final String SINGLE_SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
     // 歌曲 URL 获取 API
-//    private static final String GET_SONG_URL_API = prefix + "/song/url/v1?id=%s&level=hires";
+    private static final String GET_SONG_URL_API_NEW = prefix + "/song/url/v1?id=%s&level=hires";
     private static final String GET_SONG_URL_API = prefix + "/song/url?id=%s";
     // 歌曲 URL 获取 API (QQ)
     private static final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
@@ -16159,10 +16159,18 @@ public class MusicServerUtils {
     public static String fetchMusicUrl(String songId, int source) {
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String songBody = HttpRequest.get(String.format(GET_SONG_URL_API, songId))
+            // 首选高音质接口
+            String songBody = HttpRequest.get(String.format(GET_SONG_URL_API_NEW, songId))
                     .execute()
                     .body();
             JSONArray data = JSONObject.fromObject(songBody).optJSONArray("data");
+            // 次选普通音质
+            if (data == null) {
+                songBody = HttpRequest.get(String.format(GET_SONG_URL_API, songId))
+                        .execute()
+                        .body();
+                data = JSONObject.fromObject(songBody).optJSONArray("data");
+            }
             if (data != null) {
                 JSONObject urlJson = data.getJSONObject(0);
                 String url = urlJson.getString("url");
