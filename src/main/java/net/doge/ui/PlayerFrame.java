@@ -373,6 +373,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon soundIcon = new ImageIcon(SimplePath.ICON_PATH + "sound.png");
     // 静音图标
     private ImageIcon muteIcon = new ImageIcon(SimplePath.ICON_PATH + "mute.png");
+    // 倍速图标
+    private ImageIcon rateIcon = new ImageIcon(SimplePath.ICON_PATH + "rate.png");
     // 频谱开启图标
     private ImageIcon spectrumOnIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumOn.png");
     // 频谱关闭图标
@@ -593,6 +595,7 @@ public class PlayerFrame extends JFrame {
     private final String SHUFFLE_TIP = "随机播放";
     private final String SOUND_TIP = "声音开启";
     private final String MUTE_TIP = "静音";
+    private final String RATE_TIP = "倍速";
     private final String SWITCH_SPECTRUM_TIP = "频谱开关";
     private final String SWITCH_BLUR_TIP = "虚化开关";
     private final String SOUND_EFFECT_TIP = "音效";
@@ -664,6 +667,8 @@ public class PlayerFrame extends JFrame {
     // 关闭窗口操作
     public int currCloseWindowOption = CloseWindowOptions.ASK;
     public int forwardOrBackwardTime = DEFAULT_FORWARD_OR_BACKWARD_TIME;
+    // 播放视频时是否关闭主界面
+    public boolean videoOnly = true;
     // 当前播放速率
     public double currRate = DEFAULT_RATE;
     // 当前频谱样式
@@ -886,6 +891,36 @@ public class PlayerFrame extends JFrame {
     private JPanel volumePanel = new JPanel();
     private CustomButton muteButton = new CustomButton(soundIcon);
     private JSlider volumeSlider = new JSlider();
+    private CustomButton rateButton = new CustomButton(rateIcon);
+    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
+    private CustomRadioButtonMenuItem[] rateMenuItems = {
+            new CustomRadioButtonMenuItem("0.2x"),
+            new CustomRadioButtonMenuItem("0.3x"),
+            new CustomRadioButtonMenuItem("0.4x"),
+            new CustomRadioButtonMenuItem("0.5x"),
+            new CustomRadioButtonMenuItem("0.6x"),
+            new CustomRadioButtonMenuItem("0.7x"),
+            new CustomRadioButtonMenuItem("0.8x"),
+            new CustomRadioButtonMenuItem("0.9x"),
+            new CustomRadioButtonMenuItem("1x"),
+            new CustomRadioButtonMenuItem("1.1x"),
+            new CustomRadioButtonMenuItem("1.2x"),
+            new CustomRadioButtonMenuItem("1.3x"),
+            new CustomRadioButtonMenuItem("1.4x"),
+            new CustomRadioButtonMenuItem("1.5x"),
+            new CustomRadioButtonMenuItem("1.6x"),
+            new CustomRadioButtonMenuItem("1.7x"),
+            new CustomRadioButtonMenuItem("1.8x"),
+            new CustomRadioButtonMenuItem("1.9x"),
+            new CustomRadioButtonMenuItem("2x"),
+            new CustomRadioButtonMenuItem("3x"),
+            new CustomRadioButtonMenuItem("4x"),
+            new CustomRadioButtonMenuItem("5x"),
+            new CustomRadioButtonMenuItem("6x"),
+            new CustomRadioButtonMenuItem("7x"),
+            new CustomRadioButtonMenuItem("8x")
+    };
+    private CustomPopupMenu ratePopupMenu = new CustomPopupMenu(THIS);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
     private CustomButton switchBlurButton = new CustomButton(blurOnIcon);
     private CustomButton soundEffectButton = new CustomButton(soundEffectIcon);
@@ -2737,6 +2772,8 @@ public class PlayerFrame extends JFrame {
         }
         // 载入关闭窗口操作
         currCloseWindowOption = config.optInt(ConfigConstants.CLOSE_WINDOW_OPTION, CloseWindowOptions.ASK);
+        // 载入播放视频是否关闭主界面
+        videoOnly = config.optBoolean(ConfigConstants.VIDEO_ONLY, true);
         // 载入歌曲下载路径
         String musicDownPath = config.optString(ConfigConstants.MUSIC_DOWN_PATH);
         if (!musicDownPath.isEmpty()) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
@@ -2795,6 +2832,14 @@ public class PlayerFrame extends JFrame {
         forwardOrBackwardTime = config.optInt(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入速率
         currRate = config.optDouble(ConfigConstants.RATE, DEFAULT_RATE);
+        String rateStr = String.valueOf(currRate).replace(".0", "");
+        for (CustomRadioButtonMenuItem mi : rateMenuItems) {
+            if (rateStr.equals(mi.getText().replaceFirst("x", ""))) {
+                mi.setSelected(true);
+                updateRadioButtonMenuItemIcon(ratePopupMenu);
+                break;
+            }
+        }
         // 载入频谱样式
         currSpecStyle = config.optInt(ConfigConstants.SPECTRUM_STYLE, SpectrumConstants.GROUND);
         // 载入均衡
@@ -3544,6 +3589,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.CURR_UI_STYLE, ListUtils.search(styles, currUIStyle));
         // 存入关闭窗口操作
         config.put(ConfigConstants.CLOSE_WINDOW_OPTION, currCloseWindowOption);
+        // 存入播放视频是否隐藏主界面
+        config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
         // 存入歌曲下载路径
         config.put(ConfigConstants.MUSIC_DOWN_PATH, SimplePath.DOWNLOAD_MUSIC_PATH);
         // 存入 MV 下载路径
@@ -18424,10 +18471,26 @@ public class PlayerFrame extends JFrame {
             }
         });
         // 移入手势
-        volumeSlider.addMouseListener(new MouseAdapter() {
+        volumeSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        // 倍速菜单和按钮
+        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
+            menuItem.setFont(globalFont);
+            menuItem.addActionListener(e -> {
+                getPlayer().setRate(currRate = Double.parseDouble(menuItem.getText().replace("x", "")));
+                updateRadioButtonMenuItemIcon(ratePopupMenu);
+            });
+            rateMenuItemsButtonGroup.add(menuItem);
+            ratePopupMenu.add(menuItem);
+        }
+        rateButton.setToolTipText(RATE_TIP);
+        rateButton.setFocusable(false);
+        rateButton.addMouseListener(new ButtonMouseListener(rateButton, THIS));
+        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
+        rateButton.setComponentPopupMenu(ratePopupMenu);
+        rateButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                volumeSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            public void mouseReleased(MouseEvent e) {
+                ratePopupMenu.show(rateButton, e.getX(), e.getY());
             }
         });
         // 频谱开关按钮
@@ -18585,6 +18648,7 @@ public class PlayerFrame extends JFrame {
         volumePanel.add(muteButton);
         volumePanel.add(volumeSlider);
         controlPanel.add(volumePanel);
+        controlPanel.add(rateButton);
         controlPanel.add(switchSpectrumButton);
         controlPanel.add(switchBlurButton);
         controlPanel.add(soundEffectButton);
@@ -18593,7 +18657,7 @@ public class PlayerFrame extends JFrame {
         fl = new FlowLayout();
         fl.setHgap(12);
         changePanePanel.setLayout(fl);
-        changePanePanel.setBorder(BorderFactory.createEmptyBorder(0, 32, 0, 0));
+        changePanePanel.setBorder(BorderFactory.createEmptyBorder(0, 54, 0, 0));
         changePanePanel.add(changePaneButton);
         changePanePanel.add(mvButton);
         changePanePanel.add(collectButton);
@@ -19851,6 +19915,7 @@ public class PlayerFrame extends JFrame {
         updateMenuItemStyle(artistPopupMenu, menuItemColor);
         updateMenuItemStyle(albumPopupMenu, menuItemColor);
         updateMenuItemStyle(lrcPopupMenu, menuItemColor);
+        updateMenuItemStyle(ratePopupMenu, menuItemColor);
         updateMenuItemStyle(playModePopupMenu, menuItemColor);
         updateMenuItemStyle(mainMenu, menuItemColor);
         updateMenuItemStyle(musicPopupMenu, menuItemColor);
@@ -21031,6 +21096,8 @@ public class PlayerFrame extends JFrame {
         forwardButton.setContentAreaFilled(opaque);
         muteButton.setOpaque(opaque);
         muteButton.setContentAreaFilled(opaque);
+        rateButton.setOpaque(opaque);
+        rateButton.setContentAreaFilled(opaque);
         switchSpectrumButton.setOpaque(opaque);
         switchSpectrumButton.setContentAreaFilled(opaque);
         switchBlurButton.setOpaque(opaque);
@@ -21074,6 +21141,7 @@ public class PlayerFrame extends JFrame {
         backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), buttonColor));
         forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), buttonColor));
         muteButton.setIcon(ImageUtils.dye((ImageIcon) muteButton.getIcon(), buttonColor));
+        rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), buttonColor));
         switchSpectrumButton.setIcon(ImageUtils.dye((ImageIcon) switchSpectrumButton.getIcon(), buttonColor));
         switchBlurButton.setIcon(ImageUtils.dye((ImageIcon) switchBlurButton.getIcon(), buttonColor));
         soundEffectButton.setIcon(ImageUtils.dye((ImageIcon) soundEffectButton.getIcon(), buttonColor));
@@ -21110,6 +21178,7 @@ public class PlayerFrame extends JFrame {
         // 更新单选菜单项和标签按钮样式
         updateRadioButtonMenuItemIcon(sortPopupMenu);
         updateRadioButtonMenuItemIcon(stylePopupMenu);
+        updateRadioButtonMenuItemIcon(ratePopupMenu);
         updateTabButtonStyle();
 
         // 根据选项卡选择的情况设置选项卡文字 + 图标颜色
@@ -21446,9 +21515,11 @@ public class PlayerFrame extends JFrame {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
             } else {
                 if (player.isPlaying()) playOrPause();
+                if (videoOnly) setVisible(false);
                 videoDialog = new VideoDialog(mvInfo, dest, THIS);
                 videoDialog.showDialog();
                 videoDialog = null;
+                setVisible(true);
             }
             return;
         }
@@ -21485,9 +21556,11 @@ public class PlayerFrame extends JFrame {
                 }
                 if (player.isPlaying()) playOrPause();
                 dialog.close();
+                if (videoOnly) setVisible(false);
                 videoDialog = new VideoDialog(netMvInfo, null, THIS);
                 videoDialog.showDialog();
                 videoDialog = null;
+                setVisible(true);
             } catch (Exception e) {
                 if (e instanceof IORuntimeException) {
                     new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -21516,9 +21589,11 @@ public class PlayerFrame extends JFrame {
                 }
                 if (player.isPlaying()) playOrPause();
                 dialog.close();
+                if (videoOnly) setVisible(false);
                 videoDialog = new VideoDialog(mvInfo, null, THIS);
                 videoDialog.showDialog();
                 videoDialog = null;
+                setVisible(true);
             } catch (Exception e) {
                 if (e instanceof IORuntimeException) {
                     new TipDialog(THIS, NO_NET_MSG).showDialog();

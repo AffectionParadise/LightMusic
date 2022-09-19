@@ -15,6 +15,8 @@ public class ConfigConstants {
     public final static String CURR_UI_STYLE = "currUIStyle";
     // 关闭窗口操作
     public final static String CLOSE_WINDOW_OPTION = "closeWindowOption";
+    // 播放视频是否关闭主界面
+    public final static String VIDEO_ONLY = "videoOnly";
     // 播放模式
     public final static String PLAY_MODE = "playMode";
     // 歌曲下载路径

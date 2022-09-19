@@ -207,7 +207,7 @@
                     <showWarnings>true</showWarnings>
                     <compilerArgs>
                         <arg>-extdirs</arg>
-                        <arg>${project.basedir}/libs;D:/EdgeDownloads/openjfx-18_windows-x64_bin-sdk/javafx-sdk-18/lib</arg>
+                        <arg>${project.basedir}/libs;D:/EdgeDownloads/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib</arg>
                     </compilerArgs>
 <!--                    <compilerArguments>-->
 <!--                        <extdirs>${project.basedir}/libs</extdirs>-->

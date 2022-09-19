@@ -78,6 +78,8 @@ public class SettingDialog extends JDialog {
     // 设置项
     private JPanel autoDownloadLrcPanel = new JPanel();
     private JCheckBox autoDownloadLrcCheckBox = new JCheckBox("下载歌曲时自动下载歌词");
+    private JPanel videoOnlyPanel = new JPanel();
+    private JCheckBox videoOnlyCheckBox = new JCheckBox("播放视频时隐藏主界面");
     private JPanel musicDownPanel = new JPanel();
     private JLabel musicDownLabel = new JLabel("歌曲下载路径：");
     private CustomTextField musicDownPathTextField = new CustomTextField(20);
@@ -108,10 +110,10 @@ public class SettingDialog extends JDialog {
     private JPanel fobPanel = new JPanel();
     private JLabel fobLabel = new JLabel("快进/快退时间：");
     private JComboBox<String> fobComboBox = new JComboBox();
-    private JPanel ratePanel = new JPanel();
-    private JLabel rateLabel = new JLabel("播放速率：");
-    private JComboBox<String> rateComboBox = new JComboBox();
-    private String[] rates = {"0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "4x", "8x"};
+//    private JPanel ratePanel = new JPanel();
+//    private JLabel rateLabel = new JLabel("播放速率：");
+//    private JComboBox<String> rateComboBox = new JComboBox();
+//    private String[] rates = {"0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "4x", "8x"};
     private JPanel specStylePanel = new JPanel();
     private JLabel specStyleLabel = new JLabel("频谱样式：");
     private JComboBox<String> specStyleComboBox = new JComboBox();
@@ -250,6 +252,7 @@ public class SettingDialog extends JDialog {
 
         // 字体
         autoDownloadLrcCheckBox.setFont(globalFont);
+        videoOnlyCheckBox.setFont(globalFont);
         musicDownLabel.setFont(globalFont);
         musicDownPathTextField.setFont(globalFont);
         mvDownLabel.setFont(globalFont);
@@ -266,8 +269,8 @@ public class SettingDialog extends JDialog {
         closeOptionComboBox.setFont(globalFont);
         fobLabel.setFont(globalFont);
         fobComboBox.setFont(globalFont);
-        rateLabel.setFont(globalFont);
-        rateComboBox.setFont(globalFont);
+//        rateLabel.setFont(globalFont);
+//        rateComboBox.setFont(globalFont);
         specStyleLabel.setFont(globalFont);
         specStyleComboBox.setFont(globalFont);
         balanceLabel.setFont(globalFont);
@@ -278,6 +281,7 @@ public class SettingDialog extends JDialog {
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
         fl.setVgap(10);
         autoDownloadLrcPanel.setLayout(fl);
+        videoOnlyPanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
         mvDownPanel.setLayout(fl);
         cachePanel.setLayout(fl);
@@ -286,7 +290,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setLayout(fl);
         closeOptionPanel.setLayout(fl);
         fobPanel.setLayout(fl);
-        ratePanel.setLayout(fl);
+//        ratePanel.setLayout(fl);
         specStylePanel.setLayout(fl);
         balancePanel.setLayout(fl);
         backupPanel.setLayout(fl);
@@ -294,6 +298,7 @@ public class SettingDialog extends JDialog {
         // 边框
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
         autoDownloadLrcPanel.setBorder(b);
+        videoOnlyPanel.setBorder(b);
         musicDownPanel.setBorder(b);
         mvDownPanel.setBorder(b);
         cachePanel.setBorder(b);
@@ -302,7 +307,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setBorder(b);
         closeOptionPanel.setBorder(b);
         fobPanel.setBorder(b);
-        ratePanel.setBorder(b);
+//        ratePanel.setBorder(b);
         specStylePanel.setBorder(b);
         balancePanel.setBorder(b);
         backupPanel.setBorder(b);
@@ -311,6 +316,7 @@ public class SettingDialog extends JDialog {
         centerPanel.setOpaque(false);
         buttonPanel.setOpaque(false);
         autoDownloadLrcPanel.setOpaque(false);
+        videoOnlyPanel.setOpaque(false);
         musicDownPanel.setOpaque(false);
         mvDownPanel.setOpaque(false);
         cachePanel.setOpaque(false);
@@ -319,7 +325,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setOpaque(false);
         closeOptionPanel.setOpaque(false);
         fobPanel.setOpaque(false);
-        ratePanel.setOpaque(false);
+//        ratePanel.setOpaque(false);
         specStylePanel.setOpaque(false);
         balancePanel.setOpaque(false);
         backupPanel.setOpaque(false);
@@ -332,23 +338,26 @@ public class SettingDialog extends JDialog {
         maxHistoryCountTextField.setOpaque(false);
         maxSearchHistoryCountTextField.setOpaque(false);
         autoDownloadLrcCheckBox.setOpaque(false);
+        videoOnlyCheckBox.setOpaque(false);
         closeOptionComboBox.setOpaque(false);
         fobComboBox.setOpaque(false);
-        rateComboBox.setOpaque(false);
+//        rateComboBox.setOpaque(false);
         specStyleComboBox.setOpaque(false);
         balanceComboBox.setOpaque(false);
 
         // 组件不可聚焦
         autoDownloadLrcCheckBox.setFocusPainted(false);
+        videoOnlyCheckBox.setFocusPainted(false);
         closeOptionComboBox.setFocusable(false);
         fobComboBox.setFocusable(false);
-        rateComboBox.setFocusable(false);
+//        rateComboBox.setFocusable(false);
         specStyleComboBox.setFocusable(false);
         balanceComboBox.setFocusable(false);
 
         // 字体颜色
         Color labelColor = style.getLabelColor();
         autoDownloadLrcCheckBox.setForeground(labelColor);
+        videoOnlyCheckBox.setForeground(labelColor);
         musicDownLabel.setForeground(labelColor);
         mvDownLabel.setForeground(labelColor);
         cacheLabel.setForeground(labelColor);
@@ -357,7 +366,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountLabel.setForeground(labelColor);
         closeOptionLabel.setForeground(labelColor);
         fobLabel.setForeground(labelColor);
-        rateLabel.setForeground(labelColor);
+//        rateLabel.setForeground(labelColor);
         specStyleLabel.setForeground(labelColor);
         balanceLabel.setForeground(labelColor);
         backupLabel.setForeground(labelColor);
@@ -389,7 +398,7 @@ public class SettingDialog extends JDialog {
         Color buttonColor = style.getButtonColor();
         closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f, globalFont, buttonColor));
         fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, globalFont, buttonColor));
-        rateComboBox.setUI(new ComboBoxUI(rateComboBox, f, globalFont, buttonColor));
+//        rateComboBox.setUI(new ComboBoxUI(rateComboBox, f, globalFont, buttonColor));
         specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, globalFont, buttonColor));
         balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, globalFont, buttonColor));
 
@@ -397,7 +406,7 @@ public class SettingDialog extends JDialog {
         Border eb = BorderFactory.createEmptyBorder(0, 0, 0, 0);
         closeOptionComboBox.setBorder(eb);
         fobComboBox.setBorder(eb);
-        rateComboBox.setBorder(eb);
+//        rateComboBox.setBorder(eb);
         specStyleComboBox.setBorder(eb);
         balanceComboBox.setBorder(eb);
 
@@ -533,11 +542,19 @@ public class SettingDialog extends JDialog {
         exportListButton.setFont(globalFont);
 
         // 复选框图标
-        autoDownloadLrcCheckBox.setIconTextGap(10);
-        autoDownloadLrcCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, buttonColor));
-        autoDownloadLrcCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, buttonColor));
+        int gap=10;
+        ImageIcon icon = ImageUtils.dye(uncheckedIcon, buttonColor);
+        ImageIcon selectedIcon = ImageUtils.dye(checkedIcon, buttonColor);
+        autoDownloadLrcCheckBox.setIconTextGap(gap);
+        autoDownloadLrcCheckBox.setIcon(icon);
+        autoDownloadLrcCheckBox.setSelectedIcon(selectedIcon);
+        videoOnlyCheckBox.setIconTextGap(gap);
+        videoOnlyCheckBox.setIcon(icon);
+        videoOnlyCheckBox.setSelectedIcon(selectedIcon);
 
         autoDownloadLrcPanel.add(autoDownloadLrcCheckBox);
+
+        videoOnlyPanel.add(videoOnlyCheckBox);
 
         musicDownPanel.add(musicDownLabel);
         musicDownPanel.add(musicDownPathTextField);
@@ -577,13 +594,13 @@ public class SettingDialog extends JDialog {
         fobPanel.add(fobLabel);
         fobPanel.add(fobComboBox);
 
-        for (String rate : rates) {
-            rateComboBox.addItem(rate);
-            if (Math.abs(f.currRate - Double.parseDouble(rate.replace("x", ""))) < 0.001)
-                rateComboBox.setSelectedItem(rate);
-        }
-        ratePanel.add(rateLabel);
-        ratePanel.add(rateComboBox);
+//        for (String rate : rates) {
+//            rateComboBox.addItem(rate);
+//            if (Math.abs(f.currRate - Double.parseDouble(rate.replace("x", ""))) < 0.001)
+//                rateComboBox.setSelectedItem(rate);
+//        }
+//        ratePanel.add(rateLabel);
+//        ratePanel.add(rateComboBox);
 
         specStyleComboBox.addItem("平地式");
         specStyleComboBox.addItem("悬空式");
@@ -605,6 +622,7 @@ public class SettingDialog extends JDialog {
         backupPanel.add(exportListButton);
 
         centerPanel.add(autoDownloadLrcPanel);
+        centerPanel.add(videoOnlyPanel);
         centerPanel.add(musicDownPanel);
         centerPanel.add(mvDownPanel);
         centerPanel.add(cachePanel);
@@ -613,7 +631,7 @@ public class SettingDialog extends JDialog {
         centerPanel.add(maxSearchHistoryCountPanel);
         centerPanel.add(closeOptionPanel);
         centerPanel.add(fobPanel);
-        centerPanel.add(ratePanel);
+//        centerPanel.add(ratePanel);
         centerPanel.add(specStylePanel);
         centerPanel.add(balancePanel);
         centerPanel.add(backupPanel);
@@ -622,6 +640,7 @@ public class SettingDialog extends JDialog {
     // 加载设置
     void initSettings() {
         autoDownloadLrcCheckBox.setSelected(f.isAutoDownloadLrc);
+        videoOnlyCheckBox.setSelected(f.videoOnly);
         musicDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath());
         mvDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
         cachePathTextField.setText(new File(SimplePath.CACHE_PATH).getAbsolutePath());
@@ -653,6 +672,7 @@ public class SettingDialog extends JDialog {
         }
 
         f.isAutoDownloadLrc = autoDownloadLrcCheckBox.isSelected();
+        f.videoOnly = videoOnlyCheckBox.isSelected();
         SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + "/";
         SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + "/";
         SimplePath.CACHE_PATH = cacheDir.getAbsolutePath() + "/";
@@ -680,8 +700,8 @@ public class SettingDialog extends JDialog {
             }
         f.currCloseWindowOption = closeOptionComboBox.getSelectedIndex();
         f.forwardOrBackwardTime = Integer.parseInt(((String) fobComboBox.getSelectedItem()).replace(" 秒", ""));
-        f.currRate = Double.parseDouble(((String) rateComboBox.getSelectedItem()).replace("x", ""));
-        f.getPlayer().setRate(f.currRate);
+//        f.currRate = Double.parseDouble(((String) rateComboBox.getSelectedItem()).replace("x", ""));
+//        f.getPlayer().setRate(f.currRate);
         f.currSpecStyle = specStyleComboBox.getSelectedIndex();
         f.currBalance = balanceComboBox.getSelectedIndex() - 1;
         f.getPlayer().setBalance(f.currBalance);

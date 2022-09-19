@@ -97,7 +97,7 @@ public class VideoDialog extends JDialog {
     // 下载图标
     private ImageIcon downloadIcon = new ImageIcon(SimplePath.ICON_PATH + "download.png");
     // 倍速图标
-    private ImageIcon rateIcon = new ImageIcon(SimplePath.ICON_PATH + "rate.png");
+    private ImageIcon rateIcon = new ImageIcon(SimplePath.ICON_PATH + "videoRate.png");
     // 快退图标
     private ImageIcon backwIcon = new ImageIcon(SimplePath.ICON_PATH + "backw.png");
     // 快进图标
@@ -144,15 +144,30 @@ public class VideoDialog extends JDialog {
     private CustomPopupMenu ratePopupMenu;
     private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
     private CustomRadioButtonMenuItem[] rateMenuItems = {
-            new CustomRadioButtonMenuItem("0.25x"),
+            new CustomRadioButtonMenuItem("0.2x"),
+            new CustomRadioButtonMenuItem("0.3x"),
+            new CustomRadioButtonMenuItem("0.4x"),
             new CustomRadioButtonMenuItem("0.5x"),
-            new CustomRadioButtonMenuItem("0.75x"),
+            new CustomRadioButtonMenuItem("0.6x"),
+            new CustomRadioButtonMenuItem("0.7x"),
+            new CustomRadioButtonMenuItem("0.8x"),
+            new CustomRadioButtonMenuItem("0.9x"),
             new CustomRadioButtonMenuItem("1x", true),
-            new CustomRadioButtonMenuItem("1.25x"),
+            new CustomRadioButtonMenuItem("1.1x"),
+            new CustomRadioButtonMenuItem("1.2x"),
+            new CustomRadioButtonMenuItem("1.3x"),
+            new CustomRadioButtonMenuItem("1.4x"),
             new CustomRadioButtonMenuItem("1.5x"),
-            new CustomRadioButtonMenuItem("1.75x"),
+            new CustomRadioButtonMenuItem("1.6x"),
+            new CustomRadioButtonMenuItem("1.7x"),
+            new CustomRadioButtonMenuItem("1.8x"),
+            new CustomRadioButtonMenuItem("1.9x"),
             new CustomRadioButtonMenuItem("2x"),
+            new CustomRadioButtonMenuItem("3x"),
             new CustomRadioButtonMenuItem("4x"),
+            new CustomRadioButtonMenuItem("5x"),
+            new CustomRadioButtonMenuItem("6x"),
+            new CustomRadioButtonMenuItem("7x"),
             new CustomRadioButtonMenuItem("8x")
     };
     private JButton fobTimeButton = new JButton("10s", fobTimeIcon);
