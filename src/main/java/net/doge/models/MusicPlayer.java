@@ -2,21 +2,18 @@ package net.doge.models;
 
 import com.mpatric.mp3agic.*;
 import it.sauronsoftware.jave.EncoderException;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.media.AudioEqualizer;
 import javafx.scene.media.EqualizerBand;
+import javafx.scene.media.MediaPlayer;
 import net.doge.constants.*;
 import net.doge.ui.PlayerFrame;
 import net.doge.utils.*;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Data;
 
 import javax.sound.sampled.*;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

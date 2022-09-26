@@ -1,7 +1,5 @@
 package net.doge.ui.componentui;
 
-import com.sun.awt.AWTUtilities;
-import net.doge.constants.Colors;
 import net.doge.constants.SimplePath;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
@@ -11,9 +9,7 @@ import net.doge.ui.renderers.ComboBoxRenderer;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicComboBoxUI;
-import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 

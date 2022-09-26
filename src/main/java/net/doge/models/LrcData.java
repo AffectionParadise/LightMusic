@@ -133,7 +133,7 @@ public class LrcData {
             {
                 Statement sm = new Statement();
                 // 设置歌词，包含 ""
-                sm.setLyric(timeNum < str.length ? str[str.length - 1] : "");
+                sm.setLyric(timeNum < str.length ? str[str.length - 1].trim() : "");
                 // 设置时间
                 sm.setTime(str[i]);
                 statements.add(sm);

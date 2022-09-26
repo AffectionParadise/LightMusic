@@ -5,7 +5,6 @@ import cn.hutool.core.thread.FinalizableDelegatedExecutorService;
 import cn.hutool.http.HttpException;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import com.sun.awt.AWTUtilities;
 import it.sauronsoftware.jave.EncoderException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -892,35 +891,35 @@ public class PlayerFrame extends JFrame {
     private CustomButton muteButton = new CustomButton(soundIcon);
     private JSlider volumeSlider = new JSlider();
     private CustomButton rateButton = new CustomButton(rateIcon);
-    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
-    private CustomRadioButtonMenuItem[] rateMenuItems = {
-            new CustomRadioButtonMenuItem("0.2x"),
-            new CustomRadioButtonMenuItem("0.3x"),
-            new CustomRadioButtonMenuItem("0.4x"),
-            new CustomRadioButtonMenuItem("0.5x"),
-            new CustomRadioButtonMenuItem("0.6x"),
-            new CustomRadioButtonMenuItem("0.7x"),
-            new CustomRadioButtonMenuItem("0.8x"),
-            new CustomRadioButtonMenuItem("0.9x"),
-            new CustomRadioButtonMenuItem("1x"),
-            new CustomRadioButtonMenuItem("1.1x"),
-            new CustomRadioButtonMenuItem("1.2x"),
-            new CustomRadioButtonMenuItem("1.3x"),
-            new CustomRadioButtonMenuItem("1.4x"),
-            new CustomRadioButtonMenuItem("1.5x"),
-            new CustomRadioButtonMenuItem("1.6x"),
-            new CustomRadioButtonMenuItem("1.7x"),
-            new CustomRadioButtonMenuItem("1.8x"),
-            new CustomRadioButtonMenuItem("1.9x"),
-            new CustomRadioButtonMenuItem("2x"),
-            new CustomRadioButtonMenuItem("3x"),
-            new CustomRadioButtonMenuItem("4x"),
-            new CustomRadioButtonMenuItem("5x"),
-            new CustomRadioButtonMenuItem("6x"),
-            new CustomRadioButtonMenuItem("7x"),
-            new CustomRadioButtonMenuItem("8x")
-    };
-    private CustomPopupMenu ratePopupMenu = new CustomPopupMenu(THIS);
+//    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
+//    private CustomRadioButtonMenuItem[] rateMenuItems = {
+//            new CustomRadioButtonMenuItem("0.2x"),
+//            new CustomRadioButtonMenuItem("0.3x"),
+//            new CustomRadioButtonMenuItem("0.4x"),
+//            new CustomRadioButtonMenuItem("0.5x"),
+//            new CustomRadioButtonMenuItem("0.6x"),
+//            new CustomRadioButtonMenuItem("0.7x"),
+//            new CustomRadioButtonMenuItem("0.8x"),
+//            new CustomRadioButtonMenuItem("0.9x"),
+//            new CustomRadioButtonMenuItem("1x"),
+//            new CustomRadioButtonMenuItem("1.1x"),
+//            new CustomRadioButtonMenuItem("1.2x"),
+//            new CustomRadioButtonMenuItem("1.3x"),
+//            new CustomRadioButtonMenuItem("1.4x"),
+//            new CustomRadioButtonMenuItem("1.5x"),
+//            new CustomRadioButtonMenuItem("1.6x"),
+//            new CustomRadioButtonMenuItem("1.7x"),
+//            new CustomRadioButtonMenuItem("1.8x"),
+//            new CustomRadioButtonMenuItem("1.9x"),
+//            new CustomRadioButtonMenuItem("2x"),
+//            new CustomRadioButtonMenuItem("3x"),
+//            new CustomRadioButtonMenuItem("4x"),
+//            new CustomRadioButtonMenuItem("5x"),
+//            new CustomRadioButtonMenuItem("6x"),
+//            new CustomRadioButtonMenuItem("7x"),
+//            new CustomRadioButtonMenuItem("8x")
+//    };
+//    private CustomPopupMenu ratePopupMenu = new CustomPopupMenu(THIS);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
     private CustomButton switchBlurButton = new CustomButton(blurOnIcon);
     private CustomButton soundEffectButton = new CustomButton(soundEffectIcon);
@@ -2286,7 +2285,7 @@ public class PlayerFrame extends JFrame {
         });
         // 窗口圆角
         setDefaultLookAndFeelDecorated(true);
-        SwingUtilities.invokeLater(() -> AWTUtilities.setWindowShape(THIS, new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 10, 10)));
+        SwingUtilities.invokeLater(() -> setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 10, 10)));
         // 窗口透明
         // setWindowOpaque 存在性能问题，别用
 //        AWTUtilities.setWindowOpaque(THIS, false);
@@ -2543,7 +2542,7 @@ public class PlayerFrame extends JFrame {
                 Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
                 setBounds(0, 0, screenSize.width, screenSize.height - insets.bottom);
                 timeBar.setPreferredSize(new Dimension(getWidth() - currTimeLabel.getWidth() - durationLabel.getWidth() - 35 * 2, 12));
-                AWTUtilities.setWindowShape(THIS, new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
+                setShape(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
                 if (isBlur) doBlur();
                 else doStyleBlur(currUIStyle);
                 windowState = WindowState.MAXIMIZED;
@@ -2555,7 +2554,7 @@ public class PlayerFrame extends JFrame {
                 setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
                 setLocationRelativeTo(null);
                 timeBar.setPreferredSize(new Dimension(getWidth() - currTimeLabel.getWidth() - durationLabel.getWidth() - 35 * 2, 12));
-                AWTUtilities.setWindowShape(THIS, new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 10, 10));
+                setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 10, 10));
                 if (isBlur) doBlur();
                 else doStyleBlur(currUIStyle);
                 windowState = WindowState.NORMAL;
@@ -2832,14 +2831,14 @@ public class PlayerFrame extends JFrame {
         forwardOrBackwardTime = config.optInt(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入速率
         currRate = config.optDouble(ConfigConstants.RATE, DEFAULT_RATE);
-        String rateStr = String.valueOf(currRate).replace(".0", "");
-        for (CustomRadioButtonMenuItem mi : rateMenuItems) {
-            if (rateStr.equals(mi.getText().replaceFirst("x", ""))) {
-                mi.setSelected(true);
-                updateRadioButtonMenuItemIcon(ratePopupMenu);
-                break;
-            }
-        }
+//        String rateStr = String.valueOf(currRate).replace(".0", "");
+//        for (CustomRadioButtonMenuItem mi : rateMenuItems) {
+//            if (rateStr.equals(mi.getText().replaceFirst("x", ""))) {
+//                mi.setSelected(true);
+//                updateRadioButtonMenuItemIcon(ratePopupMenu);
+//                break;
+//            }
+//        }
         // 载入频谱样式
         currSpecStyle = config.optInt(ConfigConstants.SPECTRUM_STYLE, SpectrumConstants.GROUND);
         // 载入均衡
@@ -12139,7 +12138,7 @@ public class PlayerFrame extends JFrame {
                 netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
             else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             try {
-                imageViewDialog = new ImageViewDialog(THIS, 30) {
+                imageViewDialog = new ImageViewDialog(THIS, netRadioInfo.isGame() ? 24 : 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
                         return MusicServerUtils.getRadioImgUrls(netRadioInfo, pn);
@@ -18473,25 +18472,29 @@ public class PlayerFrame extends JFrame {
         // 移入手势
         volumeSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         // 倍速菜单和按钮
-        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
-            menuItem.setFont(globalFont);
-            menuItem.addActionListener(e -> {
-                getPlayer().setRate(currRate = Double.parseDouble(menuItem.getText().replace("x", "")));
-                updateRadioButtonMenuItemIcon(ratePopupMenu);
-            });
-            rateMenuItemsButtonGroup.add(menuItem);
-            ratePopupMenu.add(menuItem);
-        }
+//        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
+//            menuItem.setFont(globalFont);
+//            menuItem.addActionListener(e -> {
+//                getPlayer().setRate(currRate = Double.parseDouble(menuItem.getText().replace("x", "")));
+//                updateRadioButtonMenuItemIcon(ratePopupMenu);
+//            });
+//            rateMenuItemsButtonGroup.add(menuItem);
+//            ratePopupMenu.add(menuItem);
+//        }
         rateButton.setToolTipText(RATE_TIP);
         rateButton.setFocusable(false);
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, THIS));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
-        rateButton.setComponentPopupMenu(ratePopupMenu);
-        rateButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                ratePopupMenu.show(rateButton, e.getX(), e.getY());
-            }
+//        rateButton.setComponentPopupMenu(ratePopupMenu);
+//        rateButton.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                ratePopupMenu.show(rateButton, e.getX(), e.getY());
+//            }
+//        });
+        rateButton.addActionListener(e -> {
+            RateDialog rd = new RateDialog(THIS, null, rateButton);
+            rd.showDialog();
         });
         // 频谱开关按钮
         switchSpectrumButton.setToolTipText(SWITCH_SPECTRUM_TIP);
@@ -19915,7 +19918,7 @@ public class PlayerFrame extends JFrame {
         updateMenuItemStyle(artistPopupMenu, menuItemColor);
         updateMenuItemStyle(albumPopupMenu, menuItemColor);
         updateMenuItemStyle(lrcPopupMenu, menuItemColor);
-        updateMenuItemStyle(ratePopupMenu, menuItemColor);
+//        updateMenuItemStyle(ratePopupMenu, menuItemColor);
         updateMenuItemStyle(playModePopupMenu, menuItemColor);
         updateMenuItemStyle(mainMenu, menuItemColor);
         updateMenuItemStyle(musicPopupMenu, menuItemColor);
@@ -21178,7 +21181,7 @@ public class PlayerFrame extends JFrame {
         // 更新单选菜单项和标签按钮样式
         updateRadioButtonMenuItemIcon(sortPopupMenu);
         updateRadioButtonMenuItemIcon(stylePopupMenu);
-        updateRadioButtonMenuItemIcon(ratePopupMenu);
+//        updateRadioButtonMenuItemIcon(ratePopupMenu);
         updateTabButtonStyle();
 
         // 根据选项卡选择的情况设置选项卡文字 + 图标颜色

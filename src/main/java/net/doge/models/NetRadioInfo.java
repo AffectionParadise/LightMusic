@@ -2,6 +2,7 @@ package net.doge.models;
 
 import lombok.Data;
 import net.doge.constants.NetMusicSource;
+import net.doge.constants.RadioType;
 import net.doge.utils.StringUtils;
 
 import java.awt.image.BufferedImage;
@@ -16,8 +17,8 @@ import java.util.Objects;
 public class NetRadioInfo {
     // 电台来源
     private int source = NetMusicSource.NET_CLOUD;
-    // 是否是图书 (豆瓣)
-    private boolean isBook;
+    // 类型 (豆瓣)
+    private int type;
     // 电台 id
     private String id;
     // 电台名称
@@ -40,13 +41,21 @@ public class NetRadioInfo {
     private Long playCount;
     // 节目数
     private Integer trackCount;
-    // 类型
+    // 类别
     private String category;
 //    // 创建时间
 //    private String createTime;
 
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
+
+    public boolean isBook() {
+        return type == RadioType.BOOK;
+    }
+
+    public boolean isGame() {
+        return type == RadioType.GAME;
+    }
 
     public boolean hasCoverImg() {
         return coverImg != null;

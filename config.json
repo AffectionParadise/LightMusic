@@ -2142,7 +2142,7 @@
 	"miniX":981,
 	"autoDownloadLyric":true,
 	"miniY":396,
-	"musicPlaying":5,
+	"musicPlaying":-1,
 	"rate":1,
 	"japaneseType":0,
 	"musicList":[
@@ -3423,6 +3423,7 @@
 	"showSpectrum":true,
 	"maxHistoryCount":300,
 	"radioHistorySearch":[
+		"1",
 		"伏击",
 		"你",
 		"代码时间",

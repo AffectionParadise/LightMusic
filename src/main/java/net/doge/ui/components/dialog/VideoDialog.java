@@ -141,35 +141,35 @@ public class VideoDialog extends JDialog {
     private JButton collectButton = new JButton(collectIcon);
     private JButton downloadButton = new JButton(downloadIcon);
     private JButton rateButton = new JButton("1x", rateIcon);
-    private CustomPopupMenu ratePopupMenu;
-    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
-    private CustomRadioButtonMenuItem[] rateMenuItems = {
-            new CustomRadioButtonMenuItem("0.2x"),
-            new CustomRadioButtonMenuItem("0.3x"),
-            new CustomRadioButtonMenuItem("0.4x"),
-            new CustomRadioButtonMenuItem("0.5x"),
-            new CustomRadioButtonMenuItem("0.6x"),
-            new CustomRadioButtonMenuItem("0.7x"),
-            new CustomRadioButtonMenuItem("0.8x"),
-            new CustomRadioButtonMenuItem("0.9x"),
-            new CustomRadioButtonMenuItem("1x", true),
-            new CustomRadioButtonMenuItem("1.1x"),
-            new CustomRadioButtonMenuItem("1.2x"),
-            new CustomRadioButtonMenuItem("1.3x"),
-            new CustomRadioButtonMenuItem("1.4x"),
-            new CustomRadioButtonMenuItem("1.5x"),
-            new CustomRadioButtonMenuItem("1.6x"),
-            new CustomRadioButtonMenuItem("1.7x"),
-            new CustomRadioButtonMenuItem("1.8x"),
-            new CustomRadioButtonMenuItem("1.9x"),
-            new CustomRadioButtonMenuItem("2x"),
-            new CustomRadioButtonMenuItem("3x"),
-            new CustomRadioButtonMenuItem("4x"),
-            new CustomRadioButtonMenuItem("5x"),
-            new CustomRadioButtonMenuItem("6x"),
-            new CustomRadioButtonMenuItem("7x"),
-            new CustomRadioButtonMenuItem("8x")
-    };
+    //    private CustomPopupMenu ratePopupMenu;
+//    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
+//    private CustomRadioButtonMenuItem[] rateMenuItems = {
+//            new CustomRadioButtonMenuItem("0.2x"),
+//            new CustomRadioButtonMenuItem("0.3x"),
+//            new CustomRadioButtonMenuItem("0.4x"),
+//            new CustomRadioButtonMenuItem("0.5x"),
+//            new CustomRadioButtonMenuItem("0.6x"),
+//            new CustomRadioButtonMenuItem("0.7x"),
+//            new CustomRadioButtonMenuItem("0.8x"),
+//            new CustomRadioButtonMenuItem("0.9x"),
+//            new CustomRadioButtonMenuItem("1x", true),
+//            new CustomRadioButtonMenuItem("1.1x"),
+//            new CustomRadioButtonMenuItem("1.2x"),
+//            new CustomRadioButtonMenuItem("1.3x"),
+//            new CustomRadioButtonMenuItem("1.4x"),
+//            new CustomRadioButtonMenuItem("1.5x"),
+//            new CustomRadioButtonMenuItem("1.6x"),
+//            new CustomRadioButtonMenuItem("1.7x"),
+//            new CustomRadioButtonMenuItem("1.8x"),
+//            new CustomRadioButtonMenuItem("1.9x"),
+//            new CustomRadioButtonMenuItem("2x"),
+//            new CustomRadioButtonMenuItem("3x"),
+//            new CustomRadioButtonMenuItem("4x"),
+//            new CustomRadioButtonMenuItem("5x"),
+//            new CustomRadioButtonMenuItem("6x"),
+//            new CustomRadioButtonMenuItem("7x"),
+//            new CustomRadioButtonMenuItem("8x")
+//    };
     private JButton fobTimeButton = new JButton("10s", fobTimeIcon);
     private CustomPopupMenu fobTimePopupMenu;
     private ButtonGroup fobTimeMenuItemsButtonGroup = new ButtonGroup();
@@ -191,7 +191,7 @@ public class VideoDialog extends JDialog {
     private String uri;
 
     private Media media;
-    private MediaPlayer mp;
+    public MediaPlayer mp;
     private MediaView mediaView;
 
     // 全局字体
@@ -534,20 +534,20 @@ public class VideoDialog extends JDialog {
             downloadMv();
         });
         // 倍速
-        ratePopupMenu = new CustomPopupMenu(f);
-        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
-            menuItem.setFont(globalFont);
-            Color menuItemColor = style.getMenuItemColor();
-            menuItem.setForeground(menuItemColor);
-            menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
-            menuItem.addActionListener(e -> {
-                mp.setRate(Double.parseDouble(menuItem.getText().replace("x", "")));
-                rateButton.setText(menuItem.getText());
-                updateRadioButtonMenuItemIcon();
-            });
-            rateMenuItemsButtonGroup.add(menuItem);
-            ratePopupMenu.add(menuItem);
-        }
+//        ratePopupMenu = new CustomPopupMenu(f);
+//        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
+//            menuItem.setFont(globalFont);
+//            Color menuItemColor = style.getMenuItemColor();
+//            menuItem.setForeground(menuItemColor);
+//            menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
+//            menuItem.addActionListener(e -> {
+//                mp.setRate(Double.parseDouble(menuItem.getText().replace("x", "")));
+//                rateButton.setText(menuItem.getText());
+//                updateRadioButtonMenuItemIcon();
+//            });
+//            rateMenuItemsButtonGroup.add(menuItem);
+//            ratePopupMenu.add(menuItem);
+//        }
         rateButton.setFont(globalFont);
         rateButton.setForeground(style.getButtonColor());
         rateButton.setToolTipText(RATE_TIP);
@@ -556,13 +556,17 @@ public class VideoDialog extends JDialog {
         rateButton.setContentAreaFilled(false);
         rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getButtonColor()));
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, f));
-        rateButton.setComponentPopupMenu(ratePopupMenu);
-        rateButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                ratePopupMenu.show(rateButton, e.getX(), e.getY());
-            }
+        rateButton.addActionListener(e -> {
+            RateDialog rd = new RateDialog(f, this, rateButton);
+            rd.showDialog();
         });
+//        rateButton.setComponentPopupMenu(ratePopupMenu);
+//        rateButton.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                ratePopupMenu.show(rateButton, e.getX(), e.getY());
+//            }
+//        });
         // 快进/快退时间
         fobTimePopupMenu = new CustomPopupMenu(f);
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
@@ -651,13 +655,13 @@ public class VideoDialog extends JDialog {
 
     // 改变所有单选菜单项图标
     void updateRadioButtonMenuItemIcon() {
-        Component[] components = ratePopupMenu.getComponents();
-        for (Component c : components) {
-            CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, style.getMenuItemColor()));
-            else mi.setIcon(null);
-        }
-        components = fobTimePopupMenu.getComponents();
+//        Component[] components = ratePopupMenu.getComponents();
+//        for (Component c : components) {
+//            CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
+//            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, style.getMenuItemColor()));
+//            else mi.setIcon(null);
+//        }
+        Component[] components = fobTimePopupMenu.getComponents();
         for (Component c : components) {
             CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
             if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, style.getMenuItemColor()));

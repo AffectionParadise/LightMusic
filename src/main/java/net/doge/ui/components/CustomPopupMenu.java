@@ -1,16 +1,12 @@
 package net.doge.ui.components;
 
-import com.sun.awt.AWTUtilities;
 import net.doge.constants.Colors;
-import net.doge.models.MusicPlayer;
 import net.doge.ui.PlayerFrame;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.basic.DefaultMenuLayout;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 /**
  * @Author yzx
@@ -52,7 +48,8 @@ public class CustomPopupMenu extends JPopupMenu {
                 w.setVisible(false);
                 w.setBackground(Color.black);
             }
-            AWTUtilities.setWindowOpaque(w, false);
+            w.setBackground(Colors.TRANSLUCENT);
+//            AWTUtilities.setWindowOpaque(w, false);
             w.setVisible(true);
         }
         f.currPopup = b ? this : null;

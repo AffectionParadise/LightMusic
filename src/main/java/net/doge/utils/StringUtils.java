@@ -240,7 +240,7 @@ public class StringUtils {
                 Element childElement = (Element) child;
                 working.append(getPrettyText(childElement));
                 String s = childElement.tag().getName().toLowerCase();
-                if (s.equals("br") || s.equals("li") || s.equals("p")) {
+                if (s.equals("br") || s.equals("li") || s.equals("p") || s.equals("dd")) {
                     working.append("\n");
                 }
             }

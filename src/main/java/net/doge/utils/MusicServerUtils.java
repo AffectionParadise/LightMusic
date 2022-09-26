@@ -327,6 +327,9 @@ public class MusicServerUtils {
     // 关键词搜索图书电台 API(豆瓣)
     private static final String SEARCH_BOOK_RADIO_DB_API
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1001";
+    // 关键词搜索游戏电台 API(豆瓣)
+    private static final String SEARCH_GAME_RADIO_DB_API
+            = "https://www.douban.com/j/search?q=%s&start=%s&cat=3114";
 
     // 关键词搜索 MV API
     private static final String SEARCH_MV_API
@@ -425,6 +428,9 @@ public class MusicServerUtils {
     // 获取图书电台评论 API (豆瓣)
     private static final String GET_BOOK_RADIO_COMMENTS_DB_API
             = "https://book.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    // 获取游戏电台评论 API (豆瓣)
+    private static final String GET_GAME_RADIO_COMMENTS_DB_API
+            = "https://www.douban.com/game/%s/comments?sort=%s&start=%s";
     // 获取专辑评论 API (豆瓣)
     private static final String GET_ALBUM_COMMENTS_DB_API
             = "https://music.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
@@ -448,6 +454,9 @@ public class MusicServerUtils {
     // 获取电台海报 API (豆瓣)
     private static final String GET_RADIO_POSTER_DB_API
             = "https://movie.douban.com/subject/%s/photos?type=R&start=%s&sortby=like&size=a&subtype=a";
+    // 获取游戏电台照片 API (豆瓣)
+    private static final String GET_GAME_RADIO_IMG_DB_API
+            = "https://www.douban.com/game/%s/photos/?type=all&start=%s&sortby=hot";
 
     /**
      * 加载推荐歌单标签
@@ -1210,6 +1219,9 @@ public class MusicServerUtils {
     // 电台标签 API (豆瓣)
     private static final String RADIO_TAG_DB_API
             = "https://movie.douban.com/chart";
+    // 游戏电台标签 API (豆瓣)
+    private static final String GAME_RADIO_TAG_DB_API
+            = "https://www.douban.com/game/explore";
 
     /**
      * 加载电台标签
@@ -1217,37 +1229,37 @@ public class MusicServerUtils {
      * @return
      */
     public static void initRadioTag() {
-        Tags.radioTag.put("默认", new String[]{"", "", "", "", "", "0 0 0", ""});
+        Tags.radioTag.put("默认", new String[]{"", "", "", "", "", "0 0 0", "", " "});
 
         // 喜马拉雅频道
-        Tags.radioTag.put("小说", new String[]{"", "", "", "", "7", "", ""});
-        Tags.radioTag.put("儿童", new String[]{"", "", "", "", "11", "", ""});
-        Tags.radioTag.put("相声小品", new String[]{"", "", "", "", "9", "", ""});
-        Tags.radioTag.put("评书", new String[]{"", "", "", "", "10", "", ""});
-        Tags.radioTag.put("娱乐", new String[]{"", "", "", "", "13", "", ""});
-        Tags.radioTag.put("悬疑", new String[]{"", "", "", "", "14", "", ""});
-        Tags.radioTag.put("人文", new String[]{"", "", "", "", "17", "", ""});
-        Tags.radioTag.put("国学", new String[]{"", "", "", "", "18", "", ""});
-        Tags.radioTag.put("头条", new String[]{"", "", "", "", "24", "", ""});
-        Tags.radioTag.put("音乐", new String[]{"", "", "", "", "19", "", ""});
-        Tags.radioTag.put("历史", new String[]{"", "", "", "", "16", "", ""});
-        Tags.radioTag.put("情感", new String[]{"", "", "", "", "20", "", ""});
-        Tags.radioTag.put("投资理财", new String[]{"", "", "", "", "26", "", ""});
-        Tags.radioTag.put("个人提升", new String[]{"", "", "", "", "31", "", ""});
-        Tags.radioTag.put("健康", new String[]{"", "", "", "", "22", "", ""});
-        Tags.radioTag.put("生活", new String[]{"", "", "", "", "21", "", ""});
-        Tags.radioTag.put("影视", new String[]{"", "", "", "", "15", "", ""});
-        Tags.radioTag.put("商业管理", new String[]{"", "", "", "", "27", "", ""});
-        Tags.radioTag.put("英语", new String[]{"", "", "", "", "29", "", ""});
-        Tags.radioTag.put("少儿素养", new String[]{"", "", "", "", "12", "", ""});
-        Tags.radioTag.put("科技", new String[]{"", "", "", "", "28", "", ""});
-        Tags.radioTag.put("教育考试", new String[]{"", "", "", "", "32", "", ""});
-        Tags.radioTag.put("体育", new String[]{"", "", "", "", "25", "", ""});
-        Tags.radioTag.put("小语种", new String[]{"", "", "", "", "30", "", ""});
-        Tags.radioTag.put("广播剧", new String[]{"", "", "", "", "8", "", ""});
-        Tags.radioTag.put("汽车", new String[]{"", "", "", "", "23", "", ""});
+        Tags.radioTag.put("小说", new String[]{"", "", "", "", "7", "", "", " "});
+        Tags.radioTag.put("儿童", new String[]{"", "", "", "", "11", "", "", " "});
+        Tags.radioTag.put("相声小品", new String[]{"", "", "", "", "9", "", "", " "});
+        Tags.radioTag.put("评书", new String[]{"", "", "", "", "10", "", "", " "});
+        Tags.radioTag.put("娱乐", new String[]{"", "", "", "", "13", "", "", " "});
+        Tags.radioTag.put("悬疑", new String[]{"", "", "", "", "14", "", "", " "});
+        Tags.radioTag.put("人文", new String[]{"", "", "", "", "17", "", "", " "});
+        Tags.radioTag.put("国学", new String[]{"", "", "", "", "18", "", "", " "});
+        Tags.radioTag.put("头条", new String[]{"", "", "", "", "24", "", "", " "});
+        Tags.radioTag.put("音乐", new String[]{"", "", "", "", "19", "", "", " "});
+        Tags.radioTag.put("历史", new String[]{"", "", "", "", "16", "", "", " "});
+        Tags.radioTag.put("情感", new String[]{"", "", "", "", "20", "", "", " "});
+        Tags.radioTag.put("投资理财", new String[]{"", "", "", "", "26", "", "", " "});
+        Tags.radioTag.put("个人提升", new String[]{"", "", "", "", "31", "", "", " "});
+        Tags.radioTag.put("健康", new String[]{"", "", "", "", "22", "", "", " "});
+        Tags.radioTag.put("生活", new String[]{"", "", "", "", "21", "", "", " "});
+        Tags.radioTag.put("影视", new String[]{"", "", "", "", "15", "", "", " "});
+        Tags.radioTag.put("商业管理", new String[]{"", "", "", "", "27", "", "", " "});
+        Tags.radioTag.put("英语", new String[]{"", "", "", "", "29", "", "", " "});
+        Tags.radioTag.put("少儿素养", new String[]{"", "", "", "", "12", "", "", " "});
+        Tags.radioTag.put("科技", new String[]{"", "", "", "", "28", "", "", " "});
+        Tags.radioTag.put("教育考试", new String[]{"", "", "", "", "32", "", "", " "});
+        Tags.radioTag.put("体育", new String[]{"", "", "", "", "25", "", "", " "});
+        Tags.radioTag.put("小语种", new String[]{"", "", "", "", "30", "", "", " "});
+        Tags.radioTag.put("广播剧", new String[]{"", "", "", "", "8", "", "", " "});
+        Tags.radioTag.put("汽车", new String[]{"", "", "", "", "23", "", "", " "});
 
-        final int c = 7;
+        final int c = 8;
         // 网易云
         // 分类热门电台标签
         Runnable initHotRadioTag = () -> {
@@ -1374,6 +1386,34 @@ public class MusicServerUtils {
                 Tags.radioTag.get(name)[6] = id;
             }
         };
+        // 分类游戏电台标签
+        Runnable initGameRadioTagDb = () -> {
+            String radioTagBody = HttpRequest.get(String.format(GAME_RADIO_TAG_DB_API))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(radioTagBody);
+            Elements fieldset = doc.select("form.filters fieldset");
+            Elements tags = fieldset.first().select("label:not(.is-active)");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                Element tag = tags.get(i);
+
+                String name = tag.text();
+                String id = tag.getElementsByTag("input").attr("value");
+
+                if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
+                Tags.radioTag.get(name)[7] = id + " ";
+            }
+            tags = fieldset.last().select("label:not(.is-active)");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                Element tag = tags.get(i);
+
+                String name = tag.text();
+                String id = tag.getElementsByTag("input").attr("value");
+
+                if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
+                Tags.radioTag.get(name)[7] = " " + id;
+            }
+        };
 
         List<Future<?>> taskList = new LinkedList<>();
 
@@ -1383,6 +1423,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(initRankingTagXm));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRadioTagMe));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRadioTagDb));
+        taskList.add(GlobalExecutors.requestExecutor.submit(initGameRadioTagDb));
 
         taskList.forEach(task -> {
             try {
@@ -1446,6 +1487,9 @@ public class MusicServerUtils {
     // 分类电台总数 API (豆瓣)
     private static final String CAT_RADIO_TOTAL_DB_API
             = "https://movie.douban.com/j/chart/top_list_count?type=%s&interval_id=100:90";
+    // 分类游戏电台 API (豆瓣)
+    private static final String CAT_GAME_RADIO_DB_API
+            = "https://www.douban.com/j/ilmen/game/search?genres=%s&platforms=%s&more=%s&sort=rating";
 
     // 探索节目标签 API (猫耳)
     private static final String EXP_PROGRAM_TAG_ME_API
@@ -1845,6 +1889,8 @@ public class MusicServerUtils {
     private static final String RADIO_DETAIL_DB_API = "https://movie.douban.com/subject/%s/";
     // 图书电台信息 API (豆瓣)
     private static final String BOOK_RADIO_DETAIL_DB_API = "https://book.douban.com/subject/%s/";
+    // 游戏电台信息 API (豆瓣)
+    private static final String GAME_RADIO_DETAIL_DB_API = "https://www.douban.com/game/%s/";
 
     // MV 信息 API
     private static final String MV_DETAIL_API = prefix + "/mv/detail?mvid=%s";
@@ -1987,6 +2033,8 @@ public class MusicServerUtils {
     private static final String SIMILAR_RADIO_DB_API = "https://movie.douban.com/subject/%s/";
     // 相似图书电台 API (豆瓣)
     private static final String SIMILAR_BOOK_RADIO_DB_API = "https://book.douban.com/subject/%s/";
+    // 相似游戏电台 API (豆瓣)
+    private static final String SIMILAR_GAME_RADIO_DB_API = "https://www.douban.com/game/%s/";
     // 相似专辑 API (豆瓣)
     private static final String SIMILAR_ALBUM_DB_API = "https://music.douban.com/subject/%s/";
 
@@ -4117,7 +4165,47 @@ public class MusicServerUtils {
                 String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setBook(true);
+                radioInfo.setType(RadioType.BOOK);
+                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setId(radioId);
+                radioInfo.setName(radioName);
+                radioInfo.setDj(dj);
+                radioInfo.setCategory(category);
+                radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    radioInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(radioInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 豆瓣游戏
+        Callable<CommonResult<NetRadioInfo>> searchGameRadiosDb = () -> {
+            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String radioInfoBody = HttpRequest.get(String.format(SEARCH_GAME_RADIO_DB_API, encodedKeyword, (page - 1) * limit))
+                    .execute()
+                    .body();
+            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            t = radioInfoJson.getInt("total");
+            JSONArray radioArray = radioInfoJson.getJSONArray("items");
+            for (int i = 0, len = radioArray.size(); i < len; i++) {
+                Document doc = Jsoup.parse(radioArray.getString(i));
+                Elements result = doc.select("div.result");
+                Elements a = result.select("h3 a");
+                Elements span = result.select(".title h3 span");
+
+                String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                String radioName = a.text().trim();
+                String dj = result.select("span.subject-cast").text();
+                String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
+
+                NetRadioInfo radioInfo = new NetRadioInfo();
+                radioInfo.setType(RadioType.GAME);
                 radioInfo.setSource(NetMusicSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
@@ -4141,6 +4229,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosMe));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosDb));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchBookRadiosDb));
+        taskList.add(GlobalExecutors.requestExecutor.submit(searchGameRadiosDb));
 
         List<List<NetRadioInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -5088,7 +5177,7 @@ public class MusicServerUtils {
         Integer source = 0;
         boolean hotOnly = "热门评论".equals(type);
 
-        boolean isRadio = false, isBook = false;
+        boolean isRadio = false, isBook = false, isGame = false;
 
         if (info instanceof NetMusicInfo) {
             NetMusicInfo netMusicInfo = (NetMusicInfo) info;
@@ -5133,6 +5222,7 @@ public class MusicServerUtils {
             source = netRadioInfo.getSource();
             isRadio = true;
             isBook = netRadioInfo.isBook();
+            isGame = netRadioInfo.isGame();
             typeStr = new String[]{"7", "", "", ""};
         } else if (info instanceof NetMvInfo) {
             NetMvInfo netMvInfo = (NetMvInfo) info;
@@ -5529,50 +5619,93 @@ public class MusicServerUtils {
 
         // 豆瓣
         else if (source == NetMusicSource.DB) {
-            String url = isRadio ? isBook ? GET_BOOK_RADIO_COMMENTS_DB_API : GET_RADIO_COMMENTS_DB_API : GET_ALBUM_COMMENTS_DB_API;
-            String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "new_score" : "time", (page - 1) * limit, limit))
-                    .setFollowRedirects(true)
-                    .execute()
-                    .body();
-            Document doc = Jsoup.parse(commentInfoBody);
-            Elements comments = doc.select(isRadio && !isBook ? "div.comment-item" : "li.comment-item");
-            String ts = ReUtil.get("\\((\\d+)\\)", doc.select("li.is-active").text(), 1);
-            total = StringUtils.isNotEmpty(ts) ? Integer.parseInt(ts) : comments.size();
-            for (int i = 0, len = comments.size(); i < len; i++) {
-                Element comment = comments.get(i);
-                Element a = comment.select("span.comment-info a").first();
-                Element img = comment.select("div.avatar img").first();
-                Element cnt = comment.select("p.comment-content").first();
-                Element t = comment.select(isBook ? "a.comment-time" : "span.comment-time").first();
-                Element v = comment.select("span.vote-count").first();
-                Element rating = comment.select("span.comment-info span").get(isRadio && !isBook ? 1 : 0);
+            if (isGame) {
+                String url = GET_GAME_RADIO_COMMENTS_DB_API;
+                String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "score" : "time", (page - 1) * limit, limit))
+                        .setFollowRedirects(true)
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(commentInfoBody);
+                Elements comments = doc.select("li.comment-item");
+                String ts = ReUtil.get("\\((\\d+)\\)", doc.select("div#content h1").text(), 1);
+                total = StringUtils.isNotEmpty(ts) ? Integer.parseInt(ts) : comments.size();
+                for (int i = 0, len = comments.size(); i < len; i++) {
+                    Element comment = comments.get(i);
+                    Element a = comment.select("div.user-info a").first();
+                    Element sht = comment.select("span.short").first();
+                    Element t = comment.select("span.pubtime").first();
+                    Element d = comment.select("span.digg span").first();
+                    Elements rating = comment.select("div.user-info span");
 
-                String userId = ReUtil.get("/people/(.*?)/", a.attr("href"), 1);
-                String username = a.text();
-                String src = img.attr("src");
-                String profileUrl = src.contains("/user") ? src.replaceFirst("normal", "large") : src.replaceFirst(isRadio ? "/u" : "/up", "/ul");
-                String content = cnt.text();
-                String time = TimeUtils.strToPhrase(t.text().trim());
-                Integer likedCount = Integer.parseInt(v.text());
-                String r = ReUtil.get("(\\d+) ", rating.className(), 1);
-                Integer score = StringUtils.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
+                    String userId = ReUtil.get("/people/(.*?)/", a.attr("href"), 1);
+                    String username = a.text();
+                    String content = sht.text();
+                    String time = TimeUtils.strToPhrase(t.text().replaceAll("年|月", "-").replace("日", ""));
+                    Integer likedCount = Integer.parseInt(d.text());
+                    String r = ReUtil.get("allstar(\\d+)", rating.size() > 1 ? rating.get(1).className() : "", 1);
+                    Integer score = StringUtils.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
 
-                NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.DB);
-                commentInfo.setUserId(userId);
-                commentInfo.setUsername(username);
-                commentInfo.setProfileUrl(profileUrl);
-                commentInfo.setContent(content);
-                commentInfo.setTime(time);
-                commentInfo.setLikedCount(likedCount);
-                commentInfo.setScore(score);
+                    NetCommentInfo commentInfo = new NetCommentInfo();
+                    commentInfo.setSource(NetMusicSource.DB);
+                    commentInfo.setUserId(userId);
+                    commentInfo.setUsername(username);
+                    commentInfo.setContent(content);
+                    commentInfo.setTime(time);
+                    commentInfo.setLikedCount(likedCount);
+                    commentInfo.setScore(score);
 
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage profile = extractProfile(profileUrl);
-                    commentInfo.setProfile(profile);
-                });
+                    commentInfos.add(commentInfo);
+                }
+            } else {
+                String url;
+                if (isRadio) {
+                    if (isBook) url = GET_BOOK_RADIO_COMMENTS_DB_API;
+                    else url = GET_RADIO_COMMENTS_DB_API;
+                } else url = GET_ALBUM_COMMENTS_DB_API;
+                String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "new_score" : "time", (page - 1) * limit, limit))
+                        .setFollowRedirects(true)
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(commentInfoBody);
+                Elements comments = doc.select(isRadio && !isBook ? "div.comment-item" : "li.comment-item");
+                String ts = ReUtil.get("\\((\\d+)\\)", doc.select("li.is-active").text(), 1);
+                total = StringUtils.isNotEmpty(ts) ? Integer.parseInt(ts) : comments.size();
+                for (int i = 0, len = comments.size(); i < len; i++) {
+                    Element comment = comments.get(i);
+                    Element a = comment.select("span.comment-info a").first();
+                    Element img = comment.select("div.avatar img").first();
+                    Element cnt = comment.select("p.comment-content").first();
+                    Element t = comment.select(isBook ? "a.comment-time" : "span.comment-time").first();
+                    Element v = comment.select("span.vote-count").first();
+                    Element rating = comment.select("span.comment-info span").get(isRadio && !isBook ? 1 : 0);
 
-                commentInfos.add(commentInfo);
+                    String userId = ReUtil.get("/people/(.*?)/", a.attr("href"), 1);
+                    String username = a.text();
+                    String src = img.attr("src");
+                    String profileUrl = src.contains("/user") ? src.replaceFirst("normal", "large") : src.replaceFirst(isRadio ? "/u" : "/up", "/ul");
+                    String content = cnt.text();
+                    String time = TimeUtils.strToPhrase(t.text().trim());
+                    Integer likedCount = Integer.parseInt(v.text());
+                    String r = ReUtil.get("(\\d+) ", rating.className(), 1);
+                    Integer score = StringUtils.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
+
+                    NetCommentInfo commentInfo = new NetCommentInfo();
+                    commentInfo.setSource(NetMusicSource.DB);
+                    commentInfo.setUserId(userId);
+                    commentInfo.setUsername(username);
+                    commentInfo.setProfileUrl(profileUrl);
+                    commentInfo.setContent(content);
+                    commentInfo.setTime(time);
+                    commentInfo.setLikedCount(likedCount);
+                    commentInfo.setScore(score);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = extractProfile(profileUrl);
+                        commentInfo.setProfile(profile);
+                    });
+
+                    commentInfos.add(commentInfo);
+                }
             }
         }
 
@@ -5722,22 +5855,38 @@ public class MusicServerUtils {
         int source = radioInfo.getSource();
         String id = radioInfo.getId();
         boolean isBook = radioInfo.isBook();
+        boolean isGame = radioInfo.isGame();
         LinkedList<String> imgUrls = new LinkedList<>();
         Integer total = 0;
-        final int limit = 30;
+        final int limit = isGame ? 24 : 30;
 
-        if (source == NetMusicSource.DB && !isBook) {
-            String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_IMG_DB_API, id, (page - 1) * limit))
-                    .execute()
-                    .body();
-            Document doc = Jsoup.parse(imgInfoBody);
-            Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
-            String t = ReUtil.get("共(\\d+)张", doc.select("span.count").text(), 1);
-            total = StringUtils.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
-            for (int i = 0, len = imgs.size(); i < len; i++) {
-                Element img = imgs.get(i);
-                String url = img.attr("src").replaceFirst("/m/", "/l/");
-                imgUrls.add(url);
+        if (source == NetMusicSource.DB) {
+            if (isGame) {
+                String imgInfoBody = HttpRequest.get(String.format(GET_GAME_RADIO_IMG_DB_API, id, (page - 1) * limit))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(imgInfoBody);
+                Elements imgs = doc.select("div.pholist ul img");
+                String t = ReUtil.get("共(\\d+)张", doc.select("span.count").text(), 1);
+                total = StringUtils.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
+                for (int i = 0, len = imgs.size(); i < len; i++) {
+                    Element img = imgs.get(i);
+                    String url = img.attr("src").replaceFirst("/thumb/", "/photo/");
+                    imgUrls.add(url);
+                }
+            } else if (!isBook) {
+                String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_IMG_DB_API, id, (page - 1) * limit))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(imgInfoBody);
+                Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
+                String t = ReUtil.get("共(\\d+)张", doc.select("span.count").text(), 1);
+                total = StringUtils.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
+                for (int i = 0, len = imgs.size(); i < len; i++) {
+                    Element img = imgs.get(i);
+                    String url = img.attr("src").replaceFirst("/m/", "/l/");
+                    imgUrls.add(url);
+                }
             }
         }
 
@@ -8842,6 +8991,46 @@ public class MusicServerUtils {
             }
             return new CommonResult<>(res, t);
         };
+        // 分类游戏电台
+        Callable<CommonResult<NetRadioInfo>> getCatGameRadiosDb = () -> {
+            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
+                String radioInfoBody = HttpRequest.get(String.format(CAT_GAME_RADIO_DB_API, sp[0], sp[1], page))
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(radioInfoBody);
+                JSONArray radioArray = data.getJSONArray("games");
+                t = data.getInt("total");
+                for (int i = 0, len = radioArray.size(); i < len; i++) {
+                    JSONObject radioJson = radioArray.getJSONObject(i);
+
+                    String radioId = radioJson.getString("id");
+                    String radioName = radioJson.getString("title");
+                    String dj = radioJson.getString("platforms");
+                    String coverImgThumbUrl = radioJson.getString("cover");
+                    String category = radioJson.getString("genres");
+
+                    NetRadioInfo radioInfo = new NetRadioInfo();
+                    radioInfo.setType(RadioType.GAME);
+                    radioInfo.setSource(NetMusicSource.DB);
+                    radioInfo.setId(radioId);
+                    radioInfo.setName(radioName);
+                    radioInfo.setDj(dj);
+                    radioInfo.setCategory(category);
+                    radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        radioInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(radioInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
 
@@ -8859,6 +9048,7 @@ public class MusicServerUtils {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosMe));
 
             taskList.add(GlobalExecutors.requestExecutor.submit(getTopRadiosDb));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatGameRadiosDb));
         } else {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatHotRadios));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatRecRadios));
@@ -8870,6 +9060,7 @@ public class MusicServerUtils {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosMe));
 
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosDb));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatGameRadiosDb));
         }
 
         List<List<NetRadioInfo>> rl = new LinkedList<>();
@@ -11657,6 +11848,7 @@ public class MusicServerUtils {
         int source = radioInfo.getSource();
         String id = radioInfo.getId();
         boolean isBook = radioInfo.isBook();
+        boolean isGame = radioInfo.isGame();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
@@ -11723,25 +11915,54 @@ public class MusicServerUtils {
 
         // 豆瓣
         else if (source == NetMusicSource.DB) {
-            String radioInfoBody = HttpRequest.get(String.format(isBook ? BOOK_RADIO_DETAIL_DB_API : RADIO_DETAIL_DB_API, id))
-                    .execute()
-                    .body();
-            Document doc = Jsoup.parse(radioInfoBody);
-            String info = StringUtils.getPrettyText(doc.select("div#info").first()) + "\n";
-            Elements re = doc.select("div#link-report");
-            Elements span = re.select("span");
-            Element intro = doc.select("div.intro").last();
-            Element cata = doc.select(String.format("div#dir_%s_full", id)).first();
-            Element tr = doc.select("div.subject_show.block5:not(#rec-ebook-section) div").first();
+            if (isBook) {
+                String radioInfoBody = HttpRequest.get(String.format(BOOK_RADIO_DETAIL_DB_API, id))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(radioInfoBody);
+                String info = StringUtils.getPrettyText(doc.select("div#info").first()) + "\n";
+                Elements re = doc.select("div#link-report");
+                Elements span = re.select("span");
+                Element intro = doc.select("div.intro").last();
+                Element cata = doc.select(String.format("div#dir_%s_full", id)).first();
+                Element tr = doc.select("div.subject_show.block5:not(#rec-ebook-section) div").first();
 
-            String desc = StringUtils.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
-            String authorIntro = StringUtils.getPrettyText(intro) + "\n";
-            String catalog = StringUtils.getPrettyText(cata) + "\n\n";
-            String trace = StringUtils.getPrettyText(tr);
-            String coverImgUrl = doc.select("div#mainpic img").attr("src");
+                String desc = StringUtils.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
+                String authorIntro = StringUtils.getPrettyText(intro) + "\n";
+                String catalog = StringUtils.getPrettyText(cata) + "\n\n";
+                String trace = StringUtils.getPrettyText(tr);
+                String coverImgUrl = doc.select("div#mainpic img").attr("src");
 
-            radioInfo.setDescription(info + desc + "作者简介：\n" + authorIntro + "目录：\n" + catalog + "丛书信息：\n" + trace);
-            GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+                radioInfo.setDescription(info + desc + "作者简介：\n" + authorIntro + "目录：\n" + catalog + "丛书信息：\n" + trace);
+                GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+            } else if (isGame) {
+                String radioInfoBody = HttpRequest.get(String.format(GAME_RADIO_DETAIL_DB_API, id))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(radioInfoBody);
+                String info = StringUtils.getPrettyText(doc.select("dl.game-attr").first()) + "\n";
+                Element p = doc.select("div#link-report p").first();
+
+                String desc = StringUtils.getPrettyText(p) + "\n";
+                String coverImgUrl = doc.select("div.pic img").attr("src");
+
+                radioInfo.setDescription(info + desc);
+                GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+            } else {
+                String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_DB_API, id))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(radioInfoBody);
+                String info = StringUtils.getPrettyText(doc.select("div#info").first()) + "\n";
+                Elements re = doc.select("div#link-report");
+                Elements span = re.select("span");
+
+                String desc = StringUtils.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
+                String coverImgUrl = doc.select("div#mainpic img").attr("src");
+
+                radioInfo.setDescription(info + desc);
+                GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+            }
         }
     }
 
@@ -14591,7 +14812,7 @@ public class MusicServerUtils {
                     String category = "书籍";
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
-                    radioInfo.setBook(true);
+                    radioInfo.setType(RadioType.BOOK);
                     radioInfo.setSource(NetMusicSource.DB);
                     radioInfo.setId(radioId);
                     radioInfo.setName(radioName);
@@ -15502,29 +15723,32 @@ public class MusicServerUtils {
         int source = radioInfo.getSource();
         String id = radioInfo.getId();
         boolean isBook = radioInfo.isBook();
+        boolean isGame = radioInfo.isGame();
 
         LinkedList<NetRadioInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 豆瓣
         if (source == NetMusicSource.DB) {
-            String artistInfoBody = HttpRequest.get(String.format(isBook ? SIMILAR_BOOK_RADIO_DB_API : SIMILAR_RADIO_DB_API, id))
+            String artistInfoBody = HttpRequest.get(String.format(isBook ? SIMILAR_BOOK_RADIO_DB_API
+                            : isGame ? SIMILAR_GAME_RADIO_DB_API : SIMILAR_RADIO_DB_API, id))
                     .execute()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
-            Elements rs = doc.select(isBook ? "div#db-rec-section dl:not(.clear)" : "div.recommendations-bd dl");
+            Elements rs = doc.select(isBook ? "div#db-rec-section dl:not(.clear)"
+                    : isGame ? "div.list.fav-list li" : "div.recommendations-bd dl");
             t = rs.size();
             for (int i = 0, len = rs.size(); i < len; i++) {
                 Element radio = rs.get(i);
-                Element a = radio.select("dd a").first();
+                Element a = radio.select(isGame ? "div.text a" : "dd a").first();
                 Element img = radio.select("img").first();
 
-                String radioId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+                String radioId = ReUtil.get(isGame ? "game/(\\d+)/" : "subject/(\\d+)/", a.attr("href"), 1);
                 String radioName = a.text().trim();
                 String coverImgThumbUrl = img.attr("src");
 
                 NetRadioInfo ri = new NetRadioInfo();
-                ri.setBook(isBook);
+                ri.setType(isBook ? RadioType.BOOK : isGame ? RadioType.GAME : RadioType.RADIO);
                 ri.setSource(NetMusicSource.DB);
                 ri.setId(radioId);
                 ri.setName(radioName);

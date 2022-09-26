@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="javafx">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../../../EdgeDownloads/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../EdgeDownloads/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib" recursive="false" />
+  </library>
+</component>

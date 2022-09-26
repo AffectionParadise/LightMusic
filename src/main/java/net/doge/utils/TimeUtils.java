@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -62,6 +63,8 @@ public class TimeUtils {
      */
     public static String strToPhrase(String str) {
         try {
+            // MM-dd 转为 yyyy-MM-dd
+            if (str.indexOf('-') < 3) str = Calendar.getInstance().get(Calendar.YEAR) + "-" + str;
             Date date = str.contains(" ") ? formatter.parse(str) : dateFormatter.parse(str);
             return msToPhrase(date.getTime());
         } catch (ParseException e) {
