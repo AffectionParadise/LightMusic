@@ -36,6 +36,10 @@ public class Task {
     private int status;
     // 百分比
     private double percent;
+    // 已下载大小
+    private long finished;
+    // 总大小
+    private long total;
     // 任务对应的 Future 对象
     private Future future;
     // 完成后调用
@@ -55,6 +59,16 @@ public class Task {
         downloadList.repaint();
     }
 
+    public void setFinished(long finished) {
+        this.finished = finished;
+        downloadList.repaint();
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
+        downloadList.repaint();
+    }
+
     public void setStatus(int status) {
         this.status = status;
         downloadList.repaint();
@@ -67,6 +81,7 @@ public class Task {
                 dirCheck();
                 prepareInfo();
                 MusicServerUtils.download(this);
+                if(isInterrupted()) return;
                 if (invokeLater != null) invokeLater.run();
                 setStatus(TaskStatus.FINISHED);
             } catch (Exception e) {

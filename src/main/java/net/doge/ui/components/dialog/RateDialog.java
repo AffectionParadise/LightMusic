@@ -156,7 +156,7 @@ public class RateDialog extends JDialog {
             if (d == null) f.getPlayer().setRate(f.currRate = newVal);
             else {
                 d.mp.setRate(newVal);
-                ((JButton) comp).setText(txt);
+//                ((JButton) comp).setText(txt);
             }
         });
 

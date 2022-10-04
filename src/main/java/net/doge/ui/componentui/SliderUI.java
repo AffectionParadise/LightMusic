@@ -40,8 +40,8 @@ public class SliderUI extends BasicSliderUI {
         this.trackBgColor = trackColor.darker();
         this.f = f;
         this.player = player;
-        this.dialog = new TipDialog(f, 0);
-        if (isTimeBar) this.lrcDialog = new TipDialog(f, 0);
+        dialog = new TipDialog(f, 0);
+        if (isTimeBar) lrcDialog = new TipDialog(f, 0);
         this.isTimeBar = isTimeBar;
     }
 
@@ -53,7 +53,7 @@ public class SliderUI extends BasicSliderUI {
         this.trackBgColor = trackColor.darker();
         this.f = f;
         this.mp = mp;
-        this.dialog = new TipDialog(f, 0);
+        dialog = new TipDialog(f, 0);
         dialog.setAlwaysOnTop(true);
         this.isTimeBar = isTimeBar;
     }

@@ -285,4 +285,8 @@ public class ConfigConstants {
     public final static String TASK_NAME = "name";
     // 任务状态
     public final static String TASK_STATUS = "status";
+    // 任务已完成大小
+    public final static String TASK_FINISHED = "finished";
+    // 任务总大小
+    public final static String TASK_TOTAL = "total";
 }

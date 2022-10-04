@@ -24,13 +24,14 @@ public class ButtonMouseListener extends MouseAdapter {
     public ButtonMouseListener(JButton b, PlayerFrame f) {
         this.b = b;
         this.f = f;
+
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
         Color brighterColor = buttonColor.brighter();
-        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));
         b.setForeground(brighterColor);
 
@@ -58,7 +59,6 @@ public class ButtonMouseListener extends MouseAdapter {
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), buttonColor));
         b.setForeground(buttonColor);
-        b.repaint();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ButtonMouseListener extends MouseAdapter {
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
         Color brighterColor = buttonColor.brighter();
         boolean c = b.getVisibleRect().contains(e.getPoint());
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), c ? brighterColor : buttonColor));
+        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));
         b.setForeground(c ? brighterColor : buttonColor);
     }
 }

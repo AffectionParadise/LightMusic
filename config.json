@@ -209,7 +209,24 @@
 	"musicDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/",
 	"tasks":[
 		{
+			"total":34694271,
+			"mvInfo":{
+				"artist":"周传雄",
+				"name":"弱水三千",
+				"source":0,
+				"id":"5443536",
+				"type":0
+			},
+			"name":"弱水三千 - 周传雄",
+			"finished":34694271,
+			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/弱水三千 - 周传雄.mp4",
+			"type":1,
+			"status":1
+		},
+		{
+			"total":37574654,
 			"name":"EP8 爱情里如何自救？能处处不能处拉倒！ - 猫耳播客喵",
+			"finished":37574654,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/EP8 爱情里如何自救？能处处不能处拉倒！ - 猫耳播客喵.m4a",
 			"type":0,
 			"status":1,
@@ -223,7 +240,9 @@
 			}
 		},
 		{
+			"total":12505965,
 			"name":"孤勇者 - 小洛蜗牛",
+			"finished":12505965,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/孤勇者 - 小洛蜗牛.mp3",
 			"type":0,
 			"status":1,
@@ -236,10 +255,13 @@
 			}
 		},
 		{
+			"total":73731178,
 			"name":"爱在港乐01-暗恋 - 子劲Gin",
+			"finished":16291350,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/爱在港乐01-暗恋 - 子劲Gin.mp3",
 			"type":0,
-			"status":1,
+			"url":"http://m8.music.126.net/20221004181824/620dd750a3133202ac7d20d5f5399759/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/14476494335/29f6/abce/9055/ae345d77709504430484c2585e99ae3d.mp3",
+			"status":2,
 			"musicInfo":{
 				"artist":"子劲Gin",
 				"format":"mp3",
@@ -249,7 +271,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"梦里水乡 - 江珊",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/梦里水乡 - 江珊.mp3",
 			"type":0,
 			"status":1,
@@ -262,7 +286,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"Lost - OVSKY",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/Lost - OVSKY.mp3",
 			"type":0,
 			"status":1,
@@ -275,7 +301,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"陪影子想你 - 泉",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/陪影子想你 - 泉.mp3",
 			"type":0,
 			"status":1,
@@ -288,7 +316,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"Tera - Xomu",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/Tera - Xomu.mp3",
 			"type":0,
 			"status":1,
@@ -301,7 +331,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"Kuyenda - Lennart Schroot、Unknown Brain、Sru",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/Kuyenda - Lennart Schroot、Unknown Brain、Sru.mp3",
 			"type":0,
 			"status":1,
@@ -314,6 +346,7 @@
 			}
 		},
 		{
+			"total":0,
 			"mvInfo":{
 				"artist":"名字君Montage",
 				"name":"致命的优雅——刺客信条全系最帅镜头大混剪",
@@ -322,12 +355,15 @@
 				"type":0
 			},
 			"name":"致命的优雅——刺客信条全系最帅镜头大混剪 - 名字君Montage",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/致命的优雅——刺客信条全系最帅镜头大混剪 - 名字君Montage.mp4",
 			"type":1,
 			"status":1
 		},
 		{
+			"total":0,
 			"name":"《画离弦》海伦-你抚琵琶奏琴弦 。",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/《画离弦》海伦-你抚琵琶奏琴弦 。.mp3",
 			"type":0,
 			"status":1,
@@ -340,7 +376,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"执子之手 - 阮言Ruany",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/执子之手 - 阮言Ruany.flac",
 			"type":0,
 			"status":1,
@@ -353,6 +391,7 @@
 			}
 		},
 		{
+			"total":0,
 			"mvInfo":{
 				"artist":"周深",
 				"name":"我，江湖！",
@@ -361,12 +400,15 @@
 				"type":0
 			},
 			"name":"我，江湖！ - 周深",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/我，江湖！ - 周深.mp4",
 			"type":1,
 			"status":1
 		},
 		{
+			"total":0,
 			"name":"EP08:为什么说港乐是一场翻唱的艺术？ - 黑胶盒子",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/EP08为什么说港乐是一场翻唱的艺术？ - 黑胶盒子.flac",
 			"type":0,
 			"status":1,
@@ -379,7 +421,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"开源和写作 - justjavac - 真业余西",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/开源和写作 - justjavac - 真业余西.m4a",
 			"type":0,
 			"status":1,
@@ -395,7 +439,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"元夜行 - Maxser、ME_DD、Re_houseE、MasterC、HT Records",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/元夜行 - Maxser、ME_DD、Re_houseE、MasterC、HT Records.mp3",
 			"type":0,
 			"status":1,
@@ -408,7 +454,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"哪里都是你 - 队长",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/哪里都是你 - 队长.mp3",
 			"type":0,
 			"status":1,
@@ -421,6 +469,7 @@
 			}
 		},
 		{
+			"total":0,
 			"mvInfo":{
 				"artist":"队长",
 				"name":"哪里都是你",
@@ -429,11 +478,13 @@
 				"type":0
 			},
 			"name":"哪里都是你 - 队长",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/哪里都是你 - 队长.mp4",
 			"type":1,
 			"status":1
 		},
 		{
+			"total":0,
 			"mvInfo":{
 				"artist":"最美阿拉蕾",
 				"name":"朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你",
@@ -442,11 +493,13 @@
 				"type":0
 			},
 			"name":"朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你 - 最美阿拉蕾",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你 - 最美阿拉蕾.mp4",
 			"type":1,
 			"status":1
 		},
 		{
+			"total":0,
 			"mvInfo":{
 				"artist":"Lovelyz",
 				"name":"【短综】二选一问答：全场答案一致的问题是？",
@@ -455,11 +508,13 @@
 				"type":0
 			},
 			"name":"【短综】二选一问答：全场答案一致的问题是？ - Lovelyz",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/【短综】二选一问答：全场答案一致的问题是？ - Lovelyz.mp4",
 			"type":1,
 			"status":1
 		},
 		{
+			"total":0,
 			"mvInfo":{
 				"artist":"V.A.",
 				"name":"第33届韩国金唱片大赏音源部门全程回顾",
@@ -468,12 +523,15 @@
 				"type":0
 			},
 			"name":"第33届韩国金唱片大赏音源部门全程回顾 - V.A.",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/第33届韩国金唱片大赏音源部门全程回顾 - V.A..mp4",
 			"type":1,
 			"status":3
 		},
 		{
+			"total":0,
 			"name":"우주를 줄게 (Live) - 刘宪华 (Henry)",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/우주를 줄게 (Live) - 刘宪华 (Henry).mp3",
 			"type":0,
 			"status":1,
@@ -486,7 +544,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"超级敏感 - A-SOUL",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/超级敏感 - A-SOUL.mp3",
 			"type":0,
 			"status":3,
@@ -499,6 +559,7 @@
 			}
 		},
 		{
+			"total":0,
 			"mvInfo":{
 				"artist":"安迪Anndy",
 				"name":"MV",
@@ -507,12 +568,15 @@
 				"type":0
 			},
 			"name":"MV - 安迪Anndy",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/MV - 安迪Anndy.mp4",
 			"type":1,
 			"status":1
 		},
 		{
+			"total":0,
 			"name":"红马 (女版) - 一颗狼星_许篮心",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/红马 (女版) - 一颗狼星_许篮心.mp3",
 			"type":0,
 			"status":1,
@@ -525,7 +589,9 @@
 			}
 		},
 		{
+			"total":0,
 			"name":"Visual Studio Code - 吕鹏 - 代码时间",
+			"finished":0,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/Visual Studio Code - 吕鹏 - 代码时间.mp3",
 			"type":0,
 			"status":1,
@@ -542,6 +608,7 @@
 	"lyricType":0,
 	"chineseType":0,
 	"history":[
+		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\孤勇者 - 小洛蜗牛.mp3",
 		"D:\\音乐\\不认输 - Britneylee小暖.mp3",
 		"D:\\音乐\\心血来潮 - Joysaaaa.mp3",
 		"D:\\音乐\\将月亮藏进躯体 - 豆芽鱼.mp3",
@@ -590,7 +657,6 @@
 		},
 		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\EP8 爱情里如何自救？能处处不能处拉倒！ - 猫耳播客喵.m4a",
 		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\爱在港乐01-暗恋 - 子劲Gin.mp3",
-		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\孤勇者 - 小洛蜗牛.mp3",
 		"D:\\音乐\\时间深海 - 陈子晴、B.I.N.mp3",
 		"D:\\音乐\\摘星的人 - 大柯.mp3",
 		"D:\\音乐\\你之于我 - 吴奕妤.mp3",
@@ -2877,6 +2943,7 @@
 		}
 	],
 	"playQueue":[
+		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\孤勇者 - 小洛蜗牛.mp3",
 		"D:\\音乐\\将月亮藏进躯体 - 豆芽鱼.mp3",
 		"D:\\音乐\\熠熠的光 - 唐艺.mp3",
 		"D:\\音乐\\奉劝 - en.mp3",

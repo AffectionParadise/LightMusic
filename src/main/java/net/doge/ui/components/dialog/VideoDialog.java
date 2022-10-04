@@ -140,7 +140,7 @@ public class VideoDialog extends JDialog {
     private JSlider volumeSlider = new JSlider();
     private JButton collectButton = new JButton(collectIcon);
     private JButton downloadButton = new JButton(downloadIcon);
-    private JButton rateButton = new JButton("1x", rateIcon);
+    private JButton rateButton = new JButton(rateIcon);
     //    private CustomPopupMenu ratePopupMenu;
 //    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
 //    private CustomRadioButtonMenuItem[] rateMenuItems = {
@@ -170,7 +170,7 @@ public class VideoDialog extends JDialog {
 //            new CustomRadioButtonMenuItem("7x"),
 //            new CustomRadioButtonMenuItem("8x")
 //    };
-    private JButton fobTimeButton = new JButton("10s", fobTimeIcon);
+    private JButton fobTimeButton = new JButton(fobTimeIcon);
     private CustomPopupMenu fobTimePopupMenu;
     private ButtonGroup fobTimeMenuItemsButtonGroup = new ButtonGroup();
     private CustomRadioButtonMenuItem[] fobTimeMenuItems = {
@@ -276,12 +276,8 @@ public class VideoDialog extends JDialog {
         } else media = new Media(uri);
         mp = new MediaPlayer(media);
         mediaView = new MediaView(mp);
-        Platform.runLater(() -> {
-            Scene scene = new Scene(new Pane(mediaView), media.getWidth(), media.getHeight());
-            jfxPanel.setScene(scene);
-            globalPanel.add(jfxPanel, BorderLayout.CENTER);
 
-            // 视频宽高控制
+        // 视频宽高控制
 //            media.widthProperty().addListener(new ChangeListener<Number>() {
 //                @Override
 //                public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
@@ -290,56 +286,59 @@ public class VideoDialog extends JDialog {
 //                    else mediaView.setFitWidth(MEDIA_WIDTH_2);
 //                }
 //            });
-            media.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                int width = media.getWidth(), height = media.getHeight();
-                // 调整视频大小使之不超出屏幕
-                if (width > height) {
-                    mediaView.setFitWidth(MEDIA_WIDTH);
-                    mediaView.setFitHeight(height * MEDIA_WIDTH / width);
-                } else {
-                    mediaView.setFitWidth(width * MEDIA_HEIGHT / height);
-                    mediaView.setFitHeight(MEDIA_HEIGHT);
-                }
-                MusicPlayer player = f.getPlayer();
-                SimpleMusicInfo musicInfo = player.getMusicInfo();
-                doBlur(!f.getIsBlur() || !player.loadedMusic() ? ImageUtils.read(style.getStyleImgPath()) : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
-                setLocationRelativeTo(f);
-            });
-            mediaView.fitWidthProperty().addListener((observableValue, oldValue, newValue) -> {
-                int nv = newValue.intValue();
-                jfxPanel.setPreferredSize(new Dimension(nv, media.getHeight()));
-                setSize(nv - 2 + 2 * pixels, getHeight());
-                timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
-            });
-            mediaView.fitHeightProperty().addListener((observableValue, oldValue, newValue) -> {
-                int nv = newValue.intValue();
-                jfxPanel.setPreferredSize(new Dimension(media.getWidth(), nv + 2 * pixels));
-                setSize(getWidth(), nv + 129 + 2 * pixels);
-            });
-            // 刷新缓冲长度
-            mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
-            mp.currentTimeProperty().addListener(l -> {
-                // 未被操作时频繁更新时间条
-                if (!timeBar.getValueIsAdjusting())
-                    timeBar.setValue((int) (mp.getCurrentTime().toSeconds() / media.getDuration().toSeconds() * TIME_BAR_MAX));
-                currTimeLabel.setText(TimeUtils.format(mp.getCurrentTime().toSeconds()));
-                durationLabel.setText(TimeUtils.format(media.getDuration().toSeconds()));
-                // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
-                String t = durationLabel.getText().replaceAll("[1-9]", "0");
-                FontMetrics m = durationLabel.getFontMetrics(globalFont);
-                currTimeLabel.setPreferredSize(new Dimension(m.stringWidth(t) + 2, durationLabel.getHeight()));
-            });
-            mp.setOnEndOfMedia(() -> {
-                mp.seek(Duration.seconds(0));
-                mp.pause();
-                playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getButtonColor()));
-                timeBar.setValue(0);
-                currTimeLabel.setText(DEFAULT_TIME);
-            });
-            mp.setOnError(() -> {
-                closeButton.doClick();
-            });
+        media.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+            int width = media.getWidth(), height = media.getHeight();
+            // 调整视频大小使之不超出屏幕
+            if (width > height) {
+                mediaView.setFitWidth(MEDIA_WIDTH);
+                mediaView.setFitHeight(height * MEDIA_WIDTH / width);
+            } else {
+                mediaView.setFitWidth(width * MEDIA_HEIGHT / height);
+                mediaView.setFitHeight(MEDIA_HEIGHT);
+            }
+            MusicPlayer player = f.getPlayer();
+            SimpleMusicInfo musicInfo = player.getMusicInfo();
+            doBlur(!f.getIsBlur() || !player.loadedMusic() ? ImageUtils.read(style.getStyleImgPath()) : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
+            setLocationRelativeTo(f);
         });
+        mediaView.fitWidthProperty().addListener((observableValue, oldValue, newValue) -> {
+            int nv = newValue.intValue();
+            jfxPanel.setPreferredSize(new Dimension(nv, media.getHeight()));
+            setSize(nv - 2 + 2 * pixels, getHeight());
+            timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
+        });
+        mediaView.fitHeightProperty().addListener((observableValue, oldValue, newValue) -> {
+            int nv = newValue.intValue();
+            jfxPanel.setPreferredSize(new Dimension(media.getWidth(), nv + 2 * pixels));
+            setSize(getWidth(), nv + 129 + 2 * pixels);
+        });
+        // 刷新缓冲长度
+        mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
+        mp.currentTimeProperty().addListener(l -> {
+            // 未被操作时频繁更新时间条
+            if (!timeBar.getValueIsAdjusting())
+                timeBar.setValue((int) (mp.getCurrentTime().toSeconds() / media.getDuration().toSeconds() * TIME_BAR_MAX));
+            currTimeLabel.setText(TimeUtils.format(mp.getCurrentTime().toSeconds()));
+            durationLabel.setText(TimeUtils.format(media.getDuration().toSeconds()));
+            // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
+            String t = durationLabel.getText().replaceAll("[1-9]", "0");
+            FontMetrics m = durationLabel.getFontMetrics(globalFont);
+            currTimeLabel.setPreferredSize(new Dimension(m.stringWidth(t) + 2, durationLabel.getHeight()));
+        });
+        mp.setOnEndOfMedia(() -> {
+            mp.seek(Duration.seconds(0));
+            mp.pause();
+            playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getButtonColor()));
+            timeBar.setValue(0);
+            currTimeLabel.setText(DEFAULT_TIME);
+        });
+        mp.setOnError(() -> {
+            closeButton.doClick();
+        });
+
+        Scene scene = new Scene(new Pane(mediaView), media.getWidth(), media.getHeight());
+        jfxPanel.setScene(scene);
+        globalPanel.add(jfxPanel, BorderLayout.CENTER);
     }
 
     // 初始化标题栏
@@ -383,7 +382,7 @@ public class VideoDialog extends JDialog {
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
         topBox.add(topPanel);
-        topBox.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+        topBox.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
         globalPanel.add(topBox, BorderLayout.NORTH);
     }
 
@@ -398,14 +397,10 @@ public class VideoDialog extends JDialog {
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
         timeBar.setOpaque(false);
+        timeBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), f, mp, true));      // 自定义进度条 UI
         // 拖动播放时间条
         timeBar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                timeBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
-
             @Override
             public void mouseDragged(MouseEvent e) {
                 double t = media.getDuration().toSeconds() * timeBar.getValue() / TIME_BAR_MAX;
@@ -556,6 +551,7 @@ public class VideoDialog extends JDialog {
         rateButton.setContentAreaFilled(false);
         rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getButtonColor()));
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, f));
+        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
         rateButton.addActionListener(e -> {
             RateDialog rd = new RateDialog(f, this, rateButton);
             rd.showDialog();
@@ -576,7 +572,7 @@ public class VideoDialog extends JDialog {
             menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
             menuItem.addActionListener(e -> {
                 currFobTime = Integer.parseInt(menuItem.getText().replace("秒", ""));
-                fobTimeButton.setText(menuItem.getText().replace("秒", "s"));
+//                fobTimeButton.setText(menuItem.getText().replace("秒", "s"));
                 updateRadioButtonMenuItemIcon();
             });
             fobTimeMenuItemsButtonGroup.add(menuItem);
@@ -590,6 +586,7 @@ public class VideoDialog extends JDialog {
         fobTimeButton.setContentAreaFilled(false);
         fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), style.getButtonColor()));
         fobTimeButton.addMouseListener(new ButtonMouseListener(fobTimeButton, f));
+        fobTimeButton.setPreferredSize(new Dimension(fobTimeIcon.getIconWidth(), fobTimeIcon.getIconHeight()));
         fobTimeButton.setComponentPopupMenu(fobTimePopupMenu);
         fobTimeButton.addMouseListener(new MouseAdapter() {
             @Override

@@ -268,7 +268,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
         globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 

@@ -3,6 +3,7 @@ package net.doge.ui.renderers;
 import net.doge.constants.*;
 import net.doge.models.Task;
 import net.doge.ui.components.CustomPanel;
+import net.doge.utils.FileUtils;
 import net.doge.utils.ImageUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -67,10 +68,11 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         Task task = (Task) value;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel(isSelected? taskSIcon: taskIcon);
+        JLabel iconLabel = new JLabel(isSelected ? taskSIcon : taskIcon);
         JLabel nameLabel = new JLabel();
         JLabel typeLabel = new JLabel();
         JLabel statusLabel = new JLabel();
+        JLabel sizeLabel = new JLabel();
         JLabel percentLabel = new JLabel();
 
         iconLabel.setIconTextGap(15);
@@ -79,6 +81,7 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         nameLabel.setHorizontalAlignment(CENTER);
         typeLabel.setHorizontalAlignment(CENTER);
         statusLabel.setHorizontalAlignment(CENTER);
+        sizeLabel.setHorizontalAlignment(CENTER);
         percentLabel.setHorizontalAlignment(CENTER);
 
         outerPanel.setOpaque(false);
@@ -86,19 +89,22 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         nameLabel.setOpaque(false);
         typeLabel.setOpaque(false);
         statusLabel.setOpaque(false);
+        sizeLabel.setOpaque(false);
         percentLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
         nameLabel.setForeground(isSelected ? selectedColor : foreColor);
         typeLabel.setForeground(isSelected ? selectedColor : foreColor);
-        percentLabel.setForeground(isSelected ? selectedColor : foreColor);
         statusLabel.setForeground(isSelected ? selectedColor : foreColor);
+        sizeLabel.setForeground(isSelected ? selectedColor : foreColor);
+        percentLabel.setForeground(isSelected ? selectedColor : foreColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
         typeLabel.setFont(customFont);
         statusLabel.setFont(customFont);
+        sizeLabel.setFont(customFont);
         percentLabel.setFont(customFont);
 
         GridLayout layout = new GridLayout(1, 5);
@@ -109,6 +115,7 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.add(nameLabel);
         outerPanel.add(typeLabel);
         outerPanel.add(statusLabel);
+        outerPanel.add(sizeLabel);
         outerPanel.add(percentLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
@@ -116,14 +123,17 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         String type = StringUtils.textToHtml(TaskType.s[task.getType()]);
         String status = StringUtils.textToHtml(TaskStatus.s[task.getStatus()]);
         String percent = StringUtils.textToHtml(String.format("%.2f %%", task.isRunning() ? task.getPercent() : task.isFinished() ? 100 : 0));
+        String size = StringUtils.textToHtml(String.format("%s / %s", FileUtils.getUnitString(task.getFinished()), FileUtils.getUnitString(task.getTotal())));
 
         nameLabel.setText(name);
         typeLabel.setText(type);
         statusLabel.setText(status);
+        sizeLabel.setText(size);
         percentLabel.setText(percent);
 
         Dimension ps = nameLabel.getPreferredSize();
-        int ph = ps.height;
+        Dimension ps2 = sizeLabel.getPreferredSize();
+        int ph = Math.max(ps.height, ps2.height);
         Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 50));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);

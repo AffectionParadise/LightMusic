@@ -16810,11 +16810,15 @@ public class MusicServerUtils {
         byte[] buffer = new byte[1024];
         // 文件大小
         long fileSize = conn.getContentLength(), hasRead = 0;
+        task.setTotal(fileSize);
         int read;
         // 如果没有数据了会返回 -1，如果还有会返回数据的长度
         while ((read = fis.read(buffer)) != -1) {
+            // 中断任务后跳出
+            if(task.isInterrupted()) break;
             hasRead += read;
             task.setPercent((double) hasRead / fileSize * 100);
+            task.setFinished(hasRead);
             // 读取多少输出多少
             toClient.write(buffer, 0, read);
         }

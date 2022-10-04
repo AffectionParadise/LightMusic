@@ -103,7 +103,7 @@ public class PlayerFrame extends JFrame {
     // 历史记录最大条数
     public int maxHistoryCount = 300;
     // 搜索历史最大条数
-    public int maxSearchHistoryCount = 30;
+    public int maxSearchHistoryCount = 50;
     // 最大尝试播放次数
     private final int MAX_RETRY = 3;
     // 图片圆角半径弧度
@@ -891,7 +891,7 @@ public class PlayerFrame extends JFrame {
     private CustomButton muteButton = new CustomButton(soundIcon);
     private JSlider volumeSlider = new JSlider();
     private CustomButton rateButton = new CustomButton(rateIcon);
-//    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
+    //    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
 //    private CustomRadioButtonMenuItem[] rateMenuItems = {
 //            new CustomRadioButtonMenuItem("0.2x"),
 //            new CustomRadioButtonMenuItem("0.3x"),
@@ -2663,7 +2663,7 @@ public class PlayerFrame extends JFrame {
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
         topBox.add(topPanel);
-        topBox.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        topBox.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
         globalPanel.add(topBox, BorderLayout.NORTH);
     }
 
@@ -2793,7 +2793,7 @@ public class PlayerFrame extends JFrame {
         // 载入最大播放历史数量
         maxHistoryCount = config.optInt(ConfigConstants.MAX_HISTORY_COUNT, 300);
         // 载入最大搜索历史数量
-        maxSearchHistoryCount = config.optInt(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, 30);
+        maxSearchHistoryCount = config.optInt(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, 50);
         // 载入是否显示频谱
         showSpectrum = config.optBoolean(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
@@ -2947,9 +2947,10 @@ public class PlayerFrame extends JFrame {
 
                 JSONObject jsonObject = JSONObject.fromObject(s);
                 int type = jsonObject.optInt(ConfigConstants.TASK_TYPE);
-                String taskName = jsonObject.optString(ConfigConstants.TASK_NAME);
                 String dest = jsonObject.optString(ConfigConstants.TASK_DEST);
                 int status = jsonObject.optInt(ConfigConstants.TASK_STATUS);
+                long finished = jsonObject.optLong(ConfigConstants.TASK_FINISHED);
+                long total = jsonObject.optLong(ConfigConstants.TASK_TOTAL);
 
                 Task task = null;
                 if (type == TaskType.MUSIC) {
@@ -2997,6 +2998,8 @@ public class PlayerFrame extends JFrame {
                     task = new Task(downloadList, type, null, netMvInfo);
                 }
                 task.setStatus(status);
+                task.setFinished(finished);
+                task.setTotal(total);
                 downloadListModel.addElement(task);
             }
         }
@@ -3697,6 +3700,8 @@ public class PlayerFrame extends JFrame {
             jsonObject.put(ConfigConstants.TASK_TYPE, task.getType());
             jsonObject.put(ConfigConstants.TASK_NAME, task.getName());
             jsonObject.put(ConfigConstants.TASK_STATUS, task.getStatus());
+            jsonObject.put(ConfigConstants.TASK_FINISHED, task.getFinished());
+            jsonObject.put(ConfigConstants.TASK_TOTAL, task.getTotal());
             // 如果是音乐下载任务，需要额外记录音乐信息
             if (task.isMusic()) {
                 NetMusicInfo netMusicInfo = task.getNetMusicInfo();
@@ -17388,7 +17393,7 @@ public class PlayerFrame extends JFrame {
                         restartTaskMenuItem.setEnabled(false);
                         Task t = tasks.get(0);
                         downloadNextPlayMenuItem.setEnabled(t.isMusic());
-                        downloadEditInfoMenuItem.setEnabled(t.isMusic() && t.getNetMusicInfo().isMp3());
+                        downloadEditInfoMenuItem.setEnabled(t.isFinished() && t.isMusic() && t.getNetMusicInfo().isMp3());
                         for (Task task : tasks) {
                             if (task.isRunning()) cancelTaskMenuItem.setEnabled(true);
                             else restartTaskMenuItem.setEnabled(true);
