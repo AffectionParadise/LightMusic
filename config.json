@@ -211,6 +211,7 @@
 		{
 			"total":34694271,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"周传雄",
 				"name":"弱水三千",
 				"source":0,
@@ -260,7 +261,6 @@
 			"finished":16291350,
 			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/爱在港乐01-暗恋 - 子劲Gin.mp3",
 			"type":0,
-			"url":"http://m8.music.126.net/20221004181824/620dd750a3133202ac7d20d5f5399759/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/14476494335/29f6/abce/9055/ae345d77709504430484c2585e99ae3d.mp3",
 			"status":2,
 			"musicInfo":{
 				"artist":"子劲Gin",
@@ -348,6 +348,7 @@
 		{
 			"total":0,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"名字君Montage",
 				"name":"致命的优雅——刺客信条全系最帅镜头大混剪",
 				"source":0,
@@ -393,6 +394,7 @@
 		{
 			"total":0,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"周深",
 				"name":"我，江湖！",
 				"source":0,
@@ -471,6 +473,7 @@
 		{
 			"total":0,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"队长",
 				"name":"哪里都是你",
 				"source":0,
@@ -486,6 +489,7 @@
 		{
 			"total":0,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"最美阿拉蕾",
 				"name":"朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你",
 				"source":1,
@@ -501,6 +505,7 @@
 		{
 			"total":0,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"Lovelyz",
 				"name":"【短综】二选一问答：全场答案一致的问题是？",
 				"source":0,
@@ -516,6 +521,7 @@
 		{
 			"total":0,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"V.A.",
 				"name":"第33届韩国金唱片大赏音源部门全程回顾",
 				"source":0,
@@ -561,6 +567,7 @@
 		{
 			"total":0,
 			"mvInfo":{
+				"bvid":"",
 				"artist":"安迪Anndy",
 				"name":"MV",
 				"source":0,
@@ -604,10 +611,13 @@
 			}
 		}
 	],
-	"spectrumStyle":1,
+	"spectrumStyle":0,
 	"lyricType":0,
 	"chineseType":0,
 	"history":[
+		"D:\\音乐\\Dream Express - KLYDIX.mp3",
+		"D:\\音乐\\Hope - KLYDIX.mp3",
+		"D:\\音乐\\英雄联盟-音乐模式 - 一夕Clarence、球球特别大.mp3",
 		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\孤勇者 - 小洛蜗牛.mp3",
 		"D:\\音乐\\不认输 - Britneylee小暖.mp3",
 		"D:\\音乐\\心血来潮 - Joysaaaa.mp3",
@@ -1520,10 +1530,7 @@
 		"D:\\音乐\\火苗 - 格格.mp3",
 		"D:\\音乐\\梦醒时分 - 陈淑桦.mp3",
 		"D:\\音乐\\Shots (Broiler Remix) - Imagine Dragons、Broiler.mp3",
-		"D:\\音乐\\折风渡夜 - 泽国同学.mp3",
-		"D:\\音乐\\Daylight - Seredris.mp3",
-		"D:\\音乐\\君莫笑 - 泽国同学.mp3",
-		"D:\\音乐\\萍聚 - 卓依婷.mp3"
+		"D:\\音乐\\折风渡夜 - 泽国同学.mp3"
 	],
 	"collection":[
 		{
@@ -2112,9 +2119,11 @@
 		{
 			"duration":291.584,
 			"coverImgUrl":"http://p5.music.126.net/PLmtXJhaG3VDOeYWWk7G2w==/109951166555354720",
+			"bvid":"",
 			"playCount":5314,
 			"artist":"好歌又来了",
 			"name":"江珊《梦里水乡》甜美动人，歌声飘过30年，久久难忘",
+			"creatorId":"",
 			"source":0,
 			"id":"88743B43CE93EDEEF3E1D7A06464EB9D",
 			"type":1
@@ -2122,9 +2131,11 @@
 		{
 			"duration":180.928,
 			"coverImgUrl":"http://p5.music.126.net/eMxh2Z5L7LaXGxVltR1EkQ==/109951167354692216",
+			"bvid":"",
 			"playCount":11161,
 			"artist":"音乐老鸭煲",
 			"name":"2022年1月至4月最热门的六首歌，你最喜欢哪一首",
+			"creatorId":"",
 			"source":0,
 			"id":"093D8EC670808BD23E66819E58BC5D08",
 			"type":1
@@ -2132,9 +2143,11 @@
 		{
 			"duration":231.76,
 			"coverImgUrl":"http://p2.music.126.net/VvUbD74w-vue_hr2ki6YGA==/109951166443491355.jpg",
+			"bvid":"",
 			"playCount":3644,
 			"artist":"音乐老友_",
 			"name":"朱添泽《想(DJ版)》其实我也曾经幻想改！",
+			"creatorId":"",
 			"source":0,
 			"id":"B25C00A1B619793450EA0E932FFB3D30",
 			"type":1
@@ -2142,9 +2155,11 @@
 		{
 			"duration":233,
 			"coverImgUrl":"http://p1.music.126.net/iPxyyGXPKoYD3xjz6iKnnw==/109951166874483701.jpg",
+			"bvid":"",
 			"playCount":1865051,
 			"artist":"队长",
 			"name":"11",
+			"creatorId":"",
 			"source":0,
 			"id":"14487937",
 			"type":0
@@ -2152,9 +2167,11 @@
 		{
 			"duration":222,
 			"coverImgUrl":"https://img1.kuwo.cn/wmvpic/324/8/20/3455724914.jpg",
+			"bvid":"",
 			"playCount":119,
 			"artist":"李玉玺&琳谊Ring",
 			"name":"想-《神之乡》电视剧插曲",
+			"creatorId":"",
 			"source":3,
 			"id":"184867148",
 			"type":0
@@ -2162,23 +2179,25 @@
 		{
 			"duration":237,
 			"coverImgUrl":"http://imge.kugou.com/mvhdpic/20210516/20210516152123225598.jpg",
+			"bvid":"",
 			"playCount":75852,
 			"artist":"环球视听1980",
 			"name":"王炎 -《想》非常干净的一首经典老歌，时隔多年又再度火起来",
+			"creatorId":"",
 			"source":1,
 			"id":"62018d9abde776bbb73d8c30df56a552",
 			"type":0
 		}
 	],
-	"maxCacheSize":512,
+	"maxCacheSize":1024,
 	"catalogs":[
 		"D:\\音乐"
 	],
 	"videoOnly":true,
 	"sortOrder":1,
 	"mvHistorySearch":[
-		"弱水三千",
 		"无穷小亮",
+		"弱水三千",
 		"入画江南",
 		"月老掉线",
 		"想",
@@ -2212,6 +2231,35 @@
 	"rate":1,
 	"japaneseType":0,
 	"musicList":[
+		"D:\\音乐\\嫁妆 - 安与骑兵.mp3",
+		"D:\\音乐\\英雄联盟-音乐模式 - 一夕Clarence、球球特别大.mp3",
+		"D:\\音乐\\Hope - KLYDIX.mp3",
+		"D:\\音乐\\Neverland - 亚述、Forestcat Records.mp3",
+		"D:\\音乐\\Horizon - 亚述.mp3",
+		"D:\\音乐\\Sky High - KLYDIX.mp3",
+		"D:\\音乐\\Hyper - KLYDIX.mp3",
+		"D:\\音乐\\Dream Express - KLYDIX.mp3",
+		"D:\\音乐\\Night Flight - KLYDIX.mp3",
+		"D:\\音乐\\Deenise - Kawaii.mp3",
+		"D:\\音乐\\你不会懂 - Joysaaaa.mp3",
+		"D:\\音乐\\月華 - KLYDIX.mp3",
+		"D:\\音乐\\在你的身边 - 盛哲.mp3",
+		"D:\\音乐\\Nobody Like U - Ice Rabbit Record、Crash 909.mp3",
+		"D:\\音乐\\ReliFe - Felox、AK-ID.mp3",
+		"D:\\音乐\\KiTSUNE、Swempke - Kurage.mp3",
+		"D:\\音乐\\Feels Like - Kitsune.mp3",
+		"D:\\音乐\\LOVE U LIKE I DO - Bangler、UNTITLED CUBE、WERECORDS.mp3",
+		"D:\\音乐\\Pastel - KITSUNE、Orange Purple、Sound of Tomorrow.mp3",
+		"D:\\音乐\\To The Clouds - KITSUNE、ZYX-Official.mp3",
+		"D:\\音乐\\Ascend - ZYX-Official、KITSUNE.mp3",
+		"D:\\音乐\\Aspire - KITSUNE.mp3",
+		"D:\\音乐\\Call Me - KITSUNE、Ryoo.mp3",
+		"D:\\音乐\\Sky, Pt. II - KITSUNE.mp3",
+		"D:\\音乐\\Crystal Refreshed - Neptune XI、KITSUNE.mp3",
+		"D:\\音乐\\夏梦的约定 - 暴君de、YuShu.mp3",
+		"D:\\音乐\\YUMMI - Need You.mp3",
+		"D:\\音乐\\Shine - Mardi、YUMMI.mp3",
+		"D:\\音乐\\CupCake - KITSUNE、YUMMI.mp3",
 		"D:\\音乐\\将月亮藏进躯体 - 豆芽鱼.mp3",
 		"D:\\音乐\\熠熠的光 - 唐艺.mp3",
 		"D:\\音乐\\奉劝 - en.mp3",
@@ -2305,7 +2353,6 @@
 		"D:\\音乐\\The Drum - Alan Walker.mp3",
 		"D:\\音乐\\Start It Over (feat. KC) - Last Heroes、Man Cub.mp3",
 		"D:\\音乐\\Starlight(Keep Me Afloat) - Martin Garrix、Dubvision、Shaun Farrugia.mp3",
-		"D:\\音乐\\尘埃 - 林小珂.mp3",
 		"D:\\音乐\\美梦成真 - 许茹芸.mp3",
 		"D:\\音乐\\星空之间 - 双笙.mp3",
 		"D:\\音乐\\而我也无法摸到上游的风 - 刘森.mp3",
@@ -2943,7 +2990,35 @@
 		}
 	],
 	"playQueue":[
-		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\孤勇者 - 小洛蜗牛.mp3",
+		"D:\\音乐\\嫁妆 - 安与骑兵.mp3",
+		"D:\\音乐\\英雄联盟-音乐模式 - 一夕Clarence、球球特别大.mp3",
+		"D:\\音乐\\Hope - KLYDIX.mp3",
+		"D:\\音乐\\Neverland - 亚述、Forestcat Records.mp3",
+		"D:\\音乐\\Horizon - 亚述.mp3",
+		"D:\\音乐\\Sky High - KLYDIX.mp3",
+		"D:\\音乐\\Hyper - KLYDIX.mp3",
+		"D:\\音乐\\Dream Express - KLYDIX.mp3",
+		"D:\\音乐\\Night Flight - KLYDIX.mp3",
+		"D:\\音乐\\Deenise - Kawaii.mp3",
+		"D:\\音乐\\你不会懂 - Joysaaaa.mp3",
+		"D:\\音乐\\月華 - KLYDIX.mp3",
+		"D:\\音乐\\在你的身边 - 盛哲.mp3",
+		"D:\\音乐\\Nobody Like U - Ice Rabbit Record、Crash 909.mp3",
+		"D:\\音乐\\ReliFe - Felox、AK-ID.mp3",
+		"D:\\音乐\\KiTSUNE、Swempke - Kurage.mp3",
+		"D:\\音乐\\Feels Like - Kitsune.mp3",
+		"D:\\音乐\\LOVE U LIKE I DO - Bangler、UNTITLED CUBE、WERECORDS.mp3",
+		"D:\\音乐\\Pastel - KITSUNE、Orange Purple、Sound of Tomorrow.mp3",
+		"D:\\音乐\\To The Clouds - KITSUNE、ZYX-Official.mp3",
+		"D:\\音乐\\Ascend - ZYX-Official、KITSUNE.mp3",
+		"D:\\音乐\\Aspire - KITSUNE.mp3",
+		"D:\\音乐\\Call Me - KITSUNE、Ryoo.mp3",
+		"D:\\音乐\\Sky, Pt. II - KITSUNE.mp3",
+		"D:\\音乐\\Crystal Refreshed - Neptune XI、KITSUNE.mp3",
+		"D:\\音乐\\夏梦的约定 - 暴君de、YuShu.mp3",
+		"D:\\音乐\\YUMMI - Need You.mp3",
+		"D:\\音乐\\Shine - Mardi、YUMMI.mp3",
+		"D:\\音乐\\CupCake - KITSUNE、YUMMI.mp3",
 		"D:\\音乐\\将月亮藏进躯体 - 豆芽鱼.mp3",
 		"D:\\音乐\\熠熠的光 - 唐艺.mp3",
 		"D:\\音乐\\奉劝 - en.mp3",
@@ -3037,7 +3112,6 @@
 		"D:\\音乐\\The Drum - Alan Walker.mp3",
 		"D:\\音乐\\Start It Over (feat. KC) - Last Heroes、Man Cub.mp3",
 		"D:\\音乐\\Starlight(Keep Me Afloat) - Martin Garrix、Dubvision、Shaun Farrugia.mp3",
-		"D:\\音乐\\尘埃 - 林小珂.mp3",
 		"D:\\音乐\\美梦成真 - 许茹芸.mp3",
 		"D:\\音乐\\星空之间 - 双笙.mp3",
 		"D:\\音乐\\而我也无法摸到上游的风 - 刘森.mp3",

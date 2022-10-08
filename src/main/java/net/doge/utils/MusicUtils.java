@@ -349,8 +349,8 @@ public class MusicUtils {
      */
     public static void convert(AudioFile source, AudioFile dest) {
         try {
-            Runtime.getRuntime().exec(String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
-        } catch (IOException e) {
+            CmdUtils.exec(String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

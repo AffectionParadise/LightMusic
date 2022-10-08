@@ -1,12 +1,11 @@
 package net.doge.ui.components.dialog;
 
+import javafx.scene.media.MediaException;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.GlobalExecutors;
 import net.doge.constants.SimplePath;
-import net.doge.models.MusicPlayer;
-import net.doge.models.NetMvInfo;
-import net.doge.models.SimpleMusicInfo;
-import net.doge.models.UIStyle;
+import net.doge.models.*;
 import net.doge.ui.components.CustomPopupMenu;
 import net.doge.ui.components.CustomRadioButtonMenuItem;
 import net.doge.ui.components.GlobalPanel;
@@ -33,12 +32,11 @@ import net.coobird.thumbnailator.Thumbnails;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -79,6 +77,8 @@ public class VideoDialog extends JDialog {
     private final String COLLECT_SUCCESS_MSG = "收藏成功";
     // 取消收藏成功提示
     private final String CANCEL_COLLECTION_SUCCESS_MSG = "取消收藏成功";
+    // 播放异常提示
+    private final String ERROR_MSG = "播放视频时发生异常";
 
     // 选定点图标
     private ImageIcon dotIcon = new ImageIcon(SimplePath.ICON_PATH + "dot.png");
@@ -187,6 +187,7 @@ public class VideoDialog extends JDialog {
     // 底部盒子
     private Box bottomBox = new Box(BoxLayout.Y_AXIS);
 
+    private int tryTime;
     private boolean isLocal;
     private String uri;
 
@@ -246,6 +247,13 @@ public class VideoDialog extends JDialog {
                 setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
             }
         });
+        // 保持在屏幕正中间
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                setLocationRelativeTo(null);
+            }
+        });
 
         setUndecorated(true);
         setResizable(false);
@@ -259,7 +267,7 @@ public class VideoDialog extends JDialog {
         playVideo();
 
         // Dialog 背景透明
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         globalPanel.setOpaque(false);
         add(globalPanel);
     }
@@ -299,7 +307,6 @@ public class VideoDialog extends JDialog {
             MusicPlayer player = f.getPlayer();
             SimpleMusicInfo musicInfo = player.getMusicInfo();
             doBlur(!f.getIsBlur() || !player.loadedMusic() ? ImageUtils.read(style.getStyleImgPath()) : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
-            setLocationRelativeTo(f);
         });
         mediaView.fitWidthProperty().addListener((observableValue, oldValue, newValue) -> {
             int nv = newValue.intValue();
@@ -333,7 +340,23 @@ public class VideoDialog extends JDialog {
             currTimeLabel.setText(DEFAULT_TIME);
         });
         mp.setOnError(() -> {
-            closeButton.doClick();
+            MediaException.Type type = mp.getError().getType();
+            // 耳机取下导致的播放异常，重新播放
+            if (type == MediaException.Type.PLAYBACK_HALTED) {
+                initView();
+                playVideo();
+            }
+            // 歌曲 url 过期后重新加载 url 再播放
+            else if (type == MediaException.Type.MEDIA_INACCESSIBLE || type == MediaException.Type.UNKNOWN) {
+                if(!isLocal) netMvInfo.setUrl(uri = MusicServerUtils.fetchMvUrl(netMvInfo));
+                initView();
+                playVideo();
+            }
+            // 尝试多次无效直接关闭窗口
+            if(++tryTime >= 3) {
+                closeButton.doClick();
+                new TipDialog(f, ERROR_MSG).showDialog();
+            }
         });
 
         Scene scene = new Scene(new Pane(mediaView), media.getWidth(), media.getHeight());
@@ -516,7 +539,7 @@ public class VideoDialog extends JDialog {
             }
         });
         // 下载
-        downloadButton.setEnabled(!isLocal);
+        downloadButton.setEnabled(!isLocal || !netMvInfo.isMp4());
         downloadButton.setToolTipText(DOWNLOAD_TIP);
         downloadButton.setFocusable(false);
         downloadButton.setOpaque(false);

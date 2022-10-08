@@ -193,12 +193,18 @@ public class ConfigConstants {
     public final static String NET_MV_SOURCE = "source";
     // MV 类型
     public final static String NET_MV_TYPE = "type";
+    // MV 格式
+    public final static String NET_MV_FORMAT = "format";
     // MV id
     public final static String NET_MV_ID = "id";
+    // MV bvid
+    public final static String NET_MV_BVID = "bvid";
     // MV 名
     public final static String NET_MV_NAME = "name";
     // MV 艺术家
     public final static String NET_MV_ARTIST = "artist";
+    // MV 发布者 id
+    public final static String NET_MV_CREATOR_ID = "creatorId";
     // MV 时长
     public final static String NET_MV_DURATION = "duration";
     // MV 发布时间

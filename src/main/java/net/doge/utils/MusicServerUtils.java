@@ -3,6 +3,7 @@ package net.doge.utils;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.*;
+import cn.hutool.http.cookie.GlobalCookieManager;
 import net.doge.constants.*;
 import net.doge.models.*;
 import net.doge.ui.components.LoadingPanel;
@@ -34,40 +35,8 @@ import java.util.regex.Pattern;
  */
 public class MusicServerUtils {
     public static void main(String[] args) throws IOException {
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("appid", 1001);
-//        map.put("clienttime", 1566798337219L);
-//        map.put("clientver", 8275);
-//        map.put("key", "f1f93580115bb106680d2375f8032d96");
-//        map.put("mid", "21511157a05844bd085308bc76ef3343");
-//        map.put("platform", "pc");
-//        map.put("userid", "262643156");
-//        map.put("return_min", 6);
-//        map.put("return_max", 15);
-//        HttpResponse resp = HttpRequest.post("http://everydayrec.service.kugou.com/guess_special_recommend")
-//                .header(Header.USER_AGENT, "KuGou2012-8275-web_browser_event_handler")
-//                .form(map)
-//                .execute();
-//        System.out.println(resp.body());
-//        List<Map<String, String>> l = new LinkedList<>();
-//        Map<String, String> im = new HashMap<>();
-//        im.put("author_id", "3060");
-//        l.add(im);
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("clientver", "9108");
-//        map.put("mid", "286974383886022203545511837994020015101");
-//        map.put("clienttime", "1545746019");
-//        map.put("key", "4c8b684568f03eeef985ae271561bcd8");
-//        map.put("appid", "1005");
-//        map.put("data", l);
-//        System.out.println(map);
-//        String artistInfoBody = HttpRequest.post(String.format(SIMILAR_ARTIST_KG_API))
-//                .body("{\"clientver\":\"9108\",\"mid\":\"286974383886022203545511837994020015101\",\"clienttime\":\"1545746019\",\"key\":\"4c8b684568f03eeef985ae271561bcd8\",\"appid\":\"1005\",\"data\":[{\"author_id\":86747}]}")
-//                .execute()
-//                .body();
-//        System.out.println(artistInfoBody);
-        System.out.println(buildQianUrl("https://music.91q.com/v1/search?appid=16073360&timestamp=1659055580&type=1&word=2"));
-        String body = HttpRequest.get(buildQianUrl("https://music.91q.com/v1/search?appid=16073360&timestamp=1659055580&type=1&word=2"))
+        String body = HttpRequest.get("http://api.bilibili.com/x/web-interface/search/type?keyword=%E2%91%A8%E2%91%A8%E2%91%A8%EF%BC%8C%E5%A4%A9%E9%95%BF%E5%9C%B0%E4%B9%85%E8%88%AC%E7%9A%84%E5%85%B1%E8%8D%A3&search_type=video")
+                .cookie("buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7")
                 .execute()
                 .body();
         System.out.println(body);
@@ -114,6 +83,7 @@ public class MusicServerUtils {
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75";
     private static final String COOKIE = "kg_mid=eb822d765480e1e3e6b8c6f2322019c8; kg_dfid=11TWHr0cp8jq4YKe9P3fosEo; kg_dfid_collect=d41d8cd98f00b204e9800998ecf8427e; musicwo17=kugou";
     private static final String HK_COOKIE = "BIDUPSID=BE696A0D51D343798228BD61F26D5647; PSTM=1658997928; BAIDUID=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; Hm_lvt_4aadd610dfd2f5972f1efee2653a2bc5=1659086001; BAIDUID_BFESS=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; delPer=0; PSINO=1; BA_HECTOR=20ag2g0ha42galagaga7ko601hgorth16; ZFY=gy2NQKWk6ZhA6AuDxoMpPQs6Og5GSSS7oA7XUkOHKeg:C; PC_TAB_LOG=video_details_page; COMMON_LID=2c19ef6811cbc39c8bbfaafcfcaeba64; BDRCVFR[fb3VbsUruOn]=I67x6TjHwwYf0; hkpcSearch=%u7FDF%u8000%24%24%24hello; H_PS_PSSID=36561_36461_36979_36885_37267_37135_26350_37205; ariaDefaultTheme=undefined; RT=\"z=1&dm=baidu.com&si=fxuvi7wxq45&ss=l7egnei6&sl=17&tt=19ph&bcn=https%3A%2F%2Ffclog.baidu.com%2Flog%2Fweirwood%3Ftype%3Dperf&ld=1xs54&cl=1xt27&ul=1xt6x&hd=1xtb4\"";
+    private static final String BI_COOKIE = "buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7";
 
     // 域名
 //    private static final String prefix = "http://musicapi.leanapp.cn";
@@ -349,6 +319,9 @@ public class MusicServerUtils {
     // 关键词搜索 MV API (好看)
     private static final String SEARCH_MV_HK_API
             = "https://haokan.baidu.com/web/search/api?query=%s&pn=%s&rn=%s&type=video";
+    // 关键词搜索 MV API (哔哩哔哩)
+    private static final String SEARCH_MV_BI_API
+            = "http://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%s&page=%s";
 
     // 获取榜单 API
     private static final String GET_RANKING_API
@@ -387,6 +360,9 @@ public class MusicServerUtils {
     // 关键词搜索用户 API (堆糖)
     private static final String SEARCH_USER_DT_API
             = "https://www.duitang.com/napi/people/list/by_search/?kw=%s&start=%s&limit=%s&type=people&_type=&_=%s";
+    // 关键词搜索用户 API (哔哩哔哩)
+    private static final String SEARCH_USER_BI_API
+            = "http://api.bilibili.com/x/web-interface/search/type?search_type=bili_user&keyword=%s&page=%s";
 
     // 获取评论 API
     private static final String NEW_GET_COMMENTS_API = prefix + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=3";
@@ -434,6 +410,9 @@ public class MusicServerUtils {
     // 获取专辑评论 API (豆瓣)
     private static final String GET_ALBUM_COMMENTS_DB_API
             = "https://music.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    // 获取视频评论 API (哔哩哔哩)
+    private static final String GET_VIDEO_COMMENTS_BI_API
+            = "http://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
 
     // 获取曲谱 API
     private static final String GET_SHEETS_API
@@ -1615,45 +1594,201 @@ public class MusicServerUtils {
      * @return
      */
     public static void initMvTag() {
-        Tags.mvTag.put("默认", new String[]{"全部", "全部", "0", "15", "7", "0", ""});
+        Tags.mvTag.put("默认", new String[]{"全部", "全部", "0", "15", "7", "0", "", ""});
 
-        Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "0", ""});
-        Tags.mvTag.put("内地", new String[]{"内地", "全部", "", "16", "7", "1", ""});
-        Tags.mvTag.put("港台", new String[]{"港台", "全部", "", "17", "7", "2", ""});
-        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "18", "7", "3", ""});
-        Tags.mvTag.put("韩国", new String[]{"韩国", "全部", "", "19", "7", "4", ""});
-        Tags.mvTag.put("日本", new String[]{"日本", "全部", "", "20", "7", "5", ""});
-        Tags.mvTag.put("官方版", new String[]{"", "官方版", "", "", "", "", ""});
-//        Tags.mvTag.put("原生", new String[]{"", "原生", "", "", "", "", ""});
-        Tags.mvTag.put("现场版", new String[]{"", "现场版", "", "", "", "", ""});
-        Tags.mvTag.put("网易出品", new String[]{"", "网易出品", "", "", "", "", ""});
+        Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "0", "", ""});
+        Tags.mvTag.put("内地", new String[]{"内地", "全部", "", "16", "7", "1", "", ""});
+        Tags.mvTag.put("港台", new String[]{"港台", "全部", "", "17", "7", "2", "", ""});
+        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "18", "7", "3", "", ""});
+        Tags.mvTag.put("韩国", new String[]{"韩国", "全部", "", "19", "7", "4", "", ""});
+        Tags.mvTag.put("日本", new String[]{"日本", "全部", "", "20", "7", "5", "", ""});
+        Tags.mvTag.put("官方版", new String[]{"", "官方版", "", "", "", "", "", ""});
+//        Tags.mvTag.put("原生", new String[]{"", "原生", "", "", "", "", "", ""});
+        Tags.mvTag.put("现场版", new String[]{"", "现场版", "", "", "", "", "", ""});
+        Tags.mvTag.put("网易出品", new String[]{"", "网易出品", "", "", "", "", "", ""});
 
         // 好看
-        Tags.mvTag.put("影视", new String[]{"", "", "", "", "", "", "yingshi_new"});
-        Tags.mvTag.put("音乐", new String[]{"", "", "", "", "", "", "yinyue_new"});
-        Tags.mvTag.put("VLOG", new String[]{"", "", "", "", "", "", "yunying_vlog"});
-        Tags.mvTag.put("游戏", new String[]{"", "", "", "", "", "", "youxi_new"});
-        Tags.mvTag.put("搞笑", new String[]{"", "", "", "", "", "", "gaoxiao_new"});
-        Tags.mvTag.put("综艺", new String[]{"", "", "", "", "", "", "zongyi_new"});
-        Tags.mvTag.put("娱乐", new String[]{"", "", "", "", "", "", "yule_new"});
-        Tags.mvTag.put("动漫", new String[]{"", "", "", "", "", "", "dongman_new"});
-        Tags.mvTag.put("生活", new String[]{"", "", "", "", "", "", "shenghuo_new"});
-        Tags.mvTag.put("广场舞", new String[]{"", "", "", "", "", "", "guangchuangwu_new"});
-        Tags.mvTag.put("美食", new String[]{"", "", "", "", "", "", "meishi_new"});
-        Tags.mvTag.put("宠物", new String[]{"", "", "", "", "", "", "chongwu_new"});
-        Tags.mvTag.put("三农", new String[]{"", "", "", "", "", "", "sannong_new"});
-        Tags.mvTag.put("军事", new String[]{"", "", "", "", "", "", "junshi_new"});
-        Tags.mvTag.put("社会", new String[]{"", "", "", "", "", "", "shehui_new"});
-        Tags.mvTag.put("体育", new String[]{"", "", "", "", "", "", "tiyu_new"});
-        Tags.mvTag.put("科技", new String[]{"", "", "", "", "", "", "keji_new"});
-        Tags.mvTag.put("时尚", new String[]{"", "", "", "", "", "", "shishang_new"});
-        Tags.mvTag.put("汽车", new String[]{"", "", "", "", "", "", "qiche_new"});
-        Tags.mvTag.put("亲子", new String[]{"", "", "", "", "", "", "qinzi_new"});
-        Tags.mvTag.put("文化", new String[]{"", "", "", "", "", "", "wenhua_new"});
-        Tags.mvTag.put("旅游", new String[]{"", "", "", "", "", "", "lvyou_new"});
-        Tags.mvTag.put("秒懂", new String[]{"", "", "", "", "", "", "yunying_miaodong"});
+        Tags.mvTag.put("影视", new String[]{"", "", "", "", "", "", "yingshi_new", ""});
+        Tags.mvTag.put("音乐", new String[]{"", "", "", "", "", "", "yinyue_new", ""});
+        Tags.mvTag.put("VLOG", new String[]{"", "", "", "", "", "", "yunying_vlog", ""});
+        Tags.mvTag.put("游戏", new String[]{"", "", "", "", "", "", "youxi_new", ""});
+        Tags.mvTag.put("搞笑", new String[]{"", "", "", "", "", "", "gaoxiao_new", ""});
+        Tags.mvTag.put("综艺", new String[]{"", "", "", "", "", "", "zongyi_new", ""});
+        Tags.mvTag.put("娱乐", new String[]{"", "", "", "", "", "", "yule_new", ""});
+        Tags.mvTag.put("动漫", new String[]{"", "", "", "", "", "", "dongman_new", ""});
+        Tags.mvTag.put("生活", new String[]{"", "", "", "", "", "", "shenghuo_new", ""});
+        Tags.mvTag.put("广场舞", new String[]{"", "", "", "", "", "", "guangchuangwu_new", ""});
+        Tags.mvTag.put("美食", new String[]{"", "", "", "", "", "", "meishi_new", ""});
+        Tags.mvTag.put("宠物", new String[]{"", "", "", "", "", "", "chongwu_new", ""});
+        Tags.mvTag.put("三农", new String[]{"", "", "", "", "", "", "sannong_new", ""});
+        Tags.mvTag.put("军事", new String[]{"", "", "", "", "", "", "junshi_new", ""});
+        Tags.mvTag.put("社会", new String[]{"", "", "", "", "", "", "shehui_new", ""});
+        Tags.mvTag.put("体育", new String[]{"", "", "", "", "", "", "tiyu_new", ""});
+        Tags.mvTag.put("科技", new String[]{"", "", "", "", "", "", "keji_new", ""});
+        Tags.mvTag.put("时尚", new String[]{"", "", "", "", "", "", "shishang_new", ""});
+        Tags.mvTag.put("汽车", new String[]{"", "", "", "", "", "", "qiche_new", ""});
+        Tags.mvTag.put("亲子", new String[]{"", "", "", "", "", "", "qinzi_new", ""});
+        Tags.mvTag.put("文化", new String[]{"", "", "", "", "", "", "wenhua_new", ""});
+        Tags.mvTag.put("旅游", new String[]{"", "", "", "", "", "", "lvyou_new", ""});
+        Tags.mvTag.put("秒懂", new String[]{"", "", "", "", "", "", "yunying_miaodong", ""});
 
-        final int c = 7;
+        // 哔哩哔哩
+        Tags.mvTag.put("动画", new String[]{"", "", "", "", "", "", "", "1"});
+        Tags.mvTag.put("MAD·AMV", new String[]{"", "", "", "", "", "", "", "24"});
+        Tags.mvTag.put("MMD·3D", new String[]{"", "", "", "", "", "", "", "25"});
+        Tags.mvTag.put("短片·手书·配音", new String[]{"", "", "", "", "", "", "", "47"});
+        Tags.mvTag.put("手办·模玩", new String[]{"", "", "", "", "", "", "", "210"});
+        Tags.mvTag.put("特摄", new String[]{"", "", "", "", "", "", "", "86"});
+        Tags.mvTag.put("综合", new String[]{"", "", "", "", "", "", "", "27"});
+        Tags.mvTag.put("番剧", new String[]{"", "", "", "", "", "", "", "13"});
+        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "51"});
+        Tags.mvTag.put("官方延伸", new String[]{"", "", "", "", "", "", "", "152"});
+        Tags.mvTag.put("完结动画", new String[]{"", "", "", "", "", "", "", "32"});
+        Tags.mvTag.put("连载动画", new String[]{"", "", "", "", "", "", "", "33"});
+        Tags.mvTag.put("国创", new String[]{"", "", "", "", "", "", "", "167"});
+        Tags.mvTag.put("国产动画", new String[]{"", "", "", "", "", "", "", "153"});
+        Tags.mvTag.put("国产原创相关", new String[]{"", "", "", "", "", "", "", "168"});
+        Tags.mvTag.put("布袋戏", new String[]{"", "", "", "", "", "", "", "169"});
+        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "170"});
+        Tags.mvTag.put("动态漫·广播剧", new String[]{"", "", "", "", "", "", "", "195"});
+        Tags.mvTag.put("音乐", new String[]{"", "", "", "", "", "", "", "3"});
+        Tags.mvTag.put("原创音乐", new String[]{"", "", "", "", "", "", "", "28"});
+        Tags.mvTag.put("翻唱", new String[]{"", "", "", "", "", "", "", "31"});
+        Tags.mvTag.put("VOCALOID·UTAU", new String[]{"", "", "", "", "", "", "", "30"});
+//        Tags.mvTag.put("电音 (已下线)", new String[]{"", "", "", "", "", "", "", "194"});
+        Tags.mvTag.put("演奏", new String[]{"", "", "", "", "", "", "", "59"});
+        Tags.mvTag.put("MV", new String[]{"", "", "", "", "", "", "", "193"});
+        Tags.mvTag.put("音乐现场", new String[]{"", "", "", "", "", "", "", "29"});
+        Tags.mvTag.put("音乐综合", new String[]{"", "", "", "", "", "", "", "130"});
+        Tags.mvTag.put("乐评盘点", new String[]{"", "", "", "", "", "", "", "243"});
+        Tags.mvTag.put("音乐教学", new String[]{"", "", "", "", "", "", "", "244"});
+        Tags.mvTag.put("舞蹈", new String[]{"", "", "", "", "", "", "", "129"});
+        Tags.mvTag.put("宅舞", new String[]{"", "", "", "", "", "", "", "20"});
+        Tags.mvTag.put("舞蹈综合", new String[]{"", "", "", "", "", "", "", "154"});
+        Tags.mvTag.put("舞蹈教程", new String[]{"", "", "", "", "", "", "", "156"});
+        Tags.mvTag.put("街舞", new String[]{"", "", "", "", "", "", "", "198"});
+        Tags.mvTag.put("明星舞蹈", new String[]{"", "", "", "", "", "", "", "199"});
+        Tags.mvTag.put("中国舞", new String[]{"", "", "", "", "", "", "", "200"});
+        Tags.mvTag.put("游戏", new String[]{"", "", "", "", "", "", "", "4"});
+        Tags.mvTag.put("单机游戏", new String[]{"", "", "", "", "", "", "", "17"});
+        Tags.mvTag.put("电子竞技", new String[]{"", "", "", "", "", "", "", "171"});
+        Tags.mvTag.put("手机游戏", new String[]{"", "", "", "", "", "", "", "172"});
+        Tags.mvTag.put("网络游戏", new String[]{"", "", "", "", "", "", "", "65"});
+        Tags.mvTag.put("桌游棋牌", new String[]{"", "", "", "", "", "", "", "173"});
+        Tags.mvTag.put("GMV", new String[]{"", "", "", "", "", "", "", "121"});
+        Tags.mvTag.put("音游", new String[]{"", "", "", "", "", "", "", "136"});
+        Tags.mvTag.put("Mugen", new String[]{"", "", "", "", "", "", "", "19"});
+        Tags.mvTag.put("知识", new String[]{"", "", "", "", "", "", "", "36"});
+        Tags.mvTag.put("科学科普", new String[]{"", "", "", "", "", "", "", "201"});
+        Tags.mvTag.put("社科·法律·心理", new String[]{"", "", "", "", "", "", "", "124"});
+        Tags.mvTag.put("人文历史", new String[]{"", "", "", "", "", "", "", "228"});
+        Tags.mvTag.put("财经商业", new String[]{"", "", "", "", "", "", "", "207"});
+        Tags.mvTag.put("校园学习", new String[]{"", "", "", "", "", "", "", "208"});
+        Tags.mvTag.put("职业职场", new String[]{"", "", "", "", "", "", "", "209"});
+        Tags.mvTag.put("设计·创意", new String[]{"", "", "", "", "", "", "", "229"});
+        Tags.mvTag.put("野生技术协会", new String[]{"", "", "", "", "", "", "", "122"});
+//        Tags.mvTag.put("演讲·公开课 (已下线)", new String[]{"", "", "", "", "", "", "", "39"});
+//        Tags.mvTag.put("星海 (已下线)", new String[]{"", "", "", "", "", "", "", "96"});
+//        Tags.mvTag.put("机械 (已下线)", new String[]{"", "", "", "", "", "", "", "98"});
+        Tags.mvTag.put("科技", new String[]{"", "", "", "", "", "", "", "188"});
+        Tags.mvTag.put("数码", new String[]{"", "", "", "", "", "", "", "95"});
+        Tags.mvTag.put("软件应用", new String[]{"", "", "", "", "", "", "", "230"});
+        Tags.mvTag.put("计算机技术", new String[]{"", "", "", "", "", "", "", "231"});
+        Tags.mvTag.put("工业·工程·机械", new String[]{"", "", "", "", "", "", "", "232"});
+        Tags.mvTag.put("极客DIY", new String[]{"", "", "", "", "", "", "", "233"});
+//        Tags.mvTag.put("电脑装机 (已下线)", new String[]{"", "", "", "", "", "", "", "189"});
+//        Tags.mvTag.put("摄影摄像 (已下线)", new String[]{"", "", "", "", "", "", "", "190"});
+//        Tags.mvTag.put("影音智能 (已下线)", new String[]{"", "", "", "", "", "", "", "191"});
+        Tags.mvTag.put("运动", new String[]{"", "", "", "", "", "", "", "234"});
+        Tags.mvTag.put("篮球", new String[]{"", "", "", "", "", "", "", "235"});
+        Tags.mvTag.put("足球", new String[]{"", "", "", "", "", "", "", "249"});
+        Tags.mvTag.put("健身", new String[]{"", "", "", "", "", "", "", "164"});
+        Tags.mvTag.put("竞技体育", new String[]{"", "", "", "", "", "", "", "236"});
+        Tags.mvTag.put("运动文化", new String[]{"", "", "", "", "", "", "", "237"});
+        Tags.mvTag.put("运动综合", new String[]{"", "", "", "", "", "", "", "238"});
+        Tags.mvTag.put("汽车", new String[]{"", "", "", "", "", "", "", "223"});
+        Tags.mvTag.put("赛车", new String[]{"", "", "", "", "", "", "", "245"});
+        Tags.mvTag.put("改装玩车", new String[]{"", "", "", "", "", "", "", "246"});
+        Tags.mvTag.put("新能源车", new String[]{"", "", "", "", "", "", "", "247"});
+        Tags.mvTag.put("房车", new String[]{"", "", "", "", "", "", "", "248"});
+        Tags.mvTag.put("摩托车", new String[]{"", "", "", "", "", "", "", "240"});
+        Tags.mvTag.put("购车攻略", new String[]{"", "", "", "", "", "", "", "227"});
+        Tags.mvTag.put("汽车生活", new String[]{"", "", "", "", "", "", "", "176"});
+//        Tags.mvTag.put("汽车文化 (已下线)", new String[]{"", "", "", "", "", "", "", "224"});
+//        Tags.mvTag.put("汽车极客 (已下线)", new String[]{"", "", "", "", "", "", "", "225"});
+//        Tags.mvTag.put("智能出行 (已下线)", new String[]{"", "", "", "", "", "", "", "226"});
+        Tags.mvTag.put("生活", new String[]{"", "", "", "", "", "", "", "160"});
+        Tags.mvTag.put("搞笑", new String[]{"", "", "", "", "", "", "", "138"});
+        Tags.mvTag.put("出行", new String[]{"", "", "", "", "", "", "", "250"});
+        Tags.mvTag.put("三农", new String[]{"", "", "", "", "", "", "", "251"});
+        Tags.mvTag.put("家居房产", new String[]{"", "", "", "", "", "", "", "239"});
+        Tags.mvTag.put("手工", new String[]{"", "", "", "", "", "", "", "161"});
+        Tags.mvTag.put("绘画", new String[]{"", "", "", "", "", "", "", "162"});
+        Tags.mvTag.put("日常", new String[]{"", "", "", "", "", "", "", "21"});
+//        Tags.mvTag.put("美食圈 (重定向)", new String[]{"", "", "", "", "", "", "", "76"});
+//        Tags.mvTag.put("动物圈 (重定向)", new String[]{"", "", "", "", "", "", "", "75"});
+//        Tags.mvTag.put("运动 (重定向)", new String[]{"", "", "", "", "", "", "", "163"});
+//        Tags.mvTag.put("汽车 (重定向)", new String[]{"", "", "", "", "", "", "", "176"});
+//        Tags.mvTag.put("其他 (已下线)", new String[]{"", "", "", "", "", "", "", "174"});
+        Tags.mvTag.put("美食", new String[]{"", "", "", "", "", "", "", "211"});
+        Tags.mvTag.put("美食制作", new String[]{"", "", "", "", "", "", "", "76"});
+        Tags.mvTag.put("美食侦探", new String[]{"", "", "", "", "", "", "", "212"});
+        Tags.mvTag.put("美食测评", new String[]{"", "", "", "", "", "", "", "213"});
+        Tags.mvTag.put("田园美食", new String[]{"", "", "", "", "", "", "", "214"});
+        Tags.mvTag.put("美食记录", new String[]{"", "", "", "", "", "", "", "215"});
+        Tags.mvTag.put("动物圈", new String[]{"", "", "", "", "", "", "", "217"});
+        Tags.mvTag.put("喵星人", new String[]{"", "", "", "", "", "", "", "218"});
+        Tags.mvTag.put("汪星人", new String[]{"", "", "", "", "", "", "", "219"});
+        Tags.mvTag.put("野生动物", new String[]{"", "", "", "", "", "", "", "221"});
+        Tags.mvTag.put("爬宠", new String[]{"", "", "", "", "", "", "", "222"});
+        Tags.mvTag.put("大熊猫", new String[]{"", "", "", "", "", "", "", "220"});
+        Tags.mvTag.put("动物综合", new String[]{"", "", "", "", "", "", "", "75"});
+        Tags.mvTag.put("鬼畜", new String[]{"", "", "", "", "", "", "", "119"});
+        Tags.mvTag.put("鬼畜调教", new String[]{"", "", "", "", "", "", "", "22"});
+        Tags.mvTag.put("音MAD", new String[]{"", "", "", "", "", "", "", "26"});
+        Tags.mvTag.put("人力VOCALOID", new String[]{"", "", "", "", "", "", "", "126"});
+        Tags.mvTag.put("鬼畜剧场", new String[]{"", "", "", "", "", "", "", "216"});
+        Tags.mvTag.put("教程演示", new String[]{"", "", "", "", "", "", "", "127"});
+        Tags.mvTag.put("时尚", new String[]{"", "", "", "", "", "", "", "155"});
+        Tags.mvTag.put("美妆护肤", new String[]{"", "", "", "", "", "", "", "157"});
+        Tags.mvTag.put("仿妆cos", new String[]{"", "", "", "", "", "", "", "252"});
+        Tags.mvTag.put("穿搭", new String[]{"", "", "", "", "", "", "", "158"});
+//        Tags.mvTag.put("健身 (重定向)", new String[]{"", "", "", "", "", "", "", "164"});
+        Tags.mvTag.put("时尚潮流", new String[]{"", "", "", "", "", "", "", "159"});
+//        Tags.mvTag.put("风尚标 (已下线)", new String[]{"", "", "", "", "", "", "", "192"});
+        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "202"});
+        Tags.mvTag.put("热点", new String[]{"", "", "", "", "", "", "", "203"});
+        Tags.mvTag.put("环球", new String[]{"", "", "", "", "", "", "", "204"});
+        Tags.mvTag.put("社会", new String[]{"", "", "", "", "", "", "", "205"});
+        Tags.mvTag.put("综合", new String[]{"", "", "", "", "", "", "", "206"});
+//        Tags.mvTag.put("广告", new String[]{"", "", "", "", "", "", "", "165"});
+//        Tags.mvTag.put("广告 (已下线)", new String[]{"", "", "", "", "", "", "", "166"});
+        Tags.mvTag.put("娱乐", new String[]{"", "", "", "", "", "", "", "5"});
+        Tags.mvTag.put("综艺", new String[]{"", "", "", "", "", "", "", "71"});
+        Tags.mvTag.put("娱乐杂谈", new String[]{"", "", "", "", "", "", "", "241"});
+        Tags.mvTag.put("粉丝创作", new String[]{"", "", "", "", "", "", "", "242"});
+        Tags.mvTag.put("明星综合", new String[]{"", "", "", "", "", "", "", "137"});
+//        Tags.mvTag.put("Korea相关 (已下线)", new String[]{"", "", "", "", "", "", "", "131"});
+        Tags.mvTag.put("影视", new String[]{"", "", "", "", "", "", "", "181"});
+        Tags.mvTag.put("影视杂谈", new String[]{"", "", "", "", "", "", "", "182"});
+        Tags.mvTag.put("影视剪辑", new String[]{"", "", "", "", "", "", "", "183"});
+        Tags.mvTag.put("小剧场", new String[]{"", "", "", "", "", "", "", "85"});
+        Tags.mvTag.put("预告·资讯", new String[]{"", "", "", "", "", "", "", "184"});
+        Tags.mvTag.put("纪录片", new String[]{"", "", "", "", "", "", "", "177"});
+        Tags.mvTag.put("人文·历史", new String[]{"", "", "", "", "", "", "", "37"});
+        Tags.mvTag.put("科学·探索·自然", new String[]{"", "", "", "", "", "", "", "178"});
+        Tags.mvTag.put("军事", new String[]{"", "", "", "", "", "", "", "179"});
+        Tags.mvTag.put("社会·美食·旅行", new String[]{"", "", "", "", "", "", "", "180"});
+        Tags.mvTag.put("电影", new String[]{"", "", "", "", "", "", "", "23"});
+        Tags.mvTag.put("华语电影", new String[]{"", "", "", "", "", "", "", "147"});
+        Tags.mvTag.put("欧美电影", new String[]{"", "", "", "", "", "", "", "145"});
+        Tags.mvTag.put("日本电影", new String[]{"", "", "", "", "", "", "", "146"});
+        Tags.mvTag.put("其他国家", new String[]{"", "", "", "", "", "", "", "83"});
+        Tags.mvTag.put("电视剧", new String[]{"", "", "", "", "", "", "", "11"});
+        Tags.mvTag.put("国产剧", new String[]{"", "", "", "", "", "", "", "185"});
+        Tags.mvTag.put("海外剧", new String[]{"", "", "", "", "", "", "", "187"});
+
+        final int c = 8;
         // 酷狗
         // MV 标签
         Runnable initMvTagKg = () -> {
@@ -1745,6 +1880,15 @@ public class MusicServerUtils {
     // 推荐视频 API (好看)
     private static final String RECOMMEND_VIDEO_HK_API
             = "https://haokan.baidu.com/web/video/feed?tab=%s&act=pcFeed&pd=pc&num=%s&shuaxin_id=1661766211525";
+    // 热门视频 API (哔哩哔哩)
+    private static final String HOT_VIDEO_BI_API
+            = "https://api.bilibili.com/x/web-interface/popular?pn=%s&ps=%s";
+    // 分区排行榜视频 API (哔哩哔哩)
+    private static final String CAT_RANK_VIDEO_BI_API
+            = "http://api.bilibili.com/x/web-interface/ranking/region?rid=%s";
+    // 分区最新视频 API (哔哩哔哩)
+    private static final String CAT_NEW_VIDEO_BI_API
+            = "http://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
 
     // 歌曲信息 API (单首)
     private static final String SINGLE_SONG_DETAIL_API = prefix + "/song/detail?ids=%s";
@@ -1917,6 +2061,10 @@ public class MusicServerUtils {
     private static final String MV_URL_QI_API = "https://music.91q.com/v1/video/info?appid=16073360&assetCode=%s&timestamp=%s";
     // MV 视频链接获取 API (好看)
     private static final String MV_URL_HK_API = "https://haokan.baidu.com/v?vid=%s&_format=json";
+    // 视频 bvid 获取 cid (哔哩哔哩)
+    private static final String VIDEO_CID_BI_API = "http://api.bilibili.com/x/player/pagelist?bvid=%s";
+    // MV 视频链接获取 API (哔哩哔哩)
+    private static final String VIDEO_URL_BI_API = "http://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=64";
 
     // 榜单信息 API (酷狗)
     private static final String RANKING_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
@@ -1943,6 +2091,8 @@ public class MusicServerUtils {
     private static final String USER_DETAIL_DB_API = "https://www.douban.com/people/%s/";
     // 用户信息 API (堆糖)
     private static final String USER_DETAIL_DT_API = "https://www.duitang.com/people/?id=%s";
+    // 用户信息 API (哔哩哔哩)
+    private static final String USER_DETAIL_BI_API = "http://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
 
     // 相似歌曲 API
     private static final String SIMILAR_SONG_API = prefix + "/simi/song?id=%s";
@@ -1975,6 +2125,9 @@ public class MusicServerUtils {
     // 用户图书电台 API (豆瓣)
     private static final String USER_BOOK_RADIO_DB_API = "https://book.douban.com/people/%s/collect?start=%s&sort=time&rating=all&filter=all&mode=grid";
 
+    // 用户视频 API (哔哩哔哩)
+    private static final String USER_VIDEO_BI_API = "http://api.bilibili.com/x/space/arc/search?mid=%s&pn=%s&ps=%s";
+
     // 歌曲相关歌单 API
     private static final String RELATED_PLAYLIST_API = prefix + "/simi/playlist?id=%s";
     // 相关歌单 API (QQ)
@@ -2003,6 +2156,8 @@ public class MusicServerUtils {
     private static final String ARTIST_RADIO_DB_API = "https://movie.douban.com/celebrity/%s/movies?start=%s&format=pic&sortby=time";
     // 相似视频 API (好看)
     private static final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec?title=%s&vid=%s&act=pcRec&pd=pc";
+    // 相似视频 API (哔哩哔哩)
+    private static final String SIMILAR_VIDEO_BI_API = "http://api.bilibili.com/x/web-interface/archive/related?bvid=%s";
 
     // 用户关注 API
     private static final String USER_FOLLOWS_API = prefix + "/user/follows?uid=%s&limit=1000";
@@ -2010,12 +2165,16 @@ public class MusicServerUtils {
     private static final String USER_FOLLOWS_XM_API = "https://www.ximalaya.com/revision/user/following?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户关注 API (猫耳)
     private static final String USER_FOLLOWS_ME_API = "https://www.missevan.com/person/getuserattention?type=0&user_id=%s&p=%s&page_size=%s";
+    // 用户关注 API (哔哩哔哩)
+    private static final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
     // 用户粉丝 API
     private static final String USER_FOLLOWEDS_API = prefix + "/user/followeds?uid=%s&offset=%s&limit=%s";
     // 用户粉丝 API (喜马拉雅)
     private static final String USER_FOLLOWEDS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户粉丝 API (猫耳)
     private static final String USER_FOLLOWEDS_ME_API = "https://www.missevan.com/person/getuserattention?type=1&user_id=%s&p=%s&page_size=%s";
+    // 用户粉丝 API (哔哩哔哩)
+    private static final String USER_FOLLOWEDS_BI_API = "https://api.bilibili.com/x/relation/followers?vmid=%s&pn=%s&ps=%s";
 
     // 歌单收藏者 API
     private static final String PLAYLIST_SUBSCRIBERS_API = prefix + "/playlist/subscribers?id=%s&offset=%s&limit=%s";
@@ -4323,6 +4482,7 @@ public class MusicServerUtils {
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title");
                     String creators = parseCreators(mvJson);
+                    String creatorId = mvJson.getJSONArray("creator").getJSONObject(0).getString("userId");
                     Long playCount = mvJson.getLong("playTime");
                     Double duration = mvJson.getDouble("durationms") / 1000;
                     String coverImgUrl = mvJson.getString("coverUrl");
@@ -4333,6 +4493,7 @@ public class MusicServerUtils {
                     mvInfo.setId(mvId);
                     mvInfo.setName(mvName);
                     mvInfo.setArtist(creators);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
                     mvInfo.setCoverImgUrl(coverImgUrl);
@@ -4518,6 +4679,52 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
 
+        // 哔哩哔哩
+        Callable<CommonResult<NetMvInfo>> searchMvsBi = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_BI_API, encodedKeyword, page))
+                    .cookie(BI_COOKIE)
+                    .execute();
+            String mvInfoBody = resp.body();
+            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject data = mvInfoJson.getJSONObject("data");
+            t = data.getInt("numResults");
+            JSONArray mvArray = data.getJSONArray("result");
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String bvId = mvJson.getString("bvid");
+                String mvName = StringUtils.removeHTMLLabel(mvJson.getString("title"));
+                String artistName = mvJson.getString("author");
+                String creatorId = mvJson.getString("mid");
+                Long playCount = mvJson.getLong("play");
+                Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
+                String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
+                String coverImgUrl = "https:" + mvJson.getString("pic");
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setFormat(Format.FLV);
+                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setBvid(bvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
 
         taskList.add(GlobalExecutors.requestExecutor.submit(searchMvs));
@@ -4526,6 +4733,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsKw));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsHk));
+        taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsBi));
 
         List<List<NetMvInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -5139,6 +5347,53 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
 
+        // 哔哩哔哩
+        Callable<CommonResult<NetUserInfo>> searchUsersBi = () -> {
+            LinkedList<NetUserInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_BI_API, encodedKeyword, page))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            t = data.getInt("numResults");
+            JSONArray userArray = data.getJSONArray("result");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("mid");
+                String userName = userJson.getString("uname");
+                int gen = userJson.getInt("gender");
+                String gender = gen == 1 ? "男" : gen == 2 ? "女" : "保密";
+                String avatarThumbUrl = "https:" + userJson.getString("upic");
+                String avatarUrl = avatarThumbUrl;
+                Integer programCount = userJson.getInt("videos");
+                Integer followed = userJson.getInt("fans");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.BI);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+                userInfo.setProgramCount(programCount);
+//                userInfo.setFollow(follow);
+                userInfo.setFollowed(followed);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetUserInfo>>> taskList = new LinkedList<>();
 
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsers));
@@ -5147,6 +5402,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersMe));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDb));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDt));
+        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersBi));
 
         List<List<NetUserInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -5230,8 +5486,9 @@ public class MusicServerUtils {
             boolean isVideo = netMvInfo.isVideo();
             boolean isMlog = netMvInfo.isMlog();
 
-            id = netMvInfo.getId();
             source = netMvInfo.getSource();
+            // 哔哩哔哩获取视频的 bvid
+            id = source == NetMusicSource.BI ? netMvInfo.getBvid() : netMvInfo.getId();
 
             // Mlog 需要先获取视频 id，并转为视频类型
             if (isMlog) {
@@ -5706,6 +5963,47 @@ public class MusicServerUtils {
 
                     commentInfos.add(commentInfo);
                 }
+            }
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String commentInfoBody = HttpRequest.get(String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, limit))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body()
+                    // 貌似解析不了，触及到什么特殊字符了？
+                    .replace("2233娘_", "");
+            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+            JSONObject data = commentInfoJson.getJSONObject("data");
+            total = data.getJSONObject("page").getInt("count");
+            JSONArray commentArray = data.getJSONArray("replies");
+            for (int i = 0, len = commentArray.size(); i < len; i++) {
+                JSONObject commentJson = commentArray.getJSONObject(i);
+                JSONObject member = commentJson.getJSONObject("member");
+
+                String userId = commentJson.getString("mid");
+                String username = member.getString("uname");
+                String profileUrl = member.getString("avatar");
+                String content = commentJson.getJSONObject("content").getString("message");
+                String time = TimeUtils.msToPhrase(commentJson.getLong("ctime") * 1000);
+                Integer likedCount = commentJson.getInt("like");
+
+                NetCommentInfo commentInfo = new NetCommentInfo();
+                commentInfo.setSource(NetMusicSource.BI);
+                commentInfo.setUserId(userId);
+                commentInfo.setUsername(username);
+                commentInfo.setProfileUrl(profileUrl);
+                commentInfo.setContent(content);
+                commentInfo.setTime(time);
+                commentInfo.setLikedCount(likedCount);
+
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage profile = extractProfile(profileUrl);
+                    commentInfo.setProfile(profile);
+                });
+
+                commentInfos.add(commentInfo);
             }
         }
 
@@ -11082,28 +11380,175 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
 
+        // 哔哩哔哩
+        // 热门视频
+        Callable<CommonResult<NetMvInfo>> getHotVideoBi = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String mvInfoBody = HttpRequest.get(String.format(HOT_VIDEO_BI_API, page, limit))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+            t = 20;
+            JSONArray mvArray = data.getJSONArray("list");
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String id = mvJson.getString("cid");
+                String bvId = mvJson.getString("bvid");
+                String mvName = mvJson.getString("title");
+                String artistName = mvJson.getJSONObject("owner").getString("name");
+                String creatorId = mvJson.getJSONObject("owner").getString("mid");
+                String coverImgUrl = mvJson.getString("pic");
+                Long playCount = mvJson.getJSONObject("stat").getLong("view");
+                Double duration = mvJson.getDouble("duration");
+                String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setFormat(Format.FLV);
+                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setId(id);
+                mvInfo.setBvid(bvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 分区排行榜视频
+        Callable<CommonResult<NetMvInfo>> getCatRankVideoBi = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[7])) {
+                String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[7]))
+                        .cookie(BI_COOKIE)
+                        .execute()
+                        .body();
+                JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+                JSONArray mvArray = mvInfoJson.getJSONArray("data");
+                t = mvArray.size();
+                for (int i = (page - 1) * limit, len = Math.min(page * limit, mvArray.size()); i < len; i++) {
+                    JSONObject mvJson = mvArray.getJSONObject(i);
+
+//                    String id = mvJson.getString("cid");
+                    String bvId = mvJson.getString("bvid");
+                    String mvName = mvJson.getString("title");
+                    String artistName = mvJson.getString("author");
+                    String creatorId = mvJson.getString("mid");
+                    String coverImgUrl = mvJson.getString("pic");
+                    Long playCount = mvJson.getLong("play");
+                    Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
+                    String pubTime = mvJson.getString("create").split(" ")[0];
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setFormat(Format.FLV);
+                    mvInfo.setSource(NetMusicSource.BI);
+//                    mvInfo.setId(id);
+                    mvInfo.setBvid(bvId);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setDuration(duration);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(mvInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 分区最新视频
+        Callable<CommonResult<NetMvInfo>> getCatNewVideoBi = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[7])) {
+                String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[7], page, limit))
+                        .cookie(BI_COOKIE)
+                        .execute()
+                        .body();
+                JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+                JSONObject data = mvInfoJson.getJSONObject("data");
+                t = data.getJSONObject("page").getInt("count");
+                JSONArray mvArray = data.getJSONArray("archives");
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    JSONObject mvJson = mvArray.getJSONObject(i);
+
+                    String id = mvJson.getString("cid");
+                    String bvId = mvJson.getString("bvid");
+                    String mvName = mvJson.getString("title");
+                    String artistName = mvJson.getJSONObject("owner").getString("name");
+                    String creatorId = mvJson.getJSONObject("owner").getString("mid");
+                    String coverImgUrl = mvJson.getString("pic");
+                    Long playCount = mvJson.getJSONObject("stat").getLong("view");
+                    Double duration = mvJson.getDouble("duration");
+                    String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setFormat(Format.FLV);
+                    mvInfo.setSource(NetMusicSource.BI);
+                    mvInfo.setId(id);
+                    mvInfo.setBvid(bvId);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setDuration(duration);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(mvInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
 
         boolean dt = defaultTag.equals(tag);
 
-        if (dt) {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMv));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getExclusiveMv));
-
-            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQi));
-
-            taskList.add(GlobalExecutors.requestExecutor.submit(getGuessVideoHk));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getTopVideoHk));
-        }
+        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMv));
         taskList.add(GlobalExecutors.requestExecutor.submit(getMvRanking));
         taskList.add(GlobalExecutors.requestExecutor.submit(getNewMv));
         taskList.add(GlobalExecutors.requestExecutor.submit(getAllMv));
+        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getExclusiveMv));
 
         taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvKg));
+
         taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(getNewMvQq));
 
+        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQi));
+
+        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getGuessVideoHk));
+        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getTopVideoHk));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendVideoHk));
+
+        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotVideoBi));
+        taskList.add(GlobalExecutors.requestExecutor.submit(getCatRankVideoBi));
+        taskList.add(GlobalExecutors.requestExecutor.submit(getCatNewVideoBi));
 
         List<List<NetMvInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -12321,6 +12766,25 @@ public class MusicServerUtils {
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
             String bgUrl = doc.select("img.header-bg").attr("src");
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgUrl)));
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_BI_API, uid))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data").getJSONObject("card");
+            if (!userInfo.hasLevel()) userInfo.setLevel(data.getJSONObject("level_info").getInt("current_level"));
+            if (!userInfo.hasArea()) userInfo.setArea("未知");
+            if (!userInfo.hasGender()) userInfo.setGender(data.getString("sex"));
+            if (!userInfo.hasBirthday()) userInfo.setBirthday(data.getString("birthday"));
+            if (!userInfo.hasSign()) userInfo.setSign(data.getString("sign"));
+            if (!userInfo.hasFollow()) userInfo.setFollow(data.getInt("attention"));
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(data.getInt("fans"));
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(userInfoJson.getJSONObject("data").getJSONObject("space").getString("l_img"))));
         }
     }
 
@@ -14852,6 +15316,62 @@ public class MusicServerUtils {
     }
 
     /**
+     * 获取用户视频 (通过用户)
+     *
+     * @return
+     */
+    public static CommonResult<NetMvInfo> getUserVideos(NetUserInfo netUserInfo, int page, int limit) {
+        int source = netUserInfo.getSource();
+        String uid = netUserInfo.getId();
+
+        LinkedList<NetMvInfo> res = new LinkedList<>();
+        Integer t = 0;
+
+        // 哔哩哔哩
+        if (source == NetMusicSource.BI) {
+            String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, uid, page, limit))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+            t = data.getJSONObject("page").getInt("count");
+            JSONArray mvArray = data.getJSONObject("list").getJSONArray("vlist");
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String bvId = mvJson.getString("bvid");
+                String mvName = mvJson.getString("title");
+                String artistName = mvJson.getString("author");
+                String creatorId = mvJson.getString("mid");
+                String coverImgUrl = mvJson.getString("pic");
+                Long playCount = mvJson.getLong("play");
+                Double duration = TimeUtils.toSeconds(mvJson.getString("length"));
+                String pubTime = TimeUtils.msToDate(mvJson.getLong("created") * 1000);
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setFormat(Format.FLV);
+                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setBvid(bvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
+            }
+        }
+
+        return new CommonResult<>(res, t);
+    }
+
+    /**
      * 获取相关歌单（通过歌曲）
      *
      * @return
@@ -15099,6 +15619,7 @@ public class MusicServerUtils {
     public static CommonResult<NetMvInfo> getSimilarMvs(NetMvInfo netMvInfo) {
         int source = netMvInfo.getSource();
         String id = netMvInfo.getId();
+        String bvid = netMvInfo.getBvid();
         String name = StringUtils.encode(netMvInfo.getName());
         boolean isVideo = netMvInfo.isVideo();
         boolean isMlog = netMvInfo.isMlog();
@@ -15132,6 +15653,7 @@ public class MusicServerUtils {
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title");
                     String artistName = parseCreators(mvJson);
+                    String creatorId = mvJson.getJSONArray("creator").getJSONObject(0).getString("userId");
                     String coverImgUrl = mvJson.getString("coverUrl");
                     Long playCount = mvJson.getLong("playTime");
                     Double duration = mvJson.getDouble("durationms") / 1000;
@@ -15141,6 +15663,7 @@ public class MusicServerUtils {
                     mvInfo.setId(mvId);
                     mvInfo.setName(mvName.trim());
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setCoverImgUrl(coverImgUrl);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
@@ -15212,6 +15735,48 @@ public class MusicServerUtils {
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
+            }
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_BI_API, bvid))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONArray mvArray = JSONObject.fromObject(mvInfoBody).getJSONArray("data");
+            t = mvArray.size();
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String mvId = mvJson.getString("cid");
+                String bvId = mvJson.getString("bvid");
+                String mvName = mvJson.getString("title");
+                String artistName = mvJson.getJSONObject("owner").getString("name");
+                String creatorId = mvJson.getJSONObject("owner").getString("mid");
+                String coverImgUrl = mvJson.getString("pic");
+                Long playCount = mvJson.getJSONObject("stat").getLong("view");
+                Double duration = mvJson.getDouble("duration");
+                String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setFormat(Format.FLV);
+                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setId(mvId);
+                mvInfo.setBvid(bvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
@@ -15958,6 +16523,40 @@ public class MusicServerUtils {
                     res.add(userInfo);
                 }
             }
+
+            // 哔哩哔哩
+            else if (source == NetMusicSource.BI) {
+                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_BI_API, id))
+                        .cookie(BI_COOKIE)
+                        .execute()
+                        .body();
+                JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+                JSONObject data = userInfoJson.getJSONObject("data").getJSONObject("card");
+
+                String userId = data.getString("mid");
+                String userName = data.getString("name");
+                String gender = data.getString("sex");
+                gender = "男".equals(gender) ? "♂ " + gender : "女".equals(gender) ? "♀ " + gender : "保密";
+                String avatarThumbUrl = data.getString("face");
+                Integer follow = data.getInt("attention");
+                Integer followed = data.getInt("fans");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.BI);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarThumbUrl);
+                userInfo.setFollow(follow);
+                userInfo.setFollowed(followed);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
+                    userInfo.setAvatarThumb(coverImgThumb);
+                });
+
+                res.add(userInfo);
+            }
         }
 
         return new CommonResult<>(res, t);
@@ -16101,6 +16700,41 @@ public class MusicServerUtils {
             }
         }
 
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_BI_API, id, page, limit))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray userArray = data.getJSONArray("list");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("mid");
+                String userName = userJson.getString("uname");
+                String avatarThumbUrl = userJson.getString("face");
+                String avatarUrl = avatarThumbUrl;
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.BI);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+        }
+
         return new CommonResult<>(res, t);
     }
 
@@ -16231,6 +16865,41 @@ public class MusicServerUtils {
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_BI_API, id, page, limit))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray userArray = data.getJSONArray("list");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("mid");
+                String userName = userJson.getString("uname");
+                String avatarThumbUrl = userJson.getString("face");
+                String avatarUrl = avatarThumbUrl;
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.BI);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
@@ -16461,6 +17130,7 @@ public class MusicServerUtils {
     public static String fetchMvUrl(NetMvInfo netMvInfo) {
         int source = netMvInfo.getSource();
         String mvId = netMvInfo.getId();
+        String bvId = netMvInfo.getBvid();
         boolean isVideo = netMvInfo.isVideo();
         boolean isMlog = netMvInfo.isMlog();
 
@@ -16585,6 +17255,26 @@ public class MusicServerUtils {
             JSONObject data = JSONObject.fromObject(mvBody).getJSONObject("data");
             JSONArray urls = data.getJSONObject("apiData").getJSONObject("curVideoMeta").getJSONArray("clarityUrl");
             return urls.getJSONObject(urls.size() - 1).getString("url");
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            // 先通过 bvid 获取 cid
+            if (StringUtils.isEmpty(mvId)) {
+                String cidBody = HttpRequest.get(String.format(VIDEO_CID_BI_API, bvId))
+                        .cookie(BI_COOKIE)
+                        .execute()
+                        .body();
+                netMvInfo.setId(mvId = JSONObject.fromObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
+            }
+
+            String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, mvId))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(mvBody).getJSONObject("data");
+            JSONArray urls = data.getJSONArray("durl");
+            return urls.getJSONObject(0).getString("url");
         }
 
         return null;
@@ -16760,10 +17450,28 @@ public class MusicServerUtils {
      * @throws Exception
      */
     public static void download(LoadingPanel loading, String urlPath, String dest) throws Exception {
+        download(loading, urlPath, dest, null);
+    }
+
+    /**
+     * 下载文件，同时设置等待面板百分比
+     *
+     * @param loading
+     * @param urlPath
+     * @param dest
+     * @throws Exception
+     */
+    public static void download(LoadingPanel loading, String urlPath, String dest, Map<String, Object> headers) throws Exception {
         File file = new File(dest);
         URL url = new URL(urlPath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
+        // 请求头
+        if (headers != null) {
+            for (String key : headers.keySet()) {
+                conn.setRequestProperty(key, (String) headers.get(key));
+            }
+        }
         conn.connect();
         int code = conn.getResponseCode();
         if (code != HttpURLConnection.HTTP_OK) {
@@ -16779,7 +17487,8 @@ public class MusicServerUtils {
         // 如果没有数据了会返回 -1，如果还有会返回数据的长度
         while ((read = fis.read(buffer)) != -1) {
             hasRead += read;
-            loading.setText("加载歌曲文件，" + String.format("%.1f", (double) hasRead / fileSize * 100) + "%");
+            if (loading != null)
+                loading.setText("加载歌曲文件，" + String.format("%.1f", (double) hasRead / fileSize * 100) + "%");
             //读取多少输出多少
             toClient.write(buffer, 0, read);
         }
@@ -16794,11 +17503,17 @@ public class MusicServerUtils {
      * @param task
      * @throws Exception
      */
-    public static void download(Task task) throws Exception {
+    public static void download(Task task, Map<String, Object> headers) throws Exception {
         File file = new File(task.getDest());
         URL url = new URL(task.getUrl());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);
+        // 请求头
+        if (headers != null) {
+            for (String key : headers.keySet()) {
+                conn.setRequestProperty(key, (String) headers.get(key));
+            }
+        }
         conn.connect();
         int code = conn.getResponseCode();
         if (code != HttpURLConnection.HTTP_OK) {
@@ -16815,7 +17530,7 @@ public class MusicServerUtils {
         // 如果没有数据了会返回 -1，如果还有会返回数据的长度
         while ((read = fis.read(buffer)) != -1) {
             // 中断任务后跳出
-            if(task.isInterrupted()) break;
+            if (task.isInterrupted()) break;
             hasRead += read;
             task.setPercent((double) hasRead / fileSize * 100);
             task.setFinished(hasRead);

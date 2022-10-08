@@ -243,6 +243,8 @@ public class PlayerFrame extends JFrame {
     private final String USER_ALBUM_MENU_ITEM_TEXT = "查看用户专辑        ";
     // 右键菜单查看用户电台文字
     private final String USER_RADIO_MENU_ITEM_TEXT = "查看用户电台        ";
+    // 右键菜单查看用户视频文字
+    private final String USER_VIDEO_MENU_ITEM_TEXT = "查看用户视频        ";
     // 右键菜单查看用户关注文字
     private final String USER_FOLLOW_MENU_ITEM_TEXT = "查看用户关注        ";
     // 右键菜单查看用户粉丝文字
@@ -297,6 +299,8 @@ public class PlayerFrame extends JFrame {
     private final String RELATED_MV_MENU_ITEM_TEXT = "查看相关 MV        ";
     // 右键菜单查看相似 MV 文字
     private final String SIMILAR_MV_MENU_ITEM_TEXT = "查看相似 MV        ";
+    // 右键菜单查看发布者 文字
+    private final String MV_CREATOR_MENU_ITEM_TEXT = "查看发布者        ";
     // 右键菜单复制名称文字
     private final String COPY_NAME_MENU_ITEM_TEXT = "复制名称        ";
     // 右键菜单导出专辑图片文字
@@ -675,7 +679,7 @@ public class PlayerFrame extends JFrame {
     // 当前均衡
     public double currBalance = DEFAULT_BALANCE;
     // 最大缓存大小(MB，超出后自动清理)
-    public long maxCacheSize = 512;
+    public long maxCacheSize = 1024;
     // 当前排序方式
     private int currSortMethod = -1;
     // 当前排序顺序
@@ -1600,6 +1604,8 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem netMvDownloadMenuItem = new CustomMenuItem(DOWNLOAD_MENU_ITEM_TEXT);
     // MV 右键菜单：查看相似 MV
     private CustomMenuItem netMvSimilarMvMenuItem = new CustomMenuItem(SIMILAR_MV_MENU_ITEM_TEXT);
+    // MV 右键菜单：查看发布者
+    private CustomMenuItem netMvCreatorMenuItem = new CustomMenuItem(MV_CREATOR_MENU_ITEM_TEXT);
     // MV 右键菜单：查看评论
     private CustomMenuItem netMvCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
     // MV 右键菜单：复制名称
@@ -1711,6 +1717,8 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem netUserAlbumMenuItem = new CustomMenuItem(USER_ALBUM_MENU_ITEM_TEXT);
     // 用户右键菜单：查看用户电台
     private CustomMenuItem netUserRadioMenuItem = new CustomMenuItem(USER_RADIO_MENU_ITEM_TEXT);
+    // 用户右键菜单：查看用户视频
+    private CustomMenuItem netUserVideoMenuItem = new CustomMenuItem(USER_VIDEO_MENU_ITEM_TEXT);
     // 用户右键菜单：查看用户关注
     private CustomMenuItem netUserFollowMenuItem = new CustomMenuItem(USER_FOLLOW_MENU_ITEM_TEXT);
     // 用户右键菜单：查看用户粉丝
@@ -2161,6 +2169,8 @@ public class PlayerFrame extends JFrame {
     private NetCommentInfo currAlbumCommentInfo;
     // 当前相似 MV 原 MV
     private NetMvInfo currMvMvInfo;
+    // 当前视频原用户
+    private NetUserInfo currMvUserInfo;
     // 当前相似歌手原歌手
     private NetArtistInfo currArtistArtistInfo;
     // 当前合作人原歌手
@@ -2181,6 +2191,8 @@ public class PlayerFrame extends JFrame {
     private NetPlaylistInfo currSubscriberPlaylistInfo;
     // 当前用户(粉丝)原歌手
     private NetArtistInfo currUserArtistInfo;
+    // 当前用户(发布者)原 MV
+    private NetMvInfo currUserMvInfo;
     // 当前用户(主播)原电台
     private NetRadioInfo currUserRadioInfo;
     // 当前用户(订阅者)原电台
@@ -2789,7 +2801,7 @@ public class PlayerFrame extends JFrame {
         File cacheDir = new File(SimplePath.IMG_CACHE_PATH);
         if (!cacheDir.exists()) cacheDir.mkdirs();
         // 载入最大缓存大小
-        maxCacheSize = config.optLong(ConfigConstants.MAX_CACHE_SIZE, 512);
+        maxCacheSize = config.optLong(ConfigConstants.MAX_CACHE_SIZE, 1024);
         // 载入最大播放历史数量
         maxHistoryCount = config.optInt(ConfigConstants.MAX_HISTORY_COUNT, 300);
         // 载入最大搜索历史数量
@@ -2992,7 +3004,9 @@ public class PlayerFrame extends JFrame {
                     NetMvInfo netMvInfo = new NetMvInfo();
                     netMvInfo.setSource(jo.optInt(ConfigConstants.NET_MV_SOURCE));
                     netMvInfo.setType(jo.optInt(ConfigConstants.NET_MV_TYPE));
+                    netMvInfo.setFormat(jo.optString(ConfigConstants.NET_MV_FORMAT));
                     netMvInfo.setId(jo.optString(ConfigConstants.NET_MV_ID));
+                    netMvInfo.setBvid(jo.optString(ConfigConstants.NET_MV_BVID));
                     netMvInfo.setName(jo.optString(ConfigConstants.NET_MV_NAME));
                     netMvInfo.setArtist(jo.optString(ConfigConstants.NET_MV_ARTIST));
                     task = new Task(downloadList, type, null, netMvInfo);
@@ -3499,9 +3513,12 @@ public class PlayerFrame extends JFrame {
                 NetMvInfo netMvInfo = new NetMvInfo();
                 netMvInfo.setSource(jsonObject.optInt(ConfigConstants.NET_MV_SOURCE));
                 netMvInfo.setType(jsonObject.optInt(ConfigConstants.NET_MV_TYPE));
+                netMvInfo.setFormat(jsonObject.optString(ConfigConstants.NET_MV_FORMAT));
                 netMvInfo.setId(jsonObject.optString(ConfigConstants.NET_MV_ID));
+                netMvInfo.setBvid(jsonObject.optString(ConfigConstants.NET_MV_BVID));
                 netMvInfo.setName(jsonObject.optString(ConfigConstants.NET_MV_NAME));
                 netMvInfo.setArtist(jsonObject.optString(ConfigConstants.NET_MV_ARTIST));
+                netMvInfo.setCreatorId(jsonObject.optString(ConfigConstants.NET_MV_CREATOR_ID));
                 netMvInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MV_DURATION));
                 netMvInfo.setPubTime(jsonObject.optString(ConfigConstants.NET_MV_PUB_TIME));
                 netMvInfo.setCoverImgUrl(jsonObject.optString(ConfigConstants.NET_MV_COVER_IMG_URL));
@@ -3729,7 +3746,9 @@ public class PlayerFrame extends JFrame {
                 JSONObject jo = new JSONObject();
                 jo.put(ConfigConstants.NET_MV_SOURCE, netMvInfo.getSource());
                 jo.put(ConfigConstants.NET_MV_TYPE, netMvInfo.getType());
+                jo.put(ConfigConstants.NET_MV_FORMAT, netMvInfo.getFormat());
                 jo.put(ConfigConstants.NET_MV_ID, netMvInfo.getId());
+                jo.put(ConfigConstants.NET_MV_BVID, netMvInfo.getBvid());
                 jo.put(ConfigConstants.NET_MV_NAME, netMvInfo.getName());
                 jo.put(ConfigConstants.NET_MV_ARTIST, netMvInfo.getArtist());
                 jsonObject.put(ConfigConstants.TASK_MV_INFO, jo);
@@ -3964,9 +3983,12 @@ public class PlayerFrame extends JFrame {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(ConfigConstants.NET_MV_SOURCE, netMvInfo.getSource());
             jsonObject.put(ConfigConstants.NET_MV_TYPE, netMvInfo.getType());
+            jsonObject.put(ConfigConstants.NET_MV_FORMAT, netMvInfo.getFormat());
             jsonObject.put(ConfigConstants.NET_MV_ID, netMvInfo.getId());
+            jsonObject.put(ConfigConstants.NET_MV_BVID, netMvInfo.getBvid());
             jsonObject.put(ConfigConstants.NET_MV_NAME, netMvInfo.getName());
             jsonObject.put(ConfigConstants.NET_MV_ARTIST, netMvInfo.getArtist());
+            jsonObject.put(ConfigConstants.NET_MV_CREATOR_ID, netMvInfo.getCreatorId());
             if (netMvInfo.hasDuration()) jsonObject.put(ConfigConstants.NET_MV_DURATION, netMvInfo.getDuration());
             if (netMvInfo.hasPubTime()) jsonObject.put(ConfigConstants.NET_MV_PUB_TIME, netMvInfo.getPubTime());
             jsonObject.put(ConfigConstants.NET_MV_COVER_IMG_URL, netMvInfo.getCoverImgUrl());
@@ -8905,6 +8927,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -8972,6 +8996,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -10885,6 +10911,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -11902,6 +11930,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -11969,6 +11999,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -12435,14 +12467,16 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索 MV 跳页事件
         Runnable searchMvGoPageAction = () -> {
-            boolean artistRequest = currMvArtistInfo != null, songRequest = currMvMusicInfo != null, mvRequest = currMvMvInfo != null;
-            if (artistRequest || songRequest || mvRequest || StringUtils.isNotEmpty(netMvCurrKeyword)) {
+            boolean artistRequest = currMvArtistInfo != null, songRequest = currMvMusicInfo != null,
+                    mvRequest = currMvMvInfo != null, userRequest = currMvUserInfo != null;
+            if (artistRequest || songRequest || mvRequest || userRequest || StringUtils.isNotEmpty(netMvCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索 MV 并显示 MV 列表
                         CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtils.getMvInfoInArtist(currMvArtistInfo, limit, netMvCurrPage)
                                 : songRequest ? MusicServerUtils.getRelatedMvs(currMvMusicInfo, limit, netMvCurrPage)
                                 : mvRequest ? MusicServerUtils.getSimilarMvs(currMvMvInfo)
+                                : userRequest ? MusicServerUtils.getUserVideos(currMvUserInfo, netMvCurrPage, limit)
                                 : MusicServerUtils.searchMvs(netMvCurrKeyword, limit, netMvCurrPage);
                         List<NetMvInfo> netMvInfos = result.data;
                         Integer total = result.total;
@@ -12784,6 +12818,75 @@ public class PlayerFrame extends JFrame {
                 }
             });
         });
+        // 查看 MV 发布者
+        netMvCreatorMenuItem.addActionListener(e -> {
+            NetMvInfo netMvInfo;
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex == TabIndex.NET_MV) netMvInfo = netMvList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL)
+                netMvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else netMvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+            loadingAndRun(() -> {
+                try {
+                    clearRequestForUser();
+                    // 获取 MV 发布者
+                    currUserMvInfo = netMvInfo;
+                    CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
+                    List<NetUserInfo> netUserInfos = result.data;
+                    netUserCurrPage = netUserMaxPage = 1;
+                    // 标题
+                    netUserTitleLabel.setText(netMvInfo.getName() + " 的发布者");
+                    netUserToolBar.removeAll();
+                    netUserToolBar.add(netUserBackwardButton);
+                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(netUserTitleLabel);
+                    netUserToolBar.add(Box.createHorizontalGlue());
+                    // 更新数量显示
+                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountPanel.add(netUserCountLabel, 2);
+                    netUserLeftBox.add(netUserCountPanel);
+                    netUserPlayAllButton.setVisible(false);
+                    netUserRecordTypeComboBox.setVisible(false);
+                    netUserCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netUserList.setModel(emptyListModel);
+                    netUserListModel.clear();
+                    netUserInfos.forEach(userInfo -> {
+                        globalExecutor.submit(() -> updateCollection(userInfo));
+                        // 设置图片加载后重绘的事件
+                        userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
+                            netUserList.repaint();
+                            collectionList.repaint();
+                        });
+                        netUserListModel.addElement(userInfo);
+                    });
+                    netUserList.setModel(netUserListModel);
+                    netUserBackwardButton.setEnabled(true);
+                    netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
+                    if (netUserListModel.isEmpty()) {
+                        netUserLeftBox.remove(netUserScrollPane);
+                        netUserLeftBox.add(emptyHintPanel);
+                    } else {
+                        netUserLeftBox.remove(emptyHintPanel);
+                        netUserLeftBox.add(netUserScrollPane);
+                    }
+                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    tabbedPane.setSelectedIndex(TabIndex.NET_USER);
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        });
         // 查看评论
         netMvCommentMenuItem.addActionListener(e -> {
             NetMvInfo netMvInfo;
@@ -12809,6 +12912,7 @@ public class PlayerFrame extends JFrame {
         netMvCollectMenuItem.setFont(globalFont);
         netMvDownloadMenuItem.setFont(globalFont);
         netMvSimilarMvMenuItem.setFont(globalFont);
+        netMvCreatorMenuItem.setFont(globalFont);
         netMvCommentMenuItem.setFont(globalFont);
         netMvCopyNameMenuItem.setFont(globalFont);
         // MV 列表右键菜单项
@@ -12818,6 +12922,7 @@ public class PlayerFrame extends JFrame {
 //        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvDownloadMenuItem);
         netMvPopupMenu.add(netMvSimilarMvMenuItem);
+        netMvPopupMenu.add(netMvCreatorMenuItem);
 //        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvCommentMenuItem);
 //        netMvPopupMenu.addSeparator();
@@ -13441,7 +13546,7 @@ public class PlayerFrame extends JFrame {
                 netUserToolBar.removeAll();
                 netUserToolBar.add(netUserBackwardButton);
                 if (currFollowUserUserInfo == null && currFollowedUserUserInfo == null
-                        && currUserPlaylistInfo == null && currUserRadioInfo == null
+                        && currUserPlaylistInfo == null && currUserMvInfo == null && currUserRadioInfo == null
                         && currUserCommentInfo == null && currSubscriberPlaylistInfo == null
                         && currSubscriberRadioInfo == null && currUserArtistInfo == null) {
                     // 删除标题标签
@@ -13548,6 +13653,8 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(userInfo));
                             // 设置图片加载后重绘的事件
                             userInfo.setInvokeLater(() -> {
+                                updateRenderer(netUserList);
+                                updateRenderer(collectionList);
                                 netUserList.repaint();
                                 collectionList.repaint();
                             });
@@ -13584,11 +13691,11 @@ public class PlayerFrame extends JFrame {
         // 搜索用户跳页事件
         Runnable searchUserGoPageAction = () -> {
             boolean followUserRequest = currFollowUserUserInfo != null, followedUserRequest = currFollowedUserUserInfo != null,
-                    playlistRequest = currUserPlaylistInfo != null, radioRequest = currUserRadioInfo != null,
+                    playlistRequest = currUserPlaylistInfo != null, mvRequest = currUserMvInfo != null, radioRequest = currUserRadioInfo != null,
                     commentRequest = currUserCommentInfo != null, playlistSubRequest = currSubscriberPlaylistInfo != null,
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null;
             if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
-                    !playlistRequest && !radioRequest && !commentRequest && !netUserCurrKeyword.equals("")) {
+                    !playlistRequest && !mvRequest && !radioRequest && !commentRequest && !netUserCurrKeyword.equals("")) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索用户并显示用户列表
@@ -13892,6 +13999,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetUserListRenderer renderer = (TranslucentNetUserListRenderer) netUserList.getCellRenderer();
+                if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netUserList.repaint();
             }
@@ -14313,6 +14421,71 @@ public class PlayerFrame extends JFrame {
                 }
             });
         });
+        // 查看用户视频
+        netUserVideoMenuItem.addActionListener(e -> {
+            NetUserInfo netUserInfo;
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
+            else netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
+            loadingAndRun(() -> {
+                try {
+                    clearRequestForMv();
+                    // 获取用户视频
+                    CommonResult<NetMvInfo> result = MusicServerUtils.getUserVideos(currMvUserInfo = netUserInfo, netMvCurrPage = 1, limit);
+                    List<NetMvInfo> netMvInfos = result.data;
+                    Integer total = result.total;
+                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 标题
+                    netMvTitleLabel.setText(netUserInfo.getName() + " 的视频");
+                    netMvToolBar.removeAll();
+                    netMvToolBar.add(netMvBackwardButton);
+                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(netMvTitleLabel);
+                    netMvToolBar.add(Box.createHorizontalGlue());
+                    // 更新数量显示
+                    netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                    netMvCountPanel.add(netMvCountLabel, 0);
+                    netMvLeftBox.add(netMvCountPanel);
+                    netMvCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMvList.setModel(emptyListModel);
+                    netMvListModel.clear();
+                    netMvInfos.forEach(mvInfo -> {
+                        globalExecutor.submit(() -> updateCollection(mvInfo));
+                        // 设置图片加载后重绘的事件
+                        mvInfo.setInvokeLater(() -> {
+                            updateRenderer(netMvList);
+                            updateRenderer(collectionList);
+                            netMvList.repaint();
+                            collectionList.repaint();
+                        });
+                        netMvListModel.addElement(mvInfo);
+                    });
+                    netMvList.setModel(netMvListModel);
+                    netMvBackwardButton.setEnabled(true);
+                    netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
+                    if (netMvListModel.isEmpty()) {
+                        netMvLeftBox.remove(netMvScrollPane);
+                        netMvLeftBox.add(emptyHintPanel);
+                    } else {
+                        netMvLeftBox.remove(emptyHintPanel);
+                        netMvLeftBox.add(netMvScrollPane);
+                    }
+                    netMvScrollPane.getVerticalScrollBar().setValue(0);
+                    tabbedPane.setSelectedIndex(TabIndex.NET_MV);
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        });
         // 查看用户关注
         netUserFollowMenuItem.addActionListener(e -> {
             NetUserInfo netUserInfo;
@@ -14348,6 +14521,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -14413,6 +14588,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -14461,6 +14638,7 @@ public class PlayerFrame extends JFrame {
         netUserPlaylistMenuItem.setFont(globalFont);
         netUserAlbumMenuItem.setFont(globalFont);
         netUserRadioMenuItem.setFont(globalFont);
+        netUserVideoMenuItem.setFont(globalFont);
         netUserFollowMenuItem.setFont(globalFont);
         netUserFollowedMenuItem.setFont(globalFont);
         netUserCopyNameMenuItem.setFont(globalFont);
@@ -14473,6 +14651,7 @@ public class PlayerFrame extends JFrame {
         netUserPopupMenu.add(netUserPlaylistMenuItem);
         netUserPopupMenu.add(netUserAlbumMenuItem);
         netUserPopupMenu.add(netUserRadioMenuItem);
+        netUserPopupMenu.add(netUserVideoMenuItem);
         netUserPopupMenu.add(netUserFollowMenuItem);
         netUserPopupMenu.add(netUserFollowedMenuItem);
 //        netUserPopupMenu.addSeparator();
@@ -14892,6 +15071,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
@@ -18968,7 +19149,6 @@ public class PlayerFrame extends JFrame {
     public void loadMonitor(MediaPlayer mp) {
         mp.setOnError(() -> {
             MediaException.Type type = mp.getError().getType();
-            System.out.println(type);
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
             // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
             if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
@@ -18995,7 +19175,8 @@ public class PlayerFrame extends JFrame {
                 double[] specs = player.getSpecs();
                 double[] specsOrigin = player.getSpecsOrigin();
                 double[] specsGap = player.getSpecsGap();
-                for (int i = 0, len = specsOrigin.length; i < len; i++) {
+//                int num = specsOrigin.length, gap = (int) (SpectrumConstants.NUM_BANDS * SpectrumConstants.VALID_RATIO) / num;
+                for (int i = 0, num = specsOrigin.length; i < num; i++) {
                     specsOrigin[i] = SpectrumUtils.handleMagnitude(magnitudes[i]);
                     specsGap[i] = Math.abs(specsOrigin[i] - specs[i]);
                 }
@@ -19830,6 +20011,7 @@ public class PlayerFrame extends JFrame {
         netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
         netMvDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, menuItemColor));
         netMvSimilarMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
+        netMvCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, menuItemColor));
         netMvCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
         netMvCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
 
@@ -19845,6 +20027,7 @@ public class PlayerFrame extends JFrame {
         netUserPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, menuItemColor));
         netUserAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
         netUserRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, menuItemColor));
+        netUserVideoMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
         netUserFollowMenuItem.setIcon(ImageUtils.dye(userFollowMenuItemIcon, menuItemColor));
         netUserFollowedMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, menuItemColor));
         netUserCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
@@ -21584,6 +21767,7 @@ public class PlayerFrame extends JFrame {
         // 播放搜索/下载/收藏列表的 MV
         else {
             NetMvInfo mvInfo = null;
+            File file = null;
             if (mvType == MvType.MV_LIST) mvInfo = netMvList.getSelectedValue();
             else if (mvType == MvType.MV_RECOMMEND_LIST) mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             else if (mvType == MvType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
@@ -21595,10 +21779,41 @@ public class PlayerFrame extends JFrame {
                     new TipDialog(THIS, NO_PRIVILEGE_MSG).showDialog();
                     return;
                 }
+
+                // 不支持的格式转为 mp4 格式再播放
+                if (!mvInfo.isMp4()) {
+                    String fileName = mvInfo.toFileName();
+                    file = new File(SimplePath.CACHE_PATH + fileName);
+                    // 下载 MV
+                    if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
+//                        loading.start();
+//                        loading.setText(LOADING_MSG);
+                        dialog.setMessage("加载视频文件......");
+                        dialog.updateSize();
+                        dialog.setLocationRelativeTo(THIS);
+                        Map<String, Object> headers = new HashMap<>();
+                        headers.put("referer", "https://www.bilibili.com/");
+                        MusicServerUtils.download(null, mvInfo.getUrl(), file.getPath(), headers);
+                    }
+                    // 转为 mp4 再播放
+                    File tmpFile = FileUtils.replaceSuffix(file, Format.MP4);
+                    if (!tmpFile.exists()) {
+//                        loading.setText("转换视频文件格式......");
+                        dialog.setMessage("转换视频文件格式......");
+                        dialog.updateSize();
+                        dialog.setLocationRelativeTo(THIS);
+                        VideoUtils.convert(file, tmpFile);
+                        // 暂停一段时间，等待转换成功
+//                        Thread.sleep(10000);
+                    }
+                    file = tmpFile;
+//                    if (loading.isShowing()) loading.stop();
+                }
+
                 if (player.isPlaying()) playOrPause();
                 dialog.close();
                 if (videoOnly) setVisible(false);
-                videoDialog = new VideoDialog(mvInfo, null, THIS);
+                videoDialog = new VideoDialog(mvInfo, file == null ? null : file.getPath(), THIS);
                 videoDialog.showDialog();
                 videoDialog = null;
                 setVisible(true);
@@ -22092,6 +22307,7 @@ public class PlayerFrame extends JFrame {
         currMvArtistInfo = null;
         currMvMusicInfo = null;
         currMvMvInfo = null;
+        currMvUserInfo = null;
     }
 
     // 清除用户请求实例
@@ -22100,6 +22316,7 @@ public class PlayerFrame extends JFrame {
         currFollowedUserUserInfo = null;
         currUserPlaylistInfo = null;
         currUserArtistInfo = null;
+        currUserMvInfo = null;
         currUserRadioInfo = null;
         currUserCommentInfo = null;
         currSubscriberPlaylistInfo = null;

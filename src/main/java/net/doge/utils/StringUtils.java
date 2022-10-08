@@ -374,6 +374,7 @@ public class StringUtils {
         Matcher matcher = pattern.matcher(s);
         return matcher.replaceAll("")
                 .replace("&nbsp;", " ")
+                .replace("&amp;", "&")
                 .replace("&lt;", "<")
                 .replace("&gt;", ">")
                 .replace("&apos;", "'");

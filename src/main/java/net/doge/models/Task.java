@@ -7,6 +7,8 @@ import lombok.Data;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
@@ -80,8 +82,13 @@ public class Task {
             try {
                 dirCheck();
                 prepareInfo();
-                MusicServerUtils.download(this);
-                if(isInterrupted()) return;
+                Map<String, Object> headers = null;
+                if (isMv() && netMvInfo.getSource() == NetMusicSource.BI) {
+                    headers = new HashMap<>();
+                    headers.put("referer", "https://www.bilibili.com/");
+                }
+                MusicServerUtils.download(this, headers);
+                if (isInterrupted()) return;
                 if (invokeLater != null) invokeLater.run();
                 setStatus(TaskStatus.FINISHED);
             } catch (Exception e) {
@@ -112,6 +119,10 @@ public class Task {
 
     public boolean isMusic() {
         return type == TaskType.MUSIC;
+    }
+
+    public boolean isMv() {
+        return type == TaskType.MV;
     }
 
     // 任务开始之前先请求所需信息

@@ -1,8 +1,10 @@
 package net.doge.models;
 
+import net.doge.constants.Format;
 import net.doge.constants.MvInfoType;
 import net.doge.constants.NetMusicSource;
 import lombok.Data;
+import net.doge.utils.FileUtils;
 import net.doge.utils.StringUtils;
 
 import java.awt.image.BufferedImage;
@@ -20,10 +22,16 @@ public class NetMvInfo {
     private int source = NetMusicSource.NET_CLOUD;
     // 类型 (网易云分成 MV 视频 Mlog)
     private int type;
+    // 视频格式
+    private String format = Format.MP4;
     // MV id
     private String id;
+    // MV bvid (哔哩哔哩)
+    private String bvid;
     // MV 名称
     private String name;
+    // 创建者 id
+    private String creatorId;
     // 艺术家
     private String artist;
     // 封面图片 url
@@ -44,6 +52,10 @@ public class NetMvInfo {
 
     public boolean hasDuration() {
         return duration != null && !Double.isNaN(duration) && !Double.isInfinite(duration) && duration.intValue() != 0;
+    }
+
+    public boolean hasCreatorId() {
+        return StringUtils.isNotEmpty(creatorId);
     }
 
     public boolean hasPubTime() {
@@ -76,6 +88,18 @@ public class NetMvInfo {
         return url != null;
     }
 
+    public void setFormat(String format) {
+        this.format = StringUtils.isNotEmpty(format) && !"null".equals(format) ? format : Format.MP4;
+    }
+
+    public boolean isFlv() {
+        return Format.FLV.equals(format);
+    }
+
+    public boolean isMp4() {
+        return Format.MP4.equals(format);
+    }
+
     public boolean isVideo() {
         return type == MvInfoType.VIDEO;
     }
@@ -100,15 +124,15 @@ public class NetMvInfo {
     // 必须重写 hashCode 和 equals 方法才能在 Set 判断是否重复！
     @Override
     public int hashCode() {
-        return Objects.hash(source, id);
+        return Objects.hash(source, id, bvid);
     }
 
     public String toFileName() {
-        return String.format("%s - %s - %s.mp4", name, artist, id);
+        return FileUtils.filterFileName(String.format("%s - %s - %s.%s", name, artist, id, format));
     }
 
     public String toSimpleFileName() {
-        return String.format("%s - %s.mp4", name, artist);
+        return FileUtils.filterFileName(String.format("%s - %s.%s", name, artist, format));
     }
 
     public String toString() {

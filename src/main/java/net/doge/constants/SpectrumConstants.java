@@ -21,6 +21,8 @@ public class SpectrumConstants {
 
     // 播放器更新频谱数量
     public static final int NUM_BANDS = 1024;
+    // 有效频谱比例
+//    public static final double VALID_RATIO = 0.3;
     // 播放器更新频谱时间间隔(s)
     public static final double PLAYER_INTERVAL = 0.09;
     // UI 更新频谱 Timer 时间间隔(ms)

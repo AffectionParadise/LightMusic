@@ -17,6 +17,10 @@ public class Format {
 
     public static final String[] AUDIO_TYPE_SUPPORTED = {AIF, AIFF, M4A, MP3, WAV};
 
+    // 视频文件格式
+    public static final String MP4 = "mp4";
+    public static final String FLV = "flv";
+
     // 图片文件格式
     public static final String JPG = "jpg";
     public static final String JPEG = "jpeg";
