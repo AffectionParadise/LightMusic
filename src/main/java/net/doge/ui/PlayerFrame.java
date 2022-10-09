@@ -1622,6 +1622,8 @@ public class PlayerFrame extends JFrame {
     private CustomButton netMvSearchButton = new CustomButton(searchIcon);
     // MV 加载更多按钮
 //    private CustomButton netMvMoreButton = new CustomButton(MORE_TIP, moreIcon);
+    // MV 排序类型下拉框
+    private JComboBox<String> netMvSortTypeComboBox = new JComboBox();
     // MV 刷新按钮
     private CustomButton netMvRefreshButton = new CustomButton(refreshIcon);
     // MV 页数框
@@ -4796,15 +4798,23 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == CollectionTabIndex.MUSIC) {
                 musicList.setModel(collectionModel);
                 int size = collectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    musicCollectionLeftBox.remove(emptyHintPanel);
                     musicCollectionLeftBox.add(musicScrollPane);
+                } else {
+                    musicCollectionLeftBox.remove(musicScrollPane);
+                    musicCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 首", collectionModel.size()));
             } else if (selectedIndex == CollectionTabIndex.PLAYLIST) {
                 collectionList.setModel(playlistCollectionModel);
                 int size = playlistCollectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    playlistCollectionLeftBox.remove(emptyHintPanel);
                     playlistCollectionLeftBox.add(collectionScrollPane);
+                } else {
+                    playlistCollectionLeftBox.remove(collectionScrollPane);
+                    playlistCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 项", size));
 
@@ -4820,8 +4830,12 @@ public class PlayerFrame extends JFrame {
             } else if (selectedIndex == CollectionTabIndex.ALBUM) {
                 collectionList.setModel(albumCollectionModel);
                 int size = albumCollectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    albumCollectionLeftBox.remove(emptyHintPanel);
                     albumCollectionLeftBox.add(collectionScrollPane);
+                } else {
+                    albumCollectionLeftBox.remove(collectionScrollPane);
+                    albumCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 项", size));
 
@@ -4837,8 +4851,12 @@ public class PlayerFrame extends JFrame {
             } else if (selectedIndex == CollectionTabIndex.ARTIST) {
                 collectionList.setModel(artistCollectionModel);
                 int size = artistCollectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    artistCollectionLeftBox.remove(emptyHintPanel);
                     artistCollectionLeftBox.add(collectionScrollPane);
+                } else {
+                    artistCollectionLeftBox.remove(collectionScrollPane);
+                    artistCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 项", size));
 
@@ -4854,8 +4872,12 @@ public class PlayerFrame extends JFrame {
             } else if (selectedIndex == CollectionTabIndex.RADIO) {
                 collectionList.setModel(radioCollectionModel);
                 int size = radioCollectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    radioCollectionLeftBox.remove(emptyHintPanel);
                     radioCollectionLeftBox.add(collectionScrollPane);
+                } else {
+                    radioCollectionLeftBox.remove(collectionScrollPane);
+                    radioCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 项", size));
 
@@ -4871,8 +4893,12 @@ public class PlayerFrame extends JFrame {
             } else if (selectedIndex == CollectionTabIndex.MV) {
                 collectionList.setModel(mvCollectionModel);
                 int size = mvCollectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    mvCollectionLeftBox.remove(emptyHintPanel);
                     mvCollectionLeftBox.add(collectionScrollPane);
+                } else {
+                    mvCollectionLeftBox.remove(collectionScrollPane);
+                    mvCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 项", size));
 
@@ -4888,8 +4914,12 @@ public class PlayerFrame extends JFrame {
             } else if (selectedIndex == CollectionTabIndex.RANKING) {
                 collectionList.setModel(rankingCollectionModel);
                 int size = rankingCollectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    rankingCollectionLeftBox.remove(emptyHintPanel);
                     rankingCollectionLeftBox.add(collectionScrollPane);
+                } else {
+                    rankingCollectionLeftBox.remove(collectionScrollPane);
+                    rankingCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 项", size));
 
@@ -4905,8 +4935,12 @@ public class PlayerFrame extends JFrame {
             } else if (selectedIndex == CollectionTabIndex.USER) {
                 collectionList.setModel(userCollectionModel);
                 int size = userCollectionModel.size();
-                if (size != 0) {
+                if (size > 0) {
+                    userCollectionLeftBox.remove(emptyHintPanel);
                     userCollectionLeftBox.add(collectionScrollPane);
+                } else {
+                    userCollectionLeftBox.remove(collectionScrollPane);
+                    userCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format("共 %s 项", size));
 
@@ -6049,12 +6083,42 @@ public class PlayerFrame extends JFrame {
 
             // 收藏标签页
             leftBox.remove(emptyHintPanel);
-            if (collectionModel.isEmpty()) {
-                musicCollectionLeftBox.remove(musicScrollPane);
-                musicCollectionLeftBox.add(emptyHintPanel);
+            leftBox.remove(musicScrollPane);
+
+            int index = collectionTabbedPane.getSelectedIndex();
+            Box box = null;
+            DefaultListModel model = null;
+            if (index == CollectionTabIndex.MUSIC) {
+                box = musicCollectionLeftBox;
+                model = collectionModel;
+            } else if (index == CollectionTabIndex.PLAYLIST) {
+                box = playlistCollectionLeftBox;
+                model = playlistCollectionModel;
+            } else if (index == CollectionTabIndex.ALBUM) {
+                box = albumCollectionLeftBox;
+                model = albumCollectionModel;
+            } else if (index == CollectionTabIndex.ARTIST) {
+                box = artistCollectionLeftBox;
+                model = artistCollectionModel;
+            } else if (index == CollectionTabIndex.RADIO) {
+                box = radioCollectionLeftBox;
+                model = radioCollectionModel;
+            } else if (index == CollectionTabIndex.MV) {
+                box = mvCollectionLeftBox;
+                model = mvCollectionModel;
+            } else if (index == CollectionTabIndex.RANKING) {
+                box = rankingCollectionLeftBox;
+                model = rankingCollectionModel;
+            } else if (index == CollectionTabIndex.USER) {
+                box = userCollectionLeftBox;
+                model = userCollectionModel;
+            }
+            if (model.isEmpty()) {
+                box.remove(index == CollectionTabIndex.MUSIC ? musicScrollPane : collectionScrollPane);
+                box.add(emptyHintPanel);
             } else {
-                musicCollectionLeftBox.remove(emptyHintPanel);
-                musicCollectionLeftBox.add(musicScrollPane);
+                box.remove(emptyHintPanel);
+                box.add(index == CollectionTabIndex.MUSIC ? musicScrollPane : collectionScrollPane);
             }
             leftBox.add(collectionTabbedPane);
 
@@ -7637,9 +7701,10 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
-                    netMvCountPanel.add(netMvCountLabel, 0);
+                    netMvCountPanel.add(netMvCountLabel, 1);
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
+                    netMvSortTypeComboBox.setVisible(false);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
@@ -10769,6 +10834,7 @@ public class PlayerFrame extends JFrame {
                     // 更新数量显示
                     netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
                     netMvCountPanel.setVisible(true);
+                    netMvSortTypeComboBox.setVisible(false);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
@@ -12427,6 +12493,7 @@ public class PlayerFrame extends JFrame {
                         // 更新数量显示
                         netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
                         netMvCountPanel.setVisible(true);
+                        netMvSortTypeComboBox.setVisible(false);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMvList.setModel(emptyListModel);
                         netMvListModel.clear();
@@ -12476,7 +12543,7 @@ public class PlayerFrame extends JFrame {
                         CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtils.getMvInfoInArtist(currMvArtistInfo, limit, netMvCurrPage)
                                 : songRequest ? MusicServerUtils.getRelatedMvs(currMvMusicInfo, limit, netMvCurrPage)
                                 : mvRequest ? MusicServerUtils.getSimilarMvs(currMvMvInfo)
-                                : userRequest ? MusicServerUtils.getUserVideos(currMvUserInfo, netMvCurrPage, limit)
+                                : userRequest ? MusicServerUtils.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit)
                                 : MusicServerUtils.searchMvs(netMvCurrKeyword, limit, netMvCurrPage);
                         List<NetMvInfo> netMvInfos = result.data;
                         Integer total = result.total;
@@ -12484,7 +12551,7 @@ public class PlayerFrame extends JFrame {
                         // 更新数量显示
                         netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
                         netMvCountPanel.setVisible(true);
-                        netMvCountPanel.add(netMvCountLabel, 0);
+                        netMvCountPanel.add(netMvCountLabel, 1);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMvList.setModel(emptyListModel);
                         netMvListModel.clear();
@@ -12521,6 +12588,16 @@ public class PlayerFrame extends JFrame {
                 });
             }
         };
+        netMvSortTypeComboBox.addItem("最新发布");
+        netMvSortTypeComboBox.addItem("最多播放");
+        netMvSortTypeComboBox.addItem("最多收藏");
+        // MV 排序类型切换事件
+        netMvSortTypeComboBox.addItemListener(e -> {
+            // 避免事件被处理 2 次！
+            if (e.getStateChange() != ItemEvent.SELECTED) return;
+            netMvCurrPage = 1;
+            netMvRefreshButton.doClick();
+        });
         // 刷新按钮事件
         netMvRefreshButton.addActionListener(e -> {
             searchMvGoPageAction.run();
@@ -12589,8 +12666,13 @@ public class PlayerFrame extends JFrame {
         // 全局字体
         netMvTitleLabel.setFont(globalFont);
         netMvSearchTextField.setFont(globalFont);
+        netMvSortTypeComboBox.setFont(globalFont);
         netMvPageTextField.setFont(globalFont);
         netMvCountLabel.setFont(globalFont);
+        // 边框
+        Border eb = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+        netMvSortTypeComboBox.setBorder(eb);
+        netMvSortTypeComboBox.setVisible(false);
         // 帮助提示
         netMvBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
         netMvClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -12613,6 +12695,7 @@ public class PlayerFrame extends JFrame {
         netMvLeftBox.add(netMvToolBar);
 
         //  MV 数量和当前歌曲标签
+        netMvCountPanel.add(netMvSortTypeComboBox);
         netMvCountPanel.add(netMvCountLabel);
         netMvCountPanel.add(netMvRefreshButton);
         netMvCountPanel.add(netMvPageTextField);
@@ -12776,9 +12859,10 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
-                    netMvCountPanel.add(netMvCountLabel, 0);
+                    netMvCountPanel.add(netMvCountLabel, 1);
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
+                    netMvSortTypeComboBox.setVisible(false);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
@@ -14431,7 +14515,8 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForMv();
                     // 获取用户视频
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getUserVideos(currMvUserInfo = netUserInfo, netMvCurrPage = 1, limit);
+                    CommonResult<NetMvInfo> result = MusicServerUtils.getUserVideos(currMvUserInfo = netUserInfo,
+                            netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage = 1, limit);
                     List<NetMvInfo> netMvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -14444,9 +14529,10 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
-                    netMvCountPanel.add(netMvCountLabel, 0);
+                    netMvCountPanel.add(netMvCountLabel, 1);
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
+                    netMvSortTypeComboBox.setVisible(true);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
@@ -20707,6 +20793,8 @@ public class PlayerFrame extends JFrame {
         netRadioGoButton.setIcon(ImageUtils.dye((ImageIcon) netRadioGoButton.getIcon(), buttonColor));
         netRadioNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioNextPageButton.getIcon(), buttonColor));
         // MV 搜索栏按钮颜色
+        netMvSortTypeComboBox.setOpaque(opaque);
+        netMvSortTypeComboBox.setUI(new ComboBoxUI(netMvSortTypeComboBox, THIS, globalFont, buttonColor));
         netMvBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netMvBackwardButton.getIcon(), buttonColor));
         netMvClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netMvClearInputButton.getIcon(), buttonColor));
         netMvSearchButton.setIcon(ImageUtils.dye((ImageIcon) netMvSearchButton.getIcon(), buttonColor));
@@ -21771,7 +21859,6 @@ public class PlayerFrame extends JFrame {
             if (mvType == MvType.MV_LIST) mvInfo = netMvList.getSelectedValue();
             else if (mvType == MvType.MV_RECOMMEND_LIST) mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             else if (mvType == MvType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
-
             try {
                 MusicServerUtils.fillMvInfo(mvInfo);
                 String url = mvInfo.getUrl();

@@ -2126,7 +2126,7 @@ public class MusicServerUtils {
     private static final String USER_BOOK_RADIO_DB_API = "https://book.douban.com/people/%s/collect?start=%s&sort=time&rating=all&filter=all&mode=grid";
 
     // 用户视频 API (哔哩哔哩)
-    private static final String USER_VIDEO_BI_API = "http://api.bilibili.com/x/space/arc/search?mid=%s&pn=%s&ps=%s";
+    private static final String USER_VIDEO_BI_API = "http://api.bilibili.com/x/space/arc/search?order=%s&mid=%s&pn=%s&ps=%s";
 
     // 歌曲相关歌单 API
     private static final String RELATED_PLAYLIST_API = prefix + "/simi/playlist?id=%s";
@@ -12784,7 +12784,7 @@ public class MusicServerUtils {
             if (!userInfo.hasFollow()) userInfo.setFollow(data.getInt("attention"));
             if (!userInfo.hasFollowed()) userInfo.setFollowed(data.getInt("fans"));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(userInfoJson.getJSONObject("data").getJSONObject("space").getString("l_img"))));
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(userInfoJson.getJSONObject("data").getJSONObject("space").getString("s_img"))));
         }
     }
 
@@ -15320,16 +15320,18 @@ public class MusicServerUtils {
      *
      * @return
      */
-    public static CommonResult<NetMvInfo> getUserVideos(NetUserInfo netUserInfo, int page, int limit) {
+    public static CommonResult<NetMvInfo> getUserVideos(NetUserInfo netUserInfo, int sortType, int page, int limit) {
         int source = netUserInfo.getSource();
         String uid = netUserInfo.getId();
 
         LinkedList<NetMvInfo> res = new LinkedList<>();
         Integer t = 0;
 
+        String[] orders = {"pubdate", "click", "stow"};
+
         // 哔哩哔哩
         if (source == NetMusicSource.BI) {
-            String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, uid, page, limit))
+            String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, orders[sortType], uid, page, limit))
                     .cookie(BI_COOKIE)
                     .execute()
                     .body();
@@ -17429,7 +17431,7 @@ public class MusicServerUtils {
         InputStream fis = new BufferedInputStream(conn.getInputStream());
         OutputStream toClient = new BufferedOutputStream(new FileOutputStream(file));
         // 以流的形式下载文件
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[10240];
         int read;
         // 如果没有数据了会返回 -1，如果还有会返回数据的长度
         while ((read = fis.read(buffer)) != -1) {
@@ -17480,7 +17482,7 @@ public class MusicServerUtils {
         InputStream fis = new BufferedInputStream(conn.getInputStream());
         OutputStream toClient = new BufferedOutputStream(new FileOutputStream(file));
         // 以流的形式下载文件
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[10240];
         // 文件大小
         long fileSize = conn.getContentLength(), hasRead = 0;
         int read;
@@ -17522,7 +17524,7 @@ public class MusicServerUtils {
         InputStream fis = new BufferedInputStream(conn.getInputStream());
         OutputStream toClient = new BufferedOutputStream(new FileOutputStream(file));
         // 以流的形式下载文件
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[10240];
         // 文件大小
         long fileSize = conn.getContentLength(), hasRead = 0;
         task.setTotal(fileSize);

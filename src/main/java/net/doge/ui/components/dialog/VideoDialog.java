@@ -54,6 +54,7 @@ public class VideoDialog extends JDialog {
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     private final int MAX_VOLUME = 100;
     private final int MEDIA_WIDTH = 1150;
+    private final int MEDIA_MIN_WIDTH = 500;
     private final int MEDIA_HEIGHT = 800;
 
     // 最大阴影透明度
@@ -301,8 +302,12 @@ public class VideoDialog extends JDialog {
                 mediaView.setFitWidth(MEDIA_WIDTH);
                 mediaView.setFitHeight(height * MEDIA_WIDTH / width);
             } else {
-                mediaView.setFitWidth(width * MEDIA_HEIGHT / height);
                 mediaView.setFitHeight(MEDIA_HEIGHT);
+                // 宽度不得低于最小值
+                int ow = width * MEDIA_HEIGHT / height;
+                mediaView.setFitWidth(Math.max(MEDIA_MIN_WIDTH, ow));
+                // 视频位于中央
+                mediaView.setX((getWidth() - 2 * pixels - ow) / 2);
             }
             MusicPlayer player = f.getPlayer();
             SimpleMusicInfo musicInfo = player.getMusicInfo();
@@ -348,18 +353,20 @@ public class VideoDialog extends JDialog {
             }
             // 歌曲 url 过期后重新加载 url 再播放
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE || type == MediaException.Type.UNKNOWN) {
-                if(!isLocal) netMvInfo.setUrl(uri = MusicServerUtils.fetchMvUrl(netMvInfo));
+                if (!isLocal) netMvInfo.setUrl(uri = MusicServerUtils.fetchMvUrl(netMvInfo));
                 initView();
                 playVideo();
             }
             // 尝试多次无效直接关闭窗口
-            if(++tryTime >= 3) {
+            if (++tryTime >= 3) {
                 closeButton.doClick();
                 new TipDialog(f, ERROR_MSG).showDialog();
             }
         });
 
         Scene scene = new Scene(new Pane(mediaView), media.getWidth(), media.getHeight());
+        // 视频边缘黑幕
+        scene.setFill(javafx.scene.paint.Color.BLACK);
         jfxPanel.setScene(scene);
         globalPanel.add(jfxPanel, BorderLayout.CENTER);
     }

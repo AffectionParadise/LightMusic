@@ -30,7 +30,7 @@ public class JsonUtils {
             }
             reader.close();
             return JSONObject.fromObject(sb.toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             return new JSONObject();
         }
     }

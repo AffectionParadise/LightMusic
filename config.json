@@ -213,6 +213,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"周传雄",
+				"format":"mp4",
 				"name":"弱水三千",
 				"source":0,
 				"id":"5443536",
@@ -350,6 +351,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"名字君Montage",
+				"format":"mp4",
 				"name":"致命的优雅——刺客信条全系最帅镜头大混剪",
 				"source":0,
 				"id":"E9B381EE9F8BA5DF98B499DE1947E370",
@@ -396,6 +398,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"周深",
+				"format":"mp4",
 				"name":"我，江湖！",
 				"source":0,
 				"id":"14236380",
@@ -475,6 +478,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"队长",
+				"format":"mp4",
 				"name":"哪里都是你",
 				"source":0,
 				"id":"14477247",
@@ -491,6 +495,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"最美阿拉蕾",
+				"format":"mp4",
 				"name":"朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你",
 				"source":1,
 				"id":"25415073C4A1DA7D1501BA54C76B680A",
@@ -507,6 +512,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"Lovelyz",
+				"format":"mp4",
 				"name":"【短综】二选一问答：全场答案一致的问题是？",
 				"source":0,
 				"id":"10746046",
@@ -523,6 +529,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"V.A.",
+				"format":"mp4",
 				"name":"第33届韩国金唱片大赏音源部门全程回顾",
 				"source":0,
 				"id":"10850046",
@@ -569,6 +576,7 @@
 			"mvInfo":{
 				"bvid":"",
 				"artist":"安迪Anndy",
+				"format":"mp4",
 				"name":"MV",
 				"source":0,
 				"id":"10922428",
@@ -2122,6 +2130,7 @@
 			"bvid":"",
 			"playCount":5314,
 			"artist":"好歌又来了",
+			"format":"mp4",
 			"name":"江珊《梦里水乡》甜美动人，歌声飘过30年，久久难忘",
 			"creatorId":"",
 			"source":0,
@@ -2134,6 +2143,7 @@
 			"bvid":"",
 			"playCount":11161,
 			"artist":"音乐老鸭煲",
+			"format":"mp4",
 			"name":"2022年1月至4月最热门的六首歌，你最喜欢哪一首",
 			"creatorId":"",
 			"source":0,
@@ -2146,6 +2156,7 @@
 			"bvid":"",
 			"playCount":3644,
 			"artist":"音乐老友_",
+			"format":"mp4",
 			"name":"朱添泽《想(DJ版)》其实我也曾经幻想改！",
 			"creatorId":"",
 			"source":0,
@@ -2158,6 +2169,7 @@
 			"bvid":"",
 			"playCount":1865051,
 			"artist":"队长",
+			"format":"mp4",
 			"name":"11",
 			"creatorId":"",
 			"source":0,
@@ -2170,6 +2182,7 @@
 			"bvid":"",
 			"playCount":119,
 			"artist":"李玉玺&琳谊Ring",
+			"format":"mp4",
 			"name":"想-《神之乡》电视剧插曲",
 			"creatorId":"",
 			"source":3,
@@ -2182,6 +2195,7 @@
 			"bvid":"",
 			"playCount":75852,
 			"artist":"环球视听1980",
+			"format":"mp4",
 			"name":"王炎 -《想》非常干净的一首经典老歌，时隔多年又再度火起来",
 			"creatorId":"",
 			"source":1,
@@ -2196,6 +2210,7 @@
 	"videoOnly":true,
 	"sortOrder":1,
 	"mvHistorySearch":[
+		"全兽（没人发现里面混入了戍孝吧 - 介叔-",
 		"无穷小亮",
 		"弱水三千",
 		"入画江南",

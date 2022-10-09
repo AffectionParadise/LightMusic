@@ -52,7 +52,6 @@ public class CmdUtils {
 
     private static class OutputHandlerRunnable implements Runnable {
         private InputStream in;
-
         private boolean error;
 
         public OutputHandlerRunnable(InputStream in, boolean error) {
@@ -62,7 +61,7 @@ public class CmdUtils {
 
         @Override
         public void run() {
-            try (BufferedReader bufr = new BufferedReader(new InputStreamReader(this.in))) {
+            try (BufferedReader bufr = new BufferedReader(new InputStreamReader(in))) {
                 String line = null;
                 while ((line = bufr.readLine()) != null) {
                     if (error) {
