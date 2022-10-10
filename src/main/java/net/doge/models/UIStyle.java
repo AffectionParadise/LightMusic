@@ -53,6 +53,9 @@ public class UIStyle {
     // 菜单项颜色
     private Color menuItemColor;
 
+    // 缩略图加载后的回调函数
+    private Runnable invokeLater;
+
     public boolean isPreDefined() {
         return styleType != UIStyleConstants.CUSTOM;
     }
@@ -61,11 +64,28 @@ public class UIStyle {
         return styleType == UIStyleConstants.CUSTOM;
     }
 
+    private void callback() {
+        if (invokeLater != null) {
+            invokeLater.run();
+            // 调用后丢弃
+//            invokeLater = null;
+        }
+    }
+
     public void setStyleImgPath(String styleImgPath) {
         this.styleImgPath = styleImgPath;
         GlobalExecutors.imageExecutor.execute(() -> {
             img = ImageUtils.read(styleImgPath);
             imgThumb = ImageUtils.setRadius(ImageUtils.width(img, ImageConstants.mvCoverWidth), 10);
+            callback();
+        });
+    }
+
+    public void setBgColor(Color bgColor) {
+        this.bgColor = bgColor;
+        GlobalExecutors.imageExecutor.execute(() -> {
+            imgThumb = ImageUtils.setRadius(ImageUtils.width(ImageUtils.dyeRect(2, 1, bgColor),  ImageConstants.mvCoverWidth),10);
+            callback();
         });
     }
 
@@ -94,7 +114,7 @@ public class UIStyle {
         this.styleName = styleName;
         this.opaque = opaque;
         setStyleImgPath(styleImgPath);
-        this.bgColor = bgColor;
+        setBgColor(bgColor);
         this.foreColor = foreColor;
         this.selectedColor = selectedColor;
         this.lrcColor = lrcColor;

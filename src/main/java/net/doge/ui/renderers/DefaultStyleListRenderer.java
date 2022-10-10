@@ -50,9 +50,7 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
         JLabel typeLabel = new JLabel();
         JLabel inUseLabel = new JLabel();
 
-        String styleImgPath = style.getStyleImgPath();
-        BufferedImage img = StringUtils.isNotEmpty(styleImgPath) ? style.getImgThumb()
-                : ImageUtils.dyeRect(2, 1, style.getBgColor());
+        BufferedImage img = style.getImgThumb();
         if (img != null) iconLabel.setIcon(new ImageIcon(img));
 
         iconLabel.setHorizontalAlignment(CENTER);

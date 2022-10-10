@@ -251,6 +251,7 @@ public class ManageCustomStyleDialog extends JDialog {
                             ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
                             ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
                     );
+                    customStyle.setInvokeLater(() -> updateRenderer(styleList));
                     if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
                     else customStyle.setStyleImgPath((String) results[1]);
                     // 添加风格菜单项、按钮组，但不切换风格
@@ -493,6 +494,12 @@ public class ManageCustomStyleDialog extends JDialog {
         styleListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+    }
+
+    void updateRenderer(JList list) {
+        ListCellRenderer renderer = list.getCellRenderer();
+        list.setCellRenderer(null);
+        list.setCellRenderer(renderer);
     }
 
     // 主题更换时更新窗口主题

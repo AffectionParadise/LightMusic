@@ -22150,7 +22150,7 @@ public class PlayerFrame extends JFrame {
             String styleImgPath = style.getStyleImgPath();
             // 纯色背景
             if (StringUtils.isEmpty(styleImgPath)) {
-                globalPanel.setBackgroundImage(ImageUtils.dyeRect(1, 1, style.getBgColor()));
+                globalPanel.setBackgroundImage(ImageUtils.dyeRect(2, 1, style.getBgColor()));
             } else {
                 BufferedImage styleImage = style.getImg();
                 // 处理大小
