@@ -17,6 +17,7 @@ public class UIStyleConstants {
     public static final int HAPPY_NEW_YEAR = 8;
     public static final int MORITAKA = 9;
     public static final int MORITAKA_AND_RAIN = 9;
+    public static final int CLOUD_REST = 10;
 
     public static final int CUSTOM = -1;
 }

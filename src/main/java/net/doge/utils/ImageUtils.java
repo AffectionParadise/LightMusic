@@ -390,6 +390,28 @@ public class ImageUtils {
 //    }
 
     /**
+     * 返回纯色指定宽高的矩形 BuffedImage
+     *
+     * @param width
+     * @param height
+     * @param color
+     * @return
+     */
+    public static BufferedImage dyeRect(int width, int height, Color color) {
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = bufferedImage.createGraphics();
+        // 获取透明的 BufferedImage
+        BufferedImage bImageTranslucent = g.getDeviceConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+        g.dispose();
+        g = bImageTranslucent.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setColor(color);
+        g.fillRect(0, 0, width, height);
+        g.dispose();
+        return bImageTranslucent;
+    }
+
+    /**
      * 返回纯色指定宽高的圆角矩形 ImageIcon
      *
      * @param width

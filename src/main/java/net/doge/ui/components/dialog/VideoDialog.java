@@ -1,5 +1,6 @@
 package net.doge.ui.components.dialog;
 
+import cn.hutool.core.thread.ThreadUtil;
 import javafx.scene.media.MediaException;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
@@ -188,6 +189,7 @@ public class VideoDialog extends JDialog {
     // 底部盒子
     private Box bottomBox = new Box(BoxLayout.Y_AXIS);
 
+    private boolean resized;
     private int tryTime;
     private boolean isLocal;
     private String uri;
@@ -253,6 +255,7 @@ public class VideoDialog extends JDialog {
             @Override
             public void componentResized(ComponentEvent e) {
                 setLocationRelativeTo(null);
+                timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
             }
         });
 
@@ -261,8 +264,8 @@ public class VideoDialog extends JDialog {
         setSize(800, 600);
         globalPanel.setLayout(new BorderLayout());
 
-        initView();
         initTitleBar();
+        initView();
         initTimeBar();
         initControlPanel();
         playVideo();
@@ -311,13 +314,14 @@ public class VideoDialog extends JDialog {
             }
             MusicPlayer player = f.getPlayer();
             SimpleMusicInfo musicInfo = player.getMusicInfo();
-            doBlur(!f.getIsBlur() || !player.loadedMusic() ? ImageUtils.read(style.getStyleImgPath()) : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
+            doBlur(!f.getIsBlur() || !player.loadedMusic() ? style.getImg()
+                    : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
         });
         mediaView.fitWidthProperty().addListener((observableValue, oldValue, newValue) -> {
             int nv = newValue.intValue();
             jfxPanel.setPreferredSize(new Dimension(nv, media.getHeight()));
             setSize(nv - 2 + 2 * pixels, getHeight());
-            timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
+//            timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
         });
         mediaView.fitHeightProperty().addListener((observableValue, oldValue, newValue) -> {
             int nv = newValue.intValue();
@@ -331,11 +335,13 @@ public class VideoDialog extends JDialog {
             if (!timeBar.getValueIsAdjusting())
                 timeBar.setValue((int) (mp.getCurrentTime().toSeconds() / media.getDuration().toSeconds() * TIME_BAR_MAX));
             currTimeLabel.setText(TimeUtils.format(mp.getCurrentTime().toSeconds()));
+            if (resized) return;
             durationLabel.setText(TimeUtils.format(media.getDuration().toSeconds()));
             // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
             String t = durationLabel.getText().replaceAll("[1-9]", "0");
             FontMetrics m = durationLabel.getFontMetrics(globalFont);
             currTimeLabel.setPreferredSize(new Dimension(m.stringWidth(t) + 2, durationLabel.getHeight()));
+            resized = true;
         });
         mp.setOnEndOfMedia(() -> {
             mp.seek(Duration.seconds(0));

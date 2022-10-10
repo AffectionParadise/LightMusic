@@ -15,6 +15,7 @@ import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.DefaultCatalogListRenderer;
 import net.doge.utils.ImageUtils;
+import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -138,7 +139,11 @@ public class ManageCatalogDialog extends JDialog {
     public void updateBlur() {
         BufferedImage bufferedImage;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = ImageUtils.read(f.getCurrUIStyle().getStyleImgPath());
+        else {
+            String styleImgPath = f.getCurrUIStyle().getStyleImgPath();
+            if(StringUtils.isNotEmpty(styleImgPath)) bufferedImage = f.getCurrUIStyle().getImg();
+            else bufferedImage = ImageUtils.dyeRect(1, 1, f.getCurrUIStyle().getBgColor());
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
         doBlur(bufferedImage);
     }
@@ -207,7 +212,7 @@ public class ManageCatalogDialog extends JDialog {
                 File dir = catalogList.getSelectedValue();
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new ConfirmDialog(f, CATALOG_NOT_FOUND_MSG, "确定").showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -224,7 +229,7 @@ public class ManageCatalogDialog extends JDialog {
                     if (!dir.exists()) return;
                     for (int i = 0, size = catalogListModel.size(); i < size; i++) {
                         if (catalogListModel.get(i).getAbsolutePath().equals(dir.getAbsolutePath())) {
-                            new ConfirmDialog(f, CATALOG_EXISTS_MSG, "确定").showDialog();
+                            new TipDialog(f, CATALOG_EXISTS_MSG).showDialog();
                             return;
                         }
                     }

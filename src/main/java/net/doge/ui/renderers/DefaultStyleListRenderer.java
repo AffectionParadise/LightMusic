@@ -1,13 +1,21 @@
 package net.doge.ui.renderers;
 
+import net.doge.constants.ImageConstants;
+import net.doge.constants.NetMusicSource;
 import net.doge.models.MusicPlayer;
+import net.doge.models.NetMvInfo;
 import net.doge.models.UIStyle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.ui.components.CustomPanel;
+import net.doge.utils.ImageUtils;
+import net.doge.utils.StringUtils;
+import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @Author yzx
@@ -33,16 +41,65 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         UIStyle style = (UIStyle) value;
 
-        setDrawBg(isSelected);
-        setOpaque(false);
-        setText(style.getStyleName());
-        setFont(customFont);
-        setForeground(isSelected ? selectedColor : foreColor);
+        CustomPanel outerPanel = new CustomPanel();
+        JLabel iconLabel = new JLabel();
+        JLabel nameLabel = new JLabel();
+        JLabel typeLabel = new JLabel();
 
-        return this;
+        String styleImgPath = style.getStyleImgPath();
+        BufferedImage img = StringUtils.isNotEmpty(styleImgPath) ? style.getImgThumb()
+                : ImageUtils.dyeRect(2, 1, style.getBgColor());
+        if (img != null) iconLabel.setIcon(new ImageIcon(img));
+
+        iconLabel.setHorizontalAlignment(CENTER);
+        nameLabel.setHorizontalAlignment(CENTER);
+        typeLabel.setHorizontalAlignment(CENTER);
+
+        iconLabel.setVerticalAlignment(CENTER);
+        nameLabel.setVerticalAlignment(CENTER);
+        typeLabel.setVerticalAlignment(CENTER);
+
+        outerPanel.setOpaque(false);
+        iconLabel.setOpaque(false);
+        nameLabel.setOpaque(false);
+        typeLabel.setOpaque(false);
+
+        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+        iconLabel.setForeground(isSelected ? selectedColor : foreColor);
+        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
+        typeLabel.setForeground(isSelected ? selectedColor : foreColor);
+
+        iconLabel.setFont(customFont);
+        nameLabel.setFont(customFont);
+        typeLabel.setFont(customFont);
+
+        GridLayout layout = new GridLayout(1, 2);
+        layout.setHgap(15);
+        outerPanel.setLayout(layout);
+
+        outerPanel.add(iconLabel);
+        outerPanel.add(nameLabel);
+        outerPanel.add(typeLabel);
+
+        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(style.getStyleName(), maxWidth));
+        String type = StringUtils.textToHtml(style.isCustom() ? "自定义" : "预设");
+
+        nameLabel.setText(name);
+        typeLabel.setText(type);
+
+        Dimension ps = iconLabel.getPreferredSize();
+        Dimension ps2 = nameLabel.getPreferredSize();
+        int ph = Math.max(ps.height, ps2.height);
+        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+        outerPanel.setPreferredSize(d);
+        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+
+        outerPanel.setDrawBg(isSelected || hoverIndex == index);
+
+        return outerPanel;
     }
 
     @Override

@@ -117,4 +117,8 @@ public class Colors {
     public static final Color ORANGE_RED_2 = new Color(238, 64, 0);
     public static final Color ORANGE_RED_3 = new Color(205, 55, 0);
     public static final Color ORANGE_RED_4 = new Color(139, 37, 0);
+
+    public static final Color CLOUD1 = new Color(240,244,246);
+    public static final Color CLOUD2 = new Color(186,222,238);
+    public static final Color CLOUD3 = new Color(65,181,215);
 }

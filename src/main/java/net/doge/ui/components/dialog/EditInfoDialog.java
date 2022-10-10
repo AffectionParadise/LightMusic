@@ -157,7 +157,7 @@ public class EditInfoDialog extends JDialog {
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
             if (f.getPlayer().isPlayingFile(file)) {
-                new ConfirmDialog(f, FILE_BEING_USED_MSG, "确定").showDialog();
+                new TipDialog(f, FILE_BEING_USED_MSG).showDialog();
                 return;
             } else {
                 for (int i = 0, size = labels.length; i < size; i++) {
@@ -212,7 +212,11 @@ public class EditInfoDialog extends JDialog {
     public void updateBlur() {
         BufferedImage bufferedImage;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = ImageUtils.read(f.getCurrUIStyle().getStyleImgPath());
+        else {
+            String styleImgPath = f.getCurrUIStyle().getStyleImgPath();
+            if(StringUtils.isNotEmpty(styleImgPath)) bufferedImage = f.getCurrUIStyle().getImg();
+            else bufferedImage = ImageUtils.dyeRect(1, 1, f.getCurrUIStyle().getBgColor());
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
         doBlur(bufferedImage);
     }

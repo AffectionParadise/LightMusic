@@ -6,6 +6,7 @@ import net.doge.ui.components.DialogButton;
 import net.doge.ui.PlayerFrame;
 import net.doge.utils.ImageUtils;
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -132,7 +133,11 @@ public class ConfirmDialog extends JDialog {
     public void updateBlur() {
         BufferedImage bufferedImage;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = ImageUtils.read(f.getCurrUIStyle().getStyleImgPath());
+        else {
+            String styleImgPath = f.getCurrUIStyle().getStyleImgPath();
+            if(StringUtils.isNotEmpty(styleImgPath)) bufferedImage = f.getCurrUIStyle().getImg();
+            else bufferedImage = ImageUtils.dyeRect(1, 1, f.getCurrUIStyle().getBgColor());
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
         doBlur(bufferedImage);
     }

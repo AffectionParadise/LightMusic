@@ -14,12 +14,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -2158,6 +2160,8 @@ public class MusicServerUtils {
     private static final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec?title=%s&vid=%s&act=pcRec&pd=pc";
     // 相似视频 API (哔哩哔哩)
     private static final String SIMILAR_VIDEO_BI_API = "http://api.bilibili.com/x/web-interface/archive/related?bvid=%s";
+    // 视频分集 API (哔哩哔哩)
+    private static final String VIDEO_EPISODES_BI_API = "http://api.bilibili.com/x/player/pagelist?bvid=%s";
 
     // 用户关注 API
     private static final String USER_FOLLOWS_API = prefix + "/user/follows?uid=%s&limit=1000";
@@ -15796,6 +15800,64 @@ public class MusicServerUtils {
     }
 
     /**
+     * 获取视频分集
+     *
+     * @return
+     */
+    public static CommonResult<NetMvInfo> getVideoEpisodes(NetMvInfo netMvInfo) {
+        int source = netMvInfo.getSource();
+        String bvid = netMvInfo.getBvid();
+
+        LinkedList<NetMvInfo> res = new LinkedList<>();
+        Integer t = 0;
+
+        // 哔哩哔哩
+        if (source == NetMusicSource.BI) {
+            String mvInfoBody = HttpRequest.get(String.format(VIDEO_EPISODES_BI_API, bvid))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONArray mvArray = JSONObject.fromObject(mvInfoBody).optJSONArray("data");
+            if (mvArray != null) {
+                t = mvArray.size();
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    JSONObject mvJson = mvArray.getJSONObject(i);
+
+                    String mvId = mvJson.getString("cid");
+                    String mvName = mvJson.getString("part");
+                    String artistName = netMvInfo.getArtist();
+                    String creatorId = netMvInfo.getCreatorId();
+                    String coverImgUrl = netMvInfo.getCoverImgUrl();
+                    Long playCount = netMvInfo.getPlayCount();
+                    Double duration = mvJson.getDouble("duration");
+                    String pubTime = netMvInfo.getPubTime();
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setFormat(Format.FLV);
+                    mvInfo.setSource(NetMusicSource.BI);
+                    mvInfo.setId(mvId);
+                    mvInfo.setBvid(bvid);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setDuration(duration);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(mvInfo);
+                }
+            }
+        }
+
+        return new CommonResult<>(res, t);
+    }
+
+    /**
      * 获取相似专辑
      *
      * @return
@@ -17463,7 +17525,7 @@ public class MusicServerUtils {
      * @param dest
      * @throws Exception
      */
-    public static void download(LoadingPanel loading, String urlPath, String dest, Map<String, Object> headers) throws Exception {
+    public static void download(Component comp, String urlPath, String dest, Map<String, Object> headers) throws Exception {
         File file = new File(dest);
         URL url = new URL(urlPath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -17489,8 +17551,8 @@ public class MusicServerUtils {
         // 如果没有数据了会返回 -1，如果还有会返回数据的长度
         while ((read = fis.read(buffer)) != -1) {
             hasRead += read;
-            if (loading != null)
-                loading.setText("加载歌曲文件，" + String.format("%.1f", (double) hasRead / fileSize * 100) + "%");
+            if (comp instanceof LoadingPanel)
+                ((LoadingPanel) comp).setText("加载歌曲文件，" + String.format("%.1f", (double) hasRead / fileSize * 100) + "%");
             //读取多少输出多少
             toClient.write(buffer, 0, read);
         }

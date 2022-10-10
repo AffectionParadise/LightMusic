@@ -16,6 +16,7 @@ public class ColorUtils {
      * @return
      */
     public static String colorToRGBString(Color color) {
+        if (color == null) return "";
         return color.getRed() + "," + color.getGreen() + "," + color.getBlue();
     }
 
@@ -26,6 +27,7 @@ public class ColorUtils {
      * @return
      */
     public static Color RGBStringToColor(String rgbStr) {
+        if (StringUtils.isEmpty(rgbStr)) return null;
         String[] split = rgbStr.split(",");
         return new Color(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
     }

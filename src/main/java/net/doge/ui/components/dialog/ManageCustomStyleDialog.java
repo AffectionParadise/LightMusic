@@ -13,7 +13,9 @@ import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.DefaultCatalogListRenderer;
 import net.doge.ui.renderers.DefaultStyleListRenderer;
+import net.doge.ui.renderers.TranslucentItemRecommendListRenderer;
 import net.doge.utils.ImageUtils;
+import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -33,11 +35,15 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class ManageCustomStyleDialog extends JDialog {
-    private final String TITLE = "管理自定义风格";
+    private final String TITLE = "管理主题";
+    // 预设主题不能编辑提示
+    private final String EDIT_DENIED_MSG = "不能编辑预设的主题";
+    // 预设主题不能删除提示
+    private final String REMOVE_DENIED_MSG = "不能删除预设的主题";
     // 删除确认提示
-    private final String ASK_REMOVE_MSG = "确定删除选中的风格？";
+    private final String ASK_REMOVE_MSG = "确定删除选中的主题？";
     // 编辑时单选提示
-    private final String SINGLE_SELECT_MSG = "需要编辑的风格一次只能选择一个";
+    private final String SINGLE_SELECT_MSG = "需要编辑的主题一次只能选择一个";
     private ManageCustomStyleDialogPanel globalPanel = new ManageCustomStyleDialogPanel();
 
     // 最大阴影透明度
@@ -55,8 +61,9 @@ public class ManageCustomStyleDialog extends JDialog {
     private JPanel windowCtrlPanel = new JPanel();
     private JButton closeButton = new JButton(closeWindowIcon);
 
-    private final JLabel tipLabel = new JLabel("添加、编辑或删除自定义风格");
+    private final JLabel tipLabel = new JLabel("应用、添加、编辑或删除主题（预设主题不能修改）");
     private final JList<UIStyle> styleList = new JList<>();
+    private final JScrollPane styleListScrollPane = new JScrollPane(styleList);
     private final DefaultListModel<UIStyle> styleListModel = new DefaultListModel<>();
     private DialogButton allSelectButton;
     private DialogButton nonSelectButton;
@@ -111,7 +118,7 @@ public class ManageCustomStyleDialog extends JDialog {
 
         setTitle(TITLE);
         setResizable(false);
-        setSize(400, 340);
+        setSize(700, 640);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -135,7 +142,11 @@ public class ManageCustomStyleDialog extends JDialog {
     public void updateBlur() {
         BufferedImage bufferedImage;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = ImageUtils.read(f.getCurrUIStyle().getStyleImgPath());
+        else {
+            String styleImgPath = f.getCurrUIStyle().getStyleImgPath();
+            if (StringUtils.isNotEmpty(styleImgPath)) bufferedImage = f.getCurrUIStyle().getImg();
+            else bufferedImage = ImageUtils.dyeRect(1, 1, f.getCurrUIStyle().getBgColor());
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
         doBlur(bufferedImage);
     }
@@ -202,15 +213,16 @@ public class ManageCustomStyleDialog extends JDialog {
                 UIStyle style = styleList.getSelectedValue();
                 if (style != null) {
                     f.changeUIStyle(style);
+                    updateStyle();
                     // 选中应用的风格
-                    List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
-                    for (int i = 0; i < stylePopupMenuItems.size(); i++) {
-                        if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
-                            stylePopupMenuItems.get(i).setSelected(true);
-                            break;
-                        }
-                    }
-                    f.updateRadioButtonMenuItemIcon(f.getStylePopupMenu());
+//                    List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
+//                    for (int i = 0; i < stylePopupMenuItems.size(); i++) {
+//                        if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
+//                            stylePopupMenuItems.get(i).setSelected(true);
+//                            break;
+//                        }
+//                    }
+//                    f.updateRadioButtonMenuItemIcon(f.getStylePopupMenu());
                 }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -238,11 +250,13 @@ public class ManageCustomStyleDialog extends JDialog {
                             UIStyleConstants.CUSTOM,
                             ((String) results[0]),
                             false,
-                            ((String) results[1]), ((Color) results[2]), ((Color) results[3]),
+                            "", ((Color) results[2]), ((Color) results[3]),
                             ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
                             ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
                             ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
                     );
+                    if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
+                    else customStyle.setStyleImgPath((String) results[1]);
                     // 添加风格菜单项、按钮组，但不切换风格
                     f.addStyle(customStyle, false);
                     // 最后别忘了到列表中添加
@@ -262,64 +276,81 @@ public class ManageCustomStyleDialog extends JDialog {
         });
         // 删除事件
         removeButton.addActionListener(e -> {
-            if (styleList.getSelectedValue() != null) {
-                ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, "是", "否");
-                d.showDialog();
-                if (d.getResponse() == JOptionPane.YES_OPTION) {
-                    List<UIStyle> selectedStyles = styleList.getSelectedValuesList();
-                    // 获取应处理的集合
-                    List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
-                    CustomPopupMenu stylePopupMenu = f.getStylePopupMenu();
-                    List<UIStyle> styles = f.getStyles();
-                    UIStyle currUIStyle = f.getCurrUIStyle();
-                    selectedStyles.forEach(style -> {
-                        // 删除正在使用的样式，先换回默认样式，再删除
-                        if (style == currUIStyle) {
-                            try {
-                                f.changeUIStyle(styles.get(0));
-                                stylePopupMenuItems.get(0).setSelected(true);
-                                f.updateRadioButtonMenuItemIcon(stylePopupMenu);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            } catch (ClassNotFoundException classNotFoundException) {
-                                classNotFoundException.printStackTrace();
-                            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                                unsupportedLookAndFeelException.printStackTrace();
-                            } catch (InstantiationException instantiationException) {
-                                instantiationException.printStackTrace();
-                            } catch (IllegalAccessException illegalAccessException) {
-                                illegalAccessException.printStackTrace();
-                            } catch (AWTException awtException) {
-                                awtException.printStackTrace();
-                            }
+            UIStyle value = styleList.getSelectedValue();
+            if (value == null) return;
+            if (value.isPreDefined()) {
+                new TipDialog(f, REMOVE_DENIED_MSG).showDialog();
+                return;
+            }
+            ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, "是", "否");
+            d.showDialog();
+            if (d.getResponse() == JOptionPane.YES_OPTION) {
+                List<UIStyle> selectedStyles = styleList.getSelectedValuesList();
+                // 获取应处理的集合
+//                    List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
+//                    CustomPopupMenu stylePopupMenu = f.getStylePopupMenu();
+                List<UIStyle> styles = f.getStyles();
+                UIStyle currUIStyle = f.getCurrUIStyle();
+                selectedStyles.forEach(style -> {
+                    // 删除正在使用的样式，先换回默认样式，再删除
+                    if (style == currUIStyle) {
+                        try {
+                            f.changeUIStyle(styles.get(0));
+//                                stylePopupMenuItems.get(0).setSelected(true);
+//                                f.updateRadioButtonMenuItemIcon(stylePopupMenu);
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        } catch (ClassNotFoundException classNotFoundException) {
+                            classNotFoundException.printStackTrace();
+                        } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+                            unsupportedLookAndFeelException.printStackTrace();
+                        } catch (InstantiationException instantiationException) {
+                            instantiationException.printStackTrace();
+                        } catch (IllegalAccessException illegalAccessException) {
+                            illegalAccessException.printStackTrace();
+                        } catch (AWTException awtException) {
+                            awtException.printStackTrace();
                         }
-                        // 从已添加到界面上的菜单项中删除
-                        for (int i = 0; i < stylePopupMenuItems.size(); i++) {
-                            if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
-                                stylePopupMenu.remove(stylePopupMenuItems.get(i));
-                                stylePopupMenuItems.remove(stylePopupMenuItems.get(i--));
-                            }
+                    }
+                    // 从已添加到界面上的菜单项中删除
+//                        for (int i = 0; i < stylePopupMenuItems.size(); i++) {
+//                            if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
+//                                stylePopupMenu.remove(stylePopupMenuItems.get(i));
+//                                stylePopupMenuItems.remove(stylePopupMenuItems.get(i--));
+//                            }
+//                        }
+                    styles.remove(style);
+                    // 删除图片文件
+                    File file = new File(style.getStyleImgPath());
+                    // 确保要删除的文件不被其他主题使用
+                    boolean canDelete = true;
+                    for (UIStyle st : styles) {
+                        if (file.equals(new File(st.getStyleImgPath()))) {
+                            canDelete = false;
+                            break;
                         }
-                        styles.remove(style);
-                        // 删除图片文件
-                        new File(style.getStyleImgPath()).delete();
-                        // 最后别忘了从列表中删除
-                        styleListModel.removeElement(style);
-                    });
-                }
+                    }
+                    if (canDelete) file.delete();
+                    // 最后别忘了从列表中删除
+                    styleListModel.removeElement(style);
+                });
             }
         });
         // 编辑事件
         editButton.addActionListener(e -> {
             UIStyle value = styleList.getSelectedValue();
             if (value == null) return;
+            if (value.isPreDefined()) {
+                new TipDialog(f, EDIT_DENIED_MSG).showDialog();
+                return;
+            }
             CustomStyleDialog dialog = new CustomStyleDialog(f, true, "更新", value);
             try {
                 int length = styleList.getSelectedIndices().length;
                 if (length == 0) return;
                 // 只能单选
                 if (length > 1) {
-                    new ConfirmDialog(f, SINGLE_SELECT_MSG, "确定").showDialog();
+                    new TipDialog(f, SINGLE_SELECT_MSG).showDialog();
                     return;
                 }
                 dialog.showDialog();
@@ -327,7 +358,13 @@ public class ManageCustomStyleDialog extends JDialog {
                     Object[] results = dialog.getResults();
                     UIStyle selectedStyle = styleList.getSelectedValue();
                     selectedStyle.setStyleName((String) results[0]);
-                    selectedStyle.setStyleImgPath((String) results[1]);
+                    if (results[1] instanceof Color) {
+                        selectedStyle.setStyleImgPath("");
+                        selectedStyle.setBgColor((Color) results[1]);
+                    } else {
+                        selectedStyle.setStyleImgPath((String) results[1]);
+                        selectedStyle.setBgColor(null);
+                    }
                     selectedStyle.setForeColor((Color) results[2]);
                     selectedStyle.setSelectedColor((Color) results[3]);
                     selectedStyle.setLrcColor((Color) results[4]);
@@ -342,6 +379,7 @@ public class ManageCustomStyleDialog extends JDialog {
                     // 若编辑的样式正在使用，则更换
                     if (f.getCurrUIStyle() == selectedStyle) {
                         f.changeUIStyle(selectedStyle);
+                        updateStyle();
                     }
 //                    styleList.clearSelection();
                 }
@@ -363,32 +401,72 @@ public class ManageCustomStyleDialog extends JDialog {
         });
         // 添加右部按钮
         rightBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        Dimension area = new Dimension(1, 10);
+        rightBox.add(Box.createVerticalGlue());
         rightBox.add(allSelectButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(nonSelectButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(applyButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(addButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(editButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(removeButton);
+        rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
         DefaultStyleListRenderer r = new DefaultStyleListRenderer();
+        r.setCustomFont(globalFont);
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
         styleList.setCellRenderer(r);
         styleList.setOpaque(false);
         styleList.setFocusable(false);
         styleList.setModel(styleListModel);
+        styleList.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int index = styleList.locationToIndex(e.getPoint());
+                Rectangle bounds = styleList.getCellBounds(index, index);
+                if (bounds != null) setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
+            }
+
+            private void setHoverIndex(int index) {
+                DefaultStyleListRenderer renderer = (DefaultStyleListRenderer) styleList.getCellRenderer();
+                if (renderer != null) {
+                    int hoverIndex = renderer.getHoverIndex();
+                    if (hoverIndex == index) return;
+                    renderer.setHoverIndex(index);
+                    styleList.repaint();
+                }
+            }
+        });
+        styleList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                DefaultStyleListRenderer renderer = (DefaultStyleListRenderer) styleList.getCellRenderer();
+                if (renderer != null) {
+                    renderer.setHoverIndex(-1);
+                    styleList.repaint();
+                }
+            }
+        });
+        styleList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // 鼠标左键双击应用风格
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    applyButton.doClick();
+                }
+            }
+        });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
-        JScrollPane sp = new JScrollPane(styleList);
-        scrollPaneOpaque(sp);
-        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
-        bottomBox.add(sp);
+        scrollPaneOpaque();
+        styleListScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        styleListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+        bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);
 
@@ -407,20 +485,40 @@ public class ManageCustomStyleDialog extends JDialog {
     void initStyles() {
         List<UIStyle> styles = f.getStyles();
         for (UIStyle style : styles) {
-            if (style.getStyleType().intValue() == UIStyleConstants.CUSTOM) {
-                styleListModel.addElement(style);
-            }
+            styleListModel.addElement(style);
         }
     }
 
-    void scrollPaneOpaque(JScrollPane sp) {
-        sp.setOpaque(false);
-        sp.getViewport().setOpaque(false);
-        sp.getHorizontalScrollBar().setOpaque(false);
-        sp.getVerticalScrollBar().setOpaque(false);
-        sp.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        sp.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+    void scrollPaneOpaque() {
+        styleListScrollPane.setOpaque(false);
+        styleListScrollPane.getViewport().setOpaque(false);
+        styleListScrollPane.getHorizontalScrollBar().setOpaque(false);
+        styleListScrollPane.getVerticalScrollBar().setOpaque(false);
+        styleListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+    }
+
+    // 主题更换时更新窗口主题
+    void updateStyle() {
+        UIStyle st = f.getCurrUIStyle();
+        Color labelColor = st.getLabelColor();
+        Color buttonColor = st.getButtonColor();
+
+        titleLabel.setForeground(labelColor);
+        closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), buttonColor));
+        tipLabel.setForeground(labelColor);
+        allSelectButton.setForeColor(buttonColor);
+        nonSelectButton.setForeColor(buttonColor);
+        applyButton.setForeColor(buttonColor);
+        addButton.setForeColor(buttonColor);
+        editButton.setForeColor(buttonColor);
+        removeButton.setForeColor(buttonColor);
+        DefaultStyleListRenderer r = (DefaultStyleListRenderer) styleList.getCellRenderer();
+        r.setForeColor(st.getForeColor());
+        r.setSelectedColor(st.getSelectedColor());
+        styleListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(st.getScrollBarColor()));
+        styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(st.getScrollBarColor()));
     }
 
     void doBlur(BufferedImage bufferedImage) {

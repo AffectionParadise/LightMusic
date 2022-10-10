@@ -63,6 +63,11 @@ public class PreDefinedUIStyle {
             new UIStyle(UIStyleConstants.MORITAKA_AND_RAIN, "戍孝与雨", false, SimplePath.STYLE_IMG_PATH + "moritakaAndRain.jpg",
                     Colors.WHITE_SMOKE, Colors.BISQUE_2, Colors.WHITE_SMOKE, Colors.BISQUE_3, Colors.WHITE_SMOKE,
                     Colors.WHITE_SMOKE, Colors.WHITE_SMOKE, Colors.WHITE_SMOKE, Colors.WHITE_SMOKE, Colors.WHITE_SMOKE,
-                    Colors.WHITE_SMOKE)
+                    Colors.WHITE_SMOKE),
+            // 云间小憩
+            new UIStyle(UIStyleConstants.CLOUD_REST, "云间小憩", false, SimplePath.STYLE_IMG_PATH + "cloudRest.jpg",
+                    Colors.CLOUD1, Colors.CLOUD2, Colors.CLOUD1, Colors.CLOUD3, Colors.CLOUD1,
+                    Colors.CLOUD1, Colors.CLOUD1, Colors.CLOUD1, Colors.CLOUD1, Colors.CLOUD1,
+                    Colors.CLOUD1)
     };
 }

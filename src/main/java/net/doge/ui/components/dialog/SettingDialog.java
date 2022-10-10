@@ -209,7 +209,11 @@ public class SettingDialog extends JDialog {
     public void updateBlur() {
         BufferedImage bufferedImage;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = ImageUtils.read(f.getCurrUIStyle().getStyleImgPath());
+        else {
+            String styleImgPath = f.getCurrUIStyle().getStyleImgPath();
+            if(StringUtils.isNotEmpty(styleImgPath)) bufferedImage = f.getCurrUIStyle().getImg();
+            else bufferedImage = ImageUtils.dyeRect(1, 1, f.getCurrUIStyle().getBgColor());
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
         doBlur(bufferedImage);
     }
@@ -432,7 +436,7 @@ public class SettingDialog extends JDialog {
                 File dir = new File(musicDownPathTextField.getText());
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new ConfirmDialog(f, CATALOG_NOT_FOUND_MSG, "确定").showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -459,7 +463,7 @@ public class SettingDialog extends JDialog {
                 File dir = new File(mvDownPathTextField.getText());
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new ConfirmDialog(f, CATALOG_NOT_FOUND_MSG, "确定").showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -486,7 +490,7 @@ public class SettingDialog extends JDialog {
                 File dir = new File(cachePathTextField.getText());
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new ConfirmDialog(f, CATALOG_NOT_FOUND_MSG, "确定").showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -657,17 +661,17 @@ public class SettingDialog extends JDialog {
         // 验证
         File musicDir = new File(musicDownPathTextField.getText());
         if (!musicDir.exists()) {
-            new ConfirmDialog(f, "歌曲下载路径无效", "确定").showDialog();
+            new TipDialog(f, "歌曲下载路径无效").showDialog();
             return false;
         }
         File mvDir = new File(mvDownPathTextField.getText());
         if (!mvDir.exists()) {
-            new ConfirmDialog(f, "MV 下载路径无效", "确定").showDialog();
+            new TipDialog(f, "MV 下载路径无效").showDialog();
             return false;
         }
         File cacheDir = new File(cachePathTextField.getText());
         if (!cacheDir.exists()) {
-            new ConfirmDialog(f, "缓存路径无效", "确定").showDialog();
+            new TipDialog(f, "缓存路径无效").showDialog();
             return false;
         }
 

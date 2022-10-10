@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.Colors;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomRadioButtonMenuItem;
 import net.doge.ui.components.CustomTextField;
@@ -16,6 +17,7 @@ import net.doge.models.UIStyle;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.JTextFieldHintListener;
 import net.doge.utils.ImageUtils;
+import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,13 +43,13 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class CustomStyleDialog extends JDialog implements DocumentListener {
-    private final String TITLE = "自定义风格";
+    private final String TITLE = "添加自定义主题";
     private final int rectWidth = 80;
     private final int rectHeight = 20;
     // 风格名称必填提示
-    private final String STYLE_NAME_NOT_NULL_MSG = "emmm~~风格名称不能为无名氏哦";
+    private final String STYLE_NAME_NOT_NULL_MSG = "emmm~~主题名称不能为无名氏哦";
     // 风格名称重复提示
-    private final String STYLE_NAME_DUPLICATE_MSG = "emmm~该风格名称已存在，换一个吧";
+    private final String STYLE_NAME_DUPLICATE_MSG = "emmm~该主题名称已存在，换一个吧";
     // 图片文件不存在提示
     private final String IMG_FILE_NOT_EXIST_MSG = "选定的图片路径无效";
     private CustomStyleDialogPanel globalPanel = new CustomStyleDialogPanel();
@@ -99,6 +101,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             new JLabel(),
             new JLabel()
     };
+    private DialogButton pureColor = new DialogButton("纯色");
 
     private DialogButton okButton;
 
@@ -156,7 +159,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         okButton.addActionListener(e -> {
             // 风格名称不为空
             if (results[0].equals("")) {
-                new ConfirmDialog(f, STYLE_NAME_NOT_NULL_MSG, "确定").showDialog();
+                new TipDialog(f, STYLE_NAME_NOT_NULL_MSG).showDialog();
                 return;
             }
             // 风格名称不重复
@@ -165,50 +168,56 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
                 if (style.getStyleName().equals(results[0])
                         && (style != showedStyle || okButton.getText().contains("添加"))) {
-                    new ConfirmDialog(f, STYLE_NAME_DUPLICATE_MSG, "确定").showDialog();
+                    new TipDialog(f, STYLE_NAME_DUPLICATE_MSG).showDialog();
                     return;
                 }
             }
             // 更新菜单项文字显示
-            if (okButton.getText().contains("更新")) {
-                List<CustomRadioButtonMenuItem> mis = f.getStylePopupMenuItems();
-                String oriName = showedStyle.getStyleName();
-                for (int i = mis.size() - 1; i >= 0; i--) {
-                    CustomRadioButtonMenuItem mi = mis.get(i);
-                    if (mi.getText().trim().equals(oriName)) {
-                        mi.setText(results[0] + "     ");
-                        break;
+//            if (okButton.getText().contains("更新")) {
+//                List<CustomRadioButtonMenuItem> mis = f.getStylePopupMenuItems();
+//                String oriName = showedStyle.getStyleName();
+//                for (int i = mis.size() - 1; i >= 0; i--) {
+//                    CustomRadioButtonMenuItem mi = mis.get(i);
+//                    if (mi.getText().trim().equals(oriName)) {
+//                        mi.setText(results[0] + "     ");
+//                        break;
+//                    }
+//                }
+//            }
+            // 图片路径
+            if (results[1] instanceof String) {
+                // 复制图片(如果有)
+                File imgFile = new File(((String) results[1]));
+                // 图片存在且是文件
+                if (imgFile.exists() && imgFile.isFile()) {
+                    try {
+                        // 文件夹不存在就创建
+                        File dir = new File(SimplePath.CUSTOM_STYLE_IMG_PATH);
+                        if (!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        String newPath = SimplePath.CUSTOM_STYLE_IMG_PATH + imgFile.getName();
+                        Files.copy(
+                                Paths.get(imgFile.getPath()),
+                                Paths.get(newPath),
+                                StandardCopyOption.REPLACE_EXISTING
+                        );
+                        // 设置新的路径
+                        results[1] = newPath;
+                        // 更新时删除原来的图片
+                        String imgPath = style.getStyleImgPath();
+                        if (StringUtils.isNotEmpty(imgPath)) {
+                            File sf = new File(imgPath);
+                            File df = new File(newPath);
+                            if (style == showedStyle && !sf.equals(df) && sf.getParentFile().equals(dir)) sf.delete();
+                        }
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
                     }
+                } else {
+                    new TipDialog(f, IMG_FILE_NOT_EXIST_MSG).showDialog();
+                    return;
                 }
-            }
-            // 复制图片(如果有)
-            File imgFile = new File(((String) results[1]));
-            // 图片存在且是文件
-            if (imgFile.exists() && imgFile.isFile()) {
-                try {
-                    // 文件夹不存在就创建
-                    File dir = new File(SimplePath.CUSTOM_STYLE_IMG_PATH);
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    String newPath = SimplePath.CUSTOM_STYLE_IMG_PATH + imgFile.getName();
-                    Files.copy(
-                            Paths.get(imgFile.getPath()),
-                            Paths.get(newPath),
-                            StandardCopyOption.REPLACE_EXISTING
-                    );
-                    // 设置新的路径
-                    results[1] = newPath;
-                    // 更新时删除原来的图片
-                    File sf = new File(style.getStyleImgPath());
-                    File df = new File(newPath);
-                    if (style == showedStyle && !sf.equals(df) && sf.getParentFile().equals(dir)) sf.delete();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-            } else {
-                new ConfirmDialog(f, IMG_FILE_NOT_EXIST_MSG, "确定").showDialog();
-                return;
             }
             confirmed = true;
             dispose();
@@ -234,7 +243,11 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     public void updateBlur() {
         BufferedImage bufferedImage;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = ImageUtils.read(f.getCurrUIStyle().getStyleImgPath());
+        else {
+            String styleImgPath = f.getCurrUIStyle().getStyleImgPath();
+            if (StringUtils.isNotEmpty(styleImgPath)) bufferedImage = f.getCurrUIStyle().getImg();
+            else bufferedImage = ImageUtils.dyeRect(1, 1, f.getCurrUIStyle().getBgColor());
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
         doBlur(bufferedImage);
     }
@@ -281,7 +294,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
 
         // 获得传入的界面样式
         results[0] = showedStyle.getStyleName();
-        results[1] = showedStyle.getStyleImgPath();
+        String styleImgPath = showedStyle.getStyleImgPath();
+        results[1] = StringUtils.isEmpty(styleImgPath) ? showedStyle.getBgColor() : styleImgPath;
         results[2] = showedStyle.getForeColor();
         results[3] = showedStyle.getSelectedColor();
         results[4] = showedStyle.getLrcColor();
@@ -325,10 +339,16 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载当前样式背景图(显示一个缩略图)
                 if (results[i] != null) {
-                    BufferedImage image = ImageUtils.read((String) results[i]);
-                    if (image.getWidth() >= image.getHeight())
-                        labels[i].setIcon(new ImageIcon(ImageUtils.width(image, 100)));
-                    else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, 100)));
+                    if (results[i] instanceof String) {
+                        BufferedImage image = ImageUtils.read((String) results[i]);
+                        if (image != null) {
+                            if (image.getWidth() >= image.getHeight())
+                                labels[i].setIcon(new ImageIcon(ImageUtils.width(image, 100)));
+                            else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, 100)));
+                        }
+                    } else {
+                        labels[i].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, (Color) results[i]), 100)));
+                    }
                 }
                 int finalI = i;
                 // 图片文件选择
@@ -371,10 +391,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                     @Override
                     public void mouseReleased(MouseEvent e) {
                         if (e.getButton() == MouseEvent.BUTTON1) {
-                            Color color = JColorChooser.showDialog(
-                                    globalPanel,
-                                    "选择颜色",
-                                    ((Color) results[finalI]));
+                            Color color = JColorChooser.showDialog(globalPanel, "选择颜色", ((Color) results[finalI]));
                             if (color == null) return;
                             // 更改方框内颜色并保存
                             component.setIcon(ImageUtils.dyeRoundRect(rectWidth, rectHeight, color));
@@ -386,6 +403,20 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             panel.add(components[i]);
             centerPanel.add(panel);
         }
+
+        // 纯色按钮
+        pureColor.setForeColor(style.getButtonColor());
+        pureColor.setFont(globalFont);
+        pureColor.addActionListener(e -> {
+            Color color = JColorChooser.showDialog(globalPanel, "选择颜色", Colors.THEME);
+            if (color == null) return;
+            // 更改方框内颜色并保存
+            labels[1].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, color), 100)));
+            results[1] = color;
+            pack();
+            setLocationRelativeTo(f);
+        });
+        ((JPanel) centerPanel.getComponent(1)).add(pureColor);
     }
 
     @Override

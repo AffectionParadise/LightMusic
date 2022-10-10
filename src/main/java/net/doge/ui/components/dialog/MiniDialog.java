@@ -298,7 +298,7 @@ public class MiniDialog extends JDialog {
         globalPanel.add(controlPanel, BorderLayout.CENTER);
 
         SimpleMusicInfo musicInfo = player.getMusicInfo();
-        doBlur(!f.getIsBlur() || !player.loadedMusic() ? ImageUtils.read(style.getStyleImgPath()) : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
+        doBlur(!f.getIsBlur() || !player.loadedMusic() ? style.getImg() : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
     }
 
     public void doBlur(BufferedImage bufferedImage) {

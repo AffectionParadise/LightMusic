@@ -127,7 +127,7 @@ public class PlayerFrame extends JFrame {
     // 询问是否保留播放列表的提示
     private final String ASK_RETAIN_MUSIC_LIST_MSG = "播放列表已存在歌曲，您希望保留播放列表的歌曲吗？(选择“否”将清空原有的歌曲列表)";
     // 询问是否清空播放列表的提示
-    private final String ASK_CLEAR_MUSIC_LIST_MSG = "确定要清空离线音乐播放列表吗？";
+//    private final String ASK_CLEAR_MUSIC_LIST_MSG = "确定要清空离线音乐播放列表吗？";
     // 询问是否清空缓存的提示
     private final String ASK_CLEAR_CACHE_MSG = "当前缓存大小为 %s，确定要清空缓存吗？";
     // 询问是否删除不存在的文件的提示
@@ -299,6 +299,8 @@ public class PlayerFrame extends JFrame {
     private final String RELATED_MV_MENU_ITEM_TEXT = "查看相关 MV        ";
     // 右键菜单查看相似 MV 文字
     private final String SIMILAR_MV_MENU_ITEM_TEXT = "查看相似 MV        ";
+    // 右键菜单查看视频分集文字
+    private final String VIDEO_EPISODE_MENU_ITEM_TEXT = "查看视频分集        ";
     // 右键菜单查看发布者 文字
     private final String MV_CREATOR_MENU_ITEM_TEXT = "查看发布者        ";
     // 右键菜单复制名称文字
@@ -326,6 +328,10 @@ public class PlayerFrame extends JFrame {
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
     // 菜单图标
     private ImageIcon menuIcon = new ImageIcon(SimplePath.ICON_PATH + "menu.png");
+    // 更换主题图标
+    private ImageIcon changeStyleIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "changeStyle.png");
+    // 添加自定义主题图标
+    private ImageIcon addCustomStyleIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "addCustomStyle.png");
     // 关闭歌曲图标
     private ImageIcon closeSongIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "closeSong.png");
     // 清空缓存图标
@@ -541,6 +547,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon userMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "user.png");
     // 查看相似 MV 菜单项图标
     private ImageIcon similarMvMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "similarMv.png");
+    // 查看视频视频分集菜单项图标
+    private ImageIcon videoEpisodeMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "episode.png");
     // 查看相似歌手菜单项图标
     private ImageIcon similarArtistMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "similarArtist.png");
     // 查看歌手合作人菜单项图标
@@ -820,8 +828,8 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem settingMenuItem = new CustomMenuItem("设置      ");
     private CustomMenuItem closeSong = new CustomMenuItem("关闭当前歌曲      ");
     private CustomMenuItem clearCache = new CustomMenuItem("清空播放缓存      ");
-    private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义风格...");
-    private CustomMenuItem manageCustomStyleMenuItem = new CustomMenuItem("管理自定义风格...");
+    private CustomMenuItem manageStyleMenuItem = new CustomMenuItem("更换主题      ");
+    private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义主题      ");
     private CustomMenuItem helpMenuItem = new CustomMenuItem("指南      ");
 
     // 歌名
@@ -852,8 +860,8 @@ public class PlayerFrame extends JFrame {
     private CustomButton styleToolButton = new CustomButton(styleIcon);
     // 换肤按钮弹出菜单
     private CustomPopupMenu stylePopupMenu = new CustomPopupMenu(THIS);
-    private ButtonGroup stylePopupMenuButtonGroup = new ButtonGroup();
-    private List<CustomRadioButtonMenuItem> stylePopupMenuItems = fetchStyleMenuItems();
+//    private ButtonGroup stylePopupMenuButtonGroup = new ButtonGroup();
+//    private List<CustomRadioButtonMenuItem> stylePopupMenuItems = fetchStyleMenuItems();
 
     // 歌词列表
     private LyricList<Statement> lrcList = new LyricList<>();
@@ -1604,6 +1612,8 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem netMvDownloadMenuItem = new CustomMenuItem(DOWNLOAD_MENU_ITEM_TEXT);
     // MV 右键菜单：查看相似 MV
     private CustomMenuItem netMvSimilarMvMenuItem = new CustomMenuItem(SIMILAR_MV_MENU_ITEM_TEXT);
+    // MV 右键菜单：查看视频分集
+    private CustomMenuItem netMvVideoEpisodeMenuItem = new CustomMenuItem(VIDEO_EPISODE_MENU_ITEM_TEXT);
     // MV 右键菜单：查看发布者
     private CustomMenuItem netMvCreatorMenuItem = new CustomMenuItem(MV_CREATOR_MENU_ITEM_TEXT);
     // MV 右键菜单：查看评论
@@ -2768,6 +2778,7 @@ public class PlayerFrame extends JFrame {
                         styleObject.getString("name"),
                         styleObject.getBoolean("opaque"),
                         styleObject.getString("imgPath"),
+                        ColorUtils.RGBStringToColor((String) styleObject.get("bgColor")),
                         ColorUtils.RGBStringToColor((String) styleObject.get("foreColor")),
                         ColorUtils.RGBStringToColor((String) styleObject.get("selectedColor")),
                         ColorUtils.RGBStringToColor((String) styleObject.get("lrcColor")),
@@ -2824,7 +2835,7 @@ public class PlayerFrame extends JFrame {
         if (showDesktopLyric = config.optBoolean(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
             desktopLyricDialog.setVisible(true);
         } else desktopLyricButton.setIcon(ImageUtils.dye(desktopLyricOffIcon, currUIStyle.getButtonColor()));
-        stylePopupMenuItems.get(styleIndex).setSelected(true);
+//        stylePopupMenuItems.get(styleIndex).setSelected(true);
         updateRadioButtonMenuItemIcon(stylePopupMenu);
         // 载入播放模式
         switch (config.optInt(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
@@ -3585,12 +3596,13 @@ public class PlayerFrame extends JFrame {
         // 存入自定义风格
         JSONArray styleArray = new JSONArray();
         for (UIStyle style : styles) {
-            if (style.getStyleType() == UIStyleConstants.CUSTOM) {
+            if (style.isCustom()) {
                 JSONObject styleObject = new JSONObject();
                 styleObject.put("type", style.getStyleType());
                 styleObject.put("name", style.getStyleName());
                 styleObject.put("opaque", style.getOpaque());
                 styleObject.put("imgPath", style.getStyleImgPath());
+                styleObject.put("bgColor", ColorUtils.colorToRGBString(style.getBgColor()));
                 styleObject.put("foreColor", ColorUtils.colorToRGBString(style.getForeColor()));
                 styleObject.put("selectedColor", ColorUtils.colorToRGBString(style.getSelectedColor()));
                 styleObject.put("lrcColor", ColorUtils.colorToRGBString(style.getLrcColor()));
@@ -4091,7 +4103,7 @@ public class PlayerFrame extends JFrame {
         closeSong.setFont(globalFont);
         clearCache.setFont(globalFont);
         styleCustomMenuItem.setFont(globalFont);
-        manageCustomStyleMenuItem.setFont(globalFont);
+        manageStyleMenuItem.setFont(globalFont);
         settingMenuItem.setFont(globalFont);
         helpMenuItem.setFont(globalFont);
 
@@ -4234,7 +4246,7 @@ public class PlayerFrame extends JFrame {
         styleCustomMenuItem.addActionListener(e -> {
             customStyle();
         });
-        manageCustomStyleMenuItem.addActionListener(e -> {
+        manageStyleMenuItem.addActionListener(e -> {
             ManageCustomStyleDialog dialog = new ManageCustomStyleDialog(THIS, true);
             try {
                 dialog.showDialog();
@@ -6621,31 +6633,31 @@ public class PlayerFrame extends JFrame {
             removeToolButton.requestFocus();
         });
         // 添加换肤弹出菜单项
-        for (int i = 0, length = stylePopupMenuItems.size(); i < length; i++) {
-            int finalI = i;
-            stylePopupMenuItems.get(i).addActionListener(e -> {
-                try {
-                    changeUIStyle(styles.get(finalI));
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } catch (IllegalAccessException illegalAccessException) {
-                    illegalAccessException.printStackTrace();
-                } catch (InstantiationException instantiationException) {
-                    instantiationException.printStackTrace();
-                } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                    unsupportedLookAndFeelException.printStackTrace();
-                } catch (ClassNotFoundException classNotFoundException) {
-                    classNotFoundException.printStackTrace();
-                } catch (AWTException awtException) {
-                    awtException.printStackTrace();
-                }
-            });
-            stylePopupMenuButtonGroup.add(stylePopupMenuItems.get(i));
-            stylePopupMenu.add(stylePopupMenuItems.get(i));
-        }
-        stylePopupMenu.addSeparator();
+//        for (int i = 0, length = stylePopupMenuItems.size(); i < length; i++) {
+//            int finalI = i;
+//            stylePopupMenuItems.get(i).addActionListener(e -> {
+//                try {
+//                    changeUIStyle(styles.get(finalI));
+//                } catch (IOException ioException) {
+//                    ioException.printStackTrace();
+//                } catch (IllegalAccessException illegalAccessException) {
+//                    illegalAccessException.printStackTrace();
+//                } catch (InstantiationException instantiationException) {
+//                    instantiationException.printStackTrace();
+//                } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+//                    unsupportedLookAndFeelException.printStackTrace();
+//                } catch (ClassNotFoundException classNotFoundException) {
+//                    classNotFoundException.printStackTrace();
+//                } catch (AWTException awtException) {
+//                    awtException.printStackTrace();
+//                }
+//            });
+//            stylePopupMenuButtonGroup.add(stylePopupMenuItems.get(i));
+//            stylePopupMenu.add(stylePopupMenuItems.get(i));
+//        }
+//        stylePopupMenu.addSeparator();
+        stylePopupMenu.add(manageStyleMenuItem);
         stylePopupMenu.add(styleCustomMenuItem);
-        stylePopupMenu.add(manageCustomStyleMenuItem);
         // 个人音乐筛选框
         filterTextField.addFocusListener(
                 new JTextFieldHintListener(filterTextField, "关键字筛选", currUIStyle.getForeColor()));
@@ -12902,6 +12914,73 @@ public class PlayerFrame extends JFrame {
                 }
             });
         });
+        // 查看视频分集
+        netMvVideoEpisodeMenuItem.addActionListener(e -> {
+            NetMvInfo netMvInfo;
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex == TabIndex.NET_MV) netMvInfo = netMvList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL)
+                netMvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else netMvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+            loadingAndRun(() -> {
+                try {
+                    clearRequestForMv();
+                    // 获取视频分集
+                    CommonResult<NetMvInfo> result = MusicServerUtils.getVideoEpisodes(currMvMvInfo = netMvInfo);
+                    List<NetMvInfo> netMvInfos = result.data;
+                    netMvCurrPage = netMvMaxPage = 1;
+                    // 标题
+                    netMvTitleLabel.setText(netMvInfo.toSimpleString() + " 的分集");
+                    netMvToolBar.removeAll();
+                    netMvToolBar.add(netMvBackwardButton);
+                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(netMvTitleLabel);
+                    netMvToolBar.add(Box.createHorizontalGlue());
+                    // 更新数量显示
+                    netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                    netMvCountPanel.add(netMvCountLabel, 1);
+                    netMvLeftBox.add(netMvCountPanel);
+                    netMvCountPanel.setVisible(true);
+                    netMvSortTypeComboBox.setVisible(false);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMvList.setModel(emptyListModel);
+                    netMvListModel.clear();
+                    netMvInfos.forEach(mvInfo -> {
+                        globalExecutor.submit(() -> updateCollection(mvInfo));
+                        // 设置图片加载后重绘的事件
+                        mvInfo.setInvokeLater(() -> {
+                            updateRenderer(netMvList);
+                            updateRenderer(collectionList);
+                            netMvList.repaint();
+                            collectionList.repaint();
+                        });
+                        netMvListModel.addElement(mvInfo);
+                    });
+                    netMvList.setModel(netMvListModel);
+                    netMvBackwardButton.setEnabled(true);
+                    netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
+                    if (netMvListModel.isEmpty()) {
+                        netMvLeftBox.remove(netMvScrollPane);
+                        netMvLeftBox.add(emptyHintPanel);
+                    } else {
+                        netMvLeftBox.remove(emptyHintPanel);
+                        netMvLeftBox.add(netMvScrollPane);
+                    }
+                    netMvScrollPane.getVerticalScrollBar().setValue(0);
+                    tabbedPane.setSelectedIndex(TabIndex.NET_MV);
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        });
         // 查看 MV 发布者
         netMvCreatorMenuItem.addActionListener(e -> {
             NetMvInfo netMvInfo;
@@ -12996,6 +13075,7 @@ public class PlayerFrame extends JFrame {
         netMvCollectMenuItem.setFont(globalFont);
         netMvDownloadMenuItem.setFont(globalFont);
         netMvSimilarMvMenuItem.setFont(globalFont);
+        netMvVideoEpisodeMenuItem.setFont(globalFont);
         netMvCreatorMenuItem.setFont(globalFont);
         netMvCommentMenuItem.setFont(globalFont);
         netMvCopyNameMenuItem.setFont(globalFont);
@@ -13006,6 +13086,7 @@ public class PlayerFrame extends JFrame {
 //        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvDownloadMenuItem);
         netMvPopupMenu.add(netMvSimilarMvMenuItem);
+        netMvPopupMenu.add(netMvVideoEpisodeMenuItem);
         netMvPopupMenu.add(netMvCreatorMenuItem);
 //        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvCommentMenuItem);
@@ -19993,6 +20074,9 @@ public class PlayerFrame extends JFrame {
         copyMottoMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
         nextMottoMenuItem.setIcon(ImageUtils.dye(nextMottoIcon, menuItemColor));
 
+        manageStyleMenuItem.setIcon(ImageUtils.dye(changeStyleIcon, menuItemColor));
+        styleCustomMenuItem.setIcon(ImageUtils.dye(addCustomStyleIcon, menuItemColor));
+
         closeSong.setIcon(ImageUtils.dye(closeSongIcon, menuItemColor));
         closeSong.setDisabledIcon(ImageUtils.dye(closeSongIcon, disabledColor));
         clearCache.setIcon(ImageUtils.dye(clearCacheIcon, menuItemColor));
@@ -20097,6 +20181,7 @@ public class PlayerFrame extends JFrame {
         netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
         netMvDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, menuItemColor));
         netMvSimilarMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
+        netMvVideoEpisodeMenuItem.setIcon(ImageUtils.dye(videoEpisodeMenuItemIcon, menuItemColor));
         netMvCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, menuItemColor));
         netMvCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
         netMvCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
@@ -21497,11 +21582,13 @@ public class PlayerFrame extends JFrame {
                         UIStyleConstants.CUSTOM,
                         ((String) results[0]),
                         false,
-                        ((String) results[1]), ((Color) results[2]), ((Color) results[3]),
+                        "", ((Color) results[2]), ((Color) results[3]),
                         ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
                         ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
                         ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
                 );
+                if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
+                else customStyle.setStyleImgPath((String) results[1]);
                 // 添加风格菜单项、按钮组，并切换风格
                 addStyle(customStyle, true);
                 changeUIStyle(customStyle);
@@ -21552,50 +21639,50 @@ public class PlayerFrame extends JFrame {
     }
 
     // 获得风格菜单项
-    List<CustomRadioButtonMenuItem> fetchStyleMenuItems() {
-        List<CustomRadioButtonMenuItem> CustomRadioButtonMenuItems =
-                styles.stream()
-                        .map(style -> {
-                            CustomRadioButtonMenuItem menuItem = new CustomRadioButtonMenuItem(style.getStyleName() + "     ");
-                            menuItem.setFont(globalFont);
-                            return menuItem;
-                        })
-                        // 这一步很重要，转为指定类型的数组，不能直接转换！
-                        .collect(Collectors.toList());
-        return CustomRadioButtonMenuItems;
-    }
+//    List<CustomRadioButtonMenuItem> fetchStyleMenuItems() {
+//        List<CustomRadioButtonMenuItem> CustomRadioButtonMenuItems =
+//                styles.stream()
+//                        .map(style -> {
+//                            CustomRadioButtonMenuItem menuItem = new CustomRadioButtonMenuItem(style.getStyleName() + "     ");
+//                            menuItem.setFont(globalFont);
+//                            return menuItem;
+//                        })
+//                        // 这一步很重要，转为指定类型的数组，不能直接转换！
+//                        .collect(Collectors.toList());
+//        return CustomRadioButtonMenuItems;
+//    }
 
     // 添加新风格，加到 List 最前面，apply 表示添加后是否应用
     public void addStyle(UIStyle style, boolean apply) {
         styles.add(style);
-        CustomRadioButtonMenuItem newStylePopupMenuItem = new CustomRadioButtonMenuItem(style.getStyleName() + "     ");
-        newStylePopupMenuItem.setFont(globalFont);
-        newStylePopupMenuItem.setForeground(currUIStyle.getMenuItemColor());
-        newStylePopupMenuItem.setUI(new RadioButtonMenuItemUI(currUIStyle.getMenuItemColor()));
-        stylePopupMenuButtonGroup.add(newStylePopupMenuItem);
-        stylePopupMenuItems.add(newStylePopupMenuItem);
-        if (apply) {
-            newStylePopupMenuItem.setSelected(true);
-            updateRadioButtonMenuItemIcon(stylePopupMenu);
-        }
-        newStylePopupMenuItem.addActionListener(l -> {
-            try {
-                changeUIStyle(style);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                unsupportedLookAndFeelException.printStackTrace();
-            } catch (InstantiationException instantiationException) {
-                instantiationException.printStackTrace();
-            } catch (IllegalAccessException illegalAccessException) {
-                illegalAccessException.printStackTrace();
-            } catch (AWTException e) {
-                e.printStackTrace();
-            }
-        });
-        stylePopupMenu.add(newStylePopupMenuItem, stylePopupMenu.getComponentCount() - 3);
+//        CustomRadioButtonMenuItem newStylePopupMenuItem = new CustomRadioButtonMenuItem(style.getStyleName() + "     ");
+//        newStylePopupMenuItem.setFont(globalFont);
+//        newStylePopupMenuItem.setForeground(currUIStyle.getMenuItemColor());
+//        newStylePopupMenuItem.setUI(new RadioButtonMenuItemUI(currUIStyle.getMenuItemColor()));
+//        stylePopupMenuButtonGroup.add(newStylePopupMenuItem);
+//        stylePopupMenuItems.add(newStylePopupMenuItem);
+//        if (apply) {
+//            newStylePopupMenuItem.setSelected(true);
+//            updateRadioButtonMenuItemIcon(stylePopupMenu);
+//        }
+//        newStylePopupMenuItem.addActionListener(l -> {
+//            try {
+//                changeUIStyle(style);
+//            } catch (IOException ioException) {
+//                ioException.printStackTrace();
+//            } catch (ClassNotFoundException classNotFoundException) {
+//                classNotFoundException.printStackTrace();
+//            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+//                unsupportedLookAndFeelException.printStackTrace();
+//            } catch (InstantiationException instantiationException) {
+//                instantiationException.printStackTrace();
+//            } catch (IllegalAccessException illegalAccessException) {
+//                illegalAccessException.printStackTrace();
+//            } catch (AWTException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        stylePopupMenu.add(newStylePopupMenuItem, stylePopupMenu.getComponentCount() - 3);
     }
 
     // 播放/暂停按钮执行
@@ -21871,30 +21958,26 @@ public class PlayerFrame extends JFrame {
                 if (!mvInfo.isMp4()) {
                     String fileName = mvInfo.toFileName();
                     file = new File(SimplePath.CACHE_PATH + fileName);
-                    // 下载 MV
-                    if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
-//                        loading.start();
-//                        loading.setText(LOADING_MSG);
-                        dialog.setMessage("加载视频文件......");
-                        dialog.updateSize();
-                        dialog.setLocationRelativeTo(THIS);
-                        Map<String, Object> headers = new HashMap<>();
-                        headers.put("referer", "https://www.bilibili.com/");
-                        MusicServerUtils.download(null, mvInfo.getUrl(), file.getPath(), headers);
-                    }
                     // 转为 mp4 再播放
                     File tmpFile = FileUtils.replaceSuffix(file, Format.MP4);
                     if (!tmpFile.exists()) {
-//                        loading.setText("转换视频文件格式......");
+                        // 下载 MV
+                        if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
+                            dialog.setMessage("加载视频文件......");
+                            dialog.updateSize();
+                            dialog.setLocationRelativeTo(THIS);
+                            Map<String, Object> headers = new HashMap<>();
+                            headers.put("referer", "https://www.bilibili.com/");
+                            MusicServerUtils.download(null, mvInfo.getUrl(), file.getPath(), headers);
+                        }
                         dialog.setMessage("转换视频文件格式......");
                         dialog.updateSize();
                         dialog.setLocationRelativeTo(THIS);
                         VideoUtils.convert(file, tmpFile);
-                        // 暂停一段时间，等待转换成功
-//                        Thread.sleep(10000);
+                        // 转换成功后删除原文件
+                        file.delete();
                     }
                     file = tmpFile;
-//                    if (loading.isShowing()) loading.stop();
                 }
 
                 if (player.isPlaying()) playOrPause();
@@ -22064,45 +22147,42 @@ public class PlayerFrame extends JFrame {
     // 风格背景虚化
     void doStyleBlur(UIStyle style) {
         globalExecutor.submit(() -> {
-            try {
-                String styleImgPath = style.getStyleImgPath();
-                if (styleImgPath == null || styleImgPath.equals("")) {
-                    globalPanel.setBackgroundImage(null);
-                } else {
-                    BufferedImage styleImage = ImageIO.read(new File(styleImgPath));
-                    // 处理大小
-                    styleImage = ImageUtils.width(styleImage, getWidth());
-                    // 高斯模糊
-                    styleImage = ImageUtils.doSlightBlur(styleImage);
-                    // 圆角
+            String styleImgPath = style.getStyleImgPath();
+            // 纯色背景
+            if (StringUtils.isEmpty(styleImgPath)) {
+                globalPanel.setBackgroundImage(ImageUtils.dyeRect(1, 1, style.getBgColor()));
+            } else {
+                BufferedImage styleImage = style.getImg();
+                // 处理大小
+                styleImage = ImageUtils.width(styleImage, getWidth());
+                // 高斯模糊
+                styleImage = ImageUtils.doSlightBlur(styleImage);
+                // 圆角
 //                    styleImage = ImageUtils.setRadius(styleImage, WIN_ARC);
-                    // 亮度
-                    styleImage = ImageUtils.bright(styleImage, 0.7f);
-                    // 质量
-                    styleImage = ImageUtils.quality(styleImage, 0.1f);
-                    // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
-                    globalPanel.setBackgroundImage(styleImage);
-                    // 更新弹出菜单
-                    if (currPopup != null) currPopup.repaint();
-                    // 更新对话框
-                    for (JDialog d : currDialogs) {
-                        if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
-                        else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
-                        else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
-                        else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
-                        else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
-                        else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
-                        else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
-                        else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
-                        else if (d instanceof ImageViewDialog) ((ImageViewDialog) d).updateBlur();
-                    }
-                    // 改变迷你窗口背景
-//                    if (miniDialog != null) miniDialog.doBlur(styleImage);
-                }
-                globalPanelTimer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
+                // 亮度
+                styleImage = ImageUtils.bright(styleImage, 0.7f);
+                // 质量
+                styleImage = ImageUtils.quality(styleImage, 0.1f);
+                // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
+                globalPanel.setBackgroundImage(styleImage);
             }
+            // 更新弹出菜单
+            if (currPopup != null) currPopup.repaint();
+            // 更新对话框
+            for (JDialog d : currDialogs) {
+                if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
+                else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
+                else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
+                else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
+                else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
+                else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
+                else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
+                else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
+                else if (d instanceof ImageViewDialog) ((ImageViewDialog) d).updateBlur();
+            }
+            // 改变迷你窗口背景
+//                if (miniDialog != null) miniDialog.doBlur(styleImage);
+            globalPanelTimer.start();
         });
     }
 
@@ -22486,9 +22566,9 @@ public class PlayerFrame extends JFrame {
         return catalogs;
     }
 
-    public List<CustomRadioButtonMenuItem> getStylePopupMenuItems() {
-        return stylePopupMenuItems;
-    }
+//    public List<CustomRadioButtonMenuItem> getStylePopupMenuItems() {
+//        return stylePopupMenuItems;
+//    }
 
     public CustomPopupMenu getStylePopupMenu() {
         return stylePopupMenu;
