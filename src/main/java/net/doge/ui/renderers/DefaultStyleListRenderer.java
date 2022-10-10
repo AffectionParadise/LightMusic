@@ -8,6 +8,7 @@ import net.doge.models.UIStyle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -23,8 +24,6 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/7
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class DefaultStyleListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont;
@@ -35,8 +34,10 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    public DefaultStyleListRenderer(Font customFont) {
-        this.customFont = customFont;
+    private PlayerFrame f;
+
+    public DefaultStyleListRenderer(PlayerFrame f) {
+        this.f = f;
     }
 
     @Override
@@ -47,6 +48,7 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
         JLabel iconLabel = new JLabel();
         JLabel nameLabel = new JLabel();
         JLabel typeLabel = new JLabel();
+        JLabel inUseLabel = new JLabel();
 
         String styleImgPath = style.getStyleImgPath();
         BufferedImage img = StringUtils.isNotEmpty(styleImgPath) ? style.getImgThumb()
@@ -56,24 +58,29 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
         iconLabel.setHorizontalAlignment(CENTER);
         nameLabel.setHorizontalAlignment(CENTER);
         typeLabel.setHorizontalAlignment(CENTER);
+        inUseLabel.setHorizontalAlignment(CENTER);
 
         iconLabel.setVerticalAlignment(CENTER);
         nameLabel.setVerticalAlignment(CENTER);
         typeLabel.setVerticalAlignment(CENTER);
+        inUseLabel.setVerticalAlignment(CENTER);
 
         outerPanel.setOpaque(false);
         iconLabel.setOpaque(false);
         nameLabel.setOpaque(false);
         typeLabel.setOpaque(false);
+        inUseLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
         nameLabel.setForeground(isSelected ? selectedColor : foreColor);
         typeLabel.setForeground(isSelected ? selectedColor : foreColor);
+        inUseLabel.setForeground(isSelected ? selectedColor : foreColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
         typeLabel.setFont(customFont);
+        inUseLabel.setFont(customFont);
 
         GridLayout layout = new GridLayout(1, 2);
         layout.setHgap(15);
@@ -82,13 +89,16 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
         outerPanel.add(typeLabel);
+        outerPanel.add(inUseLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(style.getStyleName(), maxWidth));
         String type = StringUtils.textToHtml(style.isCustom() ? "自定义" : "预设");
+        String inUse = StringUtils.textToHtml(f.getCurrUIStyle() == style ? "使用中" : "");
 
         nameLabel.setText(name);
         typeLabel.setText(type);
+        inUseLabel.setText(inUse);
 
         Dimension ps = iconLabel.getPreferredSize();
         Dimension ps2 = nameLabel.getPreferredSize();

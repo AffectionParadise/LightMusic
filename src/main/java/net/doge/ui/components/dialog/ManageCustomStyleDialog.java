@@ -6,14 +6,10 @@ import net.doge.constants.SimplePath;
 import net.doge.constants.UIStyleConstants;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomPopupMenu;
-import net.doge.ui.components.CustomRadioButtonMenuItem;
 import net.doge.ui.components.DialogButton;
 import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.ui.renderers.DefaultCatalogListRenderer;
 import net.doge.ui.renderers.DefaultStyleListRenderer;
-import net.doge.ui.renderers.TranslucentItemRecommendListRenderer;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 
@@ -118,7 +114,7 @@ public class ManageCustomStyleDialog extends JDialog {
 
         setTitle(TITLE);
         setResizable(false);
-        setSize(700, 640);
+        setSize(800, 640);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -416,7 +412,7 @@ public class ManageCustomStyleDialog extends JDialog {
         rightBox.add(removeButton);
         rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
-        DefaultStyleListRenderer r = new DefaultStyleListRenderer();
+        DefaultStyleListRenderer r = new DefaultStyleListRenderer(f);
         r.setCustomFont(globalFont);
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
