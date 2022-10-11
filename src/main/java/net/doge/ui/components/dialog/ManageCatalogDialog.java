@@ -14,6 +14,7 @@ import net.doge.ui.components.DialogButton;
 import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.DefaultCatalogListRenderer;
+import net.doge.ui.renderers.DefaultStyleListRenderer;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 
@@ -115,7 +116,7 @@ public class ManageCatalogDialog extends JDialog {
 
         setTitle(TITLE);
         setResizable(false);
-        setSize(400, 340);
+        setSize(500, 400);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -254,25 +255,65 @@ public class ManageCatalogDialog extends JDialog {
         });
 
         // 添加右部按钮
-        int gap = 10;
         rightBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        Dimension area = new Dimension(1, 10);
+        rightBox.add(Box.createVerticalGlue());
         rightBox.add(allSelectButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(nonSelectButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(locateButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(addButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(Box.createRigidArea(area));
         rightBox.add(removeButton);
+        rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
         DefaultCatalogListRenderer r = new DefaultCatalogListRenderer();
+        r.setCustomFont(globalFont);
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
         catalogList.setCellRenderer(r);
         catalogList.setOpaque(false);
         catalogList.setFocusable(false);
         catalogList.setModel(catalogListModel);
+        catalogList.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int index = catalogList.locationToIndex(e.getPoint());
+                Rectangle bounds = catalogList.getCellBounds(index, index);
+                if (bounds != null) setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
+            }
+
+            private void setHoverIndex(int index) {
+                DefaultCatalogListRenderer renderer = (DefaultCatalogListRenderer) catalogList.getCellRenderer();
+                if (renderer != null) {
+                    int hoverIndex = renderer.getHoverIndex();
+                    if (hoverIndex == index) return;
+                    renderer.setHoverIndex(index);
+                    catalogList.repaint();
+                }
+            }
+        });
+        catalogList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                DefaultCatalogListRenderer renderer = (DefaultCatalogListRenderer) catalogList.getCellRenderer();
+                if (renderer != null) {
+                    renderer.setHoverIndex(-1);
+                    catalogList.repaint();
+                }
+            }
+        });
+        catalogList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // 鼠标左键双击应用风格
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    locateButton.doClick();
+                }
+            }
+        });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         JScrollPane sp = new JScrollPane(catalogList);
         scrollPaneOpaque(sp);

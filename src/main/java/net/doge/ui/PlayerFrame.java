@@ -2774,9 +2774,8 @@ public class PlayerFrame extends JFrame {
             for (int i = 0, len = styleArray.size(); i < len; i++) {
                 JSONObject styleObject = styleArray.getJSONObject(i);
                 UIStyle style = new UIStyle(
-                        styleObject.getInt("type"),
+                        UIStyleConstants.CUSTOM,
                         styleObject.getString("name"),
-                        styleObject.getBoolean("opaque"),
                         styleObject.getString("imgPath"),
                         ColorUtils.RGBStringToColor((String) styleObject.get("bgColor")),
                         ColorUtils.RGBStringToColor((String) styleObject.get("foreColor")),
@@ -2828,7 +2827,7 @@ public class PlayerFrame extends JFrame {
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入上次选的风格
-        int styleIndex = config.optInt(ConfigConstants.CURR_UI_STYLE, UIStyleConstants.DEFAULT);
+        int styleIndex = config.optInt(ConfigConstants.CURR_UI_STYLE, 0);
         changeUIStyle(styles.get(styleIndex));
         // 载入是否显示桌面歌词
         desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
@@ -2836,7 +2835,7 @@ public class PlayerFrame extends JFrame {
             desktopLyricDialog.setVisible(true);
         } else desktopLyricButton.setIcon(ImageUtils.dye(desktopLyricOffIcon, currUIStyle.getButtonColor()));
 //        stylePopupMenuItems.get(styleIndex).setSelected(true);
-        updateRadioButtonMenuItemIcon(stylePopupMenu);
+//        updateRadioButtonMenuItemIcon(stylePopupMenu);
         // 载入播放模式
         switch (config.optInt(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
             case PlayMode.SEQUENCE:
@@ -3598,9 +3597,7 @@ public class PlayerFrame extends JFrame {
         for (UIStyle style : styles) {
             if (style.isCustom()) {
                 JSONObject styleObject = new JSONObject();
-                styleObject.put("type", style.getStyleType());
                 styleObject.put("name", style.getStyleName());
-                styleObject.put("opaque", style.getOpaque());
                 styleObject.put("imgPath", style.getStyleImgPath());
                 styleObject.put("bgColor", ColorUtils.colorToRGBString(style.getBgColor()));
                 styleObject.put("foreColor", ColorUtils.colorToRGBString(style.getForeColor()));
@@ -20019,7 +20016,9 @@ public class PlayerFrame extends JFrame {
 
     // 改变 UI 风格
     public void changeUIStyle(UIStyle style) throws IOException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, AWTException {
-        boolean opaque = style.getOpaque();
+        currUIStyle = style;
+
+        boolean opaque = false;
         Color buttonColor = style.getButtonColor();
         Color labelColor = style.getLabelColor();
         Color selectedColor = style.getSelectedColor();
@@ -21537,11 +21536,10 @@ public class PlayerFrame extends JFrame {
         }
         // 标题图标
         setIconImage(ImageUtils.dye(titleIcon, labelColor).getImage());
-        currUIStyle = style;
 
         // 更新单选菜单项和标签按钮样式
         updateRadioButtonMenuItemIcon(sortPopupMenu);
-        updateRadioButtonMenuItemIcon(stylePopupMenu);
+//        updateRadioButtonMenuItemIcon(stylePopupMenu);
 //        updateRadioButtonMenuItemIcon(ratePopupMenu);
         updateTabButtonStyle();
 
@@ -21581,7 +21579,6 @@ public class PlayerFrame extends JFrame {
                 UIStyle customStyle = new UIStyle(
                         UIStyleConstants.CUSTOM,
                         ((String) results[0]),
-                        false,
                         "", ((Color) results[2]), ((Color) results[3]),
                         ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
                         ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),

@@ -449,7 +449,7 @@ public class ImageUtils {
     }
 
     /**
-     * 对 BufferedImage 进行毛玻璃化(高斯模糊)处理
+     * 对 BufferedImage 进行毛玻璃化(高斯模糊)处理，用于专辑背景
      *
      * @param bufferedImage
      * @return
@@ -460,18 +460,18 @@ public class ImageUtils {
     }
 
     /**
-     * 对 BufferedImage 进行轻度毛玻璃化(高斯模糊)处理
+     * 对 BufferedImage 进行轻度毛玻璃化(高斯模糊)处理，用于主题背景
      *
      * @param bufferedImage
      * @return
      */
     public static BufferedImage doSlightBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(bufferedImage.getWidth() / 32);
+        gaussianFilter.setRadius(bufferedImage.getWidth() / 25);
         return gaussianFilter.filter(bufferedImage, null);
     }
 
     /**
-     * 对 BufferedImage 进行精细毛玻璃化(高斯模糊)处理
+     * 对 BufferedImage 进行精细毛玻璃化(高斯模糊)处理，用于迷你背景
      *
      * @param bufferedImage
      * @return

@@ -207,19 +207,18 @@ public class ManageCustomStyleDialog extends JDialog {
         applyButton.addActionListener(e -> {
             try {
                 UIStyle style = styleList.getSelectedValue();
-                if (style != null) {
-                    f.changeUIStyle(style);
-                    updateStyle();
-                    // 选中应用的风格
-//                    List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
-//                    for (int i = 0; i < stylePopupMenuItems.size(); i++) {
-//                        if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
-//                            stylePopupMenuItems.get(i).setSelected(true);
-//                            break;
-//                        }
+                if (style == null) return;
+                f.changeUIStyle(style);
+                updateStyle();
+                // 选中应用的风格
+//                List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
+//                for (int i = 0; i < stylePopupMenuItems.size(); i++) {
+//                    if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
+//                        stylePopupMenuItems.get(i).setSelected(true);
+//                        break;
 //                    }
-//                    f.updateRadioButtonMenuItemIcon(f.getStylePopupMenu());
-                }
+//                }
+//                f.updateRadioButtonMenuItemIcon(f.getStylePopupMenu());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (ClassNotFoundException ex) {
@@ -245,7 +244,6 @@ public class ManageCustomStyleDialog extends JDialog {
                     UIStyle customStyle = new UIStyle(
                             UIStyleConstants.CUSTOM,
                             ((String) results[0]),
-                            false,
                             "", ((Color) results[2]), ((Color) results[3]),
                             ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
                             ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),

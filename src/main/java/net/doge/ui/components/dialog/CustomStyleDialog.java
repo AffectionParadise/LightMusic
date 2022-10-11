@@ -71,13 +71,13 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     private JButton closeButton = new JButton(closeWindowIcon);
 
     private final JLabel[] labels = {
-            new JLabel("风格名称："),
+            new JLabel("主题名称："),
             new JLabel("背景图片："),
-            new JLabel("播放列表前景色："),
-            new JLabel("播放列表选中项颜色："),
+            new JLabel("列表前景色："),
+            new JLabel("列表选中项颜色："),
             new JLabel("歌词文字颜色："),
             new JLabel("歌词高亮颜色："),
-            new JLabel("歌曲标签颜色："),
+            new JLabel("文字标签颜色："),
             new JLabel("进度条颜色："),
             new JLabel("按钮颜色："),
             new JLabel("滚动条颜色："),

@@ -5,9 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.doge.models.MusicPlayer;
 import net.doge.models.UIStyle;
+import net.doge.ui.components.CustomPanel;
+import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
@@ -34,15 +37,51 @@ public class DefaultCatalogListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        File dir = (File) value;
+//        Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//        File dir = (File) value;
+//
+//        setDrawBg(isSelected);
+//        setOpaque(false);
+//        setText(dir.getAbsolutePath());
+//        setFont(customFont);
+//        setForeground(isSelected ? selectedColor : foreColor);
+//        return this;
+        File file = (File) value;
 
-        setDrawBg(isSelected);
-        setOpaque(false);
-        setText(dir.getAbsolutePath());
-        setFont(customFont);
-        setForeground(isSelected ? selectedColor : foreColor);
-        return this;
+        CustomPanel outerPanel = new CustomPanel();
+        JLabel nameLabel = new JLabel();
+
+        nameLabel.setHorizontalAlignment(CENTER);
+
+        nameLabel.setVerticalAlignment(CENTER);
+
+        outerPanel.setOpaque(false);
+        nameLabel.setOpaque(false);
+
+        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
+
+        nameLabel.setFont(customFont);
+
+        GridLayout layout = new GridLayout(1, 1);
+        layout.setHgap(15);
+        outerPanel.setLayout(layout);
+
+        outerPanel.add(nameLabel);
+
+        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(file.getAbsolutePath(), maxWidth));
+
+        nameLabel.setText(name);
+
+        Dimension ps = nameLabel.getPreferredSize();
+        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ps.height + 16, 50));
+        outerPanel.setPreferredSize(d);
+        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+
+        outerPanel.setDrawBg(isSelected || hoverIndex == index);
+
+        return outerPanel;
     }
 
     @Override

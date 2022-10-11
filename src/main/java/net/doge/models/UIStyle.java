@@ -17,11 +17,9 @@ import java.awt.image.BufferedImage;
 @Data
 public class UIStyle {
     // 风格类型
-    private Integer styleType;
+    private int styleType;
     // 风格名称
     private String styleName;
-    // 决定组件是否透明
-    private Boolean opaque;
     // 对应的图片路径
     private String styleImgPath;
     // 图片
@@ -57,7 +55,7 @@ public class UIStyle {
     private Runnable invokeLater;
 
     public boolean isPreDefined() {
-        return styleType != UIStyleConstants.CUSTOM;
+        return styleType == UIStyleConstants.PRE;
     }
 
     public boolean isCustom() {
@@ -89,11 +87,10 @@ public class UIStyle {
         });
     }
 
-    public UIStyle(Integer styleType, String styleName, Boolean opaque, String styleImgPath,
+    public UIStyle(Integer styleType, String styleName, String styleImgPath,
                    Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color labelColor, Color timeBarColor, Color buttonColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
         this.styleType = styleType;
         this.styleName = styleName;
-        this.opaque = opaque;
         setStyleImgPath(styleImgPath);
         this.foreColor = foreColor;
         this.selectedColor = selectedColor;
@@ -108,11 +105,10 @@ public class UIStyle {
         this.menuItemColor = menuItemColor;
     }
 
-    public UIStyle(Integer styleType, String styleName, Boolean opaque, String styleImgPath, Color bgColor,
+    public UIStyle(Integer styleType, String styleName, String styleImgPath, Color bgColor,
                    Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color labelColor, Color timeBarColor, Color buttonColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
         this.styleType = styleType;
         this.styleName = styleName;
-        this.opaque = opaque;
         setStyleImgPath(styleImgPath);
         setBgColor(bgColor);
         this.foreColor = foreColor;

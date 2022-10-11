@@ -354,14 +354,12 @@ public class VideoDialog extends JDialog {
             MediaException.Type type = mp.getError().getType();
             // 耳机取下导致的播放异常，重新播放
             if (type == MediaException.Type.PLAYBACK_HALTED) {
-                initView();
-                playVideo();
+                initAgain();
             }
             // 歌曲 url 过期后重新加载 url 再播放
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE || type == MediaException.Type.UNKNOWN) {
                 if (!isLocal) netMvInfo.setUrl(uri = MusicServerUtils.fetchMvUrl(netMvInfo));
-                initView();
-                playVideo();
+                initAgain();
             }
             // 尝试多次无效直接关闭窗口
             if (++tryTime >= 3) {
@@ -375,6 +373,13 @@ public class VideoDialog extends JDialog {
         scene.setFill(javafx.scene.paint.Color.BLACK);
         jfxPanel.setScene(scene);
         globalPanel.add(jfxPanel, BorderLayout.CENTER);
+    }
+
+    // 出错时重新初始化
+    void initAgain() {
+        initView();
+        timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), f, mp, true));
+        playVideo();
     }
 
     // 初始化标题栏
