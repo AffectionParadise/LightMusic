@@ -319,6 +319,7 @@ public class ManageCatalogDialog extends JDialog {
         scrollPaneOpaque(sp);
         sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        sp.getVerticalScrollBar().setUnitIncrement(30);
 //        sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);

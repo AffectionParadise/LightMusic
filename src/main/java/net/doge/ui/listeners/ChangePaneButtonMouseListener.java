@@ -2,6 +2,7 @@ package net.doge.ui.listeners;
 
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.componentui.ChangePaneButtonUI;
+import net.doge.utils.ColorUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,19 +30,17 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
         b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         ui.setDrawMask(true);
         b.setUI(ui);
-//        b.setForeground(f.getCurrUIStyle().getButtonColor().brighter());
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         ui.setDrawMask(false);
         b.setUI(ui);
-//        b.setForeground(f.getCurrUIStyle().getButtonColor());
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        b.setForeground(f.getCurrUIStyle().getButtonColor().darker());
+        b.setForeground(ColorUtils.darker(f.getCurrUIStyle().getButtonColor()));
     }
 
     @Override

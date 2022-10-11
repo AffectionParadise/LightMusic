@@ -1,7 +1,9 @@
 package net.doge.ui.components;
 
+import cn.hutool.core.img.ColorUtil;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
+import net.doge.utils.ColorUtils;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -17,28 +19,32 @@ public class DialogButton extends CustomButton implements MouseListener {
     private Color foreColorBk;
     private float alpha = 0.2f;
 
-    public DialogButton() {
-        foreColor = Colors.WHITE;
+    void init() {
         addMouseListener(this);
         setOpaque(false);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    public DialogButton() {
+        setForeColor(Colors.WHITE);
+        init();
     }
 
     public DialogButton(String text) {
         super(text);
-        foreColor = Colors.WHITE;
-        addMouseListener(this);
-        setOpaque(false);
+        setForeColor(Colors.WHITE);
+        init();
     }
 
     public DialogButton(String text, Color foreColor) {
         super(text);
-        this.foreColor = foreColor;
-        addMouseListener(this);
-        setOpaque(false);
+        setForeColor(foreColor);
+        init();
     }
 
     public void setForeColor(Color foreColor) {
         this.foreColor = foreColor;
+        this.foreColorBk = foreColor;
         repaint();
     }
 
@@ -97,8 +103,7 @@ public class DialogButton extends CustomButton implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        foreColorBk = foreColor;
-        foreColor = foreColor.darker();
+        foreColor = ColorUtils.darker(foreColor);
     }
 
     @Override
@@ -108,7 +113,6 @@ public class DialogButton extends CustomButton implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         alpha = 0.4f;
     }
 

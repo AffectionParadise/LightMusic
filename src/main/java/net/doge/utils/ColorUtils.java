@@ -8,7 +8,6 @@ import java.awt.*;
  * @Date 2020/12/15
  */
 public class ColorUtils {
-
     /**
      * Color 转为 RGB 字符串，格式 xxx,xxx,xxx
      *
@@ -33,34 +32,62 @@ public class ColorUtils {
     }
 
     /**
-     * Color 转为十六进制字符串
+     * 更亮的颜色
      *
      * @param color
      * @return
      */
-    public static String colorToHexString(Color color) {
-        String r = Integer.toHexString(color.getRed());
-        r = r.length() < 2 ? ('0' + r) : r;
-        String g = Integer.toHexString(color.getGreen());
-        g = g.length() < 2 ? ('0' + g) : g;
-        String b = Integer.toHexString(color.getBlue());
-        b = b.length() < 2 ? ('0' + b) : b;
-        return '#' + r + g + b;
+    public static Color brighter(Color color) {
+        final float factor = 0.6f;
+        int red = (int) ((color.getRed() * (1 - factor) / 255 + factor) * 255);
+        int green = (int) ((color.getGreen() * (1 - factor) / 255 + factor) * 255);
+        int blue = (int) ((color.getBlue() * (1 - factor) / 255 + factor) * 255);
+        return new Color(red, green, blue, color.getAlpha());
     }
 
     /**
-     * 十六进制字符串转为 Color
+     * 更暗的颜色
      *
-     * @param str
+     * @param color
      * @return
      */
-    public static Color hexStringToColor(String str) {
-        return new Color(
-                Integer.parseInt(str.substring(1, 3), 16),
-                Integer.parseInt(str.substring(3, 5), 16),
-                Integer.parseInt(str.substring(5), 16)
-        );
+    public static Color darker(Color color) {
+        final float factor = 0.15f;
+        int red = (int) ((color.getRed() * (1 - factor)));
+        int green = (int) ((color.getGreen() * (1 - factor)));
+        int blue = (int) ((color.getBlue() * (1 - factor)));
+        return new Color(red, green, blue, color.getAlpha());
     }
+
+//    /**
+//     * Color 转为十六进制字符串
+//     *
+//     * @param color
+//     * @return
+//     */
+//    public static String colorToHexString(Color color) {
+//        String r = Integer.toHexString(color.getRed());
+//        r = r.length() < 2 ? ('0' + r) : r;
+//        String g = Integer.toHexString(color.getGreen());
+//        g = g.length() < 2 ? ('0' + g) : g;
+//        String b = Integer.toHexString(color.getBlue());
+//        b = b.length() < 2 ? ('0' + b) : b;
+//        return '#' + r + g + b;
+//    }
+//
+//    /**
+//     * 十六进制字符串转为 Color
+//     *
+//     * @param str
+//     * @return
+//     */
+//    public static Color hexStringToColor(String str) {
+//        return new Color(
+//                Integer.parseInt(str.substring(1, 3), 16),
+//                Integer.parseInt(str.substring(3, 5), 16),
+//                Integer.parseInt(str.substring(5), 16)
+//        );
+//    }
 
     /**
      * awt 的 Color 转为 JavaFx 的 Color

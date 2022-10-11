@@ -60,7 +60,7 @@
 			"djId":"289680033"
 		}
 	],
-	"currUIStyle":5,
+	"currUIStyle":11,
 	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/",
 	"playlistHistorySearch":[
 		"无穷小亮",
@@ -623,11 +623,11 @@
 	"lyricType":0,
 	"chineseType":0,
 	"history":[
+		"D:\\音乐\\Sky High - KLYDIX.mp3",
+		"D:\\音乐\\Horizon - 亚述.mp3",
 		"D:\\音乐\\Night Flight - KLYDIX.mp3",
 		"D:\\音乐\\Dream Express - KLYDIX.mp3",
 		"D:\\音乐\\Hyper - KLYDIX.mp3",
-		"D:\\音乐\\Sky High - KLYDIX.mp3",
-		"D:\\音乐\\Horizon - 亚述.mp3",
 		"D:\\音乐\\Hope - KLYDIX.mp3",
 		"D:\\音乐\\英雄联盟-音乐模式 - 一夕Clarence、球球特别大.mp3",
 		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\孤勇者 - 小洛蜗牛.mp3",
@@ -2242,7 +2242,7 @@
 	"miniX":981,
 	"autoDownloadLyric":true,
 	"miniY":396,
-	"musicPlaying":8,
+	"musicPlaying":5,
 	"rate":1,
 	"japaneseType":0,
 	"musicList":[

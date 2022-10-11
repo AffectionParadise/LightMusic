@@ -19398,7 +19398,7 @@ public class PlayerFrame extends JFrame {
 
             }
 //            Color labelColor = currUIStyle.getLabelColor();
-//            Color brighterColor = labelColor.brighter(), darkerColor = labelColor.darker();
+//            Color brighterColor = labelColor.brighter(), darkerColor = ColorUtils.darker(labelColor);
 //            if(newColor!=null) {
 //                newColor = new Color(Math.min(newColor.getRed()-step, 255),Math.min(newColor.getGreen()-step, 255),Math.min(newColor.getBlue()-step, 255));
 //                if(newColor.getRed() < darkerColor.getRed() || newColor.getRed() >= brighterColor.getRed() && newColor.getGreen() >= brighterColor.getGreen()
@@ -20050,7 +20050,7 @@ public class PlayerFrame extends JFrame {
         emptyHintPanel.setOpaque(opaque);
 
         // 按钮被禁用时颜色
-        Color disabledColor = buttonColor.darker();
+        Color disabledColor = ColorUtils.darker(buttonColor);
         netMusicBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netMusicBackwardButton.getIcon(), disabledColor));
         netPlaylistBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), disabledColor));
         netAlbumBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netAlbumBackwardButton.getIcon(), disabledColor));
@@ -20067,7 +20067,7 @@ public class PlayerFrame extends JFrame {
 
         // 右键菜单项禁用时颜色
         // 全局设置菜单项禁用颜色
-        UIManager.put("MenuItem.disabledForeground", menuItemColor.darker());
+        UIManager.put("MenuItem.disabledForeground", ColorUtils.darker(menuItemColor));
 
         // 右键菜单项图标
         copyMottoMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
@@ -20480,10 +20480,10 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        filterTextField.setForeground(foreColor.darker());
+        filterTextField.setForeground(ColorUtils.darker(foreColor));
         filterTextField.setCaretColor(foreColor);
         // 在线音乐搜索栏透明
         searchTextField.setOpaque(opaque);
@@ -20492,16 +20492,16 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        searchTextField.setForeground(foreColor.darker());
+        searchTextField.setForeground(ColorUtils.darker(foreColor));
         searchTextField.setCaretColor(foreColor);
 //        focusListeners = netMusicPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netMusicSearchTypeComboBox.setOpaque(opaque);
@@ -20524,16 +20524,16 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netPlaylistSearchTextField.setForeground(foreColor.darker());
+        netPlaylistSearchTextField.setForeground(ColorUtils.darker(foreColor));
         netPlaylistSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netPlaylistPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netPlaylistPageTextField.setForeground(foreColor);
@@ -20554,16 +20554,16 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netAlbumSearchTextField.setForeground(foreColor.darker());
+        netAlbumSearchTextField.setForeground(ColorUtils.darker(foreColor));
         netAlbumSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netAlbumPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netAlbumPageTextField.setForeground(foreColor);
@@ -20584,16 +20584,16 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netArtistSearchTextField.setForeground(foreColor.darker());
+        netArtistSearchTextField.setForeground(ColorUtils.darker(foreColor));
         netArtistSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netArtistPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netArtistPageTextField.setForeground(foreColor);
@@ -20614,16 +20614,16 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netRadioSearchTextField.setForeground(foreColor.darker());
+        netRadioSearchTextField.setForeground(ColorUtils.darker(foreColor));
         netRadioSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netRadioPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netRadioPageTextField.setForeground(foreColor);
@@ -20643,16 +20643,16 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netMvSearchTextField.setForeground(foreColor.darker());
+        netMvSearchTextField.setForeground(ColorUtils.darker(foreColor));
         netMvSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netMvPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netMvPageTextField.setForeground(foreColor);
@@ -20670,7 +20670,7 @@ public class PlayerFrame extends JFrame {
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netRankingPageTextField.setForeground(foreColor);
@@ -20689,16 +20689,16 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
                 ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netUserSearchTextField.setForeground(foreColor.darker());
+        netUserSearchTextField.setForeground(ColorUtils.darker(foreColor));
         netUserSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netUserPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netUserRecordTypeComboBox.setOpaque(opaque);
@@ -20721,7 +20721,7 @@ public class PlayerFrame extends JFrame {
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netCommentTypeComboBox.setOpaque(opaque);
@@ -20740,7 +20740,7 @@ public class PlayerFrame extends JFrame {
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netSheetPageTextField.setForeground(foreColor);
@@ -20755,7 +20755,7 @@ public class PlayerFrame extends JFrame {
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         netRecommendPageTextField.setForeground(foreColor);
@@ -20775,7 +20775,7 @@ public class PlayerFrame extends JFrame {
 //        for (FocusListener focusListener : focusListeners) {
 //            if (focusListener instanceof JTextFieldHintListener) {
 //                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(foreColor.darker());
+//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
 //            }
 //        }
         collectionRecordTypeComboBox.setOpaque(opaque);

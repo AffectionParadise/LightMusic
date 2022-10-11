@@ -5,6 +5,7 @@ import net.doge.constants.Fonts;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
+import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class ButtonMouseListener extends MouseAdapter {
     @Override
     public void mouseEntered(MouseEvent e) {
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
-        Color brighterColor = buttonColor.brighter();
+        Color brighterColor = ColorUtils.brighter(buttonColor);
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));
         b.setForeground(brighterColor);
 
@@ -65,7 +66,7 @@ public class ButtonMouseListener extends MouseAdapter {
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             Color buttonColor = f.getCurrUIStyle().getButtonColor();
-            Color darkerColor = buttonColor.darker();
+            Color darkerColor = ColorUtils.darker(buttonColor);
             if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), darkerColor));
             b.setForeground(darkerColor);
         }
@@ -74,7 +75,7 @@ public class ButtonMouseListener extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
-        Color brighterColor = buttonColor.brighter();
+        Color brighterColor = ColorUtils.brighter(buttonColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));
         b.setForeground(c ? brighterColor : buttonColor);

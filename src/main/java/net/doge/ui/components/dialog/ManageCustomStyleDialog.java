@@ -461,6 +461,7 @@ public class ManageCustomStyleDialog extends JDialog {
         styleListScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         styleListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+        styleListScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);

@@ -14,10 +14,7 @@ import net.doge.ui.PlayerFrame;
 import net.doge.ui.componentui.RadioButtonMenuItemUI;
 import net.doge.ui.componentui.SliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.MusicServerUtils;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -563,7 +560,7 @@ public class VideoDialog extends JDialog {
         downloadButton.setOpaque(false);
         downloadButton.setContentAreaFilled(false);
         downloadButton.setIcon(ImageUtils.dye(downloadIcon, style.getButtonColor()));
-        downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, style.getButtonColor().darker()));
+        downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, ColorUtils.darker(style.getButtonColor())));
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, f));
         downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth(), downloadIcon.getIconHeight()));
         downloadButton.addActionListener(e -> {

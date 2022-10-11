@@ -7,6 +7,7 @@ package net.doge.ui.listeners;
  */
 
 import lombok.Data;
+import net.doge.utils.ColorUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class JTextFieldHintListener implements FocusListener {
         this.textField = jTextField;
         this.hintText = hintText;
         this.inputColor = inputColor;
-        this.placeholderColor = inputColor.darker();
+        this.placeholderColor = ColorUtils.darker(inputColor);
         jTextField.setText(hintText);  // 默认直接显示
         jTextField.setForeground(placeholderColor);
     }

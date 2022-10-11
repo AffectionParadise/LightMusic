@@ -57,9 +57,9 @@ public class StringTwoColor {
 
         if (StringUtils.isEmpty(text)) return;
 
-//        Color borderColor = c2.darker().darker();
+//        Color borderColor = ColorUtils.darker(ColorUtils.darker(c2));
         int shadowXOffset = 2, shadowYOffset = 2;
-        Color shadowColor = Colors.BLACK;
+//        Color shadowColor = Colors.BLACK;
 
         // 计算宽度
         for (int i = 0, len = text.length(); i < len; i++) {

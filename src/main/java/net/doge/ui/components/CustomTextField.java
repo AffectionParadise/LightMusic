@@ -45,7 +45,7 @@ public class CustomTextField extends JTextField {
         // 画背景
         if (drawBg) {
             g2d.setColor(foregroundColor);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
             g2d.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 25, 25);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }

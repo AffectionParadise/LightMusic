@@ -4,6 +4,7 @@ import net.doge.models.MusicPlayer;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.dialog.TipDialog;
 import net.doge.ui.components.dialog.VideoDialog;
+import net.doge.utils.ColorUtils;
 import net.doge.utils.StringUtils;
 import net.doge.utils.TimeUtils;
 import javafx.scene.media.MediaPlayer;
@@ -37,7 +38,7 @@ public class SliderUI extends BasicSliderUI {
         super(slider);
         this.thumbColor = thumbColor;
         this.trackColor = trackColor;
-        this.trackBgColor = trackColor.darker();
+        this.trackBgColor = ColorUtils.darker(trackColor);
         this.f = f;
         this.player = player;
         dialog = new TipDialog(f, 0);
@@ -50,7 +51,7 @@ public class SliderUI extends BasicSliderUI {
         super(slider);
         this.thumbColor = thumbColor;
         this.trackColor = trackColor;
-        this.trackBgColor = trackColor.darker();
+        this.trackBgColor = ColorUtils.darker(trackColor);
         this.f = f;
         this.mp = mp;
         dialog = new TipDialog(f, 0);
