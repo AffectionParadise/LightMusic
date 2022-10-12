@@ -2,6 +2,7 @@ package net.doge.ui.components.dialog;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ColorPicker;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Colors;
@@ -16,6 +17,7 @@ import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.JTextFieldHintListener;
+import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 
@@ -391,8 +393,10 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                     @Override
                     public void mouseReleased(MouseEvent e) {
                         if (e.getButton() == MouseEvent.BUTTON1) {
-                            Color color = JColorChooser.showDialog(globalPanel, "选择颜色", ((Color) results[finalI]));
-                            if (color == null) return;
+                            ColorChooserDialog d = new ColorChooserDialog(f, (Color) results[finalI]);
+                            d.showDialog();
+                            if(!d.isConfirmed()) return;
+                            Color color = d.getResult();
                             // 更改方框内颜色并保存
                             component.setIcon(ImageUtils.dyeRoundRect(rectWidth, rectHeight, color));
                             results[finalI] = color;
@@ -408,8 +412,10 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         pureColor.setForeColor(style.getButtonColor());
         pureColor.setFont(globalFont);
         pureColor.addActionListener(e -> {
-            Color color = JColorChooser.showDialog(globalPanel, "选择颜色", Colors.THEME);
-            if (color == null) return;
+            ColorChooserDialog d = new ColorChooserDialog(f, Colors.THEME);
+            d.showDialog();
+            if(!d.isConfirmed()) return;
+            Color color = d.getResult();
             // 更改方框内颜色并保存
             labels[1].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, color), 100)));
             results[1] = color;

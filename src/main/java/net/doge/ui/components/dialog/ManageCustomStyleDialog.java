@@ -235,7 +235,8 @@ public class ManageCustomStyleDialog extends JDialog {
         });
         // 添加事件
         addButton.addActionListener(e -> {
-            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, true, "添加", f.getCurrUIStyle());
+            UIStyle value = styleList.getSelectedValue();
+            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, true, "添加", value != null ? value : f.getCurrUIStyle());
             try {
                 customStyleDialog.showDialog();
                 if (customStyleDialog.getConfirmed()) {

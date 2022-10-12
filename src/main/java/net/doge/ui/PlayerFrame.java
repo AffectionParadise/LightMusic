@@ -3378,6 +3378,8 @@ public class PlayerFrame extends JFrame {
             leftBox.remove(musicScrollPane);
             leftBox.add(emptyHintPanel);
         }
+
+        System.gc();
     }
 
     // 载入本地音乐列表
@@ -19723,6 +19725,8 @@ public class PlayerFrame extends JFrame {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        } finally {
+            System.gc();
         }
         return false;
     }
@@ -20050,7 +20054,7 @@ public class PlayerFrame extends JFrame {
         emptyHintPanel.setOpaque(opaque);
 
         // 按钮被禁用时颜色
-        Color disabledColor = ColorUtils.darker(buttonColor);
+        Color disabledColor = ColorUtils.darker(buttonColor, 0.3f);
         netMusicBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netMusicBackwardButton.getIcon(), disabledColor));
         netPlaylistBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), disabledColor));
         netAlbumBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netAlbumBackwardButton.getIcon(), disabledColor));
@@ -21548,6 +21552,7 @@ public class PlayerFrame extends JFrame {
         updateTabUI(collectionTabbedPane, style);
 
         globalPanel.repaint();
+        System.gc();
     }
 
     // 打开编辑歌曲信息弹窗
@@ -21868,6 +21873,7 @@ public class PlayerFrame extends JFrame {
 
     // 播放 MV
     void playMv(int mvType) {
+        System.gc();
         // 播放下载列表的 MV
         if (mvType == MvType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
@@ -22184,44 +22190,44 @@ public class PlayerFrame extends JFrame {
     }
 
     // 毛玻璃虚化
-    void doGlassBlur() {
-        blurExecutor.submit(() -> {
-            if (!player.loadedMusic()) return;
-            Rectangle rect = getBounds();
-            setVisible(false);
-            BufferedImage bgImg = ImageUtils.getScreenCapture(rect);
-            setVisible(true);
-            int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
-            if (gw == 0 || gh == 0) {
-                gw = WINDOW_WIDTH;
-                gh = WINDOW_HEIGHT;
-            }
-            // 改变迷你窗口背景
-            if (miniDialog != null) {
-                BufferedImage finalImage = bgImg;
-                miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalImage));
-            }
-            // 高斯模糊
-            bgImg = ImageUtils.doDelicateBlur(bgImg);
-            // 设置圆角
-//                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
-            globalPanel.setBackgroundImage(bgImg);
-            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
-            // 更新弹出菜单
-            if (currPopup != null) currPopup.repaint();
-            // 更新对话框
-            for (JDialog d : currDialogs) {
-                if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
-                else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
-                else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
-                else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
-                else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
-                else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
-                else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
-                else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
-            }
-        });
-    }
+//    void doGlassBlur() {
+//        blurExecutor.submit(() -> {
+//            if (!player.loadedMusic()) return;
+//            Rectangle rect = getBounds();
+//            setVisible(false);
+//            BufferedImage bgImg = ImageUtils.getScreenCapture(rect);
+//            setVisible(true);
+//            int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
+//            if (gw == 0 || gh == 0) {
+//                gw = WINDOW_WIDTH;
+//                gh = WINDOW_HEIGHT;
+//            }
+//            // 改变迷你窗口背景
+//            if (miniDialog != null) {
+//                BufferedImage finalImage = bgImg;
+//                miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalImage));
+//            }
+//            // 高斯模糊
+//            bgImg = ImageUtils.doDelicateBlur(bgImg);
+//            // 设置圆角
+////                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
+//            globalPanel.setBackgroundImage(bgImg);
+//            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
+//            // 更新弹出菜单
+//            if (currPopup != null) currPopup.repaint();
+//            // 更新对话框
+//            for (JDialog d : currDialogs) {
+//                if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
+//                else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
+//                else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
+//                else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
+//                else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
+//                else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
+//                else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
+//                else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
+//            }
+//        });
+//    }
 
     // 筛选个人音乐
     void filterPersonalMusic() {

@@ -34,8 +34,16 @@ public class CustomTextField extends JTextField {
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void setText(String t) {
+        super.setText(t);
+        // 解决设置文本后不刷新的问题
+        setVisible(false);
+        setVisible(true);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
         Rectangle rect = getVisibleRect();
