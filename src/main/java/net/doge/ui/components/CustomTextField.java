@@ -2,12 +2,11 @@ package net.doge.ui.components;
 
 import lombok.Data;
 import net.doge.constants.Fonts;
+import net.doge.ui.listeners.JTextFieldHintListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 
 /**
  * @Author yzx
@@ -26,17 +25,47 @@ public class CustomTextField extends JTextField {
         setHorizontalAlignment(CENTER);
         setMaximumSize(new Dimension(3000, 30));
         drawBg = true;
+        init();
     }
 
     public CustomTextField(int length, boolean drawBg) {
         super(length);
         this.drawBg = drawBg;
+        init();
+    }
+
+    // 解决设置文本后不刷新的问题
+    void init() {
+        setFocusable(false);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                setFocusable(true);
+                requestFocus();
+            }
+        });
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                setFocusable(false);
+            }
+        });
+    }
+
+    // 判断是否需要刷新
+    private boolean needRefresh() {
+        FocusListener[] fls = getFocusListeners();
+        for (FocusListener fl : fls) {
+            if (fl instanceof JTextFieldHintListener) return false;
+        }
+        return true;
     }
 
     @Override
     public void setText(String t) {
         super.setText(t);
         // 解决设置文本后不刷新的问题
+        if(!needRefresh()) return;
         setVisible(false);
         setVisible(true);
     }

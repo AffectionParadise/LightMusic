@@ -194,7 +194,7 @@ public class EditInfoDialog extends JDialog {
         });
         okButton.setFont(globalFont);
         buttonPanel.add(okButton);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(globalPanel, BorderLayout.CENTER);

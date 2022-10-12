@@ -190,7 +190,7 @@ public class SettingDialog extends JDialog {
         buttonPanel.add(okButton);
         buttonPanel.add(applyButton);
         buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         globalPanel.setOpaque(false);
