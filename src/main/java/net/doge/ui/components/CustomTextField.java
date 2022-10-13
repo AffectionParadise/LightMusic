@@ -42,12 +42,14 @@ public class CustomTextField extends JTextField {
             public void mousePressed(MouseEvent e) {
                 setFocusable(true);
                 requestFocus();
+                getCaret().setVisible(true);
             }
         });
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 setFocusable(false);
+                getCaret().setVisible(false);
             }
         });
     }

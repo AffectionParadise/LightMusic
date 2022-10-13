@@ -1,7 +1,6 @@
 package net.doge.ui;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.thread.FinalizableDelegatedExecutorService;
 import cn.hutool.http.HttpException;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -9,12 +8,7 @@ import it.sauronsoftware.jave.EncoderException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.media.MediaException;
 import javafx.stage.DirectoryChooser;
@@ -32,7 +26,6 @@ import net.doge.models.*;
 import net.doge.ui.componentui.*;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.ChangePaneButtonMouseListener;
-import net.doge.ui.listeners.ControlInputListener;
 import net.doge.ui.listeners.ScrollPaneListener;
 import net.doge.utils.*;
 import javafx.application.Platform;
@@ -45,7 +38,6 @@ import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
-import javax.imageio.ImageIO;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -69,7 +61,6 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class PlayerFrame extends JFrame {
     private final PlayerFrame THIS = this;
@@ -4975,7 +4966,7 @@ public class PlayerFrame extends JFrame {
 //        collectionPageTextField.addFocusListener(
 //                new JTextFieldHintListener(collectionPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        collectionPageTextField.addKeyListener(new ControlInputListener());
+        collectionPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 收藏后退按钮事件
         collectionBackwardButton.addActionListener(e -> {
             // 返回到歌单/专辑/歌手/电台
@@ -7105,7 +7096,7 @@ public class PlayerFrame extends JFrame {
 //        netMusicPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netMusicPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netMusicPageTextField.addKeyListener(new ControlInputListener());
+        netMusicPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 返回关键词面板事件
         netMusicBackwardButton.addActionListener(e -> {
             netMusicListModel.clear();
@@ -8235,7 +8226,7 @@ public class PlayerFrame extends JFrame {
 //        netPlaylistPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netPlaylistPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netPlaylistPageTextField.addKeyListener(new ControlInputListener());
+        netPlaylistPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netPlaylistBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netPlaylistLeftBox.getComponentCount() - 1;
@@ -9211,7 +9202,7 @@ public class PlayerFrame extends JFrame {
 //        netAlbumPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netAlbumPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netAlbumPageTextField.addKeyListener(new ControlInputListener());
+        netAlbumPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netAlbumBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netAlbumLeftBox.getComponentCount() - 1;
@@ -10087,7 +10078,7 @@ public class PlayerFrame extends JFrame {
 //        netArtistPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netArtistPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netArtistPageTextField.addKeyListener(new ControlInputListener());
+        netArtistPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netArtistBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netArtistLeftBox.getComponentCount() - 1;
@@ -11306,7 +11297,7 @@ public class PlayerFrame extends JFrame {
 //        netRadioPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netRadioPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netRadioPageTextField.addKeyListener(new ControlInputListener());
+        netRadioPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netRadioBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netRadioLeftBox.getComponentCount() - 1;
@@ -12440,7 +12431,7 @@ public class PlayerFrame extends JFrame {
 //        netMvPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netMvPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netMvPageTextField.addKeyListener(new ControlInputListener());
+        netMvPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 清除输入事件
         netMvClearInputButton.addActionListener(e -> {
             netMvSearchTextField.requestFocus();
@@ -13145,7 +13136,7 @@ public class PlayerFrame extends JFrame {
 //        netRankingPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netRankingPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netRankingPageTextField.addKeyListener(new ControlInputListener());
+        netRankingPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netRankingBackwardButton.addActionListener(e -> {
             netMusicListForRankingModel.clear();
@@ -13687,7 +13678,7 @@ public class PlayerFrame extends JFrame {
 //        netUserPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netUserPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netUserPageTextField.addKeyListener(new ControlInputListener());
+        netUserPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netUserBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netUserLeftBox.getComponentCount() - 1;
@@ -15006,7 +14997,7 @@ public class PlayerFrame extends JFrame {
 //        netCommentPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netCommentPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netCommentPageTextField.addKeyListener(new ControlInputListener());
+        netCommentPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netCommentBackwardButton.addActionListener(e -> {
             netCommentList.setModel(emptyListModel);
@@ -15431,7 +15422,7 @@ public class PlayerFrame extends JFrame {
     // 初始化曲谱工具栏
     void netSheetToolBarInit() {
         // 只能输入数字
-        netSheetPageTextField.addKeyListener(new ControlInputListener());
+        netSheetPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netSheetBackwardButton.addActionListener(e -> {
             netSheetList.setModel(emptyListModel);
@@ -15663,7 +15654,7 @@ public class PlayerFrame extends JFrame {
 //        netRecommendPageTextField.addFocusListener(
 //                new JTextFieldHintListener(netRecommendPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        netRecommendPageTextField.addKeyListener(new ControlInputListener());
+        netRecommendPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 推荐后退按钮事件
         recommendBackwardButton.addActionListener(e -> {
             // 返回到歌单/专辑/歌手/电台
@@ -22090,6 +22081,26 @@ public class PlayerFrame extends JFrame {
         return "";
     }
 
+    // 更新上层组件
+    void updateUpperComp() {
+        // 更新弹出菜单
+        if (currPopup != null) currPopup.repaint();
+        // 更新对话框
+        for (JDialog d : currDialogs) {
+            if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
+            else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
+            else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
+            else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
+            else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
+            else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
+            else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
+            else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
+            else if (d instanceof ImageViewDialog) ((ImageViewDialog) d).updateBlur();
+            else if (d instanceof RateDialog) ((RateDialog) d).updateBlur();
+            else if (d instanceof ColorChooserDialog) ((ColorChooserDialog) d).updateBlur();
+        }
+    }
+
     // 虚化碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化
     void doBlur() {
         blurExecutor.submit(() -> {
@@ -22127,20 +22138,7 @@ public class PlayerFrame extends JFrame {
 //                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
                 globalPanel.setBackgroundImage(bufferedImage);
                 if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
-                // 更新弹出菜单
-                if (currPopup != null) currPopup.repaint();
-                // 更新对话框
-                for (JDialog d : currDialogs) {
-                    if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
-                    else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
-                    else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
-                    else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
-                    else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
-                    else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
-                    else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
-                    else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
-                    else if (d instanceof ImageViewDialog) ((ImageViewDialog) d).updateBlur();
-                }
+                updateUpperComp();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -22169,20 +22167,7 @@ public class PlayerFrame extends JFrame {
                 // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
                 globalPanel.setBackgroundImage(styleImage);
             }
-            // 更新弹出菜单
-            if (currPopup != null) currPopup.repaint();
-            // 更新对话框
-            for (JDialog d : currDialogs) {
-                if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
-                else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
-                else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
-                else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
-                else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
-                else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
-                else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
-                else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
-                else if (d instanceof ImageViewDialog) ((ImageViewDialog) d).updateBlur();
-            }
+            updateUpperComp();
             // 改变迷你窗口背景
 //                if (miniDialog != null) miniDialog.doBlur(styleImage);
             globalPanelTimer.start();

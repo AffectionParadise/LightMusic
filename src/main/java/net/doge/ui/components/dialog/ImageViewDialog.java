@@ -1,9 +1,7 @@
 package net.doge.ui.components.dialog;
 
-import cn.hutool.core.collection.ListUtil;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
@@ -12,11 +10,8 @@ import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
 import net.doge.ui.components.CustomTextField;
-import net.doge.ui.components.DialogButton;
-import net.doge.ui.componentui.ScrollBarUI;
+import net.doge.ui.components.SafeDocument;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.ui.listeners.ControlInputListener;
-import net.doge.ui.renderers.DefaultCatalogListRenderer;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.ListUtils;
 import net.doge.utils.StringUtils;
@@ -28,9 +23,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -291,7 +284,7 @@ public abstract class ImageViewDialog extends JDialog {
             showImg(p = results.total);
         });
         // 页数框
-        pageTextField.addKeyListener(new ControlInputListener());
+        pageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         pageTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {

@@ -1,5 +1,6 @@
 package net.doge.utils;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.moji4j.MojiConverter;
@@ -68,6 +69,52 @@ public class StringUtils {
      */
     public static boolean isNotEmpty(String s) {
         return null != s && !"".equals(s);
+    }
+
+    /**
+     * 判断字符串是否为纯数字
+     *
+     * @param s
+     * @return
+     */
+    public static boolean isNumber(String s) {
+        return StrUtil.isNumeric(s);
+    }
+
+    /**
+     * 数字位数
+     *
+     * @param n
+     * @return
+     */
+    public static int bit(int n) {
+        return String.valueOf(n).length();
+    }
+
+    /**
+     * 转为数字
+     *
+     * @param s
+     * @return
+     */
+    public static int toNumber(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * 从某位置插入
+     *
+     * @param s
+     * @return
+     */
+    public static String insert(String s, int index, String content) {
+        StringBuffer sb = new StringBuffer(s);
+        sb.insert(index, content);
+        return sb.toString();
     }
 
     /**

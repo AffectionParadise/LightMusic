@@ -63,98 +63,98 @@ public class ColorUtils {
         return ColorUtil.toHex(color);
     }
 
-    /**
-     * 合并 RGB 三个值
-     *
-     * @param
-     * @return
-     */
-    public static int merge(int r, int g, int b) {
-        return r << 16 | g << 8 | b;
-    }
+//    /**
+//     * 合并 RGB 三个值
+//     *
+//     * @param
+//     * @return
+//     */
+//    public static int merge(int r, int g, int b) {
+//        return r << 16 | g << 8 | b;
+//    }
 
-    /**
-     * 合并 RGB 三个值
-     *
-     * @param
-     * @return
-     */
-    public static int merge(float r, float g, float b) {
-        return merge((int) (r * 255), (int) (g * 255), (int) (b * 255));
-    }
+//    /**
+//     * 合并 RGB 三个值
+//     *
+//     * @param
+//     * @return
+//     */
+//    public static int merge(float r, float g, float b) {
+//        return merge((int) (r * 255), (int) (g * 255), (int) (b * 255));
+//    }
 
-    /**
-     * Color 转 HSV
-     *
-     * @param
-     * @return
-     */
-    public static HSV colorToHsv(Color color) {
-        if (color == null) return null;
-        int r = color.getRed(), g = color.getGreen(), b = color.getBlue();
-        float h, s, v;
-        int max = Math.max(r, Math.max(g, b)), min = Math.min(r, Math.min(g, b));
-        if (r == max) h = (g - b) / (max - min);
-        else if (g == max) h = 2 + (b - r) / (max - min);
-        else h = 4 + (r - g) / (max - min);
-        h *= 60;
-        if (h < 0) h += 360;
+//    /**
+//     * Color 转 HSV
+//     *
+//     * @param
+//     * @return
+//     */
+//    public static HSV colorToHsv(Color color) {
+//        if (color == null) return null;
+//        int r = color.getRed(), g = color.getGreen(), b = color.getBlue();
+//        float h, s, v;
+//        int max = Math.max(r, Math.max(g, b)), min = Math.min(r, Math.min(g, b));
+//        if (r == max) h = (g - b) / (max - min);
+//        else if (g == max) h = 2 + (b - r) / (max - min);
+//        else h = 4 + (r - g) / (max - min);
+//        h *= 60;
+//        if (h < 0) h += 360;
+//
+//        v = (float) max / 255;
+//        s = (float) (max - min) / max;
+//        return new HSV(h, s, v);
+//    }
 
-        v = (float) max / 255;
-        s = (float) (max - min) / max;
-        return new HSV(h, s, v);
-    }
+//    /**
+//     * HSV 转 int
+//     *
+//     * @param
+//     * @return
+//     */
+//    public static int hsvToIntColor(float h, float s, float v) {
+//        float f, p, q, t;
+//        if (s == 0) return merge(v, v, v);
+//        h /= 60;
+//        int i = (int) Math.floor(h);
+//        f = h - i;
+//        p = v * (1 - s);
+//        q = v * (1 - s * f);
+//        t = v * (1 - s * (1 - f));
+//        switch (i) {
+//            case 0:
+//                return merge(v, t, p);
+//            case 1:
+//                return merge(q, v, p);
+//            case 2:
+//                return merge(p, v, t);
+//            case 3:
+//                return merge(p, q, v);
+//            case 4:
+//                return merge(t, p, v);
+//            default:
+//                return merge(v, p, q);
+//        }
+//    }
 
-    /**
-     * HSV 转 int
-     *
-     * @param
-     * @return
-     */
-    public static int hsvToIntColor(float h, float s, float v) {
-        float f, p, q, t;
-        if (s == 0) return merge(v, v, v);
-        h /= 60;
-        int i = (int) Math.floor(h);
-        f = h - i;
-        p = v * (1 - s);
-        q = v * (1 - s * f);
-        t = v * (1 - s * (1 - f));
-        switch (i) {
-            case 0:
-                return merge(v, t, p);
-            case 1:
-                return merge(q, v, p);
-            case 2:
-                return merge(p, v, t);
-            case 3:
-                return merge(p, q, v);
-            case 4:
-                return merge(t, p, v);
-            default:
-                return merge(v, p, q);
-        }
-    }
+//    /**
+//     * HSV 转 int
+//     *
+//     * @param
+//     * @return
+//     */
+//    public static int hsvToIntColor(HSV hsv) {
+//        return hsvToIntColor(hsv.h, hsv.s, hsv.v);
+//    }
 
-    /**
-     * HSV 转 int
-     *
-     * @param
-     * @return
-     */
-    public static int hsvToIntColor(HSV hsv) {
-        return hsvToIntColor(hsv.h, hsv.s, hsv.v);
-    }
-
-    /**
-     * HSV 转 Color
-     *
-     * @param
-     * @return
-     */
-    public static Color hsvToColor(float h, float s, float v) {
-        return new Color(hsvToIntColor(h, s, v));
-    }
+//    /**
+//     * HSV 转 Color
+//     *
+//     * @param
+//     * @return
+//     */
+//    public static Color hsvToColor(float h, float s, float v) {
+//        return new Color(hsvToIntColor(h, s, v));
+//    }
 
     /**
      * 更亮的颜色

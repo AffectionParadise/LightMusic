@@ -1,18 +1,14 @@
 package net.doge.ui.components.dialog;
 
-import javafx.scene.layout.HBox;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
-import net.doge.models.HSV;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomTextField;
 import net.doge.ui.components.DialogButton;
+import net.doge.ui.components.SafeDocument;
 import net.doge.ui.componentui.ColorSliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.ui.listeners.ColorControlInputListener;
-import net.doge.ui.listeners.ControlInputListener;
-import net.doge.ui.listeners.LengthControlInputListener;
 import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -21,7 +17,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -388,32 +383,36 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         rTextField.setFont(globalFont);
         rTextField.setForeground(foreColor);
         rTextField.setCaretColor(foreColor);
-        rTextField.addKeyListener(new ColorControlInputListener(rTextField));
-        rTextField.getDocument().addDocumentListener(this);
+        SafeDocument doc = new SafeDocument(0, 255);
+        doc.addDocumentListener(this);
+        rTextField.setDocument(doc);
         gLabel.setForeground(labelColor);
         gLabel.setFont(globalFont);
         gTextField.setOpaque(false);
         gTextField.setFont(globalFont);
         gTextField.setForeground(foreColor);
         gTextField.setCaretColor(foreColor);
-        gTextField.addKeyListener(new ColorControlInputListener(gTextField));
-        gTextField.getDocument().addDocumentListener(this);
+        doc = new SafeDocument(0, 255);
+        doc.addDocumentListener(this);
+        gTextField.setDocument(doc);
         bLabel.setForeground(labelColor);
         bLabel.setFont(globalFont);
         bTextField.setOpaque(false);
         bTextField.setFont(globalFont);
         bTextField.setForeground(foreColor);
         bTextField.setCaretColor(foreColor);
-        bTextField.addKeyListener(new ColorControlInputListener(bTextField));
-        bTextField.getDocument().addDocumentListener(this);
+        doc = new SafeDocument(0, 255);
+        doc.addDocumentListener(this);
+        bTextField.setDocument(doc);
         webLabel.setForeground(labelColor);
         webLabel.setFont(globalFont);
         webTextField.setOpaque(false);
         webTextField.setFont(globalFont);
         webTextField.setForeground(foreColor);
         webTextField.setCaretColor(foreColor);
-        webTextField.addKeyListener(new LengthControlInputListener(webTextField, 7));
-        webTextField.getDocument().addDocumentListener(this);
+        doc = new SafeDocument(7);
+        doc.addDocumentListener(this);
+        webTextField.setDocument(doc);
         updateUI();
     }
 
@@ -441,10 +440,43 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         updateUI();
     }
 
-//    public static void main(String[] args) {
-//        ColorChooserDialog colorChooserDialog = new ColorChooserDialog(null, Colors.THEME);
-//        colorChooserDialog.showDialog();
-//    }
+    void checkDocument(DocumentEvent e) {
+        Document doc = e.getDocument();
+        JTextField tf = null;
+        if (doc == rTextField.getDocument()) tf = rTextField;
+        else if (doc == gTextField.getDocument()) tf = gTextField;
+        else if (doc == bTextField.getDocument()) tf = bTextField;
+        else if (doc == webTextField.getDocument()) {
+            tf = webTextField;
+            String text = tf.getText();
+            Color color = ColorUtils.hexToColor(text);
+            if (color != null) updateColor(color);
+            return;
+        }
+
+        String text = tf.getText();
+        if (StringUtils.isEmpty(text)) return;
+        int i = Integer.parseInt(text);
+        if (doc == rTextField.getDocument()) rSlider.setValue(r = i);
+        else if (doc == gTextField.getDocument()) gSlider.setValue(g = i);
+        else if (doc == bTextField.getDocument()) bSlider.setValue(b = i);
+        updateUI();
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        checkDocument(e);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        checkDocument(e);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+
+    }
 
     void doBlur(BufferedImage bufferedImage) {
         Dimension size = getSize();
@@ -474,45 +506,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-    }
-
-    void checkDocument(DocumentEvent e) {
-        Document doc = e.getDocument();
-        JTextField tf = null;
-        if (doc == rTextField.getDocument()) tf = rTextField;
-        else if (doc == gTextField.getDocument()) tf = gTextField;
-        else if (doc == bTextField.getDocument()) tf = bTextField;
-        else if (doc == webTextField.getDocument()) {
-            tf = webTextField;
-            String text = tf.getText();
-            Color color = ColorUtils.hexToColor(text);
-            if (color != null) updateColor(color);
-            return;
-        }
-
-        String text = tf.getText();
-        if (StringUtils.isEmpty(text)) return;
-        int i = Integer.parseInt(text);
-        if (text.length() > 3 || i < 0 || i > 255) return;
-        if (doc == rTextField.getDocument()) rSlider.setValue(r = i);
-        else if (doc == gTextField.getDocument()) gSlider.setValue(g = i);
-        else if (doc == bTextField.getDocument()) bSlider.setValue(b = i);
-        updateUI();
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        checkDocument(e);
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        checkDocument(e);
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-
     }
 
     private class ColorChooserDialogPanel extends JPanel {

@@ -1,24 +1,18 @@
 package net.doge.ui.components.dialog;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Fonts;
-import net.doge.constants.Format;
-import net.doge.constants.GlobalExecutors;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomTextField;
 import net.doge.ui.components.DialogButton;
+import net.doge.ui.components.SafeDocument;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.ui.listeners.ControlInputListener;
-import net.doge.ui.listeners.JTextFieldHintListener;
-import net.doge.utils.FileUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.JsonUtils;
 import net.doge.utils.StringUtils;
@@ -26,9 +20,6 @@ import net.sf.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,13 +27,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author yzx
@@ -389,14 +373,17 @@ public class SettingDialog extends JDialog {
         maxCacheSizeTextField.setForeground(foreColor);
         maxCacheSizeTextField.setCaretColor(foreColor);
 //        maxCacheSizeTextField.addFocusListener(new JTextFieldHintListener(maxCacheSizeTextField, "", foreColor));
-        maxCacheSizeTextField.addKeyListener(new ControlInputListener());
+        SafeDocument doc = new SafeDocument(0, 4096);
+        maxCacheSizeTextField.setDocument(doc);
         maxHistoryCountTextField.setForeground(foreColor);
         maxHistoryCountTextField.setCaretColor(foreColor);
 //        maxHistoryCountTextField.addFocusListener(new JTextFieldHintListener(maxHistoryCountTextField, "", foreColor));
-        maxHistoryCountTextField.addKeyListener(new ControlInputListener());
+        doc = new SafeDocument(0, 1000);
+        maxHistoryCountTextField.setDocument(doc);
         maxSearchHistoryCountTextField.setForeground(foreColor);
         maxSearchHistoryCountTextField.setCaretColor(foreColor);
-        maxSearchHistoryCountTextField.addKeyListener(new ControlInputListener());
+        doc = new SafeDocument(0, 100);
+        maxSearchHistoryCountTextField.setDocument(doc);
 
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
