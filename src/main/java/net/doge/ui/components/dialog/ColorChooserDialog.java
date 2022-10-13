@@ -99,7 +99,8 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
     private Color[] preColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.PINK, Color.MAGENTA,
-            Colors.BRICK_RED, Colors.DEEP_ORANGE, Colors.GOLD3, Colors.SPRING_GREEN, Colors.CYAN_4, Colors.DEEP_BLUE, Colors.PINK3, Colors.ORCHID_3};
+            Colors.BRICK_RED, Colors.DEEP_ORANGE, Colors.GOLD3, Colors.SPRING_GREEN, Colors.SKY, Colors.DEEP_BLUE, Colors.PINK3, Colors.ORCHID_3,
+            Colors.DEEP_RED, Colors.BROWN, Colors.CARTON, Colors.TEA, Colors.CYAN_4, Colors.DODGER, Colors.PINK4, Colors.ORCHID_4};
     private boolean confirmed;
     private boolean updating;
     public int r;
@@ -153,7 +154,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         setTitle(TITLE);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
-        setSize(600, 500);
+        setSize(600, 580);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -306,7 +307,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         preLabel.setHorizontalAlignment(SwingConstants.CENTER);
         preLabel.setFont(globalFont);
         preLabel.setForeground(labelColor);
-        GridLayout gl = new GridLayout(2, 8);
+        GridLayout gl = new GridLayout(3, 8);
         gl.setHgap(15);
         gl.setVgap(15);
         prePanel.setLayout(gl);
