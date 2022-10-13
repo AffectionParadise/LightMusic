@@ -395,7 +395,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             ColorChooserDialog d = new ColorChooserDialog(f, (Color) results[finalI]);
                             d.showDialog();
-                            if(!d.isConfirmed()) return;
+                            if (!d.isConfirmed()) return;
                             Color color = d.getResult();
                             // 更改方框内颜色并保存
                             component.setIcon(ImageUtils.dyeRoundRect(rectWidth, rectHeight, color));
@@ -412,9 +412,9 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         pureColor.setForeColor(style.getButtonColor());
         pureColor.setFont(globalFont);
         pureColor.addActionListener(e -> {
-            ColorChooserDialog d = new ColorChooserDialog(f, Colors.THEME);
+            ColorChooserDialog d = new ColorChooserDialog(f, results[1] instanceof Color ? (Color) results[1] : Colors.THEME);
             d.showDialog();
-            if(!d.isConfirmed()) return;
+            if (!d.isConfirmed()) return;
             Color color = d.getResult();
             // 更改方框内颜色并保存
             labels[1].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, color), 100)));

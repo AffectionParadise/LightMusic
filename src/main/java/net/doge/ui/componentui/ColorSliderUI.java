@@ -32,7 +32,7 @@ public class ColorSliderUI extends BasicSliderUI {
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        g2d.setColor(new Color(d.r, d.g, d.b));
+        g2d.setColor(d.makeColor(d.r, d.g, d.b));
         g2d.fillOval(thumbRect.x, thumbRect.y + 4, thumbRect.width, thumbRect.width);
     }
 
@@ -46,8 +46,14 @@ public class ColorSliderUI extends BasicSliderUI {
         Graphics2D g2d = (Graphics2D) g;
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Color c1 = slider == d.rSlider ? new Color(0, d.g, d.b) : slider == d.gSlider ? new Color(d.r, 0, d.b) : new Color(d.r, d.g, 0);
-        Color c2 = slider == d.rSlider ? new Color(255, d.g, d.b) : slider == d.gSlider ? new Color(d.r, 255, d.b) : new Color(d.r, d.g, 255);
+        Color c1, c2;
+        if (d.isRGB()) {
+            c1 = slider == d.rSlider ? d.makeColor(0, d.g, d.b) : slider == d.gSlider ? d.makeColor(d.r, 0, d.b) : d.makeColor(d.r, d.g, 0);
+            c2 = slider == d.rSlider ? d.makeColor(d.max1, d.g, d.b) : slider == d.gSlider ? d.makeColor(d.r, d.max2, d.b) : d.makeColor(d.r, d.g, d.max3);
+        } else {
+            c1 = slider == d.rSlider ? d.makeColor(0, d.s, d.v) : slider == d.gSlider ? d.makeColor(d.h, 0, d.v) : d.makeColor(d.h, d.s, 0);
+            c2 = slider == d.rSlider ? d.makeColor(d.max1, d.s, d.v) : slider == d.gSlider ? d.makeColor(d.h, d.max2, d.v) : d.makeColor(d.h, d.s, d.max3);
+        }
         GradientPaint paint = new GradientPaint(trackRect.x, trackRect.y, c1, trackRect.x + trackRect.width, trackRect.y, c2);
         g2d.setPaint(paint);
         g2d.fillRoundRect(

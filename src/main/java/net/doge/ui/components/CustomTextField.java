@@ -50,6 +50,7 @@ public class CustomTextField extends JTextField {
             public void focusLost(FocusEvent e) {
                 setFocusable(false);
                 getCaret().setVisible(false);
+                repaint();
             }
         });
     }

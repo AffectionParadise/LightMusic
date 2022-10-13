@@ -23,6 +23,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
     private PlayerFrame f;
     private Font font;
     private Color foreColor;
+    private int width;
 
     private ImageIcon arrowIcon = new ImageIcon(SimplePath.ICON_PATH + "arrow.png");
 
@@ -41,6 +42,11 @@ public class ComboBoxUI extends BasicComboBoxUI {
         if (comboBox.getPreferredSize().width < 175) comboBox.setPreferredSize(new Dimension(175, 30));
 
         comboBox.setLightWeightPopupEnabled(false);
+    }
+
+    public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Font font, Color foreColor, int width) {
+        this(comboBox, f, font, foreColor);
+        comboBox.setPreferredSize(new Dimension(width, 30));
     }
 
     @Override

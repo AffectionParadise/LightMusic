@@ -2,12 +2,14 @@ package net.doge.ui.components.dialog;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
+import net.doge.models.HSV;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomTextField;
 import net.doge.ui.components.DialogButton;
 import net.doge.ui.components.SafeDocument;
 import net.doge.ui.componentui.ColorSliderUI;
+import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
@@ -19,6 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -78,6 +81,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     // 显示
     private JLabel view = new JLabel();
 
+    private JComboBox<String> modelComboBox = new JComboBox();
     // 文本框
     private JLabel rLabel = new JLabel("R：");
     private CustomTextField rTextField = new CustomTextField(3);
@@ -97,9 +101,16 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     private Color[] preColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.PINK, Color.MAGENTA,
             Colors.BRICK_RED, Colors.DEEP_ORANGE, Colors.GOLD3, Colors.SPRING_GREEN, Colors.CYAN_4, Colors.DEEP_BLUE, Colors.PINK3, Colors.ORCHID_3};
     private boolean confirmed;
+    private boolean updating;
     public int r;
     public int g;
     public int b;
+    public float h;
+    public float s;
+    public float v;
+    public int max1;
+    public int max2;
+    public int max3;
     private Color source;
     private Color result;
 
@@ -113,6 +124,10 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         this.r = color.getRed();
         this.g = color.getGreen();
         this.b = color.getBlue();
+        HSV hsv = ColorUtils.colorToHsv(color);
+        this.h = hsv.h;
+        this.s = hsv.s;
+        this.v = hsv.v;
         this.source = color;
         this.style = f.getCurrUIStyle();
     }
@@ -244,6 +259,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         d = new Dimension(10, 1);
         tfPanel.setLayout(new BoxLayout(tfPanel, BoxLayout.X_AXIS));
         tfPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        tfPanel.add(modelComboBox);
         tfPanel.add(rLabel);
         tfPanel.add(rTextField);
         tfPanel.add(Box.createRigidArea(d));
@@ -284,6 +300,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
         Color foreColor = style.getForeColor();
         Color labelColor = style.getLabelColor();
+        Color buttonColor = style.getButtonColor();
 
         // 预设
         preLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -319,11 +336,13 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         d = new Dimension(400, 12);
         rSlider.setPreferredSize(d);
         rSlider.setMinimum(0);
-        rSlider.setMaximum(255);
-        rSlider.setValue(r);
         rSlider.addChangeListener(e -> {
-            r = rSlider.getValue();
-            updateUI();
+            if (updating) return;
+            int val = rSlider.getValue();
+            boolean rgb = isRGB();
+            if (rgb) r = val;
+            else h = val;
+            updateColor(makeColor(), true);
         });
         glb.setFont(globalFont);
         glb.setForeground(labelColor);
@@ -333,11 +352,13 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         gSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         gSlider.setPreferredSize(d);
         gSlider.setMinimum(0);
-        gSlider.setMaximum(255);
-        gSlider.setValue(g);
         gSlider.addChangeListener(e -> {
-            g = gSlider.getValue();
-            updateUI();
+            if (updating) return;
+            int val = gSlider.getValue();
+            boolean rgb = isRGB();
+            if (rgb) g = val;
+            else s = val;
+            updateColor(makeColor(), true);
         });
         blb.setFont(globalFont);
         blb.setForeground(labelColor);
@@ -347,35 +368,50 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         bSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bSlider.setPreferredSize(d);
         bSlider.setMinimum(0);
-        bSlider.setMaximum(255);
-        bSlider.setValue(b);
         bSlider.addChangeListener(e -> {
-            b = bSlider.getValue();
-            updateUI();
+            if (updating) return;
+            int val = bSlider.getValue();
+            boolean rgb = isRGB();
+            if (rgb) b = val;
+            else v = val;
+            updateColor(makeColor(), true);
         });
 
         // 按钮
-        ok.setForeColor(style.getButtonColor());
+        ok.setForeColor(buttonColor);
         ok.setFont(globalFont);
         ok.addMouseListener(new ButtonMouseListener(ok, f));
         ok.addActionListener(e -> {
             confirmed = true;
-            result = new Color(r, g, b);
+            result = makeColor();
             closeButton.doClick();
         });
-        cancel.setForeColor(style.getButtonColor());
+        cancel.setForeColor(buttonColor);
         cancel.setFont(globalFont);
         cancel.addMouseListener(new ButtonMouseListener(ok, f));
         cancel.addActionListener(e -> {
             closeButton.doClick();
         });
-        reset.setForeColor(style.getButtonColor());
+        reset.setForeColor(buttonColor);
         reset.setFont(globalFont);
         reset.addMouseListener(new ButtonMouseListener(ok, f));
         reset.addActionListener(e -> {
             updateColor(source);
         });
 
+        // 下拉框
+        modelComboBox.setFont(globalFont);
+        modelComboBox.setOpaque(false);
+        modelComboBox.setFocusable(false);
+        modelComboBox.setUI(new ComboBoxUI(modelComboBox, f, globalFont, buttonColor, 80));
+        modelComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        modelComboBox.addItem("RGB");
+        modelComboBox.addItem("HSV");
+        modelComboBox.addItemListener(e -> {
+            // 避免事件被处理 2 次！
+            if (e.getStateChange() != ItemEvent.SELECTED) return;
+            updateColorModel();
+        });
         // 文本框
         rLabel.setForeground(labelColor);
         rLabel.setFont(globalFont);
@@ -383,37 +419,92 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         rTextField.setFont(globalFont);
         rTextField.setForeground(foreColor);
         rTextField.setCaretColor(foreColor);
-        SafeDocument doc = new SafeDocument(0, 255);
-        doc.addDocumentListener(this);
-        rTextField.setDocument(doc);
+
         gLabel.setForeground(labelColor);
         gLabel.setFont(globalFont);
         gTextField.setOpaque(false);
         gTextField.setFont(globalFont);
         gTextField.setForeground(foreColor);
         gTextField.setCaretColor(foreColor);
-        doc = new SafeDocument(0, 255);
-        doc.addDocumentListener(this);
-        gTextField.setDocument(doc);
+
         bLabel.setForeground(labelColor);
         bLabel.setFont(globalFont);
         bTextField.setOpaque(false);
         bTextField.setFont(globalFont);
         bTextField.setForeground(foreColor);
         bTextField.setCaretColor(foreColor);
-        doc = new SafeDocument(0, 255);
-        doc.addDocumentListener(this);
-        bTextField.setDocument(doc);
+
         webLabel.setForeground(labelColor);
         webLabel.setFont(globalFont);
         webTextField.setOpaque(false);
         webTextField.setFont(globalFont);
         webTextField.setForeground(foreColor);
         webTextField.setCaretColor(foreColor);
-        doc = new SafeDocument(7);
+        SafeDocument doc = new SafeDocument(7);
         doc.addDocumentListener(this);
         webTextField.setDocument(doc);
-        updateUI();
+
+        updateColorModel();
+    }
+
+    public boolean isRGB() {
+        return modelComboBox.getSelectedIndex() == 0;
+    }
+
+    public boolean isHSV() {
+        return modelComboBox.getSelectedIndex() == 1;
+    }
+
+    public Color makeColor(int r, int g, int b) {
+        return new Color(r, g, b);
+    }
+
+    public Color makeColor(float h, float s, float v) {
+        return ColorUtils.hsvToColor(h, s, v);
+    }
+
+    public Color makeColor() {
+        return isRGB() ? makeColor(r, g, b) : makeColor(h, s, v);
+    }
+
+    // 改变颜色模型
+    void updateColorModel() {
+        updating = true;
+        if (isRGB()) {
+            max1 = max2 = max3 = 255;
+            rlb.setText("R");
+            glb.setText("G");
+            blb.setText("B");
+            rLabel.setText("R：");
+            gLabel.setText("G：");
+            bLabel.setText("B：");
+        } else {
+            max1 = 359;
+            max2 = max3 = 100;
+            rlb.setText("H");
+            glb.setText("S");
+            blb.setText("V");
+            rLabel.setText("H：");
+            gLabel.setText("S：");
+            bLabel.setText("V：");
+        }
+
+        rSlider.setMaximum(max1);
+        gSlider.setMaximum(max2);
+        bSlider.setMaximum(max3);
+
+        SafeDocument doc = new SafeDocument(0, max1);
+        doc.addDocumentListener(this);
+        rTextField.setDocument(doc);
+        doc = new SafeDocument(0, max2);
+        doc.addDocumentListener(this);
+        gTextField.setDocument(doc);
+        doc = new SafeDocument(0, max3);
+        doc.addDocumentListener(this);
+        bTextField.setDocument(doc);
+
+        updateColor(makeColor());
+        updating = false;
     }
 
     // 颜色更新时更新界面
@@ -421,32 +512,58 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         rSlider.repaint();
         gSlider.repaint();
         bSlider.repaint();
-        view.setIcon(ImageUtils.dyeRoundRect(80, 80, new Color(r, g, b)));
+        view.setIcon(ImageUtils.dyeRoundRect(80, 80, makeColor()));
         try {
-            rTextField.setText(String.valueOf(r));
-            gTextField.setText(String.valueOf(g));
-            bTextField.setText(String.valueOf(b));
-            webTextField.setText(ColorUtils.toHex(new Color(r, g, b)));
+            boolean rgb = isRGB();
+            rTextField.setText(String.valueOf(rgb ? r : (int) h));
+            gTextField.setText(String.valueOf(rgb ? g : (int) s));
+            bTextField.setText(String.valueOf(rgb ? b : (int) v));
+            webTextField.setText(ColorUtils.toHex(makeColor()));
         } catch (Exception e) {
 
         }
     }
 
-    // 更新颜色
     void updateColor(Color color) {
-        rSlider.setValue(r = color.getRed());
-        gSlider.setValue(g = color.getGreen());
-        bSlider.setValue(b = color.getBlue());
+        updateColor(color, false);
+    }
+
+    // 更新 RGB 颜色
+    void updateColor(Color color, boolean sliderRequest) {
+        updating = true;
+        r = color.getRed();
+        g = color.getGreen();
+        b = color.getBlue();
+        boolean rgb = isRGB();
+        // 针对 HSV 防止因转换误差带来的滑动条调整
+        if (rgb || !sliderRequest) {
+            HSV hsv = ColorUtils.colorToHsv(color);
+            h = hsv.h;
+            s = hsv.s;
+            v = hsv.v;
+        }
+        if (rgb) {
+            rSlider.setValue(r);
+            gSlider.setValue(g);
+            bSlider.setValue(b);
+        } else {
+            rSlider.setValue((int) h);
+            gSlider.setValue((int) s);
+            bSlider.setValue((int) v);
+        }
         updateUI();
+        updating = false;
     }
 
     void checkDocument(DocumentEvent e) {
         Document doc = e.getDocument();
         JTextField tf = null;
-        if (doc == rTextField.getDocument()) tf = rTextField;
-        else if (doc == gTextField.getDocument()) tf = gTextField;
-        else if (doc == bTextField.getDocument()) tf = bTextField;
-        else if (doc == webTextField.getDocument()) {
+        boolean d1 = doc == rTextField.getDocument(), d2 = doc == gTextField.getDocument(),
+                d3 = doc == bTextField.getDocument(), d4 = doc == webTextField.getDocument();
+        if (d1) tf = rTextField;
+        else if (d2) tf = gTextField;
+        else if (d3) tf = bTextField;
+        else if (d4) {
             tf = webTextField;
             String text = tf.getText();
             Color color = ColorUtils.hexToColor(text);
@@ -457,20 +574,21 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         String text = tf.getText();
         if (StringUtils.isEmpty(text)) return;
         int i = Integer.parseInt(text);
-        if (doc == rTextField.getDocument()) rSlider.setValue(r = i);
-        else if (doc == gTextField.getDocument()) gSlider.setValue(g = i);
-        else if (doc == bTextField.getDocument()) bSlider.setValue(b = i);
+        boolean rgb = isRGB();
+        if (d1) rSlider.setValue(rgb ? (r = i) : (int) (h = i));
+        else if (d2) gSlider.setValue(rgb ? (g = i) : (int) (s = i));
+        else if (d3) bSlider.setValue(rgb ? (b = i) : (int) (v = i));
         updateUI();
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        checkDocument(e);
+        if (!updating) checkDocument(e);
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        checkDocument(e);
+        if (!updating) checkDocument(e);
     }
 
     @Override
