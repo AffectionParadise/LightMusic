@@ -7,17 +7,13 @@ import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Colors;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomRadioButtonMenuItem;
 import net.doge.ui.components.CustomTextField;
 import net.doge.ui.components.DialogButton;
-import net.doge.ui.filters.ExtensionFileFilter;
 import net.doge.constants.Fonts;
 import net.doge.constants.Format;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.ui.listeners.JTextFieldHintListener;
-import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 

@@ -16,6 +16,9 @@ import java.awt.event.MouseEvent;
 public class ColorSliderUI extends BasicSliderUI {
     private ColorChooserDialog d;
 
+    private final float[] ratios = {0, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1};
+    private final Color[] colors = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA, Color.PINK, Color.RED};
+
     public ColorSliderUI(JSlider slider, ColorChooserDialog d) {
         super(slider);
         this.d = d;
@@ -54,8 +57,13 @@ public class ColorSliderUI extends BasicSliderUI {
             c1 = slider == d.rSlider ? d.makeColor(0, d.s, d.v) : slider == d.gSlider ? d.makeColor(d.h, 0, d.v) : d.makeColor(d.h, d.s, 0);
             c2 = slider == d.rSlider ? d.makeColor(d.max1, d.s, d.v) : slider == d.gSlider ? d.makeColor(d.h, d.max2, d.v) : d.makeColor(d.h, d.s, d.max3);
         }
-        GradientPaint paint = new GradientPaint(trackRect.x, trackRect.y, c1, trackRect.x + trackRect.width, trackRect.y, c2);
-        g2d.setPaint(paint);
+        if (d.isHSV() && slider == d.rSlider) {
+            LinearGradientPaint lgp = new LinearGradientPaint(trackRect.x, trackRect.y, trackRect.x + trackRect.width, trackRect.y, ratios, colors);
+            g2d.setPaint(lgp);
+        } else {
+            GradientPaint paint = new GradientPaint(trackRect.x, trackRect.y, c1, trackRect.x + trackRect.width, trackRect.y, c2);
+            g2d.setPaint(paint);
+        }
         g2d.fillRoundRect(
                 trackRect.x,
                 trackRect.y + 8,
