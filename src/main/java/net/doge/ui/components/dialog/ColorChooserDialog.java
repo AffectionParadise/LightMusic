@@ -89,8 +89,8 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     private CustomTextField gTextField = new CustomTextField(3);
     private JLabel bLabel = new JLabel("B：");
     private CustomTextField bTextField = new CustomTextField(3);
-    private JLabel webLabel = new JLabel("Web：");
-    private CustomTextField webTextField = new CustomTextField(7);
+    private JLabel hexLabel = new JLabel("Hex：");
+    private CustomTextField hexTextField = new CustomTextField(7);
 
     private DialogButton ok = new DialogButton("确定");
     private DialogButton cancel = new DialogButton("取消");
@@ -270,8 +270,8 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         tfPanel.add(bLabel);
         tfPanel.add(bTextField);
         tfPanel.add(Box.createRigidArea(d));
-        tfPanel.add(webLabel);
-        tfPanel.add(webTextField);
+        tfPanel.add(hexLabel);
+        tfPanel.add(hexTextField);
 
         buttonPanel.add(ok);
         buttonPanel.add(cancel);
@@ -435,15 +435,15 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         bTextField.setForeground(foreColor);
         bTextField.setCaretColor(foreColor);
 
-        webLabel.setForeground(labelColor);
-        webLabel.setFont(globalFont);
-        webTextField.setOpaque(false);
-        webTextField.setFont(globalFont);
-        webTextField.setForeground(foreColor);
-        webTextField.setCaretColor(foreColor);
+        hexLabel.setForeground(labelColor);
+        hexLabel.setFont(globalFont);
+        hexTextField.setOpaque(false);
+        hexTextField.setFont(globalFont);
+        hexTextField.setForeground(foreColor);
+        hexTextField.setCaretColor(foreColor);
         SafeDocument doc = new SafeDocument(7);
         doc.addDocumentListener(this);
-        webTextField.setDocument(doc);
+        hexTextField.setDocument(doc);
 
         updateColorModel();
     }
@@ -519,7 +519,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             rTextField.setText(String.valueOf(rgb ? r : (int) h));
             gTextField.setText(String.valueOf(rgb ? g : (int) s));
             bTextField.setText(String.valueOf(rgb ? b : (int) v));
-            webTextField.setText(ColorUtils.toHex(makeColor()));
+            hexTextField.setText(ColorUtils.toHex(makeColor()));
         } catch (Exception e) {
 
         }
@@ -560,12 +560,12 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         Document doc = e.getDocument();
         JTextField tf = null;
         boolean d1 = doc == rTextField.getDocument(), d2 = doc == gTextField.getDocument(),
-                d3 = doc == bTextField.getDocument(), d4 = doc == webTextField.getDocument();
+                d3 = doc == bTextField.getDocument(), d4 = doc == hexTextField.getDocument();
         if (d1) tf = rTextField;
         else if (d2) tf = gTextField;
         else if (d3) tf = bTextField;
         else if (d4) {
-            tf = webTextField;
+            tf = hexTextField;
             String text = tf.getText();
             Color color = ColorUtils.hexToColor(text);
             if (color != null) updateColor(color);

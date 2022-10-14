@@ -772,6 +772,10 @@ public class PlayerFrame extends JFrame {
     public boolean isAutoDownloadLrc = true;
     // 是否显示桌面歌词
     private boolean showDesktopLyric = true;
+    // 是否锁定桌面歌词
+    public boolean desktopLyricLocked;
+    public int desktopLyricX;
+    public int desktopLyricY;
     // 专辑图片宽/高
     private int albumImageWidth;
     // 封面图片宽/高
@@ -2825,6 +2829,12 @@ public class PlayerFrame extends JFrame {
         if (showDesktopLyric = config.optBoolean(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
             desktopLyricDialog.setVisible(true);
         } else desktopLyricButton.setIcon(ImageUtils.dye(desktopLyricOffIcon, currUIStyle.getButtonColor()));
+        // 载入是否锁定桌面歌词
+        desktopLyricLocked = config.optBoolean(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
+        // 载入桌面歌词坐标
+        desktopLyricX = config.optInt(ConfigConstants.DESKTOP_LYRIC_X, -1);
+        desktopLyricY = config.optInt(ConfigConstants.DESKTOP_LYRIC_Y, -1);
+        if (desktopLyricX >= 0) desktopLyricDialog.setLocation(desktopLyricX, desktopLyricY);
 //        stylePopupMenuItems.get(styleIndex).setSelected(true);
 //        updateRadioButtonMenuItemIcon(stylePopupMenu);
         // 载入播放模式
@@ -3638,6 +3648,11 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, isAutoDownloadLrc);
         // 存入是否显示桌面歌词
         config.put(ConfigConstants.SHOW_DESKTOP_LYRIC, showDesktopLyric);
+        // 存入是否锁定桌面歌词
+        config.put(ConfigConstants.LOCK_DESKTOP_LYRIC, desktopLyricLocked);
+        // 存入桌面歌词坐标
+        config.put(ConfigConstants.DESKTOP_LYRIC_X, desktopLyricX);
+        config.put(ConfigConstants.DESKTOP_LYRIC_Y, desktopLyricY);
         // 存入快进/快退时间
         config.put(ConfigConstants.FOB_TIME, forwardOrBackwardTime);
         // 存入速率
@@ -21422,6 +21437,7 @@ public class PlayerFrame extends JFrame {
         // 桌面歌词更新颜色
         desktopLyricDialog.setThemeColor(style.getLrcColor());
         desktopLyricDialog.setForeColor(style.getHighlightColor());
+        desktopLyricDialog.updateStyle();
         // 时间标签用进度条的颜色
         currTimeLabel.setForeground(style.getTimeBarColor());
         durationLabel.setForeground(style.getTimeBarColor());

@@ -45,7 +45,7 @@ public class Colors {
     public static final Color CYAN_4 = new Color(3, 131, 135);
     public static final Color BISQUE_1 = new Color(255, 228, 196);
     public static final Color BISQUE_2 = new Color(238, 213, 183);
-    public static final Color BISQUE_3 = new Color(205, 183, 158);
+    public static final Color BISQUE_3 = new Color(173, 157, 134);
     public static final Color DEEP_BLUE = new Color(0, 99, 177);
     public static final Color DODGER_BLUE_4 = new Color(16, 78, 139);
     public static final Color DEEP_SKY_BLUE_1 = new Color(0, 191, 255);

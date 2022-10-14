@@ -39,6 +39,11 @@ public class ConfigConstants {
     public final static String AUTO_DOWNLOAD_LYRIC = "autoDownloadLyric";
     // 是否显示桌面歌词
     public final static String SHOW_DESKTOP_LYRIC = "showDesktopLyric";
+    // 是否锁定桌面歌词
+    public final static String LOCK_DESKTOP_LYRIC = "desktopLyricLocked";
+    // 桌面歌词坐标
+    public final static String DESKTOP_LYRIC_X = "desktopLyricX";
+    public final static String DESKTOP_LYRIC_Y = "desktopLyricY";
     // 快进/快退时间
     public final static String FOB_TIME = "fobTime";
     // 速率

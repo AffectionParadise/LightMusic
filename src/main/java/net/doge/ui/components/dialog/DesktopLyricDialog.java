@@ -1,12 +1,20 @@
 package net.doge.ui.components.dialog;
 
+import javafx.util.Duration;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
+import net.doge.constants.SimplePath;
+import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.CustomButton;
 import net.doge.ui.components.StringTwoColor;
+import net.doge.ui.listeners.ButtonMouseListener;
+import net.doge.utils.ImageUtils;
 //import sun.font.FontDesignMetrics;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 /**
  * @Author yzx
@@ -23,10 +31,27 @@ public class DesktopLyricDialog extends JDialog {
     private StringTwoColor stc;
 
     private PlayerFrame f;
+    private UIStyle style;
     private Color foreColor;
     private JLabel lyricLabel = new JLabel("", JLabel.CENTER);
     private JLabel tempLabel = new JLabel("", JLabel.CENTER);
-    private JPanel mainPanel = new JPanel();
+    private MainPanel mainPanel = new MainPanel();
+    private JPanel buttonPanel = new JPanel();
+
+    private String LOCK_TIP = "锁定桌面歌词";
+    private String UNLOCK_TIP = "解锁桌面歌词";
+    private String RESTORE_TIP = "还原桌面歌词位置";
+    private ImageIcon lockIcon = new ImageIcon(SimplePath.ICON_PATH + "lock.png");
+    private ImageIcon unlockIcon = new ImageIcon(SimplePath.ICON_PATH + "unlock.png");
+    private ImageIcon restoreIcon = new ImageIcon(SimplePath.ICON_PATH + "restoreLocation.png");
+
+    private CustomButton lock = new CustomButton();
+    private CustomButton restore = new CustomButton();
+
+    private int dx;
+    private int dy;
+    // 穿透
+    private boolean touchOver;
 
     /**
      * 设置背景色
@@ -71,34 +96,175 @@ public class DesktopLyricDialog extends JDialog {
 
     public DesktopLyricDialog(PlayerFrame f) {
         this.f = f;
-        foreColor = f.getCurrUIStyle().getHighlightColor();
+        this.style = f.getCurrUIStyle();
+        foreColor = style.getHighlightColor();
 
         // 将桌面歌词窗口设置为固定大小与固定位置
 //        FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
         FontMetrics metrics = tempLabel.getFontMetrics(font);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(width = screenSize.width - 400, height = metrics.getHeight()));
-        setLocation((screenSize.width - getWidth()) / 2, (screenSize.height - getHeight()) / 2 + 440);
+        Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+        setSize(new Dimension(width = screenSize.width - 600, height = metrics.getHeight() + 50));
+        setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 20);
 
         // 设置主题色
         themeColor = f.getCurrUIStyle().getLrcColor();
         // Dialog 背景透明
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         tempLabel.setForeground(themeColor);
         tempLabel.setFont(font);
-        tempLabel.setOpaque(false);
         setLyric(" ", 0);
-        lyricLabel.setOpaque(false);
+        lyricLabel.setVerticalAlignment(SwingConstants.CENTER);
+        lyricLabel.setVerticalTextPosition(SwingConstants.CENTER);
+        FlowLayout fl = new FlowLayout();
+        fl.setHgap(15);
+        buttonPanel.setLayout(fl);
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        buttonPanel.add(lock);
+        buttonPanel.add(restore);
+
+        restore.setVisible(false);
+
         mainPanel.setOpaque(false);
         mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(buttonPanel, BorderLayout.NORTH);
         mainPanel.add(lyricLabel, BorderLayout.CENTER);
 
         setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
 
+        initResponse();
+
         // 桌面歌词总在最顶层
         setAlwaysOnTop(true);
+    }
+
+    // 更新锁定
+    public void updateLock() {
+        boolean locked = f.desktopLyricLocked;
+        lock.setIcon(locked ? lockIcon : unlockIcon);
+        lock.setToolTipText(locked ? LOCK_TIP : UNLOCK_TIP);
+    }
+
+    // 更新样式
+    public void updateStyle() {
+        UIStyle st = f.getCurrUIStyle();
+        Color bc = st.getButtonColor();
+
+        unlockIcon = ImageUtils.dye(unlockIcon, bc);
+        lockIcon = ImageUtils.dye(lockIcon, bc);
+        restoreIcon = ImageUtils.dye(restoreIcon, bc);
+
+        restore.setIcon(restoreIcon);
+    }
+
+    // 设置穿透
+    public void setTouchOver(boolean touchOver) {
+        this.touchOver = touchOver;
+        mainPanel.repaint();
+    }
+
+    void showUI() {
+        updateLock();
+        mainPanel.setDrawBg(!f.desktopLyricLocked);
+        restore.setVisible(!f.desktopLyricLocked);
+        // 设置为不穿透，防止鼠标退出事件监听过早
+        setTouchOver(false);
+    }
+
+    void hideUI() {
+        lock.setIcon(null);
+        restore.setVisible(false);
+        mainPanel.setDrawBg(false);
+        setTouchOver(true);
+    }
+
+    // 初始化响应事件
+    void initResponse() {
+        // 解决 setUndecorated(true) 后窗口不能拖动的问题
+        Point origin = new Point();
+        mainPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (f.desktopLyricLocked) return;
+                origin.x = e.getX();
+                origin.y = e.getY();
+            }
+        });
+        mainPanel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (f.desktopLyricLocked) return;
+                Point p = getLocation();
+                setLocation(f.desktopLyricX = p.x + e.getX() - origin.x, f.desktopLyricY = p.y + e.getY() - origin.y);
+            }
+        });
+        mainPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                showUI();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (mainPanel.getVisibleRect().contains(e.getPoint())) return;
+                hideUI();
+            }
+        });
+
+        lock.setBorder(null);
+        lock.setFocusable(false);
+        lock.setOpaque(false);
+        lock.setContentAreaFilled(false);
+        lock.addMouseListener(new ButtonMouseListener(lock, f));
+        lock.setPreferredSize(new Dimension(lockIcon.getIconWidth(), lockIcon.getIconHeight()));
+        lock.addActionListener(e -> {
+            f.desktopLyricLocked = !f.desktopLyricLocked;
+            updateLock();
+        });
+        restore.setBorder(null);
+        restore.setFocusable(false);
+        restore.setOpaque(false);
+        restore.setContentAreaFilled(false);
+        restore.setToolTipText(RESTORE_TIP);
+        restore.addMouseListener(new ButtonMouseListener(restore, f));
+        restore.setPreferredSize(new Dimension(restoreIcon.getIconWidth(), restoreIcon.getIconHeight()));
+        restore.addActionListener(e -> {
+            f.desktopLyricX = f.desktopLyricY = -1;
+            setLocation(dx, dy);
+            hideUI();
+        });
+
+        updateStyle();
+    }
+
+    private class MainPanel extends JPanel {
+        private boolean drawBg;
+
+        public MainPanel() {
+            super();
+        }
+
+        public void setDrawBg(boolean drawBg) {
+            this.drawBg = drawBg;
+            repaint();
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            if (!touchOver) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(Colors.BLACK);
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, drawBg ? 0.2f : 0.01f));
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            }
+
+            super.paint(g);
+        }
     }
 
     public static void main(String[] args) {
