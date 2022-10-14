@@ -104,7 +104,7 @@ public class DesktopLyricDialog extends JDialog {
         FontMetrics metrics = tempLabel.getFontMetrics(font);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
-        setSize(new Dimension(width = screenSize.width - 600, height = metrics.getHeight() + 50));
+        setSize(new Dimension(width = (int) (screenSize.width * 0.5), height = metrics.getHeight() + 50));
         setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 20);
 
         // 设置主题色
@@ -198,7 +198,11 @@ public class DesktopLyricDialog extends JDialog {
             public void mouseDragged(MouseEvent e) {
                 if (f.desktopLyricLocked) return;
                 Point p = getLocation();
-                setLocation(f.desktopLyricX = p.x + e.getX() - origin.x, f.desktopLyricY = p.y + e.getY() - origin.y);
+                int nx = p.x + e.getX() - origin.x, ny = p.y + e.getY() - origin.y;
+                Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+                // 不准将桌面歌词拖出窗口之外
+                boolean nxValid = nx >= 0 && nx + getWidth() <= ss.width, nyValid = ny >= 0 && ny + getHeight() <= ss.height;
+                setLocation(f.desktopLyricX = nxValid ? nx : getX(), f.desktopLyricY = nyValid ? ny : getY());
             }
         });
         mainPanel.addMouseListener(new MouseAdapter() {
