@@ -201,8 +201,11 @@ public class DesktopLyricDialog extends JDialog {
                 int nx = p.x + e.getX() - origin.x, ny = p.y + e.getY() - origin.y;
                 Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
                 // 不准将桌面歌词拖出窗口之外
-                boolean nxValid = nx >= 0 && nx + getWidth() <= ss.width, nyValid = ny >= 0 && ny + getHeight() <= ss.height;
-                setLocation(f.desktopLyricX = nxValid ? nx : getX(), f.desktopLyricY = nyValid ? ny : getY());
+                if (nx < 0) nx = 0;
+                else if (nx + getWidth() > ss.width) nx = ss.width - getWidth();
+                if (ny < 0) ny = 0;
+                else if (ny + getHeight() > ss.height) ny = ss.height - getHeight();
+                setLocation(f.desktopLyricX = nx, f.desktopLyricY = ny);
             }
         });
         mainPanel.addMouseListener(new MouseAdapter() {
