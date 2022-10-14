@@ -116,10 +116,10 @@ public class ColorUtils {
         return new HSV(hue, saturation * 100, value * 100);
     }
 
-    public static void main(String[] args) {
-        System.out.println(colorToHsv(new Color(255, 0, 34)));
-        System.out.println(hsvToColor(352, 100, 100));
-    }
+//    public static void main(String[] args) {
+//        System.out.println(colorToHsv(new Color(255, 0, 34)));
+//        System.out.println(hsvToColor(352, 100, 100));
+//    }
 
     /**
      * HSV 转 int

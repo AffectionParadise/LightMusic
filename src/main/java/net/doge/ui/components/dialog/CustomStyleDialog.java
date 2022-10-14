@@ -41,9 +41,11 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class CustomStyleDialog extends JDialog implements DocumentListener {
-    private final String TITLE = "添加自定义主题";
-    private final int rectWidth = 80;
-    private final int rectHeight = 20;
+    private final String TITLE = "自定义主题";
+    private final int imgWidth = 150;
+    private final int imgHeight = 100;
+    private final int rectWidth = 170;
+    private final int rectHeight = 30;
     // 风格名称必填提示
     private final String STYLE_NAME_NOT_NULL_MSG = "emmm~~主题名称不能为无名氏哦";
     // 风格名称重复提示
@@ -341,11 +343,11 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                         BufferedImage image = ImageUtils.read((String) results[i]);
                         if (image != null) {
                             if (image.getWidth() >= image.getHeight())
-                                labels[i].setIcon(new ImageIcon(ImageUtils.width(image, 100)));
-                            else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, 100)));
+                                labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
+                            else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
                         }
                     } else {
-                        labels[i].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, (Color) results[i]), 100)));
+                        labels[i].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, (Color) results[i]), imgWidth)));
                     }
                 }
                 int finalI = i;
@@ -367,8 +369,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                             results[finalI] = file.getPath();
                             BufferedImage img = ImageUtils.read((String) results[finalI]);
                             if (img.getWidth() >= img.getHeight())
-                                labels[finalI].setIcon(new ImageIcon(ImageUtils.width(img, 100)));
-                            else labels[finalI].setIcon(new ImageIcon(ImageUtils.height(img, 100)));
+                                labels[finalI].setIcon(new ImageIcon(ImageUtils.width(img, imgWidth)));
+                            else labels[finalI].setIcon(new ImageIcon(ImageUtils.height(img, imgHeight)));
                             pack();
                             pack();
                             setLocationRelativeTo(f);
@@ -413,7 +415,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             if (!d.isConfirmed()) return;
             Color color = d.getResult();
             // 更改方框内颜色并保存
-            labels[1].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, color), 100)));
+            labels[1].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, color), imgWidth)));
             results[1] = color;
             pack();
             setLocationRelativeTo(f);

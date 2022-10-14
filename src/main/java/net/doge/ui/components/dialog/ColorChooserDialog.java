@@ -314,7 +314,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         prePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         for (Color c : preColors) {
             JLabel l = new JLabel();
-            l.setIcon(ImageUtils.dyeRoundRect(50, 50, c));
+            l.setIcon(ImageUtils.dyeCircle(50, c));
             l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             l.addMouseListener(new MouseAdapter() {
                 @Override
@@ -513,7 +513,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         rSlider.repaint();
         gSlider.repaint();
         bSlider.repaint();
-        view.setIcon(ImageUtils.dyeRoundRect(80, 80, makeColor()));
+        view.setIcon(ImageUtils.dyeCircle(80, makeColor()));
         try {
             boolean rgb = isRGB();
             rTextField.setText(String.valueOf(rgb ? r : (int) h));
