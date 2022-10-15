@@ -2331,6 +2331,20 @@ public class PlayerFrame extends JFrame {
                 setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
             }
         });
+        titleLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                origin.x = e.getX();
+                origin.y = e.getY();
+            }
+        });
+        titleLabel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point p = getLocation();
+                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
+            }
+        });
 
         // loading 面板
         setGlassPane(loading);
