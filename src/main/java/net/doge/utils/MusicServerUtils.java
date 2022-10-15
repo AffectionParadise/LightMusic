@@ -1,9 +1,7 @@
 package net.doge.utils;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.*;
-import cn.hutool.http.cookie.GlobalCookieManager;
 import net.doge.constants.*;
 import net.doge.models.*;
 import net.doge.ui.components.LoadingPanel;
@@ -19,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -31,9 +28,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author yzx
- * @Description
- * @Date 2020/12/19
+ * @author yzx
+ * @description
+ * @date 2020/12/19
  */
 public class MusicServerUtils {
     public static void main(String[] args) throws IOException {
@@ -17520,7 +17517,7 @@ public class MusicServerUtils {
     /**
      * 下载文件，同时设置等待面板百分比
      *
-     * @param loading
+     * @param comp
      * @param urlPath
      * @param dest
      * @throws Exception

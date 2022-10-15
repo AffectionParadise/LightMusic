@@ -2317,14 +2317,14 @@ public class PlayerFrame extends JFrame {
         setLocationRelativeTo(null);
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
-        titleLabel.addMouseListener(new MouseAdapter() {
+        topBox.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
         });
-        titleLabel.addMouseMotionListener(new MouseMotionAdapter() {
+        topBox.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 Point p = getLocation();
@@ -18744,14 +18744,14 @@ public class PlayerFrame extends JFrame {
         playModeButton.addMouseListener(new ButtonMouseListener(playModeButton, THIS));
         playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth(), listCycleIcon.getIconHeight()));
         // 播放模式按钮绑定右键菜单
-        playModeButton.setComponentPopupMenu(playModePopupMenu);
+//        playModeButton.setComponentPopupMenu(playModePopupMenu);
         // 播放模式切换事件
         playModeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = playModePopupMenu.getHeight();
 //                SwingUtilities.updateComponentTreeUI(playModePopupMenu);
-                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? 165 : h));
+                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? 205 : h));
             }
         });
         // 播放模式弹出菜单

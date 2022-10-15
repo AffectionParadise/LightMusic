@@ -2205,8 +2205,8 @@
 	],
 	"maxCacheSize":1024,
 	"desktopLyricLocked":true,
-	"desktopLyricX":117,
-	"desktopLyricY":628,
+	"desktopLyricX":-1,
+	"desktopLyricY":-1,
 	"catalogs":[
 		"D:\\音乐"
 	],

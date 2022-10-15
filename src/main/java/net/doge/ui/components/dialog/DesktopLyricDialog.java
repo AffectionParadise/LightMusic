@@ -105,7 +105,7 @@ public class DesktopLyricDialog extends JDialog {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
         setSize(new Dimension(width = (int) (screenSize.width * 0.5), height = metrics.getHeight() + 50));
-        setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 20);
+        setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 15);
 
         // 设置主题色
         themeColor = f.getCurrUIStyle().getLrcColor();

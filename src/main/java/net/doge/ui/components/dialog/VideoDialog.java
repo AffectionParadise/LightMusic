@@ -51,9 +51,9 @@ public class VideoDialog extends JDialog {
     private final int TIME_BAR_MIN = 0;
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     private final int MAX_VOLUME = 100;
-    private final int MEDIA_WIDTH = 1150;
+    private final int MEDIA_WIDTH = 1200;
     private final int MEDIA_MIN_WIDTH = 500;
-    private final int MEDIA_HEIGHT = 800;
+    private final int MEDIA_HEIGHT = 675;
 
     // 最大阴影透明度
     private final int TOP_OPACITY = 30;
@@ -233,14 +233,14 @@ public class VideoDialog extends JDialog {
 
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
-        titleLabel.addMouseListener(new MouseAdapter() {
+        topBox.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
         });
-        titleLabel.addMouseMotionListener(new MouseMotionAdapter() {
+        topBox.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 Point p = getLocation();
@@ -296,18 +296,18 @@ public class VideoDialog extends JDialog {
 //                }
 //            });
         media.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+            // 视频实际尺寸
             int width = media.getWidth(), height = media.getHeight();
-            // 调整视频大小使之不超出屏幕
+            // 调整为合适的尺寸，可能有黑边
+            mediaView.setFitWidth(MEDIA_WIDTH);
+            mediaView.setFitHeight(MEDIA_HEIGHT);
+            // 视频位于中央
             if (width > height) {
-                mediaView.setFitWidth(MEDIA_WIDTH);
-                mediaView.setFitHeight(height * MEDIA_WIDTH / width);
+                int oh = height * MEDIA_WIDTH / width;
+                mediaView.setY((MEDIA_HEIGHT - 2 * pixels - oh) / 2);
             } else {
-                mediaView.setFitHeight(MEDIA_HEIGHT);
-                // 宽度不得低于最小值
                 int ow = width * MEDIA_HEIGHT / height;
-                mediaView.setFitWidth(Math.max(MEDIA_MIN_WIDTH, ow));
-                // 视频位于中央
-                mediaView.setX((getWidth() - 2 * pixels - ow) / 2);
+                mediaView.setX((MEDIA_WIDTH - 2 * pixels - ow) / 2);
             }
             MusicPlayer player = f.getPlayer();
             SimpleMusicInfo musicInfo = player.getMusicInfo();
