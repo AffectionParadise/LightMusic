@@ -9,6 +9,7 @@ import com.jhlabs.image.ShadowFilter;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.NumberAxis;
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.models.HSV;
 
 import javax.swing.*;
 import java.awt.*;
@@ -361,16 +362,23 @@ public class ImageUtils {
     }
 
 //    /**
-//     * 清除 BufferedImage 的所有像素点
+//     * 生成关于某个颜色的调色板 ImageIcon
 //     *
-//     * @param bufferedImage
+//     * @param h
+//     * @return
 //     */
-//    public static void clearImg(BufferedImage bufferedImage) {
-//        for (int x = 0, w = bufferedImage.getWidth(); x < w; x++) {
-//            for (int y = 0, h = bufferedImage.getHeight(); y < h; y++) {
-//                bufferedImage.setRGB(x, y, 0);
-//            }
+//    public static ImageIcon palette(float h, int width) {
+//        final int height = 100;
+//        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//        Graphics2D g2d = img.createGraphics();
+//        for (int i = 0; i < height; i++) {
+//            GradientPaint paint = new GradientPaint(0, i, ColorUtils.hsvToColor(h, 0, height - i),
+//                    width - 1, i, ColorUtils.hsvToColor(h, 100, height - i));
+//            g2d.setPaint(paint);
+//            g2d.drawLine(0, i, width - 1, i);
 //        }
+//        g2d.dispose();
+//        return new ImageIcon(img);
 //    }
 
     /**

@@ -54,7 +54,6 @@ public class VideoDialog extends JDialog {
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     private final int MAX_VOLUME = 100;
     private final int MEDIA_WIDTH = 1200;
-    private final int MEDIA_MIN_WIDTH = 500;
     private final int MEDIA_HEIGHT = 675;
 
     // 最大阴影透明度
@@ -110,10 +109,7 @@ public class VideoDialog extends JDialog {
 
     // 标题
     private String title = "";
-    // 是否静音
-    private boolean isMute = false;
-    // 当前快进/快退时间
-    private int currFobTime = 10;
+    private boolean isMute;
 
     private VideoDialogPanel globalPanel = new VideoDialogPanel();
     private JFXPanel jfxPanel = new JFXPanel();
@@ -137,7 +133,7 @@ public class VideoDialog extends JDialog {
     private JButton playOrPauseButton = new JButton(playIcon);
     private JButton backwardButton = new JButton(backwIcon);
     private JButton forwardButton = new JButton(forwIcon);
-    private JButton muteButton = new JButton(soundIcon);
+    public JButton muteButton = new JButton(soundIcon);
     private JSlider volumeSlider = new JSlider();
     private JButton collectButton = new JButton(collectIcon);
     private JButton downloadButton = new JButton(downloadIcon);
@@ -176,7 +172,7 @@ public class VideoDialog extends JDialog {
     private ButtonGroup fobTimeMenuItemsButtonGroup = new ButtonGroup();
     private CustomRadioButtonMenuItem[] fobTimeMenuItems = {
             new CustomRadioButtonMenuItem("5秒"),
-            new CustomRadioButtonMenuItem("10秒", true),
+            new CustomRadioButtonMenuItem("10秒"),
             new CustomRadioButtonMenuItem("15秒"),
             new CustomRadioButtonMenuItem("20秒"),
             new CustomRadioButtonMenuItem("25秒"),
@@ -255,6 +251,7 @@ public class VideoDialog extends JDialog {
             public void componentResized(ComponentEvent e) {
                 setLocationRelativeTo(null);
                 timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
+                setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
             }
         });
 
@@ -287,7 +284,6 @@ public class VideoDialog extends JDialog {
         } else media = new Media(uri);
         mp = new MediaPlayer(media);
         mediaView = new MediaView(mp);
-
         // 视频宽高控制
 //            media.widthProperty().addListener(new ChangeListener<Number>() {
 //                @Override
@@ -312,6 +308,7 @@ public class VideoDialog extends JDialog {
             }
             mediaView.setFitWidth(fw);
             mediaView.setFitHeight(fh);
+
             MusicPlayer player = f.getPlayer();
             SimpleMusicInfo musicInfo = player.getMusicInfo();
             doBlur(!f.getIsBlur() || !player.loadedMusic() ?
@@ -319,12 +316,6 @@ public class VideoDialog extends JDialog {
                     style.getImg()
                     // 专辑图
                     : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
-        });
-        mediaView.fitWidthProperty().addListener((observableValue, oldValue, newValue) -> {
-            setSize(MEDIA_WIDTH + 2 * pixels, getHeight());
-        });
-        mediaView.fitHeightProperty().addListener((observableValue, oldValue, newValue) -> {
-            setSize(getWidth(), MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
         });
         // 刷新缓冲长度
         mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
@@ -479,7 +470,7 @@ public class VideoDialog extends JDialog {
         forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, f));
         forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth(), forwIcon.getIconHeight()));
         forwardButton.addActionListener(e -> {
-            mp.seek(mp.getCurrentTime().add(Duration.seconds(currFobTime)));
+            mp.seek(mp.getCurrentTime().add(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
@@ -490,14 +481,14 @@ public class VideoDialog extends JDialog {
         backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, f));
         backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth(), backwIcon.getIconHeight()));
         backwardButton.addActionListener(e -> {
-            mp.seek(mp.getCurrentTime().subtract(Duration.seconds(currFobTime)));
+            mp.seek(mp.getCurrentTime().subtract(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
         muteButton.setFocusable(false);
         muteButton.setOpaque(false);
         muteButton.setContentAreaFilled(false);
-        muteButton.setIcon(ImageUtils.dye((ImageIcon) muteButton.getIcon(), style.getButtonColor()));
+        muteButton.setIcon(ImageUtils.dye(soundIcon, style.getButtonColor()));
         muteButton.addMouseListener(new ButtonMouseListener(muteButton, f));
         muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth(), muteIcon.getIconHeight()));
         muteButton.addActionListener(e -> {
@@ -609,8 +600,10 @@ public class VideoDialog extends JDialog {
             Color menuItemColor = style.getMenuItemColor();
             menuItem.setForeground(menuItemColor);
             menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
+            int time = Integer.parseInt(menuItem.getText().replace("秒", ""));
+            menuItem.setSelected(time == f.videoForwardOrBackwardTime);
             menuItem.addActionListener(e -> {
-                currFobTime = Integer.parseInt(menuItem.getText().replace("秒", ""));
+                f.videoForwardOrBackwardTime = time;
 //                fobTimeButton.setText(menuItem.getText().replace("秒", "s"));
                 updateRadioButtonMenuItemIcon();
             });
@@ -662,6 +655,7 @@ public class VideoDialog extends JDialog {
 
     void playVideo() {
         volumeSlider.setValue(f.getVolumeSlider().getValue());
+        mp.setRate(f.currVideoRate);
         mp.play();
         playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
     }

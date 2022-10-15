@@ -668,11 +668,13 @@ public class PlayerFrame extends JFrame {
     private int windowState = WindowState.NORMAL;
     // 关闭窗口操作
     public int currCloseWindowOption = CloseWindowOptions.ASK;
-    public int forwardOrBackwardTime = DEFAULT_FORWARD_OR_BACKWARD_TIME;
+    public int forwardOrBackwardTime;
+    public int videoForwardOrBackwardTime;
     // 播放视频时是否关闭主界面
     public boolean videoOnly = true;
     // 当前播放速率
-    public double currRate = DEFAULT_RATE;
+    public double currRate;
+    public double currVideoRate;
     // 当前频谱样式
     public int currSpecStyle = SpectrumConstants.GROUND;
     // 当前均衡
@@ -763,7 +765,7 @@ public class PlayerFrame extends JFrame {
 //    private Color newColor;
 //    private int step = 3;
     // 是否静音
-    private boolean isMute = false;
+    public boolean isMute;
     // 是否开启虚化
     private boolean isBlur = true;
     // 是否显示频谱
@@ -895,7 +897,7 @@ public class PlayerFrame extends JFrame {
     private CustomButton forwardButton = new CustomButton(forwIcon);
     private CustomButton backwardButton = new CustomButton(backwIcon);
     private JPanel volumePanel = new JPanel();
-    private CustomButton muteButton = new CustomButton(soundIcon);
+    public CustomButton muteButton = new CustomButton(soundIcon);
     private JSlider volumeSlider = new JSlider();
     private CustomButton rateButton = new CustomButton(rateIcon);
     //    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
@@ -2868,8 +2870,12 @@ public class PlayerFrame extends JFrame {
         }
         // 载入快进/快退时间
         forwardOrBackwardTime = config.optInt(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
+        // 载入视频快进/快退时间
+        videoForwardOrBackwardTime = config.optInt(ConfigConstants.VIDEO_FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入速率
         currRate = config.optDouble(ConfigConstants.RATE, DEFAULT_RATE);
+        // 载入视频速率
+        currVideoRate = config.optDouble(ConfigConstants.VIDEO_RATE, DEFAULT_RATE);
 //        String rateStr = String.valueOf(currRate).replace(".0", "");
 //        for (CustomRadioButtonMenuItem mi : rateMenuItems) {
 //            if (rateStr.equals(mi.getText().replaceFirst("x", ""))) {
@@ -2884,6 +2890,9 @@ public class PlayerFrame extends JFrame {
         currBalance = config.optDouble(ConfigConstants.BALANCE, DEFAULT_BALANCE);
         // 载入音量
         volumeSlider.setValue(config.optInt(ConfigConstants.VOLUME, DEFAULT_VOLUME));
+        // 载入是否静音
+        isMute = config.optBoolean(ConfigConstants.MUTE, false);
+        if (isMute) muteButton.setIcon(ImageUtils.dye(muteIcon, currUIStyle.getButtonColor()));
         // 载入音效名称
         currSoundEffectName = config.optString(ConfigConstants.SOUND_EFFECT_NAME, EqualizerData.names[0]);
         // 载入均衡数据
@@ -3669,12 +3678,18 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.DESKTOP_LYRIC_Y, desktopLyricY);
         // 存入快进/快退时间
         config.put(ConfigConstants.FOB_TIME, forwardOrBackwardTime);
+        // 存入视频快进/快退时间
+        config.put(ConfigConstants.VIDEO_FOB_TIME, videoForwardOrBackwardTime);
         // 存入速率
         config.put(ConfigConstants.RATE, currRate);
+        // 存入视频速率
+        config.put(ConfigConstants.VIDEO_RATE, currVideoRate);
         // 存入频谱样式
         config.put(ConfigConstants.SPECTRUM_STYLE, currSpecStyle);
         // 存入均衡
         config.put(ConfigConstants.BALANCE, currBalance);
+        // 存入是否静音
+        config.put(ConfigConstants.MUTE, isMute);
         // 存入音量
         config.put(ConfigConstants.VOLUME, volumeSlider.getValue());
         // 存入音效名称
@@ -4085,7 +4100,7 @@ public class PlayerFrame extends JFrame {
         MenuItem openMainFrameMenuItem = new MenuItem("打开主界面");
         MenuItem exitMenuItem = new MenuItem("退出");
         openMainFrameMenuItem.addActionListener(e -> {
-            if (miniDialog != null) return;
+            if (videoDialog != null || miniDialog != null) return;
             // 从托盘还原窗口
             setExtendedState(NORMAL);
             if (showSpectrum) openSpectrum();
@@ -4105,7 +4120,7 @@ public class PlayerFrame extends JFrame {
         trayIconImg.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (miniDialog != null) return;
+                if (videoDialog != null || miniDialog != null) return;
                 // 从托盘还原窗口
                 setExtendedState(NORMAL);
                 if (showSpectrum) openSpectrum();

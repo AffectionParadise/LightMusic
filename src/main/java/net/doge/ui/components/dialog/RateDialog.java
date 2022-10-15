@@ -130,7 +130,7 @@ public class RateDialog extends JDialog {
         slider.setMinimum(MIN_VAL);
         slider.setMaximum(MAX_VAL);
         slider.setOrientation(SwingConstants.VERTICAL);
-        double rate = d == null ? f.currRate : d.mp.getRate();
+        double rate = d == null ? f.currRate : f.currVideoRate;
         int val = (int) (rate * 10);
         valLabel.setText(String.format("%.1fx", rate).replace(".0", ""));
         slider.setValue(val);
@@ -155,10 +155,7 @@ public class RateDialog extends JDialog {
             String txt = String.format("%.1fx", newVal).replace(".0", "");
             valLabel.setText(txt);
             if (d == null) f.getPlayer().setRate(f.currRate = newVal);
-            else {
-                d.mp.setRate(newVal);
-//                ((JButton) comp).setText(txt);
-            }
+            else d.mp.setRate(f.currVideoRate = newVal);
         });
 
         centerPanel.add(slider, BorderLayout.CENTER);

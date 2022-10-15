@@ -46,12 +46,18 @@ public class ConfigConstants {
     public final static String DESKTOP_LYRIC_Y = "desktopLyricY";
     // 快进/快退时间
     public final static String FOB_TIME = "fobTime";
+    // 视频快进/快退时间
+    public final static String VIDEO_FOB_TIME = "videoFobTime";
     // 速率
     public final static String RATE = "rate";
+    // 视频速率
+    public final static String VIDEO_RATE = "videoRate";
     // 频谱样式
     public final static String SPECTRUM_STYLE = "spectrumStyle";
     // 均衡
     public final static String BALANCE = "balance";
+    // 是否静音
+    public final static String MUTE = "isMute";
     // 音量
     public final static String VOLUME = "volume";
     // 音效名称

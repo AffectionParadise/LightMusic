@@ -21,10 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -69,6 +66,10 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     // 自定义标签
     private JPanel customPanel = new JPanel();
     private JLabel customLabel = new JLabel("自定义");
+    // 调色板
+//    private JPanel palettePanel = new JPanel();
+//    private PaletteLabel paletteLabel = new PaletteLabel();
+//    public JSlider vSlider = new JSlider();
     // r
     private JLabel rlb = new JLabel("R");
     public JSlider rSlider = new JSlider();
@@ -228,6 +229,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         prePanel.setOpaque(false);
         pPanel.setOpaque(false);
         customPanel.setOpaque(false);
+//        palettePanel.setOpaque(false);
         centerPanel.setOpaque(false);
         cPanel.setOpaque(false);
         leftPanel.setOpaque(false);
@@ -278,6 +280,10 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         preBox.add(pPanel);
         preBox.add(prePanel);
 
+//        palettePanel.setLayout(new BorderLayout());
+//        palettePanel.add(paletteLabel, BorderLayout.CENTER);
+//        palettePanel.add(vSlider, BorderLayout.EAST);
+
         customPanel.add(customLabel);
         customBox.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         customBox.add(customPanel);
@@ -285,6 +291,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
         cPanel.setLayout(new BorderLayout());
         cPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+//        cPanel.add(palettePanel, BorderLayout.NORTH);
         cPanel.add(leftPanel, BorderLayout.CENTER);
         cPanel.add(rightPanel, BorderLayout.EAST);
         cPanel.add(tfPanel, BorderLayout.SOUTH);
@@ -324,6 +331,23 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         customLabel.setHorizontalAlignment(SwingConstants.CENTER);
         customLabel.setFont(globalFont);
         customLabel.setForeground(labelColor);
+        // 调色板
+//        paletteLabel.setPreferredSize(new Dimension(400, 100));
+//        vSlider.setOpaque(false);
+//        vSlider.setFocusable(false);
+//        vSlider.setOrientation(SwingConstants.VERTICAL);
+//        vSlider.setUI(new ColorVSliderUI(vSlider, this));
+//        vSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+//        d = new Dimension(50, 100);
+//        vSlider.setPreferredSize(d);
+//        vSlider.setMinimum(0);
+//        vSlider.setMaximum(359);
+//        vSlider.addChangeListener(e -> {
+//            if (updating) return;
+//            h = vSlider.getValue();
+//            updateColor(makeColor(h, s, v), true);
+//        });
+
         rlb.setFont(globalFont);
         rlb.setForeground(labelColor);
         rSlider.setOpaque(false);
@@ -506,10 +530,13 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
     // 颜色更新时更新界面
     void updateUI() {
+//        paletteLabel.repaint();
+//        vSlider.repaint();
         rSlider.repaint();
         gSlider.repaint();
         bSlider.repaint();
         view.setIcon(ImageUtils.dyeCircle(80, makeColor()));
+//        paletteLabel.setIcon(ImageUtils.palette(h, 400));
         try {
             boolean rgb = isRGB();
             rTextField.setText(String.valueOf(rgb ? r : (int) h));
@@ -539,6 +566,8 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             s = hsv.s;
             v = hsv.v;
         }
+//        paletteLabel.locateSV(s, v);
+//        vSlider.setValue((int) h);
         if (rgb) {
             rSlider.setValue(r);
             gSlider.setValue(g);
@@ -575,6 +604,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         if (d1) rSlider.setValue(rgb ? (r = i) : (int) (h = i));
         else if (d2) gSlider.setValue(rgb ? (g = i) : (int) (s = i));
         else if (d3) bSlider.setValue(rgb ? (b = i) : (int) (v = i));
+//        vSlider.setValue((int) h);
         updateUI();
     }
 
@@ -622,6 +652,73 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             ioException.printStackTrace();
         }
     }
+
+//    private class PaletteLabel extends JLabel {
+//        private Color currColor;
+//        private Point point;
+//
+//        public PaletteLabel() {
+//            addMouseListener(new MouseAdapter() {
+//                @Override
+//                public void mousePressed(MouseEvent e) {
+//                    update(e.getPoint());
+//                }
+//            });
+//            addMouseMotionListener(new MouseMotionAdapter() {
+//                @Override
+//                public void mouseDragged(MouseEvent e) {
+//                    update(e.getPoint());
+//                }
+//            });
+//        }
+//
+//        // 定位颜色
+//        void locateSV(float s, float v) {
+//            ImageIcon icon = (ImageIcon) paletteLabel.getIcon();
+//            if (icon == null) return;
+//            BufferedImage img = (BufferedImage) icon.getImage();
+//            int w = img.getWidth(), h = img.getHeight();
+//            for (int i = 0; i < h; i++) {
+//                for (int j = 0; j < w; j++) {
+//                    if(img.getRGB(i,j) == ColorUtils.merge(r,g,b)){
+//                        point = new Point(i, j);
+//                        currColor = new Color(img.getRGB(i, j));
+//                        repaint();
+//                        return;
+//                    }
+//                }
+//            }
+//        }
+//
+//        // 更新某点光标
+//        void update(Point p) {
+//            BufferedImage img = (BufferedImage) ((ImageIcon) paletteLabel.getIcon()).getImage();
+//            int w = img.getWidth(), h = img.getHeight();
+//            if (p.x < 0) p.x = 0;
+//            else if (p.x >= w) p.x = w - 1;
+//            if (p.y < 0) p.y = 0;
+//            else if (p.y >= h) p.y = h - 1;
+//            point = p;
+//            int rgb = img.getRGB(point.x, point.y);
+//            currColor = new Color(rgb);
+//            updateColor(currColor);
+//            repaint();
+//        }
+//
+//        @Override
+//        protected void paintComponent(Graphics g) {
+//            super.paintComponent(g);
+//            // 画一个圆环光标
+//            if (point == null) return;
+//            Graphics2D g2d = (Graphics2D) paletteLabel.getGraphics();
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            final int outerRadius = 6, innerRadius = 3;
+//            g2d.setColor(Colors.WHITE);
+//            g2d.fillOval(point.x - outerRadius, point.y - outerRadius, outerRadius * 2, outerRadius * 2);
+//            g2d.setColor(currColor);
+//            g2d.fillOval(point.x - innerRadius, point.y - innerRadius, innerRadius * 2, innerRadius * 2);
+//        }
+//    }
 
     private class ColorChooserDialogPanel extends JPanel {
         private BufferedImage backgroundImage;
