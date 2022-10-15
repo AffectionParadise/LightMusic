@@ -311,7 +311,10 @@ public class VideoDialog extends JDialog {
             }
             MusicPlayer player = f.getPlayer();
             SimpleMusicInfo musicInfo = player.getMusicInfo();
-            doBlur(!f.getIsBlur() || !player.loadedMusic() ? style.getImg()
+            doBlur(!f.getIsBlur() || !player.loadedMusic() ?
+                    // 风格图
+                    StringUtils.isEmpty(style.getStyleImgPath()) ? ImageUtils.dyeRect(2, 1, style.getBgColor()) : style.getImg()
+                    // 专辑图
                     : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
         });
         mediaView.fitWidthProperty().addListener((observableValue, oldValue, newValue) -> {
