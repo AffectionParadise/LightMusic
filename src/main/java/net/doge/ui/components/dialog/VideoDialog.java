@@ -1,6 +1,8 @@
 package net.doge.ui.components.dialog;
 
 import cn.hutool.core.thread.ThreadUtil;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.media.MediaException;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
@@ -298,35 +300,31 @@ public class VideoDialog extends JDialog {
         media.heightProperty().addListener((observableValue, oldValue, newValue) -> {
             // 视频实际尺寸
             int width = media.getWidth(), height = media.getHeight();
-            // 调整为合适的尺寸，可能有黑边
-            mediaView.setFitWidth(MEDIA_WIDTH);
-            mediaView.setFitHeight(MEDIA_HEIGHT);
-            // 视频位于中央
-            if (width > height) {
-                int oh = height * MEDIA_WIDTH / width;
-                mediaView.setY((MEDIA_HEIGHT - 2 * pixels - oh) / 2);
-            } else {
-                int ow = width * MEDIA_HEIGHT / height;
-                mediaView.setX((MEDIA_WIDTH - 2 * pixels - ow) / 2);
+            // 调整为合适的尺寸
+            int fw, fh;
+            // 优先适应宽度
+            fw = MEDIA_WIDTH;
+            fh = height * fw / width;
+            // 调整好后，如果高度还超出范围，再去适应高度
+            if (fh > MEDIA_HEIGHT) {
+                fh = MEDIA_HEIGHT;
+                fw = width * fh / height;
             }
+            mediaView.setFitWidth(fw);
+            mediaView.setFitHeight(fh);
             MusicPlayer player = f.getPlayer();
             SimpleMusicInfo musicInfo = player.getMusicInfo();
             doBlur(!f.getIsBlur() || !player.loadedMusic() ?
                     // 风格图
-                    StringUtils.isEmpty(style.getStyleImgPath()) ? ImageUtils.dyeRect(2, 1, style.getBgColor()) : style.getImg()
+                    style.getImg()
                     // 专辑图
                     : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
         });
         mediaView.fitWidthProperty().addListener((observableValue, oldValue, newValue) -> {
-            int nv = newValue.intValue();
-            jfxPanel.setPreferredSize(new Dimension(nv, media.getHeight()));
-            setSize(nv - 2 + 2 * pixels, getHeight());
-//            timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
+            setSize(MEDIA_WIDTH + 2 * pixels, getHeight());
         });
         mediaView.fitHeightProperty().addListener((observableValue, oldValue, newValue) -> {
-            int nv = newValue.intValue();
-            jfxPanel.setPreferredSize(new Dimension(media.getWidth(), nv + 2 * pixels));
-            setSize(getWidth(), nv + 129 + 2 * pixels);
+            setSize(getWidth(), MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
         });
         // 刷新缓冲长度
         mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
@@ -368,7 +366,7 @@ public class VideoDialog extends JDialog {
             }
         });
 
-        Scene scene = new Scene(new Pane(mediaView), media.getWidth(), media.getHeight());
+        Scene scene = new Scene(new BorderPane(mediaView));
         // 视频边缘黑幕
         scene.setFill(javafx.scene.paint.Color.BLACK);
         jfxPanel.setScene(scene);

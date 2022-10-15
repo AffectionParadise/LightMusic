@@ -243,11 +243,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     public void updateBlur() {
         BufferedImage bufferedImage;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else {
-            String styleImgPath = f.getCurrUIStyle().getStyleImgPath();
-            if (StringUtils.isNotEmpty(styleImgPath)) bufferedImage = f.getCurrUIStyle().getImg();
-            else bufferedImage = ImageUtils.dyeRect(1, 1, f.getCurrUIStyle().getBgColor());
-        }
+        else bufferedImage = f.getCurrUIStyle().getImg();
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
         doBlur(bufferedImage);
     }

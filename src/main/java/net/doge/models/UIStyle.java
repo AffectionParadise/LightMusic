@@ -5,6 +5,7 @@ import net.doge.constants.GlobalExecutors;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.UIStyleConstants;
 import net.doge.utils.ImageUtils;
+import net.doge.utils.StringUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -72,6 +73,7 @@ public class UIStyle {
 
     public void setStyleImgPath(String styleImgPath) {
         this.styleImgPath = styleImgPath;
+        if (StringUtils.isEmpty(styleImgPath)) return;
         GlobalExecutors.imageExecutor.execute(() -> {
             img = ImageUtils.read(styleImgPath);
             imgThumb = ImageUtils.setRadius(ImageUtils.width(img, ImageConstants.mvCoverWidth), 10);
@@ -81,8 +83,10 @@ public class UIStyle {
 
     public void setBgColor(Color bgColor) {
         this.bgColor = bgColor;
+        if (bgColor == null) return;
         GlobalExecutors.imageExecutor.execute(() -> {
-            imgThumb = ImageUtils.setRadius(ImageUtils.width(ImageUtils.dyeRect(2, 1, bgColor),  ImageConstants.mvCoverWidth),10);
+            img = ImageUtils.dyeRect(2, 1, bgColor);
+            imgThumb = ImageUtils.setRadius(ImageUtils.width(img, ImageConstants.mvCoverWidth), 10);
             callback();
         });
     }

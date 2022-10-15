@@ -382,6 +382,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage dyeRect(int width, int height, Color color) {
+        if (color == null) return null;
         BufferedImage translucentImage = createTranslucentImage(width, height);
         Graphics2D g = translucentImage.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
