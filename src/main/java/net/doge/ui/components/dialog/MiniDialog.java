@@ -57,7 +57,6 @@ public class MiniDialog extends JDialog {
     private CustomButton lastButton;
     private CustomButton nextButton;
     private UIStyle style;
-    private MusicPlayer player;
 
     public ExecutorService globalExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
@@ -74,7 +73,6 @@ public class MiniDialog extends JDialog {
         super();
         this.f = f;
         style = f.getCurrUIStyle();
-        player = f.getPlayer();
         changePaneButton = f.getChangePaneButton();
         popButton = f.getPlayOrPauseButton();
         lastButton = f.getLastButton();
@@ -297,11 +295,23 @@ public class MiniDialog extends JDialog {
 
         globalPanel.add(controlPanel, BorderLayout.CENTER);
 
-        SimpleMusicInfo musicInfo = player.getMusicInfo();
-        doBlur(!f.getIsBlur() || !player.loadedMusic() ? style.getImg() : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
+        updateBlur();
     }
 
-    public void doBlur(BufferedImage bufferedImage) {
+    public void updateBlur() {
+        BufferedImage bufferedImage;
+        boolean isPureColor = false;
+        if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
+        else {
+            UIStyle style = f.getCurrUIStyle();
+            bufferedImage = style.getImg();
+            isPureColor = style.isPureColor();
+        }
+        if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
+        doBlur(bufferedImage, isPureColor);
+    }
+
+    public void doBlur(BufferedImage bufferedImage, boolean isPureColor) {
         Dimension size = getSize();
         int dw = size.width, dh = size.height;
         try {
@@ -312,7 +322,8 @@ public class MiniDialog extends JDialog {
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            bufferedImage = ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
+            bufferedImage = ImageUtils.doBlur(bufferedImage);
+            if (!isPureColor) bufferedImage = ImageUtils.darker(bufferedImage);
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();

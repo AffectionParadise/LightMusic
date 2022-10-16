@@ -139,10 +139,15 @@ public class ManageCatalogDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
+        boolean slight = false;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = f.getCurrUIStyle().getImg();
+        else {
+            UIStyle style = f.getCurrUIStyle();
+            bufferedImage = style.getImg();
+            slight = style.isPureColor();
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
-        doBlur(bufferedImage);
+        doBlur(bufferedImage, slight);
     }
 
     // 初始化标题栏
@@ -348,7 +353,7 @@ public class ManageCatalogDialog extends JDialog {
         sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
     }
 
-    void doBlur(BufferedImage bufferedImage) {
+    void doBlur(BufferedImage bufferedImage, boolean slight) {
         Dimension size = getSize();
         int dw = size.width, dh = size.height;
         try {
@@ -359,7 +364,7 @@ public class ManageCatalogDialog extends JDialog {
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            bufferedImage = ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
+            bufferedImage = slight ? ImageUtils.slightDarker(bufferedImage) : ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();

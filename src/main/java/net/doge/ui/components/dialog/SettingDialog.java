@@ -94,7 +94,7 @@ public class SettingDialog extends JDialog {
     private JPanel fobPanel = new JPanel();
     private JLabel fobLabel = new JLabel("快进/快退时间：");
     private JComboBox<String> fobComboBox = new JComboBox();
-//    private JPanel ratePanel = new JPanel();
+    //    private JPanel ratePanel = new JPanel();
 //    private JLabel rateLabel = new JLabel("播放速率：");
 //    private JComboBox<String> rateComboBox = new JComboBox();
 //    private String[] rates = {"0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "4x", "8x"};
@@ -192,10 +192,15 @@ public class SettingDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
+        boolean slight = false;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = f.getCurrUIStyle().getImg();
+        else {
+            UIStyle style = f.getCurrUIStyle();
+            bufferedImage = style.getImg();
+            slight = style.isPureColor();
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
-        doBlur(bufferedImage);
+        doBlur(bufferedImage, slight);
     }
 
     // 初始化标题栏
@@ -529,7 +534,7 @@ public class SettingDialog extends JDialog {
         exportListButton.setFont(globalFont);
 
         // 复选框图标
-        int gap=10;
+        int gap = 10;
         ImageIcon icon = ImageUtils.dye(uncheckedIcon, buttonColor);
         ImageIcon selectedIcon = ImageUtils.dye(checkedIcon, buttonColor);
         autoDownloadLrcCheckBox.setIconTextGap(gap);
@@ -696,7 +701,7 @@ public class SettingDialog extends JDialog {
         return true;
     }
 
-    void doBlur(BufferedImage bufferedImage) {
+    void doBlur(BufferedImage bufferedImage, boolean slight) {
         Dimension size = getSize();
         int dw = size.width, dh = size.height;
         try {
@@ -707,7 +712,7 @@ public class SettingDialog extends JDialog {
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            bufferedImage = ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
+            bufferedImage = slight ? ImageUtils.slightDarker(bufferedImage) : ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();

@@ -3,6 +3,7 @@ package net.doge.ui.components.dialog;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Fonts;
 import net.doge.constants.GlobalExecutors;
+import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -113,10 +114,15 @@ public class TipDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
+        boolean slight = false;
         if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else bufferedImage = f.getCurrUIStyle().getImg();
+        else {
+            UIStyle style = f.getCurrUIStyle();
+            bufferedImage = style.getImg();
+            slight = style.isPureColor();
+        }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
-        doBlur(bufferedImage);
+        doBlur(bufferedImage, slight);
     }
 
     public void showDialog() {
@@ -169,7 +175,7 @@ public class TipDialog extends JDialog {
         });
     }
 
-    void doBlur(BufferedImage bufferedImage) {
+    void doBlur(BufferedImage bufferedImage, boolean slight) {
         int dw = size.width, dh = size.height;
         try {
             // 截取中间的一部分(有的图片是长方形)
@@ -179,7 +185,7 @@ public class TipDialog extends JDialog {
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            bufferedImage = ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
+            bufferedImage = slight ? ImageUtils.slightDarker(bufferedImage) : ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();

@@ -63,6 +63,10 @@ public class UIStyle {
         return styleType == UIStyleConstants.CUSTOM;
     }
 
+    public boolean isPureColor() {
+        return bgColor != null;
+    }
+
     private void callback() {
         if (invokeLater != null) {
             invokeLater.run();

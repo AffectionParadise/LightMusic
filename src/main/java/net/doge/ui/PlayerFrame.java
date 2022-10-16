@@ -22161,7 +22161,7 @@ public class PlayerFrame extends JFrame {
                 // 改变迷你窗口背景
                 if (miniDialog != null) {
                     BufferedImage finalAlbumImage = albumImage;
-                    miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalAlbumImage));
+                    miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalAlbumImage, false));
                 }
                 BufferedImage bufferedImage = albumImage;
                 // 截取中间的一部分(有的图片是长方形)

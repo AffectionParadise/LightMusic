@@ -266,10 +266,25 @@ public class VideoDialog extends JDialog {
         initControlPanel();
         playVideo();
 
+        updateBlur();
+
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
         globalPanel.setOpaque(false);
         add(globalPanel);
+    }
+
+    public void updateBlur() {
+        BufferedImage bufferedImage;
+        boolean isPureColor = false;
+        if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
+        else {
+            UIStyle style = f.getCurrUIStyle();
+            bufferedImage = style.getImg();
+            isPureColor = style.isPureColor();
+        }
+        if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
+        doBlur(bufferedImage, isPureColor);
     }
 
     public void showDialog() {
@@ -308,14 +323,6 @@ public class VideoDialog extends JDialog {
             }
             mediaView.setFitWidth(fw);
             mediaView.setFitHeight(fh);
-
-            MusicPlayer player = f.getPlayer();
-            SimpleMusicInfo musicInfo = player.getMusicInfo();
-            doBlur(!f.getIsBlur() || !player.loadedMusic() ?
-                    // 风格图
-                    style.getImg()
-                    // 专辑图
-                    : musicInfo.hasAlbumImage() ? musicInfo.getAlbumImage() : f.getDefaultAlbumImage());
         });
         // 刷新缓冲长度
         mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
@@ -699,7 +706,7 @@ public class VideoDialog extends JDialog {
         }
     }
 
-    void doBlur(BufferedImage bufferedImage) {
+    void doBlur(BufferedImage bufferedImage, boolean isPureColor) {
         Dimension size = getSize();
         int dw = size.width, dh = size.height;
         try {
@@ -710,7 +717,8 @@ public class VideoDialog extends JDialog {
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            bufferedImage = ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
+            bufferedImage = ImageUtils.doBlur(bufferedImage);
+            if (!isPureColor) bufferedImage = ImageUtils.darker(bufferedImage);
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
