@@ -92,8 +92,19 @@ public class MusicServerUtils {
     private static final String prefixQQ33 = "http://localhost:3300";
     private static final String qqSearchApi = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     private static final String qqSearchJson = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
-    private static final String prefixKw = "http://localhost:7002";
+    //    private static final String prefixKw = "http://localhost:7002";
     private static final String prefixMg = "http://localhost:3400";
+
+    // 构造酷我音乐请求
+    private static HttpRequest kwRequest(String url) {
+        return HttpRequest.get(url)
+                .header(Header.COOKIE, "Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1623339177,1623339183; _ga=GA1.2.1195980605.1579367081" +
+                        "; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1623339982; kw_token=3E7JFQ7MRPL; _gid=GA1.2.747985028.1623339179; _gat=1")
+                .header("csrf", "3E7JFQ7MRPL")
+                .header(Header.HOST, "www.kuwo.cn")
+                .header(Header.REFERER, "http://www.kuwo.cn/")
+                .header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36");
+    }
 
     // 热搜 API
     private static final String HOT_SEARCH_API
@@ -126,8 +137,8 @@ public class MusicServerUtils {
             = "https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&format=json&key=%s" +
             "&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
     // 搜索建议 API (酷我)
-    private static final String SEARCH_SUGGESTION_KW_API
-            = prefixKw + "/kuwo/search/searchKey?key=%s";
+//    private static final String SEARCH_SUGGESTION_KW_API = prefixKw + "/kuwo/search/searchKey?key=%s";
+    private static final String SEARCH_SUGGESTION_KW_API = "http://www.kuwo.cn/api/www/search/searchKey?key=%s&httpsStatus=1";
     // 搜索建议 API (千千)
     private static final String SEARCH_SUGGESTION_QI_API
             = "https://music.91q.com/v1/search/sug?appid=16073360&timestamp=%s&type=&word=%s";
@@ -205,8 +216,8 @@ public class MusicServerUtils {
     private static final String SEARCH_MUSIC_BY_LYRIC_QQ_API
             = prefixQQ33 + "/search?t=7&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌曲 API (酷我)
-    private static final String SEARCH_MUSIC_KW_API
-            = prefixKw + "/kuwo/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s";
+//    private static final String SEARCH_MUSIC_KW_API = prefixKw + "/kuwo/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s";
+    private static final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌曲 API (咪咕)
     private static final String SEARCH_MUSIC_MG_API
             = prefixMg + "/search?keyword=%s&pageNo=%s&pageSize=%s";
@@ -230,8 +241,8 @@ public class MusicServerUtils {
 //    private static final String SEARCH_PLAYLIST_QQ_API
 //            = prefixQQ33 + "/search?t=2&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌单 API (酷我)
-    private static final String SEARCH_PLAYLIST_KW_API
-            = prefixKw + "/kuwo/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s";
+//    private static final String SEARCH_PLAYLIST_KW_API = prefixKw + "/kuwo/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s";
+    private static final String SEARCH_PLAYLIST_KW_API = "http://www.kuwo.cn/api/www/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌单 API (咪咕)
     private static final String SEARCH_PLAYLIST_MG_API
             = prefixMg + "/search?type=playlist&keyword=%s&pageNo=%s&pageSize=%s";
@@ -246,8 +257,8 @@ public class MusicServerUtils {
 //    private static final String SEARCH_ALBUM_QQ_API
 //            = prefixQQ33 + "/search?t=8&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索专辑 API (酷我)
-    private static final String SEARCH_ALBUM_KW_API
-            = prefixKw + "/kuwo/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s";
+//    private static final String SEARCH_ALBUM_KW_API = prefixKw + "/kuwo/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s";
+    private static final String SEARCH_ALBUM_KW_API = "http://www.kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索专辑 API (咪咕)
     private static final String SEARCH_ALBUM_MG_API
             = prefixMg + "/search?type=album&keyword=%s&pageNo=%s&pageSize=%s";
@@ -269,8 +280,8 @@ public class MusicServerUtils {
     private static final String SEARCH_ARTIST_QQ_API
             = prefixQQ33 + "/search?t=9&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌手 API (酷我)
-    private static final String SEARCH_ARTIST_KW_API
-            = prefixKw + "/kuwo/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s";
+//    private static final String SEARCH_ARTIST_KW_API = prefixKw + "/kuwo/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s";
+    private static final String SEARCH_ARTIST_KW_API = "http://www.kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌手 API (咪咕)
     private static final String SEARCH_ARTIST_MG_API
             = prefixMg + "/search?type=singer&keyword=%s&pageNo=%s&pageSize=%s";
@@ -313,8 +324,8 @@ public class MusicServerUtils {
     private static final String SEARCH_MV_QQ_API
             = prefixQQ33 + "/search?t=12&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索 MV API (酷我)
-    private static final String SEARCH_MV_KW_API
-            = prefixKw + "/kuwo/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s";
+//    private static final String SEARCH_MV_KW_API = prefixKw + "/kuwo/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s";
+    private static final String SEARCH_MV_KW_API = "http://www.kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索 MV API (好看)
     private static final String SEARCH_MV_HK_API
             = "https://haokan.baidu.com/web/search/api?query=%s&pn=%s&rn=%s&type=video";
@@ -335,11 +346,14 @@ public class MusicServerUtils {
     private static final String GET_RANKING_QQ_API_2
             = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5";
     // 获取榜单 API (酷我)
-    private static final String GET_RANKING_KW_API
-            = prefixKw + "/kuwo/rank";
+//    private static final String GET_RANKING_KW_API = prefixKw + "/kuwo/rank";
+    private static final String GET_RANKING_KW_API = "http://www.kuwo.cn/api/www/bang/bang/bangMenu?&httpsStatus=1";
     // 获取榜单 API 2 (酷我)
     private static final String GET_RANKING_KW_API_2
             = "http://qukudata.kuwo.cn/q.k?op=query&cont=tree&node=2&pn=0&rn=1000&fmt=json&level=2";
+    // 获取推荐榜单 API (酷我)
+    private static final String GET_REC_RANKING_KW_API
+            = "http://www.kuwo.cn/api/www/bang/index/bangList?&httpsStatus=1";
     // 获取榜单 API (咪咕)
     private static final String GET_RANKING_MG_API
             = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list";
@@ -377,11 +391,13 @@ public class MusicServerUtils {
     private static final String GET_COMMENTS_QQ_API
             = prefixQQ33 + "/comment?type=%s&biztype=%s&id=%s&pageNo=%s&pageSize=%s";
     // 获取热门评论 API (酷我)
-    private static final String GET_HOT_COMMENTS_KW_API
-            = prefixKw + "/kuwo/comment?digest=%s&sid=%s&type=get_rec_comment&page=%s&rows=%s";
+//    private static final String GET_HOT_COMMENTS_KW_API = prefixKw + "/kuwo/comment?digest=%s&sid=%s&type=get_rec_comment&page=%s&rows=%s";
+    private static final String GET_HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s" +
+            "&uid=0&prod=newWeb&httpsStatus=1";
     // 获取最新评论 API (酷我)
-    private static final String GET_NEW_COMMENTS_KW_API
-            = prefixKw + "/kuwo/comment?digest=%s&sid=%s&type=get_comment&page=%s&rows=%s";
+//    private static final String GET_NEW_COMMENTS_KW_API = prefixKw + "/kuwo/comment?digest=%s&sid=%s&type=get_comment&page=%s&rows=%s";
+    private static final String GET_NEW_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s" +
+            "&uid=0&prod=newWeb&httpsStatus=1";
     // 获取电台热门评论 API (喜马拉雅)
     private static final String GET_HOT_RADIO_COMMENTS_XM_API
             = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=content-score-desc&pageId=%s&pageSize=%s";
@@ -551,8 +567,8 @@ public class MusicServerUtils {
     private static final String NEW_PLAYLIST_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
     // 推荐歌单 API (酷我)
-    private static final String RECOMMEND_PLAYLIST_KW_API
-            = prefixKw + "/kuwo/rec_gedan";
+//    private static final String RECOMMEND_PLAYLIST_KW_API = prefixKw + "/kuwo/rec_gedan";
+    private static final String RECOMMEND_PLAYLIST_KW_API = "https://kuwo.cn/api/www/rcm/index/playlist?loginUid=0&httpsStatus=1";
     // 推荐歌单(最新) API (酷我)
     private static final String NEW_PLAYLIST_KW_API
             = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?loginUid=0&loginSid=0&appUid=76039576&&pn=%s&rn=%s&order=new";
@@ -875,11 +891,11 @@ public class MusicServerUtils {
     private static final String HOT_MUSIC_QQ_API
             = prefixQQ33 + "/top?id=26&pageNo=%s&pageSize=%s";
     // 飙升榜 API (酷我)
-    private static final String UP_MUSIC_KW_API
-            = prefixKw + "/kuwo/rank/musicList?bangId=93&pn=%s&rn=%s";
+//    private static final String UP_MUSIC_KW_API = prefixKw + "/kuwo/rank/musicList?bangId=93&pn=%s&rn=%s";
+    private static final String UP_MUSIC_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=93&pn=%s&rn=%s&httpsStatus=1";
     // 热歌榜 API (酷我)
-    private static final String HOT_MUSIC_KW_API
-            = prefixKw + "/kuwo/rank/musicList?bangId=16&pn=%s&rn=%s";
+//    private static final String HOT_MUSIC_KW_API = prefixKw + "/kuwo/rank/musicList?bangId=16&pn=%s&rn=%s";
+    private static final String HOT_MUSIC_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 尖叫热歌榜 API (咪咕)
     private static final String HOT_MUSIC_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=27186466";
 
@@ -912,8 +928,8 @@ public class MusicServerUtils {
     private static final String RECOMMEND_NEW_SONG_QQ_API
             = prefixQQ33 + "/new/songs?type=%s";
     // 新歌榜 API (酷我)
-    private static final String NEW_SONG_KW_API
-            = prefixKw + "/kuwo/rank/musicList?bangId=16&pn=%s&rn=%s";
+//    private static final String NEW_SONG_KW_API = prefixKw + "/kuwo/rank/musicList?bangId=16&pn=%s&rn=%s";
+    private static final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)
     private static final String RECOMMEND_NEW_SONG_MG_API
             = prefixMg + "/new/songs?pageNo=%s&pageSize=%s";
@@ -1002,6 +1018,9 @@ public class MusicServerUtils {
     // 新专辑榜 API (咪咕)
     private static final String NEW_ALBUM_RANKING_MG_API
             = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=23218151";
+    // 首页最新专辑 API (千千)
+    private static final String INDEX_NEW_ALBUM_QI_API
+            = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
     // 秀动发行 API (千千)
     private static final String XD_ALBUM_QI_API
             = "https://music.91q.com/v1//album/xdpublish?appid=16073360&module_name=秀动发行&moreApi=v1%%2Falbum%%2Fxdpublish" +
@@ -1026,16 +1045,16 @@ public class MusicServerUtils {
      * @return
      */
     public static void initArtistTag() {
-        Tags.artistTag.put("默认", new String[]{"1", "", "0 0", "-100 -100 -100 -100", "11", "", "  "});
+        Tags.artistTag.put("默认", new String[]{"1", "", "0 0", "-100 -100 -100 -100", "11", "0 ", "  "});
 
         Tags.artistTag.put("男", new String[]{"", "1 -1 -1", "1 0", "0 -100 -100 -100", "", "", "  男"});
         Tags.artistTag.put("女", new String[]{"", "2 -1 -1", "2 0", "1 -100 -100 -100", "", "", "  女"});
         Tags.artistTag.put("组合", new String[]{"", "3 -1 -1", "3 0", "2 -100 -100 -100", "16", "", "  组合"});
         Tags.artistTag.put("乐队", new String[]{"", "", "", "", "", "", "  乐队"});
-        Tags.artistTag.put("华语", new String[]{"1", "-1 7 -1", "0 1", "", "11", "0", ""});
-        Tags.artistTag.put("华语男", new String[]{"", "1 7 -1", "1 1", "", "", "1", ""});
-        Tags.artistTag.put("华语女", new String[]{"", "2 7 -1", "2 1", "", "", "2", ""});
-        Tags.artistTag.put("华语组合", new String[]{"", "3 7 -1", "3 1", "", "", "3", ""});
+        Tags.artistTag.put("华语", new String[]{"1", "-1 7 -1", "0 1", "", "11", "", ""});
+        Tags.artistTag.put("华语男", new String[]{"", "1 7 -1", "1 1", "", "", "1 ", ""});
+        Tags.artistTag.put("华语女", new String[]{"", "2 7 -1", "2 1", "", "", "2 ", ""});
+        Tags.artistTag.put("华语组合", new String[]{"", "3 7 -1", "3 1", "", "", "3 ", ""});
         Tags.artistTag.put("内地", new String[]{"", "", "", "-100 -100 -100 200", "", "", " 内地 "});
         Tags.artistTag.put("内地男", new String[]{"", "", "", "0 -100 -100 200", "", "", " 内地 男"});
         Tags.artistTag.put("内地女", new String[]{"", "", "", "1 -100 -100 200", "", "", " 内地 女"});
@@ -1047,9 +1066,9 @@ public class MusicServerUtils {
         Tags.artistTag.put("港台组合", new String[]{"", "", "", "2 -100 -100 2", "", "", " 港台 组合"});
         Tags.artistTag.put("港台乐队", new String[]{"", "", "", "", "", "", " 港台 乐队"});
         Tags.artistTag.put("欧美", new String[]{"2", "-1 96 -1", "0 2", "-100 -100 -100 5", "13", "", " 欧美 "});
-        Tags.artistTag.put("欧美男", new String[]{"", "1 96 -1", "1 2", "0 -100 -100 5", "", "7", " 欧美 男"});
-        Tags.artistTag.put("欧美女", new String[]{"", "2 96 -1", "2 2", "1 -100 -100 5", "", "8", " 欧美 女"});
-        Tags.artistTag.put("欧美组合", new String[]{"", "3 96 -1", "3 2", "2 -100 -100 5", "", "9", " 欧美 组合"});
+        Tags.artistTag.put("欧美男", new String[]{"", "1 96 -1", "1 2", "0 -100 -100 5", "", "7 ", " 欧美 男"});
+        Tags.artistTag.put("欧美女", new String[]{"", "2 96 -1", "2 2", "1 -100 -100 5", "", "8 ", " 欧美 女"});
+        Tags.artistTag.put("欧美组合", new String[]{"", "3 96 -1", "3 2", "2 -100 -100 5", "", "9 ", " 欧美 组合"});
         Tags.artistTag.put("欧美乐队", new String[]{"", "", "", "", "", "", " 欧美 乐队"});
         Tags.artistTag.put("韩国", new String[]{"3", "-1 16 -1", "0 6", "-100 -100 -100 3", "", "", " 韩国 "});
         Tags.artistTag.put("韩国男", new String[]{"", "1 16 -1", "1 6", "0 -100 -100 3", "", "", " 韩国 男"});
@@ -1062,10 +1081,10 @@ public class MusicServerUtils {
         Tags.artistTag.put("日本组合", new String[]{"", "3 8 -1", "3 5", "2 -100 -100 4", "", "", " 日本 组合"});
         Tags.artistTag.put("日本乐队", new String[]{"", "", "", "", "", "", " 日本 乐队"});
         Tags.artistTag.put("日韩", new String[]{"", "", "0 3", "", "12", "", ""});
-        Tags.artistTag.put("日韩男", new String[]{"", "", "1 3", "", "", "4", ""});
-        Tags.artistTag.put("日韩女", new String[]{"", "", "2 3", "", "", "5", ""});
-        Tags.artistTag.put("日韩组合", new String[]{"", "", "3 3", "", "", "6", ""});
-        Tags.artistTag.put("其他", new String[]{"", "-1 0 -1", "0 4", "-100 -100 -100 6", "", "10", " 其他 "});
+        Tags.artistTag.put("日韩男", new String[]{"", "", "1 3", "", "", "4 ", ""});
+        Tags.artistTag.put("日韩女", new String[]{"", "", "2 3", "", "", "5 ", ""});
+        Tags.artistTag.put("日韩组合", new String[]{"", "", "3 3", "", "", "6 ", ""});
+        Tags.artistTag.put("其他", new String[]{"", "-1 0 -1", "0 4", "-100 -100 -100 6", "", "10 ", " 其他 "});
         Tags.artistTag.put("其他男", new String[]{"", "1 0 -1", "1 4", "0 -100 -100 6", "", "", " 其他 男"});
         Tags.artistTag.put("其他女", new String[]{"", "2 0 -1", "2 4", "1 -100 -100 6", "", "", " 其他 女"});
         Tags.artistTag.put("其他组合", new String[]{"", "3 0 -1", "3 4", "2 -100 -100 6", "", "", " 其他 组合"});
@@ -1107,6 +1126,9 @@ public class MusicServerUtils {
                 // 网易云
                 Tags.artistTag.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : name);
 
+                // 酷我
+                if (!"#".equals(name)) Tags.artistTag.get(name)[5] = String.format("0 %s", name);
+
                 // 千千
                 Tags.artistTag.get(name)[6] = String.format("%s  ", "#".equals(name) ? "other" : name);
             }
@@ -1140,9 +1162,11 @@ public class MusicServerUtils {
     // 推荐歌手 API (QQ)
     private static final String ARTIST_LIST_QQ_API = prefixQQ33 + "/singer/list?sex=%s&genre=%s&index=%s&area=%s&pageNo=%s";
     // 歌手推荐 API (酷我)
-    private static final String ARTIST_LIST_KW_API = prefixKw + "/kuwo/rec_singer?category=%s&pn=%s&rn=%s";
+//    private static final String ARTIST_LIST_KW_API = prefixKw + "/kuwo/rec_singer?category=%s&pn=%s&rn=%s";
+    private static final String ARTIST_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
     // 全部歌手 API (酷我)
-    private static final String ALL_ARTISTS_LIST_KW_API = prefixKw + "/kuwo/singer?category=%s&pn=%s&rn=%s";
+//    private static final String ALL_ARTISTS_LIST_KW_API = prefixKw + "/kuwo/singer?category=%s&pn=%s&rn=%s";
+    private static final String ALL_ARTISTS_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&prefix=%s&pn=%s&rn=%s&httpsStatus=1";
     // 来电新声榜 API (咪咕)
     private static final String ARTIST_LIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=22425062";
     // 来电唱作榜 API (咪咕)
@@ -1898,7 +1922,8 @@ public class MusicServerUtils {
     // 歌曲封面信息 API (QQ)
     private static final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
     // 歌曲信息 API (酷我)
-    private static final String SINGLE_SONG_DETAIL_KW_API = prefixKw + "/kuwo/musicInfo?mid=%s";
+//    private static final String SINGLE_SONG_DETAIL_KW_API = prefixKw + "/kuwo/musicInfo?mid=%s";
+    private static final String SINGLE_SONG_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
     // 歌曲信息 API (咪咕)
     private static final String SINGLE_SONG_DETAIL_MG_API = prefixMg + "/song?cid=%s";
     // 歌曲信息 API (千千)
@@ -1911,7 +1936,8 @@ public class MusicServerUtils {
     // 歌曲 URL 获取 API (QQ)
     private static final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
     // 歌曲 URL 获取 API (酷我)
-    private static final String GET_SONG_URL_KW_API = prefixKw + "/kuwo/url?mid=%s";
+//    private static final String GET_SONG_URL_KW_API = prefixKw + "/kuwo/url?mid=%s";
+    private static final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&httpsStatus=1";
     // 歌曲 URL 获取 API (千千)
     private static final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
@@ -1922,7 +1948,8 @@ public class MusicServerUtils {
     // 歌词 API 获取 (QQ)
     private static final String LYRIC_QQ_API = prefixQQ33 + "/lyric?songmid=%s";
     // 歌词 API 获取 (酷我)
-    private static final String LYRIC_KW_API = prefixKw + "/kuwo/lrc?musicId=%s";
+//    private static final String LYRIC_KW_API = prefixKw + "/kuwo/lrc?musicId=%s";
+    private static final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
 
     // 歌单信息 API
     private static final String PLAYLIST_DETAIL_API = prefix + "/playlist/detail?id=%s";
@@ -1935,7 +1962,8 @@ public class MusicServerUtils {
     // 歌单信息 API (QQ)
     private static final String PLAYLIST_DETAIL_QQ_API = prefixQQ33 + "/songlist?id=%s";
     // 歌单信息 API (酷我)
-    private static final String PLAYLIST_DETAIL_KW_API = prefixKw + "/kuwo/musicList?pid=%s";
+//    private static final String PLAYLIST_DETAIL_KW_API = prefixKw + "/kuwo/musicList?pid=%s";
+    private static final String PLAYLIST_DETAIL_KW_API = "http://www.kuwo.cn/api/www/playlist/playListInfo?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌单信息 API (咪咕)
     private static final String PLAYLIST_DETAIL_MG_API = prefixMg + "/playlist?id=%s";
     // 歌单歌曲 API (咪咕)
@@ -1957,7 +1985,8 @@ public class MusicServerUtils {
     // 专辑歌曲 API (QQ)
     private static final String ALBUM_SONGS_QQ_API = prefixQQ33 + "/album/songs?albummid=%s";
     // 专辑信息 API (酷我)
-    private static final String ALBUM_DETAIL_KW_API = prefixKw + "/kuwo/albumInfo?albumId=%s&pn=%s&rn=%s";
+//    private static final String ALBUM_DETAIL_KW_API = prefixKw + "/kuwo/albumInfo?albumId=%s&pn=%s&rn=%s";
+    private static final String ALBUM_DETAIL_KW_API = "http://www.kuwo.cn/api/www/album/albumInfo?albumId=%s&pn=%s&rn=%s&httpsStatus=1";
     // 专辑信息 API (咪咕)
     private static final String ALBUM_DETAIL_MG_API = prefixMg + "/album?id=%s";
     // 专辑信息 API (千千)
@@ -2002,11 +2031,14 @@ public class MusicServerUtils {
     // 歌手 MV API (QQ)
     private static final String ARTIST_MVS_QQ_API = prefixQQ33 + "/singer/mv?singermid=%s&pageNo=%s&pageSize=%s";
     // 歌手歌曲 API (酷我)
-    private static final String ARTIST_SONGS_KW_API = prefixKw + "/kuwo/singer/music?artistid=%s&pn=%s&rn=%s";
+//    private static final String ARTIST_SONGS_KW_API = prefixKw + "/kuwo/singer/music?artistid=%s&pn=%s&rn=%s";
+    private static final String ARTIST_SONGS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手专辑 API (酷我)
-    private static final String ARTIST_ALBUMS_KW_API = prefixKw + "/kuwo/singer/album?artistid=%s&pn=%s&rn=%s";
+//    private static final String ARTIST_ALBUMS_KW_API = prefixKw + "/kuwo/singer/album?artistid=%s&pn=%s&rn=%s";
+    private static final String ARTIST_ALBUMS_KW_API = "http://www.kuwo.cn/api/www/artist/artistAlbum?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手 MV API (酷我)
-    private static final String ARTIST_MVS_KW_API = prefixKw + "/kuwo/singer/mv?artistid=%s&pn=%s&rn=%s";
+//    private static final String ARTIST_MVS_KW_API = prefixKw + "/kuwo/singer/mv?artistid=%s&pn=%s&rn=%s";
+    private static final String ARTIST_MVS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMv?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手歌曲 API (咪咕)
     private static final String ARTIST_SONGS_MG_API = prefixMg + "/singer/songs?id=%s&pageNo=%s";
     // 歌手专辑 API (咪咕)
@@ -2055,7 +2087,8 @@ public class MusicServerUtils {
     // MV 视频链接获取 API (QQ)
     private static final String MV_URL_QQ_API = prefixQQ33 + "/mv/url?id=%s";
     // MV 视频链接获取 API (酷我)
-    private static final String MV_URL_KW_API = prefixKw + "/kuwo/url?mid=%s&type=mv";
+//    private static final String MV_URL_KW_API = prefixKw + "/kuwo/url?mid=%s&type=mv";
+    private static final String MV_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=mv&httpsStatus=1";
     // MV 视频链接获取 API (千千)
     private static final String MV_URL_QI_API = "https://music.91q.com/v1/video/info?appid=16073360&assetCode=%s&timestamp=%s";
     // MV 视频链接获取 API (好看)
@@ -2070,7 +2103,8 @@ public class MusicServerUtils {
     // 榜单信息 API (QQ)
     private static final String RANKING_DETAIL_QQ_API = prefixQQ33 + "/top?id=%s&pageSize=%s";
     // 榜单信息 API (酷我)
-    private static final String RANKING_DETAIL_KW_API = prefixKw + "/kuwo/rank/musicList?bangId=%s&pn=%s&rn=%s";
+//    private static final String RANKING_DETAIL_KW_API = prefixKw + "/kuwo/rank/musicList?bangId=%s&pn=%s&rn=%s";
+    private static final String RANKING_DETAIL_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
     // 榜单信息 API (咪咕)
     private static final String RANKING_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=%s";
 
@@ -2445,7 +2479,7 @@ public class MusicServerUtils {
         Callable<List<String>> getSearchSuggestionKw = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_SUGGESTION_KW_API, encodedKeyword)).execute();
+            HttpResponse resp = kwRequest(String.format(SEARCH_SUGGESTION_KW_API, encodedKeyword)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 JSONObject searchSuggestionJson = JSONObject.fromObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");
@@ -2792,7 +2826,7 @@ public class MusicServerUtils {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page, limit)).execute();
             // 有时候请求会崩，先判断是否请求成功
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String musicInfoBody = resp.body();
@@ -3125,7 +3159,7 @@ public class MusicServerUtils {
         // 酷我
         else if (source == NetMusicSource.KW) {
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KW_API, songId))
+                String songBody = kwRequest(String.format(SINGLE_SONG_DETAIL_KW_API, songId))
                         .execute()
                         .body();
                 JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
@@ -3383,7 +3417,7 @@ public class MusicServerUtils {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -3620,7 +3654,7 @@ public class MusicServerUtils {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_KW_API, encodedKeyword, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(SEARCH_ALBUM_KW_API, encodedKeyword, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String albumInfoBody = resp.body();
                 JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
@@ -3935,7 +3969,7 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_ARTIST_KW_API, encodedKeyword, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(SEARCH_ARTIST_KW_API, encodedKeyword, page, limit)).execute();
             // 酷我有时候会崩，先验证是否请求成功
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String artistInfoBody = resp.body();
@@ -4600,7 +4634,7 @@ public class MusicServerUtils {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_KW_API, encodedKeyword, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(SEARCH_MV_KW_API, encodedKeyword, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();
                 JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
@@ -4909,11 +4943,12 @@ public class MusicServerUtils {
         };
 
         // 酷我
+        // 所有榜单
         Callable<CommonResult<NetRankingInfo>> getRankingsKw = () -> {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(GET_RANKING_KW_API)).execute();
+            HttpResponse resp = kwRequest(String.format(GET_RANKING_KW_API)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String rankingInfoBody = resp.body();
                 JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
@@ -4981,6 +5016,44 @@ public class MusicServerUtils {
             }
             return new CommonResult<>(res, t);
         };
+        // 推荐榜单
+        Callable<CommonResult<NetRankingInfo>> getRecRankingsKw = () -> {
+            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            HttpResponse resp = kwRequest(String.format(GET_REC_RANKING_KW_API))
+                    .header(Header.REFERER, "http://www.kuwo.cn/rankList")
+                    .execute();
+            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                String rankingInfoBody = resp.body();
+                JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+                JSONArray data = rankingInfoJson.getJSONArray("data");
+                for (int i = 0, len = data.size(); i < len; i++) {
+                    JSONObject rankingJson = data.getJSONObject(i);
+
+                    String rankingId = rankingJson.getString("id");
+                    String rankingName = rankingJson.getString("name");
+                    String coverImgUrl = rankingJson.getString("pic");
+                    String updateTime = rankingJson.getString("pub");
+                    String desc = "";
+
+                    NetRankingInfo rankingInfo = new NetRankingInfo();
+                    rankingInfo.setSource(NetMusicSource.KW);
+                    rankingInfo.setId(rankingId);
+                    rankingInfo.setName(rankingName);
+                    rankingInfo.setCoverImgUrl(coverImgUrl);
+                    rankingInfo.setUpdateTime(updateTime);
+                    rankingInfo.setDescription(desc);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                        rankingInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(rankingInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
 
         // 咪咕
         Callable<CommonResult<NetRankingInfo>> getRankingsMg = () -> {
@@ -5037,6 +5110,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq2));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw2));
+        taskList.add(GlobalExecutors.requestExecutor.submit(getRecRankingsKw));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsMg));
 
         List<List<NetRankingInfo>> rl = new LinkedList<>();
@@ -5680,9 +5754,25 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW && StringUtils.isNotEmpty(typeStr[2])) {
+            String ref = "";
+            switch (Integer.parseInt(typeStr[2])) {
+                case 15:
+                    ref = "http://www.kuwo.cn/play_detail/" + StringUtils.encode(id);
+                    break;
+                case 7:
+                    ref = "http://www.kuwo.cn/mvplay/" + StringUtils.encode(id);
+                    break;
+                case 8:
+                    ref = "http://www.kuwo.cn/playlist_detail/" + StringUtils.encode(id);
+                    break;
+                case 2:
+                    ref = "http://www.kuwo.cn/rankList" + StringUtils.encode(id);
+                    break;
+            }
             String url = hotOnly ? GET_HOT_COMMENTS_KW_API : GET_NEW_COMMENTS_KW_API;
             // 最新评论
-            String commentInfoBody = HttpRequest.get(String.format(url, typeStr[2], id, page, limit))
+            String commentInfoBody = kwRequest(String.format(url, typeStr[2], id, page, limit))
+                    .header(Header.REFERER, ref)
                     .execute()
                     .body();
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
@@ -6587,7 +6677,7 @@ public class MusicServerUtils {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(RECOMMEND_PLAYLIST_KW_API).execute();
+            HttpResponse resp = kwRequest(RECOMMEND_PLAYLIST_KW_API).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -6756,7 +6846,7 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-            JSONObject data = playlistInfoJson.getJSONArray("data").getJSONObject(5);
+            JSONObject data = playlistInfoJson.getJSONArray("data").getJSONObject(4);
             t = data.getInt("module_nums");
             JSONArray playlistArray = data.getJSONArray("result");
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -7932,7 +8022,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[4])) {
-                HttpResponse resp = HttpRequest.get(String.format(ARTIST_LIST_KW_API, s[4], page, limit)).execute();
+                HttpResponse resp = kwRequest(String.format(ARTIST_LIST_KW_API, s[4], page, limit)).execute();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
                     JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
@@ -7981,7 +8071,10 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[5])) {
-                HttpResponse resp = HttpRequest.get(String.format(ALL_ARTISTS_LIST_KW_API, s[5], page, limit)).execute();
+                String[] sp = s[5].split(" ", -1);
+                HttpResponse resp = kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
+                        .header(Header.REFERER, StringUtils.isNotEmpty(sp[1]) ? "http://www.kuwo.cn/singers" : "")
+                        .execute();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
                     JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
@@ -8100,13 +8193,11 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[6])) {
-                // 分割时保留空串
-                String[] sp = s[6].split(" ", -1);
                 HttpResponse resp = HttpRequest.get(buildQianUrl(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis())))
                         .execute();
                 String artistInfoBody = resp.body();
                 JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
-                JSONObject data = artistInfoJson.getJSONArray("data").getJSONObject(7);
+                JSONObject data = artistInfoJson.getJSONArray("data").getJSONObject(6);
                 t = data.getInt("module_nums");
                 JSONArray artistArray = data.getJSONArray("result");
                 for (int i = (page - 1) * limit, len = Math.min(artistArray.size(), page * limit); i < len; i++) {
@@ -9879,7 +9970,7 @@ public class MusicServerUtils {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(UP_MUSIC_KW_API, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(UP_MUSIC_KW_API, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String musicInfoBody = resp.body();
                 JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
@@ -9915,7 +10006,7 @@ public class MusicServerUtils {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(HOT_MUSIC_KW_API, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(HOT_MUSIC_KW_API, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String musicInfoBody = resp.body();
                 JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
@@ -10179,7 +10270,7 @@ public class MusicServerUtils {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(NEW_SONG_KW_API, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(NEW_SONG_KW_API, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String musicInfoBody = resp.body();
                 JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
@@ -10251,7 +10342,7 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
-            JSONObject data = musicInfoJson.getJSONArray("data").getJSONObject(3);
+            JSONObject data = musicInfoJson.getJSONArray("data").getJSONObject(2);
             t = data.getInt("module_nums");
             JSONArray songsArray = data.getJSONArray("result");
             for (int i = (page - 1) * limit, len = Math.min(songsArray.size(), page * limit); i < len; i++) {
@@ -10669,6 +10760,44 @@ public class MusicServerUtils {
         };
 
         // 千千
+        // 首页新专辑
+        Callable<CommonResult<NetAlbumInfo>> getIndexNewAlbumsQi = () -> {
+            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String albumInfoBody = HttpRequest.get(buildQianUrl(String.format(INDEX_NEW_ALBUM_QI_API, System.currentTimeMillis())))
+                    .execute()
+                    .body();
+            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject data = albumInfoJson.getJSONArray("data").getJSONObject(3);
+            JSONArray albumArray = data.getJSONArray("result");
+            t = albumArray.size();
+            for (int i = 0, len = albumArray.size(); i < len; i++) {
+                JSONObject albumJson = albumArray.getJSONObject(i);
+
+                String albumId = albumJson.getString("albumAssetCode");
+                String albumName = albumJson.getString("title");
+                String artist = parseArtists(albumJson, NetMusicSource.QI);
+                String coverImgThumbUrl = albumJson.getString("pic");
+                String publishTime = albumJson.getString("releaseDate").split("T")[0];
+                Integer songNum = albumJson.getJSONArray("trackList").size();
+
+                NetAlbumInfo albumInfo = new NetAlbumInfo();
+                albumInfo.setSource(NetMusicSource.QI);
+                albumInfo.setId(albumId);
+                albumInfo.setName(albumName);
+                albumInfo.setArtist(artist);
+                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                albumInfo.setPublishTime(publishTime);
+                albumInfo.setSongNum(songNum);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    albumInfo.setCoverImgThumb(coverImgThumb);
+                });
+                res.add(albumInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
         // 秀动发行
         Callable<CommonResult<NetAlbumInfo>> getXDAlbumsQi = () -> {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
@@ -10848,6 +10977,7 @@ public class MusicServerUtils {
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsMg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsRankingMg));
 
+            taskList.add(GlobalExecutors.requestExecutor.submit(getIndexNewAlbumsQi));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQi));
             taskList.add(GlobalExecutors.requestExecutor.submit(getXDAlbumsQi));
 
@@ -11744,7 +11874,7 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, id))
+            String playlistInfoBody = kwRequest(String.format(PLAYLIST_DETAIL_KW_API, id, 1, 1))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -11961,7 +12091,7 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_KW_API, albumInfo.getId(), 1, 1))
+            String albumInfoBody = kwRequest(String.format(ALBUM_DETAIL_KW_API, albumInfo.getId(), 1, 1))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
@@ -12937,13 +13067,14 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, playlistId))
+            String playlistInfoBody = kwRequest(String.format(PLAYLIST_DETAIL_KW_API, playlistId, page, limit))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-            JSONArray songArray = playlistInfoJson.getJSONObject("data").getJSONArray("musicList");
-            total.set(songArray.size());
-            for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
+            JSONObject data = playlistInfoJson.getJSONObject("data");
+            JSONArray songArray = data.getJSONArray("musicList");
+            total.set(data.getInt("total"));
+            for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("rid");
@@ -13166,7 +13297,7 @@ public class MusicServerUtils {
 
         // 酷我 (接口分页)
         else if (source == NetMusicSource.KW) {
-            String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_KW_API, albumId, page, limit))
+            String albumInfoBody = kwRequest(String.format(ALBUM_DETAIL_KW_API, albumId, page, limit))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
@@ -13379,7 +13510,8 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_SONGS_KW_API, artistId, page, limit))
+            String artistInfoBody = kwRequest(String.format(ARTIST_SONGS_KW_API, artistId, page, limit))
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtils.encode(artistId))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
@@ -13594,7 +13726,9 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            HttpResponse resp = HttpRequest.get(String.format(ARTIST_ALBUMS_KW_API, artistId, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(ARTIST_ALBUMS_KW_API, artistId, page, limit))
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtils.encode(artistId) + "/album")
+                    .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String albumInfoBody = resp.body();
                 JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
@@ -13860,7 +13994,9 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            HttpResponse resp = HttpRequest.get(String.format(ARTIST_MVS_KW_API, artistId, page, limit)).execute();
+            HttpResponse resp = kwRequest(String.format(ARTIST_MVS_KW_API, artistId, page, limit))
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtils.encode(artistId) + "/mv")
+                    .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();
                 JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
@@ -14158,7 +14294,7 @@ public class MusicServerUtils {
 
         // 酷我(接口分页)
         else if (source == NetMusicSource.KW) {
-            String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_KW_API, rankingId, page, limit))
+            String rankingInfoBody = kwRequest(String.format(RANKING_DETAIL_KW_API, rankingId, page, limit))
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
@@ -17155,7 +17291,7 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
+            String playUrlBody = kwRequest(String.format(GET_SONG_URL_KW_API, songId))
                     .execute()
                     .body();
             JSONObject urlJson = JSONObject.fromObject(playUrlBody);
@@ -17286,7 +17422,7 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String mvBody = HttpRequest.get(String.format(MV_URL_KW_API, mvId))
+            String mvBody = kwRequest(String.format(MV_URL_KW_API, mvId))
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(mvBody).optJSONObject("data");
@@ -17385,7 +17521,7 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String lrcBody = HttpRequest.get(String.format(LYRIC_KW_API, id))
+            String lrcBody = kwRequest(String.format(LYRIC_KW_API, id))
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(lrcBody).getJSONObject("data");

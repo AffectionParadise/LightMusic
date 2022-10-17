@@ -156,7 +156,7 @@ public class PlayerFrame extends JFrame {
     // 没有可加载的图片提示
     private final String NO_IMG_MSG = "没有可加载的图片";
     // 无版权提示
-    private final String NO_PRIVILEGE_MSG = "阿偶，没有版权，无法获取";
+    private final String NO_PRIVILEGE_MSG = "获取资源失败";
     // 无网络提示
     private final String NO_NET_MSG = "无法连接到服务器";
     // 链接超时提示
@@ -18642,7 +18642,7 @@ public class PlayerFrame extends JFrame {
         changePaneButton.setFont(globalFont);
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         changePaneButton.setIconTextGap(10);
-        changePaneButton.setPreferredSize(new Dimension(240, 60));
+        changePaneButton.setPreferredSize(new Dimension(280, 60));
         changePaneButton.setFocusable(false);
         changePaneButton.setText(NO_LRC_MSG);
         changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton, changePaneButtonUI, THIS));
@@ -19047,7 +19047,7 @@ public class PlayerFrame extends JFrame {
         fl = new FlowLayout();
         fl.setHgap(12);
         changePanePanel.setLayout(fl);
-        changePanePanel.setBorder(BorderFactory.createEmptyBorder(0, 54, 0, 0));
+        changePanePanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         changePanePanel.add(changePaneButton);
         changePanePanel.add(mvButton);
         changePanePanel.add(collectButton);
@@ -19129,7 +19129,7 @@ public class PlayerFrame extends JFrame {
         if (!lrcTimer.isRunning()) lrcTimer.start();
 
         // 设置切换面板文字
-        final int maxLen = 28;
+        final int maxLen = 38;
         if (netMusicInfo != null)
             changePaneButton.setText(StringUtils.textToHtml(StringUtils.shorten(netMusicInfo.toSimpleString(), maxLen)));
         else
