@@ -76,18 +76,22 @@ public class Task {
         downloadList.repaint();
     }
 
+    private Map<String, Object> getHeaders() {
+        Map<String, Object> headers = null;
+        if (isMv() && netMvInfo.getSource() == NetMusicSource.BI) {
+            headers = new HashMap<>();
+            headers.put("referer", "https://www.bilibili.com/");
+        }
+        return headers;
+    }
+
     public void start() {
         percent = 0;
         future = GlobalExecutors.downloadExecutor.submit(() -> {
             try {
                 dirCheck();
                 prepareInfo();
-                Map<String, Object> headers = null;
-                if (isMv() && netMvInfo.getSource() == NetMusicSource.BI) {
-                    headers = new HashMap<>();
-                    headers.put("referer", "https://www.bilibili.com/");
-                }
-                MusicServerUtils.download(this, headers);
+                MusicServerUtils.download(this, getHeaders());
                 if (isInterrupted()) return;
                 if (invokeLater != null) invokeLater.run();
                 setStatus(TaskStatus.FINISHED);

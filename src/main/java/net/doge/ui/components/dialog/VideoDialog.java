@@ -1,13 +1,11 @@
 package net.doge.ui.components.dialog;
 
 import cn.hutool.core.thread.ThreadUtil;
+import com.sun.media.jfxmedia.locator.Locator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.MediaException;
-import net.doge.constants.Colors;
-import net.doge.constants.Fonts;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.SimplePath;
+import net.doge.constants.*;
 import net.doge.models.*;
 import net.doge.ui.components.CustomPopupMenu;
 import net.doge.ui.components.CustomRadioButtonMenuItem;
@@ -36,6 +34,8 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
@@ -291,12 +291,27 @@ public class VideoDialog extends JDialog {
         setVisible(true);
     }
 
+    private void initRequestHeaders() {
+        // b 站视频需要设置请求头
+        if (isLocal || netMvInfo.getSource() != NetMusicSource.BI) return;
+        try {
+            // 由于 Media 类不能重写，只能通过反射机制设置请求头
+            Field field = Media.class.getDeclaredField("jfxLocator");
+            field.setAccessible(true);
+            Locator locator = (Locator) field.get(media);
+            locator.setConnectionProperty("referer", "http://www.bilibili.com/");
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // 初始化视频界面
     void initView() {
         if (isLocal) {
             File mediaFile = new File(uri);
             media = new Media(mediaFile.toURI().toString());
         } else media = new Media(uri);
+        initRequestHeaders();
         mp = new MediaPlayer(media);
         mediaView = new MediaView(mp);
         // 视频宽高控制

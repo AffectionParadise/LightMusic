@@ -4739,7 +4739,7 @@ public class MusicServerUtils {
                 String coverImgUrl = "https:" + mvJson.getString("pic");
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setFormat(Format.FLV);
+//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setBvid(bvId);
                 mvInfo.setName(mvName);
@@ -11537,7 +11537,7 @@ public class MusicServerUtils {
                 String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setFormat(Format.FLV);
+//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setId(id);
                 mvInfo.setBvid(bvId);
@@ -11584,7 +11584,7 @@ public class MusicServerUtils {
                     String pubTime = mvJson.getString("create").split(" ")[0];
 
                     NetMvInfo mvInfo = new NetMvInfo();
-                    mvInfo.setFormat(Format.FLV);
+//                    mvInfo.setFormat(Format.FLV);
                     mvInfo.setSource(NetMusicSource.BI);
 //                    mvInfo.setId(id);
                     mvInfo.setBvid(bvId);
@@ -11633,7 +11633,7 @@ public class MusicServerUtils {
                     String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
 
                     NetMvInfo mvInfo = new NetMvInfo();
-                    mvInfo.setFormat(Format.FLV);
+//                    mvInfo.setFormat(Format.FLV);
                     mvInfo.setSource(NetMusicSource.BI);
                     mvInfo.setId(id);
                     mvInfo.setBvid(bvId);
@@ -15487,7 +15487,7 @@ public class MusicServerUtils {
                 String pubTime = TimeUtils.msToDate(mvJson.getLong("created") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setFormat(Format.FLV);
+//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setBvid(bvId);
                 mvInfo.setName(mvName);
@@ -15908,7 +15908,7 @@ public class MusicServerUtils {
                 String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setFormat(Format.FLV);
+//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setId(mvId);
                 mvInfo.setBvid(bvId);
@@ -15965,7 +15965,7 @@ public class MusicServerUtils {
                     String pubTime = netMvInfo.getPubTime();
 
                     NetMvInfo mvInfo = new NetMvInfo();
-                    mvInfo.setFormat(Format.FLV);
+//                    mvInfo.setFormat(Format.FLV);
                     mvInfo.setSource(NetMusicSource.BI);
                     mvInfo.setId(mvId);
                     mvInfo.setBvid(bvid);
@@ -17470,7 +17470,10 @@ public class MusicServerUtils {
                     .body();
             JSONObject data = JSONObject.fromObject(mvBody).getJSONObject("data");
             JSONArray urls = data.getJSONArray("durl");
-            return urls.getJSONObject(0).getString("url");
+            String url = urls.getJSONObject(0).getString("url");
+            // 根据 url 判断视频的格式
+            netMvInfo.setFormat(url.contains(".mp4?") ? Format.MP4 : Format.FLV);
+            return url;
         }
 
         return null;
