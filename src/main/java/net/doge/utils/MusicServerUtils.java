@@ -2841,7 +2841,7 @@ public class MusicServerUtils {
                             String songId = songJson.getString("rid");
                             String songName = StringUtils.removeHTMLLabel(songJson.getString("name"));
                             String artist = StringUtils.removeHTMLLabel(songJson.getString("artist"));
-                            String albumName = songJson.getString("album");
+                            String albumName = StringUtils.removeHTMLLabel(songJson.getString("album"));
                             Double duration = songJson.getDouble("duration");
                             String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
 
