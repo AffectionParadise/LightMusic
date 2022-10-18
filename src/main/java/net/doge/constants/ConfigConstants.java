@@ -44,6 +44,10 @@ public class ConfigConstants {
     // 桌面歌词坐标
     public final static String DESKTOP_LYRIC_X = "desktopLyricX";
     public final static String DESKTOP_LYRIC_Y = "desktopLyricY";
+    // 是否桌面歌词置顶
+    public final static String DESKTOP_LYRIC_ON_TOP = "desktopLyricOnTop";
+    // 桌面歌词透明度
+    public final static String DESKTOP_LYRIC_ALPHA = "desktopLyricAlpha";
     // 快进/快退时间
     public final static String FOB_TIME = "fobTime";
     // 视频快进/快退时间

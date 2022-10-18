@@ -33,7 +33,7 @@ public class DesktopLyricDialog extends JDialog {
     private PlayerFrame f;
     private UIStyle style;
     private Color foreColor;
-    private JLabel lyricLabel = new JLabel("", JLabel.CENTER);
+    public LyricLabel lyricLabel = new LyricLabel("", JLabel.CENTER);
     private JLabel tempLabel = new JLabel("", JLabel.CENTER);
     private MainPanel mainPanel = new MainPanel();
     private JPanel buttonPanel = new JPanel();
@@ -41,12 +41,26 @@ public class DesktopLyricDialog extends JDialog {
     private String LOCK_TIP = "锁定桌面歌词";
     private String UNLOCK_TIP = "解锁桌面歌词";
     private String RESTORE_TIP = "还原桌面歌词位置";
+    private String ASCEND_TRANS_TIP = "增加透明度";
+    private String DESCEND_TRANS_TIP = "减少透明度";
+    private String ON_TOP_TIP = "置顶桌面歌词";
+    private String CANCEL_ON_TOP_TIP = "取消置顶桌面歌词";
+    private String CLOSE_TIP = "关闭桌面歌词";
     private ImageIcon lockIcon = new ImageIcon(SimplePath.ICON_PATH + "lock.png");
     private ImageIcon unlockIcon = new ImageIcon(SimplePath.ICON_PATH + "unlock.png");
     private ImageIcon restoreIcon = new ImageIcon(SimplePath.ICON_PATH + "restoreLocation.png");
+    private ImageIcon descendTransIcon = new ImageIcon(SimplePath.ICON_PATH + "descendTrans.png");
+    private ImageIcon ascendTransIcon = new ImageIcon(SimplePath.ICON_PATH + "ascendTrans.png");
+    private ImageIcon onTopIcon = new ImageIcon(SimplePath.ICON_PATH + "onTop.png");
+    private ImageIcon cancelOnTopIcon = new ImageIcon(SimplePath.ICON_PATH + "cancelOnTop.png");
+    private ImageIcon closeIcon = new ImageIcon(SimplePath.ICON_PATH + "closeMedium.png");
 
     private CustomButton lock = new CustomButton();
     private CustomButton restore = new CustomButton();
+    private CustomButton descendTrans = new CustomButton();
+    private CustomButton ascendTrans = new CustomButton();
+    private CustomButton onTop = new CustomButton();
+    private CustomButton close = new CustomButton();
 
     private int dx;
     private int dy;
@@ -124,8 +138,16 @@ public class DesktopLyricDialog extends JDialog {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(lock);
         buttonPanel.add(restore);
+        buttonPanel.add(descendTrans);
+        buttonPanel.add(ascendTrans);
+        buttonPanel.add(onTop);
+        buttonPanel.add(close);
 
         restore.setVisible(false);
+        descendTrans.setVisible(false);
+        ascendTrans.setVisible(false);
+        onTop.setVisible(false);
+        close.setVisible(false);
 
         mainPanel.setOpaque(false);
         mainPanel.setLayout(new BorderLayout());
@@ -136,9 +158,6 @@ public class DesktopLyricDialog extends JDialog {
         add(mainPanel, BorderLayout.CENTER);
 
         initResponse();
-
-        // 桌面歌词总在最顶层
-        setAlwaysOnTop(true);
     }
 
     // 更新锁定
@@ -146,6 +165,12 @@ public class DesktopLyricDialog extends JDialog {
         boolean locked = f.desktopLyricLocked;
         lock.setIcon(locked ? lockIcon : unlockIcon);
         lock.setToolTipText(locked ? LOCK_TIP : UNLOCK_TIP);
+    }
+
+    // 更新置顶
+    public void updateOnTop() {
+        onTop.setIcon(f.desktopLyricOnTop ? cancelOnTopIcon : onTopIcon);
+        onTop.setToolTipText(f.desktopLyricOnTop ? CANCEL_ON_TOP_TIP : ON_TOP_TIP);
     }
 
     // 更新样式
@@ -156,8 +181,16 @@ public class DesktopLyricDialog extends JDialog {
         unlockIcon = ImageUtils.dye(unlockIcon, bc);
         lockIcon = ImageUtils.dye(lockIcon, bc);
         restoreIcon = ImageUtils.dye(restoreIcon, bc);
+        descendTransIcon = ImageUtils.dye(descendTransIcon, bc);
+        ascendTransIcon = ImageUtils.dye(ascendTransIcon, bc);
+        onTopIcon = ImageUtils.dye(onTopIcon, bc);
+        cancelOnTopIcon = ImageUtils.dye(cancelOnTopIcon, bc);
+        closeIcon = ImageUtils.dye(closeIcon, bc);
 
         restore.setIcon(restoreIcon);
+        descendTrans.setIcon(descendTransIcon);
+        ascendTrans.setIcon(ascendTransIcon);
+        close.setIcon(closeIcon);
     }
 
     // 设置穿透
@@ -168,8 +201,14 @@ public class DesktopLyricDialog extends JDialog {
 
     void showUI() {
         updateLock();
-        mainPanel.setDrawBg(!f.desktopLyricLocked);
-        restore.setVisible(!f.desktopLyricLocked);
+        updateOnTop();
+        boolean unlocked = !f.desktopLyricLocked;
+        mainPanel.setDrawBg(unlocked);
+        restore.setVisible(unlocked);
+        descendTrans.setVisible(unlocked);
+        ascendTrans.setVisible(unlocked);
+        onTop.setVisible(unlocked);
+        close.setVisible(unlocked);
         // 设置为不穿透，防止鼠标退出事件监听过早
         setTouchOver(false);
     }
@@ -177,6 +216,10 @@ public class DesktopLyricDialog extends JDialog {
     void hideUI() {
         lock.setIcon(null);
         restore.setVisible(false);
+        descendTrans.setVisible(false);
+        ascendTrans.setVisible(false);
+        onTop.setVisible(false);
+        close.setVisible(false);
         mainPanel.setDrawBg(false);
         setTouchOver(true);
     }
@@ -243,8 +286,85 @@ public class DesktopLyricDialog extends JDialog {
             setLocation(dx, dy);
             hideUI();
         });
+        descendTrans.setBorder(null);
+        descendTrans.setFocusable(false);
+        descendTrans.setOpaque(false);
+        descendTrans.setContentAreaFilled(false);
+        descendTrans.setToolTipText(DESCEND_TRANS_TIP);
+        descendTrans.addMouseListener(new ButtonMouseListener(descendTrans, f));
+        descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth(), descendTransIcon.getIconHeight()));
+        descendTrans.addActionListener(e -> {
+            lyricLabel.decreaseAlpha();
+        });
+        ascendTrans.setBorder(null);
+        ascendTrans.setFocusable(false);
+        ascendTrans.setOpaque(false);
+        ascendTrans.setContentAreaFilled(false);
+        ascendTrans.setToolTipText(ASCEND_TRANS_TIP);
+        ascendTrans.addMouseListener(new ButtonMouseListener(ascendTrans, f));
+        ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth(), ascendTransIcon.getIconHeight()));
+        ascendTrans.addActionListener(e -> {
+            lyricLabel.increaseAlpha();
+        });
+        onTop.setBorder(null);
+        onTop.setFocusable(false);
+        onTop.setOpaque(false);
+        onTop.setContentAreaFilled(false);
+        onTop.addMouseListener(new ButtonMouseListener(onTop, f));
+        onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth(), onTopIcon.getIconHeight()));
+        onTop.addActionListener(e -> {
+            setAlwaysOnTop(f.desktopLyricOnTop = !f.desktopLyricOnTop);
+            updateOnTop();
+        });
+        close.setBorder(null);
+        close.setFocusable(false);
+        close.setOpaque(false);
+        close.setContentAreaFilled(false);
+        close.setToolTipText(CLOSE_TIP);
+        close.addMouseListener(new ButtonMouseListener(close, f));
+        close.setPreferredSize(new Dimension(closeIcon.getIconWidth(), closeIcon.getIconHeight()));
+        close.addActionListener(e -> {
+            f.desktopLyricButton.doClick();
+        });
 
         updateStyle();
+    }
+
+    public void setAlpha(float alpha) {
+        lyricLabel.setAlpha(alpha);
+    }
+
+    private class LyricLabel extends JLabel {
+        private float alpha = 1;
+        private final float min = 0.2f;
+        private final float max = 1f;
+        private final float step = 0.1f;
+
+        public LyricLabel(String text, int align) {
+            super(text, align);
+        }
+
+        public void decreaseAlpha() {
+            setAlpha(alpha - step);
+        }
+
+        public void increaseAlpha() {
+            setAlpha(alpha + step);
+        }
+
+        public void setAlpha(float alpha) {
+            if (alpha < min) alpha = min;
+            else if (alpha > max) alpha = max;
+            f.desktopLyricAlpha = this.alpha = alpha;
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+            super.paintComponent(g);
+        }
     }
 
     private class MainPanel extends JPanel {

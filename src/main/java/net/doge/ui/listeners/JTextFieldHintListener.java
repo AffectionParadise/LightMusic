@@ -21,9 +21,7 @@ public class JTextFieldHintListener implements FocusListener {
     private Color placeholderColor;
     private Color inputColor;
 
-    public JTextFieldHintListener(JTextField jTextField,
-                                  String hintText,
-                                  Color inputColor) {
+    public JTextFieldHintListener(JTextField jTextField, String hintText, Color inputColor) {
         this.textField = jTextField;
         this.hintText = hintText;
         this.inputColor = inputColor;

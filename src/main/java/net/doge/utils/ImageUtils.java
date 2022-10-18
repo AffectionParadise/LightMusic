@@ -5,6 +5,7 @@ import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
+import com.jhlabs.image.GlowFilter;
 import com.jhlabs.image.ShadowFilter;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.NumberAxis;

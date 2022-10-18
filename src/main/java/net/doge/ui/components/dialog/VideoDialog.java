@@ -392,7 +392,7 @@ public class VideoDialog extends JDialog {
             Future<?> future = GlobalExecutors.requestExecutor.submit(() -> {
                 dispose();
                 // 恢复桌面歌词置顶
-                f.getDesktopLyricDialog().setAlwaysOnTop(true);
+                f.getDesktopLyricDialog().setAlwaysOnTop(f.desktopLyricOnTop);
                 mp.dispose();
             });
             try {

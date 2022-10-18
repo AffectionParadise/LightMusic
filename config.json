@@ -64,8 +64,8 @@
 	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/",
 	"videoRate":1,
 	"playlistHistorySearch":[
-		"无穷小亮",
 		"治愈轻音：繁星",
+		"无穷小亮",
 		"森系轻音：",
 		"咱们裸熊",
 		"星露谷物语",
@@ -624,6 +624,7 @@
 	"lyricType":0,
 	"chineseType":0,
 	"history":[
+		"D:\\音乐\\嫁妆 - 安与骑兵.mp3",
 		"D:\\音乐\\Hyper - KLYDIX.mp3",
 		"D:\\音乐\\Sky High - KLYDIX.mp3",
 		"D:\\音乐\\Horizon - 亚述.mp3",
@@ -1538,8 +1539,7 @@
 		"D:\\音乐\\Walhalla - Gouryella.mp3",
 		"D:\\音乐\\人间惊鸿客 - 叶里.mp3",
 		"D:\\音乐\\折枝花满衣 - 泽典.mp3",
-		"D:\\音乐\\汉服 - 七音盒.mp3",
-		"D:\\音乐\\红豆 - 王菲.mp3"
+		"D:\\音乐\\汉服 - 七音盒.mp3"
 	],
 	"collection":[
 		{
@@ -2205,7 +2205,7 @@
 		}
 	],
 	"maxCacheSize":1024,
-	"desktopLyricLocked":true,
+	"desktopLyricLocked":false,
 	"desktopLyricX":-1,
 	"desktopLyricY":-1,
 	"catalogs":[
@@ -2249,7 +2249,8 @@
 	"miniX":981,
 	"autoDownloadLyric":true,
 	"miniY":396,
-	"musicPlaying":6,
+	"musicPlaying":-1,
+	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
 	"musicList":[
@@ -2826,6 +2827,7 @@
 	],
 	"showDesktopLyric":true,
 	"historySearch":[
+		"暖暖dj",
 		"rubia",
 		"孤勇者",
 		"粉墙花影自重重  帘卷残荷水殿风  抱琴弹向月明中  香袅金猊动  人在蓬莱第几宫",
@@ -2836,6 +2838,7 @@
 		"删了吧"
 	],
 	"closeWindowOption":0,
+	"desktopLyricOnTop":false,
 	"userCollection":[
 		{
 			"radioCount":-1,

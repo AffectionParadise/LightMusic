@@ -352,8 +352,7 @@ public class MusicServerUtils {
     private static final String GET_RANKING_KW_API_2
             = "http://qukudata.kuwo.cn/q.k?op=query&cont=tree&node=2&pn=0&rn=1000&fmt=json&level=2";
     // 获取推荐榜单 API (酷我)
-    private static final String GET_REC_RANKING_KW_API
-            = "http://www.kuwo.cn/api/www/bang/index/bangList?&httpsStatus=1";
+//    private static final String GET_REC_RANKING_KW_API = "http://www.kuwo.cn/api/www/bang/index/bangList?&httpsStatus=1";
     // 获取榜单 API (咪咕)
     private static final String GET_RANKING_MG_API
             = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list";
@@ -571,7 +570,7 @@ public class MusicServerUtils {
     private static final String RECOMMEND_PLAYLIST_KW_API = "https://kuwo.cn/api/www/rcm/index/playlist?loginUid=0&httpsStatus=1";
     // 推荐歌单(最新) API (酷我)
     private static final String NEW_PLAYLIST_KW_API
-            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?loginUid=0&loginSid=0&appUid=76039576&&pn=%s&rn=%s&order=new";
+            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?loginUid=0&loginSid=0&appUid=76039576&pn=%s&rn=%s&order=new";
     // 最新歌单 API (咪咕)
     private static final String NEW_PLAYLIST_MG_API
             = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127272&startIndex=%s";
@@ -2840,7 +2839,7 @@ public class MusicServerUtils {
                             JSONObject songJson = songsArray.getJSONObject(i);
 
                             String songId = songJson.getString("rid");
-                            String songName = songJson.getString("name");
+                            String songName = StringUtils.removeHTMLLabel(songJson.getString("name"));
                             String artist = StringUtils.removeHTMLLabel(songJson.getString("artist"));
                             String albumName = songJson.getString("album");
                             Double duration = songJson.getDouble("duration");
@@ -5017,43 +5016,43 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
         // 推荐榜单
-        Callable<CommonResult<NetRankingInfo>> getRecRankingsKw = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
-            Integer t = 0;
-
-            HttpResponse resp = kwRequest(String.format(GET_REC_RANKING_KW_API))
-                    .header(Header.REFERER, "http://www.kuwo.cn/rankList")
-                    .execute();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
-                String rankingInfoBody = resp.body();
-                JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
-                JSONArray data = rankingInfoJson.getJSONArray("data");
-                for (int i = 0, len = data.size(); i < len; i++) {
-                    JSONObject rankingJson = data.getJSONObject(i);
-
-                    String rankingId = rankingJson.getString("id");
-                    String rankingName = rankingJson.getString("name");
-                    String coverImgUrl = rankingJson.getString("pic");
-                    String updateTime = rankingJson.getString("pub");
-                    String desc = "";
-
-                    NetRankingInfo rankingInfo = new NetRankingInfo();
-                    rankingInfo.setSource(NetMusicSource.KW);
-                    rankingInfo.setId(rankingId);
-                    rankingInfo.setName(rankingName);
-                    rankingInfo.setCoverImgUrl(coverImgUrl);
-                    rankingInfo.setUpdateTime(updateTime);
-                    rankingInfo.setDescription(desc);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
-                        rankingInfo.setCoverImgThumb(coverImgThumb);
-                    });
-
-                    res.add(rankingInfo);
-                }
-            }
-            return new CommonResult<>(res, t);
-        };
+//        Callable<CommonResult<NetRankingInfo>> getRecRankingsKw = () -> {
+//            LinkedList<NetRankingInfo> res = new LinkedList<>();
+//            Integer t = 0;
+//
+//            HttpResponse resp = kwRequest(String.format(GET_REC_RANKING_KW_API))
+//                    .header(Header.REFERER, "http://www.kuwo.cn/rankList")
+//                    .execute();
+//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//                String rankingInfoBody = resp.body();
+//                JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+//                JSONArray data = rankingInfoJson.getJSONArray("data");
+//                for (int i = 0, len = data.size(); i < len; i++) {
+//                    JSONObject rankingJson = data.getJSONObject(i);
+//
+//                    String rankingId = rankingJson.getString("id");
+//                    String rankingName = rankingJson.getString("name");
+//                    String coverImgUrl = rankingJson.getString("pic");
+//                    String updateTime = rankingJson.getString("pub");
+//                    String desc = "";
+//
+//                    NetRankingInfo rankingInfo = new NetRankingInfo();
+//                    rankingInfo.setSource(NetMusicSource.KW);
+//                    rankingInfo.setId(rankingId);
+//                    rankingInfo.setName(rankingName);
+//                    rankingInfo.setCoverImgUrl(coverImgUrl);
+//                    rankingInfo.setUpdateTime(updateTime);
+//                    rankingInfo.setDescription(desc);
+//                    GlobalExecutors.imageExecutor.execute(() -> {
+//                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+//                        rankingInfo.setCoverImgThumb(coverImgThumb);
+//                    });
+//
+//                    res.add(rankingInfo);
+//                }
+//            }
+//            return new CommonResult<>(res, t);
+//        };
 
         // 咪咕
         Callable<CommonResult<NetRankingInfo>> getRankingsMg = () -> {
@@ -5110,7 +5109,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq2));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw2));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecRankingsKw));
+//        taskList.add(GlobalExecutors.requestExecutor.submit(getRecRankingsKw));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsMg));
 
         List<List<NetRankingInfo>> rl = new LinkedList<>();

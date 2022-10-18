@@ -773,11 +773,15 @@ public class PlayerFrame extends JFrame {
     // 是否自动下载歌词
     public boolean isAutoDownloadLrc = true;
     // 是否显示桌面歌词
-    private boolean showDesktopLyric = true;
+    public boolean showDesktopLyric;
     // 是否锁定桌面歌词
     public boolean desktopLyricLocked;
     public int desktopLyricX;
     public int desktopLyricY;
+    // 桌面歌词是否置顶
+    public boolean desktopLyricOnTop;
+    // 桌面歌词透明度
+    public double desktopLyricAlpha;
     // 专辑图片宽/高
     private int albumImageWidth;
     // 封面图片宽/高
@@ -934,7 +938,7 @@ public class PlayerFrame extends JFrame {
     private CustomButton soundEffectButton = new CustomButton(soundEffectIcon);
     private CustomButton sheetButton = new CustomButton(sheetIcon);
     private CustomButton goToPlayQueueButton = new CustomButton(goToPlayQueueIcon);
-    private CustomButton desktopLyricButton = new CustomButton(desktopLyricOnIcon);
+    public CustomButton desktopLyricButton = new CustomButton(desktopLyricOnIcon);
     private CustomButton switchChineseButton = new CustomButton(simpChineseIcon);
     private CustomButton switchJapaneseButton = new CustomButton(kanaIcon);
     private CustomButton switchLrcTypeButton = new CustomButton(originalIcon);
@@ -2851,6 +2855,12 @@ public class PlayerFrame extends JFrame {
         desktopLyricX = config.optInt(ConfigConstants.DESKTOP_LYRIC_X, -1);
         desktopLyricY = config.optInt(ConfigConstants.DESKTOP_LYRIC_Y, -1);
         if (desktopLyricX >= 0) desktopLyricDialog.setLocation(desktopLyricX, desktopLyricY);
+        // 载入是否桌面歌词置顶
+        desktopLyricOnTop = config.optBoolean(ConfigConstants.DESKTOP_LYRIC_ON_TOP, true);
+        desktopLyricDialog.setAlwaysOnTop(desktopLyricOnTop);
+        // 载入桌面歌词透明度
+        desktopLyricAlpha = config.optDouble(ConfigConstants.DESKTOP_LYRIC_ALPHA, 1);
+        desktopLyricDialog.setAlpha((float) desktopLyricAlpha);
 //        stylePopupMenuItems.get(styleIndex).setSelected(true);
 //        updateRadioButtonMenuItemIcon(stylePopupMenu);
         // 载入播放模式
@@ -3676,6 +3686,10 @@ public class PlayerFrame extends JFrame {
         // 存入桌面歌词坐标
         config.put(ConfigConstants.DESKTOP_LYRIC_X, desktopLyricX);
         config.put(ConfigConstants.DESKTOP_LYRIC_Y, desktopLyricY);
+        // 存入是否桌面歌词置顶
+        config.put(ConfigConstants.DESKTOP_LYRIC_ON_TOP, desktopLyricOnTop);
+        // 存入桌面歌词透明度
+        config.put(ConfigConstants.DESKTOP_LYRIC_ALPHA, desktopLyricAlpha);
         // 存入快进/快退时间
         config.put(ConfigConstants.FOB_TIME, forwardOrBackwardTime);
         // 存入视频快进/快退时间
