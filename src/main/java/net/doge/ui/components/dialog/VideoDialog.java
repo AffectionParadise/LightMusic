@@ -1,26 +1,19 @@
 package net.doge.ui.components.dialog;
 
-import cn.hutool.core.thread.ThreadUtil;
 import com.sun.media.jfxmedia.locator.Locator;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.media.MediaException;
 import net.doge.constants.*;
 import net.doge.models.*;
 import net.doge.ui.components.CustomPopupMenu;
 import net.doge.ui.components.CustomRadioButtonMenuItem;
-import net.doge.ui.components.GlobalPanel;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.componentui.RadioButtonMenuItemUI;
 import net.doge.ui.componentui.SliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.*;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -35,13 +28,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.Collections;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @Author yzx

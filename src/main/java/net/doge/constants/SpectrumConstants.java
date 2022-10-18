@@ -27,8 +27,8 @@ public class SpectrumConstants {
     public static final double PLAYER_INTERVAL = 0.09;
     // UI 更新频谱 Timer 时间间隔(ms)
     public static final int TIMER_INTERVAL = 10;
-    // 频谱条数量
-    public static final int BAR_NUM = 60;
+    // 频谱条数量(由界面宽度决定)
+    public static int BAR_NUM = 60;
     // 频谱每条宽度
     public static final int BAR_WIDTH = 7;
     // 频谱最大高度

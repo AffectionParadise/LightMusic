@@ -2599,7 +2599,7 @@ public class PlayerFrame extends JFrame {
                 windowState = WindowState.NORMAL;
             }
             // 设置歌词面板大小
-            Dimension d = new Dimension((int) (getWidth() * 0.6), (int) (getHeight() * 0.6));
+            Dimension d = new Dimension((int) (getWidth() * 0.55), (int) (getHeight() * 0.6));
             lrcScrollPane.setPreferredSize(d);
 
             // 改变专辑图片大小并重新加载
@@ -18496,13 +18496,13 @@ public class PlayerFrame extends JFrame {
             }
         });
         // 歌词面板最佳大小(JList 需要加到 JScrollPane 中才能调整大小！)
-        Dimension d = new Dimension((int) (WINDOW_WIDTH * 0.6), 100);
-        Dimension d2 = new Dimension((int) (WINDOW_WIDTH * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
-//        lrcList.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        Dimension d = new Dimension((int) (WINDOW_WIDTH * 0.55), 100);
+        Dimension d2 = new Dimension((int) (WINDOW_WIDTH * 0.55), SpectrumConstants.BAR_MAX_HEIGHT);
+        Dimension d3 = new Dimension(Integer.MAX_VALUE, SpectrumConstants.BAR_MAX_HEIGHT);
         lrcScrollPane.setBorder(null);
         lrcScrollPane.setPreferredSize(d);
         spectrumPanel.setPreferredSize(d2);
-        spectrumPanel.setMaximumSize(d2);
+        spectrumPanel.setMaximumSize(d3);
 //        lrcScrollPane.setMinimumSize(dimension);
 //        lrcScrollPane.setMaximumSize(new Dimension((int)(WINDOW_WIDTH * 0.6), (int)(WINDOW_HEIGHT * 1)));
         lrcAndSpecBox.add(lrcScrollPane);
@@ -19390,11 +19390,24 @@ public class PlayerFrame extends JFrame {
                 double[] specs = player.getSpecs();
                 double[] specsOrigin = player.getSpecsOrigin();
                 double[] specsGap = player.getSpecsGap();
-//                int num = specsOrigin.length, gap = (int) (SpectrumConstants.NUM_BANDS * SpectrumConstants.VALID_RATIO) / num;
-                for (int i = 0, num = specsOrigin.length; i < num; i++) {
-                    specsOrigin[i] = SpectrumUtils.handleMagnitude(magnitudes[i]);
+                int barNum = SpectrumConstants.BAR_NUM, numBands = SpectrumConstants.NUM_BANDS;
+                double avg = 0;
+                for (int i = 0; i < numBands; i++) {
+                    int mult = (int) Math.floor(i / barNum);
+                    int n = mult % 2 == 0 ? (i - barNum * mult) : (barNum - (i - barNum * mult));
+                    int spectrum = n > 25 ? 0 : (int) SpectrumUtils.handleMagnitude(magnitudes[n + 20]);
+                    avg += spectrum * 1.2;
+                }
+                avg = avg / numBands * 1.4 / barNum + 0.42;
+                for (int i = 0; i < barNum; i++) {
+                    double h = SpectrumUtils.handleMagnitude(magnitudes[i]) * avg;
+                    specsOrigin[i] = h;
                     specsGap[i] = Math.abs(specsOrigin[i] - specs[i]);
                 }
+//                for (int i = 0, num = specsOrigin.length; i < num; i++) {
+//                    specsOrigin[i] = SpectrumUtils.handleMagnitude(magnitudes[i]);
+//                    specsGap[i] = Math.abs(specsOrigin[i] - specs[i]);
+//                }
             }
         });
         // 缓冲时间改变后刷新进度条

@@ -1,16 +1,10 @@
 package net.doge.utils;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
-import com.jhlabs.image.GlowFilter;
 import com.jhlabs.image.ShadowFilter;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.NumberAxis;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.models.HSV;
 
 import javax.swing.*;
 import java.awt.*;
