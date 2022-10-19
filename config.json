@@ -624,13 +624,13 @@
 	"lyricType":0,
 	"chineseType":0,
 	"history":[
+		"D:\\音乐\\Hope - KLYDIX.mp3",
 		"D:\\音乐\\嫁妆 - 安与骑兵.mp3",
 		"D:\\音乐\\Hyper - KLYDIX.mp3",
 		"D:\\音乐\\Sky High - KLYDIX.mp3",
 		"D:\\音乐\\Horizon - 亚述.mp3",
 		"D:\\音乐\\Night Flight - KLYDIX.mp3",
 		"D:\\音乐\\Dream Express - KLYDIX.mp3",
-		"D:\\音乐\\Hope - KLYDIX.mp3",
 		"D:\\音乐\\英雄联盟-音乐模式 - 一夕Clarence、球球特别大.mp3",
 		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\孤勇者 - 小洛蜗牛.mp3",
 		"D:\\音乐\\不认输 - Britneylee小暖.mp3",
@@ -2205,7 +2205,7 @@
 		}
 	],
 	"maxCacheSize":1024,
-	"desktopLyricLocked":false,
+	"desktopLyricLocked":true,
 	"desktopLyricX":-1,
 	"desktopLyricY":-1,
 	"catalogs":[
@@ -2249,7 +2249,7 @@
 	"miniX":981,
 	"autoDownloadLyric":true,
 	"miniY":396,
-	"musicPlaying":-1,
+	"musicPlaying":2,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
@@ -2838,7 +2838,7 @@
 		"删了吧"
 	],
 	"closeWindowOption":0,
-	"desktopLyricOnTop":false,
+	"desktopLyricOnTop":true,
 	"userCollection":[
 		{
 			"radioCount":-1,

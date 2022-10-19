@@ -25,7 +25,8 @@ public class SpectrumPanel extends JFXPanel {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                SpectrumConstants.BAR_NUM = (getWidth() - space * 2 + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                int num = (getWidth() - space * 2 + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                SpectrumConstants.BAR_NUM = Math.min(num, SpectrumConstants.NUM_BANDS);
             }
         });
     }
@@ -126,7 +127,5 @@ public class SpectrumPanel extends JFXPanel {
             }
 
         }
-//        d++;
-//        graphics.drawImage(spectrumImg, imgX, 0, null);
     }
 }
