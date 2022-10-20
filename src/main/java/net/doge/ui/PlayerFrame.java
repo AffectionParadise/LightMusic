@@ -18610,6 +18610,9 @@ public class PlayerFrame extends JFrame {
         currTimeLabel.setFont(globalFont);
         durationLabel.setFont(globalFont);
 
+        currTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        durationLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         timeBar.setFocusable(false);
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
@@ -19090,8 +19093,6 @@ public class PlayerFrame extends JFrame {
 
     // 准备播放，初始化播放器和 UI
     void prepareToPlay(AudioFile file, NetMusicInfo netMusicInfo) throws IOException, UnsupportedAudioFileException, InterruptedException, EncoderException, InvalidDataException, UnsupportedTagException, URISyntaxException {
-        // 将播放中的音乐打断
-        if (player.isPlaying()) player.pause();
         player.load(file, netMusicInfo);
         clearLrc();
         loadLrc(file, netMusicInfo, false, currLrcType == LyricType.TRANSLATION);
@@ -19159,14 +19160,14 @@ public class PlayerFrame extends JFrame {
             collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getButtonColor()));
         else
             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
-        // 加载专辑图片
-        loadAlbumImage();
         // 设置歌曲名称
         songNameLabel.setText(StringUtils.textToHtml(SONG_NAME_LABEL + player.getMusicInfo().getName()));
         // 设置艺术家
         artistLabel.setText(StringUtils.textToHtml(ARTIST_LABEL + player.getMusicInfo().getArtist()));
         // 设置专辑名称
         albumLabel.setText(StringUtils.textToHtml(ALBUM_NAME_LABEL + player.getMusicInfo().getAlbumName()));
+        // 加载专辑图片
+        loadAlbumImage();
     }
 
     // 界面关闭文件
@@ -19393,7 +19394,7 @@ public class PlayerFrame extends JFrame {
                 final int barNum = SpectrumConstants.BAR_NUM, nFactor = barNum - 30, numBands = SpectrumConstants.NUM_BANDS, maxHeight = SpectrumConstants.BAR_MAX_HEIGHT;
                 double avg = 0;
                 for (int i = 0; i < numBands; i++) {
-                    int mult = (int) Math.floor(i / barNum);
+                    int mult = i / barNum;
                     int n = mult % 2 == 0 ? (i - barNum * mult) : (barNum - (i - barNum * mult));
                     int spectrum = n > nFactor ? 0 : (int) SpectrumUtils.handleMagnitude(magnitudes[n + 20]);
                     avg += spectrum * 1.2;
@@ -19595,7 +19596,7 @@ public class PlayerFrame extends JFrame {
         }
 
         // 将单首歌曲加到当前播放歌曲之后(若不在播放队列)
-        int in = currSong + 1;
+        int in = Math.min(currSong + 1, playQueueModel.size());
         playQueueModel.add(in, obj);
         new TipDialog(THIS, NEXT_PLAY_SUCCESS_MSG).showDialog();
     }

@@ -20,7 +20,7 @@ public class SpectrumConstants {
     public static final int WAVE = 5;
 
     // 播放器更新频谱数量
-    public static final int NUM_BANDS = 128;
+    public static final int NUM_BANDS = 256;
     // 有效频谱比例
 //    public static final double VALID_RATIO = 0.3;
     // 播放器更新频谱时间间隔(s)

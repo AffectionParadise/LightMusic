@@ -433,6 +433,8 @@ public class VideoDialog extends JDialog {
         durationLabel.setFont(globalFont);
         currTimeLabel.setForeground(style.getTimeBarColor());
         durationLabel.setForeground(style.getTimeBarColor());
+        currTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        durationLabel.setHorizontalAlignment(SwingConstants.CENTER);
         timeBar.setFocusable(false);
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);

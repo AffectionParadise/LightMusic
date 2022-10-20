@@ -228,20 +228,21 @@ public class MusicPlayer {
     }
 
     public void play() {
+        if (mp == null) return;
         mp.play();
         status = PlayerStatus.PLAYING;
     }
 
     // 暂停
     public void pause() {
+        if (mp == null) return;
         mp.pause();
         status = PlayerStatus.PAUSING;
     }
 
     // 继续播放
     public void continuePlay() {
-        mp.play();
-        status = PlayerStatus.PLAYING;
+        play();
     }
 
     // 重新播放

@@ -10778,7 +10778,9 @@ public class MusicServerUtils {
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
                 String coverImgThumbUrl = albumJson.getString("pic");
-                String publishTime = albumJson.getString("releaseDate").split("T")[0];
+                String releaseDate = albumJson.optString("releaseDate");
+                if (StringUtils.isEmpty(releaseDate)) releaseDate = albumJson.getString("pushTime");
+                String publishTime = releaseDate.split("T")[0];
                 Integer songNum = albumJson.getJSONArray("trackList").size();
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();

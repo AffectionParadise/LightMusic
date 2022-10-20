@@ -6,20 +6,20 @@ package net.doge.constants;
  * @Date 2020/12/7
  */
 public class Format {
-    // 音频文件格式
+    // 音视频文件格式
     public static final String AIF = "aif";
     public static final String AIFF = "aiff";
+    public static final String M3U8 = "m3u8";
     public static final String M4A = "m4a";
+    public static final String M4V = "m4v";
     public static final String MP3 = "mp3";
-    public static final String WAV = "wav";
-
-    public static final String FLAC = "flac";
-
-    public static final String[] AUDIO_TYPE_SUPPORTED = {AIF, AIFF, M4A, MP3, WAV};
-
-    // 视频文件格式
     public static final String MP4 = "mp4";
+    public static final String WAV = "wav";
+    // 不支持的格式
+    public static final String FLAC = "flac";
     public static final String FLV = "flv";
+
+    public static final String[] AUDIO_TYPE_SUPPORTED = {AIF, AIFF, M3U8, M4A, M4V, MP3, MP4, WAV};
 
     // 图片文件格式
     public static final String JPG = "jpg";
