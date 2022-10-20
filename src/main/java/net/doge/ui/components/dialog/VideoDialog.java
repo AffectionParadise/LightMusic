@@ -246,7 +246,7 @@ public class VideoDialog extends JDialog {
 
         setUndecorated(true);
         setResizable(false);
-        setSize(800, 600);
+        setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + 2 * pixels);
         globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();

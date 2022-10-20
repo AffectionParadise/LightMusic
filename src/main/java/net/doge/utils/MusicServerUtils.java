@@ -5989,7 +5989,7 @@ public class MusicServerUtils {
                     String content = sht.text();
                     String time = TimeUtils.strToPhrase(t.text().replaceAll("年|月", "-").replace("日", ""));
                     Integer likedCount = Integer.parseInt(d.text());
-                    String r = ReUtil.get("allstar(\\d+)", rating.size() > 1 ? rating.get(1).className() : "", 1);
+                    String r = ReUtil.get("allstar(\\d+)", rating.size() > 2 ? rating.get(2).className() : "", 1);
                     Integer score = StringUtils.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
