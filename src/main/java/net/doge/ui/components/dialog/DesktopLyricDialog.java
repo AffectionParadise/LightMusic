@@ -263,6 +263,12 @@ public class DesktopLyricDialog extends JDialog {
                 hideUI();
             }
         });
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                hideUI();
+            }
+        });
 
         lock.setBorder(null);
         lock.setFocusable(false);
