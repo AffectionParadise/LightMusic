@@ -24,8 +24,10 @@ import java.util.regex.Pattern;
  */
 public class TimeUtils {
     private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static DateFormat dateShortTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private static DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     private static DateFormat shortDateFormatter = new SimpleDateFormat("MM-dd");
+    private static DateFormat shortDateShortTimeFormatter = new SimpleDateFormat("MM-dd HH:mm");
 
 //    private final static int[] constellationDayArr = new int[]{20, 19, 21, 20, 21, 22, 23, 23, 23, 24, 23, 22};
 //    private final static String[] constellationArr = new String[]{"摩羯座", "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "摩羯座"};
@@ -51,8 +53,8 @@ public class TimeUtils {
         long days = unit.toDays(l);
         if (days < 7) return days + "天前";
         // 同一年份省掉年的显示
-        if (msToYear(ms) == msToYear(now)) return msToShortDate(ms);
-        return msToDate(ms);
+        if (msToYear(ms) == msToYear(now)) return msToShortDateShortTime(ms);
+        return msToDateShortTime(ms);
     }
 
     /**
@@ -81,7 +83,19 @@ public class TimeUtils {
      * @return
      */
     public static String msToDatetime(long ms) {
+        if (ms < 0) return null;
         return formatter.format(new Date(ms));
+    }
+
+    /**
+     * 转换毫秒为日期短时间
+     *
+     * @param ms 毫秒数
+     * @return
+     */
+    public static String msToDateShortTime(long ms) {
+        if (ms < 0) return null;
+        return dateShortTimeFormatter.format(new Date(ms));
     }
 
     /**
@@ -118,6 +132,17 @@ public class TimeUtils {
     public static String msToShortDate(long ms) {
         if (ms < 0) return null;
         return shortDateFormatter.format(new Date(ms));
+    }
+
+    /**
+     * 转换毫秒为短日期短时间
+     *
+     * @param ms 毫秒数
+     * @return
+     */
+    public static String msToShortDateShortTime(long ms) {
+        if (ms < 0) return null;
+        return shortDateShortTimeFormatter.format(new Date(ms));
     }
 
     /**
