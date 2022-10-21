@@ -15938,7 +15938,7 @@ public class MusicServerUtils {
      *
      * @return
      */
-    public static CommonResult<NetMvInfo> getVideoEpisodes(NetMvInfo netMvInfo) {
+    public static CommonResult<NetMvInfo> getVideoEpisodes(NetMvInfo netMvInfo, int page, int limit) {
         int source = netMvInfo.getSource();
         String bvid = netMvInfo.getBvid();
 
@@ -15954,7 +15954,7 @@ public class MusicServerUtils {
             JSONArray mvArray = JSONObject.fromObject(mvInfoBody).optJSONArray("data");
             if (mvArray != null) {
                 t = mvArray.size();
-                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                for (int i = (page - 1) * limit, len = Math.min(page * limit, mvArray.size()); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("cid");

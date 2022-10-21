@@ -7,6 +7,7 @@ package net.doge.ui.listeners;
  */
 
 import lombok.Data;
+import net.doge.ui.components.CustomTextField;
 import net.doge.utils.ColorUtils;
 
 import javax.swing.*;
@@ -17,36 +18,38 @@ import java.awt.event.FocusListener;
 @Data
 public class JTextFieldHintListener implements FocusListener {
     private String hintText;
-    private JTextField textField;
+    private CustomTextField tf;
     private Color placeholderColor;
     private Color inputColor;
 
-    public JTextFieldHintListener(JTextField jTextField, String hintText, Color inputColor) {
-        this.textField = jTextField;
+    public JTextFieldHintListener(CustomTextField tf, String hintText, Color inputColor) {
+        this.tf = tf;
         this.hintText = hintText;
         this.inputColor = inputColor;
         this.placeholderColor = ColorUtils.darker(inputColor);
-        jTextField.setText(hintText);  // 默认直接显示
-        jTextField.setForeground(placeholderColor);
+        tf.setText(hintText);  // 默认直接显示
+        tf.setForeground(placeholderColor);
     }
 
     @Override
     public void focusGained(FocusEvent e) {
         // 获取焦点时，清空提示内容
-        String temp = textField.getText();
+        String temp = tf.getText();
         if (temp.equals(hintText)) {
-            textField.setText("");
+            tf.setText("");
+            tf.setOccupied(true);
         }
-        textField.setForeground(inputColor);
+        tf.setForeground(inputColor);
     }
 
     @Override
     public void focusLost(FocusEvent e) {
         // 失去焦点时，没有输入内容，显示提示内容
-        String temp = textField.getText();
+        String temp = tf.getText();
         if (temp.equals("")) {
-            textField.setForeground(placeholderColor);
-            textField.setText(hintText);
+            tf.setForeground(placeholderColor);
+            tf.setText(hintText);
+            tf.setOccupied(false);
         }
     }
 }

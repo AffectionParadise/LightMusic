@@ -17,6 +17,7 @@ import java.awt.event.*;
 public class CustomTextField extends JTextField {
     private Color backgroundColor;
     private Color foregroundColor;
+    private boolean occupied;
 
     private boolean drawBg;
 
@@ -40,7 +41,6 @@ public class CustomTextField extends JTextField {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                setFocusable(true);
                 requestFocus();
                 getCaret().setVisible(true);
             }
@@ -53,6 +53,21 @@ public class CustomTextField extends JTextField {
                 repaint();
             }
         });
+    }
+
+    // 需要焦点时，先设置可聚焦的
+    @Override
+    public void requestFocus() {
+        setFocusable(true);
+        super.requestFocus();
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 
     // 判断是否需要刷新

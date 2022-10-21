@@ -19,6 +19,8 @@ import javax.swing.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -125,7 +127,7 @@ public class StringUtils {
      * @return
      */
     public static String shorten(String s, int maxLen) {
-        if (maxLen <= 3 || s.length() <= maxLen) return s;
+        if (maxLen <= 3 || s == null || s.length() <= maxLen) return s;
         return s.substring(0, maxLen - 3) + "...";
     }
 
@@ -140,7 +142,7 @@ public class StringUtils {
     }
 
     /**
-     * 字符串转为 32 位 MD5
+     * byr 数组转为 32 位 MD5
      *
      * @param b
      * @return

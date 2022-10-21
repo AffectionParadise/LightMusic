@@ -179,86 +179,82 @@ public class MusicUtils {
             }
             Mp3File f = new Mp3File(source);
             source.setDuration((double) f.getLengthInMilliseconds() / 1000);
+            ID3v1 tag = null;
             // 先从 ID3v2 找信息
-            if (f.hasId3v2Tag()) {
-                ID3v2 id3v2Tag = f.getId3v2Tag();
-
-                source.setSongName(id3v2Tag.getTitle());
-                source.setArtist(id3v2Tag.getArtist());
-                source.setAlbum(id3v2Tag.getAlbum());
-            }
-            // 若没有 ID3v2 ，在 ID3v1 找
-            else if (f.hasId3v1Tag()) {
-                ID3v1 id3v1Tag = f.getId3v1Tag();
-
-                source.setSongName(id3v1Tag.getTitle());
-                source.setArtist(id3v1Tag.getArtist());
-                source.setAlbum(id3v1Tag.getAlbum());
-            }
+            if (f.hasId3v2Tag()) tag = f.getId3v2Tag();
+                // 若没有 ID3v2 ，在 ID3v1 找
+            else if (f.hasId3v1Tag()) tag = f.getId3v1Tag();
+            if (tag == null) return;
+            String title = tag.getTitle();
+            String artist = tag.getArtist();
+            String album = tag.getAlbum();
+            source.setSongName(title);
+            source.setArtist(artist);
+            source.setAlbum(album);
         } catch (IOException | UnsupportedTagException | InvalidDataException | IllegalArgumentException e) {
 
         }
     }
 
-    /**
-     * 从文件获取歌曲名信息，若没有，返回 null
-     *
-     * @param source
-     * @return
-     */
-    public static String getSongName(File source) {
-        try {
-            Mp3File f = new Mp3File(source);
-            String songName = null;
-            // 先从 ID3v2 找信息
-            if (f.hasId3v2Tag()) songName = f.getId3v2Tag().getTitle();
-                // 若没有 ID3v2 ，在 ID3v1 找
-            else if (f.hasId3v1Tag()) songName = f.getId3v1Tag().getTitle();
-            return songName;
-        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 从文件获取艺术家信息，若没有，返回 null
-     *
-     * @param source
-     * @return
-     */
-    public static String getArtist(File source) {
-        try {
-            Mp3File f = new Mp3File(source);
-            String artist = null;
-            // 先从 ID3v2 找信息
-            if (f.hasId3v2Tag()) artist = f.getId3v2Tag().getArtist();
-                // 若没有 ID3v2 ，在 ID3v1 找
-            else if (f.hasId3v1Tag()) artist = f.getId3v1Tag().getArtist();
-            return artist;
-        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 从文件获取专辑名称信息，若没有，返回 null
-     *
-     * @param source
-     * @return
-     */
-    public static String getAlbumName(File source) {
-        try {
-            Mp3File f = new Mp3File(source);
-            String albumName = null;
-            // 先从 ID3v2 找信息
-            if (f.hasId3v2Tag()) albumName = f.getId3v2Tag().getAlbum();
-                // 若没有 ID3v2 ，在 ID3v1 找
-            else if (f.hasId3v1Tag()) albumName = f.getId3v1Tag().getAlbum();
-            return albumName;
-        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
-            return null;
-        }
-    }
+//    /**
+//     * 从文件获取歌曲名信息，若没有，返回 null
+//     *
+//     * @param source
+//     * @return
+//     */
+//    public static String getSongName(File source) {
+//        try {
+//            Mp3File f = new Mp3File(source);
+//            String songName = null;
+//            // 先从 ID3v2 找信息
+//            if (f.hasId3v2Tag()) songName = f.getId3v2Tag().getTitle();
+//                // 若没有 ID3v2 ，在 ID3v1 找
+//            else if (f.hasId3v1Tag()) songName = f.getId3v1Tag().getTitle();
+//            return songName;
+//        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+//            return null;
+//        }
+//    }
+//
+//    /**
+//     * 从文件获取艺术家信息，若没有，返回 null
+//     *
+//     * @param source
+//     * @return
+//     */
+//    public static String getArtist(File source) {
+//        try {
+//            Mp3File f = new Mp3File(source);
+//            String artist = null;
+//            // 先从 ID3v2 找信息
+//            if (f.hasId3v2Tag()) artist = f.getId3v2Tag().getArtist();
+//                // 若没有 ID3v2 ，在 ID3v1 找
+//            else if (f.hasId3v1Tag()) artist = f.getId3v1Tag().getArtist();
+//            return artist;
+//        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+//            return null;
+//        }
+//    }
+//
+//    /**
+//     * 从文件获取专辑名称信息，若没有，返回 null
+//     *
+//     * @param source
+//     * @return
+//     */
+//    public static String getAlbumName(File source) {
+//        try {
+//            Mp3File f = new Mp3File(source);
+//            String albumName = null;
+//            // 先从 ID3v2 找信息
+//            if (f.hasId3v2Tag()) albumName = f.getId3v2Tag().getAlbum();
+//                // 若没有 ID3v2 ，在 ID3v1 找
+//            else if (f.hasId3v1Tag()) albumName = f.getId3v1Tag().getAlbum();
+//            return albumName;
+//        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+//            return null;
+//        }
+//    }
 
     /**
      * 从文件获取封面图片，若没有，返回 null

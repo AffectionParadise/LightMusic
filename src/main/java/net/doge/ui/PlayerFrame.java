@@ -2182,6 +2182,8 @@ public class PlayerFrame extends JFrame {
     private NetCommentInfo currAlbumCommentInfo;
     // 当前相似 MV 原 MV
     private NetMvInfo currMvMvInfo;
+    // 当前分集原 MV
+    private NetMvInfo currEpisodesMvInfo;
     // 当前视频原用户
     private NetUserInfo currMvUserInfo;
     // 当前相似歌手原歌手
@@ -12595,14 +12597,15 @@ public class PlayerFrame extends JFrame {
         // 搜索 MV 跳页事件
         Runnable searchMvGoPageAction = () -> {
             boolean artistRequest = currMvArtistInfo != null, songRequest = currMvMusicInfo != null,
-                    mvRequest = currMvMvInfo != null, userRequest = currMvUserInfo != null;
-            if (artistRequest || songRequest || mvRequest || userRequest || StringUtils.isNotEmpty(netMvCurrKeyword)) {
+                    mvRequest = currMvMvInfo != null, episodeRequest = currEpisodesMvInfo != null, userRequest = currMvUserInfo != null;
+            if (artistRequest || songRequest || mvRequest || episodeRequest || userRequest || StringUtils.isNotEmpty(netMvCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索 MV 并显示 MV 列表
                         CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtils.getMvInfoInArtist(currMvArtistInfo, limit, netMvCurrPage)
                                 : songRequest ? MusicServerUtils.getRelatedMvs(currMvMusicInfo, limit, netMvCurrPage)
                                 : mvRequest ? MusicServerUtils.getSimilarMvs(currMvMvInfo)
+                                : episodeRequest ? MusicServerUtils.getVideoEpisodes(currEpisodesMvInfo, netMvCurrPage, limit)
                                 : userRequest ? MusicServerUtils.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit)
                                 : MusicServerUtils.searchMvs(netMvCurrKeyword, limit, netMvCurrPage);
                         List<NetMvInfo> netMvInfos = result.data;
@@ -12974,9 +12977,10 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForMv();
                     // 获取视频分集
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getVideoEpisodes(currMvMvInfo = netMvInfo);
+                    CommonResult<NetMvInfo> result = MusicServerUtils.getVideoEpisodes(currEpisodesMvInfo = netMvInfo, netMvCurrPage = 1, limit);
                     List<NetMvInfo> netMvInfos = result.data;
-                    netMvCurrPage = netMvMaxPage = 1;
+                    Integer total = result.total;
+                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
                     netMvTitleLabel.setText(netMvInfo.toSimpleString() + " 的分集");
                     netMvToolBar.removeAll();
@@ -20550,7 +20554,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        filterTextField.setForeground(ColorUtils.darker(foreColor));
+        filterTextField.setForeground(filterTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         filterTextField.setCaretColor(foreColor);
         // 在线音乐搜索栏透明
         searchTextField.setOpaque(opaque);
@@ -20562,7 +20566,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        searchTextField.setForeground(ColorUtils.darker(foreColor));
+        searchTextField.setForeground(searchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         searchTextField.setCaretColor(foreColor);
 //        focusListeners = netMusicPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
@@ -20594,7 +20598,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netPlaylistSearchTextField.setForeground(ColorUtils.darker(foreColor));
+        netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netPlaylistSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netPlaylistPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
@@ -20624,7 +20628,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netAlbumSearchTextField.setForeground(ColorUtils.darker(foreColor));
+        netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netAlbumSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netAlbumPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
@@ -20654,7 +20658,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netArtistSearchTextField.setForeground(ColorUtils.darker(foreColor));
+        netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netArtistSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netArtistPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
@@ -20684,7 +20688,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netRadioSearchTextField.setForeground(ColorUtils.darker(foreColor));
+        netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netRadioSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netRadioPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
@@ -20713,7 +20717,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netMvSearchTextField.setForeground(ColorUtils.darker(foreColor));
+        netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netMvSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netMvPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
@@ -20759,7 +20763,7 @@ public class PlayerFrame extends JFrame {
                 ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
             }
         }
-        netUserSearchTextField.setForeground(ColorUtils.darker(foreColor));
+        netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netUserSearchTextField.setCaretColor(foreColor);
 //        focusListeners = netUserPageTextField.getFocusListeners();
 //        for (FocusListener focusListener : focusListeners) {
@@ -22535,6 +22539,7 @@ public class PlayerFrame extends JFrame {
         currMvArtistInfo = null;
         currMvMusicInfo = null;
         currMvMvInfo = null;
+        currEpisodesMvInfo = null;
         currMvUserInfo = null;
     }
 
