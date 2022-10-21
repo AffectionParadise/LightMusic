@@ -235,7 +235,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             String source = StringUtils.textToHtml(NetMusicSource.names[netAlbumInfo.getSource()]);
             String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netAlbumInfo.getName(), maxWidth));
             String artist = netAlbumInfo.hasArtist() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netAlbumInfo.getArtist(), maxWidth)) : "";
-            String songNum = netAlbumInfo.hasSongNum() ? netAlbumInfo.getSongNum() + " 首歌曲" : "";
+            String songNum = netAlbumInfo.hasSongNum() ? netAlbumInfo.isPhoto() ? netAlbumInfo.getSongNum() + " 张图片" : netAlbumInfo.getSongNum() + " 首歌曲" : "";
             String publishTime = netAlbumInfo.hasPublishTime() ? netAlbumInfo.getPublishTime() + " 发行" : "";
 
             iconLabel.setText(source);

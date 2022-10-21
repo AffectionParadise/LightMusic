@@ -23,7 +23,6 @@ public class ComboBoxUI extends BasicComboBoxUI {
     private PlayerFrame f;
     private Font font;
     private Color foreColor;
-    private int width;
 
     private ImageIcon arrowIcon = new ImageIcon(SimplePath.ICON_PATH + "arrow.png");
 
@@ -39,7 +38,8 @@ public class ComboBoxUI extends BasicComboBoxUI {
         comboBox.setRenderer(new ComboBoxRenderer(font, foreColor));
         // 设置最大显示项目数量
         comboBox.setMaximumRowCount(15);
-        if (comboBox.getPreferredSize().width < 175) comboBox.setPreferredSize(new Dimension(175, 30));
+        final int width = 170;
+        if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new Dimension(width, 30));
 
         comboBox.setLightWeightPopupEnabled(false);
     }
@@ -68,7 +68,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(foreColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 10, 10);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 //        super.paintCurrentValueBackground(g, bounds, hasFocus);

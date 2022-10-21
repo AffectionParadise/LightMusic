@@ -1,6 +1,7 @@
 package net.doge.ui.components;
 
 import lombok.Data;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.ui.listeners.JTextFieldHintListener;
 
@@ -25,13 +26,8 @@ public class CustomTextField extends JTextField {
         super(length);
         setHorizontalAlignment(CENTER);
         setMaximumSize(new Dimension(3000, 30));
+        setSelectionColor(Colors.THEME);
         drawBg = true;
-        init();
-    }
-
-    public CustomTextField(int length, boolean drawBg) {
-        super(length);
-        this.drawBg = drawBg;
         init();
     }
 
@@ -83,7 +79,7 @@ public class CustomTextField extends JTextField {
     public void setText(String t) {
         super.setText(t);
         // 解决设置文本后不刷新的问题
-        if(!needRefresh()) return;
+        if (!needRefresh()) return;
         setVisible(false);
         setVisible(true);
     }
@@ -100,7 +96,7 @@ public class CustomTextField extends JTextField {
         // 画背景
         if (drawBg) {
             g2d.setColor(foregroundColor);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
             g2d.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 25, 25);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }

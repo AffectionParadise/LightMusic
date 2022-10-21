@@ -19630,7 +19630,7 @@ public class PlayerFrame extends JFrame {
         }
 
         // 下载/在线音乐列表播放歌曲时，将单首歌曲加到当前播放歌曲之后播放(若不在播放队列)
-        if (model == downloadListModel || model == netMusicListModel || model == netMusicRecommendListModel) {
+        if (model == downloadListModel || model == netMusicListModel) {
             for (int i = 0, size = playQueueModel.size(); i < size; i++) {
                 if (playQueueModel.get(i).equals(obj)) {
                     exists = true;
@@ -20833,7 +20833,7 @@ public class PlayerFrame extends JFrame {
         netRecommendPageTextField.setCaretColor(foreColor);
         netRecommendTagComboBox.setOpaque(opaque);
 //        netRecommendTagComboBox.setForeground(buttonColor);
-        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor));
+        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor, 210));
         netRecommendPlayAllButton.setOpaque(opaque);
         netRecommendPlayAllButton.setForeground(buttonColor);
         netRecommendRefreshButton.setOpaque(opaque);

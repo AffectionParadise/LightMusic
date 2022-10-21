@@ -26,6 +26,6 @@ public class TextFieldUI extends BasicTextFieldUI {
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(backgroundColor);
-        g2d.fillRoundRect(rect.x, rect.y, rect.width - 1, rect.height - 1, 25, 25);
+        g2d.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 25, 25);
     }
 }

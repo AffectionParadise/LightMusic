@@ -41,6 +41,10 @@ public class NetAlbumInfo {
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
 
+    public boolean isPhoto() {
+        return source == NetMusicSource.DT;
+    }
+
     public boolean hasCoverImg() {
         return coverImg != null;
     }
