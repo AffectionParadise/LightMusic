@@ -1,6 +1,7 @@
 package net.doge.ui.components.dialog;
 
 import net.doge.constants.Fonts;
+import net.doge.constants.SimplePath;
 import net.doge.models.SimpleMusicInfo;
 import net.doge.models.UIStyle;
 import net.doge.ui.components.DialogButton;
@@ -32,14 +33,21 @@ public class ConfirmDialog extends JDialog {
     private DialogButton yes = new DialogButton("");
     private DialogButton no = new DialogButton("");
     private DialogButton cancel = new DialogButton("");
-    int response;
+    private int response;
 
-    PlayerFrame f;
-    String message = "";
-    JPanel messagePanel = new JPanel();
-    JLabel messageLabel = new JLabel(message, JLabel.CENTER);
-    JPanel buttonPanel = new JPanel();
-    ConfirmDialogPanel mainPanel = new ConfirmDialogPanel();
+    // 复选框图标
+    private ImageIcon uncheckedIcon = new ImageIcon(SimplePath.ICON_PATH + "unchecked.png");
+    private ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
+
+    private PlayerFrame f;
+    private String message = "";
+    private JPanel messagePanel = new JPanel();
+    private JLabel messageLabel = new JLabel(message, JLabel.CENTER);
+    private boolean showCheck;
+    private JPanel checkPanel = new JPanel();
+    private JCheckBox checkBox = new JCheckBox();
+    private JPanel buttonPanel = new JPanel();
+    private ConfirmDialogPanel mainPanel = new ConfirmDialogPanel();
 
     public ConfirmDialog(PlayerFrame f, String message) {
         // 一定要是模态对话框才能接收值！！！
@@ -49,37 +57,35 @@ public class ConfirmDialog extends JDialog {
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText) {
-        // 一定要是模态对话框才能接收值！！！
-        super(f, true);
-        this.f = f;
-        this.message = message;
+        this(f, message);
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
         yes = new DialogButton(yesText, buttonColor);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText) {
-        // 一定要是模态对话框才能接收值！！！
-        super(f, true);
-        this.f = f;
-        this.message = message;
+        this(f, message, yesText);
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
-        yes = new DialogButton(yesText, buttonColor);
         no = new DialogButton(noText, buttonColor);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText, String cancelText) {
-        // 一定要是模态对话框才能接收值！！！
-        super(f, true);
-        this.f = f;
-        this.message = message;
+        this(f, message, yesText, noText);
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
-        yes = new DialogButton(yesText, buttonColor);
-        no = new DialogButton(noText, buttonColor);
         cancel = new DialogButton(cancelText, buttonColor);
     }
 
+    public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText, boolean showCheck, String checkText) {
+        this(f, message, yesText, noText);
+        this.showCheck = showCheck;
+        checkBox.setText(checkText);
+    }
+
+    public boolean isChecked() {
+        return checkBox.isSelected();
+    }
+
     public void showDialog() {
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color labelColor = f.getCurrUIStyle().getLabelColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(new Color(0, 0, 0, 0));
@@ -87,8 +93,20 @@ public class ConfirmDialog extends JDialog {
         yes.setFont(font);
         no.setFont(font);
         cancel.setFont(font);
+        checkBox.setFont(font);
+        checkBox.setOpaque(false);
+        checkBox.setFocusPainted(false);
+        checkBox.setForeground(labelColor);
+        checkBox.setIconTextGap(10);
+        checkBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
+        checkBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
+        checkPanel.setOpaque(false);
+        checkPanel.add(checkBox);
+        checkPanel.setVisible(showCheck);
+        checkPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+
         messageLabel.setText(message);
-        messageLabel.setForeground(buttonColor);
+        messageLabel.setForeground(labelColor);
         messagePanel.add(messageLabel);
         messagePanel.setOpaque(false);
         messagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
@@ -97,11 +115,12 @@ public class ConfirmDialog extends JDialog {
         buttonPanel.setLayout(fl);
         buttonPanel.setOpaque(false);
 
-        if (!yes.getText().equals("")) buttonPanel.add(yes);
-        if (!no.getText().equals("")) buttonPanel.add(no);
-        if (!cancel.getText().equals("")) buttonPanel.add(cancel);
+        if (StringUtils.isNotEmpty(yes.getText())) buttonPanel.add(yes);
+        if (StringUtils.isNotEmpty(no.getText())) buttonPanel.add(no);
+        if (StringUtils.isNotEmpty(cancel.getText())) buttonPanel.add(cancel);
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(messagePanel, BorderLayout.CENTER);
+        mainPanel.add(messagePanel, BorderLayout.NORTH);
+        mainPanel.add(checkPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(35, 55, 35, 55));
 

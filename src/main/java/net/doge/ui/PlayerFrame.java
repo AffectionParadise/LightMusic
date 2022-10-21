@@ -197,6 +197,8 @@ public class PlayerFrame extends JFrame {
     private final String WAIT_FOR_TASK_COMPLETED_MSG = "请等待下载任务完成";
     // 询问是否删除选中任务提示
     private final String ASK_REMOVE_SELECTED_TASKS_MSG = "确定要删除选中任务吗？";
+    // 询问是否同时删除文件提示
+    private final String ASK_REMOVE_FILE_MSG = "同时删除文件";
     // 询问是否清空任务列表提示
     private final String ASK_REMOVE_ALL_TASKS_MSG = "确定要清空任务列表吗？";
     // 询问是否从播放列表删除提示
@@ -2721,6 +2723,12 @@ public class PlayerFrame extends JFrame {
                     } else if (kE.getKeyCode() == KeyEvent.VK_RIGHT) {
                         imageViewDialog.nextImgButton.doClick();
                     }
+                }
+                // 视频界面恢复窗口事件
+                else if (videoDialog != null && videoDialog.isFullScreen() && kE.getID() == KeyEvent.KEY_RELEASED) {
+                    if (kE.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        videoDialog.restoreWindow();
+                    }
                 } else if (kE.getID() == KeyEvent.KEY_RELEASED) {
                     // 搜索框输入时不受影响
                     if (!collectionPageTextField.hasFocus()
@@ -2739,7 +2747,6 @@ public class PlayerFrame extends JFrame {
                         // 空格播放或暂停
                         if (kE.getKeyCode() == KeyEvent.VK_SPACE) {
                             if (videoDialog == null) playOrPause();
-                            else videoDialog.playOrPause();
                         }
                         // 上下一曲
                         else if (kE.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -6375,8 +6382,7 @@ public class PlayerFrame extends JFrame {
                     || selectedIndex == CollectionTabIndex.MUSIC) {
                 List selectedValues = musicList.getSelectedValuesList();
                 if (selectedValues.size() != 0) {
-                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                            ASK_REMOVE_ITEMS_MSG, "是", "否");
+                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
                     confirmDialog.showDialog();
                     int response = confirmDialog.getResponse();
                     // 删除选中的文件
@@ -17861,13 +17867,14 @@ public class PlayerFrame extends JFrame {
         removeTaskMenuItem.addActionListener(e -> {
             List<Task> tasks = downloadList.getSelectedValuesList();
             if (!tasks.isEmpty()) {
-                ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_SELECTED_TASKS_MSG, "是", "否");
+                ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_SELECTED_TASKS_MSG, "是", "否", true, ASK_REMOVE_FILE_MSG);
                 dialog.showDialog();
                 if (dialog.getResponse() == JOptionPane.YES_OPTION) {
                     downloadList.setModel(emptyListModel);
                     for (Task task : tasks) {
                         if (task.isRunning()) task.stop();
                         downloadListModel.removeElement(task);
+                        if (dialog.isChecked()) new File(task.getDest()).delete();
                     }
                     downloadList.setModel(downloadListModel);
                     new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
@@ -22636,13 +22643,13 @@ public class PlayerFrame extends JFrame {
 //        return stylePopupMenuItems;
 //    }
 
-    public CustomPopupMenu getStylePopupMenu() {
-        return stylePopupMenu;
-    }
+//    public CustomPopupMenu getStylePopupMenu() {
+//        return stylePopupMenu;
+//    }
 
-    public JSlider getTimeBar() {
-        return timeBar;
-    }
+//    public JSlider getTimeBar() {
+//        return timeBar;
+//    }
 
     public JSlider getVolumeSlider() {
         return volumeSlider;

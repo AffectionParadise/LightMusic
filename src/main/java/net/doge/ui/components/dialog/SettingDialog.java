@@ -535,8 +535,8 @@ public class SettingDialog extends JDialog {
 
         // 复选框图标
         int gap = 10;
-        ImageIcon icon = ImageUtils.dye(uncheckedIcon, buttonColor);
-        ImageIcon selectedIcon = ImageUtils.dye(checkedIcon, buttonColor);
+        ImageIcon icon = ImageUtils.dye(uncheckedIcon, labelColor);
+        ImageIcon selectedIcon = ImageUtils.dye(checkedIcon, labelColor);
         autoDownloadLrcCheckBox.setIconTextGap(gap);
         autoDownloadLrcCheckBox.setIcon(icon);
         autoDownloadLrcCheckBox.setSelectedIcon(selectedIcon);

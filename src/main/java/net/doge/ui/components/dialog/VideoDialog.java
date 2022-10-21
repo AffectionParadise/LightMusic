@@ -61,6 +61,7 @@ public class VideoDialog extends JDialog {
     private final String DOWNLOAD_TIP = "下载";
     private final String RATE_TIP = "倍速";
     private final String FOB_TIME_TIP = "快进/快退时间";
+    private final String FULL_SCREEN_TIP = "全屏";
 
     // 收藏成功提示
     private final String COLLECT_SUCCESS_MSG = "收藏成功";
@@ -87,6 +88,8 @@ public class VideoDialog extends JDialog {
     private ImageIcon downloadIcon = new ImageIcon(SimplePath.ICON_PATH + "download.png");
     // 倍速图标
     private ImageIcon rateIcon = new ImageIcon(SimplePath.ICON_PATH + "videoRate.png");
+    // 全屏图标
+    private ImageIcon fullScreenIcon = new ImageIcon(SimplePath.ICON_PATH + "fullScreen.png");
     // 快退图标
     private ImageIcon backwIcon = new ImageIcon(SimplePath.ICON_PATH + "backw.png");
     // 快进图标
@@ -157,6 +160,7 @@ public class VideoDialog extends JDialog {
 //            new CustomRadioButtonMenuItem("8x")
 //    };
     private JButton fobTimeButton = new JButton(fobTimeIcon);
+    private JButton fullScreenButton = new JButton(fullScreenIcon);
     private CustomPopupMenu fobTimePopupMenu;
     private ButtonGroup fobTimeMenuItemsButtonGroup = new ButtonGroup();
     private CustomRadioButtonMenuItem[] fobTimeMenuItems = {
@@ -176,6 +180,7 @@ public class VideoDialog extends JDialog {
     private boolean resized;
     private int tryTime;
     private boolean isLocal;
+    private boolean fullScreen;
     private String uri;
 
     private Media media;
@@ -239,6 +244,7 @@ public class VideoDialog extends JDialog {
             @Override
             public void componentResized(ComponentEvent e) {
                 setLocationRelativeTo(null);
+                if (fullScreen) return;
                 timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
                 setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
             }
@@ -294,6 +300,26 @@ public class VideoDialog extends JDialog {
         }
     }
 
+    void fitMediaView() {
+        // 视频实际尺寸
+        int width = media.getWidth(), height = media.getHeight();
+        if (width == 0 || height == 0) return;
+        Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+        int dw = fullScreen ? ss.width : MEDIA_WIDTH, dh = fullScreen ? ss.height : MEDIA_HEIGHT;
+        // 调整为合适的尺寸
+        int fw, fh;
+        // 优先适应宽度
+        fw = dw;
+        fh = height * fw / width;
+        // 调整好后，如果高度还超出范围，再去适应高度
+        if (fh > dh) {
+            fh = dh;
+            fw = width * fh / height;
+        }
+        mediaView.setFitWidth(fw);
+        mediaView.setFitHeight(fh);
+    }
+
     // 初始化视频界面
     void initView() {
         if (isLocal) {
@@ -313,20 +339,7 @@ public class VideoDialog extends JDialog {
 //                }
 //            });
         media.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-            // 视频实际尺寸
-            int width = media.getWidth(), height = media.getHeight();
-            // 调整为合适的尺寸
-            int fw, fh;
-            // 优先适应宽度
-            fw = MEDIA_WIDTH;
-            fh = height * fw / width;
-            // 调整好后，如果高度还超出范围，再去适应高度
-            if (fh > MEDIA_HEIGHT) {
-                fh = MEDIA_HEIGHT;
-                fw = width * fh / height;
-            }
-            mediaView.setFitWidth(fw);
-            mediaView.setFitHeight(fh);
+            fitMediaView();
         });
         // 刷新缓冲长度
         mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
@@ -462,6 +475,10 @@ public class VideoDialog extends JDialog {
         progressPanel.add(timeBar);
         progressPanel.add(durationLabel);
         bottomBox.add(progressPanel);
+    }
+
+    public boolean isFullScreen() {
+        return fullScreen;
     }
 
     // 控制面板
@@ -639,6 +656,33 @@ public class VideoDialog extends JDialog {
                 fobTimePopupMenu.show(fobTimeButton, e.getX(), e.getY());
             }
         });
+        fullScreenButton.setFont(globalFont);
+        fullScreenButton.setForeground(style.getButtonColor());
+        fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
+        fullScreenButton.setFocusable(false);
+        fullScreenButton.setOpaque(false);
+        fullScreenButton.setContentAreaFilled(false);
+        fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), style.getButtonColor()));
+        fullScreenButton.addMouseListener(new ButtonMouseListener(fullScreenButton, f));
+        fullScreenButton.setPreferredSize(new Dimension(fullScreenIcon.getIconWidth(), fullScreenIcon.getIconHeight()));
+        fullScreenButton.addActionListener(e -> {
+            toFullScreen();
+        });
+        jfxPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!fullScreen || e.getButton() != MouseEvent.BUTTON3) return;
+                restoreWindow();
+            }
+        });
+        jfxPanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    playOrPause();
+                }
+            }
+        });
 
         updateRadioButtonMenuItemIcon();
 
@@ -661,9 +705,29 @@ public class VideoDialog extends JDialog {
         controlPanel.add(volumePanel);
         controlPanel.add(rateButton);
         controlPanel.add(fobTimeButton);
+        controlPanel.add(fullScreenButton);
         controlPanel.add(Box.createHorizontalGlue());
         bottomBox.add(controlPanel);
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
+    }
+
+    void toFullScreen() {
+        fullScreen = true;
+        Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+        topBox.setVisible(false);
+        bottomBox.setVisible(false);
+        globalPanel.eraseBorder();
+        setSize(ss.width, ss.height);
+        fitMediaView();
+    }
+
+    public void restoreWindow() {
+        setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
+        fullScreen = false;
+        topBox.setVisible(true);
+        bottomBox.setVisible(true);
+        globalPanel.initBorder();
+        fitMediaView();
     }
 
     void playVideo() {
@@ -747,9 +811,17 @@ public class VideoDialog extends JDialog {
         private BufferedImage backgroundImage;
 
         public VideoDialogPanel() {
+            initBorder();
+        }
+
+        public void initBorder() {
             // 阴影边框
             Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
             setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+        }
+
+        public void eraseBorder() {
+            setBorder(null);
         }
 
         public void setBackgroundImage(BufferedImage backgroundImage) {
@@ -766,9 +838,11 @@ public class VideoDialog extends JDialog {
             }
 
             // 画边框阴影
-            for (int i = 0; i < pixels; i++) {
-                g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-                g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
+            if (!fullScreen) {
+                for (int i = 0; i < pixels; i++) {
+                    g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
+                    g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
+                }
             }
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
         }
