@@ -671,13 +671,18 @@ public class VideoDialog extends JDialog {
         jfxPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (!fullScreen || e.getButton() != MouseEvent.BUTTON3) return;
-                restoreWindow();
+                // 右键或者左键双击切换全屏
+                if (fullScreen && e.getButton() == MouseEvent.BUTTON3
+                        || e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    if (fullScreen) restoreWindow();
+                    else toFullScreen();
+                }
             }
         });
         jfxPanel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
+                // 空格播放暂停
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     playOrPause();
                 }
