@@ -248,6 +248,8 @@ public class ConfigConstants {
 
     // 用户来源
     public final static String NET_USER_SOURCE = "source";
+    // 用户是否是声优
+    public final static String NET_USER_IS_CV = "isCV";
     // 用户 id
     public final static String NET_USER_ID = "id";
     // 用户名称

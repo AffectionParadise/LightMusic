@@ -3613,6 +3613,7 @@ public class PlayerFrame extends JFrame {
 
                 NetUserInfo netUserInfo = new NetUserInfo();
                 netUserInfo.setSource(jsonObject.optInt(ConfigConstants.NET_USER_SOURCE));
+                netUserInfo.setCV(jsonObject.optBoolean(ConfigConstants.NET_USER_IS_CV));
                 netUserInfo.setId(jsonObject.optString(ConfigConstants.NET_USER_ID));
                 netUserInfo.setName(jsonObject.optString(ConfigConstants.NET_USER_NAME));
                 netUserInfo.setGender(jsonObject.optString(ConfigConstants.NET_USER_GENDER));
@@ -4093,6 +4094,7 @@ public class PlayerFrame extends JFrame {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(ConfigConstants.NET_USER_SOURCE, netUserInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_USER_IS_CV, netUserInfo.isCV());
             jsonObject.put(ConfigConstants.NET_USER_ID, netUserInfo.getId());
             jsonObject.put(ConfigConstants.NET_USER_NAME, netUserInfo.getName());
             jsonObject.put(ConfigConstants.NET_USER_GENDER, netUserInfo.getGender());

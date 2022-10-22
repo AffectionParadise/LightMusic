@@ -17,6 +17,8 @@ import java.util.Objects;
 public class NetUserInfo {
     // 用户来源
     private int source = NetMusicSource.NET_CLOUD;
+    // 是否是声优(猫耳)
+    private boolean isCV;
     // 用户 id
     private String id;
     // 用户名称
@@ -31,6 +33,14 @@ public class NetUserInfo {
     private Integer level;
     // 号龄
     private String accAge;
+    // 职业
+    private String career;
+    // 血型
+    private String bloodType;
+    // 别名
+    private String alias;
+    // 社团
+    private String group;
     // 头像
     private BufferedImage avatar;
     // 头像 url
@@ -74,7 +84,15 @@ public class NetUserInfo {
                 + (hasBirth ? "生日：" + birthday + (isShort ? "" : TimeUtils.yearToAge(Integer.parseInt(s[0]))) + "\n"
                 + "星座：" + (isShort ? TimeUtils.getConstellation(Integer.parseInt(s[0]), Integer.parseInt(s[1]))
                 : TimeUtils.getConstellation(Integer.parseInt(s[1]), Integer.parseInt(s[2]))) + "\n" : "")
+                + (hasCareer() ? "职业：" + career + "\n" : "")
+                + (hasBloodType() ? "血型：" + bloodType + "\n" : "")
+                + (hasAlias() ? "别名：" + alias + "\n" : "")
+                + (hasGroup() ? "社团：" + group + "\n" : "")
                 + (hasArea() ? "地区：" + area : "");
+    }
+
+    public boolean isCV() {
+        return isCV;
     }
 
     public boolean hasAvatar() {
@@ -99,6 +117,22 @@ public class NetUserInfo {
 
     public boolean hasAccAge() {
         return StringUtils.isNotEmpty(accAge);
+    }
+
+    public boolean hasCareer() {
+        return StringUtils.isNotEmpty(career);
+    }
+
+    public boolean hasBloodType() {
+        return StringUtils.isNotEmpty(bloodType);
+    }
+
+    public boolean hasAlias() {
+        return StringUtils.isNotEmpty(alias);
+    }
+
+    public boolean hasGroup() {
+        return StringUtils.isNotEmpty(group);
     }
 
     public boolean hasArea() {

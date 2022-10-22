@@ -153,7 +153,8 @@ public class TranslucentNetUserListRenderer extends DefaultListCellRenderer {
 //        String birthday = netUserInfo.hasBirthday() ? netUserInfo.getBirthday() : "";
 //        String area = netUserInfo.hasArea() ? netUserInfo.getArea() : "";
         String playlistCount = netUserInfo.hasPlaylistCount() ? netUserInfo.getPlaylistCount() + " 歌单"
-                : netUserInfo.hasRadioCount() ? netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目"
+                : netUserInfo.hasRadioCount() && netUserInfo.hasProgramCount() ? netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目"
+                : netUserInfo.hasRadioCount() ? netUserInfo.getRadioCount() + " 电台"
                 : netUserInfo.hasProgramCount() ? netUserInfo.getProgramCount() + " 节目"
                 : "";
         String follow = netUserInfo.hasFollow() ? StringUtils.formatNumberWithoutSuffix(netUserInfo.getFollow()) + " 关注" : "";

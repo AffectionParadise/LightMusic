@@ -154,7 +154,7 @@ public class MusicServerUtils {
      */
     public static void initProgramSearchTag() {
         // 猫耳
-        Tags.programSearchTag.put("默认", new String[]{""});
+        Tags.programSearchTag.put("默认", new String[]{" "});
 
         final int c = 1;
         // 猫耳
@@ -370,6 +370,9 @@ public class MusicServerUtils {
     // 关键词搜索用户 API (猫耳)
     private static final String SEARCH_USER_ME_API
             = "https://www.missevan.com/sound/getsearch?s=%s&type=1&p=%s&page_size=%s";
+    // 关键词搜索声优 API (猫耳)
+    private static final String SEARCH_CV_ME_API
+            = "https://www.missevan.com/sound/getsearch?s=%s&type=4&p=%s&page_size=%s";
     // 关键词搜索用户 API (豆瓣)
     private static final String SEARCH_USER_DB_API
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1005";
@@ -2465,8 +2468,12 @@ public class MusicServerUtils {
     private static final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户信息 API (猫耳)
     private static final String USER_DETAIL_ME_API = "https://www.missevan.com/%s/";
+    // CV 信息 API (猫耳)
+    private static final String CV_DETAIL_ME_API = "https://www.missevan.com/dramaapi/cvinfo?cv_id=%s&page=%s&page_size=%s";
     // 用户节目 API (猫耳)
     private static final String USER_PROGRAMS_ME_API = "https://www.missevan.com/person/getusersound?user_id=%s&p=%s&page_size=%s";
+    // 声优节目 API (猫耳)
+    private static final String CV_PROGRAMS_ME_API = "https://www.missevan.com/seiy/%s";
     // 用户信息 API (豆瓣)
     private static final String USER_DETAIL_DB_API = "https://www.douban.com/people/%s/";
     // 用户信息 API (堆糖)
@@ -3323,7 +3330,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[0])) {
-                String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, s[0], encodedKeyword, page, limit))
+                String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, s[0].trim(), encodedKeyword, page, limit))
                         .execute()
                         .body();
                 JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
@@ -3364,9 +3371,8 @@ public class MusicServerUtils {
                 if (dt) {
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchVoice));
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicXm));
-                } else {
-                    taskList.add(GlobalExecutors.requestExecutor.submit(searchProgramMe));
                 }
+                taskList.add(GlobalExecutors.requestExecutor.submit(searchProgramMe));
                 break;
             default:
                 taskList.add(GlobalExecutors.requestExecutor.submit(searchMusic));
@@ -5718,6 +5724,44 @@ public class MusicServerUtils {
             }
             return new CommonResult<>(res, t);
         };
+        // 搜索声优
+        Callable<CommonResult<NetUserInfo>> searchCVsMe = () -> {
+            LinkedList<NetUserInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_CV_ME_API, encodedKeyword, page, limit))
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject info = userInfoJson.getJSONObject("info");
+            t = info.getJSONObject("pagination").getInt("count");
+            JSONArray userArray = info.getJSONArray("Datas");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("id");
+                String userName = userJson.getString("name");
+                String avatarThumbUrl = userJson.getString("icon");
+                String avatarUrl = avatarThumbUrl;
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.ME);
+                userInfo.setCV(true);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
 
         // 豆瓣
         Callable<CommonResult<NetUserInfo>> searchUsersDb = () -> {
@@ -5860,6 +5904,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersXm));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersMe));
+        taskList.add(GlobalExecutors.requestExecutor.submit(searchCVsMe));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDb));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDt));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersBi));
@@ -13305,29 +13350,64 @@ public class MusicServerUtils {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, uid))
-                    .execute()
-                    .body();
-            Document doc = Jsoup.parse(userInfoBody);
+            if (userInfo.isCV()) {
+                String userInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, uid, 1, 1))
+                        .execute()
+                        .body();
+                JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+                JSONObject data = userInfoJson.getJSONObject("info");
+                JSONObject cv = data.getJSONObject("cv");
+                JSONObject dramas = data.getJSONObject("dramas");
 
-            if (!userInfo.hasLevel())
-                userInfo.setLevel(Integer.parseInt(doc.select("span.level").first().text().replace("LV", "")));
-            if (!userInfo.hasGender()) userInfo.setGender("保密");
-            if (!userInfo.hasArea()) userInfo.setArea("未知");
-            if (!userInfo.hasSign())
-                userInfo.setSign(doc.select("#t_u_n_a").first().text());
-            if (!userInfo.hasFollow())
-                userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
-            if (!userInfo.hasFollowed())
-                userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
+                if (!userInfo.hasGender()) {
+                    Integer gen = cv.getInt("gender");
+                    String gender = gen == 1 ? "♂ 男" : gen == 2 ? "♀ 女" : "保密";
+                    userInfo.setGender(gender);
+                }
+                if (!userInfo.hasCareer()) {
+                    Integer ca = cv.getInt("career");
+                    String career = ca == 1 ? "中文 CV" : ca == 0 ? "日文 CV" : "";
+                    userInfo.setCareer(career);
+                }
+                if (!userInfo.hasBloodType()) {
+                    Integer bt = cv.getInt("bloodtype");
+                    String bloodType = bt == 1 ? "A" : bt == 2 ? "B" : bt == 3 ? "O" : "保密";
+                    userInfo.setBloodType(bloodType);
+                }
+                if (!userInfo.hasAlias()) userInfo.setAlias(cv.getString("seiyalias"));
+                if (!userInfo.hasGroup()) userInfo.setGroup(cv.getString("group"));
+                if (!userInfo.hasBirthday()) {
+                    int year = cv.getInt("birthyear"), month = cv.getInt("birthmonth"), day = cv.getInt("birthday");
+                    userInfo.setBirthday(year <= 0 ? month <= 0 ? null : month + "-" + day : null);
+                }
+                if (!userInfo.hasSign()) userInfo.setSign(cv.getString("profile"));
+                if (!userInfo.hasRadioCount())
+                    userInfo.setRadioCount(dramas.getJSONObject("pagination").getInt("count"));
+                GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+            } else {
+                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, uid))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+
+                if (!userInfo.hasLevel())
+                    userInfo.setLevel(Integer.parseInt(doc.select("span.level").first().text().replace("LV", "")));
+                if (!userInfo.hasGender()) userInfo.setGender("保密");
+                if (!userInfo.hasSign())
+                    userInfo.setSign(doc.select("#t_u_n_a").first().text());
+                if (!userInfo.hasFollow())
+                    userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
+                if (!userInfo.hasFollowed())
+                    userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
 //            if (!userInfo.hasRadioCount()) userInfo.setRadioCount(Integer.parseInt(ReUtil.get(
 //                    "剧集.*?\\((\\d+)\\)", userInfoBody, 1)));
 //            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(Integer.parseInt(ReUtil.get(
 //                    "声音.*?\\((\\d+)\\)", userInfoBody, 1)));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-            String bgUrl = ReUtil.get("style=\"background-image:url\\((.*?)\\)\"", userInfoBody, 1);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(
-                    (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl)));
+                GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+                String bgUrl = ReUtil.get("style=\"background-image:url\\((.*?)\\)\"", userInfoBody, 1);
+                GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(
+                        (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl)));
+            }
         }
 
         // 豆瓣
@@ -13360,7 +13440,6 @@ public class MusicServerUtils {
             Document doc = Jsoup.parse(userInfoBody);
 
             if (!userInfo.hasGender()) userInfo.setGender("保密");
-            if (!userInfo.hasArea()) userInfo.setArea("未知");
             if (!userInfo.hasSign())
                 userInfo.setSign(doc.select("div.people-desc").text().trim());
             if (!userInfo.hasFollow())
@@ -13381,7 +13460,6 @@ public class MusicServerUtils {
             JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data").getJSONObject("card");
             if (!userInfo.hasLevel()) userInfo.setLevel(data.getJSONObject("level_info").getInt("current_level"));
-            if (!userInfo.hasArea()) userInfo.setArea("未知");
             if (!userInfo.hasGender()) userInfo.setGender(data.getString("sex"));
             if (!userInfo.hasBirthday()) userInfo.setBirthday(data.getString("birthday"));
             if (!userInfo.hasSign()) userInfo.setSign(data.getString("sign"));
@@ -14907,31 +14985,55 @@ public class MusicServerUtils {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, userId, page, limit))
-                    .execute()
-                    .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
-            JSONObject data = userInfoJson.getJSONObject("info");
-            JSONArray songArray = data.getJSONArray("Datas");
-            total.set(data.getJSONObject("pagination").getInt("count"));
-            for (int i = 0, len = songArray.size(); i < len; i++) {
-                JSONObject songJson = songArray.getJSONObject(i);
+            if (userInfo.isCV()) {
+                String userInfoBody = HttpRequest.get(String.format(CV_PROGRAMS_ME_API, userId))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+                Elements programs = doc.select(".pld-sound-title.cv-title a");
+                total.set(programs.size());
+                for (int i = 0, len = programs.size(); i < len; i++) {
+                    Element program = programs.get(i);
 
-                String songId = songJson.getString("id");
-                String name = songJson.getString("soundstr");
-                String artist = userInfo.getName();
+                    String songId = ReUtil.get("id=(\\d+)", program.attr("href"), 1);
+                    String name = program.text().trim();
+                    String artist = userInfo.getName();
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.ME);
+                    musicInfo.setFormat(Format.M4A);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfos.add(musicInfo);
+                }
+            } else {
+                String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, userId, page, limit))
+                        .execute()
+                        .body();
+                JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+                JSONObject data = userInfoJson.getJSONObject("info");
+                JSONArray songArray = data.getJSONArray("Datas");
+                total.set(data.getJSONObject("pagination").getInt("count"));
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
+
+                    String songId = songJson.getString("id");
+                    String name = songJson.getString("soundstr");
+                    String artist = userInfo.getName();
 //                String albumImgUrl = songJson.getString("front_cover");
-                Double duration = songJson.getDouble("duration") / 1000;
+                    Double duration = songJson.getDouble("duration") / 1000;
 
-                NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.ME);
-                musicInfo.setFormat(Format.M4A);
-                musicInfo.setId(songId);
-                musicInfo.setName(name);
-                musicInfo.setArtist(artist);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.ME);
+                    musicInfo.setFormat(Format.M4A);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
 //                musicInfo.setAlbumImgUrl(albumImgUrl);
-                musicInfo.setDuration(duration);
-                musicInfos.add(musicInfo);
+                    musicInfo.setDuration(duration);
+                    musicInfos.add(musicInfo);
+                }
             }
         }
 
@@ -15716,23 +15818,20 @@ public class MusicServerUtils {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            Callable<CommonResult<NetRadioInfo>> getCreatedRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
-                Integer t = 0;
-
-                String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, uid, page, limit))
+            if (netUserInfo.isCV()) {
+                String radioInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, uid, page, limit))
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-                JSONObject data = radioInfoJson.getJSONObject("info");
+                JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("dramas");
                 JSONArray radioArray = data.getJSONArray("Datas");
-                t = data.getJSONObject("pagination").getInt("count");
+                total.set(data.getJSONObject("pagination").getInt("count"));
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
-                    JSONObject radioJson = radioArray.getJSONObject(i);
+                    JSONObject radioJson = radioArray.getJSONObject(i).getJSONObject("drama");
 
                     String radioId = radioJson.getString("id");
                     String radioName = radioJson.getString("name");
-//                    String category = radioJson.getString("type_name");
+                    String category = radioJson.getString("catalog_name");
                     String dj = netUserInfo.getName();
                     Long playCount = radioJson.getLong("view_count");
                     String coverImgThumbUrl = radioJson.getString("cover");
@@ -15746,74 +15845,115 @@ public class MusicServerUtils {
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     radioInfo.setCoverImgUrl(coverImgUrl);
                     radioInfo.setPlayCount(playCount);
-//                    radioInfo.setCategory(category);
+                    radioInfo.setCategory(category);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    r.add(radioInfo);
+                    res.add(radioInfo);
                 }
+            } else {
+                Callable<CommonResult<NetRadioInfo>> getCreatedRadios = () -> {
+                    LinkedList<NetRadioInfo> r = new LinkedList<>();
+                    Integer t = 0;
 
-                return new CommonResult<>(r, t);
-            };
+                    String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, uid, page, limit))
+                            .execute()
+                            .body();
+                    JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                    JSONObject data = radioInfoJson.getJSONObject("info");
+                    JSONArray radioArray = data.getJSONArray("Datas");
+                    t = data.getJSONObject("pagination").getInt("count");
+                    for (int i = 0, len = radioArray.size(); i < len; i++) {
+                        JSONObject radioJson = radioArray.getJSONObject(i);
 
-            Callable<CommonResult<NetRadioInfo>> getSubRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
-                Integer t = 0;
+                        String radioId = radioJson.getString("id");
+                        String radioName = radioJson.getString("name");
+//                    String category = radioJson.getString("type_name");
+                        String dj = netUserInfo.getName();
+                        Long playCount = radioJson.getLong("view_count");
+                        String coverImgThumbUrl = radioJson.getString("cover");
+                        String coverImgUrl = coverImgThumbUrl;
 
-                String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, uid, page, limit))
-                        .execute()
-                        .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-                JSONObject data = radioInfoJson.getJSONObject("info");
-                JSONArray radioArray = data.getJSONArray("Datas");
-                t = data.getJSONObject("pagination").getInt("count");
-                for (int i = 0, len = radioArray.size(); i < len; i++) {
-                    JSONObject radioJson = radioArray.getJSONObject(i);
+                        NetRadioInfo radioInfo = new NetRadioInfo();
+                        radioInfo.setSource(NetMusicSource.ME);
+                        radioInfo.setId(radioId);
+                        radioInfo.setName(radioName);
+                        radioInfo.setDj(dj);
+                        radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                        radioInfo.setCoverImgUrl(coverImgUrl);
+                        radioInfo.setPlayCount(playCount);
+//                    radioInfo.setCategory(category);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            radioInfo.setCoverImgThumb(coverImgThumb);
+                        });
 
-                    String radioId = radioJson.getString("id");
-                    String radioName = radioJson.getString("name");
+                        r.add(radioInfo);
+                    }
+
+                    return new CommonResult<>(r, t);
+                };
+
+                Callable<CommonResult<NetRadioInfo>> getSubRadios = () -> {
+                    LinkedList<NetRadioInfo> r = new LinkedList<>();
+                    Integer t = 0;
+
+                    String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, uid, page, limit))
+                            .execute()
+                            .body();
+                    JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                    JSONObject data = radioInfoJson.getJSONObject("info");
+                    JSONArray radioArray = data.optJSONArray("Datas");
+                    if (radioArray != null) {
+                        t = data.getJSONObject("pagination").getInt("count");
+                        for (int i = 0, len = radioArray.size(); i < len; i++) {
+                            JSONObject radioJson = radioArray.getJSONObject(i);
+
+                            String radioId = radioJson.getString("id");
+                            String radioName = radioJson.getString("name");
 //                    String category = radioJson.getString("type");
-                    String coverImgThumbUrl = radioJson.getString("cover");
-                    String coverImgUrl = coverImgThumbUrl;
+                            String coverImgThumbUrl = radioJson.getString("cover");
+                            String coverImgUrl = coverImgThumbUrl;
 
-                    NetRadioInfo radioInfo = new NetRadioInfo();
-                    radioInfo.setSource(NetMusicSource.ME);
-                    radioInfo.setId(radioId);
-                    radioInfo.setName(radioName);
-                    radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    radioInfo.setCoverImgUrl(coverImgUrl);
+                            NetRadioInfo radioInfo = new NetRadioInfo();
+                            radioInfo.setSource(NetMusicSource.ME);
+                            radioInfo.setId(radioId);
+                            radioInfo.setName(radioName);
+                            radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                            radioInfo.setCoverImgUrl(coverImgUrl);
 //                    radioInfo.setCategory(category);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                        radioInfo.setCoverImgThumb(coverImgThumb);
-                    });
+                            GlobalExecutors.imageExecutor.execute(() -> {
+                                BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                                radioInfo.setCoverImgThumb(coverImgThumb);
+                            });
 
-                    r.add(radioInfo);
-                }
+                            r.add(radioInfo);
+                        }
+                    }
+                    return new CommonResult<>(r, t);
+                };
 
-                return new CommonResult<>(r, t);
-            };
+                List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
 
-            List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCreatedRadios));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getSubRadios));
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCreatedRadios));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getSubRadios));
-
-            List<List<NetRadioInfo>> rl = new LinkedList<>();
-            taskList.forEach(task -> {
-                try {
-                    CommonResult<NetRadioInfo> result = task.get();
-                    rl.add(result.data);
-                    total.set(Math.max(total.get(), result.total));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            });
-            res.addAll(ListUtils.joinAll(rl));
+                List<List<NetRadioInfo>> rl = new LinkedList<>();
+                taskList.forEach(task -> {
+                    try {
+                        CommonResult<NetRadioInfo> result = task.get();
+                        rl.add(result.data);
+                        total.set(Math.max(total.get(), result.total));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                });
+                res.addAll(ListUtils.joinAll(rl));
+            }
         }
 
         // 豆瓣
@@ -16626,7 +16766,8 @@ public class MusicServerUtils {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo netPlaylistInfo, int limit, int page) {
+    public static CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo netPlaylistInfo, int limit,
+                                                                   int page) {
         int source = netPlaylistInfo.getSource();
         String id = netPlaylistInfo.getId();
 
@@ -18134,7 +18275,8 @@ public class MusicServerUtils {
      * @param dest
      * @throws Exception
      */
-    public static void download(Component comp, String urlPath, String dest, Map<String, Object> headers) throws Exception {
+    public static void download(Component comp, String urlPath, String dest, Map<String, Object> headers) throws
+            Exception {
         File file = new File(dest);
         URL url = new URL(urlPath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
