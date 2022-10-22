@@ -4130,30 +4130,32 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
-            t = albumInfoJson.getInt("total");
-            JSONArray albumArray = albumInfoJson.getJSONArray("items");
-            for (int i = 0, len = albumArray.size(); i < len; i++) {
-                Document doc = Jsoup.parse(albumArray.getString(i));
-                Elements result = doc.select("div.result");
-                Elements a = result.select("h3 a");
+            JSONArray albumArray = albumInfoJson.optJSONArray("items");
+            if (albumArray != null) {
+                t = albumInfoJson.getInt("total");
+                for (int i = 0, len = albumArray.size(); i < len; i++) {
+                    Document doc = Jsoup.parse(albumArray.getString(i));
+                    Elements result = doc.select("div.result");
+                    Elements a = result.select("h3 a");
 
-                String albumId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
-                String albumName = a.text().trim();
-                String artist = result.select("span.subject-cast").text();
-                String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String albumId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String albumName = a.text().trim();
+                    String artist = result.select("span.subject-cast").text();
+                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
 
-                NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.DB);
-                albumInfo.setId(albumId);
-                albumInfo.setName(albumName);
-                albumInfo.setArtist(artist);
-                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                    albumInfo.setCoverImgThumb(coverImgThumb);
-                });
+                    NetAlbumInfo albumInfo = new NetAlbumInfo();
+                    albumInfo.setSource(NetMusicSource.DB);
+                    albumInfo.setId(albumId);
+                    albumInfo.setName(albumName);
+                    albumInfo.setArtist(artist);
+                    albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        albumInfo.setCoverImgThumb(coverImgThumb);
+                    });
 
-                res.add(albumInfo);
+                    res.add(albumInfo);
+                }
             }
             return new CommonResult<>(res, t);
         };
@@ -4696,33 +4698,35 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            t = radioInfoJson.getInt("total");
-            JSONArray radioArray = radioInfoJson.getJSONArray("items");
-            for (int i = 0, len = radioArray.size(); i < len; i++) {
-                Document doc = Jsoup.parse(radioArray.getString(i));
-                Elements result = doc.select("div.result");
-                Elements a = result.select("h3 a");
-                Elements span = result.select(".title h3 span");
+            JSONArray radioArray = radioInfoJson.optJSONArray("items");
+            if (radioArray != null) {
+                t = radioInfoJson.getInt("total");
+                for (int i = 0, len = radioArray.size(); i < len; i++) {
+                    Document doc = Jsoup.parse(radioArray.getString(i));
+                    Elements result = doc.select("div.result");
+                    Elements a = result.select("h3 a");
+                    Elements span = result.select(".title h3 span");
 
-                String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
-                String radioName = a.text().trim();
-                String dj = result.select("span.subject-cast").text();
-                String coverImgThumbUrl = result.select("div.pic img").attr("src");
-                String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
+                    String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String radioName = a.text().trim();
+                    String dj = result.select("span.subject-cast").text();
+                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
 
-                NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.DB);
-                radioInfo.setId(radioId);
-                radioInfo.setName(radioName);
-                radioInfo.setDj(dj);
-                radioInfo.setCategory(category);
-                radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                    radioInfo.setCoverImgThumb(coverImgThumb);
-                });
+                    NetRadioInfo radioInfo = new NetRadioInfo();
+                    radioInfo.setSource(NetMusicSource.DB);
+                    radioInfo.setId(radioId);
+                    radioInfo.setName(radioName);
+                    radioInfo.setDj(dj);
+                    radioInfo.setCategory(category);
+                    radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        radioInfo.setCoverImgThumb(coverImgThumb);
+                    });
 
-                res.add(radioInfo);
+                    res.add(radioInfo);
+                }
             }
             return new CommonResult<>(res, t);
         };
@@ -4735,34 +4739,36 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            t = radioInfoJson.getInt("total");
-            JSONArray radioArray = radioInfoJson.getJSONArray("items");
-            for (int i = 0, len = radioArray.size(); i < len; i++) {
-                Document doc = Jsoup.parse(radioArray.getString(i));
-                Elements result = doc.select("div.result");
-                Elements a = result.select("h3 a");
-                Elements span = result.select(".title h3 span");
+            JSONArray radioArray = radioInfoJson.optJSONArray("items");
+            if (radioArray != null) {
+                t = radioInfoJson.getInt("total");
+                for (int i = 0, len = radioArray.size(); i < len; i++) {
+                    Document doc = Jsoup.parse(radioArray.getString(i));
+                    Elements result = doc.select("div.result");
+                    Elements a = result.select("h3 a");
+                    Elements span = result.select(".title h3 span");
 
-                String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
-                String radioName = a.text().trim();
-                String dj = result.select("span.subject-cast").text();
-                String coverImgThumbUrl = result.select("div.pic img").attr("src");
-                String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
+                    String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String radioName = a.text().trim();
+                    String dj = result.select("span.subject-cast").text();
+                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
 
-                NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setType(RadioType.BOOK);
-                radioInfo.setSource(NetMusicSource.DB);
-                radioInfo.setId(radioId);
-                radioInfo.setName(radioName);
-                radioInfo.setDj(dj);
-                radioInfo.setCategory(category);
-                radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                    radioInfo.setCoverImgThumb(coverImgThumb);
-                });
+                    NetRadioInfo radioInfo = new NetRadioInfo();
+                    radioInfo.setType(RadioType.BOOK);
+                    radioInfo.setSource(NetMusicSource.DB);
+                    radioInfo.setId(radioId);
+                    radioInfo.setName(radioName);
+                    radioInfo.setDj(dj);
+                    radioInfo.setCategory(category);
+                    radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        radioInfo.setCoverImgThumb(coverImgThumb);
+                    });
 
-                res.add(radioInfo);
+                    res.add(radioInfo);
+                }
             }
             return new CommonResult<>(res, t);
         };
@@ -4775,34 +4781,36 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            t = radioInfoJson.getInt("total");
-            JSONArray radioArray = radioInfoJson.getJSONArray("items");
-            for (int i = 0, len = radioArray.size(); i < len; i++) {
-                Document doc = Jsoup.parse(radioArray.getString(i));
-                Elements result = doc.select("div.result");
-                Elements a = result.select("h3 a");
-                Elements span = result.select(".title h3 span");
+            JSONArray radioArray = radioInfoJson.optJSONArray("items");
+            if (radioArray != null) {
+                t = radioInfoJson.getInt("total");
+                for (int i = 0, len = radioArray.size(); i < len; i++) {
+                    Document doc = Jsoup.parse(radioArray.getString(i));
+                    Elements result = doc.select("div.result");
+                    Elements a = result.select("h3 a");
+                    Elements span = result.select(".title h3 span");
 
-                String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
-                String radioName = a.text().trim();
-                String dj = result.select("span.subject-cast").text();
-                String coverImgThumbUrl = result.select("div.pic img").attr("src");
-                String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
+                    String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String radioName = a.text().trim();
+                    String dj = result.select("span.subject-cast").text();
+                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
 
-                NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setType(RadioType.GAME);
-                radioInfo.setSource(NetMusicSource.DB);
-                radioInfo.setId(radioId);
-                radioInfo.setName(radioName);
-                radioInfo.setDj(dj);
-                radioInfo.setCategory(category);
-                radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                    radioInfo.setCoverImgThumb(coverImgThumb);
-                });
+                    NetRadioInfo radioInfo = new NetRadioInfo();
+                    radioInfo.setType(RadioType.GAME);
+                    radioInfo.setSource(NetMusicSource.DB);
+                    radioInfo.setId(radioId);
+                    radioInfo.setName(radioName);
+                    radioInfo.setDj(dj);
+                    radioInfo.setCategory(category);
+                    radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        radioInfo.setCoverImgThumb(coverImgThumb);
+                    });
 
-                res.add(radioInfo);
+                    res.add(radioInfo);
+                }
             }
             return new CommonResult<>(res, t);
         };
@@ -5772,37 +5780,39 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            t = radioInfoJson.getInt("total");
-            JSONArray radioArray = radioInfoJson.getJSONArray("items");
-            for (int i = 0, len = radioArray.size(); i < len; i++) {
-                Document doc = Jsoup.parse(radioArray.getString(i));
-                Elements result = doc.select("div.result");
-                Elements a = result.select("h3 a");
-                Elements info = result.select(".title .info");
-                Elements img = result.select("div.pic img");
+            JSONArray radioArray = radioInfoJson.optJSONArray("items");
+            if (radioArray != null) {
+                t = radioInfoJson.getInt("total");
+                for (int i = 0, len = radioArray.size(); i < len; i++) {
+                    Document doc = Jsoup.parse(radioArray.getString(i));
+                    Elements result = doc.select("div.result");
+                    Elements a = result.select("h3 a");
+                    Elements info = result.select(".title .info");
+                    Elements img = result.select("div.pic img");
 
-                String userId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
-                String userName = a.text().trim();
-                String gender = "保密";
-                String src = img.attr("src");
-                String avatarThumbUrl = src.contains("/user") ? src.replaceFirst("normal", "large") : src.replaceFirst("/up", "/ul");
-                String avatarUrl = avatarThumbUrl;
-                Integer followed = Integer.parseInt(ReUtil.get("(\\d+)人关注", info.text(), 1));
+                    String userId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String userName = a.text().trim();
+                    String gender = "保密";
+                    String src = img.attr("src");
+                    String avatarThumbUrl = src.contains("/user") ? src.replaceFirst("normal", "large") : src.replaceFirst("/up", "/ul");
+                    String avatarUrl = avatarThumbUrl;
+                    Integer followed = Integer.parseInt(ReUtil.get("(\\d+)人关注", info.text(), 1));
 
-                NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.DB);
-                userInfo.setId(userId);
-                userInfo.setName(userName);
-                userInfo.setGender(gender);
-                userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
-                userInfo.setFollowed(followed);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
-                    userInfo.setAvatarThumb(coverImgThumb);
-                });
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.DB);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    userInfo.setAvatarUrl(avatarUrl);
+                    userInfo.setFollowed(followed);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
+                        userInfo.setAvatarThumb(coverImgThumb);
+                    });
 
-                res.add(userInfo);
+                    res.add(userInfo);
+                }
             }
             return new CommonResult<>(res, t);
         };
