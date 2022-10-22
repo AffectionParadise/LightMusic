@@ -5776,15 +5776,15 @@ public class MusicServerUtils {
             LinkedList<NetUserInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(SEARCH_USER_DB_API, encodedKeyword, (page - 1) * limit))
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DB_API, encodedKeyword, (page - 1) * limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            JSONArray radioArray = radioInfoJson.optJSONArray("items");
-            if (radioArray != null) {
-                t = radioInfoJson.getInt("total");
-                for (int i = 0, len = radioArray.size(); i < len; i++) {
-                    Document doc = Jsoup.parse(radioArray.getString(i));
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONArray userArray = userInfoJson.optJSONArray("items");
+            if (userArray != null) {
+                t = userInfoJson.getInt("total");
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    Document doc = Jsoup.parse(userArray.getString(i));
                     Elements result = doc.select("div.result");
                     Elements a = result.select("h3 a");
                     Elements info = result.select(".title .info");
