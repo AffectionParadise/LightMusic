@@ -40,7 +40,7 @@ public class CustomMenuItem extends JMenuItem {
     }
 
     private void createBorder() {
-        setBorder(BorderFactory.createEmptyBorder(8, 5, 8, 0));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 0));
     }
 
     @Override

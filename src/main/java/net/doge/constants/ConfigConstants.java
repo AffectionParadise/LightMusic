@@ -123,10 +123,14 @@ public class ConfigConstants {
     public final static String NET_MUSIC_NAME = "name";
     // 在线音乐艺术家
     public final static String NET_MUSIC_ARTIST = "artist";
+    // 在线音乐艺术家 id
+    public final static String NET_MUSIC_ARTIST_ID = "artistId";
     // 在线音乐时长
     public final static String NET_MUSIC_DURATION = "duration";
     // 在线音乐专辑名称
     public final static String NET_MUSIC_ALBUM_NAME = "albumName";
+    // 在线音乐专辑 id
+    public final static String NET_MUSIC_ALBUM_ID = "albumId";
     // 在线音乐封面 url
     public final static String NET_MUSIC_ALBUM_IMG_URL = "albumImgUrl";
     // 在线音乐 MV ID

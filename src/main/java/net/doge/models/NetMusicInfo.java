@@ -41,8 +41,12 @@ public class NetMusicInfo {
     private String name;
     // 艺术家
     private String artist;
+    // 艺术家 id
+    private String artistId;
     // 专辑名称
     private String albumName;
+    // 专辑 id
+    private String albumId;
     // 专辑图片
 //    private BufferedImage albumImage;
     // 专辑图片 url(喜马拉雅需要)
@@ -114,8 +118,16 @@ public class NetMusicInfo {
         return StringUtils.isNotEmpty(artist);
     }
 
+    public boolean hasArtistId() {
+        return StringUtils.isNotEmpty(artistId);
+    }
+
     public boolean hasAlbumName() {
         return StringUtils.isNotEmpty(albumName);
+    }
+
+    public boolean hasAlbumId() {
+        return StringUtils.isNotEmpty(albumId);
     }
 
     public boolean hasAlbumImage() {
