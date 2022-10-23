@@ -103,13 +103,14 @@ public class ConfirmDialog extends JDialog {
         checkPanel.setOpaque(false);
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
-        checkPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+        Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);
+        checkPanel.setBorder(eb);
 
         messageLabel.setText(message);
         messageLabel.setForeground(labelColor);
         messagePanel.add(messageLabel);
         messagePanel.setOpaque(false);
-        messagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+        messagePanel.setBorder(eb);
         FlowLayout fl = new FlowLayout();
         fl.setHgap(20);
         buttonPanel.setLayout(fl);
@@ -122,7 +123,7 @@ public class ConfirmDialog extends JDialog {
         mainPanel.add(messagePanel, BorderLayout.NORTH);
         mainPanel.add(checkPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(35, 55, 35, 55));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(25, 55, 25, 55));
 
         yes.addActionListener(e -> {
             response = JOptionPane.YES_OPTION;

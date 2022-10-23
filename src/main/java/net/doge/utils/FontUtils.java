@@ -3,6 +3,7 @@ package net.doge.utils;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Arrays;
 
 /**
  * @Author yzx
@@ -24,6 +25,8 @@ public class FontUtils {
             Font dynamicFont = Font.createFont(Font.TRUETYPE_FONT, fis);
             Font dynamicFontPt = dynamicFont.deriveFont(fontSize);
             fis.close();
+            // 注册改字体以便 HTML 调用
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(dynamicFontPt);
             return dynamicFontPt;
         } catch (Exception e) {
             e.printStackTrace();

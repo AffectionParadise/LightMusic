@@ -192,11 +192,11 @@ public class NetMusicInfo {
     }
 
     public String toAlbumImageFileName() {
-        return FileUtils.filterFileName(toSimpleString() + " - " + id + "." + Format.JPG);
+        return FileUtils.filterFileName(toSimpleString() + separator + id + "." + Format.JPG);
     }
 
     public String toFileName() {
-        return FileUtils.filterFileName(toSimpleString() + " - " + id + "." + format);
+        return FileUtils.filterFileName(toSimpleString() + separator + id + "." + format);
     }
 
     public String toSimpleFileName() {
@@ -204,7 +204,7 @@ public class NetMusicInfo {
     }
 
     public String toLrcFileName() {
-        return FileUtils.filterFileName(toSimpleString() + " - " + id + ".lrc");
+        return FileUtils.filterFileName(toSimpleString() + separator + id + ".lrc");
     }
 
     public String toSimpleLrcFileName() {
@@ -212,22 +212,17 @@ public class NetMusicInfo {
     }
 
     public String toLrcTransFileName() {
-        return FileUtils.filterFileName(toSimpleString() + " - " + id + " - trans" + ".lrc");
+        return FileUtils.filterFileName(toSimpleString() + separator + id + separator + "trans.lrc");
     }
 
     public String toSimpleLrcTransFileName() {
-        return FileUtils.filterFileName(toSimpleString() + " - trans" + ".lrc");
+        return FileUtils.filterFileName(toSimpleString() + separator + "trans.lrc");
     }
 
     public String toString() {
         return NetMusicSource.names[source] + separator + toSimpleString();
 //                + (StringUtils.isNotEmpty(albumName) ? separator + albumName : "")
 //                + (duration != null ? separator + TimeUtils.format(duration) : "");
-    }
-
-    public String toStringWithLrcMatch() {
-        return this
-                + (StringUtils.isNotEmpty(lrcMatch) ? "\n词： " + lrcMatch : "");
     }
 
     public String toSimpleString() {

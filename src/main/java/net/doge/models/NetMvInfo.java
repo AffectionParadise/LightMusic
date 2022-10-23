@@ -50,6 +50,10 @@ public class NetMvInfo {
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
 
+    public boolean isRealMV() {
+        return type == MvInfoType.MV && source != NetMusicSource.HK && source != NetMusicSource.BI;
+    }
+
     public boolean hasDuration() {
         return duration != null && !Double.isNaN(duration) && !Double.isInfinite(duration) && duration.intValue() != 0;
     }

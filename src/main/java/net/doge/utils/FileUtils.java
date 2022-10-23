@@ -237,12 +237,14 @@ public class FileUtils {
      * @param dest
      * @throws IOException
      */
-    public static void writeStr(String str, String dest, boolean append) throws IOException {
+    public static void writeStr(String str, String dest, boolean append) {
         if (str == null) return;
         File file = new File(dest);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file, append));
-        writer.write(str);
-        writer.close();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))) {
+            writer.write(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

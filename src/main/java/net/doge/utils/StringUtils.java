@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -304,90 +305,7 @@ public class StringUtils {
      * @return
      */
     public static String textToHtmlWithSpace(String text) {
-        if (text == null || text.startsWith("<html>") || text.trim().equals("")) return text;
-        StringBuffer sb = new StringBuffer();
-        sb.append("<html><div style=\"font-family:'" + Fonts.NORMAL.getFontName() + "'\">");
-        for (int i = 0, len = text.length(); i < len; i++) {
-            int codePoint = text.codePointAt(i);
-            char[] chars = Character.toChars(codePoint);
-            if (cMap.containsKey(chars[0])) {
-                sb.append(cMap.get(chars[0]));
-                continue;
-            }
-            for (int j = 0, l = Fonts.TYPES.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(codePoint)) {
-                    // 中文
-                    if (j == 0) sb.append(chars[0]);
-                    else
-                        sb.append("<span style=\"font-family:'" + Fonts.TYPES[j].getFontName() + "'\">" + new String(chars) + "</span>");
-                    if (chars.length == 2) i++;
-                    break;
-                }
-            }
-        }
-        sb.append("</html>");
-        return sb.toString();
-    }
-
-    /**
-     * 将无法显示的字符通过 HTML 换种字体显示，不替换 < >
-     *
-     * @param text
-     * @return
-     */
-    public static String textToHtmlWithoutLtGt(String text) {
-        if (text == null || text.startsWith("<html>") || text.trim().equals("")) return text;
-        StringBuffer sb = new StringBuffer();
-        sb.append("<html><div style=\"font-family:'" + Fonts.NORMAL.getFontName() + "'\">");
-        for (int i = 0, len = text.length(); i < len; i++) {
-            char ch = text.charAt(i);
-            if (ch != ' ' && ch != '<' && ch != '>' && cMap.containsKey(ch)) {
-                sb.append(cMap.get(ch));
-                continue;
-            }
-            for (int j = 0, l = Fonts.TYPES.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(ch)) {
-                    // 中文
-                    if (j == 0) sb.append(ch);
-                    else sb.append("<font face=\"" + Fonts.TYPES[j].getFontName() + "\">" + ch + "</font>");
-                    break;
-                }
-            }
-        }
-        sb.append("</html>");
-        return sb.toString();
-    }
-
-    /**
-     * 将无法显示的字符通过 HTML 换种字体显示，不替换空格
-     *
-     * @param text
-     * @return
-     */
-    public static String textToHtml(String text) {
-        if (text == null || text.startsWith("<html>") || text.trim().equals("")) return text;
-        StringBuffer sb = new StringBuffer();
-        sb.append("<html><div style=\"font-family:'" + Fonts.NORMAL.getFontName() + "'\">");
-        for (int i = 0, len = text.length(); i < len; i++) {
-            int codePoint = text.codePointAt(i);
-            char[] chars = Character.toChars(codePoint);
-            if (chars[0] != ' ' && cMap.containsKey(chars[0])) {
-                sb.append(cMap.get(chars[0]));
-                continue;
-            }
-            for (int j = 0, l = Fonts.TYPES.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(codePoint)) {
-                    // 中文
-                    if (j == 0) sb.append(chars[0]);
-                    else
-                        sb.append("<span style=\"font-family:'" + Fonts.TYPES[j].getFontName() + "'\">" + new String(chars) + "</span>");
-                    if (chars.length == 2) i++;
-                    break;
-                }
-            }
-        }
-        sb.append("</div></html>");
-        return sb.toString();
+        return textToHtml(text, true);
     }
 
     /**
@@ -396,20 +314,62 @@ public class StringUtils {
      * @param text
      * @return
      */
-    public static String textToHtml(String text, boolean autoWrap) {
-        if (text.startsWith("<html>") || text.trim().equals("")) return text;
+    public static String textToHtml(String text) {
+        return textToHtml(text, false);
+    }
+
+    /**
+     * 将无法显示的字符通过 HTML 换种字体显示，不替换空格
+     *
+     * @param text
+     * @return
+     */
+    public static String textToHtml(String text, boolean withSpace) {
+        if (text == null || text.startsWith("<html>") || text.trim().equals("")) return text;
         StringBuffer sb = new StringBuffer();
-        sb.append("<html><div style=\"white-space:nowrap;\">");
+        sb.append(String.format("<html><div style=\"font-family:%s\">", Fonts.NORMAL.getFontName(Locale.ENGLISH)));
         for (int i = 0, len = text.length(); i < len; i++) {
-            char ch = text.charAt(i);
-            // 韩语
-            if (CharsetUtils.isKnChar(ch)) sb.append("<font face=\"Malgun Gothic\">" + ch + "</font>");
-            else sb.append(ch);
-            if (autoWrap && i > 0 && i % 50 == 0) sb.append("<br>");
+            int codePoint = text.codePointAt(i);
+            char[] chars = Character.toChars(codePoint);
+            if ((!withSpace || chars[0] != ' ') && cMap.containsKey(chars[0])) {
+                sb.append(cMap.get(chars[0]));
+                continue;
+            }
+            for (int j = 0, l = Fonts.TYPES.length; j < l; j++) {
+                if (Fonts.TYPES[j].canDisplay(codePoint)) {
+                    // 中文
+                    if (j == 0) sb.append(chars[0]);
+                    else
+                        sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES[j].getFontName(), new String(chars)));
+                    if (chars.length == 2) i++;
+                    break;
+                }
+            }
         }
         sb.append("</div></html>");
         return sb.toString();
     }
+
+//    /**
+//     * 将无法显示的字符通过 HTML 换种字体显示
+//     *
+//     * @param text
+//     * @return
+//     */
+//    public static String textToHtml(String text, boolean autoWrap) {
+//        if (text.startsWith("<html>") || text.trim().equals("")) return text;
+//        StringBuffer sb = new StringBuffer();
+//        sb.append("<html><div style=\"white-space:nowrap;\">");
+//        for (int i = 0, len = text.length(); i < len; i++) {
+//            char ch = text.charAt(i);
+//            // 韩语
+//            if (CharsetUtils.isKnChar(ch)) sb.append("<font face=\"Malgun Gothic\">" + ch + "</font>");
+//            else sb.append(ch);
+//            if (autoWrap && i > 0 && i % 50 == 0) sb.append("<br>");
+//        }
+//        sb.append("</div></html>");
+//        return sb.toString();
+//    }
 
     /**
      * 去掉字符串中所有 HTML 标签，并将转义后的符号还原
@@ -427,28 +387,6 @@ public class StringUtils {
                 .replace("&lt;", "<")
                 .replace("&gt;", ">")
                 .replace("&apos;", "'");
-    }
-
-    /**
-     * 字符串根据每行字符数 threshold 加 <br/> 换行
-     *
-     * @param s
-     * @param threshold
-     * @return
-     */
-    public static String wrapLine(String s, int threshold) {
-        String ts = removeHTMLLabel(s);
-        if (ts.length() <= threshold) return s;
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0, c = 0, len = ts.length(); i < len; i++) {
-            char ch = ts.charAt(i);
-            sb.append(ch);
-            if (++c == threshold) {
-                sb.append("<br/>");
-                c = 0;
-            }
-        }
-        return textToHtmlWithoutLtGt(sb.toString());
     }
 
     /**

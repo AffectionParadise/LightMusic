@@ -665,9 +665,7 @@ public class VideoDialog extends JDialog {
         fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), style.getButtonColor()));
         fullScreenButton.addMouseListener(new ButtonMouseListener(fullScreenButton, f));
         fullScreenButton.setPreferredSize(new Dimension(fullScreenIcon.getIconWidth(), fullScreenIcon.getIconHeight()));
-        fullScreenButton.addActionListener(e -> {
-            toFullScreen();
-        });
+        fullScreenButton.addActionListener(e -> toFullScreen());
         jfxPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {

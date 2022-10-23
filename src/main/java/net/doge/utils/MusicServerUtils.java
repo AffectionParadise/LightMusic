@@ -81,7 +81,7 @@ public class MusicServerUtils {
     // 请求头
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75";
     private static final String COOKIE = "kg_mid=eb822d765480e1e3e6b8c6f2322019c8; kg_dfid=11TWHr0cp8jq4YKe9P3fosEo; kg_dfid_collect=d41d8cd98f00b204e9800998ecf8427e; musicwo17=kugou";
-    private static final String HK_COOKIE = "BIDUPSID=BE696A0D51D343798228BD61F26D5647; PSTM=1658997928; BAIDUID=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; Hm_lvt_4aadd610dfd2f5972f1efee2653a2bc5=1659086001; BAIDUID_BFESS=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; delPer=0; PSINO=1; BA_HECTOR=20ag2g0ha42galagaga7ko601hgorth16; ZFY=gy2NQKWk6ZhA6AuDxoMpPQs6Og5GSSS7oA7XUkOHKeg:C; PC_TAB_LOG=video_details_page; COMMON_LID=2c19ef6811cbc39c8bbfaafcfcaeba64; BDRCVFR[fb3VbsUruOn]=I67x6TjHwwYf0; hkpcSearch=%u7FDF%u8000%24%24%24hello; H_PS_PSSID=36561_36461_36979_36885_37267_37135_26350_37205; ariaDefaultTheme=undefined; RT=\"z=1&dm=baidu.com&si=fxuvi7wxq45&ss=l7egnei6&sl=17&tt=19ph&bcn=https%3A%2F%2Ffclog.baidu.com%2Flog%2Fweirwood%3Ftype%3Dperf&ld=1xs54&cl=1xt27&ul=1xt6x&hd=1xtb4\"";
+    static final String HK_COOKIE = "BIDUPSID=BE696A0D51D343798228BD61F26D5647; PSTM=1658997928; BAIDUID=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; Hm_lvt_4aadd610dfd2f5972f1efee2653a2bc5=1659086001; BAIDUID_BFESS=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; delPer=0; PSINO=1; BA_HECTOR=20ag2g0ha42galagaga7ko601hgorth16; ZFY=gy2NQKWk6ZhA6AuDxoMpPQs6Og5GSSS7oA7XUkOHKeg:C; PC_TAB_LOG=video_details_page; COMMON_LID=2c19ef6811cbc39c8bbfaafcfcaeba64; BDRCVFR[fb3VbsUruOn]=I67x6TjHwwYf0; hkpcSearch=%u7FDF%u8000%24%24%24hello; H_PS_PSSID=36561_36461_36979_36885_37267_37135_26350_37205; ariaDefaultTheme=undefined; RT=\"z=1&dm=baidu.com&si=fxuvi7wxq45&ss=l7egnei6&sl=17&tt=19ph&bcn=https%3A%2F%2Ffclog.baidu.com%2Flog%2Fweirwood%3Ftype%3Dperf&ld=1xs54&cl=1xt27&ul=1xt6x&hd=1xtb4\"";
     private static final String BI_COOKIE = "buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7";
 
     // 域名
@@ -331,8 +331,7 @@ public class MusicServerUtils {
 //    private static final String SEARCH_MV_KW_API = prefixKw + "/kuwo/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s";
     private static final String SEARCH_MV_KW_API = "http://www.kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索 MV API (好看)
-    private static final String SEARCH_MV_HK_API
-            = "https://haokan.baidu.com/web/search/api?query=%s&pn=%s&rn=%s&type=video";
+    private static final String SEARCH_MV_HK_API = "https://haokan.baidu.com/web/search/api?query=%s&pn=%s&rn=%s&type=video";
     // 关键词搜索 MV API (哔哩哔哩)
     private static final String SEARCH_MV_BI_API
             = "http://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%s&page=%s";
@@ -373,6 +372,9 @@ public class MusicServerUtils {
     // 关键词搜索声优 API (猫耳)
     private static final String SEARCH_CV_ME_API
             = "https://www.missevan.com/sound/getsearch?s=%s&type=4&p=%s&page_size=%s";
+    // 关键词搜索用户 API (好看)
+    private static final String SEARCH_USER_HK_API
+            = "https://haokan.baidu.com/web/search/api?query=%s&pn=%s&rn=%s&type=author";
     // 关键词搜索用户 API (豆瓣)
     private static final String SEARCH_USER_DB_API
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1005";
@@ -2280,6 +2282,8 @@ public class MusicServerUtils {
     private static final String SINGLE_SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲信息 API (猫耳)
     private static final String SINGLE_SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
+    // 歌曲专辑信息 API (猫耳)
+    private static final String SONG_ALBUM_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdramabysound?sound_id=%s";
     // 歌曲 URL 获取 API
     private static final String GET_SONG_URL_API_NEW = prefix + "/song/url/v1?id=%s&level=hires";
     private static final String GET_SONG_URL_API = prefix + "/song/url?id=%s";
@@ -2354,6 +2358,8 @@ public class MusicServerUtils {
     private static final String ARTIST_DETAIL_QQ_API = prefixQQ33 + "/singer/desc?singermid=%s";
     // 歌手图片 API (QQ)
     private static final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
+    // 歌手信息 API (酷我)
+    private static final String ARTIST_DETAIL_KW_API = "https://kuwo.cn/api/www/artist/artist?artistid=%s&httpsStatus=1";
     // 歌手信息 API (咪咕)
     private static final String ARTIST_DETAIL_MG_API = prefixMg + "/singer/desc?id=%s";
     // 歌手信息 API (千千)
@@ -2474,6 +2480,8 @@ public class MusicServerUtils {
     private static final String USER_PROGRAMS_ME_API = "https://www.missevan.com/person/getusersound?user_id=%s&p=%s&page_size=%s";
     // 声优节目 API (猫耳)
     private static final String CV_PROGRAMS_ME_API = "https://www.missevan.com/seiy/%s";
+    // 用户信息 API (好看)
+    private static final String USER_DETAIL_HK_API = "https://haokan.baidu.com/author/%s";
     // 用户信息 API (豆瓣)
     private static final String USER_DETAIL_DB_API = "https://www.douban.com/people/%s/";
     // 用户信息 API (堆糖)
@@ -2485,6 +2493,8 @@ public class MusicServerUtils {
     private static final String SIMILAR_SONG_API = prefix + "/simi/song?id=%s";
     // 相似歌曲 API (QQ)
     private static final String SIMILAR_SONG_QQ_API = prefixQQ33 + "/song/similar?id=%s";
+    // 相似歌曲 API (猫耳)
+    private static final String SIMILAR_SONG_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
     // 用户歌单 API
     private static final String USER_PLAYLIST_API = prefix + "/user/playlist?uid=%s&limit=1000";
     // 用户创建歌单 API (QQ)
@@ -2512,6 +2522,10 @@ public class MusicServerUtils {
     // 用户图书电台 API (豆瓣)
     private static final String USER_BOOK_RADIO_DB_API = "https://book.douban.com/people/%s/collect?start=%s&sort=time&rating=all&filter=all&mode=grid";
 
+    // 用户视频 API (好看)
+    private static final String USER_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20";
+    // 用户小视频 API (好看)
+    private static final String USER_SMALL_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20&video_type=haokan|tabhubVideo";
     // 用户视频 API (哔哩哔哩)
     private static final String USER_VIDEO_BI_API = "http://api.bilibili.com/x/space/arc/search?order=%s&mid=%s&pn=%s&ps=%s";
 
@@ -2577,6 +2591,10 @@ public class MusicServerUtils {
     private static final String RADIO_SUBSCRIBERS_API = prefix + "/dj/subscriber?id=%s";
     // 电台演职员 API (豆瓣)
     private static final String RADIO_ARTISTS_DB_API = "https://movie.douban.com/subject/%s/celebrities";
+    // 歌曲推荐电台 API (猫耳)
+    private static final String SONG_REC_RADIO_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
+    // 相似电台 API (猫耳)
+    private static final String SIMILAR_RADIO_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
     // 相似电台 API (豆瓣)
     private static final String SIMILAR_RADIO_DB_API = "https://movie.douban.com/subject/%s/";
     // 相似图书电台 API (豆瓣)
@@ -2916,7 +2934,7 @@ public class MusicServerUtils {
                     JSONObject songJson = songsArray.getJSONObject(i);
 
                     String songId = songJson.getString("id");
-                    String songName = songJson.getString("name");
+                    String songName = songJson.getString("name").trim();
                     String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("al").getString("name");
@@ -2948,37 +2966,39 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
-            JSONObject result = musicInfoJson.getJSONObject("result");
-            t = result.getInt("songCount");
-            JSONArray songs = result.optJSONArray("songs");
-            if (songs != null) {
-                for (int i = 0, len = songs.size(); i < len; i++) {
-                    JSONObject songJson = songs.getJSONObject(i);
+            JSONObject result = musicInfoJson.optJSONObject("result");
+            if (result != null) {
+                t = result.getInt("songCount");
+                JSONArray songs = result.optJSONArray("songs");
+                if (songs != null) {
+                    for (int i = 0, len = songs.size(); i < len; i++) {
+                        JSONObject songJson = songs.getJSONObject(i);
 
-                    String songId = songJson.getString("id");
-                    String songName = songJson.getString("name");
-                    String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
-                    String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
-                    String albumName = songJson.getJSONObject("al").getString("name");
-                    String albumId = songJson.getJSONObject("al").getString("id");
-                    Double duration = songJson.getDouble("duration") / 1000;
-                    String mvId = songJson.getString("mvid");
-                    JSONObject lyrics = songJson.optJSONObject("lyrics");
-                    String lrcMatch = null;
-                    if (lyrics != null) lrcMatch = lyrics.getString("txt").replace("\n", " / ");
+                        String songId = songJson.getString("id");
+                        String songName = songJson.getString("name").trim();
+                        String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                        String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
+                        String albumName = songJson.getJSONObject("al").getString("name");
+                        String albumId = songJson.getJSONObject("al").getString("id");
+                        Double duration = songJson.getDouble("duration") / 1000;
+                        String mvId = songJson.getString("mvid");
+                        JSONObject lyrics = songJson.optJSONObject("lyrics");
+                        String lrcMatch = null;
+                        if (lyrics != null) lrcMatch = lyrics.getString("txt").replace("\n", " / ");
 
-                    NetMusicInfo musicInfo = new NetMusicInfo();
-                    musicInfo.setId(songId);
-                    musicInfo.setName(songName);
-                    musicInfo.setArtist(artist);
-                    musicInfo.setArtistId(artistId);
-                    musicInfo.setAlbumName(albumName);
-                    musicInfo.setAlbumId(albumId);
-                    musicInfo.setDuration(duration);
-                    musicInfo.setMvId(mvId);
-                    musicInfo.setLrcMatch(lrcMatch);
+                        NetMusicInfo musicInfo = new NetMusicInfo();
+                        musicInfo.setId(songId);
+                        musicInfo.setName(songName);
+                        musicInfo.setArtist(artist);
+                        musicInfo.setArtistId(artistId);
+                        musicInfo.setAlbumName(albumName);
+                        musicInfo.setAlbumId(albumId);
+                        musicInfo.setDuration(duration);
+                        musicInfo.setMvId(mvId);
+                        musicInfo.setLrcMatch(lrcMatch);
 
-                    res.add(musicInfo);
+                        res.add(musicInfo);
+                    }
                 }
             }
             return new CommonResult<>(res, t);
@@ -3219,6 +3239,7 @@ public class MusicServerUtils {
                             String songId = songJson.getString("rid");
                             String songName = StringUtils.removeHTMLLabel(songJson.getString("name"));
                             String artist = StringUtils.removeHTMLLabel(songJson.getString("artist"));
+                            String artistId = songJson.getString("artistid");
                             String albumName = StringUtils.removeHTMLLabel(songJson.getString("album"));
                             String albumId = songJson.getString("albumid");
                             Double duration = songJson.getDouble("duration");
@@ -3229,6 +3250,7 @@ public class MusicServerUtils {
                             musicInfo.setId(songId);
                             musicInfo.setName(songName);
                             musicInfo.setArtist(artist);
+                            musicInfo.setArtistId(artistId);
                             musicInfo.setAlbumName(albumName);
                             musicInfo.setAlbumId(albumId);
                             musicInfo.setDuration(duration);
@@ -3290,31 +3312,33 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
-            JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.optInt("total");
-            JSONArray songsArray = data.getJSONArray("typeTrack");
-            for (int i = 0, len = songsArray.size(); i < len; i++) {
-                JSONObject songJson = songsArray.getJSONObject(i);
+            JSONObject data = musicInfoJson.optJSONObject("data");
+            if (data != null) {
+                t = data.optInt("total");
+                JSONArray songsArray = data.getJSONArray("typeTrack");
+                for (int i = 0, len = songsArray.size(); i < len; i++) {
+                    JSONObject songJson = songsArray.getJSONObject(i);
 
-                String songId = songJson.getString("TSID");
-                String songName = songJson.getString("title");
-                String artist = parseArtists(songJson, NetMusicSource.QI);
-                String artistId = songJson.getJSONArray("artist").getJSONObject(0).getString("artistCode");
-                String albumName = songJson.getString("albumTitle");
-                String albumId = songJson.getString("albumAssetCode");
-                Double duration = songJson.getDouble("duration");
+                    String songId = songJson.getString("TSID");
+                    String songName = songJson.getString("title");
+                    String artist = parseArtists(songJson, NetMusicSource.QI);
+                    String artistId = songJson.getJSONArray("artist").getJSONObject(0).getString("artistCode");
+                    String albumName = songJson.getString("albumTitle");
+                    String albumId = songJson.getString("albumAssetCode");
+                    Double duration = songJson.getDouble("duration");
 
-                NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.QI);
-                musicInfo.setId(songId);
-                musicInfo.setName(songName);
-                musicInfo.setArtist(artist);
-                musicInfo.setArtistId(artistId);
-                musicInfo.setAlbumName(albumName);
-                musicInfo.setAlbumId(albumId);
-                musicInfo.setDuration(duration);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.QI);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(songName);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
 
-                res.add(musicInfo);
+                    res.add(musicInfo);
+                }
             }
             return new CommonResult<>(res, t);
         };
@@ -3465,6 +3489,8 @@ public class MusicServerUtils {
                     if (!musicInfo.hasDuration()) musicInfo.setDuration(songJson.getDouble("dt") / 1000);
                     if (!musicInfo.hasAlbumName())
                         musicInfo.setAlbumName(songJson.getJSONObject("al").getString("name"));
+                    if (!musicInfo.hasAlbumId())
+                        musicInfo.setAlbumId(songJson.getJSONObject("al").getString("id"));
                     if (!musicInfo.hasAlbumImage()) {
                         GlobalExecutors.imageExecutor.submit(() -> {
                             BufferedImage albumImage = getImageFromUrl(isProgram ? musicInfo.getAlbumImgUrl()
@@ -3500,12 +3526,12 @@ public class MusicServerUtils {
             // 时长是毫秒，转为秒
             if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("timelength") / 1000);
             if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
+            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumName(data.getString("album_id"));
             if (!musicInfo.hasAlbumImage()) {
                 GlobalExecutors.imageExecutor.submit(() -> {
                     BufferedImage albumImage = getImageFromUrl(data.getString("img"));
                     ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
-//                musicInfo.setAlbumImage(getImageFromUrl(data.getString("img")));
                 });
             }
             if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("play_url"));
@@ -3524,6 +3550,7 @@ public class MusicServerUtils {
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(trackInfo.getDouble("interval"));
                 if (!musicInfo.hasAlbumName())
                     musicInfo.setAlbumName(trackInfo.getJSONObject("album").getString("name"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumName(trackInfo.getJSONObject("album").getString("mid"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
                         // QQ 的歌曲专辑图片需要额外请求接口获得！
@@ -3535,7 +3562,6 @@ public class MusicServerUtils {
                             albumImage = getImageFromUrl(String.format(ARTIST_IMG_QQ_API, trackInfo.getJSONArray("singer").getJSONObject(0).getString("mid")));
                         ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
-//                musicInfo.setAlbumImage(albumImage);
                     });
                 }
             }));
@@ -3558,12 +3584,12 @@ public class MusicServerUtils {
 
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
                 if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumName(data.getString("albumid"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
                         BufferedImage albumImage = getImageFromUrl(data.getString("pic"));
                         ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
-//                musicInfo.setAlbumImage(getImageFromUrl(data.getString("pic")));
                     });
                 }
             }));
@@ -3582,21 +3608,22 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+            String albumId = data.getJSONObject("album").getString("id");
             // 咪咕的专辑名称需要额外请求专辑信息接口！
             if (!musicInfo.hasAlbumName()) {
-                String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, data.getJSONObject("album").getString("id")))
+                String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, albumId))
                         .execute()
                         .body();
                 JSONObject albumData = JSONObject.fromObject(albumBody).getJSONObject("data");
                 musicInfo.setAlbumName(albumData.getString("name"));
             }
+            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumId);
             if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
             if (!musicInfo.hasAlbumImage()) {
                 GlobalExecutors.imageExecutor.submit(() -> {
                     BufferedImage albumImage = getImageFromUrl(data.getString("picUrl"));
                     ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
-//                musicInfo.setAlbumImage(getImageFromUrl(data.getString("picUrl")));
                 });
             }
             if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("320"));
@@ -3610,6 +3637,7 @@ public class MusicServerUtils {
                     .body();
             JSONObject data = JSONObject.fromObject(songBody).getJSONArray("data").getJSONObject(0);
             if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("albumTitle"));
+            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("albumAssetCode"));
             if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
             if (!musicInfo.hasAlbumImage()) {
                 GlobalExecutors.imageExecutor.submit(() -> {
@@ -3634,7 +3662,6 @@ public class MusicServerUtils {
                     BufferedImage albumImage = getImageFromUrl(musicInfo.getAlbumImgUrl());
                     ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
-//                musicInfo.setAlbumImage(getImageFromUrl(musicInfo.getAlbumImgUrl()));
                 });
             }
             if (!musicInfo.hasUrl()) musicInfo.setUrl(fetchMusicUrl(songId, NetMusicSource.XM));
@@ -3643,23 +3670,36 @@ public class MusicServerUtils {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, songId))
-                    .execute()
-                    .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("info").getJSONObject("sound");
-            // 时长是毫秒，转为秒
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration") / 1000);
-            if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("username"));
-            if (!musicInfo.hasArtistId()) musicInfo.setArtistId(data.getString("user_id"));
-            if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
-                    BufferedImage albumImage = getImageFromUrl(data.getString("front_cover"));
-                    ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
-                    musicInfo.callback();
-                });
-            }
-            if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("soundurl"));
-            musicInfo.setLrc("");
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, songId))
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("info").getJSONObject("sound");
+                // 时长是毫秒，转为秒
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration") / 1000);
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("username"));
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(data.getString("user_id"));
+                if (!musicInfo.hasAlbumImage()) {
+                    GlobalExecutors.imageExecutor.submit(() -> {
+                        BufferedImage albumImage = getImageFromUrl(data.getString("front_cover"));
+                        ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                        musicInfo.callback();
+                    });
+                }
+                if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("soundurl"));
+                musicInfo.setLrc("");
+            }));
+            // 猫耳的专辑需要单独请求专辑信息接口！
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                String albumBody = HttpRequest.get(String.format(SONG_ALBUM_DETAIL_ME_API, songId))
+                        .execute()
+                        .body();
+                JSONObject info = JSONObject.fromObject(albumBody).optJSONObject("info");
+                if (info == null) return;
+                JSONObject albumData = info.getJSONObject("drama");
+                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(albumData.getString("name"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumData.getString("id"));
+            }));
         }
 
         // 阻塞等待所有请求完成
@@ -4416,20 +4456,16 @@ public class MusicServerUtils {
                     String artistId = artistJson.getString("id");
                     String artistName = artistJson.getString("name");
                     Integer songNum = artistJson.getInt("musicNum");
-                    String coverImgUrl = artistJson.getString("pic300");
-                    String coverImgThumbUrl = coverImgUrl;
+                    String coverImgThumbUrl = artistJson.getString("pic300");
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
                     artistInfo.setSource(NetMusicSource.KW);
                     artistInfo.setId(artistId);
                     artistInfo.setName(artistName);
                     artistInfo.setSongNum(songNum);
-                    // 酷我音乐没有单独的歌手信息接口，需要在搜索歌手时记录封面图片 url ！
-                    artistInfo.setCoverImgUrl(coverImgUrl);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
-                        if (coverImgThumb == null) coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(artistInfo);
@@ -4702,11 +4738,8 @@ public class MusicServerUtils {
                 String radioId = radioJson.getString("id");
                 String radioName = radioJson.getString("name");
                 String dj = radioJson.getString("author");
-//                String djId = radioJson.getString("uid");
                 String coverImgThumbUrl = radioJson.getString("cover");
-                String description = radioJson.getString("abstract");
                 Long playCount = radioJson.getLong("view_count");
-//                Integer trackCount = radioJson.getInt("tracksCount");
                 String category = radioJson.getString("catalog_name");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
@@ -4715,10 +4748,8 @@ public class MusicServerUtils {
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
                 radioInfo.setPlayCount(playCount);
-//                radioInfo.setTrackCount(trackCount);
                 radioInfo.setCategory(category);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                radioInfo.setDescription(description);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
@@ -4910,28 +4941,27 @@ public class MusicServerUtils {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("id");
-                    String mvName = mvJson.getString("name");
-                    String artistName = mvJson.getString("artistName");
+                    String mvName = mvJson.getString("name").trim();
+                    String artistName = parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getDouble("duration") / 1000;
                     String coverImgUrl = mvJson.getString("cover");
 
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
                     mvInfo.setCoverImgUrl(coverImgUrl);
 
-//                    if (!set.contains(mvInfo)) {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(mvInfo);
-//                    }
-//                    set.add(mvInfo);
                 }
             }
             return new CommonResult<>(res, t);
@@ -5001,6 +5031,7 @@ public class MusicServerUtils {
                 // 酷狗返回的名称含有 HTML 标签，需要去除
                 String mvName = StringUtils.removeHTMLLabel(mvJson.getString("filename"));
                 String artistName = StringUtils.removeHTMLLabel(mvJson.getString("singername"));
+                String creatorId = mvJson.getString("userid");
                 Long playCount = mvJson.getLong("historyheat");
                 Double duration = mvJson.getDouble("duration");
                 String pubTime = mvJson.getString("publishdate").split(" ")[0];
@@ -5008,9 +5039,12 @@ public class MusicServerUtils {
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.KG);
+                // 酷狗搜索 MV 只给了用户 id，默认全是视频
+                mvInfo.setType(MvInfoType.VIDEO);
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
                 mvInfo.setPubTime(pubTime);
@@ -5042,8 +5076,9 @@ public class MusicServerUtils {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
                 String mvId = mvJson.getString("v_id");
-                String mvName = mvJson.getString("mv_name");
-                String artistName = mvJson.getString("singer_name");
+                String mvName = mvJson.getString("mv_name").trim();
+                String artistName = parseArtists(mvJson, NetMusicSource.QQ);
+                String creatorId = mvJson.getJSONArray("singer_list").getJSONObject(0).getString("mid");
                 Long playCount = mvJson.getLong("play_count");
                 Double duration = mvJson.getDouble("duration");
                 String pubTime = mvJson.getString("publish_date");
@@ -5052,8 +5087,9 @@ public class MusicServerUtils {
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.QQ);
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
                 mvInfo.setPubTime(pubTime);
@@ -5084,8 +5120,9 @@ public class MusicServerUtils {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("id");
-                    String mvName = mvJson.getString("name");
+                    String mvName = mvJson.getString("name").trim();
                     String artistName = mvJson.getString("artist");
+                    String creatorId = mvJson.getString("artistid");
                     Long playCount = mvJson.getLong("mvPlayCnt");
                     Double duration = mvJson.getDouble("duration");
                     String coverImgUrl = mvJson.getString("pic");
@@ -5093,8 +5130,9 @@ public class MusicServerUtils {
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setSource(NetMusicSource.KW);
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
                     mvInfo.setCoverImgUrl(coverImgUrl);
@@ -5129,6 +5167,7 @@ public class MusicServerUtils {
                 String mvId = mvJson.getString("vid");
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
+                String creatorId = mvJson.getString("author_id");
                 Long playCount = StringUtils.antiFormatNumber(mvJson.getString("read_num").replaceFirst("次播放", ""));
                 Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
                 String pubTime = mvJson.getString("publishTimeText");
@@ -5139,6 +5178,7 @@ public class MusicServerUtils {
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
                 mvInfo.setPubTime(pubTime);
@@ -5179,7 +5219,6 @@ public class MusicServerUtils {
                 String coverImgUrl = "https:" + mvJson.getString("pic");
 
                 NetMvInfo mvInfo = new NetMvInfo();
-//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setBvid(bvId);
                 mvInfo.setName(mvName);
@@ -5735,7 +5774,6 @@ public class MusicServerUtils {
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
-                // 猫耳没有获取用户信息的接口！
                 String userId = userJson.getString("id");
                 String userName = userJson.getString("username");
                 String gender = "保密";
@@ -5799,6 +5837,49 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setAvatarUrl(avatarUrl);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
+        // 好看
+        Callable<CommonResult<NetUserInfo>> searchUsersHk = () -> {
+            LinkedList<NetUserInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_HK_API, encodedKeyword, page, limit))
+                    .header(Header.COOKIE, HK_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            t = 20;
+            JSONArray userArray = data.getJSONArray("list");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("appid");
+                String userName = userJson.getString("name");
+                String gender = "保密";
+                String avatarThumbUrl = userJson.getString("author_icon");
+                Integer followed = userJson.getInt("fansCnt");
+                Integer programCount = userJson.getInt("videoCnt");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.HK);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setFollowed(followed);
+                userInfo.setProgramCount(programCount);
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
@@ -5959,6 +6040,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersXm));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersMe));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchCVsMe));
+        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersHk));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDb));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDt));
         taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersBi));
@@ -8518,11 +8600,10 @@ public class MusicServerUtils {
 
                         String artistId = artistJson.getString("id");
                         String artistName = artistJson.getString("name");
-                        String coverImgUrl = artistJson.getString("pic300");
+                        String coverImgThumbUrl = artistJson.getString("pic300");
                         Integer songNum = artistJson.getInt("musicNum");
                         Integer albumNum = artistJson.getInt("albumNum");
                         Integer mvNum = artistJson.getInt("mvNum");
-                        String coverImgThumbUrl = coverImgUrl;
 
                         NetArtistInfo artistInfo = new NetArtistInfo();
                         artistInfo.setSource(NetMusicSource.KW);
@@ -8531,12 +8612,9 @@ public class MusicServerUtils {
                         artistInfo.setSongNum(songNum);
                         artistInfo.setAlbumNum(albumNum);
                         artistInfo.setMvNum(mvNum);
-                        // 酷我音乐没有单独的歌手信息接口，需要在搜索歌手时记录封面图片 url ！
-                        artistInfo.setCoverImgUrl(coverImgUrl);
                         artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgUrl);
-                            if (coverImgThumb == null) coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -8570,11 +8648,10 @@ public class MusicServerUtils {
 
                         String artistId = artistJson.getString("id");
                         String artistName = artistJson.getString("name");
-                        String coverImgUrl = artistJson.getString("pic300");
+                        String coverImgThumbUrl = artistJson.getString("pic300");
                         Integer songNum = artistJson.getInt("musicNum");
                         Integer albumNum = artistJson.getInt("albumNum");
                         Integer mvNum = artistJson.getInt("mvNum");
-                        String coverImgThumbUrl = coverImgUrl;
 
                         NetArtistInfo artistInfo = new NetArtistInfo();
                         artistInfo.setSource(NetMusicSource.KW);
@@ -8583,12 +8660,9 @@ public class MusicServerUtils {
                         artistInfo.setSongNum(songNum);
                         artistInfo.setAlbumNum(albumNum);
                         artistInfo.setMvNum(mvNum);
-                        // 酷我音乐没有单独的歌手信息接口，需要在搜索歌手时记录封面图片 url ！
-                        artistInfo.setCoverImgUrl(coverImgUrl);
                         artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgUrl);
-                            if (coverImgThumb == null) coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -9546,29 +9620,22 @@ public class MusicServerUtils {
                     String radioId = radioJson.getString("albumId");
                     String radioName = radioJson.getString("albumTitle");
                     String dj = radioJson.getString("albumUserNickName");
-//                    String description = radioJson.optString("intro");
                     Long playCount = radioJson.getLong("albumPlayCount");
                     Integer trackCount = radioJson.getInt("albumTrackCount");
                     String category = tag;
                     String coverImgUrl = "http://imagev2.xmcdn.com/" + radioJson.getString("albumCoverPath");
                     String coverImgThumbUrl = coverImgUrl;
-//            long ms = radioJson.optLong("createTime");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setSource(NetMusicSource.XM);
                     radioInfo.setId(radioId);
                     radioInfo.setName(radioName);
                     radioInfo.setDj(dj);
-//                    radioInfo.setDescription(description);
                     radioInfo.setCoverImgUrl(coverImgUrl);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     radioInfo.setPlayCount(playCount);
                     radioInfo.setTrackCount(trackCount);
                     radioInfo.setCategory(category);
-//            if (ms != 0) {
-//                String createTime = TimeUtils.msToDate(ms);
-//                radioInfo.setCreateTime(createTime);
-//            }
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
@@ -9599,13 +9666,11 @@ public class MusicServerUtils {
                     String radioName = radioJson.getString("albumTitle");
                     String dj = radioJson.getString("anchorName");
                     String djId = radioJson.getString("anchorUrl").replace("/zhubo/", "");
-//                    String description = radioJson.getString("description");
                     Long playCount = radioJson.getLong("playCount");
                     Integer trackCount = radioJson.getInt("trackCount");
                     String category = radioJson.optString("categoryTitle");
                     String coverImgUrl = "http://imagev2.xmcdn.com/" + radioJson.getString("cover");
                     String coverImgThumbUrl = coverImgUrl;
-//            long ms = radioJson.optLong("createTime");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setSource(NetMusicSource.XM);
@@ -9613,16 +9678,11 @@ public class MusicServerUtils {
                     radioInfo.setName(radioName);
                     radioInfo.setDj(dj);
                     radioInfo.setDjId(djId);
-//                    radioInfo.setDescription(description);
                     radioInfo.setCoverImgUrl(coverImgUrl);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     radioInfo.setPlayCount(playCount);
                     radioInfo.setTrackCount(trackCount);
                     radioInfo.setCategory(category);
-//            if (ms != 0) {
-//                String createTime = TimeUtils.msToDate(ms);
-//                radioInfo.setCreateTime(createTime);
-//            }
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
@@ -10151,7 +10211,6 @@ public class MusicServerUtils {
 
                 String id = programJson.getString("id");
                 String name = programJson.getString("soundstr");
-//                String albumImgUrl = programJson.getString("front_cover");
                 Double duration = programJson.getDouble("duration") / 1000;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -10159,7 +10218,6 @@ public class MusicServerUtils {
                 musicInfo.setFormat(Format.M4A);
                 musicInfo.setId(id);
                 musicInfo.setName(name);
-//                musicInfo.setAlbumImgUrl(albumImgUrl);
                 musicInfo.setDuration(duration);
 
                 res.add(musicInfo);
@@ -10500,6 +10558,7 @@ public class MusicServerUtils {
                     String id = songJson.getString("rid");
                     String name = songJson.getString("name");
                     String artist = songJson.getString("artist");
+                    String artistId = songJson.getString("artistid");
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
@@ -10510,6 +10569,7 @@ public class MusicServerUtils {
                     musicInfo.setId(id);
                     musicInfo.setName(name);
                     musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
@@ -10538,6 +10598,7 @@ public class MusicServerUtils {
                     String id = songJson.getString("rid");
                     String name = songJson.getString("name");
                     String artist = songJson.getString("artist");
+                    String artistId = songJson.getString("artistid");
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
@@ -10548,6 +10609,7 @@ public class MusicServerUtils {
                     musicInfo.setId(id);
                     musicInfo.setName(name);
                     musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
@@ -10659,7 +10721,7 @@ public class MusicServerUtils {
                 if (jsonObject.has("song")) songJson = jsonObject.getJSONObject("song");
                 else songJson = jsonObject;
                 String songId = songJson.getString("id");
-                String songName = songJson.getString("name");
+                String songName = songJson.getString("name").trim();
                 String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                 String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String albumName = songJson.getJSONObject("album").getString("name");
@@ -10698,7 +10760,7 @@ public class MusicServerUtils {
                     if (jsonObject.has("song")) songJson = jsonObject.getJSONObject("song");
                     else songJson = jsonObject;
                     String songId = songJson.getString("id");
-                    String songName = songJson.getString("name");
+                    String songName = songJson.getString("name").trim();
                     String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("album").getString("name");
@@ -10824,6 +10886,7 @@ public class MusicServerUtils {
                     String id = songJson.getString("rid");
                     String name = songJson.getString("name");
                     String artist = songJson.getString("artist");
+                    String artistId = songJson.getString("artistid");
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
@@ -10834,6 +10897,7 @@ public class MusicServerUtils {
                     musicInfo.setId(id);
                     musicInfo.setName(name);
                     musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
@@ -10895,9 +10959,10 @@ public class MusicServerUtils {
                 String songId = songJson.getString("TSID");
                 String songName = songJson.getString("title");
                 String artist = parseArtists(songJson, NetMusicSource.QI);
-                String artistId = songJson.getJSONArray("artist").getJSONObject(0).getString("artistCode");
+                JSONArray artistArray = songJson.optJSONArray("artist");
+                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = songJson.getString("albumTitle");
-                String albumId = songJson.getString("albumId");
+                String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -11675,6 +11740,7 @@ public class MusicServerUtils {
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
                     String artistName = parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
                     String pubTime = mvJson.getJSONObject("mv").getString("publishTime");
@@ -11684,6 +11750,7 @@ public class MusicServerUtils {
                     mvInfo.setId(mvId);
                     mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
                     mvInfo.setPubTime(pubTime);
@@ -11713,18 +11780,18 @@ public class MusicServerUtils {
                 for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
                     String mvId = mvJson.getString("id");
-                    String mvName = mvJson.getString("name");
+                    String mvName = mvJson.getString("name").trim();
                     String artistName = parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     Long playCount = mvJson.getLong("playCount");
-//                Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
                     String coverImgUrl = mvJson.getString("cover");
 
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
-//                mvInfo.setDuration(duration);
                     mvInfo.setCoverImgUrl(coverImgUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
@@ -11751,18 +11818,20 @@ public class MusicServerUtils {
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
                     String mvId = mvJson.getString("id");
-                    String mvName = mvJson.getString("name");
+                    String mvName = mvJson.getString("name").trim();
                     String artistName = parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     Long playCount = mvJson.getLong("playCount");
-//                Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
+                    Double duration = mvJson.getDouble("duration") / 1000;
                     String coverImgUrl = mvJson.getString("cover");
 
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
-//                mvInfo.setDuration(duration);
+                    mvInfo.setDuration(duration);
                     mvInfo.setCoverImgUrl(coverImgUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
@@ -11788,18 +11857,20 @@ public class MusicServerUtils {
             for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
                 String mvId = mvJson.getString("id");
-                String mvName = mvJson.getString("name");
+                String mvName = mvJson.getString("name").trim();
                 String artistName = parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 Long playCount = mvJson.getLong("playCount");
-//                Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
+                Double duration = mvJson.getDouble("duration") / 1000;
                 String coverImgUrl = mvJson.getString("picUrl");
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
-//                mvInfo.setDuration(duration);
+                mvInfo.setDuration(duration);
                 mvInfo.setCoverImgUrl(coverImgUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
@@ -11824,16 +11895,18 @@ public class MusicServerUtils {
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
                 String mvId = mvJson.getString("id");
-                String mvName = mvJson.getString("name");
+                String mvName = mvJson.getString("name").trim();
                 String artistName = parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 Long playCount = mvJson.getLong("playCount");
 //                Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
                 String coverImgUrl = mvJson.getString("cover");
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
 //                mvInfo.setDuration(duration);
                 mvInfo.setCoverImgUrl(coverImgUrl);
@@ -11866,6 +11939,7 @@ public class MusicServerUtils {
                     String mvId = mvJson.getString("mvhash");
                     String mvName = mvJson.getString("videoname");
                     String artistName = mvJson.getString("singername");
+                    String creatorId = mvJson.getJSONArray("authors").getJSONObject(0).getString("singerid");
                     Long playCount = mvJson.getLong("playcount");
                     Double duration = mvJson.getDouble("duration") / 1000;
                     String pubTime = mvJson.getString("publish").split(" ")[0];
@@ -11876,6 +11950,7 @@ public class MusicServerUtils {
                     mvInfo.setId(mvId);
                     mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
                     mvInfo.setPubTime(pubTime);
@@ -11909,8 +11984,9 @@ public class MusicServerUtils {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("vid");
-                    String mvName = mvJson.getString("title");
+                    String mvName = mvJson.getString("title").trim();
                     String artistName = parseArtists(mvJson, NetMusicSource.QQ);
+                    String creatorId = mvJson.getJSONArray("singers").getJSONObject(0).getString("mid");
                     Long playCount = mvJson.getLong("playcnt");
                     Double duration = mvJson.getDouble("duration");
                     String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
@@ -11919,8 +11995,9 @@ public class MusicServerUtils {
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setSource(NetMusicSource.QQ);
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
                     mvInfo.setPubTime(pubTime);
@@ -11951,8 +12028,9 @@ public class MusicServerUtils {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("vid");
-                    String mvName = mvJson.getString("mvtitle");
-                    String artistName = mvJson.getString("singername");
+                    String mvName = mvJson.getString("mvtitle").trim();
+                    String artistName = parseArtists(mvJson, NetMusicSource.QQ);
+                    String creatorId = mvJson.getJSONArray("singers").getJSONObject(0).getString("mid");
                     Long playCount = mvJson.getLong("listennum");
                     String pubTime = mvJson.getString("pub_date");
                     String coverImgUrl = mvJson.getString("picurl");
@@ -11960,8 +12038,9 @@ public class MusicServerUtils {
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setSource(NetMusicSource.QQ);
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setPubTime(pubTime);
                     mvInfo.setCoverImgUrl(coverImgUrl);
@@ -11993,8 +12072,9 @@ public class MusicServerUtils {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
                 String mvId = mvJson.getString("assetCode");
-                String mvName = mvJson.getString("title");
+                String mvName = mvJson.getString("title").trim();
                 String artistName = parseArtists(mvJson, NetMusicSource.QI);
+                String creatorId = mvJson.getJSONArray("artist").getJSONObject(0).getString("artistCode");
                 Long playCount = mvJson.getLong("playnum");
                 String coverImgUrl = mvJson.getString("pic");
                 Double duration = mvJson.getDouble("duration") / 1000;
@@ -12003,8 +12083,9 @@ public class MusicServerUtils {
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.QI);
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
                 mvInfo.setPubTime(pubTime);
@@ -12038,6 +12119,7 @@ public class MusicServerUtils {
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
+//                String creatorId = mvJson.getString("author_id");
                 Long playCount = StringUtils.antiFormatNumber(mvJson.getString("fmplaycnt"));
                 String coverImgUrl = "https:" + mvJson.getString("poster");
                 Double duration = TimeUtils.toSeconds(mvJson.getString("time_length"));
@@ -12048,6 +12130,7 @@ public class MusicServerUtils {
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+//                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
                 mvInfo.setPubTime(pubTime);
@@ -12079,6 +12162,7 @@ public class MusicServerUtils {
                 String mvId = mvJson.getString("vid");
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
+                String creatorId = mvJson.getString("third_id");
                 Long playCount = mvJson.getLong("hot");
                 String coverImgUrl = mvJson.getString("poster");
                 Double duration = mvJson.getDouble("duration");
@@ -12089,6 +12173,7 @@ public class MusicServerUtils {
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
                 mvInfo.setPubTime(pubTime);
@@ -12122,6 +12207,7 @@ public class MusicServerUtils {
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("title");
                     String artistName = mvJson.getString("source_name");
+                    String creatorId = mvJson.getString("third_id");
                     Long playCount = mvJson.getLong("playcnt");
                     String coverImgUrl = mvJson.getString("poster_pc");
                     Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
@@ -12132,6 +12218,7 @@ public class MusicServerUtils {
                     mvInfo.setId(mvId);
                     mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
                     mvInfo.setPubTime(pubTime);
@@ -12174,7 +12261,6 @@ public class MusicServerUtils {
                 String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setId(id);
                 mvInfo.setBvid(bvId);
@@ -12221,7 +12307,6 @@ public class MusicServerUtils {
                     String pubTime = mvJson.getString("create").split(" ")[0];
 
                     NetMvInfo mvInfo = new NetMvInfo();
-//                    mvInfo.setFormat(Format.FLV);
                     mvInfo.setSource(NetMusicSource.BI);
 //                    mvInfo.setId(id);
                     mvInfo.setBvid(bvId);
@@ -12270,7 +12355,6 @@ public class MusicServerUtils {
                     String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
 
                     NetMvInfo mvInfo = new NetMvInfo();
-//                    mvInfo.setFormat(Format.FLV);
                     mvInfo.setSource(NetMusicSource.BI);
                     mvInfo.setId(id);
                     mvInfo.setBvid(bvId);
@@ -12677,7 +12761,7 @@ public class MusicServerUtils {
         LinkedList<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        if (!"null".equals(id) && StringUtils.isNotEmpty(id)) {
+        if (!"0".equals(id) && !"null".equals(id) && StringUtils.isNotEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
                 String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_API, id))
@@ -13177,7 +13261,33 @@ public class MusicServerUtils {
 
             // 酷我
             else if (source == NetMusicSource.KW) {
+                String artistInfoBody = kwRequest(String.format(ARTIST_DETAIL_KW_API, id))
+                        .execute()
+                        .body();
+                JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
+                JSONObject artistJson = artistInfoJson.getJSONObject("data");
 
+                String artistId = artistJson.getString("id");
+                String name = artistJson.getString("name");
+                String coverImgThumbUrl = artistJson.getString("pic300");
+                Integer songNum = artistJson.getInt("musicNum");
+                Integer albumNum = artistJson.getInt("albumNum");
+                Integer mvNum = artistJson.getInt("mvNum");
+
+                NetArtistInfo artistInfo = new NetArtistInfo();
+                artistInfo.setSource(NetMusicSource.KW);
+                artistInfo.setId(artistId);
+                artistInfo.setName(name);
+                artistInfo.setSongNum(songNum);
+                artistInfo.setAlbumNum(albumNum);
+                artistInfo.setMvNum(mvNum);
+                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    artistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(artistInfo);
             }
 
             // 咪咕
@@ -13323,13 +13433,19 @@ public class MusicServerUtils {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            GlobalExecutors.imageExecutor.submit(() -> {
-                BufferedImage coverImg = getImageFromUrl(artistInfo.getCoverImgUrl());
-                if (coverImg == null)
-                    coverImg = getImageFromUrl(artistInfo.getCoverImgUrl().replaceFirst("/300/", "/0/"));
-                artistInfo.setCoverImg(coverImg);
-            });
-            artistInfo.setDescription("");
+            String artistInfoBody = kwRequest(String.format(ARTIST_DETAIL_KW_API, artistInfo.getId()))
+                    .execute()
+                    .body();
+            JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
+            JSONObject data = artistInfoJson.getJSONObject("data");
+
+            String description = StringUtils.removeHTMLLabel(data.getString("info"));
+            String coverImgUrl = data.getString("pic300");
+            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+            artistInfo.setDescription(description);
+            if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getInt("musicNum"));
+            if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(data.getInt("albumNum"));
+            if (!artistInfo.hasMvNum()) artistInfo.setMvNum(data.getInt("mvNum"));
         }
 
         // 咪咕
@@ -13714,7 +13830,7 @@ public class MusicServerUtils {
                     .body();
             JSONObject mvJson = JSONObject.fromObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
-            String name = data.getString("name");
+            String name = data.getString("name").trim();
             String artists = parseArtists(data, NetMusicSource.NET_CLOUD);
             Long playCount = data.getLong("playCount");
             Double duration = data.getDouble("duration") / 1000;
@@ -13935,7 +14051,7 @@ public class MusicServerUtils {
         }
 
         // QQ
-        if (source == NetMusicSource.QQ) {
+        else if (source == NetMusicSource.QQ) {
             userInfo.setSign("");
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
         }
@@ -14028,6 +14144,20 @@ public class MusicServerUtils {
                 GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(
                         (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl)));
             }
+        }
+
+        // 好看
+        else if (source == NetMusicSource.HK) {
+            String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HK_API, uid))
+                    .header(Header.COOKIE, HK_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
+
+            if (!userInfo.hasSign()) userInfo.setSign(userInfoJson.getString("wishes"));
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(userInfoJson.getInt("fansCnt"));
+            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(userInfoJson.getInt("videoCnt"));
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfoJson.getString("avatar"))));
         }
 
         // 豆瓣
@@ -14123,7 +14253,7 @@ public class MusicServerUtils {
                     JSONObject songJson = songArray.getJSONObject(i);
 
                     String songId = songJson.getString("id");
-                    String name = songJson.getString("name");
+                    String name = songJson.getString("name").trim();
                     String artists = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("al").getString("name");
@@ -14261,6 +14391,7 @@ public class MusicServerUtils {
                 String songId = songJson.getString("rid");
                 String name = songJson.getString("name");
                 String artists = songJson.getString("artist");
+                String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
@@ -14271,6 +14402,7 @@ public class MusicServerUtils {
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
                 netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtistId(artistId);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(albumId);
                 netMusicInfo.setDuration(duration);
@@ -14335,7 +14467,7 @@ public class MusicServerUtils {
                 String artists = parseArtists(songJson, NetMusicSource.QI);
                 String artistId = songJson.getJSONArray("artist").getJSONObject(0).getString("artistCode");
                 String albumName = songJson.getString("albumTitle");
-                String albumId = songJson.getString("albumId");
+                String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
@@ -14401,7 +14533,7 @@ public class MusicServerUtils {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("id");
-                String name = songJson.getString("name");
+                String name = songJson.getString("name").trim();
                 String artists = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                 String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                 String albumName = songJson.getJSONObject("al").getString("name");
@@ -14511,6 +14643,7 @@ public class MusicServerUtils {
                 String songId = songJson.getString("rid");
                 String name = songJson.getString("name");
                 String artists = songJson.getString("artist");
+                String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String alId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
@@ -14521,6 +14654,7 @@ public class MusicServerUtils {
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
                 netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtistId(artistId);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(alId);
                 netMusicInfo.setDuration(duration);
@@ -14580,7 +14714,8 @@ public class MusicServerUtils {
                 String songId = songJson.getString("assetId");
                 String name = songJson.getString("title");
                 String artists = parseArtists(songJson, NetMusicSource.QI);
-                String artistId = songJson.getJSONArray("artist").getJSONObject(0).getString("artistCode");
+                JSONArray artistArray = songJson.optJSONArray("artist");
+                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = data.getString("title");
                 String alId = data.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");
@@ -14633,7 +14768,7 @@ public class MusicServerUtils {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("id");
-                String name = songJson.getString("name");
+                String name = songJson.getString("name").trim();
                 String artists = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                 String arId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                 String albumName = songJson.getJSONObject("al").getString("name");
@@ -14746,6 +14881,7 @@ public class MusicServerUtils {
                 // 酷我歌名中可能含有 HTML 标签，先去除
                 String name = StringUtils.removeHTMLLabel(songJson.getString("name"));
                 String artists = songJson.getString("artist");
+                String arId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
@@ -14755,6 +14891,7 @@ public class MusicServerUtils {
                 netMusicInfo.setSource(NetMusicSource.KW);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
+                netMusicInfo.setArtistId(arId);
                 netMusicInfo.setArtist(artists);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(albumId);
@@ -15090,16 +15227,18 @@ public class MusicServerUtils {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
                 String mvId = mvJson.getString("id");
-                String mvName = mvJson.getString("name");
+                String mvName = mvJson.getString("name").trim();
                 String artistName = mvJson.getString("artistName");
+                String creatorId = mvJson.getJSONObject("artist").getString("id");
                 Long playCount = mvJson.getLong("playCount");
                 Double duration = mvJson.getDouble("duration") / 1000;
                 String coverImgUrl = mvJson.getString("imgurl");
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
@@ -15167,8 +15306,6 @@ public class MusicServerUtils {
                 String mvName = StringUtils.removeHTMLLabel(mvJson.getString("filename"));
                 String artistName = StringUtils.removeHTMLLabel(mvJson.getString("singername"));
                 String coverImgUrl = mvJson.getString("imgurl");
-//                Long playCount = mvJson.getLong("historyheat");
-//                Double duration = mvJson.getDouble("duration");
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.KG);
@@ -15176,8 +15313,6 @@ public class MusicServerUtils {
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
                 mvInfo.setCoverImgUrl(coverImgUrl);
-//                mvInfo.setPlayCount(playCount);
-//                mvInfo.setDuration(duration);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
                     mvInfo.setCoverImgThumb(coverImgThumb);
@@ -15200,20 +15335,20 @@ public class MusicServerUtils {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
                 String mvId = mvJson.getString("vid");
-                String mvName = mvJson.getString("title");
+                String mvName = mvJson.getString("title").trim();
                 String artistName = mvJson.getString("singer_name");
+                String creatorId = mvJson.getString("singer_id");
                 String coverImgUrl = mvJson.getString("pic");
                 Long playCount = mvJson.getLong("listenCount");
-//                Double duration = mvJson.getDouble("duration");
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.QQ);
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
                 mvInfo.setPlayCount(playCount);
-//                mvInfo.setDuration(duration);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
                     mvInfo.setCoverImgThumb(coverImgThumb);
@@ -15238,8 +15373,9 @@ public class MusicServerUtils {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("id");
-                    String mvName = mvJson.getString("name");
+                    String mvName = mvJson.getString("name").trim();
                     String artistName = mvJson.getString("artist");
+                    String creatorId = mvJson.getString("artistid");
                     String coverImgUrl = mvJson.getString("pic");
                     Long playCount = mvJson.getLong("mvPlayCnt");
                     Double duration = mvJson.getDouble("duration");
@@ -15247,8 +15383,9 @@ public class MusicServerUtils {
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setSource(NetMusicSource.KW);
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setCoverImgUrl(coverImgUrl);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
@@ -15561,6 +15698,7 @@ public class MusicServerUtils {
                 String songId = songJson.getString("rid");
                 String name = songJson.getString("name");
                 String artist = songJson.getString("artist");
+                String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
@@ -15571,6 +15709,7 @@ public class MusicServerUtils {
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
@@ -15641,7 +15780,7 @@ public class MusicServerUtils {
                     JSONObject songJson = songArray.getJSONObject(i).getJSONObject("song");
 
                     String songId = songJson.getString("id");
-                    String name = songJson.getString("name");
+                    String name = songJson.getString("name").trim();
                     String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("al").getString("name");
@@ -15709,19 +15848,23 @@ public class MusicServerUtils {
                 Document doc = Jsoup.parse(userInfoBody);
                 Elements programs = doc.select(".pld-sound-title.cv-title a");
                 total.set(programs.size());
+//                Elements a = doc.select("a.share-personage-name.show_album_ower_name");
                 for (int i = (page - 1) * limit, len = Math.min(page * limit, programs.size()); i < len; i++) {
                     Element program = programs.get(i);
 
                     String songId = ReUtil.get("id=(\\d+)", program.attr("href"), 1);
                     String name = program.text().trim();
-                    String artist = userInfo.getName();
+                    // 部分音频的艺术家不一致，干脆先不记录！
+//                    String artist = a.text();
+//                    String artistId = a.attr("href").replaceFirst("/", "");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.ME);
                     musicInfo.setFormat(Format.M4A);
                     musicInfo.setId(songId);
                     musicInfo.setName(name);
-                    musicInfo.setArtist(artist);
+//                    musicInfo.setArtist(artist);
+//                    musicInfo.setArtistId(artistId);
                     musicInfos.add(musicInfo);
                 }
             } else {
@@ -15739,7 +15882,6 @@ public class MusicServerUtils {
                     String name = songJson.getString("soundstr");
                     String artist = userInfo.getName();
                     String artistId = userInfo.getId();
-//                String albumImgUrl = songJson.getString("front_cover");
                     Double duration = songJson.getDouble("duration") / 1000;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
@@ -15749,7 +15891,6 @@ public class MusicServerUtils {
                     musicInfo.setName(name);
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
-//                musicInfo.setAlbumImgUrl(albumImgUrl);
                     musicInfo.setDuration(duration);
                     musicInfos.add(musicInfo);
                 }
@@ -15783,7 +15924,7 @@ public class MusicServerUtils {
                 JSONObject songJson = songsArray.getJSONObject(i);
 
                 String songId = songJson.getString("id");
-                String songName = songJson.getString("name");
+                String songName = songJson.getString("name").trim();
                 String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
                 String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String albumName = songJson.getJSONObject("album").getString("name");
@@ -15842,6 +15983,29 @@ public class MusicServerUtils {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
+
+                res.add(musicInfo);
+            }
+        }
+
+        // 猫耳
+        else if (source == NetMusicSource.ME) {
+            String musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_ME_API, id))
+                    .execute()
+                    .body();
+            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONArray songsArray = musicInfoJson.getJSONObject("info").getJSONArray("sounds");
+            t = songsArray.size();
+            for (int i = 0, len = songsArray.size(); i < len; i++) {
+                JSONObject songJson = songsArray.getJSONObject(i);
+
+                String songId = songJson.getString("id");
+                String songName = songJson.getString("soundstr");
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
 
                 res.add(musicInfo);
             }
@@ -16802,18 +16966,128 @@ public class MusicServerUtils {
         String uid = netUserInfo.getId();
 
         LinkedList<NetMvInfo> res = new LinkedList<>();
-        Integer t = 0;
+        AtomicInteger total = new AtomicInteger();
 
         String[] orders = {"pubdate", "click", "stow"};
 
+        // 好看
+        if (source == NetMusicSource.HK) {
+            // 普通视频
+            Callable<CommonResult<NetMvInfo>> getNormalVideos = () -> {
+                LinkedList<NetMvInfo> r = new LinkedList<>();
+                Integer t = 0;
+
+                String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, uid))
+                        .header(Header.COOKIE, HK_COOKIE)
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+                t = 20;
+                JSONArray mvArray = data.getJSONArray("results");
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    JSONObject mvJson = mvArray.getJSONObject(i).getJSONObject("content");
+
+                    String mvId = mvJson.getString("vid");
+                    String mvName = mvJson.getString("title");
+                    String artistName = netUserInfo.getName();
+                    String creatorId = netUserInfo.getId();
+                    String coverImgUrl = mvJson.getString("poster");
+                    Long playCount = mvJson.getLong("playcnt");
+                    Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
+                    String pubTime = mvJson.getString("publish_time").replaceAll("年|月", "-").replace("日", "");
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(NetMusicSource.HK);
+                    mvInfo.setId(mvId);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setDuration(duration);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(mvInfo);
+                }
+
+                return new CommonResult<>(r, t);
+            };
+            // 小视频
+            Callable<CommonResult<NetMvInfo>> getSmallVideos = () -> {
+                LinkedList<NetMvInfo> r = new LinkedList<>();
+                Integer t = 0;
+
+                String mvInfoBody = HttpRequest.get(String.format(USER_SMALL_VIDEO_HK_API, uid))
+                        .header(Header.COOKIE, HK_COOKIE)
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+                t = 20;
+                JSONArray mvArray = data.getJSONArray("results");
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    JSONObject mvJson = mvArray.getJSONObject(i).getJSONObject("content");
+
+                    String mvId = mvJson.getString("vid");
+                    String mvName = mvJson.getString("title");
+                    String artistName = netUserInfo.getName();
+                    String creatorId = netUserInfo.getId();
+                    String coverImgUrl = mvJson.getString("poster");
+                    Long playCount = mvJson.getLong("playcnt");
+                    Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
+                    String pubTime = mvJson.getString("publish_time").replaceAll("年|月", "-").replace("日", "");
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(NetMusicSource.HK);
+                    mvInfo.setId(mvId);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setDuration(duration);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(mvInfo);
+                }
+
+                return new CommonResult<>(r, t);
+            };
+            List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
+
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNormalVideos));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getSmallVideos));
+
+            List<List<NetMvInfo>> rl = new LinkedList<>();
+            taskList.forEach(task -> {
+                try {
+                    CommonResult<NetMvInfo> result = task.get();
+                    rl.add(result.data);
+                    total.set(Math.max(total.get(), result.total));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            });
+            res.addAll(ListUtils.joinAll(rl));
+        }
+
         // 哔哩哔哩
-        if (source == NetMusicSource.BI) {
+        else if (source == NetMusicSource.BI) {
             String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, orders[sortType], uid, page, limit))
                     .cookie(BI_COOKIE)
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
-            t = data.getJSONObject("page").getInt("count");
+            total.set(data.getJSONObject("page").getInt("count"));
             JSONArray mvArray = data.getJSONObject("list").getJSONArray("vlist");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -16828,7 +17102,6 @@ public class MusicServerUtils {
                 String pubTime = TimeUtils.msToDate(mvJson.getLong("created") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setBvid(bvId);
                 mvInfo.setName(mvName);
@@ -16847,7 +17120,7 @@ public class MusicServerUtils {
             }
         }
 
-        return new CommonResult<>(res, t);
+        return new CommonResult<>(res, total.get());
     }
 
     /**
@@ -17019,9 +17292,10 @@ public class MusicServerUtils {
                 JSONObject mlogBaseData = resource.getJSONObject("mlogBaseData");
 
                 String mvId = mlogBaseData.getString("id");
-                String mvName = mlogBaseData.getString("originalTitle");
+                String mvName = mlogBaseData.getString("originalTitle").trim();
                 if ("null".equals(mvName)) mvName = mlogBaseData.getString("text");
                 String artistName = resource.getJSONObject("userProfile").getString("nickname");
+                String creatorId = resource.getJSONObject("userProfile").getString("userId");
                 String coverImgUrl = mlogBaseData.getString("coverUrl");
                 Long playCount = resource.getJSONObject("mlogExtVO").getLong("playCount");
                 Double duration = mlogBaseData.getDouble("duration") / 1000;
@@ -17030,8 +17304,9 @@ public class MusicServerUtils {
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setType(MvInfoType.MLOG);
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
@@ -17066,18 +17341,18 @@ public class MusicServerUtils {
                 String mvId = mvJson.getString("vid");
                 String mvName = mvJson.getString("title");
                 String artistName = parseArtists(mvJson, NetMusicSource.QQ);
+                String creatorId = mvJson.getJSONArray("singers").getJSONObject(0).getString("mid");
                 String coverImgUrl = mvJson.getString("picurl");
                 Long playCount = mvJson.getLong("playcnt");
-//                Double duration = mvJson.getDouble("duration");
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.QQ);
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName.trim());
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
                 mvInfo.setPlayCount(playCount);
-//                mvInfo.setDuration(duration);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
                     mvInfo.setCoverImgThumb(coverImgThumb);
@@ -17166,16 +17441,18 @@ public class MusicServerUtils {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("id");
-                    String mvName = mvJson.getString("name");
+                    String mvName = mvJson.getString("name").trim();
                     String artistName = parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String coverImgUrl = mvJson.getString("cover");
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getDouble("duration") / 1000;
 
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
                     mvInfo.setCoverImgUrl(coverImgUrl);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
@@ -17204,6 +17481,7 @@ public class MusicServerUtils {
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("source_name");
+                String creatorId = mvJson.getString("third_id");
                 String coverImgUrl = mvJson.getString("poster");
                 Long playCount = mvJson.getLong("playcnt");
                 Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
@@ -17214,6 +17492,7 @@ public class MusicServerUtils {
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
@@ -17249,7 +17528,6 @@ public class MusicServerUtils {
                 String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-//                mvInfo.setFormat(Format.FLV);
                 mvInfo.setSource(NetMusicSource.BI);
                 mvInfo.setId(mvId);
                 mvInfo.setBvid(bvId);
@@ -17306,7 +17584,6 @@ public class MusicServerUtils {
                     String pubTime = netMvInfo.getPubTime();
 
                     NetMvInfo mvInfo = new NetMvInfo();
-//                    mvInfo.setFormat(Format.FLV);
                     mvInfo.setSource(NetMusicSource.BI);
                     mvInfo.setId(mvId);
                     mvInfo.setBvid(bvid);
@@ -17818,6 +18095,53 @@ public class MusicServerUtils {
     }
 
     /**
+     * 获取推荐电台
+     *
+     * @return
+     */
+    public static CommonResult<NetRadioInfo> getRecRadios(NetMusicInfo musicInfo) {
+        int source = musicInfo.getSource();
+        String id = musicInfo.getId();
+
+        LinkedList<NetRadioInfo> res = new LinkedList<>();
+        Integer t = 0;
+
+        // 猫耳
+        if (source == NetMusicSource.ME) {
+            String radioInfoBody = HttpRequest.get(String.format(SONG_REC_RADIO_ME_API, id))
+                    .execute()
+                    .body();
+            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject data = radioInfoJson.getJSONObject("info");
+            JSONArray radioArray = data.getJSONArray("dramas");
+            t = radioArray.size();
+            for (int i = 0, len = radioArray.size(); i < len; i++) {
+                JSONObject radioJson = radioArray.getJSONObject(i);
+
+                String radioId = radioJson.getString("id");
+                String radioName = radioJson.getString("name");
+                String coverImgThumbUrl = radioJson.getString("front_cover");
+                Long playCount = radioJson.getLong("view_count");
+
+                NetRadioInfo radioInfo = new NetRadioInfo();
+                radioInfo.setSource(NetMusicSource.ME);
+                radioInfo.setId(radioId);
+                radioInfo.setName(radioName);
+                radioInfo.setPlayCount(playCount);
+                radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    radioInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(radioInfo);
+            }
+        }
+
+        return new CommonResult<>(res, t);
+    }
+
+    /**
      * 获取相似电台
      *
      * @return
@@ -17860,6 +18184,38 @@ public class MusicServerUtils {
                     BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                     ri.setCoverImgThumb(coverImgThumb);
                 });
+                res.add(ri);
+            }
+        }
+
+        // 猫耳
+        else if (source == NetMusicSource.ME) {
+            String radioInfoBody = HttpRequest.get(String.format(SIMILAR_RADIO_ME_API, id))
+                    .execute()
+                    .body();
+            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject data = radioInfoJson.getJSONObject("info");
+            JSONArray radioArray = data.getJSONArray("recommend");
+            t = radioArray.size();
+            for (int i = 0, len = radioArray.size(); i < len; i++) {
+                JSONObject radioJson = radioArray.getJSONObject(i);
+
+                String radioId = radioJson.getString("id");
+                String radioName = radioJson.getString("name");
+                String coverImgThumbUrl = radioJson.getString("front_cover");
+                Long playCount = radioJson.getLong("view_count");
+
+                NetRadioInfo ri = new NetRadioInfo();
+                ri.setSource(NetMusicSource.ME);
+                ri.setId(radioId);
+                ri.setName(radioName);
+                ri.setPlayCount(playCount);
+                ri.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    ri.setCoverImgThumb(coverImgThumb);
+                });
+
                 res.add(ri);
             }
         }
@@ -18022,6 +18378,40 @@ public class MusicServerUtils {
 //                    "声音.*?\\((\\d+)\\)", userInfoBody, 1)));
 
                 String finalAvatarThumbUrl = avaUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+
+            // 好看
+            else if (source == NetMusicSource.HK) {
+                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HK_API, id))
+                        .header(Header.COOKIE, HK_COOKIE)
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
+
+                String userId = data.getString("id");
+                String userName = data.getString("name");
+                String gender = "保密";
+                String avatarThumbUrl = data.getString("avatar");
+                Integer followed = data.getInt("fansCnt");
+                Integer programCount = data.getInt("videoCnt");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.HK);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarThumbUrl);
+                userInfo.setFollowed(followed);
+                userInfo.setProgramCount(programCount);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
