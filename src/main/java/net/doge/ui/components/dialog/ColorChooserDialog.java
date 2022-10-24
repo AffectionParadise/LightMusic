@@ -430,7 +430,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         modelComboBox.setOpaque(false);
         modelComboBox.setFocusable(false);
         modelComboBox.setUI(new ComboBoxUI(modelComboBox, f, globalFont, buttonColor, 80));
-        modelComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        modelComboBox.setBorder(null);
         modelComboBox.addItem("RGB");
         modelComboBox.addItem("HSV");
         modelComboBox.addItemListener(e -> {

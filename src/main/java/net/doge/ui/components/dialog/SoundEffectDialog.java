@@ -240,8 +240,7 @@ public class SoundEffectDialog extends JDialog {
         Color buttonColor = style.getButtonColor();
         comboBox.setUI(new ComboBoxUI(comboBox, f, globalFont, buttonColor));
         // 下拉框边框
-        Border eb = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-        comboBox.setBorder(eb);
+        comboBox.setBorder(null);
         soundEffectPanel.add(soundEffectLabel);
         soundEffectPanel.add(comboBox);
         centerPanel.add(soundEffectPanel, BorderLayout.NORTH);

@@ -258,8 +258,6 @@ public class SettingDialog extends JDialog {
         closeOptionComboBox.setFont(globalFont);
         fobLabel.setFont(globalFont);
         fobComboBox.setFont(globalFont);
-//        rateLabel.setFont(globalFont);
-//        rateComboBox.setFont(globalFont);
         specStyleLabel.setFont(globalFont);
         specStyleComboBox.setFont(globalFont);
         balanceLabel.setFont(globalFont);
@@ -268,7 +266,7 @@ public class SettingDialog extends JDialog {
 
         // 对齐
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
-        fl.setVgap(10);
+        fl.setVgap(7);
         autoDownloadLrcPanel.setLayout(fl);
         videoOnlyPanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
@@ -279,7 +277,6 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setLayout(fl);
         closeOptionPanel.setLayout(fl);
         fobPanel.setLayout(fl);
-//        ratePanel.setLayout(fl);
         specStylePanel.setLayout(fl);
         balancePanel.setLayout(fl);
         backupPanel.setLayout(fl);
@@ -296,7 +293,6 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setBorder(b);
         closeOptionPanel.setBorder(b);
         fobPanel.setBorder(b);
-//        ratePanel.setBorder(b);
         specStylePanel.setBorder(b);
         balancePanel.setBorder(b);
         backupPanel.setBorder(b);
@@ -314,7 +310,6 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setOpaque(false);
         closeOptionPanel.setOpaque(false);
         fobPanel.setOpaque(false);
-//        ratePanel.setOpaque(false);
         specStylePanel.setOpaque(false);
         balancePanel.setOpaque(false);
         backupPanel.setOpaque(false);
@@ -330,7 +325,6 @@ public class SettingDialog extends JDialog {
         videoOnlyCheckBox.setOpaque(false);
         closeOptionComboBox.setOpaque(false);
         fobComboBox.setOpaque(false);
-//        rateComboBox.setOpaque(false);
         specStyleComboBox.setOpaque(false);
         balanceComboBox.setOpaque(false);
 
@@ -339,7 +333,6 @@ public class SettingDialog extends JDialog {
         videoOnlyCheckBox.setFocusPainted(false);
         closeOptionComboBox.setFocusable(false);
         fobComboBox.setFocusable(false);
-//        rateComboBox.setFocusable(false);
         specStyleComboBox.setFocusable(false);
         balanceComboBox.setFocusable(false);
 
@@ -355,7 +348,6 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountLabel.setForeground(labelColor);
         closeOptionLabel.setForeground(labelColor);
         fobLabel.setForeground(labelColor);
-//        rateLabel.setForeground(labelColor);
         specStyleLabel.setForeground(labelColor);
         balanceLabel.setForeground(labelColor);
         backupLabel.setForeground(labelColor);
@@ -364,21 +356,16 @@ public class SettingDialog extends JDialog {
         Color foreColor = style.getForeColor();
         musicDownPathTextField.setForeground(foreColor);
         musicDownPathTextField.setCaretColor(foreColor);
-//        musicDownPathTextField.addFocusListener(new JTextFieldHintListener(musicDownPathTextField, "", foreColor));
         mvDownPathTextField.setForeground(foreColor);
         mvDownPathTextField.setCaretColor(foreColor);
-//        mvDownPathTextField.addFocusListener(new JTextFieldHintListener(mvDownPathTextField, "", foreColor));
         cachePathTextField.setForeground(foreColor);
         cachePathTextField.setCaretColor(foreColor);
-//        cachePathTextField.addFocusListener(new JTextFieldHintListener(cachePathTextField, "", foreColor));
         maxCacheSizeTextField.setForeground(foreColor);
         maxCacheSizeTextField.setCaretColor(foreColor);
-//        maxCacheSizeTextField.addFocusListener(new JTextFieldHintListener(maxCacheSizeTextField, "", foreColor));
         SafeDocument doc = new SafeDocument(0, 4096);
         maxCacheSizeTextField.setDocument(doc);
         maxHistoryCountTextField.setForeground(foreColor);
         maxHistoryCountTextField.setCaretColor(foreColor);
-//        maxHistoryCountTextField.addFocusListener(new JTextFieldHintListener(maxHistoryCountTextField, "", foreColor));
         doc = new SafeDocument(0, 1000);
         maxHistoryCountTextField.setDocument(doc);
         maxSearchHistoryCountTextField.setForeground(foreColor);
@@ -390,17 +377,14 @@ public class SettingDialog extends JDialog {
         Color buttonColor = style.getButtonColor();
         closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f, globalFont, buttonColor));
         fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, globalFont, buttonColor));
-//        rateComboBox.setUI(new ComboBoxUI(rateComboBox, f, globalFont, buttonColor));
         specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, globalFont, buttonColor));
         balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, globalFont, buttonColor));
 
         // 下拉框边框
-        Border eb = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-        closeOptionComboBox.setBorder(eb);
-        fobComboBox.setBorder(eb);
-//        rateComboBox.setBorder(eb);
-        specStyleComboBox.setBorder(eb);
-        balanceComboBox.setBorder(eb);
+        closeOptionComboBox.setBorder(null);
+        fobComboBox.setBorder(null);
+        specStyleComboBox.setBorder(null);
+        balanceComboBox.setBorder(null);
 
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("选择歌曲文件夹");

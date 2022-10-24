@@ -83,6 +83,7 @@
 		"iwanna"
 	],
 	"userHistorySearch":[
+		"王七叶",
 		"你",
 		"三国",
 		"戍孝"
@@ -3061,6 +3062,17 @@
 	"closeWindowOption":0,
 	"desktopLyricOnTop":true,
 	"userCollection":[
+		{
+			"gender":"女",
+			"avatarUrl":"https://i1.hdslb.com/bfs/face/78728942da61180ff0393908e24ded29dc55c6ca.jpg",
+			"name":"王七叶-",
+			"source":11,
+			"id":"1813173223",
+			"isCV":false,
+			"programCount":56,
+			"followed":1100029,
+			"avatarThumbUrl":"https://i1.hdslb.com/bfs/face/78728942da61180ff0393908e24ded29dc55c6ca.jpg"
+		},
 		{
 			"radioCount":-1,
 			"gender":"保密",

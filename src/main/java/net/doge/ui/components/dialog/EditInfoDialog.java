@@ -311,7 +311,6 @@ public class EditInfoDialog extends JDialog {
             } else if (components[i] instanceof CustomTextField) {
                 CustomTextField component = (CustomTextField) components[i];
                 Color foreColor = style.getForeColor();
-//                component.addFocusListener(new JTextFieldHintListener(component, "", foreColor));
                 component.setForeground(foreColor);
                 component.setCaretColor(foreColor);
                 component.setOpaque(false);
@@ -325,8 +324,7 @@ public class EditInfoDialog extends JDialog {
                 Color buttonColor = style.getButtonColor();
                 component.setUI(new ComboBoxUI(component, f, globalFont, buttonColor));
                 // 下拉框边框
-                Border eb = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-                component.setBorder(eb);
+                component.setBorder(null);
 
                 component.setFont(globalFont);
                 int finalI = i;

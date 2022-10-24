@@ -147,8 +147,4 @@ public class NetMvInfo {
     public String toSimpleString() {
         return name + " - " + artist;
     }
-
-//    public String toString() {
-//        return name + " - " + id;
-//    }
 }

@@ -1,7 +1,6 @@
 package net.doge.models;
 
 import lombok.Data;
-import net.doge.constants.NetMusicSource;
 import net.doge.utils.StringUtils;
 
 import java.awt.image.BufferedImage;

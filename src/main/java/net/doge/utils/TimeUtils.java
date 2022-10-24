@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.SimpleFormatter;
 import java.util.regex.Pattern;
 
 /**
@@ -28,9 +29,6 @@ public class TimeUtils {
     private static DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     private static DateFormat shortDateFormatter = new SimpleDateFormat("MM-dd");
     private static DateFormat shortDateShortTimeFormatter = new SimpleDateFormat("MM-dd HH:mm");
-
-//    private final static int[] constellationDayArr = new int[]{20, 19, 21, 20, 21, 22, 23, 23, 23, 24, 23, 22};
-//    private final static String[] constellationArr = new String[]{"摩羯座", "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "摩羯座"};
 
     /**
      * 转换毫秒为时间短语
@@ -69,7 +67,12 @@ public class TimeUtils {
             if (index < 0) return str;
             // MM-dd 转为 yyyy-MM-dd
             if (index < 3) str = Calendar.getInstance().get(Calendar.YEAR) + "-" + str;
-            Date date = str.contains(" ") ? formatter.parse(str) : dateFormatter.parse(str);
+            // yyyy-MM-dd 或 yyyy-MM-dd HH:mm:ss 或 yyyy-MM-dd HH:mm
+            DateFormat fmt = null;
+            if (!str.contains(" ")) fmt = dateFormatter;
+            else if (str.split(":").length > 2) fmt = formatter;
+            else fmt = dateShortTimeFormatter;
+            Date date = fmt.parse(str);
             return msToPhrase(date.getTime());
         } catch (ParseException e) {
             return null;

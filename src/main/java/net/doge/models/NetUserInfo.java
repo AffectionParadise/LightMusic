@@ -95,6 +95,14 @@ public class NetUserInfo {
         return isCV;
     }
 
+    public boolean fromNetCloud() {
+        return source == NetMusicSource.NET_CLOUD;
+    }
+
+    public boolean fromME() {
+        return source == NetMusicSource.ME;
+    }
+
     public boolean hasAvatar() {
         return avatar != null;
     }

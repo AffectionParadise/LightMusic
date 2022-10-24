@@ -49,6 +49,10 @@ public class NetRadioInfo {
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
 
+    public boolean fromME() {
+        return source == NetMusicSource.ME;
+    }
+
     public boolean isBook() {
         return type == RadioType.BOOK;
     }

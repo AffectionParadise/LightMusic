@@ -66,8 +66,6 @@ public class PlayerFrame extends JFrame {
     private final PlayerFrame THIS = this;
     private final String TITLE = "轻音";
     // 窗口宽高
-//    private final int WINDOW_WIDTH = 1145;
-//    private final int WINDOW_HEIGHT = 728;
     private final int WINDOW_WIDTH = 1245;
     private final int WINDOW_HEIGHT = 788;
     private final String SONG_NAME_LABEL = "歌曲名：";
@@ -87,8 +85,6 @@ public class PlayerFrame extends JFrame {
     private final double DEFAULT_RATE = 1;
     // 默认均衡
     private final double DEFAULT_BALANCE = 0;
-    // 歌词动画更新间隔(ms)
-//    private final int LRC_INTERVAL = 10;
     // 歌词高亮位置
     private final int LRC_INDEX = 8;
     // 历史记录最大条数
@@ -102,6 +98,8 @@ public class PlayerFrame extends JFrame {
     private final double MIDDLE_ARC = 0.1;
     private final double LARGE_ARC = 0.03;
     //    private final double WIN_ARC = 0.01;
+    // 分页提示
+    private final String PAGINATION_MSG = "第 %s 页，共 %s 页";
     // 无歌词或歌词损坏提示
     private final String NO_LRC_MSG = "尽情享受音乐的世界";
     // 歌词不支持滚动提示
@@ -117,8 +115,6 @@ public class PlayerFrame extends JFrame {
     private final String ASK_REIMPORT_MSG = "将重新从所有歌曲目录导入歌曲，是否继续？";
     // 询问是否保留播放列表的提示
     private final String ASK_RETAIN_MUSIC_LIST_MSG = "播放列表已存在歌曲，您希望保留播放列表的歌曲吗？(选择“否”将清空原有的歌曲列表)";
-    // 询问是否清空播放列表的提示
-//    private final String ASK_CLEAR_MUSIC_LIST_MSG = "确定要清空离线音乐播放列表吗？";
     // 询问是否清空缓存的提示
     private final String ASK_CLEAR_CACHE_MSG = "当前缓存大小为 %s，确定要清空缓存吗？";
     // 询问是否删除不存在的文件的提示
@@ -131,8 +127,6 @@ public class PlayerFrame extends JFrame {
     private final String ASK_DUPLICATE_MSG = "是否要删除列表中重复的项目？";
     // 询问是否倒序提示
     private final String ASK_REVERSE_MSG = "是否要倒置列表顺序？";
-    // 询问是否覆盖
-//    private final String ASK_OVERWRITE_FIFE_MSG = "文件已存在，是否覆盖？";
     // 帮助信息
     private final String HELP_MSG = "这里没有指南，让音乐作为你的北极星吧。戴上耳机，闭上眼睛，沉醉在美妙的旋律里感受生活......";
     // 已经是第一页提示
@@ -247,7 +241,7 @@ public class PlayerFrame extends JFrame {
     private final String PLAYLIST_SUBSCRIBER_MENU_ITEM_TEXT = "查看收藏者        ";
     private final String RADIO_SUBSCRIBER_MENU_ITEM_TEXT = "查看订阅者        ";
     private final String SIMILAR_RADIO_MENU_ITEM_TEXT = "查看相似电台        ";
-    private final String RADIO_ARTISTS_MENU_ITEM_TEXT = "查看演职员        ";
+    private final String RADIO_ARTISTS_MENU_ITEM_TEXT = "查看演职员/CV        ";
     private final String RADIO_PHOTOS_MENU_ITEM_TEXT = "查看电台照片        ";
     private final String RADIO_POSTERS_MENU_ITEM_TEXT = "查看电台海报        ";
     private final String REC_RADIO_MENU_ITEM_TEXT = "查看推荐电台        ";
@@ -582,9 +576,7 @@ public class PlayerFrame extends JFrame {
     private final String HIDE_DETAIL_TIP = "隐藏歌曲详情页";
     private final String SHOW_KEYWORD_PANEL_TIP = "显示关键词面板";
     private final String SEARCH_TIP = "搜索";
-    //    private final String MORE_TIP = "加载更多";
     private final String BACKWARD_TIP = "后退";
-    private final String TAG_TIP = "选择分类";
     private final String PLAY_ALL_TIP = "播放全部";
     private final String REFRESH_TIP = "刷新";
     private final String LAST_PAGE_TIP = "上一页";
@@ -1053,6 +1045,8 @@ public class PlayerFrame extends JFrame {
     private CustomButton collectionBackwardButton = new CustomButton(backwardIcon);
     // 收藏用户听歌记录类型下拉框
     private JComboBox<String> collectionRecordTypeComboBox = new JComboBox();
+    private DefaultComboBoxModel<String> collectionRecordTypeComboBoxModel = new DefaultComboBoxModel<>();
+    private DefaultComboBoxModel<String> collectionOrderComboBoxModel = new DefaultComboBoxModel<>();
     // 收藏播放全部按钮
     private CustomButton collectionPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 收藏刷新按钮
@@ -1516,7 +1510,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem netRadioSubscriberMenuItem = new CustomMenuItem(RADIO_SUBSCRIBER_MENU_ITEM_TEXT);
     // 电台右键菜单：查看相似电台
     private CustomMenuItem netRadioSimilarMenuItem = new CustomMenuItem(SIMILAR_RADIO_MENU_ITEM_TEXT);
-    // 电台右键菜单：查看电台演职员
+    // 电台右键菜单：查看电台演职员/CV
     private CustomMenuItem netRadioArtistsMenuItem = new CustomMenuItem(RADIO_ARTISTS_MENU_ITEM_TEXT);
     // 电台右键菜单：查看电台照片
     private CustomMenuItem netRadioPhotosMenuItem = new CustomMenuItem(RADIO_PHOTOS_MENU_ITEM_TEXT);
@@ -1717,6 +1711,8 @@ public class PlayerFrame extends JFrame {
     private JLabel netUserTitleLabel = new JLabel();
     // 用户听歌记录类型下拉框
     private JComboBox<String> netUserRecordTypeComboBox = new JComboBox();
+    private DefaultComboBoxModel<String> recordTypeComboBoxModel = new DefaultComboBoxModel<>();
+    private DefaultComboBoxModel<String> orderComboBoxModel = new DefaultComboBoxModel<>();
     // 返回用户按钮
     private CustomButton netUserBackwardButton = new CustomButton(backwardIcon);
     // 用户搜索框
@@ -2181,6 +2177,8 @@ public class PlayerFrame extends JFrame {
     private NetRadioInfo currRadioRadioInfo;
     // 当前歌手原 MV
     private NetMvInfo currArtistMvInfo;
+    // 当前 CV 原电台
+    private NetRadioInfo currCVRadioInfo;
     // 当前演职员原电台
     private NetRadioInfo currArtistRadioInfo;
     // 当前关注用户原用户
@@ -5060,7 +5058,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             // 解决数量标签文字显示不全问题
                             collectionCountPanel.add(collectionCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -5081,7 +5079,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             // 解决数量标签文字显示不全问题
                             collectionCountPanel.add(collectionCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -5102,7 +5100,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             // 解决数量标签文字显示不全问题
                             collectionCountPanel.add(collectionCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -5122,7 +5120,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             // 解决数量标签文字显示不全问题
                             collectionCountPanel.add(collectionCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -5143,7 +5141,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             // 解决数量标签文字显示不全问题
                             collectionCountPanel.add(collectionCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -5160,11 +5158,11 @@ public class PlayerFrame extends JFrame {
                         else if (o instanceof NetUserInfo) {
                             NetUserInfo userInfo = (NetUserInfo) o;
                             CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
-                                    collectionRecordTypeComboBox.getSelectedIndex() ^ 1, userInfo, limit, netMusicInCollectionCurrPage);
+                                    collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             // 解决数量标签文字显示不全问题
                             collectionCountPanel.add(collectionCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -5200,9 +5198,11 @@ public class PlayerFrame extends JFrame {
                 });
             }
         };
-        // 添加用户听歌记录类型
-        collectionRecordTypeComboBox.addItem("最近一周");
-        collectionRecordTypeComboBox.addItem("所有时间");
+        collectionRecordTypeComboBoxModel.addElement("最近一周");
+        collectionRecordTypeComboBoxModel.addElement("所有时间");
+        collectionOrderComboBoxModel.addElement("最新发布");
+        collectionOrderComboBoxModel.addElement("最多播放");
+        collectionRecordTypeComboBox.setModel(collectionRecordTypeComboBoxModel);
         // 用户听歌记录类型
         collectionRecordTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
@@ -5417,7 +5417,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌单歌曲数量显示
 //                                currcollectionLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
                             javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
                             SwingUtilities.updateComponentTreeUI(collectionCountPanel);
@@ -5511,7 +5511,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新专辑歌曲数量显示
 //                                currcollectionLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
                             javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
                             SwingUtilities.updateComponentTreeUI(collectionCountPanel);
@@ -5605,7 +5605,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌手歌曲数量显示
 //                                currcollectionLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
                             javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
                             SwingUtilities.updateComponentTreeUI(collectionCountPanel);
@@ -5698,7 +5698,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新电台歌曲数量显示
 //                                currcollectionLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
                             javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
                             SwingUtilities.updateComponentTreeUI(collectionCountPanel);
@@ -5791,8 +5791,7 @@ public class PlayerFrame extends JFrame {
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新榜单歌曲数量显示
-//                                currcollectionLabel.setText(StringUtils.textToHtml(rankingInfo.getName()));
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
                             javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
                             SwingUtilities.updateComponentTreeUI(collectionCountPanel);
@@ -5893,14 +5892,19 @@ public class PlayerFrame extends JFrame {
                     // 得到用户的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
+                            // 网易云/猫耳用户才显示下拉框
+                            if (userInfo.fromNetCloud())
+                                collectionRecordTypeComboBox.setModel(collectionRecordTypeComboBoxModel);
+                            else if (userInfo.fromME() && !userInfo.isCV())
+                                collectionRecordTypeComboBox.setModel(collectionOrderComboBoxModel);
+
                             CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
-                                    collectionRecordTypeComboBox.getSelectedIndex() ^ 1, userInfo, limit, netMusicInCollectionCurrPage = 1);
+                                    collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新用户歌曲数量显示
-//                                currcollectionLabel.setText(StringUtils.textToHtml(UserInfo.getName()));
-                            collectionCountLabel.setText("当前在第 " + netMusicInCollectionCurrPage + " 页，共有 " + netMusicInCollectionMaxPage + " 页");
+                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
                             javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
                             SwingUtilities.updateComponentTreeUI(collectionCountPanel);
@@ -5913,8 +5917,7 @@ public class PlayerFrame extends JFrame {
                             collectionLeftBox.add(musicCollectionToolBar, 0);
                             SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
                             collectionRecordTypeComboBox.setUI(ui);
-                            // 网易云才显示下拉框
-                            collectionRecordTypeComboBox.setVisible(userInfo.getSource() == NetMusicSource.NET_CLOUD);
+                            collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() && !userInfo.isCV());
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForUserCollectionModel.clear();
@@ -7142,7 +7145,7 @@ public class PlayerFrame extends JFrame {
                     netAlbumToolBar.add(netAlbumTitleLabel);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, 1);
                     netAlbumLeftBox.add(netAlbumCountPanel);
                     netAlbumPlayAllButton.setVisible(false);
@@ -7362,7 +7365,8 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netMusicCountLabel.setText("当前在第 " + netMusicCurrPage + " 页，共有 " + netMusicMaxPage + " 页");
+                        netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
+                        netMusicCountPanel.add(netMusicCountLabel, 2);
                         netMusicCountPanel.setVisible(true);
                         netMusicSearchTypeComboBox.setVisible(true);
                         netMusicSearchSubTypeComboBox.setVisible(netMusicSearchTypeComboBox.getSelectedIndex() == 2);
@@ -7425,7 +7429,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netMusicCountLabel.setText("当前在第 " + netMusicCurrPage + " 页，共有 " + netMusicMaxPage + " 页");
+                        netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
                         netMusicCountPanel.add(netMusicCountLabel, 2);
                         netMusicCountPanel.setVisible(true);
                         netMusicSearchSubTypeComboBox.setVisible(netMusicSearchTypeComboBox.getSelectedIndex() == 2);
@@ -7749,7 +7753,7 @@ public class PlayerFrame extends JFrame {
                     netMusicToolBar.add(netMusicTitleLabel);
                     netMusicToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netMusicCountLabel.setText("当前在第 " + netMusicCurrPage + " 页，共有 " + netMusicMaxPage + " 页");
+                    netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
                     netMusicCountPanel.add(netMusicCountLabel, 2);
                     netLeftBox.add(netMusicCountPanel);
                     netMusicCountPanel.setVisible(true);
@@ -7817,7 +7821,7 @@ public class PlayerFrame extends JFrame {
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netPlaylistCountLabel.setText("当前在第 " + netPlaylistCurrPage + " 页，共有 " + netPlaylistMaxPage + " 页");
+                    netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, 1);
                     netPlaylistLeftBox.add(netPlaylistCountPanel);
                     netPlaylistPlayAllButton.setVisible(false);
@@ -7887,7 +7891,7 @@ public class PlayerFrame extends JFrame {
                         netUserToolBar.add(netUserTitleLabel);
                         netUserToolBar.add(Box.createHorizontalGlue());
                         // 更新数量显示
-                        netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.add(netUserCountLabel, 2);
                         netUserLeftBox.add(netUserCountPanel);
                         netUserPlayAllButton.setVisible(false);
@@ -7935,7 +7939,7 @@ public class PlayerFrame extends JFrame {
                         netArtistToolBar.add(netArtistTitleLabel);
                         netArtistToolBar.add(Box.createHorizontalGlue());
                         // 更新数量显示
-                        netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, 1);
                         netArtistLeftBox.add(netArtistCountPanel);
                         netArtistPlayAllButton.setVisible(false);
@@ -8007,7 +8011,7 @@ public class PlayerFrame extends JFrame {
                         netRadioToolBar.add(netRadioTitleLabel);
                         netRadioToolBar.add(Box.createHorizontalGlue());
                         // 更新数量显示
-                        netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                         netRadioCountPanel.add(netRadioCountLabel, 1);
                         netRadioLeftBox.add(netRadioCountPanel);
                         netRadioPlayAllButton.setVisible(false);
@@ -8055,7 +8059,7 @@ public class PlayerFrame extends JFrame {
                         netAlbumToolBar.add(netAlbumTitleLabel);
                         netAlbumToolBar.add(Box.createHorizontalGlue());
                         // 更新数量显示
-                        netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                         netAlbumCountPanel.add(netAlbumCountLabel, 1);
                         netAlbumLeftBox.add(netAlbumCountPanel);
                         netAlbumPlayAllButton.setVisible(false);
@@ -8126,7 +8130,7 @@ public class PlayerFrame extends JFrame {
                     netRadioToolBar.add(netRadioTitleLabel);
                     netRadioToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                    netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, 1);
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioPlayAllButton.setVisible(false);
@@ -8197,7 +8201,7 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(netMvTitleLabel);
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                    netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, 1);
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
@@ -8755,7 +8759,7 @@ public class PlayerFrame extends JFrame {
                 }
                 // 更新歌单歌曲数量显示
 //                netCurrPlaylistLabel.setText("");
-                netPlaylistCountLabel.setText("当前在第 " + netPlaylistCurrPage + " 页，共有 " + netPlaylistMaxPage + " 页");
+                netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
 //                netPlaylistBackwardButton.setEnabled(false);
             }
             // 后退到关键词面板
@@ -8839,7 +8843,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netPlaylistCountLabel.setText("当前在第 " + netPlaylistCurrPage + " 页，共有 " + netPlaylistMaxPage + " 页");
+                        netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                         netPlaylistCountPanel.add(netPlaylistCountLabel, 1);
                         netPlaylistCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -8899,7 +8903,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netPlaylistCountLabel.setText("当前在第 " + netPlaylistCurrPage + " 页，共有 " + netPlaylistMaxPage + " 页");
+                        netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                         netPlaylistCountPanel.add(netPlaylistCountLabel, 1);
                         netPlaylistCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -8952,7 +8956,7 @@ public class PlayerFrame extends JFrame {
                         int total = result.total;
                         netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netPlaylistCountLabel.setText("当前在第 " + netMusicInPlaylistCurrPage + " 页，共有 " + netMusicInPlaylistMaxPage + " 页");
+                        netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInPlaylistCurrPage, netMusicInPlaylistMaxPage));
                         netPlaylistCountPanel.add(netPlaylistCountLabel, 1);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
@@ -9225,7 +9229,7 @@ public class PlayerFrame extends JFrame {
                         netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新歌单歌曲数量显示
 //                            netCurrPlaylistLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
-                        netPlaylistCountLabel.setText("当前在第 " + netMusicInPlaylistCurrPage + " 页，共有 " + netMusicInPlaylistMaxPage + " 页");
+                        netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInPlaylistCurrPage, netMusicInPlaylistMaxPage));
                         playlistListCountBox.add(netPlaylistCountPanel);
                         playlistListBox.add(playlistListCountBox);
                         // 歌单列表切换到在线音乐列表
@@ -9420,7 +9424,7 @@ public class PlayerFrame extends JFrame {
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netPlaylistCountLabel.setText("当前在第 " + netPlaylistCurrPage + " 页，共有 " + netPlaylistMaxPage + " 页");
+                    netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, 1);
                     netPlaylistLeftBox.add(netPlaylistCountPanel);
                     netPlaylistPlayAllButton.setVisible(false);
@@ -9486,7 +9490,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -9555,7 +9559,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -9738,7 +9742,7 @@ public class PlayerFrame extends JFrame {
                 }
                 // 更新专辑歌曲数量显示
 //                netCurrAlbumLabel.setText("");
-                netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
 //                netAlbumBackwardButton.setEnabled(false);
             }
             // 后退到关键词面板
@@ -9822,7 +9826,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                         netAlbumCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netAlbumList.setModel(emptyListModel);
@@ -9884,7 +9888,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                         netAlbumCountPanel.add(netAlbumCountLabel, 1);
                         netAlbumCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -9940,7 +9944,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netAlbumCountLabel.setText("当前在第 " + netMusicInAlbumCurrPage + " 页，共有 " + netMusicInAlbumMaxPage + " 页");
+                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netMusicInAlbumCurrPage, netMusicInAlbumMaxPage));
                         netAlbumCountPanel.add(netAlbumCountLabel, 1);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
@@ -10213,7 +10217,7 @@ public class PlayerFrame extends JFrame {
                         netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新专辑歌曲数量显示
 //                            netCurrAlbumLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
-                        netAlbumCountLabel.setText("当前在第 " + netMusicInAlbumCurrPage + " 页，共有 " + netMusicInAlbumMaxPage + " 页");
+                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netMusicInAlbumCurrPage, netMusicInAlbumMaxPage));
                         albumListCountBox.add(netAlbumCountPanel);
                         albumListBox.add(albumListCountBox);
                         // 专辑列表切换到在线音乐列表
@@ -10408,7 +10412,7 @@ public class PlayerFrame extends JFrame {
                     netAlbumToolBar.add(netAlbumTitleLabel);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, 1);
                     netAlbumLeftBox.add(netAlbumCountPanel);
                     netAlbumPlayAllButton.setVisible(false);
@@ -10629,7 +10633,7 @@ public class PlayerFrame extends JFrame {
                 }
                 // 更新歌手歌曲数量显示
 //                netCurrArtistLabel.setText("");
-                netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
+                netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
 //                netArtistBackwardButton.setEnabled(false);
             }
             // 后退到关键词面板
@@ -10713,7 +10717,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netArtistList.setModel(emptyListModel);
@@ -10774,7 +10778,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, 1);
                         netArtistCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -10830,7 +10834,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netArtistCountLabel.setText("当前在第 " + netMusicInArtistCurrPage + " 页，共有 " + netMusicInArtistMaxPage + " 页");
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInArtistCurrPage, netMusicInArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, 1);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicListForArtistModel.clear();
@@ -11103,7 +11107,7 @@ public class PlayerFrame extends JFrame {
                         netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新歌手歌曲数量显示
 //                            netCurrArtistLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
-                        netArtistCountLabel.setText("当前在第 " + netMusicInArtistCurrPage + " 页，共有 " + netMusicInArtistMaxPage + " 页");
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInArtistCurrPage, netMusicInArtistMaxPage));
                         artistListCountBox.add(netArtistCountPanel);
                         artistListBox.add(artistListCountBox);
                         // 歌手列表切换到在线音乐列表
@@ -11289,7 +11293,7 @@ public class PlayerFrame extends JFrame {
                     netAlbumToolBar.add(netAlbumTitleLabel);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, 1);
                     netAlbumLeftBox.add(netAlbumCountPanel);
                     netAlbumPlayAllButton.setVisible(false);
@@ -11361,7 +11365,7 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(netMvTitleLabel);
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                    netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.setVisible(true);
                     netMvSortTypeComboBox.setVisible(false);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -11427,7 +11431,7 @@ public class PlayerFrame extends JFrame {
                     netArtistToolBar.add(netArtistTitleLabel);
                     netArtistToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
+                    netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                     netArtistCountPanel.add(netArtistCountLabel, 1);
                     netArtistLeftBox.add(netArtistCountPanel);
                     netArtistPlayAllButton.setVisible(false);
@@ -11494,7 +11498,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -11563,7 +11567,7 @@ public class PlayerFrame extends JFrame {
                     netArtistToolBar.add(netArtistTitleLabel);
                     netArtistToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
+                    netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                     netArtistCountPanel.add(netArtistCountLabel, 1);
                     netArtistLeftBox.add(netArtistCountPanel);
                     netArtistPlayAllButton.setVisible(false);
@@ -11631,7 +11635,7 @@ public class PlayerFrame extends JFrame {
                     netRadioToolBar.add(netRadioTitleLabel);
                     netRadioToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                    netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, 1);
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioPlayAllButton.setVisible(false);
@@ -11861,7 +11865,7 @@ public class PlayerFrame extends JFrame {
                 }
                 // 更新用户歌曲数量显示
 //                netCurrRadioLabel.setText("");
-                netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
 //                netRadioBackwardButton.setEnabled(false);
             }
             // 后退到关键词面板
@@ -11945,7 +11949,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                         netRadioCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netRadioList.setModel(emptyListModel);
@@ -12005,7 +12009,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                         netRadioCountPanel.add(netRadioCountLabel, 1);
                         netRadioCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -12060,7 +12064,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netRadioCountLabel.setText("当前在第 " + netMusicInRadioCurrPage + " 页，共有 " + netMusicInRadioMaxPage + " 页");
+                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRadioCurrPage, netMusicInRadioMaxPage));
                         netRadioCountPanel.add(netRadioCountLabel, 1);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
@@ -12269,18 +12273,22 @@ public class PlayerFrame extends JFrame {
 
             private void setHoverIndex(int index) {
                 TranslucentNetRadioListRenderer renderer = (TranslucentNetRadioListRenderer) netRadioList.getCellRenderer();
-                int hoverIndex = renderer.getHoverIndex();
-                if (hoverIndex == index) return;
-                renderer.setHoverIndex(index);
-                netRadioList.repaint();
+                if (renderer != null) {
+                    int hoverIndex = renderer.getHoverIndex();
+                    if (hoverIndex == index) return;
+                    renderer.setHoverIndex(index);
+                    netRadioList.repaint();
+                }
             }
         });
         netRadioList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetRadioListRenderer renderer = (TranslucentNetRadioListRenderer) netRadioList.getCellRenderer();
-                renderer.setHoverIndex(-1);
-                netRadioList.repaint();
+                if (renderer != null) {
+                    renderer.setHoverIndex(-1);
+                    netRadioList.repaint();
+                }
             }
         });
         // 打开电台
@@ -12328,7 +12336,7 @@ public class PlayerFrame extends JFrame {
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新电台歌曲数量显示
 //                            netCurrRadioLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
-                        netRadioCountLabel.setText("当前在第 " + netMusicInRadioCurrPage + " 页，共有 " + netMusicInRadioMaxPage + " 页");
+                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRadioCurrPage, netMusicInRadioMaxPage));
                         radioListCountBox.add(netRadioCountPanel);
                         radioListCountBox.add(netMusicScrollPane);
                         radioListBox.add(radioListCountBox);
@@ -12525,7 +12533,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -12594,7 +12602,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -12663,7 +12671,7 @@ public class PlayerFrame extends JFrame {
                     netRadioToolBar.add(netRadioTitleLabel);
                     netRadioToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                    netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, 1);
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioPlayAllButton.setVisible(false);
@@ -12707,7 +12715,7 @@ public class PlayerFrame extends JFrame {
                 }
             });
         });
-        // 查看演职员
+        // 查看演职员/CV
         netRadioArtistsMenuItem.addActionListener(e -> {
             NetRadioInfo netRadioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
@@ -12717,50 +12725,99 @@ public class PlayerFrame extends JFrame {
             else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
-                    clearRequestForArtist();
-                    // 搜索演职员
-                    CommonResult<NetArtistInfo> result = MusicServerUtils.getRadioArtists(currArtistRadioInfo = netRadioInfo);
-                    List<NetArtistInfo> netArtistInfos = result.data;
-                    netArtistCurrPage = netArtistMaxPage = 1;
-                    // 标题
-                    netArtistTitleLabel.setText(netRadioInfo.getName() + " 的演职员");
-                    netArtistToolBar.removeAll();
-                    netArtistToolBar.add(netArtistBackwardButton);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
-                    netArtistToolBar.add(netArtistTitleLabel);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
-                    // 更新数量显示
-                    netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
-                    netArtistCountPanel.add(netArtistCountLabel, 1);
-                    netArtistLeftBox.add(netArtistCountPanel);
-                    netArtistPlayAllButton.setVisible(false);
-                    netArtistCountPanel.setVisible(true);
-                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                    netArtistList.setModel(emptyListModel);
-                    netArtistListModel.clear();
-                    netArtistInfos.forEach(artistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(artistInfo));
-                        // 设置图片加载后重绘的事件
-                        artistInfo.setInvokeLater(() -> {
-                            updateRenderer(netArtistList);
-                            updateRenderer(collectionList);
-                            netArtistList.repaint();
-                            collectionList.repaint();
+                    if (netRadioInfo.fromME()) {
+                        clearRequestForUser();
+                        // 获取 CV
+                        CommonResult<NetUserInfo> result = MusicServerUtils.getRadioCVs(currCVRadioInfo = netRadioInfo);
+                        List<NetUserInfo> netUserInfos = result.data;
+                        Integer total = result.total;
+                        netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        // 标题
+                        netUserTitleLabel.setText(netRadioInfo.getName() + " 的 CV");
+                        netUserToolBar.removeAll();
+                        netUserToolBar.add(netUserBackwardButton);
+                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(netUserTitleLabel);
+                        netUserToolBar.add(Box.createHorizontalGlue());
+                        // 更新数量显示
+                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
+                        netUserCountPanel.add(netUserCountLabel, 2);
+                        netUserLeftBox.add(netUserCountPanel);
+                        netUserPlayAllButton.setVisible(false);
+                        netUserRecordTypeComboBox.setVisible(false);
+                        netUserCountPanel.setVisible(true);
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netUserList.setModel(emptyListModel);
+                        netUserListModel.clear();
+                        netUserInfos.forEach(userInfo -> {
+                            globalExecutor.submit(() -> updateCollection(userInfo));
+                            // 设置图片加载后重绘的事件
+                            userInfo.setInvokeLater(() -> {
+                                updateRenderer(netUserList);
+                                updateRenderer(collectionList);
+                                netUserList.repaint();
+                                collectionList.repaint();
+                            });
+                            netUserListModel.addElement(userInfo);
                         });
-                        netArtistListModel.addElement(artistInfo);
-                    });
-                    netArtistList.setModel(netArtistListModel);
-                    netArtistBackwardButton.setEnabled(true);
-                    netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
-                    if (netArtistListModel.isEmpty()) {
-                        netArtistLeftBox.remove(netArtistScrollPane);
-                        netArtistLeftBox.add(emptyHintPanel);
+                        netUserList.setModel(netUserListModel);
+                        netUserBackwardButton.setEnabled(true);
+                        netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
+                        if (netUserListModel.isEmpty()) {
+                            netUserLeftBox.remove(netUserScrollPane);
+                            netUserLeftBox.add(emptyHintPanel);
+                        } else {
+                            netUserLeftBox.remove(emptyHintPanel);
+                            netUserLeftBox.add(netUserScrollPane);
+                        }
+                        netUserScrollPane.getVerticalScrollBar().setValue(0);
+                        tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     } else {
-                        netArtistLeftBox.remove(emptyHintPanel);
-                        netArtistLeftBox.add(netArtistScrollPane);
+                        clearRequestForArtist();
+                        // 搜索演职员
+                        CommonResult<NetArtistInfo> result = MusicServerUtils.getRadioArtists(currArtistRadioInfo = netRadioInfo);
+                        List<NetArtistInfo> netArtistInfos = result.data;
+                        netArtistCurrPage = netArtistMaxPage = 1;
+                        // 标题
+                        netArtistTitleLabel.setText(netRadioInfo.getName() + " 的演职员");
+                        netArtistToolBar.removeAll();
+                        netArtistToolBar.add(netArtistBackwardButton);
+                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(netArtistTitleLabel);
+                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        // 更新数量显示
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
+                        netArtistCountPanel.add(netArtistCountLabel, 1);
+                        netArtistLeftBox.add(netArtistCountPanel);
+                        netArtistPlayAllButton.setVisible(false);
+                        netArtistCountPanel.setVisible(true);
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netArtistList.setModel(emptyListModel);
+                        netArtistListModel.clear();
+                        netArtistInfos.forEach(artistInfo -> {
+                            globalExecutor.submit(() -> updateCollection(artistInfo));
+                            // 设置图片加载后重绘的事件
+                            artistInfo.setInvokeLater(() -> {
+                                updateRenderer(netArtistList);
+                                updateRenderer(collectionList);
+                                netArtistList.repaint();
+                                collectionList.repaint();
+                            });
+                            netArtistListModel.addElement(artistInfo);
+                        });
+                        netArtistList.setModel(netArtistListModel);
+                        netArtistBackwardButton.setEnabled(true);
+                        netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
+                        if (netArtistListModel.isEmpty()) {
+                            netArtistLeftBox.remove(netArtistScrollPane);
+                            netArtistLeftBox.add(emptyHintPanel);
+                        } else {
+                            netArtistLeftBox.remove(emptyHintPanel);
+                            netArtistLeftBox.add(netArtistScrollPane);
+                        }
+                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                        tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
-                    netArtistScrollPane.getVerticalScrollBar().setValue(0);
-                    tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
                     new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -13033,7 +13090,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                        netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                         netMvCountPanel.setVisible(true);
                         netMvSortTypeComboBox.setVisible(false);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -13092,7 +13149,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                        netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                         netMvCountPanel.setVisible(true);
                         netMvCountPanel.add(netMvCountLabel, 1);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -13213,8 +13270,7 @@ public class PlayerFrame extends JFrame {
         netMvPageTextField.setFont(globalFont);
         netMvCountLabel.setFont(globalFont);
         // 边框
-        Border eb = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-        netMvSortTypeComboBox.setBorder(eb);
+        netMvSortTypeComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         netMvSortTypeComboBox.setVisible(false);
         // 帮助提示
         netMvBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
@@ -13401,7 +13457,7 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(netMvTitleLabel);
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                    netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, 1);
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
@@ -13469,7 +13525,7 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(netMvTitleLabel);
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                    netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, 1);
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
@@ -13525,7 +13581,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     if (netMvInfo.isRealMV()) {
                         clearRequestForArtist();
-                        // 搜索演职员
+                        // 查看歌手
                         currArtistMvInfo = netMvInfo;
                         CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
                         List<NetArtistInfo> netArtistInfos = result.data;
@@ -13538,7 +13594,7 @@ public class PlayerFrame extends JFrame {
                         netArtistToolBar.add(netArtistTitleLabel);
                         netArtistToolBar.add(Box.createHorizontalGlue());
                         // 更新数量显示
-                        netArtistCountLabel.setText("当前在第 " + netArtistCurrPage + " 页，共有 " + netArtistMaxPage + " 页");
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, 1);
                         netArtistLeftBox.add(netArtistCountPanel);
                         netArtistPlayAllButton.setVisible(false);
@@ -13584,7 +13640,7 @@ public class PlayerFrame extends JFrame {
                         netUserToolBar.add(netUserTitleLabel);
                         netUserToolBar.add(Box.createHorizontalGlue());
                         // 更新数量显示
-                        netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.add(netUserCountLabel, 2);
                         netUserLeftBox.add(netUserCountPanel);
                         netUserPlayAllButton.setVisible(false);
@@ -13737,7 +13793,7 @@ public class PlayerFrame extends JFrame {
             netRankingLeftBox.add(netRankingScrollPane);
             // 更新榜单歌曲数量显示
 //                netCurrRankingLabel.setText("");
-            netRankingCountLabel.setText("当前在第 " + netRankingCurrPage + " 页，共有 " + netRankingMaxPage + " 页");
+            netRankingCountLabel.setText(String.format(PAGINATION_MSG, netRankingCurrPage, netRankingMaxPage));
             netRankingBackwardButton.setEnabled(false);
             // 切换后一定要刷新！
             netRankingLeftBox.repaint();
@@ -13753,7 +13809,7 @@ public class PlayerFrame extends JFrame {
 //                        netRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     netRankingMaxPage = 1;
                     // 更新数量显示
-                    netRankingCountLabel.setText("当前在第 " + netRankingCurrPage + " 页，共有 " + netRankingMaxPage + " 页");
+                    netRankingCountLabel.setText(String.format(PAGINATION_MSG, netRankingCurrPage, netRankingMaxPage));
                     netRankingCountPanel.setVisible(true);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netRankingList.setModel(emptyListModel);
@@ -13800,7 +13856,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netRankingCountLabel.setText("当前在第 " + netMusicInRankingCurrPage + " 页，共有 " + netMusicInRankingMaxPage + " 页");
+                        netRankingCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRankingCurrPage, netMusicInRankingMaxPage));
                         netRankingCountPanel.add(netRankingCountLabel, 1);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
@@ -14051,7 +14107,7 @@ public class PlayerFrame extends JFrame {
                         netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新榜单歌曲数量显示
 //                            netCurrRankingLabel.setText(StringUtils.textToHtml(RankingInfo.getName()));
-                        netRankingCountLabel.setText("当前在第 " + netMusicInRankingCurrPage + " 页，共有 " + netMusicInRankingMaxPage + " 页");
+                        netRankingCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRankingCurrPage, netMusicInRankingMaxPage));
                         rankingListCountBox.add(netRankingCountPanel);
                         rankingListBox.add(rankingListCountBox);
                         // 榜单列表切换到在线音乐列表
@@ -14302,7 +14358,7 @@ public class PlayerFrame extends JFrame {
                 if (currFollowUserUserInfo == null && currFollowedUserUserInfo == null
                         && currUserPlaylistInfo == null && currUserMvInfo == null && currUserRadioInfo == null
                         && currUserCommentInfo == null && currSubscriberPlaylistInfo == null
-                        && currSubscriberRadioInfo == null && currUserArtistInfo == null) {
+                        && currSubscriberRadioInfo == null && currUserArtistInfo == null && currCVRadioInfo == null) {
                     // 删除标题标签
                     netUserToolBar.add(netUserSearchTextField);
                     netUserToolBar.add(netUserClearInputButton);
@@ -14314,7 +14370,7 @@ public class PlayerFrame extends JFrame {
                 }
                 // 更新用户歌曲数量显示
 //                netCurrUserLabel.setText("");
-                netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
 //                netUserBackwardButton.setEnabled(false);
             }
             // 后退到关键词面板
@@ -14398,7 +14454,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netUserList.setModel(emptyListModel);
@@ -14448,8 +14504,8 @@ public class PlayerFrame extends JFrame {
                     playlistRequest = currUserPlaylistInfo != null, mvRequest = currUserMvInfo != null, radioRequest = currUserRadioInfo != null,
                     commentRequest = currUserCommentInfo != null, playlistSubRequest = currSubscriberPlaylistInfo != null,
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
-                    songRequest = currAuthorMusicInfo != null;
-            if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
+                    songRequest = currAuthorMusicInfo != null, radioCVRequest = currCVRadioInfo != null;
+            if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest || radioCVRequest ||
                     !playlistRequest && !mvRequest && !radioRequest && !commentRequest && !songRequest && !netUserCurrKeyword.equals("")) {
                 loadingAndRun(() -> {
                     try {
@@ -14459,12 +14515,13 @@ public class PlayerFrame extends JFrame {
                                 : playlistSubRequest ? MusicServerUtils.getPlaylistSubscribers(currSubscriberPlaylistInfo, limit, netUserCurrPage)
                                 : radioSubRequest ? MusicServerUtils.getRadioSubscribers(currSubscriberRadioInfo, limit, netUserCurrPage)
                                 : artistRequest ? MusicServerUtils.getArtistFans(currUserArtistInfo, limit, netUserCurrPage)
+                                : radioCVRequest ? MusicServerUtils.getRadioCVs(currCVRadioInfo)
                                 : MusicServerUtils.searchUsers(netUserCurrKeyword, limit, netUserCurrPage);
                         List<NetUserInfo> netUserInfos = result.data;
                         Integer total = result.total;
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.add(netUserCountLabel, 2);
                         netUserCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -14514,12 +14571,12 @@ public class PlayerFrame extends JFrame {
                 try {
                     NetUserInfo userInfo = netUserList.getSelectedValue();
                     CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
-                            netUserRecordTypeComboBox.getSelectedIndex() ^ 1, userInfo, limit, netMusicInUserCurrPage);
+                            netUserRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInUserCurrPage);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
                     netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netMusicInUserCurrPage + " 页，共有 " + netMusicInUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netMusicInUserCurrPage, netMusicInUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMusicList.setModel(emptyListModel);
@@ -14552,9 +14609,11 @@ public class PlayerFrame extends JFrame {
             });
 //            }
         };
-        // 添加用户播放记录类型
-        netUserRecordTypeComboBox.addItem("最近一周");
-        netUserRecordTypeComboBox.addItem("所有时间");
+        recordTypeComboBoxModel.addElement("最近一周");
+        recordTypeComboBoxModel.addElement("所有时间");
+        orderComboBoxModel.addElement("最新发布");
+        orderComboBoxModel.addElement("最多播放");
+        netUserRecordTypeComboBox.setModel(recordTypeComboBoxModel);
         // 用户播放记录类型
         netUserRecordTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
@@ -14814,20 +14873,22 @@ public class PlayerFrame extends JFrame {
                     });
                 }));
 
-
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
+                        // 网易云/猫耳用户才显示下拉框
+                        if (userInfo.fromNetCloud()) netUserRecordTypeComboBox.setModel(recordTypeComboBoxModel);
+                        else if (userInfo.fromME() && !userInfo.isCV())
+                            netUserRecordTypeComboBox.setModel(orderComboBoxModel);
+
                         // 得到用户的音乐信息
                         CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
-                                netUserRecordTypeComboBox.getSelectedIndex() ^ 1, userInfo, limit, netMusicInUserCurrPage = 1);
+                                netUserRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInUserCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 网易云用户才显示下拉框
-                        netUserRecordTypeComboBox.setVisible(userInfo.getSource() == NetMusicSource.NET_CLOUD);
+                        netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() && !userInfo.isCV());
                         // 更新用户歌曲数量显示
-//                            netCurrUserLabel.setText(StringUtils.textToHtml(UserInfo.getName()));
-                        netUserCountLabel.setText("当前在第 " + netMusicInUserCurrPage + " 页，共有 " + netMusicInUserMaxPage + " 页");
+                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netMusicInUserCurrPage, netMusicInUserMaxPage));
                         userListCountBox.add(netUserCountPanel);
                         userListCountBox.add(netMusicScrollPane);
                         userListBox.add(userListCountBox);
@@ -14945,7 +15006,7 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
-                            netUserRecordTypeComboBox.getSelectedIndex() ^ 1, netUserInfo, 10000, 1);
+                            netUserRecordTypeComboBox.getSelectedIndex(), netUserInfo, 10000, 1);
                     List<NetMusicInfo> musicInfos = result.data;
                     if (musicInfos.isEmpty()) {
                         new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -15012,7 +15073,7 @@ public class PlayerFrame extends JFrame {
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netPlaylistCountLabel.setText("当前在第 " + netPlaylistCurrPage + " 页，共有 " + netPlaylistMaxPage + " 页");
+                    netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, 1);
                     netPlaylistLeftBox.add(netPlaylistCountPanel);
                     netPlaylistPlayAllButton.setVisible(false);
@@ -15076,7 +15137,7 @@ public class PlayerFrame extends JFrame {
                     netAlbumToolBar.add(netAlbumTitleLabel);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, 1);
                     netAlbumLeftBox.add(netAlbumCountPanel);
                     netAlbumPlayAllButton.setVisible(false);
@@ -15141,7 +15202,7 @@ public class PlayerFrame extends JFrame {
                     netRadioToolBar.add(netRadioTitleLabel);
                     netRadioToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netRadioCountLabel.setText("当前在第 " + netRadioCurrPage + " 页，共有 " + netRadioMaxPage + " 页");
+                    netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, 1);
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioPlayAllButton.setVisible(false);
@@ -15208,7 +15269,7 @@ public class PlayerFrame extends JFrame {
                     netMvToolBar.add(netMvTitleLabel);
                     netMvToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netMvCountLabel.setText("当前在第 " + netMvCurrPage + " 页，共有 " + netMvMaxPage + " 页");
+                    netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, 1);
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
@@ -15274,7 +15335,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -15341,7 +15402,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -15490,7 +15551,7 @@ public class PlayerFrame extends JFrame {
                 else if (info instanceof NetMvInfo) s = ((NetMvInfo) info).toSimpleString();
                 else if (info instanceof NetRankingInfo) s = ((NetRankingInfo) info).toSimpleString();
                 netCommentTitleLabel.setText(s + " 的评论");
-                netCommentCountLabel.setText("当前在第 " + netCommentCurrPage + " 页，共有 " + netCommentMaxPage + " 页");
+                netCommentCountLabel.setText(String.format(PAGINATION_MSG, netCommentCurrPage, netCommentMaxPage));
                 netCommentCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                 netCommentList.setModel(emptyListModel);
@@ -15551,7 +15612,7 @@ public class PlayerFrame extends JFrame {
                 netSheetCurrPage = netSheetMaxPage = 1;
                 // 更新标题和数量显示
                 netSheetTitleLabel.setText(info.toSimpleString() + " 的曲谱");
-                netSheetCountLabel.setText("当前在第 " + netSheetCurrPage + " 页，共有 " + netSheetMaxPage + " 页");
+                netSheetCountLabel.setText(String.format(PAGINATION_MSG, netSheetCurrPage, netSheetMaxPage));
                 netSheetCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                 netSheetList.setModel(emptyListModel);
@@ -15824,7 +15885,7 @@ public class PlayerFrame extends JFrame {
                     netUserToolBar.add(netUserTitleLabel);
                     netUserToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netUserCountLabel.setText("当前在第 " + netUserCurrPage + " 页，共有 " + netUserMaxPage + " 页");
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, 2);
                     netUserLeftBox.add(netUserCountPanel);
                     netUserPlayAllButton.setVisible(false);
@@ -15891,7 +15952,7 @@ public class PlayerFrame extends JFrame {
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netPlaylistCountLabel.setText("当前在第 " + netPlaylistCurrPage + " 页，共有 " + netPlaylistMaxPage + " 页");
+                    netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, 1);
                     netPlaylistLeftBox.add(netPlaylistCountPanel);
                     netPlaylistPlayAllButton.setVisible(false);
@@ -15955,7 +16016,7 @@ public class PlayerFrame extends JFrame {
                     netAlbumToolBar.add(netAlbumTitleLabel);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
                     // 更新数量显示
-                    netAlbumCountLabel.setText("当前在第 " + netAlbumCurrPage + " 页，共有 " + netAlbumMaxPage + " 页");
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, 1);
                     netAlbumLeftBox.add(netAlbumCountPanel);
                     netAlbumPlayAllButton.setVisible(false);
@@ -16282,7 +16343,7 @@ public class PlayerFrame extends JFrame {
             recommendLeftBox.remove(musicRecommendToolBar);
             recommendLeftBox.add(recommendToolBar, 0);
             // 更新歌单/专辑/歌手/电台数量显示
-            recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+            recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
             // 解决数量标签文字显示不全问题
             recommendCountPanel.add(recommendCountLabel, 2);
             recommendBackwardButton.setEnabled(false);
@@ -16305,7 +16366,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             // 解决数量标签文字显示不全问题
                             recommendCountPanel.add(recommendCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16333,7 +16394,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             // 解决数量标签文字显示不全问题
                             recommendCountPanel.add(recommendCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16361,7 +16422,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             // 解决数量标签文字显示不全问题
                             recommendCountPanel.add(recommendCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16389,7 +16450,7 @@ public class PlayerFrame extends JFrame {
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             // 解决数量标签文字显示不全问题
                             recommendCountPanel.add(recommendCountLabel, 2);
                             // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16434,7 +16495,7 @@ public class PlayerFrame extends JFrame {
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16481,7 +16542,7 @@ public class PlayerFrame extends JFrame {
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16528,7 +16589,7 @@ public class PlayerFrame extends JFrame {
                         List<NetMusicInfo> netMusicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16567,7 +16628,7 @@ public class PlayerFrame extends JFrame {
                         List<NetMusicInfo> netMusicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16607,7 +16668,7 @@ public class PlayerFrame extends JFrame {
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16657,7 +16718,7 @@ public class PlayerFrame extends JFrame {
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16705,7 +16766,7 @@ public class PlayerFrame extends JFrame {
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16753,7 +16814,7 @@ public class PlayerFrame extends JFrame {
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16802,7 +16863,7 @@ public class PlayerFrame extends JFrame {
                         List<NetMusicInfo> netMusicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16842,7 +16903,7 @@ public class PlayerFrame extends JFrame {
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
-                        recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, 2);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -17000,7 +17061,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     if (!recommendCountPanel.isVisible()) recommendCountPanel.setVisible(true);
@@ -17059,7 +17120,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     itemRecommendList.setModel(emptyListModel);
@@ -17110,7 +17171,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     netMusicList.setModel(emptyListModel);
@@ -17159,7 +17220,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     netMusicList.setModel(emptyListModel);
@@ -17208,7 +17269,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     itemRecommendList.setModel(emptyListModel);
@@ -17266,7 +17327,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     itemRecommendList.setModel(emptyListModel);
@@ -17317,7 +17378,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     itemRecommendList.setModel(emptyListModel);
@@ -17373,7 +17434,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     itemRecommendList.setModel(emptyListModel);
@@ -17431,7 +17492,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     netMusicList.setModel(emptyListModel);
@@ -17481,7 +17542,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
-                    recommendCountLabel.setText("当前在第 " + netRecommendCurrPage + " 页，共有 " + netRecommendMaxPage + " 页");
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, 2);
                     itemRecommendList.setModel(emptyListModel);
@@ -17543,11 +17604,9 @@ public class PlayerFrame extends JFrame {
         hotRadioRecommendButton.setFont(globalFont);
         programRecommendButton.setFont(globalFont);
         mvRecommendButton.setFont(globalFont);
-//        currItemRecommendLabel.setFont(globalFont);
         netRecommendTagComboBox.setFont(globalFont);
         netRecommendPlayAllButton.setFont(globalFont);
         recommendCountLabel.setFont(globalFont);
-//        musicMoreRecommendButton.setFont(globalFont);
         netRecommendPageTextField.setFont(globalFont);
         // 边框
         netRecommendTagComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -17777,7 +17836,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌单歌曲数量显示
 //                                currItemRecommendLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
                             // 歌单列表切换到在线音乐列表
@@ -17869,7 +17928,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新专辑歌曲数量显示
 //                                currItemRecommendLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
                             // 专辑列表切换到在线音乐列表
@@ -17961,7 +18020,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌手歌曲数量显示
 //                                currItemRecommendLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
                             // 歌手列表切换到在线音乐列表
@@ -18053,7 +18112,7 @@ public class PlayerFrame extends JFrame {
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新电台歌曲数量显示
 //                                currItemRecommendLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
-                            recommendCountLabel.setText("当前在第 " + netMusicInRecommendCurrPage + " 页，共有 " + netMusicInRecommendMaxPage + " 页");
+                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
                             // 电台列表切换到在线音乐列表
@@ -19376,8 +19435,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = playModePopupMenu.getHeight();
-//                SwingUtilities.updateComponentTreeUI(playModePopupMenu);
-                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? 205 : h));
+                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? 177 : h));
             }
         });
         // 播放模式弹出菜单
@@ -23150,6 +23208,7 @@ public class PlayerFrame extends JFrame {
         currUserCommentInfo = null;
         currSubscriberPlaylistInfo = null;
         currSubscriberRadioInfo = null;
+        currCVRadioInfo = null;
     }
 
     // 退出播放器
