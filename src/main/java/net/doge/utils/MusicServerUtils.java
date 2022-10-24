@@ -1659,14 +1659,27 @@ public class MusicServerUtils {
             JSONArray fTags = radioTagJson.getJSONArray("data");
             for (int i = 0, len = fTags.size(); i < len; i++) {
                 JSONArray sTags = fTags.getJSONObject(i).getJSONArray("categories");
-                for (int j = 0, s = sTags.size(); j < s; j++) {
+                // 大标签
+                for (int j = 0, size = sTags.size(); j < size; j++) {
                     JSONObject tagJson = sTags.getJSONObject(j);
 
                     String name = tagJson.getString("displayName");
                     String pinyin = tagJson.getString("pinyin");
 
                     if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-                    Tags.radioTag.get(name)[3] = pinyin;
+                    Tags.radioTag.get(name)[3] = pinyin + " ";
+
+                    // 子标签
+                    JSONArray ssTags = tagJson.getJSONArray("subcategories");
+                    for (int k = 0, s = ssTags.size(); k < s; k++) {
+                        JSONObject ssTagJson = ssTags.getJSONObject(k);
+
+                        String ssName = name + " - " + ssTagJson.getString("displayValue");
+                        String ssId = String.format("%s %s", pinyin, ssTagJson.getString("code"));
+
+                        if (!Tags.radioTag.containsKey(ssName)) Tags.radioTag.put(ssName, new String[c]);
+                        Tags.radioTag.get(ssName)[3] = ssId;
+                    }
                 }
             }
         };
@@ -1815,7 +1828,7 @@ public class MusicServerUtils {
             = "https://www.ximalaya.com/revision/rank/v3/element?typeId=%s&clusterId=%s";
     // 分类电台 API (喜马拉雅)
     private static final String CAT_RADIO_XM_API
-            = "https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=%s&subcategory=&meta=&sort=0&page=%s&perPage=%s&useCache=false";
+            = "https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=%s&subcategory=%s&meta=&sort=0&page=%s&perPage=%s&useCache=false";
     // 频道电台 API (喜马拉雅)
     private static final String CHANNEL_RADIO_XM_API
             = "https://www.ximalaya.com/revision/metadata/v2/channel/albums?groupId=%s&pageNum=%s&pageSize=%s&sort=1&metadata=";
@@ -2278,6 +2291,8 @@ public class MusicServerUtils {
     private static final String SINGLE_SONG_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
     // 歌曲信息 API (咪咕)
     private static final String SINGLE_SONG_DETAIL_MG_API = prefixMg + "/song?cid=%s";
+    // 歌曲信息 API (喜马拉雅)
+    private static final String SINGLE_SONG_DETAIL_XM_API = "https://www.ximalaya.com/revision/track/simple?trackId=%s";
     // 歌曲信息 API (千千)
     private static final String SINGLE_SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲信息 API (猫耳)
@@ -3369,7 +3384,6 @@ public class MusicServerUtils {
                 String artistId = songJson.getString("uid");
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumId");
-                String albumImgUrl = songJson.getString("coverPath");
                 Double duration = songJson.getDouble("duration");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -3382,7 +3396,6 @@ public class MusicServerUtils {
                 musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
-                musicInfo.setAlbumImgUrl(albumImgUrl);
                 musicInfo.setDuration(duration);
 
                 res.add(musicInfo);
@@ -3660,11 +3673,21 @@ public class MusicServerUtils {
             }));
         }
 
-        // 喜马拉雅(时长、专辑名称提前写入了，没有歌词)
+        // 喜马拉雅
         else if (source == NetMusicSource.XM) {
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_XM_API, songId))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+            JSONObject trackInfo = data.getJSONObject("trackInfo");
+            JSONObject albumInfo = data.getJSONObject("albumInfo");
+
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(trackInfo.getDouble("duration"));
+            if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(albumInfo.getString("title"));
+            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumInfo.getString("albumId"));
             if (!musicInfo.hasAlbumImage()) {
                 GlobalExecutors.imageExecutor.submit(() -> {
-                    BufferedImage albumImage = getImageFromUrl(musicInfo.getAlbumImgUrl());
+                    BufferedImage albumImage = getImageFromUrl("https:" + trackInfo.getString("coverPath"));
                     ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
                 });
@@ -9554,7 +9577,8 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[3])) {
-                String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, s[3], page, limit))
+                String[] sp = s[3].split(" ", -1);
+                String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, sp[0], sp[1], page, limit))
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
@@ -9568,14 +9592,12 @@ public class MusicServerUtils {
                     String radioName = radioJson.getString("title");
                     String dj = radioJson.getString("anchorName");
                     String djId = radioJson.getString("uid");
-//                    String description = radioJson.getString("description");
                     Long playCount = radioJson.getLong("playCount");
                     Integer trackCount = radioJson.getInt("trackCount");
                     String category = tag;
                     String coverImgUrl = "http:" + radioJson.getString("coverPath");
                     coverImgUrl = coverImgUrl.substring(0, coverImgUrl.lastIndexOf('!'));
                     String coverImgThumbUrl = coverImgUrl;
-//            long ms = radioJson.optLong("createTime");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setSource(NetMusicSource.XM);
@@ -9583,16 +9605,12 @@ public class MusicServerUtils {
                     radioInfo.setName(radioName);
                     radioInfo.setDj(dj);
                     radioInfo.setDjId(djId);
-//                    radioInfo.setDescription(description);
                     radioInfo.setCoverImgUrl(coverImgUrl);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     radioInfo.setPlayCount(playCount);
                     radioInfo.setTrackCount(trackCount);
                     radioInfo.setCategory(category);
-//            if (ms != 0) {
-//                String createTime = TimeUtils.msToDate(ms);
-//                radioInfo.setCreateTime(createTime);
-//            }
+
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
@@ -15243,9 +15261,6 @@ public class MusicServerUtils {
                 Double duration = songJson.getDouble("duration");
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumId");
-                // 专辑图片 url 可能不存在，需要判空
-                String albumCoverPath = songJson.optString("albumCoverPath");
-                String albumImgUrl = albumCoverPath != null ? "http://imagev2.xmcdn.com/" + albumCoverPath : "";
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.XM);
@@ -15255,11 +15270,9 @@ public class MusicServerUtils {
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
-                // 喜马拉雅歌曲需要提前写入时长、专辑名称、封面图片 url！
                 musicInfo.setDuration(duration);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
-                musicInfo.setAlbumImgUrl(albumImgUrl);
                 musicInfos.add(musicInfo);
             }
         }
@@ -15531,7 +15544,6 @@ public class MusicServerUtils {
                 String artistId = songJson.getString("anchorUid");
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumId");
-                String albumImgUrl = "http:" + songJson.getString("coverPath");
                 Double duration = songJson.getDouble("length");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -15544,7 +15556,6 @@ public class MusicServerUtils {
                 musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
-                musicInfo.setAlbumImgUrl(albumImgUrl);
                 musicInfo.setDuration(duration);
                 musicInfos.add(musicInfo);
             }

@@ -2979,11 +2979,6 @@ public class PlayerFrame extends JFrame {
                     netMusicInfo.setAlbumName(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
                     netMusicInfo.setAlbumId(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_ID));
                     netMusicInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MUSIC_DURATION));
-                    // 电台节目需要额外载入图片 url
-                    if (netMusicInfo.isProgram()) {
-                        netMusicInfo.setAlbumImgUrl(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL));
-                    }
-                    // 注意电台没有 MV ！
                     netMusicInfo.setMvId(jsonObject.optString(ConfigConstants.NET_MUSIC_MV_ID));
                     historyModel.addElement(netMusicInfo);
                 }
@@ -3015,16 +3010,6 @@ public class PlayerFrame extends JFrame {
                     netMusicInfo.setId(jo.optString(ConfigConstants.NET_MUSIC_ID));
                     netMusicInfo.setName(jo.optString(ConfigConstants.NET_MUSIC_NAME));
                     netMusicInfo.setArtist(jo.optString(ConfigConstants.NET_MUSIC_ARTIST));
-                    // 喜马拉雅需要额外载入时长、专辑名称、图片 url
-                    if (netMusicInfo.getSource() == NetMusicSource.XM) {
-                        netMusicInfo.setDuration(jo.optDouble(ConfigConstants.NET_MUSIC_DURATION));
-                        netMusicInfo.setAlbumName(jo.optString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-//                            netMusicInfo.setAlbumImgUrl(jo.optString(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL));
-                    }
-                    // 电台节目需要额外载入图片 url
-                    if (netMusicInfo.isProgram()) {
-                        netMusicInfo.setAlbumImgUrl(jo.optString(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL));
-                    }
                     task = new Task(downloadList, type, netMusicInfo, null);
 
                     task.setInvokeLater(() -> {
@@ -3087,11 +3072,6 @@ public class PlayerFrame extends JFrame {
                     netMusicInfo.setAlbumName(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
                     netMusicInfo.setAlbumId(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_ID));
                     netMusicInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MUSIC_DURATION));
-                    // 电台节目需要额外载入图片 url
-                    if (netMusicInfo.isProgram()) {
-                        netMusicInfo.setAlbumImgUrl(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL));
-                    }
-                    // 注意电台没有 MV ！
                     netMusicInfo.setMvId(jsonObject.optString(ConfigConstants.NET_MUSIC_MV_ID));
                     playQueueModel.addElement(netMusicInfo);
                 }
@@ -3459,11 +3439,6 @@ public class PlayerFrame extends JFrame {
                     netMusicInfo.setAlbumName(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
                     netMusicInfo.setAlbumId(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_ID));
                     netMusicInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MUSIC_DURATION));
-                    // 电台节目需要额外载入图片 url
-                    if (netMusicInfo.isProgram()) {
-                        netMusicInfo.setAlbumImgUrl(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL));
-                    }
-                    // 注意电台没有 MV ！
                     netMusicInfo.setMvId(jsonObject.optString(ConfigConstants.NET_MUSIC_MV_ID));
                     collectionModel.addElement(netMusicInfo);
                 }
@@ -3747,21 +3722,15 @@ public class PlayerFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
                 if (netMusicInfo.hasHash()) jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
-                if (netMusicInfo.hasProgramId())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
-                if (netMusicInfo.hasAlbumName())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if (netMusicInfo.hasDuration())
+                if(netMusicInfo.hasDuration())
                     jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
-                // 电台节目需要额外存入图片 url
-                if (netMusicInfo.isProgram()) {
-                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL, netMusicInfo.getAlbumImgUrl());
-                }
                 historyJsonArray.add(jsonObject);
             }
         }
@@ -3793,16 +3762,6 @@ public class PlayerFrame extends JFrame {
                 jo.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
                 jo.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
                 jo.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
-                // 喜马拉雅需要额外存入时长、专辑名称、图片 url
-                if (netMusicInfo.getSource() == NetMusicSource.XM) {
-                    jo.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
-                    jo.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
-//                    jo.put(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL, netMusicInfo.getAlbumImgUrl());
-                }
-                // 电台节目需要额外存入图片 url
-                if (netMusicInfo.isProgram()) {
-                    jo.put(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL, netMusicInfo.getAlbumImgUrl());
-                }
                 jsonObject.put(ConfigConstants.TASK_MUSIC_INFO, jo);
             }
             // 如果是 MV 下载任务，需要额外记录 MV 信息
@@ -3836,21 +3795,15 @@ public class PlayerFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
                 if (netMusicInfo.hasHash()) jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
-                if (netMusicInfo.hasProgramId())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
-                if (netMusicInfo.hasAlbumName())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if (netMusicInfo.hasDuration())
+                if(netMusicInfo.hasDuration())
                     jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
-                // 电台节目需要额外存入图片 url
-                if (netMusicInfo.isProgram()) {
-                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL, netMusicInfo.getAlbumImgUrl());
-                }
                 playQueueJsonArray.add(jsonObject);
             }
         }
@@ -3948,21 +3901,15 @@ public class PlayerFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
                 if (netMusicInfo.hasHash()) jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
-                if (netMusicInfo.hasProgramId())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
-                if (netMusicInfo.hasAlbumName())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if (netMusicInfo.hasDuration())
+                if(netMusicInfo.hasDuration())
                     jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
-                // 电台节目需要额外存入图片 url
-                if (netMusicInfo.isProgram()) {
-                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_IMG_URL, netMusicInfo.getAlbumImgUrl());
-                }
                 collectionJsonArray.add(jsonObject);
             }
         }
@@ -7124,69 +7071,7 @@ public class PlayerFrame extends JFrame {
         // 查看歌手/作者
         authorMenuItem.addActionListener(e -> netMusicAuthorMenuItem.doClick());
         // 查看专辑/电台
-        albumMenuItem.addActionListener(e -> {
-            Object o = musicList.getSelectedValue();
-            if (o instanceof AudioFile) return;
-            NetMusicInfo netMusicInfo = (NetMusicInfo) o;
-            loadingAndRun(() -> {
-                try {
-                    clearRequestForAlbum();
-                    // 查看歌曲专辑
-                    currAlbumMusicInfo = netMusicInfo;
-                    CommonResult<NetAlbumInfo> result = MusicServerUtils.getAlbumInfo(netMusicInfo.getAlbumId(), netMusicInfo.getSource());
-                    List<NetAlbumInfo> netAlbumInfos = result.data;
-                    Integer total = result.total;
-                    netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                    // 标题
-                    netAlbumTitleLabel.setText(netMusicInfo.toSimpleString() + " 的专辑");
-                    netAlbumToolBar.removeAll();
-                    netAlbumToolBar.add(netAlbumBackwardButton);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
-                    netAlbumToolBar.add(netAlbumTitleLabel);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
-                    // 更新数量显示
-                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
-                    netAlbumCountPanel.add(netAlbumCountLabel, 1);
-                    netAlbumLeftBox.add(netAlbumCountPanel);
-                    netAlbumPlayAllButton.setVisible(false);
-                    netAlbumCountPanel.setVisible(true);
-                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                    netAlbumList.setModel(emptyListModel);
-                    netAlbumListModel.clear();
-                    netAlbumInfos.forEach(albumInfo -> {
-                        globalExecutor.submit(() -> updateCollection(albumInfo));
-                        // 设置图片加载后重绘的事件
-                        albumInfo.setInvokeLater(() -> {
-                            netAlbumList.repaint();
-                            collectionList.repaint();
-                        });
-                        netAlbumListModel.addElement(albumInfo);
-                    });
-                    netAlbumList.setModel(netAlbumListModel);
-                    netAlbumBackwardButton.setEnabled(true);
-                    netAlbumLeftBox.remove(netAlbumKeywordsPanelScrollPane);
-                    if (netAlbumListModel.isEmpty()) {
-                        netAlbumLeftBox.remove(netAlbumScrollPane);
-                        netAlbumLeftBox.add(emptyHintPanel);
-                    } else {
-                        netAlbumLeftBox.remove(emptyHintPanel);
-                        netAlbumLeftBox.add(netAlbumScrollPane);
-                    }
-                    netAlbumScrollPane.getVerticalScrollBar().setValue(0);
-                    tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                }
-            });
-        });
+        albumMenuItem.addActionListener(e -> netMusicAlbumMenuItem.doClick());
         // 查看推荐电台
         recRadioMenuItem.addActionListener(e -> netMusicRecRadioMenuItem.doClick());
         // 右键菜单查看相关 MV
@@ -21484,8 +21369,7 @@ public class PlayerFrame extends JFrame {
         netRecommendPageTextField.setForeground(foreColor);
         netRecommendPageTextField.setCaretColor(foreColor);
         netRecommendTagComboBox.setOpaque(opaque);
-//        netRecommendTagComboBox.setForeground(buttonColor);
-        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor, 210));
+        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor, 220));
         netRecommendPlayAllButton.setOpaque(opaque);
         netRecommendPlayAllButton.setForeground(buttonColor);
         netRecommendRefreshButton.setOpaque(opaque);
