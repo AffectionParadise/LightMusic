@@ -31,6 +31,8 @@ public class ConfigConstants {
     public final static String MAX_HISTORY_COUNT = "maxHistoryCount";
     // 最大搜索历史数量
     public final static String MAX_SEARCH_HISTORY_COUNT = "maxSearchHistoryCount";
+    // 最大同时下载的任务数
+    public final static String MAX_CONCURRENT_TASK_COUNT = "maxConcurrentTaskCount";
     // 是否显示频谱
     public final static String SHOW_SPECTRUM = "showSpectrum";
     // 是否碟片虚化
@@ -131,8 +133,6 @@ public class ConfigConstants {
     public final static String NET_MUSIC_ALBUM_NAME = "albumName";
     // 在线音乐专辑 id
     public final static String NET_MUSIC_ALBUM_ID = "albumId";
-    // 在线音乐封面 url
-    public final static String NET_MUSIC_ALBUM_IMG_URL = "albumImgUrl";
     // 在线音乐 MV ID
     public final static String NET_MUSIC_MV_ID = "mvId";
 
@@ -199,8 +199,6 @@ public class ConfigConstants {
     public final static String NET_RADIO_DJ = "dj";
     // 电台 DJ id
     public final static String NET_RADIO_DJ_ID = "djId";
-    // 电台描述
-    public final static String NET_RADIO_DESCRIPTION = "description";
     // 电台类型
     public final static String NET_RADIO_CATEGORY = "category";
     // 电台节目数量
@@ -260,18 +258,10 @@ public class ConfigConstants {
     public final static String NET_USER_NAME = "name";
     // 用户性别
     public final static String NET_USER_GENDER = "gender";
-    // 用户生日
-    public final static String NET_USER_BIRTHDAY = "birthday";
-    // 用户地区
-    public final static String NET_USER_AREA = "area";
     // 用户头像 url
     public final static String NET_USER_AVATAR_URL = "avatarUrl";
     // 用户头像缩略图 url
     public final static String NET_USER_AVATAR_THUMB_URL = "avatarThumbUrl";
-//    // 用户背景 url
-//    public final static String NET_USER_BG_IMG_URL = "bgImgUrl";
-//    // 用户签名
-//    public final static String NET_USER_SIGN = "sign";
     // 用户关注数
     public final static String NET_USER_FOLLOW = "follow";
     // 用户粉丝数

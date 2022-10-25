@@ -1,36 +1,53 @@
 package net.doge.constants;
 
+import java.io.File;
+import java.lang.reflect.Field;
+
 /**
  * @Author yzx
  * @Description
  * @Date 2020/12/9
  */
 public class SimplePath {
-    // 打包时的基础路径
-//    public static final String BASE_PATH = "src/net/doge/";
+    private static final String separator = File.separator;
+
+    private static String buildPath(String... parts) {
+        return String.join(separator, parts);
+    }
+
     // 基础路径
-    public static final String BASE_PATH = "src/main/java/net/doge/";
+    public static String BASE_PATH = buildPath("src", "main", "java", "net", "doge");
     // 图标路径
-    public static final String ICON_PATH = BASE_PATH + "icons/";
+    public static String ICON_PATH = buildPath(BASE_PATH, "icons");
     // 菜单相关图标路径
-    public static final String MENU_ICON_PATH = ICON_PATH + "menu/";
+    public static String MENU_ICON_PATH = buildPath(ICON_PATH, "menu");
     // 字体路径
-    public static final String FONT_PATH = BASE_PATH + "fonts/";
+    public static String FONT_PATH = buildPath(BASE_PATH, "fonts");
     // 系统风格图片路径
-    public static final String STYLE_IMG_PATH = ICON_PATH + "style/";
+    public static String STYLE_IMG_PATH = buildPath(ICON_PATH, "style");
     // 自定义风格图片
-    public static final String CUSTOM_STYLE_IMG_PATH = ICON_PATH + "customStyle/";
+    public static String CUSTOM_STYLE_IMG_PATH = buildPath(ICON_PATH, "customStyle");
 
     // 缓存路径
-    public static String CACHE_PATH = BASE_PATH + "cache/";
+    public static String CACHE_PATH = buildPath(BASE_PATH, "cache");
     // 图片缓存路径
-    public static String IMG_CACHE_PATH = CACHE_PATH + "img/";
+    public static String IMG_CACHE_PATH = buildPath(CACHE_PATH, "img");
     // 下载路径
-    public static final String DOWNLOAD_PATH = BASE_PATH + "downloads/";
+    public static String DOWNLOAD_PATH = buildPath(BASE_PATH, "downloads");
     // 下载的音乐路径
-    public static String DOWNLOAD_MUSIC_PATH = DOWNLOAD_PATH + "music/";
+    public static String DOWNLOAD_MUSIC_PATH = buildPath(DOWNLOAD_PATH, "music");
     // 下载的 MV 路径
-    public static String DOWNLOAD_MV_PATH = DOWNLOAD_PATH + "mv/";
-    // 专辑缓存路径
-//    public static final String ALBUM_CACHE_PATH = CACHE_PATH + "albums/";
+    public static String DOWNLOAD_MV_PATH = buildPath(DOWNLOAD_PATH, "mv");
+
+    static {
+        try {
+            // 所有路径后面添加分隔符
+            Field[] fields = SimplePath.class.getFields();
+            for (Field field : fields) {
+                field.set(null, field.get(null) + separator);
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

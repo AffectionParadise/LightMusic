@@ -38,7 +38,7 @@
 		},
 		{
 			"coverImgUrl":"",
-			"playCount":55595,
+			"playCount":55981,
 			"trackCount":69,
 			"dj":"时间代码",
 			"name":"随身听英语-BBC",
@@ -50,7 +50,7 @@
 		},
 		{
 			"coverImgUrl":"",
-			"playCount":440722,
+			"playCount":441747,
 			"trackCount":36,
 			"dj":"代码时间",
 			"name":"代码时间",
@@ -62,7 +62,7 @@
 		}
 	],
 	"currUIStyle":22,
-	"mvDownPath":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/",
+	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/",
 	"videoRate":1,
 	"playlistHistorySearch":[
 		"治愈轻音：繁星",
@@ -199,16 +199,78 @@
 			"name":"雨 RAIN RAIN RAIN",
 			"source":0,
 			"id":"74752067",
-			"coverImgThumbUrl":"https://p2.music.126.net/2bepi13lhHf8qVDoHGPJUg==/109951163734122907.jpg"
+			"coverImgThumbUrl":"https://p1.music.126.net/2bepi13lhHf8qVDoHGPJUg==/109951163734122907.jpg"
 		}
 	],
-	"musicDownPath":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/",
+	"musicDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/",
 	"tasks":[
+		{
+			"total":22024219,
+			"name":"英语口语 - Henry(下) - 真业余西",
+			"finished":22024219,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/英语口语 - Henry(下) - 真业余西.m4a",
+			"type":0,
+			"status":1,
+			"musicInfo":{
+				"artist":"真业余西",
+				"format":"m4a",
+				"name":"英语口语 - Henry(下)",
+				"source":5,
+				"id":"34756440"
+			}
+		},
+		{
+			"total":28115076,
+			"name":"DevOps Tooling - 张学谦 - 真业余西",
+			"finished":28115076,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/DevOps Tooling - 张学谦 - 真业余西.m4a",
+			"type":0,
+			"status":1,
+			"musicInfo":{
+				"artist":"真业余西",
+				"format":"m4a",
+				"name":"DevOps Tooling - 张学谦",
+				"source":5,
+				"id":"37890611"
+			}
+		},
+		{
+			"total":4371245,
+			"name":"陈奕雯「为你读诗」：《旅行》 - 为你读诗官方账号",
+			"finished":4371245,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/陈奕雯「为你读诗」：《旅行》 - 为你读诗官方账号.m4a",
+			"type":0,
+			"status":1,
+			"musicInfo":{
+				"artist":"为你读诗官方账号",
+				"format":"m4a",
+				"name":"陈奕雯「为你读诗」：《旅行》",
+				"source":7,
+				"id":"6388926"
+			}
+		},
+		{
+			"total":146054995,
+			"mvInfo":{
+				"bvid":"",
+				"artist":"告五人",
+				"format":"mp4",
+				"name":"爱人错过",
+				"source":2,
+				"id":"d0031xd9jf4",
+				"type":0
+			},
+			"name":"爱人错过 - 告五人",
+			"finished":146054995,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/mv/爱人错过 - 告五人.mp4",
+			"type":1,
+			"status":1
+		},
 		{
 			"total":3100883,
 			"name":"Let Me - 亚哲大大、Re_houseE",
 			"finished":3100883,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/Let Me - 亚哲大大、Re_houseE.mp3",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/Let Me - 亚哲大大、Re_houseE.mp3",
 			"type":0,
 			"status":1,
 			"musicInfo":{
@@ -232,7 +294,7 @@
 			},
 			"name":"弱水三千 - 周传雄",
 			"finished":34694271,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/弱水三千 - 周传雄.mp4",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/mv/弱水三千 - 周传雄.mp4",
 			"type":1,
 			"status":1
 		},
@@ -240,11 +302,10 @@
 			"total":37574654,
 			"name":"EP8 爱情里如何自救？能处处不能处拉倒！ - 猫耳播客喵",
 			"finished":37574654,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/EP8 爱情里如何自救？能处处不能处拉倒！ - 猫耳播客喵.m4a",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/EP8 爱情里如何自救？能处处不能处拉倒！ - 猫耳播客喵.m4a",
 			"type":0,
 			"status":1,
 			"musicInfo":{
-				"albumImgUrl":"https://static.maoercdn.com/coversmini/202207/20/541a55a53c1aed1d069a18aaa54276d2130549.png",
 				"artist":"猫耳播客喵",
 				"format":"m4a",
 				"name":"EP8 爱情里如何自救？能处处不能处拉倒！",
@@ -256,7 +317,7 @@
 			"total":12505965,
 			"name":"孤勇者 - 小洛蜗牛",
 			"finished":12505965,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/孤勇者 - 小洛蜗牛.mp3",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/孤勇者 - 小洛蜗牛.mp3",
 			"type":0,
 			"status":1,
 			"musicInfo":{
@@ -271,7 +332,7 @@
 			"total":73731178,
 			"name":"爱在港乐01-暗恋 - 子劲Gin",
 			"finished":16291350,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/爱在港乐01-暗恋 - 子劲Gin.mp3",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/爱在港乐01-暗恋 - 子劲Gin.mp3",
 			"type":0,
 			"status":2,
 			"musicInfo":{
@@ -283,129 +344,7 @@
 			}
 		},
 		{
-			"total":0,
-			"name":"梦里水乡 - 江珊",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/梦里水乡 - 江珊.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"江珊",
-				"format":"mp3",
-				"name":"梦里水乡",
-				"source":0,
-				"id":"249320"
-			}
-		},
-		{
-			"total":0,
-			"name":"Lost - OVSKY",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/Lost - OVSKY.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"OVSKY",
-				"format":"mp3",
-				"name":"Lost",
-				"source":0,
-				"id":"1482604086"
-			}
-		},
-		{
-			"total":0,
-			"name":"陪影子想你 - 泉",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/陪影子想你 - 泉.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"泉",
-				"format":"mp3",
-				"name":"陪影子想你",
-				"source":0,
-				"id":"1904235912"
-			}
-		},
-		{
-			"total":0,
-			"name":"Tera - Xomu",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/Tera - Xomu.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"Xomu",
-				"format":"mp3",
-				"name":"Tera",
-				"source":0,
-				"id":"521415465"
-			}
-		},
-		{
-			"total":0,
-			"name":"Kuyenda - Lennart Schroot、Unknown Brain、Sru",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/Kuyenda - Lennart Schroot、Unknown Brain、Sru.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"Lennart Schroot、Unknown Brain、Sru",
-				"format":"mp3",
-				"name":"Kuyenda",
-				"source":0,
-				"id":"500399011"
-			}
-		},
-		{
-			"total":0,
-			"mvInfo":{
-				"bvid":"",
-				"artist":"名字君Montage",
-				"format":"mp4",
-				"name":"致命的优雅——刺客信条全系最帅镜头大混剪",
-				"source":0,
-				"id":"E9B381EE9F8BA5DF98B499DE1947E370",
-				"type":0
-			},
-			"name":"致命的优雅——刺客信条全系最帅镜头大混剪 - 名字君Montage",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/致命的优雅——刺客信条全系最帅镜头大混剪 - 名字君Montage.mp4",
-			"type":1,
-			"status":1
-		},
-		{
-			"total":0,
-			"name":"《画离弦》海伦-你抚琵琶奏琴弦 。",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/《画离弦》海伦-你抚琵琶奏琴弦 。.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"",
-				"format":"mp3",
-				"name":"《画离弦》海伦-你抚琵琶奏琴弦 。",
-				"source":0,
-				"id":"1873999552"
-			}
-		},
-		{
-			"total":0,
-			"name":"执子之手 - 阮言Ruany",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/执子之手 - 阮言Ruany.flac",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"阮言Ruany",
-				"format":"flac",
-				"name":"执子之手",
-				"source":0,
-				"id":"1911365910"
-			}
-		},
-		{
-			"total":0,
+			"total":104292085,
 			"mvInfo":{
 				"bvid":"",
 				"artist":"周深",
@@ -416,49 +355,16 @@
 				"type":0
 			},
 			"name":"我，江湖！ - 周深",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/我，江湖！ - 周深.mp4",
+			"finished":104292085,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/mv/我，江湖！ - 周深.mp4",
 			"type":1,
 			"status":1
 		},
 		{
 			"total":0,
-			"name":"EP08:为什么说港乐是一场翻唱的艺术？ - 黑胶盒子",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/EP08为什么说港乐是一场翻唱的艺术？ - 黑胶盒子.flac",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"黑胶盒子",
-				"format":"flac",
-				"name":"EP08:为什么说港乐是一场翻唱的艺术？",
-				"source":0,
-				"id":"1924207765"
-			}
-		},
-		{
-			"total":0,
-			"name":"开源和写作 - justjavac - 真业余西",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/开源和写作 - justjavac - 真业余西.m4a",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"duration":2759,
-				"albumName":"代码时间",
-				"albumImgUrl":"https://imagev2.xmcdn.com/group20/M0A/63/61/wKgJJ1eeB-PQdc6-AAIYz2ivNpY840.png",
-				"artist":"真业余西",
-				"format":"m4a",
-				"name":"开源和写作 - justjavac",
-				"source":5,
-				"id":"49046547"
-			}
-		},
-		{
-			"total":0,
 			"name":"元夜行 - Maxser、ME_DD、Re_houseE、MasterC、HT Records",
 			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/元夜行 - Maxser、ME_DD、Re_houseE、MasterC、HT Records.mp3",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/元夜行 - Maxser、ME_DD、Re_houseE、MasterC、HT Records.mp3",
 			"type":0,
 			"status":1,
 			"musicInfo":{
@@ -473,7 +379,7 @@
 			"total":0,
 			"name":"哪里都是你 - 队长",
 			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/哪里都是你 - 队长.mp3",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/哪里都是你 - 队长.mp3",
 			"type":0,
 			"status":1,
 			"musicInfo":{
@@ -485,7 +391,7 @@
 			}
 		},
 		{
-			"total":0,
+			"total":28911080,
 			"mvInfo":{
 				"bvid":"",
 				"artist":"队长",
@@ -496,13 +402,13 @@
 				"type":0
 			},
 			"name":"哪里都是你 - 队长",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/哪里都是你 - 队长.mp4",
+			"finished":28911080,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/mv/哪里都是你 - 队长.mp4",
 			"type":1,
 			"status":1
 		},
 		{
-			"total":0,
+			"total":98720700,
 			"mvInfo":{
 				"bvid":"",
 				"artist":"最美阿拉蕾",
@@ -513,13 +419,13 @@
 				"type":0
 			},
 			"name":"朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你 - 最美阿拉蕾",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你 - 最美阿拉蕾.mp4",
+			"finished":98720700,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/mv/朱添泽《想》DJ版，我该用什么状态告诉你，我最大的遗憾就是你 - 最美阿拉蕾.mp4",
 			"type":1,
 			"status":1
 		},
 		{
-			"total":0,
+			"total":27031082,
 			"mvInfo":{
 				"bvid":"",
 				"artist":"Lovelyz",
@@ -530,8 +436,8 @@
 				"type":0
 			},
 			"name":"【短综】二选一问答：全场答案一致的问题是？ - Lovelyz",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/【短综】二选一问答：全场答案一致的问题是？ - Lovelyz.mp4",
+			"finished":27031082,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/mv/【短综】二选一问答：全场答案一致的问题是？ - Lovelyz.mp4",
 			"type":1,
 			"status":1
 		},
@@ -548,32 +454,17 @@
 			},
 			"name":"第33届韩国金唱片大赏音源部门全程回顾 - V.A.",
 			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/第33届韩国金唱片大赏音源部门全程回顾 - V.A..mp4",
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/mv/第33届韩国金唱片大赏音源部门全程回顾 - V.A..mp4",
 			"type":1,
 			"status":3
 		},
 		{
-			"total":0,
-			"name":"우주를 줄게 (Live) - 刘宪华 (Henry)",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/우주를 줄게 (Live) - 刘宪华 (Henry).mp3",
+			"total":481115,
+			"name":"超级敏感 - A-SOUL",
+			"finished":481115,
+			"dest":"D:/编程之路/Java/我的项目/MusicPlayer/src/main/java/net/doge/downloads/music/超级敏感 - A-SOUL.mp3",
 			"type":0,
 			"status":1,
-			"musicInfo":{
-				"artist":"刘宪华 (Henry)",
-				"format":"mp3",
-				"name":"우주를 줄게 (Live)",
-				"source":0,
-				"id":"1377290021"
-			}
-		},
-		{
-			"total":0,
-			"name":"超级敏感 - A-SOUL",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/超级敏感 - A-SOUL.mp3",
-			"type":0,
-			"status":3,
 			"musicInfo":{
 				"artist":"A-SOUL",
 				"format":"mp3",
@@ -581,123 +472,32 @@
 				"source":0,
 				"id":"1841611653"
 			}
-		},
-		{
-			"total":0,
-			"mvInfo":{
-				"bvid":"",
-				"artist":"安迪Anndy",
-				"format":"mp4",
-				"name":"MV",
-				"source":0,
-				"id":"10922428",
-				"type":0
-			},
-			"name":"MV - 安迪Anndy",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\mv/MV - 安迪Anndy.mp4",
-			"type":1,
-			"status":1
-		},
-		{
-			"total":0,
-			"name":"红马 (女版) - 一颗狼星_许篮心",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/红马 (女版) - 一颗狼星_许篮心.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"一颗狼星_许篮心",
-				"format":"mp3",
-				"name":"红马 (女版)",
-				"source":0,
-				"id":"1828574198"
-			}
-		},
-		{
-			"total":0,
-			"name":"Visual Studio Code - 吕鹏 - 代码时间",
-			"finished":0,
-			"dest":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music/Visual Studio Code - 吕鹏 - 代码时间.mp3",
-			"type":0,
-			"status":1,
-			"musicInfo":{
-				"artist":"代码时间",
-				"format":"mp3",
-				"name":"Visual Studio Code - 吕鹏",
-				"source":0,
-				"id":"530692704"
-			}
 		}
 	],
 	"spectrumStyle":0,
 	"lyricType":0,
 	"chineseType":0,
 	"history":[
+		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\英语口语 - Henry(下) - 真业余西.m4a",
 		{
-			"duration":492.773,
-			"albumName":"【声音恋人】鸭宝",
-			"albumImgUrl":"",
-			"artist":"H_鸭宝",
+			"duration":247,
+			"albumName":"Punching Bag",
+			"artist":"Josh Turner、Ricky Skaggs",
 			"mvId":"",
-			"format":"m4a",
-			"name":"【女性向音声】委屈的暧昧期大狗勾狗急跳墙啦（吃醋_甜_表白 ）",
-			"albumId":"56059",
-			"artistId":"14821814",
-			"source":7,
-			"id":"6453007"
+			"format":"mp3",
+			"name":"For the Love of God",
+			"albumId":"965221",
+			"artistId":"",
+			"source":1,
+			"id":"32086078",
+			"hash":"33CF606474990BF9EE93CAA41157C912",
+			"programId":""
 		},
-		{
-			"duration":550,
-			"albumImgUrl":"",
-			"artist":"啊小鼠啊",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【女性向中文音声】胃疼醒来任你摆弄后反攻你的狼崽男友! ! !（异地/恋爱/年下）",
-			"albumId":"",
-			"artistId":"10394826",
-			"source":7,
-			"id":"6473025"
-		},
-		{
-			"duration":608.313,
-			"albumImgUrl":"",
-			"artist":"久紫儿",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【3D男性向中文音声】[十分钟女友] 做你的十分钟恋人",
-			"albumId":"",
-			"artistId":"3461151",
-			"source":7,
-			"id":"6481402"
-		},
-		{
-			"duration":220.233,
-			"albumImgUrl":"",
-			"artist":"兰波゛",
-			"mvId":"",
-			"format":"m4a",
-			"name":"月老掉线 To 月月",
-			"albumId":"",
-			"artistId":"18557174",
-			"source":7,
-			"id":"4669073"
-		},
-		{
-			"duration":202.965,
-			"albumImgUrl":"",
-			"artist":"小航砸_一心向钱",
-			"mvId":"",
-			"format":"m4a",
-			"name":"月老掉线",
-			"albumId":"",
-			"artistId":"16695738",
-			"source":7,
-			"id":"4750686"
-		},
+		"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music\\DevOps Tooling - 张学谦 - 真业余西.m4a",
+		"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music\\陈奕雯「为你读诗」：《旅行》 - 为你读诗官方账号.m4a",
 		{
 			"duration":263.968,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晔梓辰",
 			"mvId":"",
 			"format":"m4a",
@@ -705,11 +505,12 @@
 			"albumId":"",
 			"artistId":"10603755",
 			"source":7,
-			"id":"5486411"
+			"id":"5486411",
+			"programId":""
 		},
 		{
 			"duration":254.496,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"暖白白",
 			"mvId":"",
 			"format":"m4a",
@@ -717,11 +518,12 @@
 			"albumId":"",
 			"artistId":"8308243",
 			"source":7,
-			"id":"4439988"
+			"id":"4439988",
+			"programId":""
 		},
 		{
 			"duration":272.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -729,12 +531,130 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"6470362"
+			"id":"6470362",
+			"programId":""
+		},
+		"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music\\开源和写作 - justjavac - 真业余西.m4a",
+		{
+			"duration":594,
+			"albumName":"完｜中华少年偶像｜屠呦呦传",
+			"artist":"三宝带你读传记",
+			"mvId":"",
+			"format":"m4a",
+			"name":"20 在瑞典卡罗琳斯卡学院的演讲（大结局）",
+			"albumId":"41150438",
+			"artistId":"65625042",
+			"source":5,
+			"id":"334188878",
+			"programId":""
+		},
+		{
+			"duration":2759,
+			"albumName":"代码时间",
+			"artist":"真业余西",
+			"mvId":"",
+			"format":"m4a",
+			"name":"开源和写作 - justjavac",
+			"albumId":"4867505",
+			"artistId":"51547393",
+			"source":5,
+			"id":"49046547",
+			"programId":""
+		},
+		{
+			"duration":362,
+			"albumName":"代码时间",
+			"artist":"真业余西",
+			"mvId":"",
+			"format":"m4a",
+			"name":"再见！",
+			"albumId":"4867505",
+			"artistId":"51547393",
+			"source":5,
+			"id":"188230380",
+			"programId":""
+		},
+		{
+			"duration":213,
+			"albumName":"Glory Days (Deluxe)",
+			"artist":"LittleMix",
+			"mvId":"600906000000119569",
+			"format":"mp3",
+			"name":"Touch",
+			"albumId":"1004670821",
+			"artistId":"",
+			"source":4,
+			"id":"6005971FJDR",
+			"programId":""
+		},
+		{
+			"duration":492.773,
+			"albumName":"【声音恋人】鸭宝",
+			"artist":"H_鸭宝",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【女性向音声】委屈的暧昧期大狗勾狗急跳墙啦（吃醋_甜_表白 ）",
+			"albumId":"56059",
+			"artistId":"14821814",
+			"source":7,
+			"id":"6453007",
+			"programId":""
+		},
+		{
+			"duration":550,
+			"albumName":"",
+			"artist":"啊小鼠啊",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【女性向中文音声】胃疼醒来任你摆弄后反攻你的狼崽男友! ! !（异地/恋爱/年下）",
+			"albumId":"",
+			"artistId":"10394826",
+			"source":7,
+			"id":"6473025",
+			"programId":""
+		},
+		{
+			"duration":608.313,
+			"albumName":"",
+			"artist":"久紫儿",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【3D男性向中文音声】[十分钟女友] 做你的十分钟恋人",
+			"albumId":"",
+			"artistId":"3461151",
+			"source":7,
+			"id":"6481402",
+			"programId":""
+		},
+		{
+			"duration":220.233,
+			"albumName":"",
+			"artist":"兰波゛",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线 To 月月",
+			"albumId":"",
+			"artistId":"18557174",
+			"source":7,
+			"id":"4669073",
+			"programId":""
+		},
+		{
+			"duration":202.965,
+			"albumName":"",
+			"artist":"小航砸_一心向钱",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线",
+			"albumId":"",
+			"artistId":"16695738",
+			"source":7,
+			"id":"4750686",
+			"programId":""
 		},
 		{
 			"duration":22.151,
 			"albumName":"随便上传的",
-			"albumImgUrl":"http://p2.music.126.net/V8ww8jehTO66Tsi1dDe4Lg==/109951166935037722.jpg",
 			"artist":"ING7593",
 			"mvId":"",
 			"format":"mp3",
@@ -748,7 +668,6 @@
 		{
 			"duration":27.611,
 			"albumName":"飞鸟以天空为巢",
-			"albumImgUrl":"http://p2.music.126.net/1DYCpZmA5nu7EJgjK-tJTg==/109951166932989474.jpg",
 			"artist":"苏苏妤",
 			"mvId":"",
 			"format":"mp3",
@@ -769,7 +688,8 @@
 			"albumId":"003125Ie327cnC",
 			"artistId":"004GetHy3HZbVT",
 			"source":2,
-			"id":"001wzDTr1dbAD8"
+			"id":"001wzDTr1dbAD8",
+			"programId":""
 		},
 		{
 			"duration":236.75,
@@ -781,7 +701,8 @@
 			"albumId":"74752067",
 			"artistId":"31010647",
 			"source":0,
-			"id":"1333904985"
+			"id":"1333904985",
+			"programId":""
 		},
 		{
 			"duration":256,
@@ -793,7 +714,8 @@
 			"albumId":"137142551",
 			"artistId":"2116",
 			"source":0,
-			"id":"1901371647"
+			"id":"1901371647",
+			"programId":""
 		},
 		"D:\\音乐\\Feel The Same(feat. Sofuu) - Felix Austin、West Collins、Sofuu.mp3",
 		"D:\\音乐\\逆流的鲸 - 原来是萝卜丫.mp3",
@@ -802,7 +724,7 @@
 		"D:\\音乐\\Nightcore - Stereo Love.mp3",
 		{
 			"duration":429.27,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"紫曦每天都被自己蠢哭",
 			"mvId":"",
 			"format":"m4a",
@@ -810,11 +732,12 @@
 			"albumId":"",
 			"artistId":"3011634",
 			"source":7,
-			"id":"6481178"
+			"id":"6481178",
+			"programId":""
 		},
 		{
 			"duration":580.008,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"玫瑰先生_有只猫",
 			"mvId":"",
 			"format":"m4a",
@@ -822,11 +745,12 @@
 			"albumId":"",
 			"artistId":"3543978",
 			"source":7,
-			"id":"6445869"
+			"id":"6445869",
+			"programId":""
 		},
 		{
 			"duration":310.944,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Cv凌木_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -834,12 +758,12 @@
 			"albumId":"",
 			"artistId":"11345850",
 			"source":7,
-			"id":"6465735"
+			"id":"6465735",
+			"programId":""
 		},
 		{
 			"duration":287.568,
 			"albumName":"【声音恋人】陆千重的声恋合集",
-			"albumImgUrl":"",
 			"artist":"陆千重",
 			"mvId":"",
 			"format":"m4a",
@@ -847,11 +771,12 @@
 			"albumId":"55759",
 			"artistId":"7337306",
 			"source":7,
-			"id":"6454948"
+			"id":"6454948",
+			"programId":""
 		},
 		{
 			"duration":181.999,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"YOGA・",
 			"mvId":"",
 			"format":"m4a",
@@ -859,11 +784,12 @@
 			"albumId":"",
 			"artistId":"7711146",
 			"source":7,
-			"id":"4661510"
+			"id":"4661510",
+			"programId":""
 		},
 		{
 			"duration":170.808,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"可这一点也不酷鸭",
 			"mvId":"",
 			"format":"m4a",
@@ -871,11 +797,12 @@
 			"albumId":"",
 			"artistId":"11660582",
 			"source":7,
-			"id":"4665811"
+			"id":"4665811",
+			"programId":""
 		},
 		{
 			"duration":229.537,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"音子的mua",
 			"mvId":"",
 			"format":"m4a",
@@ -883,11 +810,12 @@
 			"albumId":"",
 			"artistId":"18608984",
 			"source":7,
-			"id":"5250546"
+			"id":"5250546",
+			"programId":""
 		},
 		{
 			"duration":205.035,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"小凤凰_BLL゛",
 			"mvId":"",
 			"format":"m4a",
@@ -895,11 +823,12 @@
 			"albumId":"",
 			"artistId":"20136818",
 			"source":7,
-			"id":"5860777"
+			"id":"5860777",
+			"programId":""
 		},
 		{
 			"duration":203.84,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"麟古",
 			"mvId":"",
 			"format":"m4a",
@@ -907,12 +836,12 @@
 			"albumId":"",
 			"artistId":"22116050",
 			"source":7,
-			"id":"6470234"
+			"id":"6470234",
+			"programId":""
 		},
 		{
 			"duration":209.972,
 			"albumName":"执耳直播时のLive",
-			"albumImgUrl":"",
 			"artist":"一休_ZE",
 			"mvId":"",
 			"format":"m4a",
@@ -920,11 +849,12 @@
 			"albumId":"36463",
 			"artistId":"3747183",
 			"source":7,
-			"id":"4901370"
+			"id":"4901370",
+			"programId":""
 		},
 		{
 			"duration":205.999,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"YOGA・",
 			"mvId":"",
 			"format":"m4a",
@@ -932,11 +862,12 @@
 			"albumId":"",
 			"artistId":"7711146",
 			"source":7,
-			"id":"4694273"
+			"id":"4694273",
+			"programId":""
 		},
 		{
 			"duration":234.292,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"YOGA・",
 			"mvId":"",
 			"format":"m4a",
@@ -944,11 +875,12 @@
 			"albumId":"",
 			"artistId":"7711146",
 			"source":7,
-			"id":"4915815"
+			"id":"4915815",
+			"programId":""
 		},
 		{
 			"duration":204.46,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"钱多多y",
 			"mvId":"",
 			"format":"m4a",
@@ -956,11 +888,12 @@
 			"albumId":"",
 			"artistId":"8417691",
 			"source":7,
-			"id":"4683219"
+			"id":"4683219",
+			"programId":""
 		},
 		{
 			"duration":189.397,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"度敌",
 			"mvId":"",
 			"format":"m4a",
@@ -968,11 +901,12 @@
 			"albumId":"",
 			"artistId":"19534481",
 			"source":7,
-			"id":"5146242"
+			"id":"5146242",
+			"programId":""
 		},
 		{
 			"duration":613.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -980,7 +914,8 @@
 			"albumId":"",
 			"artistId":"5864988",
 			"source":7,
-			"id":"6469472"
+			"id":"6469472",
+			"programId":""
 		},
 		"D:\\音乐\\世上的盐 - 苏运莹、万象凡音.mp3",
 		{
@@ -993,7 +928,8 @@
 			"albumId":"74752067",
 			"artistId":"31010647",
 			"source":0,
-			"id":"1340685176"
+			"id":"1340685176",
+			"programId":""
 		},
 		{
 			"duration":228.266,
@@ -1005,7 +941,8 @@
 			"albumId":"74752067",
 			"artistId":"31010647",
 			"source":0,
-			"id":"1340686106"
+			"id":"1340686106",
+			"programId":""
 		},
 		{
 			"duration":260.266,
@@ -1017,12 +954,12 @@
 			"albumId":"74752067",
 			"artistId":"31010647",
 			"source":0,
-			"id":"1338064727"
+			"id":"1338064727",
+			"programId":""
 		},
 		{
 			"duration":3247.008,
 			"albumName":"影帝们的公寓",
-			"albumImgUrl":"",
 			"artist":"橡皮筋企业龙头",
 			"mvId":"",
 			"format":"m4a",
@@ -1030,12 +967,12 @@
 			"albumId":"650",
 			"artistId":"2989620",
 			"source":7,
-			"id":"555087"
+			"id":"555087",
+			"programId":""
 		},
 		{
 			"duration":1678.44,
 			"albumName":"影帝们的公寓",
-			"albumImgUrl":"",
 			"artist":"原虾烧麦皇真好吃",
 			"mvId":"",
 			"format":"m4a",
@@ -1043,12 +980,12 @@
 			"albumId":"650",
 			"artistId":"82768",
 			"source":7,
-			"id":"114625"
+			"id":"114625",
+			"programId":""
 		},
 		{
 			"duration":260.022,
 			"albumName":"水千丞《火焰戎装》剧情歌《寻光》",
-			"albumImgUrl":"",
 			"artist":"赫沂辰汐小仙女w",
 			"mvId":"",
 			"format":"m4a",
@@ -1056,11 +993,12 @@
 			"albumId":"44277",
 			"artistId":"7218620",
 			"source":7,
-			"id":"4412641"
+			"id":"4412641",
+			"programId":""
 		},
 		{
 			"duration":227.393,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晔梓辰",
 			"mvId":"",
 			"format":"m4a",
@@ -1068,11 +1006,12 @@
 			"albumId":"",
 			"artistId":"10603755",
 			"source":7,
-			"id":"2584818"
+			"id":"2584818",
+			"programId":""
 		},
 		{
 			"duration":203.232,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晔梓辰",
 			"mvId":"",
 			"format":"m4a",
@@ -1080,12 +1019,12 @@
 			"albumId":"",
 			"artistId":"10603755",
 			"source":7,
-			"id":"5447887"
+			"id":"5447887",
+			"programId":""
 		},
 		{
 			"duration":328.881,
 			"albumName":"仙女们的冠名歌曲",
-			"albumImgUrl":"",
 			"artist":"暖白白",
 			"mvId":"",
 			"format":"m4a",
@@ -1093,11 +1032,12 @@
 			"albumId":"43285",
 			"artistId":"8308243",
 			"source":7,
-			"id":"4227254"
+			"id":"4227254",
+			"programId":""
 		},
 		{
 			"duration":250.296,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"暖白白",
 			"mvId":"",
 			"format":"m4a",
@@ -1105,14 +1045,14 @@
 			"albumId":"",
 			"artistId":"8308243",
 			"source":7,
-			"id":"4440035"
+			"id":"4440035",
+			"programId":""
 		},
 		"D:\\音乐\\夏梦的约定 - 暴君de、YuShu.mp3",
 		"D:\\音乐\\KiTSUNE、Swempke - Kurage.mp3",
 		{
 			"duration":502.546,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
-			"albumImgUrl":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -1120,13 +1060,13 @@
 			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
-			"id":"6383852"
+			"id":"6383852",
+			"programId":""
 		},
 		"D:\\音乐\\RUQOA - Say.mp3",
 		{
 			"duration":151.693,
 			"albumName":"灰灰の音乐集",
-			"albumImgUrl":"",
 			"artist":"灰灰の播放器",
 			"mvId":"",
 			"format":"m4a",
@@ -1134,11 +1074,12 @@
 			"albumId":"37184",
 			"artistId":"14273333",
 			"source":7,
-			"id":"3317872"
+			"id":"3317872",
+			"programId":""
 		},
 		{
 			"duration":206.288,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"墨希",
 			"mvId":"",
 			"format":"m4a",
@@ -1146,11 +1087,12 @@
 			"albumId":"",
 			"artistId":"476659",
 			"source":7,
-			"id":"341462"
+			"id":"341462",
+			"programId":""
 		},
 		{
 			"duration":112.326,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"喵友谊",
 			"mvId":"",
 			"format":"m4a",
@@ -1158,11 +1100,12 @@
 			"albumId":"",
 			"artistId":"89073",
 			"source":7,
-			"id":"95147"
+			"id":"95147",
+			"programId":""
 		},
 		{
 			"duration":206.913,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV洛凰_凰逸",
 			"mvId":"",
 			"format":"m4a",
@@ -1170,12 +1113,12 @@
 			"albumId":"",
 			"artistId":"3271172",
 			"source":7,
-			"id":"2722073"
+			"id":"2722073",
+			"programId":""
 		},
 		{
 			"duration":203.284,
 			"albumName":"灰灰の音乐集",
-			"albumImgUrl":"",
 			"artist":"灰灰の播放器",
 			"mvId":"",
 			"format":"m4a",
@@ -1183,11 +1126,12 @@
 			"albumId":"37184",
 			"artistId":"14273333",
 			"source":7,
-			"id":"3317868"
+			"id":"3317868",
+			"programId":""
 		},
 		{
 			"duration":120.528,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"沙汀鱼_",
 			"mvId":"",
 			"format":"m4a",
@@ -1195,11 +1139,12 @@
 			"albumId":"",
 			"artistId":"17452624",
 			"source":7,
-			"id":"4568359"
+			"id":"4568359",
+			"programId":""
 		},
 		{
 			"duration":251.297,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"新宝icon",
 			"mvId":"",
 			"format":"m4a",
@@ -1207,12 +1152,12 @@
 			"albumId":"",
 			"artistId":"9455298",
 			"source":7,
-			"id":"2160889"
+			"id":"2160889",
+			"programId":""
 		},
 		{
 			"duration":33.28,
 			"albumName":"饺子的弹唱小铺~",
-			"albumImgUrl":"",
 			"artist":"小饺子爱弹唱",
 			"mvId":"",
 			"format":"m4a",
@@ -1220,11 +1165,12 @@
 			"albumId":"35230",
 			"artistId":"12270608",
 			"source":7,
-			"id":"2984716"
+			"id":"2984716",
+			"programId":""
 		},
 		{
 			"duration":30.442,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"双枝_燃点",
 			"mvId":"",
 			"format":"m4a",
@@ -1232,11 +1178,12 @@
 			"albumId":"",
 			"artistId":"10260520",
 			"source":7,
-			"id":"3338058"
+			"id":"3338058",
+			"programId":""
 		},
 		{
 			"duration":16.992,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"挽声の绿帽批发染",
 			"mvId":"",
 			"format":"m4a",
@@ -1244,11 +1191,12 @@
 			"albumId":"",
 			"artistId":"8561852",
 			"source":7,
-			"id":"2013089"
+			"id":"2013089",
+			"programId":""
 		},
 		{
 			"duration":36.493,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"西隐_吃了么",
 			"mvId":"",
 			"format":"m4a",
@@ -1256,11 +1204,12 @@
 			"albumId":"",
 			"artistId":"12147112",
 			"source":7,
-			"id":"3092375"
+			"id":"3092375",
+			"programId":""
 		},
 		{
 			"duration":257.369,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"球球_小歌手",
 			"mvId":"",
 			"format":"m4a",
@@ -1268,11 +1217,12 @@
 			"albumId":"",
 			"artistId":"17569055",
 			"source":7,
-			"id":"4074779"
+			"id":"4074779",
+			"programId":""
 		},
 		{
 			"duration":28.682,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"做人要潇洒一点",
 			"mvId":"",
 			"format":"m4a",
@@ -1280,11 +1230,12 @@
 			"albumId":"",
 			"artistId":"9776448",
 			"source":7,
-			"id":"4074535"
+			"id":"4074535",
+			"programId":""
 		},
 		{
 			"duration":247.408,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"西俊俊_麦田",
 			"mvId":"",
 			"format":"m4a",
@@ -1292,12 +1243,12 @@
 			"albumId":"",
 			"artistId":"12471664",
 			"source":7,
-			"id":"4897484"
+			"id":"4897484",
+			"programId":""
 		},
 		{
 			"duration":337.266,
 			"albumName":"灰灰の音乐集",
-			"albumImgUrl":"",
 			"artist":"灰灰の播放器",
 			"mvId":"",
 			"format":"m4a",
@@ -1305,11 +1256,12 @@
 			"albumId":"37184",
 			"artistId":"14273333",
 			"source":7,
-			"id":"3317866"
+			"id":"3317866",
+			"programId":""
 		},
 		{
 			"duration":33.787,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"小度_DGX",
 			"mvId":"",
 			"format":"m4a",
@@ -1317,11 +1269,12 @@
 			"albumId":"",
 			"artistId":"23081247",
 			"source":7,
-			"id":"6049515"
+			"id":"6049515",
+			"programId":""
 		},
 		{
 			"duration":271.371,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"何大白_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -1329,11 +1282,12 @@
 			"albumId":"",
 			"artistId":"21334464",
 			"source":7,
-			"id":"5408972"
+			"id":"5408972",
+			"programId":""
 		},
 		{
 			"duration":220.003,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"谦君__竹音",
 			"mvId":"",
 			"format":"m4a",
@@ -1341,11 +1295,12 @@
 			"albumId":"",
 			"artistId":"5447935",
 			"source":7,
-			"id":"2566921"
+			"id":"2566921",
+			"programId":""
 		},
 		{
 			"duration":198.478,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"酒倾梦_",
 			"mvId":"",
 			"format":"m4a",
@@ -1353,11 +1308,12 @@
 			"albumId":"",
 			"artistId":"8379276",
 			"source":7,
-			"id":"2345914"
+			"id":"2345914",
+			"programId":""
 		},
 		{
 			"duration":219.167,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"ZZ腾__只会唱歌",
 			"mvId":"",
 			"format":"m4a",
@@ -1365,12 +1321,12 @@
 			"albumId":"",
 			"artistId":"9710203",
 			"source":7,
-			"id":"2984393"
+			"id":"2984393",
+			"programId":""
 		},
 		{
 			"duration":230.16,
 			"albumName":"灰灰の音乐集",
-			"albumImgUrl":"",
 			"artist":"灰灰の播放器",
 			"mvId":"",
 			"format":"m4a",
@@ -1378,11 +1334,12 @@
 			"albumId":"37184",
 			"artistId":"14273333",
 			"source":7,
-			"id":"3317861"
+			"id":"3317861",
+			"programId":""
 		},
 		{
 			"duration":241.138,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"药药_怡聲",
 			"mvId":"",
 			"format":"m4a",
@@ -1390,11 +1347,12 @@
 			"albumId":"",
 			"artistId":"15826030",
 			"source":7,
-			"id":"3841686"
+			"id":"3841686",
+			"programId":""
 		},
 		{
 			"duration":179.8,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"ZZ腾__只会唱歌",
 			"mvId":"",
 			"format":"m4a",
@@ -1402,11 +1360,12 @@
 			"albumId":"",
 			"artistId":"9710203",
 			"source":7,
-			"id":"3033729"
+			"id":"3033729",
+			"programId":""
 		},
 		{
 			"duration":163.343,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"辞儿_修身养性",
 			"mvId":"",
 			"format":"m4a",
@@ -1414,11 +1373,12 @@
 			"albumId":"",
 			"artistId":"21950554",
 			"source":7,
-			"id":"6225600"
+			"id":"6225600",
+			"programId":""
 		},
 		{
 			"duration":199.656,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"早尾茶",
 			"mvId":"",
 			"format":"m4a",
@@ -1426,12 +1386,12 @@
 			"albumId":"",
 			"artistId":"288053",
 			"source":7,
-			"id":"120090"
+			"id":"120090",
+			"programId":""
 		},
 		{
 			"duration":210.834,
 			"albumName":"灰灰の音乐集",
-			"albumImgUrl":"",
 			"artist":"灰灰の播放器",
 			"mvId":"",
 			"format":"m4a",
@@ -1439,12 +1399,12 @@
 			"albumId":"37184",
 			"artistId":"14273333",
 			"source":7,
-			"id":"3317857"
+			"id":"3317857",
+			"programId":""
 		},
 		{
 			"duration":320,
 			"albumName":"灰灰の音乐集",
-			"albumImgUrl":"",
 			"artist":"灰灰の播放器",
 			"mvId":"",
 			"format":"m4a",
@@ -1452,12 +1412,12 @@
 			"albumId":"37184",
 			"artistId":"14273333",
 			"source":7,
-			"id":"5491590"
+			"id":"5491590",
+			"programId":""
 		},
 		{
 			"duration":240.528,
 			"albumName":"卡修翻唱集",
-			"albumImgUrl":"",
 			"artist":"坚果儿85",
 			"mvId":"",
 			"format":"m4a",
@@ -1465,11 +1425,12 @@
 			"albumId":"40071",
 			"artistId":"10241770",
 			"source":7,
-			"id":"4476592"
+			"id":"4476592",
+			"programId":""
 		},
 		{
 			"duration":258.303,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"言止__",
 			"mvId":"",
 			"format":"m4a",
@@ -1477,12 +1438,12 @@
 			"albumId":"",
 			"artistId":"8012831",
 			"source":7,
-			"id":"2234955"
+			"id":"2234955",
+			"programId":""
 		},
 		{
 			"duration":174.195,
 			"albumName":"被迫降生的剧集",
-			"albumImgUrl":"",
 			"artist":"傾粟_初闻",
 			"mvId":"",
 			"format":"m4a",
@@ -1490,11 +1451,12 @@
 			"albumId":"52721",
 			"artistId":"11561319",
 			"source":7,
-			"id":"2788255"
+			"id":"2788255",
+			"programId":""
 		},
 		{
 			"duration":177.92,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Mr罗飞飞",
 			"mvId":"",
 			"format":"m4a",
@@ -1502,11 +1464,12 @@
 			"albumId":"",
 			"artistId":"10396802",
 			"source":7,
-			"id":"2624096"
+			"id":"2624096",
+			"programId":""
 		},
 		{
 			"duration":299.736,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"执耳_KD",
 			"mvId":"",
 			"format":"m4a",
@@ -1514,11 +1477,12 @@
 			"albumId":"",
 			"artistId":"7691950",
 			"source":7,
-			"id":"2420187"
+			"id":"2420187",
+			"programId":""
 		},
 		{
 			"duration":34.089,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"・猫儿",
 			"mvId":"",
 			"format":"m4a",
@@ -1526,11 +1490,12 @@
 			"albumId":"",
 			"artistId":"23451465",
 			"source":7,
-			"id":"6233368"
+			"id":"6233368",
+			"programId":""
 		},
 		{
 			"duration":185.129,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"满汉文泉vip",
 			"mvId":"",
 			"format":"m4a",
@@ -1538,11 +1503,12 @@
 			"albumId":"",
 			"artistId":"8075182",
 			"source":7,
-			"id":"4179035"
+			"id":"4179035",
+			"programId":""
 		},
 		{
 			"duration":44.651,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"是南城a",
 			"mvId":"",
 			"format":"m4a",
@@ -1550,11 +1516,12 @@
 			"albumId":"",
 			"artistId":"15283183",
 			"source":7,
-			"id":"3767813"
+			"id":"3767813",
+			"programId":""
 		},
 		{
 			"duration":270.883,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"枫叶girl",
 			"mvId":"",
 			"format":"m4a",
@@ -1562,12 +1529,12 @@
 			"albumId":"",
 			"artistId":"5615830",
 			"source":7,
-			"id":"1215952"
+			"id":"1215952",
+			"programId":""
 		},
 		{
 			"duration":230.974,
 			"albumName":"林予曦（兔兔）歌曲不完全合集",
-			"albumImgUrl":"",
 			"artist":"虞美人小蜜",
 			"mvId":"",
 			"format":"m4a",
@@ -1575,11 +1542,12 @@
 			"albumId":"33690",
 			"artistId":"10056440",
 			"source":7,
-			"id":"2949763"
+			"id":"2949763",
+			"programId":""
 		},
 		{
 			"duration":32.809,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Babystop_山竹",
 			"mvId":"",
 			"format":"m4a",
@@ -1587,11 +1555,12 @@
 			"albumId":"",
 			"artistId":"5505273",
 			"source":7,
-			"id":"1187177"
+			"id":"1187177",
+			"programId":""
 		},
 		{
 			"duration":277.054,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"萌比Yfh",
 			"mvId":"",
 			"format":"m4a",
@@ -1599,11 +1568,12 @@
 			"albumId":"",
 			"artistId":"5113435",
 			"source":7,
-			"id":"1247451"
+			"id":"1247451",
+			"programId":""
 		},
 		{
 			"duration":208.979,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"荒_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -1611,11 +1581,12 @@
 			"albumId":"",
 			"artistId":"21564228",
 			"source":7,
-			"id":"5526952"
+			"id":"5526952",
+			"programId":""
 		},
 		{
 			"duration":216.804,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晨晨要变白",
 			"mvId":"",
 			"format":"m4a",
@@ -1623,11 +1594,12 @@
 			"albumId":"",
 			"artistId":"20171967",
 			"source":7,
-			"id":"6018185"
+			"id":"6018185",
+			"programId":""
 		},
 		{
 			"duration":218.644,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"非雪遗韵",
 			"mvId":"",
 			"format":"m4a",
@@ -1635,13 +1607,14 @@
 			"albumId":"",
 			"artistId":"3261636",
 			"source":7,
-			"id":"1627940"
+			"id":"1627940",
+			"programId":""
 		},
 		"D:\\音乐\\雁书 - 艾热 AIR.mp3",
 		"D:\\音乐\\Let Me - 亚哲大大、Re_houseE.mp3",
 		{
 			"duration":210.494,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"曲调_律风",
 			"mvId":"",
 			"format":"m4a",
@@ -1649,12 +1622,12 @@
 			"albumId":"",
 			"artistId":"10057017",
 			"source":7,
-			"id":"2525208"
+			"id":"2525208",
+			"programId":""
 		},
 		{
 			"duration":149.498,
 			"albumName":"【Nightcore】",
-			"albumImgUrl":"http://p2.music.126.net/JAnFVU37XexKT6M9KLTM7Q==/109951167503431539.jpg",
 			"artist":"零丶落浮华",
 			"mvId":"",
 			"format":"mp3",
@@ -1667,7 +1640,7 @@
 		},
 		{
 			"duration":49.667,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"鸪寒",
 			"mvId":"",
 			"format":"m4a",
@@ -1675,12 +1648,12 @@
 			"albumId":"",
 			"artistId":"14666128",
 			"source":7,
-			"id":"3475331"
+			"id":"3475331",
+			"programId":""
 		},
 		{
 			"duration":32.731,
 			"albumName":"阿卡贝拉",
-			"albumImgUrl":"",
 			"artist":"胡了好",
 			"mvId":"",
 			"format":"m4a",
@@ -1688,7 +1661,8 @@
 			"albumId":"27285",
 			"artistId":"9533976",
 			"source":7,
-			"id":"2010489"
+			"id":"2010489",
+			"programId":""
 		},
 		"D:\\音乐\\鹿 be free - 尚雯婕.mp3",
 		"D:\\音乐\\私语 - Youngior.mp3",
@@ -1696,7 +1670,7 @@
 		"D:\\音乐\\星落 - 七粥.mp3",
 		{
 			"duration":214.831,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"朝暮_知音",
 			"mvId":"",
 			"format":"m4a",
@@ -1704,11 +1678,12 @@
 			"albumId":"",
 			"artistId":"13284069",
 			"source":7,
-			"id":"3301769"
+			"id":"3301769",
+			"programId":""
 		},
 		{
 			"duration":274.912,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"漓九_初尘",
 			"mvId":"",
 			"format":"m4a",
@@ -1716,12 +1691,12 @@
 			"albumId":"",
 			"artistId":"9731308",
 			"source":7,
-			"id":"2933641"
+			"id":"2933641",
+			"programId":""
 		},
 		{
 			"duration":193.253,
 			"albumName":"林予曦翻唱＆演唱歌曲合集",
-			"albumImgUrl":"",
 			"artist":"兔兔林予曦的歌库",
 			"mvId":"",
 			"format":"m4a",
@@ -1729,11 +1704,12 @@
 			"albumId":"54795",
 			"artistId":"14554068",
 			"source":7,
-			"id":"6372116"
+			"id":"6372116",
+			"programId":""
 		},
 		{
 			"duration":167.439,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"冰心双双の万物向洋",
 			"mvId":"",
 			"format":"m4a",
@@ -1741,11 +1717,12 @@
 			"albumId":"",
 			"artistId":"7202478",
 			"source":7,
-			"id":"3089940"
+			"id":"3089940",
+			"programId":""
 		},
 		{
 			"duration":166.72,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"小杰哥is班草",
 			"mvId":"",
 			"format":"m4a",
@@ -1753,11 +1730,12 @@
 			"albumId":"",
 			"artistId":"16843190",
 			"source":7,
-			"id":"4289081"
+			"id":"4289081",
+			"programId":""
 		},
 		{
 			"duration":184.215,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"萌比Yfh",
 			"mvId":"",
 			"format":"m4a",
@@ -1765,11 +1743,12 @@
 			"albumId":"",
 			"artistId":"5113435",
 			"source":7,
-			"id":"3094225"
+			"id":"3094225",
+			"programId":""
 		},
 		{
 			"duration":173.987,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"轻薄姐姐_宝宝",
 			"mvId":"",
 			"format":"m4a",
@@ -1777,11 +1756,12 @@
 			"albumId":"",
 			"artistId":"6856843",
 			"source":7,
-			"id":"2267243"
+			"id":"2267243",
+			"programId":""
 		},
 		{
 			"duration":172.617,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"悦神_玥儿",
 			"mvId":"",
 			"format":"m4a",
@@ -1789,11 +1769,12 @@
 			"albumId":"",
 			"artistId":"6392997",
 			"source":7,
-			"id":"2128644"
+			"id":"2128644",
+			"programId":""
 		},
 		{
 			"duration":239.281,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Assen捷",
 			"mvId":"",
 			"format":"m4a",
@@ -1801,11 +1782,12 @@
 			"albumId":"",
 			"artistId":"396167",
 			"source":7,
-			"id":"189199"
+			"id":"189199",
+			"programId":""
 		},
 		{
 			"duration":182.439,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"梦梦_睡不醒",
 			"mvId":"",
 			"format":"m4a",
@@ -1813,11 +1795,12 @@
 			"albumId":"",
 			"artistId":"21235453",
 			"source":7,
-			"id":"5311055"
+			"id":"5311055",
+			"programId":""
 		},
 		{
 			"duration":24.868,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"一只小锦鲤吖",
 			"mvId":"",
 			"format":"m4a",
@@ -1825,11 +1808,12 @@
 			"albumId":"",
 			"artistId":"15227532",
 			"source":7,
-			"id":"3689971"
+			"id":"3689971",
+			"programId":""
 		},
 		{
 			"duration":215.263,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"洛书_九星",
 			"mvId":"",
 			"format":"m4a",
@@ -1837,12 +1821,12 @@
 			"albumId":"",
 			"artistId":"9771521",
 			"source":7,
-			"id":"5441582"
+			"id":"5441582",
+			"programId":""
 		},
 		{
 			"duration":188.808,
 			"albumName":"时雨の古风辑",
-			"albumImgUrl":"",
 			"artist":"时雨㌶",
 			"mvId":"",
 			"format":"m4a",
@@ -1850,11 +1834,12 @@
 			"albumId":"39331",
 			"artistId":"14042500",
 			"source":7,
-			"id":"3405252"
+			"id":"3405252",
+			"programId":""
 		},
 		{
 			"duration":182.439,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"梦梦_睡不醒",
 			"mvId":"",
 			"format":"m4a",
@@ -1862,11 +1847,12 @@
 			"albumId":"",
 			"artistId":"21235453",
 			"source":7,
-			"id":"5311044"
+			"id":"5311044",
+			"programId":""
 		},
 		{
 			"duration":181.512,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"小鹿仔",
 			"mvId":"",
 			"format":"m4a",
@@ -1874,12 +1860,13 @@
 			"albumId":"",
 			"artistId":"112618",
 			"source":7,
-			"id":"91218"
+			"id":"91218",
+			"programId":""
 		},
 		"D:\\音乐\\海市蜃楼 (一颗狼星完整版) - 一颗狼星.mp3",
 		{
 			"duration":278.677,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"_喵小颖_",
 			"mvId":"",
 			"format":"m4a",
@@ -1887,12 +1874,12 @@
 			"albumId":"",
 			"artistId":"11093696",
 			"source":7,
-			"id":"3254101"
+			"id":"3254101",
+			"programId":""
 		},
 		{
 			"duration":258.879,
 			"albumName":"金风台",
-			"albumImgUrl":"",
 			"artist":"东方棋_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -1900,11 +1887,12 @@
 			"albumId":"50798",
 			"artistId":"6884364",
 			"source":7,
-			"id":"2354489"
+			"id":"2354489",
+			"programId":""
 		},
 		{
 			"duration":107.28,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"独白_十方",
 			"mvId":"",
 			"format":"m4a",
@@ -1912,11 +1900,12 @@
 			"albumId":"",
 			"artistId":"19117823",
 			"source":7,
-			"id":"5396801"
+			"id":"5396801",
+			"programId":""
 		},
 		{
 			"duration":278.64,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"执耳_KD",
 			"mvId":"",
 			"format":"m4a",
@@ -1924,11 +1913,12 @@
 			"albumId":"",
 			"artistId":"7691950",
 			"source":7,
-			"id":"2329852"
+			"id":"2329852",
+			"programId":""
 		},
 		{
 			"duration":208.326,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV浩然猫耳官方账号",
 			"mvId":"",
 			"format":"m4a",
@@ -1936,11 +1926,12 @@
 			"albumId":"",
 			"artistId":"3415256",
 			"source":7,
-			"id":"1438318"
+			"id":"1438318",
+			"programId":""
 		},
 		{
 			"duration":213.449,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"悟空__九天星光",
 			"mvId":"",
 			"format":"m4a",
@@ -1948,11 +1939,12 @@
 			"albumId":"",
 			"artistId":"9148744",
 			"source":7,
-			"id":"3119331"
+			"id":"3119331",
+			"programId":""
 		},
 		{
 			"duration":142.407,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"4urap",
 			"mvId":"",
 			"format":"m4a",
@@ -1960,11 +1952,12 @@
 			"albumId":"",
 			"artistId":"20472433",
 			"source":7,
-			"id":"4784539"
+			"id":"4784539",
+			"programId":""
 		},
 		{
 			"duration":235.075,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"清酒酒吖",
 			"mvId":"",
 			"format":"m4a",
@@ -1972,11 +1965,12 @@
 			"albumId":"",
 			"artistId":"5946242",
 			"source":7,
-			"id":"2822973"
+			"id":"2822973",
+			"programId":""
 		},
 		{
 			"duration":264.097,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"华韵音乐五号站",
 			"mvId":"",
 			"format":"m4a",
@@ -1984,12 +1978,12 @@
 			"albumId":"",
 			"artistId":"3072945",
 			"source":7,
-			"id":"765569"
+			"id":"765569",
+			"programId":""
 		},
 		{
 			"duration":263.627,
 			"albumName":"好听到不行的翻唱。原创(*@ο@*) ",
-			"albumImgUrl":"",
 			"artist":"CV南喻",
 			"mvId":"",
 			"format":"m4a",
@@ -1997,11 +1991,12 @@
 			"albumId":"14830",
 			"artistId":"3354654",
 			"source":7,
-			"id":"857776"
+			"id":"857776",
+			"programId":""
 		},
 		{
 			"duration":291.213,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"_霖霖吖",
 			"mvId":"",
 			"format":"m4a",
@@ -2009,12 +2004,12 @@
 			"albumId":"",
 			"artistId":"17520327",
 			"source":7,
-			"id":"4763023"
+			"id":"4763023",
+			"programId":""
 		},
 		{
 			"duration":267.023,
 			"albumName":"墨小离音乐合集",
-			"albumImgUrl":"",
 			"artist":"墨小离_28日生辰皛",
 			"mvId":"",
 			"format":"m4a",
@@ -2022,12 +2017,12 @@
 			"albumId":"46841",
 			"artistId":"18450983",
 			"source":7,
-			"id":"4682678"
+			"id":"4682678",
+			"programId":""
 		},
 		{
 			"duration":249.26,
 			"albumName":"墨小离音乐合集",
-			"albumImgUrl":"",
 			"artist":"墨小离_28日生辰皛",
 			"mvId":"",
 			"format":"m4a",
@@ -2035,11 +2030,12 @@
 			"albumId":"46841",
 			"artistId":"18450983",
 			"source":7,
-			"id":"6419266"
+			"id":"6419266",
+			"programId":""
 		},
 		{
 			"duration":222.197,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"贰拾叁の橙子",
 			"mvId":"",
 			"format":"m4a",
@@ -2047,11 +2043,12 @@
 			"albumId":"",
 			"artistId":"11309308",
 			"source":7,
-			"id":"6174229"
+			"id":"6174229",
+			"programId":""
 		},
 		{
 			"duration":33.83,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"佩一_SSヾ绝世歌姬",
 			"mvId":"",
 			"format":"m4a",
@@ -2059,11 +2056,12 @@
 			"albumId":"",
 			"artistId":"15148429",
 			"source":7,
-			"id":"6362774"
+			"id":"6362774",
+			"programId":""
 		},
 		{
 			"duration":284.211,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"深蓝先生blues",
 			"mvId":"",
 			"format":"m4a",
@@ -2071,11 +2069,12 @@
 			"albumId":"",
 			"artistId":"9835816",
 			"source":7,
-			"id":"5856289"
+			"id":"5856289",
+			"programId":""
 		},
 		{
 			"duration":281.756,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"饭饭_娃娃の_",
 			"mvId":"",
 			"format":"m4a",
@@ -2083,12 +2082,12 @@
 			"albumId":"",
 			"artistId":"10790825",
 			"source":7,
-			"id":"2549816"
+			"id":"2549816",
+			"programId":""
 		},
 		{
 			"duration":216.137,
 			"albumName":"李心浩翻唱合集",
-			"albumImgUrl":"",
 			"artist":"李心浩_元气满满",
 			"mvId":"",
 			"format":"m4a",
@@ -2096,12 +2095,12 @@
 			"albumId":"35506",
 			"artistId":"9577205",
 			"source":7,
-			"id":"2225610"
+			"id":"2225610",
+			"programId":""
 		},
 		{
 			"duration":248.163,
 			"albumName":"言希の正经翻唱集",
-			"albumImgUrl":"",
 			"artist":"言希Yaser_白的发光",
 			"mvId":"",
 			"format":"m4a",
@@ -2109,12 +2108,12 @@
 			"albumId":"40570",
 			"artistId":"10333438",
 			"source":7,
-			"id":"3504986"
+			"id":"3504986",
+			"programId":""
 		},
 		{
 			"duration":246.625,
 			"albumName":"尉宸翻唱歌曲",
-			"albumImgUrl":"",
 			"artist":"尉宸灬Star",
 			"mvId":"",
 			"format":"m4a",
@@ -2122,12 +2121,12 @@
 			"albumId":"45812",
 			"artistId":"9154116",
 			"source":7,
-			"id":"3605549"
+			"id":"3605549",
+			"programId":""
 		},
 		{
 			"duration":236.026,
 			"albumName":"洛缘儿の直录歌曲",
-			"albumImgUrl":"",
 			"artist":"李暖暖_",
 			"mvId":"",
 			"format":"m4a",
@@ -2135,12 +2134,12 @@
 			"albumId":"51053",
 			"artistId":"6757630",
 			"source":7,
-			"id":"5655691"
+			"id":"5655691",
+			"programId":""
 		},
 		{
 			"duration":236.629,
 			"albumName":"洛缘儿の直录歌曲",
-			"albumImgUrl":"",
 			"artist":"李暖暖_",
 			"mvId":"",
 			"format":"m4a",
@@ -2148,11 +2147,12 @@
 			"albumId":"51053",
 			"artistId":"6757630",
 			"source":7,
-			"id":"5661436"
+			"id":"5661436",
+			"programId":""
 		},
 		{
 			"duration":231.624,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"云彻_",
 			"mvId":"",
 			"format":"m4a",
@@ -2160,11 +2160,12 @@
 			"albumId":"",
 			"artistId":"9927816",
 			"source":7,
-			"id":"3700107"
+			"id":"3700107",
+			"programId":""
 		},
 		{
 			"duration":232.021,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"罗笑笑_依然笑笑",
 			"mvId":"",
 			"format":"m4a",
@@ -2172,12 +2173,12 @@
 			"albumId":"",
 			"artistId":"10772749",
 			"source":7,
-			"id":"3742166"
+			"id":"3742166",
+			"programId":""
 		},
 		{
 			"duration":292.153,
 			"albumName":"林予曦（兔兔）歌曲不完全合集",
-			"albumImgUrl":"",
 			"artist":"虞美人小蜜",
 			"mvId":"",
 			"format":"m4a",
@@ -2185,11 +2186,12 @@
 			"albumId":"33690",
 			"artistId":"10056440",
 			"source":7,
-			"id":"3066312"
+			"id":"3066312",
+			"programId":""
 		},
 		{
 			"duration":206.446,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"暮沉_等我回来呀",
 			"mvId":"",
 			"format":"m4a",
@@ -2197,11 +2199,12 @@
 			"albumId":"",
 			"artistId":"15369572",
 			"source":7,
-			"id":"3895502"
+			"id":"3895502",
+			"programId":""
 		},
 		{
 			"duration":178.259,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Ten円",
 			"mvId":"",
 			"format":"m4a",
@@ -2209,11 +2212,12 @@
 			"albumId":"",
 			"artistId":"3678292",
 			"source":7,
-			"id":"2821453"
+			"id":"2821453",
+			"programId":""
 		},
 		{
 			"duration":69.568,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"星辰zy丨TK",
 			"mvId":"",
 			"format":"m4a",
@@ -2221,11 +2225,12 @@
 			"albumId":"",
 			"artistId":"9291604",
 			"source":7,
-			"id":"1948387"
+			"id":"1948387",
+			"programId":""
 		},
 		{
 			"duration":27.306,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"星辰zy丨TK",
 			"mvId":"",
 			"format":"m4a",
@@ -2233,11 +2238,12 @@
 			"albumId":"",
 			"artistId":"9291604",
 			"source":7,
-			"id":"1948383"
+			"id":"1948383",
+			"programId":""
 		},
 		{
 			"duration":176.352,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"松鼠大冒险",
 			"mvId":"",
 			"format":"m4a",
@@ -2245,11 +2251,12 @@
 			"albumId":"",
 			"artistId":"7932471",
 			"source":7,
-			"id":"1930797"
+			"id":"1930797",
+			"programId":""
 		},
 		{
 			"duration":201.273,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Jade玉儿",
 			"mvId":"",
 			"format":"m4a",
@@ -2257,11 +2264,12 @@
 			"albumId":"",
 			"artistId":"9348570",
 			"source":7,
-			"id":"2384711"
+			"id":"2384711",
+			"programId":""
 		},
 		{
 			"duration":103.464,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"墨小白_tiger",
 			"mvId":"",
 			"format":"m4a",
@@ -2269,11 +2277,12 @@
 			"albumId":"",
 			"artistId":"21729695",
 			"source":7,
-			"id":"5543673"
+			"id":"5543673",
+			"programId":""
 		},
 		{
 			"duration":248.464,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"陈飞飞_九星",
 			"mvId":"",
 			"format":"m4a",
@@ -2281,11 +2290,12 @@
 			"albumId":"",
 			"artistId":"20491507",
 			"source":7,
-			"id":"5656543"
+			"id":"5656543",
+			"programId":""
 		},
 		{
 			"duration":196.78,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"小豆腐团子_宝宝",
 			"mvId":"",
 			"format":"m4a",
@@ -2293,12 +2303,12 @@
 			"albumId":"",
 			"artistId":"12247141",
 			"source":7,
-			"id":"5234977"
+			"id":"5234977",
+			"programId":""
 		},
 		{
 			"duration":227.833,
 			"albumName":"可颂翻唱合集",
-			"albumImgUrl":"",
 			"artist":"小面包_九星",
 			"mvId":"",
 			"format":"m4a",
@@ -2306,12 +2316,12 @@
 			"albumId":"52606",
 			"artistId":"16677437",
 			"source":7,
-			"id":"4559783"
+			"id":"4559783",
+			"programId":""
 		},
 		{
 			"duration":246.757,
 			"albumName":"滚滚的唱不见练习~",
-			"albumImgUrl":"",
 			"artist":"圆滚滚_星禾璀璨",
 			"mvId":"",
 			"format":"m4a",
@@ -2319,11 +2329,12 @@
 			"albumId":"51996",
 			"artistId":"14448169",
 			"source":7,
-			"id":"6062373"
+			"id":"6062373",
+			"programId":""
 		},
 		{
 			"duration":224.219,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"过客___",
 			"mvId":"",
 			"format":"m4a",
@@ -2331,11 +2342,12 @@
 			"albumId":"",
 			"artistId":"16871790",
 			"source":7,
-			"id":"4619832"
+			"id":"4619832",
+			"programId":""
 		},
 		{
 			"duration":229.104,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"玄羽Moon",
 			"mvId":"",
 			"format":"m4a",
@@ -2343,12 +2355,12 @@
 			"albumId":"",
 			"artistId":"11944193",
 			"source":7,
-			"id":"4896179"
+			"id":"4896179",
+			"programId":""
 		},
 		{
 			"duration":243.983,
 			"albumName":"戏腔丨古风丨 万幸相逢巧遇知凡",
-			"albumImgUrl":"",
 			"artist":"巧知凡_知音",
 			"mvId":"",
 			"format":"m4a",
@@ -2356,11 +2368,12 @@
 			"albumId":"30643",
 			"artistId":"9294169",
 			"source":7,
-			"id":"3408150"
+			"id":"3408150",
+			"programId":""
 		},
 		{
 			"duration":30.153,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Y林枫",
 			"mvId":"",
 			"format":"m4a",
@@ -2368,11 +2381,12 @@
 			"albumId":"",
 			"artistId":"15325424",
 			"source":7,
-			"id":"3674851"
+			"id":"3674851",
+			"programId":""
 		},
 		{
 			"duration":247.771,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"满汉_Dz",
 			"mvId":"",
 			"format":"m4a",
@@ -2380,11 +2394,12 @@
 			"albumId":"",
 			"artistId":"16630912",
 			"source":7,
-			"id":"3843693"
+			"id":"3843693",
+			"programId":""
 		},
 		{
 			"duration":220.839,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"asdasdsadasdasxz",
 			"mvId":"",
 			"format":"m4a",
@@ -2392,11 +2407,12 @@
 			"albumId":"",
 			"artistId":"9217633",
 			"source":7,
-			"id":"2633331"
+			"id":"2633331",
+			"programId":""
 		},
 		{
 			"duration":34.324,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Babystop_山竹",
 			"mvId":"",
 			"format":"m4a",
@@ -2404,12 +2420,12 @@
 			"albumId":"",
 			"artistId":"5505273",
 			"source":7,
-			"id":"2299910"
+			"id":"2299910",
+			"programId":""
 		},
 		{
 			"duration":240,
 			"albumName":"C7aesar的音乐小酒馆",
-			"albumImgUrl":"",
 			"artist":"白也_星河",
 			"mvId":"",
 			"format":"m4a",
@@ -2417,11 +2433,12 @@
 			"albumId":"46659",
 			"artistId":"15565449",
 			"source":7,
-			"id":"4999847"
+			"id":"4999847",
+			"programId":""
 		},
 		{
 			"duration":242.253,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"MrY音為妳_燃点",
 			"mvId":"",
 			"format":"m4a",
@@ -2429,11 +2446,12 @@
 			"albumId":"",
 			"artistId":"20922340",
 			"source":7,
-			"id":"5741752"
+			"id":"5741752",
+			"programId":""
 		},
 		{
 			"duration":214,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"沫白__",
 			"mvId":"",
 			"format":"m4a",
@@ -2441,11 +2459,12 @@
 			"albumId":"",
 			"artistId":"21767578",
 			"source":7,
-			"id":"5781465"
+			"id":"5781465",
+			"programId":""
 		},
 		{
 			"duration":225.697,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Black_吟聆",
 			"mvId":"",
 			"format":"m4a",
@@ -2453,11 +2472,12 @@
 			"albumId":"",
 			"artistId":"11423096",
 			"source":7,
-			"id":"4683366"
+			"id":"4683366",
+			"programId":""
 		},
 		{
 			"duration":254.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Black_吟聆",
 			"mvId":"",
 			"format":"m4a",
@@ -2465,11 +2485,12 @@
 			"albumId":"",
 			"artistId":"11423096",
 			"source":7,
-			"id":"3871893"
+			"id":"3871893",
+			"programId":""
 		},
 		{
 			"duration":229.929,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"Black_吟聆",
 			"mvId":"",
 			"format":"m4a",
@@ -2477,11 +2498,12 @@
 			"albumId":"",
 			"artistId":"11423096",
 			"source":7,
-			"id":"4683361"
+			"id":"4683361",
+			"programId":""
 		},
 		{
 			"duration":231.672,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"酒栀_",
 			"mvId":"",
 			"format":"m4a",
@@ -2489,11 +2511,12 @@
 			"albumId":"",
 			"artistId":"8909966",
 			"source":7,
-			"id":"2944546"
+			"id":"2944546",
+			"programId":""
 		},
 		{
 			"duration":254.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -2501,11 +2524,12 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"6470377"
+			"id":"6470377",
+			"programId":""
 		},
 		{
 			"duration":215.196,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"温蘅c",
 			"mvId":"",
 			"format":"m4a",
@@ -2513,12 +2537,12 @@
 			"albumId":"",
 			"artistId":"3380778",
 			"source":7,
-			"id":"5746423"
+			"id":"5746423",
+			"programId":""
 		},
 		{
 			"duration":289.854,
 			"albumName":"CV十一的唱见之旅",
-			"albumImgUrl":"",
 			"artist":"蓝色小蝌蚪超爱许仙の",
 			"mvId":"",
 			"format":"m4a",
@@ -2526,11 +2550,12 @@
 			"albumId":"52302",
 			"artistId":"19713984",
 			"source":7,
-			"id":"5615083"
+			"id":"5615083",
+			"programId":""
 		},
 		{
 			"duration":223.686,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"佑城の流年公主殿下",
 			"mvId":"",
 			"format":"m4a",
@@ -2538,11 +2563,12 @@
 			"albumId":"",
 			"artistId":"8165807",
 			"source":7,
-			"id":"4439932"
+			"id":"4439932",
+			"programId":""
 		},
 		{
 			"duration":238.927,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"满汉噪音_星河",
 			"mvId":"",
 			"format":"m4a",
@@ -2550,12 +2576,12 @@
 			"albumId":"",
 			"artistId":"13612753",
 			"source":7,
-			"id":"3815187"
+			"id":"3815187",
+			"programId":""
 		},
 		{
 			"duration":268,
 			"albumName":"云端音乐 | 随心自由听",
-			"albumImgUrl":"http://imagev2.xmcdn.com/storages/4c79-audiofreehighqps/4A/63/CKwRIRwFTeiUAAKrtADwsLCX.jpg!op_type=3&columns=180&rows=180",
 			"artist":"何美汐",
 			"mvId":"",
 			"format":"m4a",
@@ -2563,11 +2589,12 @@
 			"albumId":"53243212",
 			"artistId":"114748032",
 			"source":5,
-			"id":"485706720"
+			"id":"485706720",
+			"programId":""
 		},
 		{
 			"duration":217.913,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"风歌_星河",
 			"mvId":"",
 			"format":"m4a",
@@ -2575,11 +2602,12 @@
 			"albumId":"",
 			"artistId":"11561431",
 			"source":7,
-			"id":"4939118"
+			"id":"4939118",
+			"programId":""
 		},
 		{
 			"duration":215.202,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"苍火_澄果",
 			"mvId":"",
 			"format":"m4a",
@@ -2587,11 +2615,12 @@
 			"albumId":"",
 			"artistId":"9842068",
 			"source":7,
-			"id":"3849756"
+			"id":"3849756",
+			"programId":""
 		},
 		{
 			"duration":282.024,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -2599,11 +2628,12 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"6484520"
+			"id":"6484520",
+			"programId":""
 		},
 		{
 			"duration":244.819,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"ZZ腾__只会唱歌",
 			"mvId":"",
 			"format":"m4a",
@@ -2611,11 +2641,12 @@
 			"albumId":"",
 			"artistId":"9710203",
 			"source":7,
-			"id":"3033712"
+			"id":"3033712",
+			"programId":""
 		},
 		{
 			"duration":243.528,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"纯玩TIME",
 			"mvId":"",
 			"format":"m4a",
@@ -2623,11 +2654,12 @@
 			"albumId":"",
 			"artistId":"14718228",
 			"source":7,
-			"id":"3912042"
+			"id":"3912042",
+			"programId":""
 		},
 		{
 			"duration":223.634,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晨晨要变白",
 			"mvId":"",
 			"format":"m4a",
@@ -2635,11 +2667,12 @@
 			"albumId":"",
 			"artistId":"20171967",
 			"source":7,
-			"id":"5745110"
+			"id":"5745110",
+			"programId":""
 		},
 		{
 			"duration":67.239,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"无敌の小趴菜",
 			"mvId":"",
 			"format":"m4a",
@@ -2647,11 +2680,12 @@
 			"albumId":"",
 			"artistId":"9628504",
 			"source":7,
-			"id":"6364020"
+			"id":"6364020",
+			"programId":""
 		},
 		{
 			"duration":278.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -2659,12 +2693,12 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"6429561"
+			"id":"6429561",
+			"programId":""
 		},
 		{
 			"duration":19.069,
 			"albumName":"温柔Live",
-			"albumImgUrl":"",
 			"artist":"小熊拽得很_",
 			"mvId":"",
 			"format":"m4a",
@@ -2672,11 +2706,12 @@
 			"albumId":"49549",
 			"artistId":"7916056",
 			"source":7,
-			"id":"5172426"
+			"id":"5172426",
+			"programId":""
 		},
 		{
 			"duration":180.96,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"風司音",
 			"mvId":"",
 			"format":"m4a",
@@ -2684,11 +2719,12 @@
 			"albumId":"",
 			"artistId":"2858505",
 			"source":7,
-			"id":"5517663"
+			"id":"5517663",
+			"programId":""
 		},
 		{
 			"duration":181.028,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"经商之人",
 			"mvId":"",
 			"format":"m4a",
@@ -2696,11 +2732,12 @@
 			"albumId":"",
 			"artistId":"22369408",
 			"source":7,
-			"id":"5711889"
+			"id":"5711889",
+			"programId":""
 		},
 		{
 			"duration":16.224,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"年年落落宝贝",
 			"mvId":"",
 			"format":"m4a",
@@ -2708,12 +2745,12 @@
 			"albumId":"",
 			"artistId":"15928754",
 			"source":7,
-			"id":"6069873"
+			"id":"6069873",
+			"programId":""
 		},
 		{
 			"duration":181.551,
 			"albumName":"Summer",
-			"albumImgUrl":"",
 			"artist":"Cindy_Summer",
 			"mvId":"",
 			"format":"m4a",
@@ -2721,12 +2758,12 @@
 			"albumId":"56743",
 			"artistId":"7937706",
 			"source":7,
-			"id":"6274935"
+			"id":"6274935",
+			"programId":""
 		},
 		{
 			"duration":215.379,
 			"albumName":"灰灰の直播演唱合辑",
-			"albumImgUrl":"",
 			"artist":"小心心_灰の播放器",
 			"mvId":"",
 			"format":"m4a",
@@ -2734,11 +2771,12 @@
 			"albumId":"39681",
 			"artistId":"11870578",
 			"source":7,
-			"id":"6236122"
+			"id":"6236122",
+			"programId":""
 		},
 		{
 			"duration":208.927,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"仄夏_酒宝",
 			"mvId":"",
 			"format":"m4a",
@@ -2746,11 +2784,12 @@
 			"albumId":"",
 			"artistId":"7998535",
 			"source":7,
-			"id":"2165403"
+			"id":"2165403",
+			"programId":""
 		},
 		{
 			"duration":179.304,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"今夜明珠色丶",
 			"mvId":"",
 			"format":"m4a",
@@ -2758,11 +2797,12 @@
 			"albumId":"",
 			"artistId":"7595908",
 			"source":7,
-			"id":"2103656"
+			"id":"2103656",
+			"programId":""
 		},
 		{
 			"duration":190.008,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"幺儿_上学版",
 			"mvId":"",
 			"format":"m4a",
@@ -2770,11 +2810,12 @@
 			"albumId":"",
 			"artistId":"20484959",
 			"source":7,
-			"id":"5094545"
+			"id":"5094545",
+			"programId":""
 		},
 		{
 			"duration":21.315,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"土拨小晚晚_星禾",
 			"mvId":"",
 			"format":"m4a",
@@ -2782,11 +2823,12 @@
 			"albumId":"",
 			"artistId":"16195011",
 			"source":7,
-			"id":"4177509"
+			"id":"4177509",
+			"programId":""
 		},
 		{
 			"duration":159.288,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"七妹_Bq",
 			"mvId":"",
 			"format":"m4a",
@@ -2794,7 +2836,8 @@
 			"albumId":"",
 			"artistId":"7702983",
 			"source":7,
-			"id":"4227626"
+			"id":"4227626",
+			"programId":""
 		},
 		{
 			"duration":184,
@@ -2807,7 +2850,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"40476386",
-			"hash":"7446994924e7b7b7adf643405c6e6fcd"
+			"hash":"7446994924e7b7b7adf643405c6e6fcd",
+			"programId":""
 		},
 		{
 			"duration":184,
@@ -2819,12 +2863,12 @@
 			"albumId":"2696061",
 			"artistId":"1046457",
 			"source":0,
-			"id":"27928038"
+			"id":"27928038",
+			"programId":""
 		},
 		{
 			"duration":560.065,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
-			"albumImgUrl":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -2832,12 +2876,12 @@
 			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
-			"id":"3695540"
+			"id":"3695540",
+			"programId":""
 		},
 		{
 			"duration":310.416,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
-			"albumImgUrl":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -2845,7 +2889,8 @@
 			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
-			"id":"1297117"
+			"id":"1297117",
+			"programId":""
 		},
 		{
 			"duration":264.038,
@@ -2857,7 +2902,8 @@
 			"albumId":"95119634",
 			"artistId":"30226109",
 			"source":0,
-			"id":"1477825439"
+			"id":"1477825439",
+			"programId":""
 		},
 		{
 			"duration":190.866,
@@ -2869,11 +2915,12 @@
 			"albumId":"138869243",
 			"artistId":"35852429",
 			"source":0,
-			"id":"1911894957"
+			"id":"1911894957",
+			"programId":""
 		},
 		{
 			"duration":278.544,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -2881,11 +2928,12 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"3883444"
+			"id":"3883444",
+			"programId":""
 		},
 		{
 			"duration":269.333,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -2893,7 +2941,8 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"6096987"
+			"id":"6096987",
+			"programId":""
 		},
 		{
 			"duration":162.529,
@@ -2905,7 +2954,8 @@
 			"albumId":"153021394",
 			"artistId":"12700520",
 			"source":0,
-			"id":"1988555791"
+			"id":"1988555791",
+			"programId":""
 		},
 		{
 			"duration":166,
@@ -2917,11 +2967,12 @@
 			"albumId":"150377096",
 			"artistId":"46966451",
 			"source":0,
-			"id":"1975589384"
+			"id":"1975589384",
+			"programId":""
 		},
 		{
 			"duration":279.457,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"饭饭_娃娃の_",
 			"mvId":"",
 			"format":"m4a",
@@ -2929,11 +2980,12 @@
 			"albumId":"",
 			"artistId":"10790825",
 			"source":7,
-			"id":"2563502"
+			"id":"2563502",
+			"programId":""
 		},
 		{
 			"duration":220.776,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"毛十八Mao",
 			"mvId":"",
 			"format":"m4a",
@@ -2941,11 +2993,12 @@
 			"albumId":"",
 			"artistId":"17812950",
 			"source":7,
-			"id":"4836926"
+			"id":"4836926",
+			"programId":""
 		},
 		{
 			"duration":240.528,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -2953,11 +3006,12 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"3883441"
+			"id":"3883441",
+			"programId":""
 		},
 		{
 			"duration":212.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -2965,11 +3019,12 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"3959383"
+			"id":"3959383",
+			"programId":""
 		},
 		{
 			"duration":238.999,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"洛缘儿_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -2977,7 +3032,8 @@
 			"albumId":"",
 			"artistId":"4716800",
 			"source":7,
-			"id":"6417179"
+			"id":"6417179",
+			"programId":""
 		},
 		"D:\\音乐\\Night Flight - KLYDIX.mp3",
 		"D:\\音乐\\Sky High - KLYDIX.mp3",
@@ -2985,7 +3041,7 @@
 		"D:\\音乐\\Neverland - 亚述、Forestcat Records.mp3",
 		{
 			"duration":216.92,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"关关_Su",
 			"mvId":"",
 			"format":"m4a",
@@ -2993,11 +3049,12 @@
 			"albumId":"",
 			"artistId":"6053203",
 			"source":7,
-			"id":"4285299"
+			"id":"4285299",
+			"programId":""
 		},
 		{
 			"duration":216.92,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"安白_Fox",
 			"mvId":"",
 			"format":"m4a",
@@ -3005,12 +3062,12 @@
 			"albumId":"",
 			"artistId":"21928412",
 			"source":7,
-			"id":"6052111"
+			"id":"6052111",
+			"programId":""
 		},
 		{
 			"duration":217.128,
 			"albumName":"探窗",
-			"albumImgUrl":"",
 			"artist":"应时啊",
 			"mvId":"",
 			"format":"m4a",
@@ -3018,7 +3075,8 @@
 			"albumId":"49780",
 			"artistId":"3059534",
 			"source":7,
-			"id":"4750916"
+			"id":"4750916",
+			"programId":""
 		},
 		{
 			"duration":211.555,
@@ -3030,7 +3088,8 @@
 			"albumId":"81592835",
 			"artistId":"12270575",
 			"source":0,
-			"id":"1390484118"
+			"id":"1390484118",
+			"programId":""
 		},
 		{
 			"duration":231.173,
@@ -3042,11 +3101,12 @@
 			"albumId":"3154565",
 			"artistId":"1081062",
 			"source":0,
-			"id":"32320824"
+			"id":"32320824",
+			"programId":""
 		},
 		{
 			"duration":179.095,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"㊗比巴卜㏠满月樂㊒棠",
 			"mvId":"",
 			"format":"m4a",
@@ -3054,11 +3114,12 @@
 			"albumId":"",
 			"artistId":"5110023",
 			"source":7,
-			"id":"6417029"
+			"id":"6417029",
+			"programId":""
 		},
 		{
 			"duration":225.515,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"摩斯花生",
 			"mvId":"",
 			"format":"m4a",
@@ -3066,11 +3127,12 @@
 			"albumId":"",
 			"artistId":"2612",
 			"source":7,
-			"id":"216067"
+			"id":"216067",
+			"programId":""
 		},
 		{
 			"duration":81.188,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"阿潮ッ真的白",
 			"mvId":"",
 			"format":"m4a",
@@ -3078,11 +3140,12 @@
 			"albumId":"",
 			"artistId":"23446043",
 			"source":7,
-			"id":"6382256"
+			"id":"6382256",
+			"programId":""
 		},
 		{
 			"duration":187.01,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"众里_燃点",
 			"mvId":"",
 			"format":"m4a",
@@ -3090,7 +3153,8 @@
 			"albumId":"",
 			"artistId":"7582437",
 			"source":7,
-			"id":"6002613"
+			"id":"6002613",
+			"programId":""
 		},
 		{
 			"duration":197,
@@ -3103,7 +3167,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"354411135",
-			"hash":"6e795c4d7089a011a8c3388d3583ff25"
+			"hash":"6e795c4d7089a011a8c3388d3583ff25",
+			"programId":""
 		},
 		{
 			"duration":186,
@@ -3116,12 +3181,12 @@
 			"artistId":"",
 			"source":1,
 			"id":"433483044",
-			"hash":"e32016d0007282321365e35400442033"
+			"hash":"e32016d0007282321365e35400442033",
+			"programId":""
 		},
 		{
 			"duration":43.676,
 			"albumName":"呆呆破的小窝窝",
-			"albumImgUrl":"http://p2.music.126.net/xxouu28aBnFmvSw1GAh4bg==/109951167929597559.jpg",
 			"artist":"听句灯光吧",
 			"mvId":"",
 			"format":"mp3",
@@ -3135,7 +3200,6 @@
 		{
 			"duration":332.925,
 			"albumName":"贰叁Eric作品集",
-			"albumImgUrl":"",
 			"artist":"贰叁Eric・九星",
 			"mvId":"",
 			"format":"m4a",
@@ -3143,12 +3207,12 @@
 			"albumId":"36496",
 			"artistId":"7745970",
 			"source":7,
-			"id":"4178670"
+			"id":"4178670",
+			"programId":""
 		},
 		{
 			"duration":696.069,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
-			"albumImgUrl":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -3156,7 +3220,8 @@
 			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
-			"id":"5200748"
+			"id":"5200748",
+			"programId":""
 		},
 		{
 			"duration":360,
@@ -3169,7 +3234,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"451873760",
-			"hash":"ca067c0dde9ee2af620e3584a6e4b852"
+			"hash":"ca067c0dde9ee2af620e3584a6e4b852",
+			"programId":""
 		},
 		{
 			"duration":263.571,
@@ -3181,12 +3247,13 @@
 			"albumId":"135516634",
 			"artistId":"34500818",
 			"source":0,
-			"id":"1891431677"
+			"id":"1891431677",
+			"programId":""
 		},
 		"D:\\音乐\\Hope - KLYDIX.mp3",
 		{
 			"duration":266.71,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晔梓辰",
 			"mvId":"",
 			"format":"m4a",
@@ -3194,12 +3261,12 @@
 			"albumId":"",
 			"artistId":"10603755",
 			"source":7,
-			"id":"5447913"
+			"id":"5447913",
+			"programId":""
 		},
 		{
 			"duration":265.952,
 			"albumName":"精装后期",
-			"albumImgUrl":"",
 			"artist":"着迷Free_九星",
 			"mvId":"",
 			"format":"m4a",
@@ -3207,11 +3274,12 @@
 			"albumId":"49872",
 			"artistId":"9856577",
 			"source":7,
-			"id":"6321969"
+			"id":"6321969",
+			"programId":""
 		},
 		{
 			"duration":256.746,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"人间月半",
 			"mvId":"",
 			"format":"m4a",
@@ -3219,11 +3287,12 @@
 			"albumId":"",
 			"artistId":"11391033",
 			"source":7,
-			"id":"4351568"
+			"id":"4351568",
+			"programId":""
 		},
 		{
 			"duration":174.94,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"账号已注销",
 			"mvId":"",
 			"format":"m4a",
@@ -3231,11 +3300,12 @@
 			"albumId":"",
 			"artistId":"18635262",
 			"source":7,
-			"id":"4380629"
+			"id":"4380629",
+			"programId":""
 		},
 		{
 			"duration":263.452,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"仙气飘飘大小姐",
 			"mvId":"",
 			"format":"m4a",
@@ -3243,11 +3313,12 @@
 			"albumId":"",
 			"artistId":"16327625",
 			"source":7,
-			"id":"5804619"
+			"id":"5804619",
+			"programId":""
 		},
 		{
 			"duration":262.217,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"烟channel",
 			"mvId":"",
 			"format":"m4a",
@@ -3255,11 +3326,12 @@
 			"albumId":"",
 			"artistId":"22437376",
 			"source":7,
-			"id":"6284426"
+			"id":"6284426",
+			"programId":""
 		},
 		{
 			"duration":261.25,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"韬儿_十方",
 			"mvId":"",
 			"format":"m4a",
@@ -3267,11 +3339,12 @@
 			"albumId":"",
 			"artistId":"10935530",
 			"source":7,
-			"id":"6119474"
+			"id":"6119474",
+			"programId":""
 		},
 		{
 			"duration":263.862,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"南尘先生",
 			"mvId":"",
 			"format":"m4a",
@@ -3279,11 +3352,12 @@
 			"albumId":"",
 			"artistId":"20472347",
 			"source":7,
-			"id":"6081766"
+			"id":"6081766",
+			"programId":""
 		},
 		{
 			"duration":263.313,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晔梓辰",
 			"mvId":"",
 			"format":"m4a",
@@ -3291,13 +3365,13 @@
 			"albumId":"",
 			"artistId":"10603755",
 			"source":7,
-			"id":"5564128"
+			"id":"5564128",
+			"programId":""
 		},
 		"F:\\愿嫁汉家郎 - 余晖、林建明.mp3",
 		{
 			"duration":311.902,
 			"albumName":"仙女们的冠名歌曲",
-			"albumImgUrl":"",
 			"artist":"暖白白",
 			"mvId":"",
 			"format":"m4a",
@@ -3305,11 +3379,12 @@
 			"albumId":"43285",
 			"artistId":"8308243",
 			"source":7,
-			"id":"4216940"
+			"id":"4216940",
+			"programId":""
 		},
 		{
 			"duration":307.095,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"暖白白",
 			"mvId":"",
 			"format":"m4a",
@@ -3317,12 +3392,12 @@
 			"albumId":"",
 			"artistId":"8308243",
 			"source":7,
-			"id":"5604089"
+			"id":"5604089",
+			"programId":""
 		},
 		{
 			"duration":184.711,
 			"albumName":"郭麒麟非正式电台",
-			"albumImgUrl":"http://p1.music.126.net/_ivSUjlJpFdl2IWAhTOzXg==/109951163820801237.jpg",
 			"artist":"好想戒酒呀",
 			"mvId":"",
 			"format":"mp3",
@@ -3336,7 +3411,6 @@
 		{
 			"duration":203.496,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3344,12 +3418,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6129481"
+			"id":"6129481",
+			"programId":""
 		},
 		{
 			"duration":97.507,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3357,12 +3431,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6192588"
+			"id":"6192588",
+			"programId":""
 		},
 		{
 			"duration":325.318,
 			"albumName":"我不可能喜欢他",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3370,12 +3444,12 @@
 			"albumId":"52398",
 			"artistId":"425603",
 			"source":7,
-			"id":"6213472"
+			"id":"6213472",
+			"programId":""
 		},
 		{
 			"duration":9.682,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3383,12 +3457,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6236513"
+			"id":"6236513",
+			"programId":""
 		},
 		{
 			"duration":9.625,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3396,12 +3470,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6236522"
+			"id":"6236522",
+			"programId":""
 		},
 		{
 			"duration":154.698,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3409,12 +3483,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6294007"
+			"id":"6294007",
+			"programId":""
 		},
 		{
 			"duration":30.223,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3422,12 +3496,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6371520"
+			"id":"6371520",
+			"programId":""
 		},
 		{
 			"duration":30.018,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3435,12 +3509,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6371543"
+			"id":"6371543",
+			"programId":""
 		},
 		{
 			"duration":280.824,
 			"albumName":"跨界演员 第一季",
-			"albumImgUrl":"",
 			"artist":"音熊联萌",
 			"mvId":"",
 			"format":"m4a",
@@ -3448,12 +3522,12 @@
 			"albumId":"50728",
 			"artistId":"425603",
 			"source":7,
-			"id":"6404482"
+			"id":"6404482",
+			"programId":""
 		},
 		{
 			"duration":38.556,
 			"albumName":"贰叁Ericの歌单",
-			"albumImgUrl":"",
 			"artist":"贰叁Eric・九星",
 			"mvId":"",
 			"format":"m4a",
@@ -3461,11 +3535,12 @@
 			"albumId":"38990",
 			"artistId":"7745970",
 			"source":7,
-			"id":"3610766"
+			"id":"3610766",
+			"programId":""
 		},
 		{
 			"duration":276.062,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"贰叁Eric・九星",
 			"mvId":"",
 			"format":"m4a",
@@ -3473,11 +3548,12 @@
 			"albumId":"",
 			"artistId":"7745970",
 			"source":7,
-			"id":"6341179"
+			"id":"6341179",
+			"programId":""
 		},
 		{
 			"duration":683.324,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -3485,7 +3561,8 @@
 			"albumId":"",
 			"artistId":"5864988",
 			"source":7,
-			"id":"6422685"
+			"id":"6422685",
+			"programId":""
 		},
 		{
 			"duration":236,
@@ -3497,12 +3574,12 @@
 			"albumId":"P10002184427",
 			"artistId":"A10840400",
 			"source":6,
-			"id":"T10046053373"
+			"id":"T10046053373",
+			"programId":""
 		},
 		{
 			"duration":263.688,
 			"albumName":"时雨の古风辑",
-			"albumImgUrl":"",
 			"artist":"时雨㌶",
 			"mvId":"",
 			"format":"m4a",
@@ -3510,11 +3587,12 @@
 			"albumId":"39331",
 			"artistId":"14042500",
 			"source":7,
-			"id":"5639971"
+			"id":"5639971",
+			"programId":""
 		},
 		{
 			"duration":300.042,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"一只王铁柱",
 			"mvId":"",
 			"format":"m4a",
@@ -3522,12 +3600,12 @@
 			"albumId":"",
 			"artistId":"23367892",
 			"source":7,
-			"id":"6230838"
+			"id":"6230838",
+			"programId":""
 		},
 		{
 			"duration":870.938,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
-			"albumImgUrl":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -3535,7 +3613,8 @@
 			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
-			"id":"5127237"
+			"id":"5127237",
+			"programId":""
 		},
 		{
 			"duration":209,
@@ -3548,7 +3627,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"32108081",
-			"hash":"5ceef51970326664fc172d4918b7bea4"
+			"hash":"5ceef51970326664fc172d4918b7bea4",
+			"programId":""
 		},
 		{
 			"duration":295,
@@ -3560,12 +3640,12 @@
 			"albumId":"35357",
 			"artistId":"11776",
 			"source":0,
-			"id":"358037"
+			"id":"358037",
+			"programId":""
 		},
 		{
 			"duration":554.788,
 			"albumName":"【全能男友】糕丸子",
-			"albumImgUrl":"",
 			"artist":"超大丸纸",
 			"mvId":"",
 			"format":"m4a",
@@ -3573,11 +3653,12 @@
 			"albumId":"49093",
 			"artistId":"373705",
 			"source":7,
-			"id":"6263101"
+			"id":"6263101",
+			"programId":""
 		},
 		{
 			"duration":440.064,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"A大人_",
 			"mvId":"",
 			"format":"m4a",
@@ -3585,12 +3666,12 @@
 			"albumId":"",
 			"artistId":"19499732",
 			"source":7,
-			"id":"6322147"
+			"id":"6322147",
+			"programId":""
 		},
 		{
 			"duration":194.616,
 			"albumName":"【声音恋人】陆千重的声恋合集",
-			"albumImgUrl":"",
 			"artist":"陆千重",
 			"mvId":"",
 			"format":"m4a",
@@ -3598,11 +3679,12 @@
 			"albumId":"55759",
 			"artistId":"7337306",
 			"source":7,
-			"id":"6229296"
+			"id":"6229296",
+			"programId":""
 		},
 		{
 			"duration":924,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"欧勒_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -3610,11 +3692,12 @@
 			"albumId":"",
 			"artistId":"17699913",
 			"source":7,
-			"id":"6439985"
+			"id":"6439985",
+			"programId":""
 		},
 		{
 			"duration":483,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"方兴未艾mirai",
 			"mvId":"",
 			"format":"m4a",
@@ -3622,11 +3705,12 @@
 			"albumId":"",
 			"artistId":"13050975",
 			"source":7,
-			"id":"6477487"
+			"id":"6477487",
+			"programId":""
 		},
 		{
 			"duration":289,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV荻野",
 			"mvId":"",
 			"format":"m4a",
@@ -3634,11 +3718,12 @@
 			"albumId":"",
 			"artistId":"7044093",
 			"source":7,
-			"id":"6467365"
+			"id":"6467365",
+			"programId":""
 		},
 		{
 			"duration":418,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"浅湫丶",
 			"mvId":"",
 			"format":"m4a",
@@ -3646,11 +3731,12 @@
 			"albumId":"",
 			"artistId":"3279538",
 			"source":7,
-			"id":"6477728"
+			"id":"6477728",
+			"programId":""
 		},
 		{
 			"duration":418,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"天籁之声工作室",
 			"mvId":"",
 			"format":"m4a",
@@ -3658,12 +3744,12 @@
 			"albumId":"",
 			"artistId":"11226065",
 			"source":7,
-			"id":"6477690"
+			"id":"6477690",
+			"programId":""
 		},
 		{
 			"duration":773,
 			"albumName":"【声音恋人】嘲风",
-			"albumImgUrl":"",
 			"artist":"嘲风_CF",
 			"mvId":"",
 			"format":"m4a",
@@ -3671,11 +3757,12 @@
 			"albumId":"38051",
 			"artistId":"9822532",
 			"source":7,
-			"id":"6385047"
+			"id":"6385047",
+			"programId":""
 		},
 		{
 			"duration":181.707,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"为你读诗官方账号",
 			"mvId":"",
 			"format":"m4a",
@@ -3683,11 +3770,11 @@
 			"albumId":"",
 			"artistId":"4098815",
 			"source":7,
-			"id":"6388926"
+			"id":"6388926",
+			"programId":""
 		},
 		{
 			"albumName":"我的世界音效",
-			"albumImgUrl":"https://p1.music.126.net/xw6zk7wz5VratBbvU6MPNw==/109951167542605998.jpg",
 			"artist":"玩麦块的fresh-sans",
 			"mvId":"",
 			"format":"mp3",
@@ -3701,7 +3788,6 @@
 		{
 			"duration":311.193,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
-			"albumImgUrl":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -3709,11 +3795,12 @@
 			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
-			"id":"3268981"
+			"id":"3268981",
+			"programId":""
 		},
 		{
 			"duration":420,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -3721,12 +3808,12 @@
 			"albumId":"",
 			"artistId":"5864988",
 			"source":7,
-			"id":"5264243"
+			"id":"5264243",
+			"programId":""
 		},
 		{
 			"duration":490,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
-			"albumImgUrl":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -3734,7 +3821,8 @@
 			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
-			"id":"5341388"
+			"id":"5341388",
+			"programId":""
 		},
 		{
 			"duration":179.047,
@@ -3746,7 +3834,8 @@
 			"albumId":"127351575",
 			"artistId":"47779723",
 			"source":0,
-			"id":"1844676665"
+			"id":"1844676665",
+			"programId":""
 		},
 		"D:\\音乐\\Away We Go - Ted Nights、MAGILO.mp3",
 		{
@@ -3760,12 +3849,13 @@
 			"artistId":"",
 			"source":1,
 			"id":"414465637",
-			"hash":"f71157c55dc63614564b5931c38fdcd9"
+			"hash":"f71157c55dc63614564b5931c38fdcd9",
+			"programId":""
 		},
 		"D:\\音乐\\独钟 - Sasablue.mp3",
 		{
 			"duration":254,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"你的浪浪・九星",
 			"mvId":"",
 			"format":"m4a",
@@ -3773,11 +3863,12 @@
 			"albumId":"",
 			"artistId":"7591915",
 			"source":7,
-			"id":"5710017"
+			"id":"5710017",
+			"programId":""
 		},
 		{
 			"duration":242.208,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"你的浪浪・九星",
 			"mvId":"",
 			"format":"m4a",
@@ -3785,7 +3876,8 @@
 			"albumId":"",
 			"artistId":"7591915",
 			"source":7,
-			"id":"6364619"
+			"id":"6364619",
+			"programId":""
 		},
 		{
 			"duration":193.235,
@@ -3797,7 +3889,8 @@
 			"albumId":"150651960",
 			"artistId":"49937403",
 			"source":0,
-			"id":"1976899454"
+			"id":"1976899454",
+			"programId":""
 		},
 		{
 			"duration":270.672,
@@ -3809,7 +3902,8 @@
 			"albumId":"153343119",
 			"artistId":"12676697",
 			"source":0,
-			"id":"1990179959"
+			"id":"1990179959",
+			"programId":""
 		},
 		{
 			"duration":247.494,
@@ -3821,12 +3915,12 @@
 			"albumId":"24825",
 			"artistId":"8151",
 			"source":0,
-			"id":"247807"
+			"id":"247807",
+			"programId":""
 		},
 		{
 			"duration":2706.782,
 			"albumName":"在云端",
-			"albumImgUrl":"https://p1.music.126.net/Cds6bZXcxyfm-BS9B4sihg==/109951167415804161.jpg",
 			"artist":"林海",
 			"mvId":"",
 			"format":"mp3",
@@ -3847,11 +3941,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1406099861"
+			"id":"1406099861",
+			"programId":""
 		},
 		{
 			"duration":462.315,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"葵影乱",
 			"mvId":"",
 			"format":"m4a",
@@ -3859,11 +3954,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"6419760"
+			"id":"6419760",
+			"programId":""
 		},
 		{
 			"duration":823,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"葵影乱",
 			"mvId":"",
 			"format":"m4a",
@@ -3871,11 +3967,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"6467703"
+			"id":"6467703",
+			"programId":""
 		},
 		{
 			"duration":220.525,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV荻野",
 			"mvId":"",
 			"format":"m4a",
@@ -3883,11 +3980,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"5470769"
+			"id":"5470769",
+			"programId":""
 		},
 		{
 			"duration":68.57,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV荻野",
 			"mvId":"",
 			"format":"m4a",
@@ -3895,11 +3993,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"5488061"
+			"id":"5488061",
+			"programId":""
 		},
 		{
 			"duration":79.976,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV荻野",
 			"mvId":"",
 			"format":"m4a",
@@ -3907,11 +4006,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"5556695"
+			"id":"5556695",
+			"programId":""
 		},
 		{
 			"duration":308.595,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV荻野",
 			"mvId":"",
 			"format":"m4a",
@@ -3919,11 +4019,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"5809581"
+			"id":"5809581",
+			"programId":""
 		},
 		{
 			"duration":7.116,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV荻野",
 			"mvId":"",
 			"format":"m4a",
@@ -3931,11 +4032,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"5948345"
+			"id":"5948345",
+			"programId":""
 		},
 		{
 			"duration":326.77,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"CV荻野",
 			"mvId":"",
 			"format":"m4a",
@@ -3943,126 +4045,14 @@
 			"albumId":"",
 			"artistId":"",
 			"source":7,
-			"id":"6233543"
-		},
-		{
-			"duration":168.951,
-			"albumImgUrl":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【等风热吻你·许星纯】-CV荻野",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6438242"
-		},
-		{
-			"duration":203.023,
-			"albumName":"【声恋星球】——CV荻野",
-			"albumImgUrl":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】带你海滨度假",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5425857"
-		},
-		{
-			"duration":358.584,
-			"albumName":"【声恋星球】——CV荻野",
-			"albumImgUrl":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【同居男友】暴风天住进暧昧发小家中",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5062975"
-		},
-		{
-			"duration":200.596,
-			"albumName":"【声恋星球】——CV荻野",
-			"albumImgUrl":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【盐系男友】能让我下厨的只有你",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"4032481"
-		},
-		{
-			"duration":210.192,
-			"albumName":"【声恋星球】——CV荻野",
-			"albumImgUrl":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】蛋糕和你，我都想吃",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"3567474"
-		},
-		{
-			"duration":201.408,
-			"albumName":"【声恋星球】——CV荻野",
-			"albumImgUrl":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【春日男友】画室里学长手把手教你",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"3170320"
-		},
-		{
-			"duration":349.985,
-			"albumImgUrl":"",
-			"artist":"贰叁Eric・九星",
-			"mvId":"",
-			"format":"m4a",
-			"name":"《人生规划》剧情版",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"3208241"
-		},
-		{
-			"duration":246,
-			"albumImgUrl":"",
-			"artist":"贰叁Eric・九星",
-			"mvId":"",
-			"format":"m4a",
-			"name":"最伟大的串烧",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5734403"
-		},
-		{
-			"duration":13984.302,
-			"albumImgUrl":"",
-			"artist":"贰叁Eric・九星",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【回放】欸嘿嘿，生了",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5983363"
+			"id":"6233543",
+			"programId":""
 		}
 	],
 	"collection":[
 		{
 			"duration":272.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"三斤_声演",
 			"mvId":"",
 			"format":"m4a",
@@ -4070,11 +4060,12 @@
 			"albumId":"",
 			"artistId":"13751022",
 			"source":7,
-			"id":"6470362"
+			"id":"6470362",
+			"programId":""
 		},
 		{
 			"duration":254.496,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"暖白白",
 			"mvId":"",
 			"format":"m4a",
@@ -4082,11 +4073,12 @@
 			"albumId":"",
 			"artistId":"8308243",
 			"source":7,
-			"id":"4439988"
+			"id":"4439988",
+			"programId":""
 		},
 		{
 			"duration":263.968,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"晔梓辰",
 			"mvId":"",
 			"format":"m4a",
@@ -4094,11 +4086,12 @@
 			"albumId":"",
 			"artistId":"10603755",
 			"source":7,
-			"id":"5486411"
+			"id":"5486411",
+			"programId":""
 		},
 		{
 			"duration":613.04,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
@@ -4106,7 +4099,8 @@
 			"albumId":"",
 			"artistId":"5864988",
 			"source":7,
-			"id":"6469472"
+			"id":"6469472",
+			"programId":""
 		},
 		{
 			"duration":190.866,
@@ -4118,7 +4112,8 @@
 			"albumId":"138869243",
 			"artistId":"35852429",
 			"source":0,
-			"id":"1911894957"
+			"id":"1911894957",
+			"programId":""
 		},
 		{
 			"duration":264.038,
@@ -4130,7 +4125,8 @@
 			"albumId":"95119634",
 			"artistId":"30226109",
 			"source":0,
-			"id":"1477825439"
+			"id":"1477825439",
+			"programId":""
 		},
 		{
 			"duration":179.047,
@@ -4142,7 +4138,8 @@
 			"albumId":"127351575",
 			"artistId":"47779723",
 			"source":0,
-			"id":"1844676665"
+			"id":"1844676665",
+			"programId":""
 		},
 		{
 			"duration":172,
@@ -4154,7 +4151,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":3,
-			"id":"204202783"
+			"id":"204202783",
+			"programId":""
 		},
 		{
 			"duration":199.706,
@@ -4166,7 +4164,8 @@
 			"albumId":"92247895",
 			"artistId":"13499634",
 			"source":0,
-			"id":"1461827404"
+			"id":"1461827404",
+			"programId":""
 		},
 		{
 			"duration":158.442,
@@ -4178,7 +4177,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1421176934"
+			"id":"1421176934",
+			"programId":""
 		},
 		{
 			"duration":174,
@@ -4190,7 +4190,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"0035rKR624MyIq"
+			"id":"0035rKR624MyIq",
+			"programId":""
 		},
 		{
 			"duration":193.128,
@@ -4202,7 +4203,8 @@
 			"albumId":"78400778",
 			"artistId":"13537270",
 			"source":0,
-			"id":"1357730882"
+			"id":"1357730882",
+			"programId":""
 		},
 		{
 			"duration":186,
@@ -4215,7 +4217,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"433483044",
-			"hash":"e32016d0007282321365e35400442033"
+			"hash":"e32016d0007282321365e35400442033",
+			"programId":""
 		},
 		{
 			"duration":197,
@@ -4228,7 +4231,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"354411135",
-			"hash":"6e795c4d7089a011a8c3388d3583ff25"
+			"hash":"6e795c4d7089a011a8c3388d3583ff25",
+			"programId":""
 		},
 		{
 			"duration":376,
@@ -4240,7 +4244,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"0026MIeC0VOG0R"
+			"id":"0026MIeC0VOG0R",
+			"programId":""
 		},
 		{
 			"duration":204.955,
@@ -4252,7 +4257,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1891469546"
+			"id":"1891469546",
+			"programId":""
 		},
 		{
 			"duration":188,
@@ -4265,7 +4271,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"350009457",
-			"hash":"3EF2F2C62683B8A1604A6E24A59637EB"
+			"hash":"3EF2F2C62683B8A1604A6E24A59637EB",
+			"programId":""
 		},
 		{
 			"duration":158,
@@ -4278,7 +4285,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"404457774",
-			"hash":"BA3C2CEC45FF5011FBE3D4C1DAB46148"
+			"hash":"BA3C2CEC45FF5011FBE3D4C1DAB46148",
+			"programId":""
 		},
 		{
 			"duration":224,
@@ -4291,7 +4299,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"381570152",
-			"hash":"075905eb683306e00606f553efc7d693"
+			"hash":"075905eb683306e00606f553efc7d693",
+			"programId":""
 		},
 		{
 			"duration":195,
@@ -4304,10 +4313,12 @@
 			"artistId":"",
 			"source":1,
 			"id":"388217815",
-			"hash":"996badce80f4559d2fe553c8555eb763"
+			"hash":"996badce80f4559d2fe553c8555eb763",
+			"programId":""
 		},
 		{
 			"duration":230,
+			"albumName":"",
 			"artist":"COP",
 			"mvId":"",
 			"format":"mp3",
@@ -4316,7 +4327,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"54875658",
-			"hash":"A5456E5A05080F21BB801FC423B348D0"
+			"hash":"A5456E5A05080F21BB801FC423B348D0",
+			"programId":""
 		},
 		{
 			"duration":285,
@@ -4328,7 +4340,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":3,
-			"id":"209201619"
+			"id":"209201619",
+			"programId":""
 		},
 		{
 			"duration":222.683,
@@ -4340,7 +4353,8 @@
 			"albumId":"35702116",
 			"artistId":"1143033",
 			"source":0,
-			"id":"488249475"
+			"id":"488249475",
+			"programId":""
 		},
 		{
 			"duration":256,
@@ -4353,7 +4367,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"32042685",
-			"hash":"28e7a8283f9e54d6d8748ed73039cda0"
+			"hash":"28e7a8283f9e54d6d8748ed73039cda0",
+			"programId":""
 		},
 		{
 			"duration":16.587,
@@ -4365,7 +4380,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1438820072"
+			"id":"1438820072",
+			"programId":""
 		},
 		{
 			"duration":330.99,
@@ -4377,7 +4393,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1877075596"
+			"id":"1877075596",
+			"programId":""
 		},
 		{
 			"duration":298.04,
@@ -4389,7 +4406,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"249320"
+			"id":"249320",
+			"programId":""
 		},
 		{
 			"duration":183.224,
@@ -4401,7 +4419,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1887382477"
+			"id":"1887382477",
+			"programId":""
 		},
 		{
 			"duration":152,
@@ -4413,7 +4432,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"000cVZzL3XubHi"
+			"id":"000cVZzL3XubHi",
+			"programId":""
 		},
 		{
 			"duration":183,
@@ -4425,7 +4445,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"0003J8Se2C95ky"
+			"id":"0003J8Se2C95ky",
+			"programId":""
 		},
 		{
 			"duration":251,
@@ -4438,7 +4459,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"32573022",
-			"hash":"f1b8ade70b385af9d51f3f2ebff9032e"
+			"hash":"f1b8ade70b385af9d51f3f2ebff9032e",
+			"programId":""
 		},
 		{
 			"duration":328,
@@ -4451,7 +4473,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"281757269",
-			"hash":"072D6B6BAD6C28C4A265BBF158EF736B"
+			"hash":"072D6B6BAD6C28C4A265BBF158EF736B",
+			"programId":""
 		},
 		{
 			"duration":263,
@@ -4464,7 +4487,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"379759197",
-			"hash":"cb99a75e28f6382ebefe5961508bd4bf"
+			"hash":"cb99a75e28f6382ebefe5961508bd4bf",
+			"programId":""
 		},
 		{
 			"duration":178,
@@ -4476,7 +4500,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":3,
-			"id":"198635187"
+			"id":"198635187",
+			"programId":""
 		},
 		{
 			"duration":255,
@@ -4488,7 +4513,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":3,
-			"id":"204402269"
+			"id":"204402269",
+			"programId":""
 		},
 		{
 			"duration":221,
@@ -4500,7 +4526,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":3,
-			"id":"195498153"
+			"id":"195498153",
+			"programId":""
 		},
 		{
 			"duration":190,
@@ -4512,7 +4539,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"0000ardh3TSnuU"
+			"id":"0000ardh3TSnuU",
+			"programId":""
 		},
 		{
 			"duration":204,
@@ -4524,7 +4552,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"002FlPoN4bSOQ3"
+			"id":"002FlPoN4bSOQ3",
+			"programId":""
 		},
 		"D:\\音乐\\雾里 - 姚六一.mp3",
 		{
@@ -4537,7 +4566,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":3,
-			"id":"207079689"
+			"id":"207079689",
+			"programId":""
 		},
 		{
 			"duration":166,
@@ -4549,7 +4579,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"003YIaP90xbajn"
+			"id":"003YIaP90xbajn",
+			"programId":""
 		},
 		{
 			"duration":161,
@@ -4561,7 +4592,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"001pnsCG2W3HB2"
+			"id":"001pnsCG2W3HB2",
+			"programId":""
 		},
 		{
 			"duration":214.728,
@@ -4573,7 +4605,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1467105208"
+			"id":"1467105208",
+			"programId":""
 		},
 		{
 			"duration":203.344,
@@ -4585,7 +4618,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1832233793"
+			"id":"1832233793",
+			"programId":""
 		},
 		{
 			"duration":218.4,
@@ -4597,7 +4631,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1869146646"
+			"id":"1869146646",
+			"programId":""
 		},
 		{
 			"duration":196,
@@ -4609,11 +4644,12 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1445556953"
+			"id":"1445556953",
+			"programId":""
 		},
 		{
 			"duration":1843.226,
-			"albumImgUrl":"https://p2.music.126.net/ysyakPen-3K2Aq8I0aerpw==/109951167409583796.jpg",
+			"albumName":"",
 			"artist":"子劲Gin",
 			"mvId":"",
 			"format":"mp3",
@@ -4627,28 +4663,28 @@
 		{
 			"duration":2759,
 			"albumName":"代码时间",
-			"albumImgUrl":"https://imagev2.xmcdn.com/group20/M0A/63/61/wKgJJ1eeB-PQdc6-AAIYz2ivNpY840.png",
 			"artist":"真业余西",
 			"mvId":"",
-			"format":"m4a",
+			"format":"mp3",
 			"name":"开源和写作 - justjavac",
-			"albumId":"",
-			"artistId":"",
+			"albumId":"4867505",
+			"artistId":"51547393",
 			"source":5,
-			"id":"49046547"
+			"id":"49046547",
+			"programId":""
 		},
 		{
 			"duration":362,
 			"albumName":"代码时间",
-			"albumImgUrl":"https://imagev2.xmcdn.com/group20/M0A/63/61/wKgJJ1eeB-PQdc6-AAIYz2ivNpY840.png",
 			"artist":"真业余西",
 			"mvId":"",
-			"format":"m4a",
+			"format":"mp3",
 			"name":"再见！",
-			"albumId":"",
-			"artistId":"",
+			"albumId":"4867505",
+			"artistId":"51547393",
 			"source":5,
-			"id":"188230380"
+			"id":"188230380",
+			"programId":""
 		},
 		{
 			"duration":213,
@@ -4657,10 +4693,11 @@
 			"mvId":"600906000000119569",
 			"format":"mp3",
 			"name":"Touch",
-			"albumId":"",
+			"albumId":"1004670821",
 			"artistId":"",
 			"source":4,
-			"id":"6005971FJDR"
+			"id":"6005971FJDR",
+			"programId":""
 		},
 		"D:\\音乐\\Ahxello - Time.mp3",
 		"D:\\音乐\\Ahead - Elecprok.mp3",
@@ -4675,7 +4712,8 @@
 			"artistId":"",
 			"source":1,
 			"id":"280040041",
-			"hash":"201652e4eac71c503bb502be86693c00"
+			"hash":"201652e4eac71c503bb502be86693c00",
+			"programId":""
 		},
 		{
 			"duration":263,
@@ -4687,7 +4725,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":3,
-			"id":"199254660"
+			"id":"199254660",
+			"programId":""
 		},
 		{
 			"duration":263,
@@ -4699,7 +4738,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":2,
-			"id":"000VS3zk4c8rxJ"
+			"id":"000VS3zk4c8rxJ",
+			"programId":""
 		},
 		{
 			"duration":188.731,
@@ -4711,7 +4751,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"1828574198"
+			"id":"1828574198",
+			"programId":""
 		},
 		{
 			"duration":232.855,
@@ -4723,7 +4764,8 @@
 			"albumId":"",
 			"artistId":"",
 			"source":0,
-			"id":"303084"
+			"id":"303084",
+			"programId":""
 		},
 		"D:\\音乐\\醉心问月 - 闻人听書_.mp3"
 	],
@@ -4753,6 +4795,7 @@
 			"creator":"腾讯音乐人",
 			"trackCount":21,
 			"name":"假日放松必听！饭后遛弯专用歌单",
+			"creatorId":"",
 			"source":3,
 			"id":"3081749559",
 			"coverImgThumbUrl":"https://img1.kuwo.cn/star/userpl2015/15/39/1601342175983_448007115_150.jpg"
@@ -4762,6 +4805,7 @@
 			"creator":"八次元的世界你不懂",
 			"trackCount":17,
 			"name":"放松丨干净清爽的网络歌曲",
+			"creatorId":"",
 			"source":3,
 			"id":"2442183692",
 			"coverImgThumbUrl":"https://img1.kuwo.cn/star/userpl2015/75/36/1522810188194_421369875_150.jpg"
@@ -4771,6 +4815,7 @@
 			"creator":"强烈哥",
 			"trackCount":50,
 			"name":"拒绝焦虑｜瞬间放松的50首轻音乐",
+			"creatorId":"",
 			"source":2,
 			"id":"8071469493",
 			"coverImgThumbUrl":"http://qpic.y.qq.com/music_cover/KpII0D21R4Xx3NpIARI5VFVM7Rzc47dECKRpIIzJ0MzEshWsbWicRGw/300"
@@ -4780,6 +4825,7 @@
 			"creator":"微笑",
 			"trackCount":29,
 			"name":"治愈系！拥抱海洋放松每一个神经",
+			"creatorId":"",
 			"source":2,
 			"id":"7725989770",
 			"coverImgThumbUrl":"http://qpic.y.qq.com/music_cover/UiaaoBEX8RFu4yu8ZqRLoGccKCDAe6VdjJpC7PAQribzEw56xyULLhqQ/300"
@@ -4789,6 +4835,7 @@
 			"creator":"Li",
 			"trackCount":28,
 			"name":"瑜伽音乐冥想放松音乐",
+			"creatorId":"",
 			"source":1,
 			"id":"4170367",
 			"coverImgThumbUrl":"http://c1.kgimg.com/custom/150/20210823/20210823195551853031.jpg"
@@ -4798,6 +4845,7 @@
 			"creator":"宝藏纯音乐",
 			"trackCount":108,
 			"name":"放松轻音乐纯音乐 解压",
+			"creatorId":"",
 			"source":1,
 			"id":"4194538",
 			"coverImgThumbUrl":"http://c1.kgimg.com/custom/150/20210907/20210907212614866400.jpg"
@@ -4807,14 +4855,17 @@
 			"creator":"世界无一人",
 			"trackCount":72,
 			"name":"[中文] 好听～轻快放松身心的音乐",
+			"creatorId":"",
 			"source":0,
 			"id":"2652013202",
 			"coverImgThumbUrl":"https://p2.music.126.net/58gSLjdxyiVteWlSglvjEQ==/109951165922317836.jpg"
 		},
 		{
 			"playCount":10271502,
+			"creator":"",
 			"trackCount":98,
 			"name":"「轻音乐·安静」舒缓放松，缓解压力",
+			"creatorId":"",
 			"source":0,
 			"id":"2209538297",
 			"coverImgThumbUrl":"https://p2.music.126.net/zQsuZvhJygPTFTM_FFnqhQ==/109951164139588912.jpg"
@@ -4828,6 +4879,7 @@
 			"bvid":"",
 			"playCount":3668285,
 			"artist":"盛哲",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"在你的身边",
 			"creatorId":"12395355",
@@ -4841,6 +4893,7 @@
 			"bvid":"",
 			"playCount":240296,
 			"artist":"安与骑兵",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"三年三天",
 			"creatorId":"",
@@ -4868,6 +4921,7 @@
 			"bvid":"",
 			"playCount":22671,
 			"artist":"Blake-Rui",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"1.[HOT Tiktok Dance] PHAO - 2 Phut Hon ((Av6288570",
 			"creatorId":"1457775938",
@@ -4893,12 +4947,12 @@
 			"duration":317,
 			"coverImgUrl":"https://y.gtimg.cn/music/photo_new/T015R640x360M101001m8tvD1Us0R6.jpg",
 			"bvid":"",
-			"playCount":8365551,
+			"playCount":8545011,
 			"artist":"告五人",
 			"pubTime":"2019-08-07",
 			"format":"mp4",
 			"name":"爱人错过",
-			"creatorId":"",
+			"creatorId":"002pfVN53lKI7x",
 			"source":2,
 			"id":"d0031xd9jf4",
 			"type":0
@@ -4909,6 +4963,7 @@
 			"bvid":"",
 			"playCount":5314,
 			"artist":"好歌又来了",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"江珊《梦里水乡》甜美动人，歌声飘过30年，久久难忘",
 			"creatorId":"",
@@ -4922,6 +4977,7 @@
 			"bvid":"",
 			"playCount":11161,
 			"artist":"音乐老鸭煲",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"2022年1月至4月最热门的六首歌，你最喜欢哪一首",
 			"creatorId":"",
@@ -4935,6 +4991,7 @@
 			"bvid":"",
 			"playCount":3644,
 			"artist":"音乐老友_",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"朱添泽《想(DJ版)》其实我也曾经幻想改！",
 			"creatorId":"",
@@ -4948,6 +5005,7 @@
 			"bvid":"",
 			"playCount":1865051,
 			"artist":"队长",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"11",
 			"creatorId":"",
@@ -4961,6 +5019,7 @@
 			"bvid":"",
 			"playCount":119,
 			"artist":"李玉玺&琳谊Ring",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"想-《神之乡》电视剧插曲",
 			"creatorId":"",
@@ -4974,6 +5033,7 @@
 			"bvid":"",
 			"playCount":75852,
 			"artist":"环球视听1980",
+			"pubTime":"",
 			"format":"mp4",
 			"name":"王炎 -《想》非常干净的一首经典老歌，时隔多年又再度火起来",
 			"creatorId":"",
@@ -4992,13 +5052,13 @@
 	"videoOnly":true,
 	"sortOrder":1,
 	"mvHistorySearch":[
+		"爱人错过",
 		"我，江湖",
 		"在你的身边",
 		"phut hon",
 		"介叔 戍孝",
 		"梅花精",
 		"弱水三千",
-		"爱人错过",
 		"草原之上",
 		"康雅雅",
 		"月老掉线",
@@ -5020,7 +5080,8 @@
 		"红豆",
 		"第33"
 	],
-	"cachePath":"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\cache/",
+	"cachePath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\cache/",
+	"maxConcurrentTaskCount":5,
 	"equalizerData":[
 		0,
 		0,
@@ -5860,432 +5921,117 @@
 	],
 	"playQueue":[
 		{
-			"duration":289,
-			"albumImgUrl":"",
-			"artist":"",
+			"duration":247,
+			"albumName":"Punching Bag",
+			"artist":"Josh Turner、Ricky Skaggs",
 			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】与犬系年下男友过纪念日，然后…",
-			"albumId":"",
+			"format":"mp3",
+			"name":"For the Love of God",
+			"albumId":"965221",
 			"artistId":"",
-			"source":7,
-			"id":"6467365"
+			"source":1,
+			"id":"32086078",
+			"hash":"33CF606474990BF9EE93CAA41157C912",
+			"programId":""
 		},
+		"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music\\DevOps Tooling - 张学谦 - 真业余西.m4a",
+		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\英语口语 - Henry(下) - 真业余西.m4a",
+		"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music\\陈奕雯「为你读诗」：《旅行》 - 为你读诗官方账号.m4a",
 		{
-			"duration":508,
-			"albumImgUrl":"",
-			"artist":"",
+			"duration":263.968,
+			"albumName":"",
+			"artist":"晔梓辰",
 			"mvId":"",
 			"format":"m4a",
-			"name":"异色画灵_叶瑄.冰雕玉琢",
+			"name":"武家坡2021",
 			"albumId":"",
+			"artistId":"10603755",
+			"source":7,
+			"id":"5486411",
+			"programId":""
+		},
+		{
+			"duration":254.496,
+			"albumName":"",
+			"artist":"暖白白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"武家坡2021-暖白白（摩卡冠名）",
+			"albumId":"",
+			"artistId":"8308243",
+			"source":7,
+			"id":"4439988",
+			"programId":""
+		},
+		{
+			"duration":272.04,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"爱似水仙",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"6470362",
+			"programId":""
+		},
+		"D:\\其他\\轻音\\LightMusic\\src\\main\\java\\net\\doge\\downloads\\music\\开源和写作 - justjavac - 真业余西.m4a",
+		{
+			"duration":594,
+			"albumName":"完｜中华少年偶像｜屠呦呦传",
+			"artist":"三宝带你读传记",
+			"mvId":"",
+			"format":"m4a",
+			"name":"20 在瑞典卡罗琳斯卡学院的演讲（大结局）",
+			"albumId":"41150438",
+			"artistId":"65625042",
+			"source":5,
+			"id":"334188878",
+			"programId":""
+		},
+		{
+			"duration":2759,
+			"albumName":"代码时间",
+			"artist":"真业余西",
+			"mvId":"",
+			"format":"m4a",
+			"name":"开源和写作 - justjavac",
+			"albumId":"4867505",
+			"artistId":"51547393",
+			"source":5,
+			"id":"49046547",
+			"programId":""
+		},
+		{
+			"duration":362,
+			"albumName":"代码时间",
+			"artist":"真业余西",
+			"mvId":"",
+			"format":"m4a",
+			"name":"再见！",
+			"albumId":"4867505",
+			"artistId":"51547393",
+			"source":5,
+			"id":"188230380",
+			"programId":""
+		},
+		{
+			"duration":213,
+			"albumName":"Glory Days (Deluxe)",
+			"artist":"LittleMix",
+			"mvId":"600906000000119569",
+			"format":"mp3",
+			"name":"Touch",
+			"albumId":"1004670821",
 			"artistId":"",
-			"source":7,
-			"id":"6487956"
-		},
-		{
-			"duration":287.568,
-			"albumName":"【声音恋人】陆千重的声恋合集",
-			"albumImgUrl":"",
-			"artist":"陆千重",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】温柔男友出差在外安慰孤单女友",
-			"albumId":"55759",
-			"artistId":"7337306",
-			"source":7,
-			"id":"6454948"
-		},
-		{
-			"duration":1298,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"YH《刺金花园》CV吴磊",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"4725944"
-		},
-		{
-			"duration":33,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"我想要你陪我过个冬",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6487778"
-		},
-		{
-			"duration":310.944,
-			"albumImgUrl":"",
-			"artist":"Cv凌木_声演",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【追妻系列】被小狼狗追到火车站台告白?",
-			"albumId":"",
-			"artistId":"11345850",
-			"source":7,
-			"id":"6465735"
-		},
-		{
-			"duration":322,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】你的男友吃醋了-良声",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5999772"
-		},
-		{
-			"duration":518,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】安慰你不要精神内耗的男友（陪伴治愈向）",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6487625"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】当你生理期还不安分地撩拨男友时（生理期/浪漫/高甜/日常）",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6460225"
-		},
-		{
-			"duration":691,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【枕边女友】再抱你一下",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"1036477"
-		},
-		{
-			"duration":491,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"晚餐后的散步",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6487571"
-		},
-		{
-			"duration":441,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【女性向】终于被占有欲击溃的男友",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6482190"
-		},
-		{
-			"duration":31,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"520电话-路辰-心有灵犀",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6487534"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】不一样的理科男友/甜宠/温柔/治愈",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6452109"
-		},
-		{
-			"duration":176,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【等风热吻你·许星纯】-沫生",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6439315"
-		},
-		{
-			"duration":50,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"我想和你一起努力",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6486728"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声恋】超暖心！和青梅竹马多年后的深夜长谈",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6469472"
-		},
-		{
-			"duration":255,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"虚拟偶像团综丨《LASER出道日》七夕伴你入眠：林致",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"2392114"
-		},
-		{
-			"duration":690,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【女性向音声】在阳光下告白（青涩_甜 ）",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6486433"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【女性向/吃醋/胃疼】喝醉后哼哼唧唧的奶狗小男友（笨蛋男友）",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6478508"
-		},
-		{
-			"duration":279,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"轩ZONE-偶遇·下雨天",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"1022632"
-		},
-		{
-			"duration":1417,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"YH《秋日序曲》CV谷江山",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6485951"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】缉毒警“前”男友卧底任务归来而你已开始新的生活",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6483093"
-		},
-		{
-			"duration":305,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】沉稳爹系男友温柔",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6483732"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】你不希望你喜欢别人老公的事情被人知道吧？",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6467703"
-		},
-		{
-			"duration":938,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"不要在遗憾了",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6483454"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】和青梅竹马看日出（表白）",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6474746"
-		},
-		{
-			"duration":90,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"我的小鱼回来了~",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6483132"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【男友便利店】手把手教你做陶艺初体验-沫生",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6458642"
-		},
-		{
-			"duration":279,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【枕边男友】 假期前文绉绉的男友（上篇）",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"1335062"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【等风热吻你·许星纯】-顾淮",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6457881"
-		},
-		{
-			"duration":391,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【中秋祈语】霸道总裁陪你过中秋",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6173769"
-		},
-		{
-			"duration":811,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"中文女音声,耳语轻语测试,助眠助眠解压放松",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6482964"
-		},
-		{
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【女性向】 婚 后 爱＋霸 总 为 你 撑 腰",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6446382"
-		},
-		{
-			"duration":210,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】蛋糕和你，我都想吃",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"3567474"
-		},
-		{
-			"duration":338,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【女性向中文音声】男友的温柔助眠",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6482732"
+			"source":4,
+			"id":"6005971FJDR",
+			"programId":""
 		},
 		{
 			"duration":492.773,
 			"albumName":"【声音恋人】鸭宝",
-			"albumImgUrl":"",
 			"artist":"H_鸭宝",
 			"mvId":"",
 			"format":"m4a",
@@ -6293,95 +6039,12 @@
 			"albumId":"56059",
 			"artistId":"14821814",
 			"source":7,
-			"id":"6453007"
-		},
-		{
-			"duration":253,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【同居男友】在姐姐家宿醉醒来后",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5060532"
-		},
-		{
-			"duration":331,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"（女性向|年上）女朋友太懂事怎么办！",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6482640"
-		},
-		{
-			"duration":580.008,
-			"albumImgUrl":"",
-			"artist":"玫瑰先生_有只猫",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人/甜】醉酒男友抱着你……",
-			"albumId":"",
-			"artistId":"3543978",
-			"source":7,
-			"id":"6445869"
-		},
-		{
-			"duration":725,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】去酒店能干什么？",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"3772252"
-		},
-		{
-			"duration":478,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"（女性向）安慰缺乏安全感的你",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6482587"
-		},
-		{
-			"duration":197,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】姐姐你要没喝多可不要怪我",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6230414"
-		},
-		{
-			"duration":481,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"神陨遗事_罗夏.石像之下",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6482454"
+			"id":"6453007",
+			"programId":""
 		},
 		{
 			"duration":550,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"啊小鼠啊",
 			"mvId":"",
 			"format":"m4a",
@@ -6389,23 +6052,12 @@
 			"albumId":"",
 			"artistId":"10394826",
 			"source":7,
-			"id":"6473025"
-		},
-		{
-			"duration":386,
-			"albumImgUrl":"",
-			"artist":"",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】攻音男友在线宠溺",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"2564094"
+			"id":"6473025",
+			"programId":""
 		},
 		{
 			"duration":608.313,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"久紫儿",
 			"mvId":"",
 			"format":"m4a",
@@ -6413,59 +6065,108 @@
 			"albumId":"",
 			"artistId":"3461151",
 			"source":7,
-			"id":"6481402"
+			"id":"6481402",
+			"programId":""
 		},
 		{
-			"duration":378,
-			"albumImgUrl":"",
-			"artist":"",
+			"duration":220.233,
+			"albumName":"",
+			"artist":"兰波゛",
 			"mvId":"",
 			"format":"m4a",
-			"name":"【声音恋人】狼狗男友低语种草莓",
+			"name":"月老掉线 To 月月",
 			"albumId":"",
-			"artistId":"",
+			"artistId":"18557174",
 			"source":7,
-			"id":"6440000"
+			"id":"4669073",
+			"programId":""
 		},
 		{
-			"duration":220,
-			"albumImgUrl":"",
-			"artist":"",
+			"duration":202.965,
+			"albumName":"",
+			"artist":"小航砸_一心向钱",
 			"mvId":"",
 			"format":"m4a",
-			"name":"有一种深爱叫相爱不如怀念",
+			"name":"月老掉线",
 			"albumId":"",
-			"artistId":"",
+			"artistId":"16695738",
 			"source":7,
-			"id":"6481855"
+			"id":"4750686",
+			"programId":""
 		},
 		{
-			"duration":185,
-			"albumImgUrl":"",
-			"artist":"",
+			"duration":22.151,
+			"albumName":"随便上传的",
+			"artist":"ING7593",
 			"mvId":"",
-			"format":"m4a",
-			"name":"【周末男友】温柔男友睡前照顾",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5117001"
+			"format":"mp3",
+			"name":"飞鸟以天空为巢（戏腔）",
+			"albumId":"967888485",
+			"artistId":"1935500714",
+			"source":0,
+			"id":"1912243688",
+			"programId":"2496849597"
 		},
 		{
-			"duration":213,
-			"albumImgUrl":"",
-			"artist":"",
+			"duration":27.611,
+			"albumName":"飞鸟以天空为巢",
+			"artist":"苏苏妤",
 			"mvId":"",
-			"format":"m4a",
-			"name":"平安京_罗夏.江山渡火",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6481835"
+			"format":"mp3",
+			"name":"飞鸟以天空为巢",
+			"albumId":"970741592",
+			"artistId":"1865240829",
+			"source":0,
+			"id":"1912092124",
+			"programId":"2496793223"
 		},
+		{
+			"duration":188,
+			"albumName":"飞鸟以天空为巢",
+			"artist":"孟维来",
+			"mvId":"",
+			"format":"mp3",
+			"name":"飞鸟以天空为巢",
+			"albumId":"003125Ie327cnC",
+			"artistId":"004GetHy3HZbVT",
+			"source":2,
+			"id":"001wzDTr1dbAD8",
+			"programId":""
+		},
+		{
+			"duration":236.75,
+			"albumName":"雨 RAIN RAIN RAIN",
+			"artist":"无边界音乐",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"雨打风吹去",
+			"albumId":"74752067",
+			"artistId":"31010647",
+			"source":0,
+			"id":"1333904985",
+			"programId":""
+		},
+		{
+			"duration":256,
+			"albumName":"孤勇者",
+			"artist":"陈奕迅",
+			"mvId":"14480854",
+			"format":"mp3",
+			"name":"孤勇者",
+			"albumId":"137142551",
+			"artistId":"2116",
+			"source":0,
+			"id":"1901371647",
+			"programId":""
+		},
+		"D:\\音乐\\Feel The Same(feat. Sofuu) - Felix Austin、West Collins、Sofuu.mp3",
+		"D:\\音乐\\逆流的鲸 - 原来是萝卜丫.mp3",
+		"D:\\音乐\\Dream Express - KLYDIX.mp3",
+		"D:\\音乐\\Hyper - KLYDIX.mp3",
+		"D:\\音乐\\Nightcore - Stereo Love.mp3",
 		{
 			"duration":429.27,
-			"albumImgUrl":"",
+			"albumName":"",
 			"artist":"紫曦每天都被自己蠢哭",
 			"mvId":"",
 			"format":"m4a",
@@ -6473,18 +6174,3345 @@
 			"albumId":"",
 			"artistId":"3011634",
 			"source":7,
-			"id":"6481178"
+			"id":"6481178",
+			"programId":""
+		},
+		{
+			"duration":580.008,
+			"albumName":"",
+			"artist":"玫瑰先生_有只猫",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人/甜】醉酒男友抱着你……",
+			"albumId":"",
+			"artistId":"3543978",
+			"source":7,
+			"id":"6445869",
+			"programId":""
+		},
+		{
+			"duration":310.944,
+			"albumName":"",
+			"artist":"Cv凌木_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【追妻系列】被小狼狗追到火车站台告白?",
+			"albumId":"",
+			"artistId":"11345850",
+			"source":7,
+			"id":"6465735",
+			"programId":""
+		},
+		{
+			"duration":287.568,
+			"albumName":"【声音恋人】陆千重的声恋合集",
+			"artist":"陆千重",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】温柔男友出差在外安慰孤单女友",
+			"albumId":"55759",
+			"artistId":"7337306",
+			"source":7,
+			"id":"6454948",
+			"programId":""
+		},
+		{
+			"duration":181.999,
+			"albumName":"",
+			"artist":"YOGA・",
+			"mvId":"",
+			"format":"m4a",
+			"name":"话没说完",
+			"albumId":"",
+			"artistId":"7711146",
+			"source":7,
+			"id":"4661510",
+			"programId":""
+		},
+		{
+			"duration":170.808,
+			"albumName":"",
+			"artist":"可这一点也不酷鸭",
+			"mvId":"",
+			"format":"m4a",
+			"name":"傾粟~月老掉线",
+			"albumId":"",
+			"artistId":"11660582",
+			"source":7,
+			"id":"4665811",
+			"programId":""
+		},
+		{
+			"duration":229.537,
+			"albumName":"",
+			"artist":"音子的mua",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线 - 言言",
+			"albumId":"",
+			"artistId":"18608984",
+			"source":7,
+			"id":"5250546",
+			"programId":""
+		},
+		{
+			"duration":205.035,
+			"albumName":"",
+			"artist":"小凤凰_BLL゛",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线—北凉",
+			"albumId":"",
+			"artistId":"20136818",
+			"source":7,
+			"id":"5860777",
+			"programId":""
+		},
+		{
+			"duration":203.84,
+			"albumName":"",
+			"artist":"麟古",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线DJ版",
+			"albumId":"",
+			"artistId":"22116050",
+			"source":7,
+			"id":"6470234",
+			"programId":""
+		},
+		{
+			"duration":209.972,
+			"albumName":"执耳直播时のLive",
+			"artist":"一休_ZE",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线—执耳",
+			"albumId":"36463",
+			"artistId":"3747183",
+			"source":7,
+			"id":"4901370",
+			"programId":""
+		},
+		{
+			"duration":205.999,
+			"albumName":"",
+			"artist":"YOGA・",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线dj",
+			"albumId":"",
+			"artistId":"7711146",
+			"source":7,
+			"id":"4694273",
+			"programId":""
+		},
+		{
+			"duration":234.292,
+			"albumName":"",
+			"artist":"YOGA・",
+			"mvId":"",
+			"format":"m4a",
+			"name":"11",
+			"albumId":"",
+			"artistId":"7711146",
+			"source":7,
+			"id":"4915815",
+			"programId":""
+		},
+		{
+			"duration":204.46,
+			"albumName":"",
+			"artist":"钱多多y",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线（live）",
+			"albumId":"",
+			"artistId":"8417691",
+			"source":7,
+			"id":"4683219",
+			"programId":""
+		},
+		{
+			"duration":189.397,
+			"albumName":"",
+			"artist":"度敌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月老掉线",
+			"albumId":"",
+			"artistId":"19534481",
+			"source":7,
+			"id":"5146242",
+			"programId":""
+		},
+		{
+			"duration":613.04,
+			"albumName":"",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】超暖心！和青梅竹马多年后的深夜长谈",
+			"albumId":"",
+			"artistId":"5864988",
+			"source":7,
+			"id":"6469472",
+			"programId":""
+		},
+		"D:\\音乐\\世上的盐 - 苏运莹、万象凡音.mp3",
+		{
+			"duration":224.426,
+			"albumName":"雨 RAIN RAIN RAIN",
+			"artist":"无边界音乐",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"世纪之爱",
+			"albumId":"74752067",
+			"artistId":"31010647",
+			"source":0,
+			"id":"1340685176",
+			"programId":""
+		},
+		{
+			"duration":228.266,
+			"albumName":"雨 RAIN RAIN RAIN",
+			"artist":"无边界音乐",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"明天",
+			"albumId":"74752067",
+			"artistId":"31010647",
+			"source":0,
+			"id":"1340686106",
+			"programId":""
+		},
+		{
+			"duration":260.266,
+			"albumName":"雨 RAIN RAIN RAIN",
+			"artist":"无边界音乐",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"在星星峡遇暴风雨",
+			"albumId":"74752067",
+			"artistId":"31010647",
+			"source":0,
+			"id":"1338064727",
+			"programId":""
+		},
+		{
+			"duration":3247.008,
+			"albumName":"影帝们的公寓",
+			"artist":"橡皮筋企业龙头",
+			"mvId":"",
+			"format":"m4a",
+			"name":"第二期",
+			"albumId":"650",
+			"artistId":"2989620",
+			"source":7,
+			"id":"555087",
+			"programId":""
+		},
+		{
+			"duration":1678.44,
+			"albumName":"影帝们的公寓",
+			"artist":"原虾烧麦皇真好吃",
+			"mvId":"",
+			"format":"m4a",
+			"name":"第一期上",
+			"albumId":"650",
+			"artistId":"82768",
+			"source":7,
+			"id":"114625",
+			"programId":""
+		},
+		{
+			"duration":260.022,
+			"albumName":"水千丞《火焰戎装》剧情歌《寻光》",
+			"artist":"赫沂辰汐小仙女w",
+			"mvId":"",
+			"format":"m4a",
+			"name":"水千丞《火焰戎装》剧情歌《寻光》纯歌版",
+			"albumId":"44277",
+			"artistId":"7218620",
+			"source":7,
+			"id":"4412641",
+			"programId":""
+		},
+		{
+			"duration":227.393,
+			"albumName":"",
+			"artist":"晔梓辰",
+			"mvId":"",
+			"format":"m4a",
+			"name":"伶人",
+			"albumId":"",
+			"artistId":"10603755",
+			"source":7,
+			"id":"2584818",
+			"programId":""
+		},
+		{
+			"duration":203.232,
+			"albumName":"",
+			"artist":"晔梓辰",
+			"mvId":"",
+			"format":"m4a",
+			"name":"范思哲_哲哲 - 伯虎说 (feat_唐伯虎Annie)",
+			"albumId":"",
+			"artistId":"10603755",
+			"source":7,
+			"id":"5447887",
+			"programId":""
+		},
+		{
+			"duration":328.881,
+			"albumName":"仙女们的冠名歌曲",
+			"artist":"暖白白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"凉凉-暖白白（锦鲤冠名）",
+			"albumId":"43285",
+			"artistId":"8308243",
+			"source":7,
+			"id":"4227254",
+			"programId":""
+		},
+		{
+			"duration":250.296,
+			"albumName":"",
+			"artist":"暖白白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"我爱你不问归期-暖白白（兰兰冠名）",
+			"albumId":"",
+			"artistId":"8308243",
+			"source":7,
+			"id":"4440035",
+			"programId":""
+		},
+		"D:\\音乐\\夏梦的约定 - 暴君de、YuShu.mp3",
+		"D:\\音乐\\KiTSUNE、Swempke - Kurage.mp3",
+		{
+			"duration":502.546,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】臭不要脸！绿茶男喜欢上好兄弟的姐姐该怎么办？",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"6383852",
+			"programId":""
+		},
+		"D:\\音乐\\RUQOA - Say.mp3",
+		{
+			"duration":151.693,
+			"albumName":"灰灰の音乐集",
+			"artist":"灰灰の播放器",
+			"mvId":"",
+			"format":"m4a",
+			"name":"不染",
+			"albumId":"37184",
+			"artistId":"14273333",
+			"source":7,
+			"id":"3317872",
+			"programId":""
+		},
+		{
+			"duration":206.288,
+			"albumName":"",
+			"artist":"墨希",
+			"mvId":"",
+			"format":"m4a",
+			"name":"采茶纪",
+			"albumId":"",
+			"artistId":"476659",
+			"source":7,
+			"id":"341462",
+			"programId":""
+		},
+		{
+			"duration":112.326,
+			"albumName":"",
+			"artist":"喵友谊",
+			"mvId":"",
+			"format":"m4a",
+			"name":"采茶纪",
+			"albumId":"",
+			"artistId":"89073",
+			"source":7,
+			"id":"95147",
+			"programId":""
+		},
+		{
+			"duration":206.913,
+			"albumName":"",
+			"artist":"CV洛凰_凰逸",
+			"mvId":"",
+			"format":"m4a",
+			"name":"星星失眠【CV洛凰】",
+			"albumId":"",
+			"artistId":"3271172",
+			"source":7,
+			"id":"2722073",
+			"programId":""
+		},
+		{
+			"duration":203.284,
+			"albumName":"灰灰の音乐集",
+			"artist":"灰灰の播放器",
+			"mvId":"",
+			"format":"m4a",
+			"name":"别再闹了",
+			"albumId":"37184",
+			"artistId":"14273333",
+			"source":7,
+			"id":"3317868",
+			"programId":""
+		},
+		{
+			"duration":120.528,
+			"albumName":"",
+			"artist":"沙汀鱼_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"星星失眠 to 傅寒",
+			"albumId":"",
+			"artistId":"17452624",
+			"source":7,
+			"id":"4568359",
+			"programId":""
+		},
+		{
+			"duration":251.297,
+			"albumName":"",
+			"artist":"新宝icon",
+			"mvId":"",
+			"format":"m4a",
+			"name":"星星失眠-小新",
+			"albumId":"",
+			"artistId":"9455298",
+			"source":7,
+			"id":"2160889",
+			"programId":""
+		},
+		{
+			"duration":33.28,
+			"albumName":"饺子的弹唱小铺~",
+			"artist":"小饺子爱弹唱",
+			"mvId":"",
+			"format":"m4a",
+			"name":"星星失眠",
+			"albumId":"35230",
+			"artistId":"12270608",
+			"source":7,
+			"id":"2984716",
+			"programId":""
+		},
+		{
+			"duration":30.442,
+			"albumName":"",
+			"artist":"双枝_燃点",
+			"mvId":"",
+			"format":"m4a",
+			"name":"星星失眠",
+			"albumId":"",
+			"artistId":"10260520",
+			"source":7,
+			"id":"3338058",
+			"programId":""
+		},
+		{
+			"duration":16.992,
+			"albumName":"",
+			"artist":"挽声の绿帽批发染",
+			"mvId":"",
+			"format":"m4a",
+			"name":"星星失眠",
+			"albumId":"",
+			"artistId":"8561852",
+			"source":7,
+			"id":"2013089",
+			"programId":""
+		},
+		{
+			"duration":36.493,
+			"albumName":"",
+			"artist":"西隐_吃了么",
+			"mvId":"",
+			"format":"m4a",
+			"name":"星星失眠",
+			"albumId":"",
+			"artistId":"12147112",
+			"source":7,
+			"id":"3092375",
+			"programId":""
+		},
+		{
+			"duration":257.369,
+			"albumName":"",
+			"artist":"球球_小歌手",
+			"mvId":"",
+			"format":"m4a",
+			"name":"忘了没有",
+			"albumId":"",
+			"artistId":"17569055",
+			"source":7,
+			"id":"4074779",
+			"programId":""
+		},
+		{
+			"duration":28.682,
+			"albumName":"",
+			"artist":"做人要潇洒一点",
+			"mvId":"",
+			"format":"m4a",
+			"name":"忘了没有",
+			"albumId":"",
+			"artistId":"9776448",
+			"source":7,
+			"id":"4074535",
+			"programId":""
+		},
+		{
+			"duration":247.408,
+			"albumName":"",
+			"artist":"西俊俊_麦田",
+			"mvId":"",
+			"format":"m4a",
+			"name":"忘了没有",
+			"albumId":"",
+			"artistId":"12471664",
+			"source":7,
+			"id":"4897484",
+			"programId":""
+		},
+		{
+			"duration":337.266,
+			"albumName":"灰灰の音乐集",
+			"artist":"灰灰の播放器",
+			"mvId":"",
+			"format":"m4a",
+			"name":"不能说的秘密",
+			"albumId":"37184",
+			"artistId":"14273333",
+			"source":7,
+			"id":"3317866",
+			"programId":""
+		},
+		{
+			"duration":33.787,
+			"albumName":"",
+			"artist":"小度_DGX",
+			"mvId":"",
+			"format":"m4a",
+			"name":"忘了没有",
+			"albumId":"",
+			"artistId":"23081247",
+			"source":7,
+			"id":"6049515",
+			"programId":""
+		},
+		{
+			"duration":271.371,
+			"albumName":"",
+			"artist":"何大白_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"飞",
+			"albumId":"",
+			"artistId":"21334464",
+			"source":7,
+			"id":"5408972",
+			"programId":""
+		},
+		{
+			"duration":220.003,
+			"albumName":"",
+			"artist":"谦君__竹音",
+			"mvId":"",
+			"format":"m4a",
+			"name":"莫问归期",
+			"albumId":"",
+			"artistId":"5447935",
+			"source":7,
+			"id":"2566921",
+			"programId":""
+		},
+		{
+			"duration":198.478,
+			"albumName":"",
+			"artist":"酒倾梦_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"莫问归期",
+			"albumId":"",
+			"artistId":"8379276",
+			"source":7,
+			"id":"2345914",
+			"programId":""
+		},
+		{
+			"duration":219.167,
+			"albumName":"",
+			"artist":"ZZ腾__只会唱歌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"莫问归期",
+			"albumId":"",
+			"artistId":"9710203",
+			"source":7,
+			"id":"2984393",
+			"programId":""
+		},
+		{
+			"duration":230.16,
+			"albumName":"灰灰の音乐集",
+			"artist":"灰灰の播放器",
+			"mvId":"",
+			"format":"m4a",
+			"name":"不潮不用花钱",
+			"albumId":"37184",
+			"artistId":"14273333",
+			"source":7,
+			"id":"3317861",
+			"programId":""
+		},
+		{
+			"duration":241.138,
+			"albumName":"",
+			"artist":"药药_怡聲",
+			"mvId":"",
+			"format":"m4a",
+			"name":"东南西北风",
+			"albumId":"",
+			"artistId":"15826030",
+			"source":7,
+			"id":"3841686",
+			"programId":""
+		},
+		{
+			"duration":179.8,
+			"albumName":"",
+			"artist":"ZZ腾__只会唱歌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"落了白",
+			"albumId":"",
+			"artistId":"9710203",
+			"source":7,
+			"id":"3033729",
+			"programId":""
+		},
+		{
+			"duration":163.343,
+			"albumName":"",
+			"artist":"辞儿_修身养性",
+			"mvId":"",
+			"format":"m4a",
+			"name":"落了白&amp;白帝",
+			"albumId":"",
+			"artistId":"21950554",
+			"source":7,
+			"id":"6225600",
+			"programId":""
+		},
+		{
+			"duration":199.656,
+			"albumName":"",
+			"artist":"早尾茶",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【午夜航班尾翼】摩天轮",
+			"albumId":"",
+			"artistId":"288053",
+			"source":7,
+			"id":"120090",
+			"programId":""
+		},
+		{
+			"duration":210.834,
+			"albumName":"灰灰の音乐集",
+			"artist":"灰灰の播放器",
+			"mvId":"",
+			"format":"m4a",
+			"name":"別想他",
+			"albumId":"37184",
+			"artistId":"14273333",
+			"source":7,
+			"id":"3317857",
+			"programId":""
+		},
+		{
+			"duration":320,
+			"albumName":"灰灰の音乐集",
+			"artist":"灰灰の播放器",
+			"mvId":"",
+			"format":"m4a",
+			"name":"独角戏",
+			"albumId":"37184",
+			"artistId":"14273333",
+			"source":7,
+			"id":"5491590",
+			"programId":""
+		},
+		{
+			"duration":240.528,
+			"albumName":"卡修翻唱集",
+			"artist":"坚果儿85",
+			"mvId":"",
+			"format":"m4a",
+			"name":"独角戏",
+			"albumId":"40071",
+			"artistId":"10241770",
+			"source":7,
+			"id":"4476592",
+			"programId":""
+		},
+		{
+			"duration":258.303,
+			"albumName":"",
+			"artist":"言止__",
+			"mvId":"",
+			"format":"m4a",
+			"name":"梦醒时分",
+			"albumId":"",
+			"artistId":"8012831",
+			"source":7,
+			"id":"2234955",
+			"programId":""
+		},
+		{
+			"duration":174.195,
+			"albumName":"被迫降生的剧集",
+			"artist":"傾粟_初闻",
+			"mvId":"",
+			"format":"m4a",
+			"name":"我对自己开了一枪",
+			"albumId":"52721",
+			"artistId":"11561319",
+			"source":7,
+			"id":"2788255",
+			"programId":""
+		},
+		{
+			"duration":177.92,
+			"albumName":"",
+			"artist":"Mr罗飞飞",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【现代翻唱】我对自己开了一枪",
+			"albumId":"",
+			"artistId":"10396802",
+			"source":7,
+			"id":"2624096",
+			"programId":""
+		},
+		{
+			"duration":299.736,
+			"albumName":"",
+			"artist":"执耳_KD",
+			"mvId":"",
+			"format":"m4a",
+			"name":"我对自己开了一枪",
+			"albumId":"",
+			"artistId":"7691950",
+			"source":7,
+			"id":"2420187",
+			"programId":""
+		},
+		{
+			"duration":34.089,
+			"albumName":"",
+			"artist":"・猫儿",
+			"mvId":"",
+			"format":"m4a",
+			"name":"美人画卷-ANG",
+			"albumId":"",
+			"artistId":"23451465",
+			"source":7,
+			"id":"6233368",
+			"programId":""
+		},
+		{
+			"duration":185.129,
+			"albumName":"",
+			"artist":"满汉文泉vip",
+			"mvId":"",
+			"format":"m4a",
+			"name":"美人画卷 文泉",
+			"albumId":"",
+			"artistId":"8075182",
+			"source":7,
+			"id":"4179035",
+			"programId":""
+		},
+		{
+			"duration":44.651,
+			"albumName":"",
+			"artist":"是南城a",
+			"mvId":"",
+			"format":"m4a",
+			"name":"美人画卷",
+			"albumId":"",
+			"artistId":"15283183",
+			"source":7,
+			"id":"3767813",
+			"programId":""
+		},
+		{
+			"duration":270.883,
+			"albumName":"",
+			"artist":"枫叶girl",
+			"mvId":"",
+			"format":"m4a",
+			"name":"绿色",
+			"albumId":"",
+			"artistId":"5615830",
+			"source":7,
+			"id":"1215952",
+			"programId":""
+		},
+		{
+			"duration":230.974,
+			"albumName":"林予曦（兔兔）歌曲不完全合集",
+			"artist":"虞美人小蜜",
+			"mvId":"",
+			"format":"m4a",
+			"name":"梦醒时分",
+			"albumId":"33690",
+			"artistId":"10056440",
+			"source":7,
+			"id":"2949763",
+			"programId":""
+		},
+		{
+			"duration":32.809,
+			"albumName":"",
+			"artist":"Babystop_山竹",
+			"mvId":"",
+			"format":"m4a",
+			"name":"绿色",
+			"albumId":"",
+			"artistId":"5505273",
+			"source":7,
+			"id":"1187177",
+			"programId":""
+		},
+		{
+			"duration":277.054,
+			"albumName":"",
+			"artist":"萌比Yfh",
+			"mvId":"",
+			"format":"m4a",
+			"name":"绿色",
+			"albumId":"",
+			"artistId":"5113435",
+			"source":7,
+			"id":"1247451",
+			"programId":""
+		},
+		{
+			"duration":208.979,
+			"albumName":"",
+			"artist":"荒_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"一笑江湖（江湖侠气男声版）",
+			"albumId":"",
+			"artistId":"21564228",
+			"source":7,
+			"id":"5526952",
+			"programId":""
+		},
+		{
+			"duration":216.804,
+			"albumName":"",
+			"artist":"晨晨要变白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"一笑江湖",
+			"albumId":"",
+			"artistId":"20171967",
+			"source":7,
+			"id":"6018185",
+			"programId":""
+		},
+		{
+			"duration":218.644,
+			"albumName":"",
+			"artist":"非雪遗韵",
+			"mvId":"",
+			"format":"m4a",
+			"name":"烟火人间（《二哈和他的白猫师尊》元宵节活动广播剧ED）",
+			"albumId":"",
+			"artistId":"3261636",
+			"source":7,
+			"id":"1627940",
+			"programId":""
+		},
+		"D:\\音乐\\雁书 - 艾热 AIR.mp3",
+		"D:\\音乐\\Let Me - 亚哲大大、Re_houseE.mp3",
+		{
+			"duration":210.494,
+			"albumName":"",
+			"artist":"曲调_律风",
+			"mvId":"",
+			"format":"m4a",
+			"name":"折枝花满衣",
+			"albumId":"",
+			"artistId":"10057017",
+			"source":7,
+			"id":"2525208",
+			"programId":""
+		},
+		{
+			"duration":149.498,
+			"albumName":"【Nightcore】",
+			"artist":"零丶落浮华",
+			"mvId":"",
+			"format":"mp3",
+			"name":"Nightcore - 醜話 Ugly Truth",
+			"albumId":"340938061",
+			"artistId":"263066664",
+			"source":0,
+			"id":"1952777515",
+			"programId":"2505840798"
+		},
+		{
+			"duration":49.667,
+			"albumName":"",
+			"artist":"鸪寒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"火苗_鸪寒",
+			"albumId":"",
+			"artistId":"14666128",
+			"source":7,
+			"id":"3475331",
+			"programId":""
+		},
+		{
+			"duration":32.731,
+			"albumName":"阿卡贝拉",
+			"artist":"胡了好",
+			"mvId":"",
+			"format":"m4a",
+			"name":"火苗",
+			"albumId":"27285",
+			"artistId":"9533976",
+			"source":7,
+			"id":"2010489",
+			"programId":""
+		},
+		"D:\\音乐\\鹿 be free - 尚雯婕.mp3",
+		"D:\\音乐\\私语 - Youngior.mp3",
+		"D:\\音乐\\星落 - 丁溪.mp3",
+		"D:\\音乐\\星落 - 七粥.mp3",
+		{
+			"duration":214.831,
+			"albumName":"",
+			"artist":"朝暮_知音",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红马",
+			"albumId":"",
+			"artistId":"13284069",
+			"source":7,
+			"id":"3301769",
+			"programId":""
+		},
+		{
+			"duration":274.912,
+			"albumName":"",
+			"artist":"漓九_初尘",
+			"mvId":"",
+			"format":"m4a",
+			"name":"折风渡夜",
+			"albumId":"",
+			"artistId":"9731308",
+			"source":7,
+			"id":"2933641",
+			"programId":""
+		},
+		{
+			"duration":193.253,
+			"albumName":"林予曦翻唱＆演唱歌曲合集",
+			"artist":"兔兔林予曦的歌库",
+			"mvId":"",
+			"format":"m4a",
+			"name":"萍聚-林予曦-2018.3.20",
+			"albumId":"54795",
+			"artistId":"14554068",
+			"source":7,
+			"id":"6372116",
+			"programId":""
+		},
+		{
+			"duration":167.439,
+			"albumName":"",
+			"artist":"冰心双双の万物向洋",
+			"mvId":"",
+			"format":"m4a",
+			"name":"萍聚",
+			"albumId":"",
+			"artistId":"7202478",
+			"source":7,
+			"id":"3089940",
+			"programId":""
+		},
+		{
+			"duration":166.72,
+			"albumName":"",
+			"artist":"小杰哥is班草",
+			"mvId":"",
+			"format":"m4a",
+			"name":"萍聚",
+			"albumId":"",
+			"artistId":"16843190",
+			"source":7,
+			"id":"4289081",
+			"programId":""
+		},
+		{
+			"duration":184.215,
+			"albumName":"",
+			"artist":"萌比Yfh",
+			"mvId":"",
+			"format":"m4a",
+			"name":"大喜",
+			"albumId":"",
+			"artistId":"5113435",
+			"source":7,
+			"id":"3094225",
+			"programId":""
+		},
+		{
+			"duration":173.987,
+			"albumName":"",
+			"artist":"轻薄姐姐_宝宝",
+			"mvId":"",
+			"format":"m4a",
+			"name":"旧梦一场",
+			"albumId":"",
+			"artistId":"6856843",
+			"source":7,
+			"id":"2267243",
+			"programId":""
+		},
+		{
+			"duration":172.617,
+			"albumName":"",
+			"artist":"悦神_玥儿",
+			"mvId":"",
+			"format":"m4a",
+			"name":"旧梦一场",
+			"albumId":"",
+			"artistId":"6392997",
+			"source":7,
+			"id":"2128644",
+			"programId":""
+		},
+		{
+			"duration":239.281,
+			"albumName":"",
+			"artist":"Assen捷",
+			"mvId":"",
+			"format":"m4a",
+			"name":"牵丝戏",
+			"albumId":"",
+			"artistId":"396167",
+			"source":7,
+			"id":"189199",
+			"programId":""
+		},
+		{
+			"duration":182.439,
+			"albumName":"",
+			"artist":"梦梦_睡不醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红马",
+			"albumId":"",
+			"artistId":"21235453",
+			"source":7,
+			"id":"5311055",
+			"programId":""
+		},
+		{
+			"duration":24.868,
+			"albumName":"",
+			"artist":"一只小锦鲤吖",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红马",
+			"albumId":"",
+			"artistId":"15227532",
+			"source":7,
+			"id":"3689971",
+			"programId":""
+		},
+		{
+			"duration":215.263,
+			"albumName":"",
+			"artist":"洛书_九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红马",
+			"albumId":"",
+			"artistId":"9771521",
+			"source":7,
+			"id":"5441582",
+			"programId":""
+		},
+		{
+			"duration":188.808,
+			"albumName":"时雨の古风辑",
+			"artist":"时雨㌶",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红马",
+			"albumId":"39331",
+			"artistId":"14042500",
+			"source":7,
+			"id":"3405252",
+			"programId":""
+		},
+		{
+			"duration":182.439,
+			"albumName":"",
+			"artist":"梦梦_睡不醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红马",
+			"albumId":"",
+			"artistId":"21235453",
+			"source":7,
+			"id":"5311044",
+			"programId":""
+		},
+		{
+			"duration":181.512,
+			"albumName":"",
+			"artist":"小鹿仔",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【DEMO】God Is A Girl|||确实爆炸了",
+			"albumId":"",
+			"artistId":"112618",
+			"source":7,
+			"id":"91218",
+			"programId":""
+		},
+		"D:\\音乐\\海市蜃楼 (一颗狼星完整版) - 一颗狼星.mp3",
+		{
+			"duration":278.677,
+			"albumName":"",
+			"artist":"_喵小颖_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红山果",
+			"albumId":"",
+			"artistId":"11093696",
+			"source":7,
+			"id":"3254101",
+			"programId":""
+		},
+		{
+			"duration":258.879,
+			"albumName":"金风台",
+			"artist":"东方棋_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红山果",
+			"albumId":"50798",
+			"artistId":"6884364",
+			"source":7,
+			"id":"2354489",
+			"programId":""
+		},
+		{
+			"duration":107.28,
+			"albumName":"",
+			"artist":"独白_十方",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红山果",
+			"albumId":"",
+			"artistId":"19117823",
+			"source":7,
+			"id":"5396801",
+			"programId":""
+		},
+		{
+			"duration":278.64,
+			"albumName":"",
+			"artist":"执耳_KD",
+			"mvId":"",
+			"format":"m4a",
+			"name":"红山果",
+			"albumId":"",
+			"artistId":"7691950",
+			"source":7,
+			"id":"2329852",
+			"programId":""
+		},
+		{
+			"duration":208.326,
+			"albumName":"",
+			"artist":"CV浩然猫耳官方账号",
+			"mvId":"",
+			"format":"m4a",
+			"name":"失眠飞行",
+			"albumId":"",
+			"artistId":"3415256",
+			"source":7,
+			"id":"1438318",
+			"programId":""
+		},
+		{
+			"duration":213.449,
+			"albumName":"",
+			"artist":"悟空__九天星光",
+			"mvId":"",
+			"format":"m4a",
+			"name":"从头再来",
+			"albumId":"",
+			"artistId":"9148744",
+			"source":7,
+			"id":"3119331",
+			"programId":""
+		},
+		{
+			"duration":142.407,
+			"albumName":"",
+			"artist":"4urap",
+			"mvId":"",
+			"format":"m4a",
+			"name":"月亮",
+			"albumId":"",
+			"artistId":"20472433",
+			"source":7,
+			"id":"4784539",
+			"programId":""
+		},
+		{
+			"duration":235.075,
+			"albumName":"",
+			"artist":"清酒酒吖",
+			"mvId":"",
+			"format":"m4a",
+			"name":"辞九门回忆",
+			"albumId":"",
+			"artistId":"5946242",
+			"source":7,
+			"id":"2822973",
+			"programId":""
+		},
+		{
+			"duration":264.097,
+			"albumName":"",
+			"artist":"华韵音乐五号站",
+			"mvId":"",
+			"format":"m4a",
+			"name":"弱水三千",
+			"albumId":"",
+			"artistId":"3072945",
+			"source":7,
+			"id":"765569",
+			"programId":""
+		},
+		{
+			"duration":263.627,
+			"albumName":"好听到不行的翻唱。原创(*@ο@*) ",
+			"artist":"CV南喻",
+			"mvId":"",
+			"format":"m4a",
+			"name":"弱水三千",
+			"albumId":"14830",
+			"artistId":"3354654",
+			"source":7,
+			"id":"857776",
+			"programId":""
+		},
+		{
+			"duration":291.213,
+			"albumName":"",
+			"artist":"_霖霖吖",
+			"mvId":"",
+			"format":"m4a",
+			"name":"弱水三千",
+			"albumId":"",
+			"artistId":"17520327",
+			"source":7,
+			"id":"4763023",
+			"programId":""
+		},
+		{
+			"duration":267.023,
+			"albumName":"墨小离音乐合集",
+			"artist":"墨小离_28日生辰皛",
+			"mvId":"",
+			"format":"m4a",
+			"name":"赤伶-墨小离To抹茶（超粉送歌）",
+			"albumId":"46841",
+			"artistId":"18450983",
+			"source":7,
+			"id":"4682678",
+			"programId":""
+		},
+		{
+			"duration":249.26,
+			"albumName":"墨小离音乐合集",
+			"artist":"墨小离_28日生辰皛",
+			"mvId":"",
+			"format":"m4a",
+			"name":"入画江南-墨小离To泠汐",
+			"albumId":"46841",
+			"artistId":"18450983",
+			"source":7,
+			"id":"6419266",
+			"programId":""
+		},
+		{
+			"duration":222.197,
+			"albumName":"",
+			"artist":"贰拾叁の橙子",
+			"mvId":"",
+			"format":"m4a",
+			"name":"入画江南-叁哥",
+			"albumId":"",
+			"artistId":"11309308",
+			"source":7,
+			"id":"6174229",
+			"programId":""
+		},
+		{
+			"duration":33.83,
+			"albumName":"",
+			"artist":"佩一_SSヾ绝世歌姬",
+			"mvId":"",
+			"format":"m4a",
+			"name":"入画江南",
+			"albumId":"",
+			"artistId":"15148429",
+			"source":7,
+			"id":"6362774",
+			"programId":""
+		},
+		{
+			"duration":284.211,
+			"albumName":"",
+			"artist":"深蓝先生blues",
+			"mvId":"",
+			"format":"m4a",
+			"name":"当我遇见你｜一帘幽梦 to 暖暖（Cover 许茹芸）",
+			"albumId":"",
+			"artistId":"9835816",
+			"source":7,
+			"id":"5856289",
+			"programId":""
+		},
+		{
+			"duration":281.756,
+			"albumName":"",
+			"artist":"饭饭_娃娃の_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"侧脸",
+			"albumId":"",
+			"artistId":"10790825",
+			"source":7,
+			"id":"2549816",
+			"programId":""
+		},
+		{
+			"duration":216.137,
+			"albumName":"李心浩翻唱合集",
+			"artist":"李心浩_元气满满",
+			"mvId":"",
+			"format":"m4a",
+			"name":"侧脸",
+			"albumId":"35506",
+			"artistId":"9577205",
+			"source":7,
+			"id":"2225610",
+			"programId":""
+		},
+		{
+			"duration":248.163,
+			"albumName":"言希の正经翻唱集",
+			"artist":"言希Yaser_白的发光",
+			"mvId":"",
+			"format":"m4a",
+			"name":"雾里",
+			"albumId":"40570",
+			"artistId":"10333438",
+			"source":7,
+			"id":"3504986",
+			"programId":""
+		},
+		{
+			"duration":246.625,
+			"albumName":"尉宸翻唱歌曲",
+			"artist":"尉宸灬Star",
+			"mvId":"",
+			"format":"m4a",
+			"name":"雾里",
+			"albumId":"45812",
+			"artistId":"9154116",
+			"source":7,
+			"id":"3605549",
+			"programId":""
+		},
+		{
+			"duration":236.026,
+			"albumName":"洛缘儿の直录歌曲",
+			"artist":"李暖暖_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"「一分一寸」洛缘儿live",
+			"albumId":"51053",
+			"artistId":"6757630",
+			"source":7,
+			"id":"5655691",
+			"programId":""
+		},
+		{
+			"duration":236.629,
+			"albumName":"洛缘儿の直录歌曲",
+			"artist":"李暖暖_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"「来迟」洛缘儿live",
+			"albumId":"51053",
+			"artistId":"6757630",
+			"source":7,
+			"id":"5661436",
+			"programId":""
+		},
+		{
+			"duration":231.624,
+			"albumName":"",
+			"artist":"云彻_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"来迟-仙女紫牌冠名",
+			"albumId":"",
+			"artistId":"9927816",
+			"source":7,
+			"id":"3700107",
+			"programId":""
+		},
+		{
+			"duration":232.021,
+			"albumName":"",
+			"artist":"罗笑笑_依然笑笑",
+			"mvId":"",
+			"format":"m4a",
+			"name":"来迟",
+			"albumId":"",
+			"artistId":"10772749",
+			"source":7,
+			"id":"3742166",
+			"programId":""
+		},
+		{
+			"duration":292.153,
+			"albumName":"林予曦（兔兔）歌曲不完全合集",
+			"artist":"虞美人小蜜",
+			"mvId":"",
+			"format":"m4a",
+			"name":"梦里水乡",
+			"albumId":"33690",
+			"artistId":"10056440",
+			"source":7,
+			"id":"3066312",
+			"programId":""
+		},
+		{
+			"duration":206.446,
+			"albumName":"",
+			"artist":"暮沉_等我回来呀",
+			"mvId":"",
+			"format":"m4a",
+			"name":"圈住你 to甜甜~",
+			"albumId":"",
+			"artistId":"15369572",
+			"source":7,
+			"id":"3895502",
+			"programId":""
+		},
+		{
+			"duration":178.259,
+			"albumName":"",
+			"artist":"Ten円",
+			"mvId":"",
+			"format":"m4a",
+			"name":"圈住你",
+			"albumId":"",
+			"artistId":"3678292",
+			"source":7,
+			"id":"2821453",
+			"programId":""
+		},
+		{
+			"duration":69.568,
+			"albumName":"",
+			"artist":"星辰zy丨TK",
+			"mvId":"",
+			"format":"m4a",
+			"name":"暖暖",
+			"albumId":"",
+			"artistId":"9291604",
+			"source":7,
+			"id":"1948387",
+			"programId":""
+		},
+		{
+			"duration":27.306,
+			"albumName":"",
+			"artist":"星辰zy丨TK",
+			"mvId":"",
+			"format":"m4a",
+			"name":"圈住你",
+			"albumId":"",
+			"artistId":"9291604",
+			"source":7,
+			"id":"1948383",
+			"programId":""
+		},
+		{
+			"duration":176.352,
+			"albumName":"",
+			"artist":"松鼠大冒险",
+			"mvId":"",
+			"format":"m4a",
+			"name":"圈住你",
+			"albumId":"",
+			"artistId":"7932471",
+			"source":7,
+			"id":"1930797",
+			"programId":""
+		},
+		{
+			"duration":201.273,
+			"albumName":"",
+			"artist":"Jade玉儿",
+			"mvId":"",
+			"format":"m4a",
+			"name":"圈住你",
+			"albumId":"",
+			"artistId":"9348570",
+			"source":7,
+			"id":"2384711",
+			"programId":""
+		},
+		{
+			"duration":103.464,
+			"albumName":"",
+			"artist":"墨小白_tiger",
+			"mvId":"",
+			"format":"m4a",
+			"name":"太想念",
+			"albumId":"",
+			"artistId":"21729695",
+			"source":7,
+			"id":"5543673",
+			"programId":""
+		},
+		{
+			"duration":248.464,
+			"albumName":"",
+			"artist":"陈飞飞_九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"春泥",
+			"albumId":"",
+			"artistId":"20491507",
+			"source":7,
+			"id":"5656543",
+			"programId":""
+		},
+		{
+			"duration":196.78,
+			"albumName":"",
+			"artist":"小豆腐团子_宝宝",
+			"mvId":"",
+			"format":"m4a",
+			"name":"春泥",
+			"albumId":"",
+			"artistId":"12247141",
+			"source":7,
+			"id":"5234977",
+			"programId":""
+		},
+		{
+			"duration":227.833,
+			"albumName":"可颂翻唱合集",
+			"artist":"小面包_九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"海市蜃楼",
+			"albumId":"52606",
+			"artistId":"16677437",
+			"source":7,
+			"id":"4559783",
+			"programId":""
+		},
+		{
+			"duration":246.757,
+			"albumName":"滚滚的唱不见练习~",
+			"artist":"圆滚滚_星禾璀璨",
+			"mvId":"",
+			"format":"m4a",
+			"name":"海市蜃楼",
+			"albumId":"51996",
+			"artistId":"14448169",
+			"source":7,
+			"id":"6062373",
+			"programId":""
+		},
+		{
+			"duration":224.219,
+			"albumName":"",
+			"artist":"过客___",
+			"mvId":"",
+			"format":"m4a",
+			"name":"海市蜃楼",
+			"albumId":"",
+			"artistId":"16871790",
+			"source":7,
+			"id":"4619832",
+			"programId":""
+		},
+		{
+			"duration":229.104,
+			"albumName":"",
+			"artist":"玄羽Moon",
+			"mvId":"",
+			"format":"m4a",
+			"name":"海市蜃楼",
+			"albumId":"",
+			"artistId":"11944193",
+			"source":7,
+			"id":"4896179",
+			"programId":""
+		},
+		{
+			"duration":243.983,
+			"albumName":"戏腔丨古风丨 万幸相逢巧遇知凡",
+			"artist":"巧知凡_知音",
+			"mvId":"",
+			"format":"m4a",
+			"name":"春庭雪-冠名《子苓》",
+			"albumId":"30643",
+			"artistId":"9294169",
+			"source":7,
+			"id":"3408150",
+			"programId":""
+		},
+		{
+			"duration":30.153,
+			"albumName":"",
+			"artist":"Y林枫",
+			"mvId":"",
+			"format":"m4a",
+			"name":"春庭雪",
+			"albumId":"",
+			"artistId":"15325424",
+			"source":7,
+			"id":"3674851",
+			"programId":""
+		},
+		{
+			"duration":247.771,
+			"albumName":"",
+			"artist":"满汉_Dz",
+			"mvId":"",
+			"format":"m4a",
+			"name":"春庭雪",
+			"albumId":"",
+			"artistId":"16630912",
+			"source":7,
+			"id":"3843693",
+			"programId":""
+		},
+		{
+			"duration":220.839,
+			"albumName":"",
+			"artist":"asdasdsadasdasxz",
+			"mvId":"",
+			"format":"m4a",
+			"name":"春庭雪",
+			"albumId":"",
+			"artistId":"9217633",
+			"source":7,
+			"id":"2633331",
+			"programId":""
+		},
+		{
+			"duration":34.324,
+			"albumName":"",
+			"artist":"Babystop_山竹",
+			"mvId":"",
+			"format":"m4a",
+			"name":"春庭雪",
+			"albumId":"",
+			"artistId":"5505273",
+			"source":7,
+			"id":"2299910",
+			"programId":""
+		},
+		{
+			"duration":240,
+			"albumName":"C7aesar的音乐小酒馆",
+			"artist":"白也_星河",
+			"mvId":"",
+			"format":"m4a",
+			"name":"世本常态",
+			"albumId":"46659",
+			"artistId":"15565449",
+			"source":7,
+			"id":"4999847",
+			"programId":""
+		},
+		{
+			"duration":242.253,
+			"albumName":"",
+			"artist":"MrY音為妳_燃点",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【翻唱】与光同行",
+			"albumId":"",
+			"artistId":"20922340",
+			"source":7,
+			"id":"5741752",
+			"programId":""
+		},
+		{
+			"duration":214,
+			"albumName":"",
+			"artist":"沫白__",
+			"mvId":"",
+			"format":"m4a",
+			"name":"大天蓬",
+			"albumId":"",
+			"artistId":"21767578",
+			"source":7,
+			"id":"5781465",
+			"programId":""
+		},
+		{
+			"duration":225.697,
+			"albumName":"",
+			"artist":"Black_吟聆",
+			"mvId":"",
+			"format":"m4a",
+			"name":"美丽谎言",
+			"albumId":"",
+			"artistId":"11423096",
+			"source":7,
+			"id":"4683366",
+			"programId":""
+		},
+		{
+			"duration":254.04,
+			"albumName":"",
+			"artist":"Black_吟聆",
+			"mvId":"",
+			"format":"m4a",
+			"name":"奉劝",
+			"albumId":"",
+			"artistId":"11423096",
+			"source":7,
+			"id":"3871893",
+			"programId":""
+		},
+		{
+			"duration":229.929,
+			"albumName":"",
+			"artist":"Black_吟聆",
+			"mvId":"",
+			"format":"m4a",
+			"name":"大天蓬",
+			"albumId":"",
+			"artistId":"11423096",
+			"source":7,
+			"id":"4683361",
+			"programId":""
+		},
+		{
+			"duration":231.672,
+			"albumName":"",
+			"artist":"酒栀_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"大天蓬",
+			"albumId":"",
+			"artistId":"8909966",
+			"source":7,
+			"id":"2944546",
+			"programId":""
+		},
+		{
+			"duration":254.04,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"我认",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"6470377",
+			"programId":""
+		},
+		{
+			"duration":215.196,
+			"albumName":"",
+			"artist":"温蘅c",
+			"mvId":"",
+			"format":"m4a",
+			"name":"大天蓬",
+			"albumId":"",
+			"artistId":"3380778",
+			"source":7,
+			"id":"5746423",
+			"programId":""
+		},
+		{
+			"duration":289.854,
+			"albumName":"CV十一的唱见之旅",
+			"artist":"蓝色小蝌蚪超爱许仙の",
+			"mvId":"",
+			"format":"m4a",
+			"name":"美梦成真",
+			"albumId":"52302",
+			"artistId":"19713984",
+			"source":7,
+			"id":"5615083",
+			"programId":""
+		},
+		{
+			"duration":223.686,
+			"albumName":"",
+			"artist":"佑城の流年公主殿下",
+			"mvId":"",
+			"format":"m4a",
+			"name":"后知后觉",
+			"albumId":"",
+			"artistId":"8165807",
+			"source":7,
+			"id":"4439932",
+			"programId":""
+		},
+		{
+			"duration":238.927,
+			"albumName":"",
+			"artist":"满汉噪音_星河",
+			"mvId":"",
+			"format":"m4a",
+			"name":"后知后觉",
+			"albumId":"",
+			"artistId":"13612753",
+			"source":7,
+			"id":"3815187",
+			"programId":""
+		},
+		{
+			"duration":268,
+			"albumName":"云端音乐 | 随心自由听",
+			"artist":"何美汐",
+			"mvId":"",
+			"format":"m4a",
+			"name":"《反复催眠》",
+			"albumId":"53243212",
+			"artistId":"114748032",
+			"source":5,
+			"id":"485706720",
+			"programId":""
+		},
+		{
+			"duration":217.913,
+			"albumName":"",
+			"artist":"风歌_星河",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【听书】",
+			"albumId":"",
+			"artistId":"11561431",
+			"source":7,
+			"id":"4939118",
+			"programId":""
+		},
+		{
+			"duration":215.202,
+			"albumName":"",
+			"artist":"苍火_澄果",
+			"mvId":"",
+			"format":"m4a",
+			"name":"翻唱-【听书】-苍火",
+			"albumId":"",
+			"artistId":"9842068",
+			"source":7,
+			"id":"3849756",
+			"programId":""
+		},
+		{
+			"duration":282.024,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【23独家】还有我to小岛",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"6484520",
+			"programId":""
+		},
+		{
+			"duration":244.819,
+			"albumName":"",
+			"artist":"ZZ腾__只会唱歌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"去年夏天",
+			"albumId":"",
+			"artistId":"9710203",
+			"source":7,
+			"id":"3033712",
+			"programId":""
+		},
+		{
+			"duration":243.528,
+			"albumName":"",
+			"artist":"纯玩TIME",
+			"mvId":"",
+			"format":"m4a",
+			"name":"记号",
+			"albumId":"",
+			"artistId":"14718228",
+			"source":7,
+			"id":"3912042",
+			"programId":""
+		},
+		{
+			"duration":223.634,
+			"albumName":"",
+			"artist":"晨晨要变白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"西厢寻他",
+			"albumId":"",
+			"artistId":"20171967",
+			"source":7,
+			"id":"5745110",
+			"programId":""
+		},
+		{
+			"duration":67.239,
+			"albumName":"",
+			"artist":"无敌の小趴菜",
+			"mvId":"",
+			"format":"m4a",
+			"name":"花式《你不明白》",
+			"albumId":"",
+			"artistId":"9628504",
+			"source":7,
+			"id":"6364020",
+			"programId":""
+		},
+		{
+			"duration":278.04,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"空心--Cover：光泽",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"6429561",
+			"programId":""
+		},
+		{
+			"duration":19.069,
+			"albumName":"温柔Live",
+			"artist":"小熊拽得很_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"你不明白Live",
+			"albumId":"49549",
+			"artistId":"7916056",
+			"source":7,
+			"id":"5172426",
+			"programId":""
+		},
+		{
+			"duration":180.96,
+			"albumName":"",
+			"artist":"風司音",
+			"mvId":"",
+			"format":"m4a",
+			"name":"風司音 - 镜中渊",
+			"albumId":"",
+			"artistId":"2858505",
+			"source":7,
+			"id":"5517663",
+			"programId":""
+		},
+		{
+			"duration":181.028,
+			"albumName":"",
+			"artist":"经商之人",
+			"mvId":"",
+			"format":"m4a",
+			"name":"周林枫 - 镜中渊",
+			"albumId":"",
+			"artistId":"22369408",
+			"source":7,
+			"id":"5711889",
+			"programId":""
+		},
+		{
+			"duration":16.224,
+			"albumName":"",
+			"artist":"年年落落宝贝",
+			"mvId":"",
+			"format":"m4a",
+			"name":"镜中渊",
+			"albumId":"",
+			"artistId":"15928754",
+			"source":7,
+			"id":"6069873",
+			"programId":""
+		},
+		{
+			"duration":181.551,
+			"albumName":"Summer",
+			"artist":"Cindy_Summer",
+			"mvId":"",
+			"format":"m4a",
+			"name":"镜中渊",
+			"albumId":"56743",
+			"artistId":"7937706",
+			"source":7,
+			"id":"6274935",
+			"programId":""
+		},
+		{
+			"duration":215.379,
+			"albumName":"灰灰の直播演唱合辑",
+			"artist":"小心心_灰の播放器",
+			"mvId":"",
+			"format":"m4a",
+			"name":"异类_灰灰",
+			"albumId":"39681",
+			"artistId":"11870578",
+			"source":7,
+			"id":"6236122",
+			"programId":""
+		},
+		{
+			"duration":208.927,
+			"albumName":"",
+			"artist":"仄夏_酒宝",
+			"mvId":"",
+			"format":"m4a",
+			"name":"Zz-异类",
+			"albumId":"",
+			"artistId":"7998535",
+			"source":7,
+			"id":"2165403",
+			"programId":""
+		},
+		{
+			"duration":179.304,
+			"albumName":"",
+			"artist":"今夜明珠色丶",
+			"mvId":"",
+			"format":"m4a",
+			"name":"异类",
+			"albumId":"",
+			"artistId":"7595908",
+			"source":7,
+			"id":"2103656",
+			"programId":""
+		},
+		{
+			"duration":190.008,
+			"albumName":"",
+			"artist":"幺儿_上学版",
+			"mvId":"",
+			"format":"m4a",
+			"name":"异类",
+			"albumId":"",
+			"artistId":"20484959",
+			"source":7,
+			"id":"5094545",
+			"programId":""
+		},
+		{
+			"duration":21.315,
+			"albumName":"",
+			"artist":"土拨小晚晚_星禾",
+			"mvId":"",
+			"format":"m4a",
+			"name":"像极了",
+			"albumId":"",
+			"artistId":"16195011",
+			"source":7,
+			"id":"4177509",
+			"programId":""
+		},
+		{
+			"duration":159.288,
+			"albumName":"",
+			"artist":"七妹_Bq",
+			"mvId":"",
+			"format":"m4a",
+			"name":"像极了",
+			"albumId":"",
+			"artistId":"7702983",
+			"source":7,
+			"id":"4227626",
+			"programId":""
+		},
+		{
+			"duration":184,
+			"albumName":"未知专辑",
+			"artist":"邓蓉",
+			"mvId":"2e2ca8df783f9025905ff388c7445657",
+			"format":"mp3",
+			"name":"双枪老太婆",
+			"albumId":"0",
+			"artistId":"",
+			"source":1,
+			"id":"40476386",
+			"hash":"7446994924e7b7b7adf643405c6e6fcd",
+			"programId":""
+		},
+		{
+			"duration":184,
+			"albumName":"热门华语161",
+			"artist":"徐千惠",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"是非功过任评说",
+			"albumId":"2696061",
+			"artistId":"1046457",
+			"source":0,
+			"id":"27928038",
+			"programId":""
+		},
+		{
+			"duration":560.065,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】这个粗暴的助眠策略不可取",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"3695540",
+			"programId":""
+		},
+		{
+			"duration":310.416,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"醉酒小狼狗，柠檬狗在线咬人",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"1297117",
+			"programId":""
+		},
+		{
+			"duration":264.038,
+			"albumName":"Journey",
+			"artist":"Kirara Magic、ugumugu",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"Journey",
+			"albumId":"95119634",
+			"artistId":"30226109",
+			"source":0,
+			"id":"1477825439",
+			"programId":""
+		},
+		{
+			"duration":190.866,
+			"albumName":"Sparkle",
+			"artist":"KLYDIX、Sound of Tomorrow",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"Sparkle",
+			"albumId":"138869243",
+			"artistId":"35852429",
+			"source":0,
+			"id":"1911894957",
+			"programId":""
+		},
+		{
+			"duration":278.544,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"Melody--三斤",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"3883444",
+			"programId":""
+		},
+		{
+			"duration":269.333,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声演传媒】《IFYOU》（填翻）",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"6096987",
+			"programId":""
+		},
+		{
+			"duration":162.529,
+			"albumName":"小孩",
+			"artist":"CJ 周密",
+			"mvId":"14570857",
+			"format":"mp3",
+			"name":"小孩",
+			"albumId":"153021394",
+			"artistId":"12700520",
+			"source":0,
+			"id":"1988555791",
+			"programId":""
+		},
+		{
+			"duration":166,
+			"albumName":"爱似水仙",
+			"artist":"苏星婕",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"爱似水仙",
+			"albumId":"150377096",
+			"artistId":"46966451",
+			"source":0,
+			"id":"1975589384",
+			"programId":""
+		},
+		{
+			"duration":279.457,
+			"albumName":"",
+			"artist":"饭饭_娃娃の_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"爱似水仙",
+			"albumId":"",
+			"artistId":"10790825",
+			"source":7,
+			"id":"2563502",
+			"programId":""
+		},
+		{
+			"duration":220.776,
+			"albumName":"",
+			"artist":"毛十八Mao",
+			"mvId":"",
+			"format":"m4a",
+			"name":"爱似水仙",
+			"albumId":"",
+			"artistId":"17812950",
+			"source":7,
+			"id":"4836926",
+			"programId":""
+		},
+		{
+			"duration":240.528,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"怎叹--三斤",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"3883441",
+			"programId":""
+		},
+		{
+			"duration":212.04,
+			"albumName":"",
+			"artist":"三斤_声演",
+			"mvId":"",
+			"format":"m4a",
+			"name":"问星海--三斤",
+			"albumId":"",
+			"artistId":"13751022",
+			"source":7,
+			"id":"3959383",
+			"programId":""
+		},
+		{
+			"duration":238.999,
+			"albumName":"",
+			"artist":"洛缘儿_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"爱似水仙live 洛缘儿",
+			"albumId":"",
+			"artistId":"4716800",
+			"source":7,
+			"id":"6417179",
+			"programId":""
+		},
+		"D:\\音乐\\Night Flight - KLYDIX.mp3",
+		"D:\\音乐\\Sky High - KLYDIX.mp3",
+		"D:\\音乐\\Horizon - 亚述.mp3",
+		"D:\\音乐\\Neverland - 亚述、Forestcat Records.mp3",
+		{
+			"duration":216.92,
+			"albumName":"",
+			"artist":"关关_Su",
+			"mvId":"",
+			"format":"m4a",
+			"name":"探窗",
+			"albumId":"",
+			"artistId":"6053203",
+			"source":7,
+			"id":"4285299",
+			"programId":""
+		},
+		{
+			"duration":216.92,
+			"albumName":"",
+			"artist":"安白_Fox",
+			"mvId":"",
+			"format":"m4a",
+			"name":"探窗",
+			"albumId":"",
+			"artistId":"21928412",
+			"source":7,
+			"id":"6052111",
+			"programId":""
+		},
+		{
+			"duration":217.128,
+			"albumName":"探窗",
+			"artist":"应时啊",
+			"mvId":"",
+			"format":"m4a",
+			"name":"探窗",
+			"albumId":"49780",
+			"artistId":"3059534",
+			"source":7,
+			"id":"4750916",
+			"programId":""
+		},
+		{
+			"duration":211.555,
+			"albumName":"狗狗诗人",
+			"artist":"孟凡明",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"狗狗诗人",
+			"albumId":"81592835",
+			"artistId":"12270575",
+			"source":0,
+			"id":"1390484118",
+			"programId":""
+		},
+		{
+			"duration":231.173,
+			"albumName":"Dawn Light",
+			"artist":"Zachary Bruno",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"Oak",
+			"albumId":"3154565",
+			"artistId":"1081062",
+			"source":0,
+			"id":"32320824",
+			"programId":""
+		},
+		{
+			"duration":179.095,
+			"albumName":"",
+			"artist":"㊗比巴卜㏠满月樂㊒棠",
+			"mvId":"",
+			"format":"m4a",
+			"name":"堕",
+			"albumId":"",
+			"artistId":"5110023",
+			"source":7,
+			"id":"6417029",
+			"programId":""
+		},
+		{
+			"duration":225.515,
+			"albumName":"",
+			"artist":"摩斯花生",
+			"mvId":"",
+			"format":"m4a",
+			"name":"堕",
+			"albumId":"",
+			"artistId":"2612",
+			"source":7,
+			"id":"216067",
+			"programId":""
+		},
+		{
+			"duration":81.188,
+			"albumName":"",
+			"artist":"阿潮ッ真的白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"堕",
+			"albumId":"",
+			"artistId":"23446043",
+			"source":7,
+			"id":"6382256",
+			"programId":""
+		},
+		{
+			"duration":187.01,
+			"albumName":"",
+			"artist":"众里_燃点",
+			"mvId":"",
+			"format":"m4a",
+			"name":"堕",
+			"albumId":"",
+			"artistId":"7582437",
+			"source":7,
+			"id":"6002613",
+			"programId":""
+		},
+		{
+			"duration":197,
+			"albumName":"49747471",
+			"artist":"红格格",
+			"mvId":"",
+			"format":"mp3",
+			"name":"地球最可爱 (DJ版)",
+			"albumId":"",
+			"artistId":"",
+			"source":1,
+			"id":"354411135",
+			"hash":"6e795c4d7089a011a8c3388d3583ff25",
+			"programId":""
+		},
+		{
+			"duration":186,
+			"albumName":"59767566",
+			"artist":"旺仔小乔",
+			"mvId":"3f9c242ec3a7ca85555302ec2bd0dc13",
+			"format":"mp3",
+			"name":"堕 (小乔版)",
+			"albumId":"",
+			"artistId":"",
+			"source":1,
+			"id":"433483044",
+			"hash":"e32016d0007282321365e35400442033",
+			"programId":""
+		},
+		{
+			"duration":43.676,
+			"albumName":"呆呆破的小窝窝",
+			"artist":"听句灯光吧",
+			"mvId":"",
+			"format":"mp3",
+			"name":"V我50（疯狂星期四版）",
+			"albumId":"969259721",
+			"artistId":"581123464",
+			"source":0,
+			"id":"1986309595",
+			"programId":"2511851224"
+		},
+		{
+			"duration":332.925,
+			"albumName":"贰叁Eric作品集",
+			"artist":"贰叁Eric・九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"漠河舞厅（说唱版）feat你的浪浪",
+			"albumId":"36496",
+			"artistId":"7745970",
+			"source":7,
+			"id":"4178670",
+			"programId":""
+		},
+		{
+			"duration":696.069,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】帮青梅竹马逃避相亲108次后终于……",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"5200748",
+			"programId":""
+		},
+		{
+			"duration":360,
+			"albumName":"中国梦之声·我们的歌第四季 第5期",
+			"artist":"萧敬腾、张淇",
+			"mvId":"b6af818e213c4a7204826fcbee3c5ff8",
+			"format":"mp3",
+			"name":"武家坡2021 (Live)",
+			"albumId":"62721200",
+			"artistId":"",
+			"source":1,
+			"id":"451873760",
+			"hash":"ca067c0dde9ee2af620e3584a6e4b852",
+			"programId":""
+		},
+		{
+			"duration":263.571,
+			"albumName":"武家坡 2021",
+			"artist":"龍猛寺寬度",
+			"mvId":"14471959",
+			"format":"mp3",
+			"name":"武家坡2021",
+			"albumId":"135516634",
+			"artistId":"34500818",
+			"source":0,
+			"id":"1891431677",
+			"programId":""
+		},
+		"D:\\音乐\\Hope - KLYDIX.mp3",
+		{
+			"duration":266.71,
+			"albumName":"",
+			"artist":"晔梓辰",
+			"mvId":"",
+			"format":"m4a",
+			"name":"不谓侠",
+			"albumId":"",
+			"artistId":"10603755",
+			"source":7,
+			"id":"5447913",
+			"programId":""
+		},
+		{
+			"duration":265.952,
+			"albumName":"精装后期",
+			"artist":"着迷Free_九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"迷の武家坡（窝的宝周冠）",
+			"albumId":"49872",
+			"artistId":"9856577",
+			"source":7,
+			"id":"6321969",
+			"programId":""
+		},
+		{
+			"duration":256.746,
+			"albumName":"",
+			"artist":"人间月半",
+			"mvId":"",
+			"format":"m4a",
+			"name":"武家坡20211221Demo",
+			"albumId":"",
+			"artistId":"11391033",
+			"source":7,
+			"id":"4351568",
+			"programId":""
+		},
+		{
+			"duration":174.94,
+			"albumName":"",
+			"artist":"账号已注销",
+			"mvId":"",
+			"format":"m4a",
+			"name":"武家坡2021",
+			"albumId":"",
+			"artistId":"18635262",
+			"source":7,
+			"id":"4380629",
+			"programId":""
+		},
+		{
+			"duration":263.452,
+			"albumName":"",
+			"artist":"仙气飘飘大小姐",
+			"mvId":"",
+			"format":"m4a",
+			"name":"长歌甜甜-武家坡",
+			"albumId":"",
+			"artistId":"16327625",
+			"source":7,
+			"id":"5804619",
+			"programId":""
+		},
+		{
+			"duration":262.217,
+			"albumName":"",
+			"artist":"烟channel",
+			"mvId":"",
+			"format":"m4a",
+			"name":"武家坡2021",
+			"albumId":"",
+			"artistId":"22437376",
+			"source":7,
+			"id":"6284426",
+			"programId":""
+		},
+		{
+			"duration":261.25,
+			"albumName":"",
+			"artist":"韬儿_十方",
+			"mvId":"",
+			"format":"m4a",
+			"name":"《武家坡2021》",
+			"albumId":"",
+			"artistId":"10935530",
+			"source":7,
+			"id":"6119474",
+			"programId":""
+		},
+		{
+			"duration":263.862,
+			"albumName":"",
+			"artist":"南尘先生",
+			"mvId":"",
+			"format":"m4a",
+			"name":"武家坡2021",
+			"albumId":"",
+			"artistId":"20472347",
+			"source":7,
+			"id":"6081766",
+			"programId":""
+		},
+		{
+			"duration":263.313,
+			"albumName":"",
+			"artist":"晔梓辰",
+			"mvId":"",
+			"format":"m4a",
+			"name":"范思哲_哲哲 - 弱水三千",
+			"albumId":"",
+			"artistId":"10603755",
+			"source":7,
+			"id":"5564128",
+			"programId":""
+		},
+		"F:\\愿嫁汉家郎 - 余晖、林建明.mp3",
+		{
+			"duration":311.902,
+			"albumName":"仙女们的冠名歌曲",
+			"artist":"暖白白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"大鱼-暖白白（锦鲤冠名）",
+			"albumId":"43285",
+			"artistId":"8308243",
+			"source":7,
+			"id":"4216940",
+			"programId":""
+		},
+		{
+			"duration":307.095,
+			"albumName":"",
+			"artist":"暖白白",
+			"mvId":"",
+			"format":"m4a",
+			"name":"湖心亭-暖白白（猫猫姐姐冠名）",
+			"albumId":"",
+			"artistId":"8308243",
+			"source":7,
+			"id":"5604089",
+			"programId":""
+		},
+		{
+			"duration":184.711,
+			"albumName":"郭麒麟非正式电台",
+			"artist":"好想戒酒呀",
+			"mvId":"",
+			"format":"mp3",
+			"name":"武家坡",
+			"albumId":"526446642",
+			"artistId":"130707614",
+			"source":0,
+			"id":"1342347041",
+			"programId":"2059266992"
+		},
+		{
+			"duration":203.496,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·花絮三",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6129481",
+			"programId":""
+		},
+		{
+			"duration":97.507,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·中秋祝福",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6192588",
+			"programId":""
+		},
+		{
+			"duration":325.318,
+			"albumName":"我不可能喜欢他",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"陈隐原著 | 广播剧《我不可能喜欢他》· 预告",
+			"albumId":"52398",
+			"artistId":"425603",
+			"source":7,
+			"id":"6213472",
+			"programId":""
+		},
+		{
+			"duration":9.682,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·百万福利·消息铃声·陆文",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6236513",
+			"programId":""
+		},
+		{
+			"duration":9.625,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·百万福利·消息铃声·瞿燕庭",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6236522",
+			"programId":""
+		},
+		{
+			"duration":154.698,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·【文儿log】十八线小糊星的日常·都是误会",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6294007",
+			"programId":""
+		},
+		{
+			"duration":30.223,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·两百万福利·早安语音·陆文",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6371520",
+			"programId":""
+		},
+		{
+			"duration":30.018,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·两百万福利·早安语音·瞿燕庭",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6371543",
+			"programId":""
+		},
+		{
+			"duration":280.824,
+			"albumName":"跨界演员 第一季",
+			"artist":"音熊联萌",
+			"mvId":"",
+			"format":"m4a",
+			"name":"北南原著 | 广播剧《跨界演员》第一季·花絮四",
+			"albumId":"50728",
+			"artistId":"425603",
+			"source":7,
+			"id":"6404482",
+			"programId":""
+		},
+		{
+			"duration":38.556,
+			"albumName":"贰叁Ericの歌单",
+			"artist":"贰叁Eric・九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"歌单介绍",
+			"albumId":"38990",
+			"artistId":"7745970",
+			"source":7,
+			"id":"3610766",
+			"programId":""
+		},
+		{
+			"duration":276.062,
+			"albumName":"",
+			"artist":"贰叁Eric・九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"有可能的夜晚",
+			"albumId":"",
+			"artistId":"7745970",
+			"source":7,
+			"id":"6341179",
+			"programId":""
+		},
+		{
+			"duration":683.324,
+			"albumName":"",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】超长！一封来自未来男友的匿名邮件",
+			"albumId":"",
+			"artistId":"5864988",
+			"source":7,
+			"id":"6422685",
+			"programId":""
+		},
+		{
+			"duration":236,
+			"albumName":"爱似水仙",
+			"artist":"王金金",
+			"mvId":"",
+			"format":"mp3",
+			"name":"爱似水仙",
+			"albumId":"P10002184427",
+			"artistId":"A10840400",
+			"source":6,
+			"id":"T10046053373",
+			"programId":""
+		},
+		{
+			"duration":263.688,
+			"albumName":"时雨の古风辑",
+			"artist":"时雨㌶",
+			"mvId":"",
+			"format":"m4a",
+			"name":"武家坡2021",
+			"albumId":"39331",
+			"artistId":"14042500",
+			"source":7,
+			"id":"5639971",
+			"programId":""
+		},
+		{
+			"duration":300.042,
+			"albumName":"",
+			"artist":"一只王铁柱",
+			"mvId":"",
+			"format":"m4a",
+			"name":"武家坡",
+			"albumId":"",
+			"artistId":"23367892",
+			"source":7,
+			"id":"6230838",
+			"programId":""
+		},
+		{
+			"duration":870.938,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】忠犬贴身助理的甜蜜守护",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"5127237",
+			"programId":""
+		},
+		{
+			"duration":209,
+			"albumName":"快乐时光",
+			"artist":"侃侃",
+			"mvId":"",
+			"format":"mp3",
+			"name":"听妈妈讲那过去的事情",
+			"albumId":"967646",
+			"artistId":"",
+			"source":1,
+			"id":"32108081",
+			"hash":"5ceef51970326664fc172d4918b7bea4",
+			"programId":""
+		},
+		{
+			"duration":295,
+			"albumName":"为时光和声",
+			"artist":"黑鸭子",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"听妈妈讲那过去的事情",
+			"albumId":"35357",
+			"artistId":"11776",
+			"source":0,
+			"id":"358037",
+			"programId":""
+		},
+		{
+			"duration":554.788,
+			"albumName":"【全能男友】糕丸子",
+			"artist":"超大丸纸",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【女性向/胃疼/娇娇年上】忍着胃疼还不忘照顾你的温柔老公",
+			"albumId":"49093",
+			"artistId":"373705",
+			"source":7,
+			"id":"6263101",
+			"programId":""
+		},
+		{
+			"duration":440.064,
+			"albumName":"",
+			"artist":"A大人_",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】【耳语】一些先婚后爱文学 深夜抵达他的城市，下班归来临睡前的耳喃",
+			"albumId":"",
+			"artistId":"19499732",
+			"source":7,
+			"id":"6322147",
+			"programId":""
+		},
+		{
+			"duration":194.616,
+			"albumName":"【声音恋人】陆千重的声恋合集",
+			"artist":"陆千重",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】温柔男友音安慰工作受委屈的你",
+			"albumId":"55759",
+			"artistId":"7337306",
+			"source":7,
+			"id":"6229296",
+			"programId":""
+		},
+		{
+			"duration":924,
+			"albumName":"",
+			"artist":"欧勒_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】失眠后给温柔宠溺男友打电话",
+			"albumId":"",
+			"artistId":"17699913",
+			"source":7,
+			"id":"6439985",
+			"programId":""
+		},
+		{
+			"duration":483,
+			"albumName":"",
+			"artist":"方兴未艾mirai",
+			"mvId":"",
+			"format":"m4a",
+			"name":"神陨遗事-罗夏-石像之下",
+			"albumId":"",
+			"artistId":"13050975",
+			"source":7,
+			"id":"6477487",
+			"programId":""
+		},
+		{
+			"duration":289,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】与犬系年下男友过纪念日，然后…",
+			"albumId":"",
+			"artistId":"7044093",
+			"source":7,
+			"id":"6467365",
+			"programId":""
+		},
+		{
+			"duration":418,
+			"albumName":"",
+			"artist":"浅湫丶",
+			"mvId":"",
+			"format":"m4a",
+			"name":"婚礼的期待--声线",
+			"albumId":"",
+			"artistId":"3279538",
+			"source":7,
+			"id":"6477728",
+			"programId":""
+		},
+		{
+			"duration":418,
+			"albumName":"",
+			"artist":"天籁之声工作室",
+			"mvId":"",
+			"format":"m4a",
+			"name":"婚礼的期待--声线",
+			"albumId":"",
+			"artistId":"11226065",
+			"source":7,
+			"id":"6477690",
+			"programId":""
+		},
+		{
+			"duration":773,
+			"albumName":"【声音恋人】嘲风",
+			"artist":"嘲风_CF",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】生理期的温柔陪伴",
+			"albumId":"38051",
+			"artistId":"9822532",
+			"source":7,
+			"id":"6385047",
+			"programId":""
+		},
+		{
+			"duration":181.707,
+			"albumName":"",
+			"artist":"为你读诗官方账号",
+			"mvId":"",
+			"format":"m4a",
+			"name":"陈奕雯「为你读诗」：《旅行》",
+			"albumId":"",
+			"artistId":"4098815",
+			"source":7,
+			"id":"6388926",
+			"programId":""
+		},
+		{
+			"albumName":"我的世界音效",
+			"artist":"玩麦块的fresh-sans",
+			"mvId":"",
+			"format":"mp3",
+			"name":"猪 死亡音效",
+			"albumId":"965029467",
+			"artistId":"4027764879",
+			"source":0,
+			"id":"1955400772",
+			"programId":"2506207034"
+		},
+		{
+			"duration":311.193,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】佣人级男友，催起床帮洗脸帮搭配衣服简直了",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"3268981",
+			"programId":""
+		},
+		{
+			"duration":420,
+			"albumName":"",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【520限定】在病房里说喜欢你",
+			"albumId":"",
+			"artistId":"5864988",
+			"source":7,
+			"id":"5264243",
+			"programId":""
+		},
+		{
+			"duration":490,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】年下小狼狗照顾摔断腿的你",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"5341388",
+			"programId":""
+		},
+		{
+			"duration":179.047,
+			"albumName":"This Dream",
+			"artist":"Mestereo",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"This Dream",
+			"albumId":"127351575",
+			"artistId":"47779723",
+			"source":0,
+			"id":"1844676665",
+			"programId":""
+		},
+		"D:\\音乐\\Away We Go - Ted Nights、MAGILO.mp3",
+		{
+			"duration":236,
+			"albumName":"爱似水仙",
+			"artist":"张茜、半吨兄弟",
+			"mvId":"f90fdb98c385c573d466266b3776fc04",
+			"format":"mp3",
+			"name":"爱似水仙 (合唱版)",
+			"albumId":"57838033",
+			"artistId":"",
+			"source":1,
+			"id":"414465637",
+			"hash":"f71157c55dc63614564b5931c38fdcd9",
+			"programId":""
+		},
+		"D:\\音乐\\独钟 - Sasablue.mp3",
+		{
+			"duration":254,
+			"albumName":"",
+			"artist":"你的浪浪・九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"#一人一首周杰伦#夜的第七章",
+			"albumId":"",
+			"artistId":"7591915",
+			"source":7,
+			"id":"5710017",
+			"programId":""
+		},
+		{
+			"duration":242.208,
+			"albumName":"",
+			"artist":"你的浪浪・九星",
+			"mvId":"",
+			"format":"m4a",
+			"name":"《玫瑰少年》生而为人无罪 你不需要抱歉",
+			"albumId":"",
+			"artistId":"7591915",
+			"source":7,
+			"id":"6364619",
+			"programId":""
+		},
+		{
+			"duration":193.235,
+			"albumName":"爱似水仙（烟嗓）",
+			"artist":"烟(许佳豪)",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"爱似水仙（烟嗓）",
+			"albumId":"150651960",
+			"artistId":"49937403",
+			"source":0,
+			"id":"1976899454",
+			"programId":""
+		},
+		{
+			"duration":270.672,
+			"albumName":"在未来的你跟我说声嗨",
+			"artist":"告五人",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"在未来的你跟我说声嗨",
+			"albumId":"153343119",
+			"artistId":"12676697",
+			"source":0,
+			"id":"1990179959",
+			"programId":""
+		},
+		{
+			"duration":247.494,
+			"albumName":"爱似水仙",
+			"artist":"金海心",
+			"mvId":"5308935",
+			"format":"mp3",
+			"name":"爱似水仙",
+			"albumId":"24825",
+			"artistId":"8151",
+			"source":0,
+			"id":"247807",
+			"programId":""
+		},
+		{
+			"duration":2706.782,
+			"albumName":"在云端",
+			"artist":"林海",
+			"mvId":"",
+			"format":"mp3",
+			"name":"在云端——声影记忆之难以磨灭的旋律",
+			"albumId":"",
+			"artistId":"",
+			"source":0,
+			"id":"1991219510",
+			"programId":"2512829803"
+		},
+		{
+			"duration":149.574,
+			"albumName":"Fast Lane",
+			"artist":"Palm Trees、MdL、Abi F Jones",
+			"mvId":"0",
+			"format":"mp3",
+			"name":"Fast Lane",
+			"albumId":"",
+			"artistId":"",
+			"source":0,
+			"id":"1406099861",
+			"programId":""
+		},
+		{
+			"duration":462.315,
+			"albumName":"",
+			"artist":"葵影乱",
+			"mvId":"",
+			"format":"m4a",
+			"name":"在床上被你弄哭的男朋友【声音恋人】",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"6419760",
+			"programId":""
+		},
+		{
+			"duration":823,
+			"albumName":"",
+			"artist":"葵影乱",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】你不希望你喜欢别人老公的事情被人知道吧？",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"6467703",
+			"programId":""
+		},
+		{
+			"duration":220.525,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【月悦专属】《慢慢喜欢你》Cover.莫文蔚",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"5470769",
+			"programId":""
+		},
+		{
+			"duration":68.57,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【安全必备音声】酒吧等公共场所被搭讪-荻野",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"5488061",
+			"programId":""
+		},
+		{
+			"duration":79.976,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【夏日声恋冰饮店】生打椰椰冰-荻野",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"5556695",
+			"programId":""
+		},
+		{
+			"duration":308.595,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】停电与男友共处一室……",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"5809581",
+			"programId":""
+		},
+		{
+			"duration":7.116,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"CV荻野-介绍音",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"5948345",
+			"programId":""
+		},
+		{
+			"duration":326.77,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声音恋人】异地男友煲电话粥，结果……",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"6233543",
+			"programId":""
+		},
+		{
+			"duration":168.951,
+			"albumName":"",
+			"artist":"CV荻野",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【等风热吻你·许星纯】-CV荻野",
+			"albumId":"",
+			"artistId":"",
+			"source":7,
+			"id":"6438242",
+			"programId":""
 		}
 	],
 	"showSpectrum":true,
 	"maxHistoryCount":300,
 	"radioHistorySearch":[
+		"代码时间",
 		"贰叁Eric",
 		"有声书",
 		"轻音乐",
 		"伏击",
-		"你",
-		"代码时间"
+		"你"
 	],
 	"albumHistorySearch":[
 		"无边界音乐",

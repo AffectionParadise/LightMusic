@@ -23,7 +23,7 @@ import java.util.Objects;
 public class NetMusicInfo {
     // 来源
     private int source = NetMusicSource.NET_CLOUD;
-    // 网易云 / 酷狗 / QQ 音乐 / 酷我 / 咪咕 / 喜马拉雅 id
+    // 歌曲 id
     private String id;
     // 酷狗的歌曲 hash，这个参数与上面的 id 不同
     private String hash;
@@ -47,10 +47,6 @@ public class NetMusicInfo {
     private String albumName;
     // 专辑 id
     private String albumId;
-    // 专辑图片
-//    private BufferedImage albumImage;
-    // 专辑图片 url(喜马拉雅需要)
-    private String albumImgUrl;
     // 歌词
     private String lrc;
     // 歌词匹配
@@ -64,11 +60,6 @@ public class NetMusicInfo {
     private Runnable invokeLater;
 
     private final static String separator = " - ";
-
-//    public void setAlbumImage(BufferedImage albumImage) {
-//        this.albumImage = albumImage;
-//        callback();
-//    }
 
     public BufferedImage getAlbumImage() {
         File imgFile = new File(SimplePath.IMG_CACHE_PATH + toAlbumImageFileName());
@@ -221,8 +212,6 @@ public class NetMusicInfo {
 
     public String toString() {
         return NetMusicSource.names[source] + separator + toSimpleString();
-//                + (StringUtils.isNotEmpty(albumName) ? separator + albumName : "")
-//                + (duration != null ? separator + TimeUtils.format(duration) : "");
     }
 
     public String toSimpleString() {

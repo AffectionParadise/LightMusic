@@ -98,106 +98,57 @@ public class PlayerFrame extends JFrame {
     private final double MIDDLE_ARC = 0.1;
     private final double LARGE_ARC = 0.03;
     //    private final double WIN_ARC = 0.01;
-    // 分页提示
     private final String PAGINATION_MSG = "第 %s 页，共 %s 页";
-    // 无歌词或歌词损坏提示
     private final String NO_LRC_MSG = "尽情享受音乐的世界";
-    // 歌词不支持滚动提示
     private final String BAD_FORMAT_LRC_MSG = "该歌词不支持滚动";
-    // 加载中提示
     private final String LOADING_MSG = "加载中，客官请稍等......";
-    // 加载失败提示
     private final String LOAD_FAILED = "数据加载失败";
-    // 询问是否隐藏到托盘
     private final String ASK_DISPOSE_MSG = "你希望隐藏到托盘还是退出程序？";
     private final String[] EXIT_OPTIONS = {"隐藏到托盘", "退出程序", "取消"};
-    // 询问是否重新导入的提示
     private final String ASK_REIMPORT_MSG = "将重新从所有歌曲目录导入歌曲，是否继续？";
-    // 询问是否保留播放列表的提示
     private final String ASK_RETAIN_MUSIC_LIST_MSG = "播放列表已存在歌曲，您希望保留播放列表的歌曲吗？(选择“否”将清空原有的歌曲列表)";
-    // 询问是否清空缓存的提示
     private final String ASK_CLEAR_CACHE_MSG = "当前缓存大小为 %s，确定要清空缓存吗？";
-    // 询问是否删除不存在的文件的提示
     private final String ASK_REMOVE_FIFE_NOT_FOUND_MSG = "该歌曲文件不存在，是否从列表中删除？";
-    // 询问是否删除
     private final String ASK_REMOVE_ITEMS_MSG = "是否删除选中的项目？";
-    // 询问是否清空列表提示
     private final String ASK_CLEAR_LIST_MSG = "是否要清空列表？";
-    // 询问是否去重提示
     private final String ASK_DUPLICATE_MSG = "是否要删除列表中重复的项目？";
-    // 询问是否倒序提示
     private final String ASK_REVERSE_MSG = "是否要倒置列表顺序？";
-    // 帮助信息
     private final String HELP_MSG = "这里没有指南，让音乐作为你的北极星吧。戴上耳机，闭上眼睛，沉醉在美妙的旋律里感受生活......";
-    // 已经是第一页提示
     private final String FIRST_PAGE_MSG = "已经是第一页了";
-    // 已经是最后一页提示
     private final String LAST_PAGE_MSG = "已经是最后一页了";
-    // 非法页码提示
     private final String ILLEGAL_PAGE_MSG = "请输入合法页码";
-    // 文件不存在提示
     private final String FILE_NOT_FOUND_MSG = "文件不存在";
-    // 不支持的音频文件提示
     private final String UNSUPPORTED_AUDIO_FILE_MSG = "不支持该格式的音频文件";
-    // 不是有效的音频文件提示
     private final String INVALID_AUDIO_FILE_MSG = "不是有效的音频文件";
-    // 歌曲目录为空的提示
     private final String NO_CATALOG_MSG = "歌曲目录为空";
-    // 无可播放歌曲的提示
     private final String NO_MUSIC_MSG = "没有可以播放的歌曲";
-    // 当前歌曲已经在播放提示
     private final String ALREADY_PLAYING_MSG = "当前歌曲已经在播放";
-    // 没有可加载的图片提示
     private final String NO_IMG_MSG = "没有可加载的图片";
-    // 无版权提示
     private final String NO_PRIVILEGE_MSG = "获取资源失败";
-    // 无网络提示
     private final String NO_NET_MSG = "无法连接到服务器";
-    // 链接超时提示
     private final String TIME_OUT_MSG = "请求超时";
-    // 接口问题提示
     private final String API_ERROR_MSG = "接口异常，请稍候再试";
-    // 清除缓存成功提示
     private final String CLEAR_CACHE_SUCCESS_MSG = "清除缓存成功";
-    // 已添加到下一首提示
     private final String NEXT_PLAY_SUCCESS_MSG = "已添加到下一首";
-    // 收藏成功提示
     private final String COLLECT_SUCCESS_MSG = "收藏成功";
-    // 取消收藏成功提示
     private final String CANCEL_COLLECTION_SUCCESS_MSG = "取消收藏成功";
-    // 已收藏过提示
-//    private final String HAS_BEEN_COLLECTED_MSG = "已经收藏过该歌曲";
-    // 删除成功提示
     private final String REMOVE_SUCCESS_MSG = "删除成功";
-    // 清空成功提示
     private final String CLEAR_SUCCESS_MSG = "清空成功";
-    // 去重成功提示
     private final String DUPLICATE_SUCCESS_MSG = "去重成功";
-    // 倒序成功提示
     private final String REVERSE_SUCCESS_MSG = "倒序成功";
-    // 切换到顺序播放提示
     private final String CHANGE_SEQUENCE_MSG = "已切换到顺序播放";
-    // 切换到列表循环提示
     private final String CHANGE_LIST_CYCLE_MSG = "已切换到列表循环";
-    // 切换到单曲循环提示
     private final String CHANGE_SINGLE_MSG = "已切换到单曲循环";
-    // 切换到随机播放提示
     private final String CHANGE_SHUFFLE_MSG = "已切换到随机播放";
-    // 下载完成提示
     private final String DOWNLOAD_COMPLETED_MSG = "下载完成";
-    // 加入到下载队列提示
     private final String TASK_ADDED_MSG = "已加入到下载队列";
-    // 请等待下载任务完成提示
     private final String WAIT_FOR_TASK_COMPLETED_MSG = "请等待下载任务完成";
-    // 询问是否删除选中任务提示
     private final String ASK_REMOVE_SELECTED_TASKS_MSG = "确定要删除选中任务吗？";
-    // 询问是否同时删除文件提示
     private final String ASK_REMOVE_FILE_MSG = "同时删除文件";
-    // 询问是否清空任务列表提示
+    private final String ASK_RESTART_ALL_TASKS_MSG = "是否要重新开始全部任务？";
+    private final String ASK_CANCEL_ALL_TASKS_MSG = "是否要取消全部任务？";
     private final String ASK_REMOVE_ALL_TASKS_MSG = "确定要清空任务列表吗？";
-    // 询问是否从列表删除提示
     private final String ASK_REMOVE_SONGS_FROM_PLAY_QUEUE_MSG = "是否从播放队列删除选中歌曲？";
-    // 询问是否清空播放队列提示
     private final String ASK_CLEAR_PLAY_QUEUE_MSG = "是否要清空播放队列？";
     // 加载 MV 提示
     private final String LOADING_MV_MSG = "请稍候，MV 加载中......";
@@ -2827,6 +2778,9 @@ public class PlayerFrame extends JFrame {
         maxHistoryCount = config.optInt(ConfigConstants.MAX_HISTORY_COUNT, 300);
         // 载入最大搜索历史数量
         maxSearchHistoryCount = config.optInt(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, 50);
+        // 载入同时下载的最大任务数
+        int maxConcurrentTaskCount = config.optInt(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, 5);
+        GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(maxConcurrentTaskCount);
         // 载入是否显示频谱
         showSpectrum = config.optBoolean(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
@@ -2996,6 +2950,7 @@ public class PlayerFrame extends JFrame {
 
                 JSONObject jsonObject = JSONObject.fromObject(s);
                 int type = jsonObject.optInt(ConfigConstants.TASK_TYPE);
+                String name = jsonObject.optString(ConfigConstants.TASK_NAME);
                 String dest = jsonObject.optString(ConfigConstants.TASK_DEST);
                 int status = jsonObject.optInt(ConfigConstants.TASK_STATUS);
                 long finished = jsonObject.optLong(ConfigConstants.TASK_FINISHED);
@@ -3038,6 +2993,9 @@ public class PlayerFrame extends JFrame {
                     netMvInfo.setArtist(jo.optString(ConfigConstants.NET_MV_ARTIST));
                     task = new Task(downloadList, type, null, netMvInfo);
                 }
+                // 考虑到下载路径可能更换，沿用任务原来的路径
+                task.setDest(dest);
+                task.setName(name);
                 task.setStatus(status);
                 task.setFinished(finished);
                 task.setTotal(total);
@@ -3518,7 +3476,6 @@ public class PlayerFrame extends JFrame {
                 netRadioInfo.setDjId(jsonObject.optString(ConfigConstants.NET_RADIO_DJ_ID));
                 netRadioInfo.setCoverImgUrl(jsonObject.optString(ConfigConstants.NET_RADIO_COVER_IMG_URL));
                 netRadioInfo.setCoverImgThumbUrl(jsonObject.optString(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL));
-//                netRadioInfo.setDescription(jsonObject.optString(ConfigConstants.NET_RADIO_DESCRIPTION));
                 netRadioInfo.setCategory(jsonObject.optString(ConfigConstants.NET_RADIO_CATEGORY));
                 netRadioInfo.setTrackCount(jsonObject.optInt(ConfigConstants.NET_RADIO_TRACK_COUNT, -1));
                 netRadioInfo.setPlayCount(jsonObject.optLong(ConfigConstants.NET_RADIO_PLAY_COUNT, -1));
@@ -3583,13 +3540,8 @@ public class PlayerFrame extends JFrame {
                 netUserInfo.setId(jsonObject.optString(ConfigConstants.NET_USER_ID));
                 netUserInfo.setName(jsonObject.optString(ConfigConstants.NET_USER_NAME));
                 netUserInfo.setGender(jsonObject.optString(ConfigConstants.NET_USER_GENDER));
-//                netUserInfo.setArea(jsonObject.optString(ConfigConstants.NET_USER_AREA));
                 netUserInfo.setAvatarUrl(jsonObject.optString(ConfigConstants.NET_USER_AVATAR_URL));
                 netUserInfo.setAvatarThumbUrl(jsonObject.optString(ConfigConstants.NET_USER_AVATAR_THUMB_URL));
-//                if (netUserInfo.getSource() == NetMusicSource.ME) {
-//                    netUserInfo.setSign(jsonObject.optString(ConfigConstants.NET_USER_SIGN));
-//                    netUserInfo.setBgImgUrl(jsonObject.optString(ConfigConstants.NET_USER_BG_IMG_URL));
-//                }
                 netUserInfo.setFollow(jsonObject.optInt(ConfigConstants.NET_USER_FOLLOW, -1));
                 netUserInfo.setFollowed(jsonObject.optInt(ConfigConstants.NET_USER_FOLLOWED, -1));
                 netUserInfo.setPlaylistCount(jsonObject.optInt(ConfigConstants.NET_USER_PLAYLIST_COUNT, -1));
@@ -3645,6 +3597,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.MAX_HISTORY_COUNT, maxHistoryCount);
         // 存入最大搜索历史数量
         config.put(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, maxSearchHistoryCount);
+        // 存入同时下载的最大任务数
+        config.put(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, ((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize());
         // 存入当前播放模式
         config.put(ConfigConstants.PLAY_MODE, currPlayMode);
         // 存入快进/快退时间(索引)
@@ -3728,7 +3682,7 @@ public class PlayerFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if(netMusicInfo.hasDuration())
+                if (netMusicInfo.hasDuration())
                     jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
                 historyJsonArray.add(jsonObject);
@@ -3801,7 +3755,7 @@ public class PlayerFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if(netMusicInfo.hasDuration())
+                if (netMusicInfo.hasDuration())
                     jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
                 playQueueJsonArray.add(jsonObject);
@@ -3907,7 +3861,7 @@ public class PlayerFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if(netMusicInfo.hasDuration())
+                if (netMusicInfo.hasDuration())
                     jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
                 collectionJsonArray.add(jsonObject);
@@ -3924,9 +3878,7 @@ public class PlayerFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_PLAYLIST_SOURCE, netPlaylistInfo.getSource());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_ID, netPlaylistInfo.getId());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_NAME, netPlaylistInfo.getName());
-            if (netPlaylistInfo.hasCreator())
                 jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR, netPlaylistInfo.getCreator());
-            if (netPlaylistInfo.hasCreatorId())
                 jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR_ID, netPlaylistInfo.getCreatorId());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL, netPlaylistInfo.getCoverImgThumbUrl());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, netPlaylistInfo.getTrackCount());
@@ -3980,10 +3932,9 @@ public class PlayerFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_RADIO_ID, netRadioInfo.getId());
             jsonObject.put(ConfigConstants.NET_RADIO_NAME, netRadioInfo.getName());
             jsonObject.put(ConfigConstants.NET_RADIO_DJ, netRadioInfo.getDj());
-            if (netRadioInfo.hasDjId()) jsonObject.put(ConfigConstants.NET_RADIO_DJ_ID, netRadioInfo.getDjId());
+            jsonObject.put(ConfigConstants.NET_RADIO_DJ_ID, netRadioInfo.getDjId());
             jsonObject.put(ConfigConstants.NET_RADIO_COVER_IMG_URL, netRadioInfo.getCoverImgUrl());
             jsonObject.put(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL, netRadioInfo.getCoverImgThumbUrl());
-//            jsonObject.put(ConfigConstants.NET_RADIO_DESCRIPTION, netRadioInfo.getDescription());
             jsonObject.put(ConfigConstants.NET_RADIO_CATEGORY, netRadioInfo.getCategory());
             jsonObject.put(ConfigConstants.NET_RADIO_TRACK_COUNT, netRadioInfo.getTrackCount());
             jsonObject.put(ConfigConstants.NET_RADIO_PLAY_COUNT, netRadioInfo.getPlayCount());
@@ -4006,7 +3957,7 @@ public class PlayerFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_MV_ARTIST, netMvInfo.getArtist());
             jsonObject.put(ConfigConstants.NET_MV_CREATOR_ID, netMvInfo.getCreatorId());
             if (netMvInfo.hasDuration()) jsonObject.put(ConfigConstants.NET_MV_DURATION, netMvInfo.getDuration());
-            if (netMvInfo.hasPubTime()) jsonObject.put(ConfigConstants.NET_MV_PUB_TIME, netMvInfo.getPubTime());
+            jsonObject.put(ConfigConstants.NET_MV_PUB_TIME, netMvInfo.getPubTime());
             jsonObject.put(ConfigConstants.NET_MV_COVER_IMG_URL, netMvInfo.getCoverImgUrl());
             jsonObject.put(ConfigConstants.NET_MV_PLAY_COUNT, netMvInfo.getPlayCount());
             mvCollectionJsonArray.add(jsonObject);
@@ -4042,13 +3993,8 @@ public class PlayerFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_USER_ID, netUserInfo.getId());
             jsonObject.put(ConfigConstants.NET_USER_NAME, netUserInfo.getName());
             jsonObject.put(ConfigConstants.NET_USER_GENDER, netUserInfo.getGender());
-//            jsonObject.put(ConfigConstants.NET_USER_AREA, netUserInfo.getArea());
             jsonObject.put(ConfigConstants.NET_USER_AVATAR_URL, netUserInfo.getAvatarUrl());
             jsonObject.put(ConfigConstants.NET_USER_AVATAR_THUMB_URL, netUserInfo.getAvatarThumbUrl());
-//            if (netUserInfo.getSource() == NetMusicSource.ME) {
-//                jsonObject.put(ConfigConstants.NET_USER_SIGN, netUserInfo.getSign());
-//                jsonObject.put(ConfigConstants.NET_USER_BG_IMG_URL, netUserInfo.getBgImgUrl());
-//            }
             jsonObject.put(ConfigConstants.NET_USER_FOLLOW, netUserInfo.getFollow());
             jsonObject.put(ConfigConstants.NET_USER_FOLLOWED, netUserInfo.getFollowed());
             jsonObject.put(ConfigConstants.NET_USER_PLAYLIST_COUNT, netUserInfo.getPlaylistCount());
@@ -6984,12 +6930,8 @@ public class PlayerFrame extends JFrame {
         locateFileMenuItem.addActionListener(e -> {
             Object o = musicList.getSelectedValue();
             if (o instanceof AudioFile) {
-                try {
-                    File file = ((AudioFile) o);
-                    Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", (file.exists() ? file.getAbsolutePath() : file.getParent())));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                File file = ((AudioFile) o);
+                TerminateUtils.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
             }
         });
         // 右键菜单编辑歌曲信息
@@ -18176,18 +18118,26 @@ public class PlayerFrame extends JFrame {
         });
         // 重新开始全部任务
         restartAllTasksButton.addActionListener(e -> {
-            Enumeration<Task> tasks = downloadListModel.elements();
-            while (tasks.hasMoreElements()) {
-                Task task = tasks.nextElement();
-                if (!task.isRunning()) task.start();
+            ConfirmDialog dialog = new ConfirmDialog(this, ASK_RESTART_ALL_TASKS_MSG, "是", "否");
+            dialog.showDialog();
+            if (dialog.getResponse() == JOptionPane.YES_OPTION) {
+                Enumeration<Task> tasks = downloadListModel.elements();
+                while (tasks.hasMoreElements()) {
+                    Task task = tasks.nextElement();
+                    if (!task.isRunning()) task.start();
+                }
             }
         });
         // 取消全部任务
         cancelAllTasksButton.addActionListener(e -> {
-            Enumeration<Task> tasks = downloadListModel.elements();
-            while (tasks.hasMoreElements()) {
-                Task task = tasks.nextElement();
-                if (task.isRunning()) task.stop();
+            ConfirmDialog dialog = new ConfirmDialog(this, ASK_CANCEL_ALL_TASKS_MSG, "是", "否");
+            dialog.showDialog();
+            if (dialog.getResponse() == JOptionPane.YES_OPTION) {
+                Enumeration<Task> tasks = downloadListModel.elements();
+                while (tasks.hasMoreElements()) {
+                    Task task = tasks.nextElement();
+                    if (task.isRunning()) task.stop();
+                }
             }
         });
         // 删除全部任务
@@ -18338,14 +18288,10 @@ public class PlayerFrame extends JFrame {
         // 打开文件所在位置菜单项
         downloadLocateFileMenuItem.addActionListener(e -> {
             Task task = downloadList.getSelectedValue();
-            try {
-                File file = new File(task.getDest());
-                Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", file.exists() ? file.getAbsolutePath() :
-                        task.isMusic() ? new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath() :
-                                new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath()));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            File file = new File(task.getDest());
+            TerminateUtils.explorer(file.exists() ? file.getAbsolutePath() :
+                    task.isMusic() ? new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath() :
+                            new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
         });
         // 编辑歌曲信息菜单项
         downloadEditInfoMenuItem.addActionListener(e -> {
@@ -18375,20 +18321,19 @@ public class PlayerFrame extends JFrame {
         // 删除任务菜单项
         removeTaskMenuItem.addActionListener(e -> {
             List<Task> tasks = downloadList.getSelectedValuesList();
-            if (!tasks.isEmpty()) {
-                ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_SELECTED_TASKS_MSG, "是", "否", true, ASK_REMOVE_FILE_MSG);
-                dialog.showDialog();
-                if (dialog.getResponse() == JOptionPane.YES_OPTION) {
-                    downloadList.setModel(emptyListModel);
-                    for (Task task : tasks) {
-                        if (task.isRunning()) task.stop();
-                        downloadListModel.removeElement(task);
-                        if (dialog.isChecked()) new File(task.getDest()).delete();
-                    }
-                    downloadList.setModel(downloadListModel);
-                    new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
-                }
+            if (tasks.isEmpty()) return;
+            ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_SELECTED_TASKS_MSG, "是", "否", true, ASK_REMOVE_FILE_MSG);
+            dialog.showDialog();
+            if (dialog.getResponse() != JOptionPane.YES_OPTION) return;
+            downloadList.setModel(emptyListModel);
+            for (Task task : tasks) {
+                if (task.isRunning()) task.stop();
+                downloadListModel.removeElement(task);
+                if (!dialog.isChecked()) continue;
+                FileUtils.delete(task.getDest());
             }
+            downloadList.setModel(downloadListModel);
+            new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
         });
         // 字体
         downloadPlayMenuItem.setFont(globalFont);
@@ -18401,15 +18346,10 @@ public class PlayerFrame extends JFrame {
 
         downloadPopupMenu.add(downloadPlayMenuItem);
         downloadPopupMenu.add(downloadNextPlayMenuItem);
-//        downloadPopupMenu.addSeparator();
         downloadPopupMenu.add(downloadLocateFileMenuItem);
-//        downloadPopupMenu.addSeparator();
         downloadPopupMenu.add(downloadEditInfoMenuItem);
-//        downloadPopupMenu.addSeparator();
         downloadPopupMenu.add(cancelTaskMenuItem);
-//        downloadPopupMenu.addSeparator();
         downloadPopupMenu.add(restartTaskMenuItem);
-//        downloadPopupMenu.addSeparator();
         downloadPopupMenu.add(removeTaskMenuItem);
         downloadList.add(downloadPopupMenu);
         // 滚动条
@@ -18789,12 +18729,8 @@ public class PlayerFrame extends JFrame {
         playQueueLocateFileMenuItem.addActionListener(e -> {
             Object o = playQueue.getSelectedValue();
             if (o instanceof AudioFile) {
-                try {
-                    File file = ((AudioFile) o);
-                    Runtime.getRuntime().exec(String.format("explorer.exe /select,\"%s\"", file.exists() ? file.getAbsolutePath() : file.getParent()));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                File file = ((AudioFile) o);
+                TerminateUtils.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
             }
         });
         // 编辑歌曲信息菜单项
@@ -18882,11 +18818,7 @@ public class PlayerFrame extends JFrame {
                 String filePath = file.getAbsolutePath();
                 lrcPath = filePath.substring(0, filePath.lastIndexOf('.')) + ".lrc";
             }
-            try {
-                Runtime.getRuntime().exec(String.format("notepad \"%s\"", lrcPath));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            TerminateUtils.notepad(lrcPath);
         });
         // 查看歌词翻译文件
         browseLrcTransMenuItem.addActionListener(e -> {
@@ -18897,11 +18829,7 @@ public class PlayerFrame extends JFrame {
                 lrcPath = new File(SimplePath.CACHE_PATH + netMusicInfo.toLrcTransFileName()).getAbsolutePath();
                 FileUtils.writeStr(transStr, lrcPath, false);
             }
-            try {
-                Runtime.getRuntime().exec(String.format("notepad \"%s\"", lrcPath));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            TerminateUtils.notepad(lrcPath);
         });
         // 下载歌词文件
         downloadLrcMenuItem.addActionListener(e -> {

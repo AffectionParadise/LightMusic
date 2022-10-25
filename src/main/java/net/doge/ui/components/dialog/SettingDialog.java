@@ -5,6 +5,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Fonts;
+import net.doge.constants.GlobalExecutors;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
@@ -27,6 +28,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @Author yzx
@@ -88,6 +91,9 @@ public class SettingDialog extends JDialog {
     private JPanel maxSearchHistoryCountPanel = new JPanel();
     private JLabel maxSearchHistoryCountLabel = new JLabel("最大搜索历史数量：");
     private CustomTextField maxSearchHistoryCountTextField = new CustomTextField(10);
+    private JPanel maxConcurrentTaskCountPanel = new JPanel();
+    private JLabel maxConcurrentTaskCountLabel = new JLabel("同时下载的最大任务数：");
+    private CustomTextField maxConcurrentTaskCountTextField = new CustomTextField(10);
     private JPanel closeOptionPanel = new JPanel();
     private JLabel closeOptionLabel = new JLabel("关闭主界面时：");
     private JComboBox<String> closeOptionComboBox = new JComboBox();
@@ -253,7 +259,9 @@ public class SettingDialog extends JDialog {
         maxHistoryCountLabel.setFont(globalFont);
         maxHistoryCountTextField.setFont(globalFont);
         maxSearchHistoryCountLabel.setFont(globalFont);
+        maxConcurrentTaskCountLabel.setFont(globalFont);
         maxSearchHistoryCountTextField.setFont(globalFont);
+        maxConcurrentTaskCountTextField.setFont(globalFont);
         closeOptionLabel.setFont(globalFont);
         closeOptionComboBox.setFont(globalFont);
         fobLabel.setFont(globalFont);
@@ -275,6 +283,7 @@ public class SettingDialog extends JDialog {
         maxCacheSizePanel.setLayout(fl);
         maxHistoryCountPanel.setLayout(fl);
         maxSearchHistoryCountPanel.setLayout(fl);
+        maxConcurrentTaskCountPanel.setLayout(fl);
         closeOptionPanel.setLayout(fl);
         fobPanel.setLayout(fl);
         specStylePanel.setLayout(fl);
@@ -291,6 +300,7 @@ public class SettingDialog extends JDialog {
         maxCacheSizePanel.setBorder(b);
         maxHistoryCountPanel.setBorder(b);
         maxSearchHistoryCountPanel.setBorder(b);
+        maxConcurrentTaskCountPanel.setBorder(b);
         closeOptionPanel.setBorder(b);
         fobPanel.setBorder(b);
         specStylePanel.setBorder(b);
@@ -308,6 +318,7 @@ public class SettingDialog extends JDialog {
         maxCacheSizePanel.setOpaque(false);
         maxHistoryCountPanel.setOpaque(false);
         maxSearchHistoryCountPanel.setOpaque(false);
+        maxConcurrentTaskCountPanel.setOpaque(false);
         closeOptionPanel.setOpaque(false);
         fobPanel.setOpaque(false);
         specStylePanel.setOpaque(false);
@@ -321,6 +332,7 @@ public class SettingDialog extends JDialog {
         maxCacheSizeTextField.setOpaque(false);
         maxHistoryCountTextField.setOpaque(false);
         maxSearchHistoryCountTextField.setOpaque(false);
+        maxConcurrentTaskCountTextField.setOpaque(false);
         autoDownloadLrcCheckBox.setOpaque(false);
         videoOnlyCheckBox.setOpaque(false);
         closeOptionComboBox.setOpaque(false);
@@ -346,6 +358,7 @@ public class SettingDialog extends JDialog {
         maxCacheSizeLabel.setForeground(labelColor);
         maxHistoryCountLabel.setForeground(labelColor);
         maxSearchHistoryCountLabel.setForeground(labelColor);
+        maxConcurrentTaskCountLabel.setForeground(labelColor);
         closeOptionLabel.setForeground(labelColor);
         fobLabel.setForeground(labelColor);
         specStyleLabel.setForeground(labelColor);
@@ -372,6 +385,10 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountTextField.setCaretColor(foreColor);
         doc = new SafeDocument(0, 100);
         maxSearchHistoryCountTextField.setDocument(doc);
+        maxConcurrentTaskCountTextField.setForeground(foreColor);
+        maxConcurrentTaskCountTextField.setCaretColor(foreColor);
+        doc = new SafeDocument(1, 5);
+        maxConcurrentTaskCountTextField.setDocument(doc);
 
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
@@ -556,6 +573,9 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.add(maxSearchHistoryCountLabel);
         maxSearchHistoryCountPanel.add(maxSearchHistoryCountTextField);
 
+        maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountLabel);
+        maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountTextField);
+
         closeOptionComboBox.addItem("询问");
         closeOptionComboBox.addItem("隐藏到托盘");
         closeOptionComboBox.addItem("退出程序");
@@ -605,6 +625,7 @@ public class SettingDialog extends JDialog {
         centerPanel.add(maxCacheSizePanel);
         centerPanel.add(maxHistoryCountPanel);
         centerPanel.add(maxSearchHistoryCountPanel);
+        centerPanel.add(maxConcurrentTaskCountPanel);
         centerPanel.add(closeOptionPanel);
         centerPanel.add(fobPanel);
 //        centerPanel.add(ratePanel);
@@ -623,6 +644,7 @@ public class SettingDialog extends JDialog {
         maxCacheSizeTextField.setText(String.valueOf(f.maxCacheSize));
         maxHistoryCountTextField.setText(String.valueOf(f.maxHistoryCount));
         maxSearchHistoryCountTextField.setText(String.valueOf(f.maxSearchHistoryCount));
+        maxConcurrentTaskCountTextField.setText(String.valueOf(((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize()));
         closeOptionComboBox.setSelectedIndex(f.currCloseWindowOption);
         specStyleComboBox.setSelectedIndex(f.currSpecStyle);
         balanceComboBox.setSelectedIndex(Double.valueOf(f.currBalance).intValue() + 1);
@@ -655,12 +677,38 @@ public class SettingDialog extends JDialog {
         // 更改缓存图像路径并创建
         new File(SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + "img/").mkdirs();
 
-        f.maxCacheSize = Long.parseLong(maxCacheSizeTextField.getText());
-        f.maxHistoryCount = Integer.parseInt(maxHistoryCountTextField.getText());
+        String text = maxCacheSizeTextField.getText();
+        if (text.isEmpty()) {
+            new TipDialog(f, "最大缓存大小无效").showDialog();
+            return false;
+        }
+        f.maxCacheSize = Long.parseLong(text);
+
+        text = maxHistoryCountTextField.getText();
+        if (text.isEmpty()) {
+            new TipDialog(f, "最大播放历史数量无效").showDialog();
+            return false;
+        }
+        f.maxHistoryCount = Integer.parseInt(text);
+
+        text = maxSearchHistoryCountTextField.getText();
+        if (text.isEmpty()) {
+            new TipDialog(f, "最大搜索历史数量无效").showDialog();
+            return false;
+        }
+        f.maxSearchHistoryCount = Integer.parseInt(text);
+
+        text = maxConcurrentTaskCountTextField.getText();
+        if (text.isEmpty()) {
+            new TipDialog(f, "同时下载的最大任务数无效").showDialog();
+            return false;
+        }
+        GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(Integer.parseInt(text));
+
         // 删除多余的播放历史记录
         for (int i = f.maxHistoryCount, s = f.historyModel.size(); i < s; i++)
             f.historyModel.remove(f.maxHistoryCount);
-        f.maxSearchHistoryCount = Integer.parseInt(maxSearchHistoryCountTextField.getText());
+
         // 删除多余的搜索历史记录
         JPanel[] ps = new JPanel[]{f.netMusicHistorySearchInnerPanel2,
                 f.netPlaylistHistorySearchInnerPanel2,
@@ -674,6 +722,7 @@ public class SettingDialog extends JDialog {
                 p.remove(f.maxSearchHistoryCount);
                 p.repaint();
             }
+
         f.currCloseWindowOption = closeOptionComboBox.getSelectedIndex();
         f.forwardOrBackwardTime = Integer.parseInt(((String) fobComboBox.getSelectedItem()).replace(" 秒", ""));
 //        f.currRate = Double.parseDouble(((String) rateComboBox.getSelectedItem()).replace("x", ""));

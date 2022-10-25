@@ -2,18 +2,15 @@ package net.doge.utils;
 
 import cn.hutool.core.util.RuntimeUtil;
 import net.doge.constants.GlobalExecutors;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import java.io.*;
-import java.util.List;
 
 /**
  * @Author yzx
  * @Description cmd 工具类
  * @Date 2020/12/15
  */
-public class CmdUtils {
+public class TerminateUtils {
 //    private static String[] dirs = {"MiguMusicApi", "NeteaseCloudMusicApi", "QQMusicApi", "kuwoMusicApi"};
 //    private static String[] cmds = {"npm start", "npm start", "npm start", "npm run dev"};
 //
@@ -33,21 +30,55 @@ public class CmdUtils {
 //    }
 
     /**
-     * 执行命令
+     * 执行命令(同步)
      *
      * @param command
      * @return
      * @throws IOException
      * @throws InterruptedException
      */
-    public static int exec(String command) throws IOException, InterruptedException {
-        Process p = RuntimeUtil.exec(command);
-        // 获取外部程序标准输出流
-        GlobalExecutors.requestExecutor.execute(new OutputHandlerRunnable(p.getInputStream(), false));
-        // 获取外部程序标准错误流
-        GlobalExecutors.requestExecutor.execute(new OutputHandlerRunnable(p.getErrorStream(), true));
-        int code = p.waitFor();
-        return code;
+    public static int exec(String command) {
+        try {
+            Process p = RuntimeUtil.exec(command);
+            // 获取外部程序标准输出流
+            GlobalExecutors.requestExecutor.execute(new OutputHandlerRunnable(p.getInputStream(), false));
+            // 获取外部程序标准错误流
+            GlobalExecutors.requestExecutor.execute(new OutputHandlerRunnable(p.getErrorStream(), true));
+            int code = p.waitFor();
+            return code;
+        } catch (InterruptedException e) {
+            return -1;
+        }
+    }
+
+    /**
+     * 执行命令(异步)
+     *
+     * @param command
+     * @return
+     */
+    public static void asyncExec(String command) {
+        RuntimeUtil.exec(command);
+    }
+
+    /**
+     * 调用文件资源管理器
+     *
+     * @param
+     * @return
+     */
+    public static void explorer(String path) {
+        asyncExec(String.format("explorer /select, \"%s\"", path));
+    }
+
+    /**
+     * 调用记事本
+     *
+     * @param
+     * @return
+     */
+    public static void notepad(String path) {
+        asyncExec(String.format("notepad \"%s\"", path));
     }
 
     private static class OutputHandlerRunnable implements Runnable {

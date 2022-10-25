@@ -70,6 +70,24 @@ public class FileUtils {
     }
 
     /**
+     * 删除文件
+     *
+     * @param path 文件路径
+     */
+    public static void delete(String path) {
+        delete(new File(path));
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param f 文件
+     */
+    public static void delete(File f) {
+        f.delete();
+    }
+
+    /**
      * 删除文件夹
      *
      * @param dirPath 文件夹路径
@@ -169,15 +187,15 @@ public class FileUtils {
         if (size < 1024)
             return String.format("%s B", size);
         else if (size < 1024 * 1024)
-            return String.format("%.2f KB", (double) size / 1024);
+            return String.format("%.2f K", (double) size / 1024);
         else if (size < 1024 * 1024 * 1024)
-            return String.format("%.2f MB", (double) size / 1024 / 1024);
+            return String.format("%.2f M", (double) size / 1024 / 1024);
         else if (size < 1024L * 1024 * 1024 * 1024)
-            return String.format("%.2f GB", (double) size / 1024 / 1024 / 1024);
+            return String.format("%.2f G", (double) size / 1024 / 1024 / 1024);
         else if (size < 1024L * 1024 * 1024 * 1024 * 1024)
-            return String.format("%.2f TB", (double) size / 1024 / 1024 / 1024 / 1024);
+            return String.format("%.2f T", (double) size / 1024 / 1024 / 1024 / 1024);
         else
-            return String.format("%.2f PB", (double) size / 1024 / 1024 / 1024 / 1024 / 1024);
+            return String.format("%.2f P", (double) size / 1024 / 1024 / 1024 / 1024 / 1024);
     }
 
     /**
