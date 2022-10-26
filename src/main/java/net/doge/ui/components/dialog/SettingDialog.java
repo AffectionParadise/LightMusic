@@ -7,6 +7,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Fonts;
 import net.doge.constants.GlobalExecutors;
 import net.doge.constants.SimplePath;
+import net.doge.constants.SpectrumConstants;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomTextField;
@@ -598,12 +599,7 @@ public class SettingDialog extends JDialog {
 //        ratePanel.add(rateLabel);
 //        ratePanel.add(rateComboBox);
 
-        specStyleComboBox.addItem("平地式");
-        specStyleComboBox.addItem("悬空式");
-        specStyleComboBox.addItem("折线式");
-        specStyleComboBox.addItem("曲线式");
-        specStyleComboBox.addItem("山峰式");
-        specStyleComboBox.addItem("波浪式");
+        for (String name : SpectrumConstants.names) specStyleComboBox.addItem(name);
         specStylePanel.add(specStyleLabel);
         specStylePanel.add(specStyleComboBox);
 
@@ -671,11 +667,11 @@ public class SettingDialog extends JDialog {
 
         f.isAutoDownloadLrc = autoDownloadLrcCheckBox.isSelected();
         f.videoOnly = videoOnlyCheckBox.isSelected();
-        SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + "/";
-        SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + "/";
-        SimplePath.CACHE_PATH = cacheDir.getAbsolutePath() + "/";
+        SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
+        SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + File.separator;
+        SimplePath.CACHE_PATH = cacheDir.getAbsolutePath() + File.separator;
         // 更改缓存图像路径并创建
-        new File(SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + "img/").mkdirs();
+        new File(SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + File.separator + "img" + File.separator).mkdirs();
 
         String text = maxCacheSizeTextField.getText();
         if (text.isEmpty()) {

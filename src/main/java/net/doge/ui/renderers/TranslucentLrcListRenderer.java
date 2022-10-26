@@ -1,5 +1,9 @@
 package net.doge.ui.renderers;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import net.doge.constants.Fonts;
 import net.doge.models.Statement;
 import net.doge.ui.components.StringTwoColor;
@@ -42,16 +46,6 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
         normalLabelUI = new LabelUI(0.5f);
     }
 
-//    public void setBackgroundColor(Color backgroundColor) {
-//        // 背景色透明的方法
-//        this.backgroundColor = new Color(
-//                backgroundColor.getRed(),
-//                backgroundColor.getGreen(),
-//                backgroundColor.getBlue(),
-//                (int) (255 * 0.6));
-//    }
-
-
     public void setRow(int row) {
         this.ratio = 0;
         this.row = row;
@@ -77,7 +71,6 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
                 else stc.setRatio(ratio);
                 setIcon(stc.getImageIcon());
                 setText("");
-//                setBackground(backgroundColor);
             }
             // 其他行的样式
             else {
@@ -88,7 +81,6 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
         } else {
             for (int i = 0; i < rows.length; i++) {
                 if (index == rows[i]) {
-//                    setBackground(backgroundColor);
                     setFont(getFont().deriveFont((float) (getFont().getSize() + 8)));
                 }
             }

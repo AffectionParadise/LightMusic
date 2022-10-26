@@ -2321,6 +2321,8 @@ public class MusicServerUtils {
     // 歌词 API 获取 (酷我)
 //    private static final String LYRIC_KW_API = prefixKw + "/kuwo/lrc?musicId=%s";
     private static final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
+    // 弹幕 API 获取 (猫耳)
+    private static final String DM_ME_API = "https://www.missevan.com/sound/getdm?soundid=%s";
 
     // 歌单信息 API
     private static final String PLAYLIST_DETAIL_API = prefix + "/playlist/detail?id=%s";
@@ -2931,7 +2933,6 @@ public class MusicServerUtils {
     public static CommonResult<NetMusicInfo> searchMusic(int type, String subType, String keyword, int limit, int page) throws IOException {
         AtomicReference<Integer> total = new AtomicReference<>(0);
         List<NetMusicInfo> musicInfos = new LinkedList<>();
-//        Set<NetMusicInfo> set = new HashSet<>();
 
         // 先对关键词编码，避免特殊符号的干扰
         String encodedKeyword = StringUtils.encode(keyword);
@@ -3420,7 +3421,7 @@ public class MusicServerUtils {
                     JSONObject songJson = songsArray.getJSONObject(i);
 
                     String songId = songJson.getString("id");
-                    String name = songJson.getString("soundstr");
+                    String name = StringUtils.removeHTMLLabel(songJson.getString("soundstr"));
                     String artist = songJson.getString("username");
                     String artistId = songJson.getString("user_id");
                     Double duration = songJson.getDouble("duration") / 1000;
@@ -3770,7 +3771,10 @@ public class MusicServerUtils {
                     musicInfo.setUrl(url);
                     if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
                 }
-                musicInfo.setLrc("");
+            }));
+            // 填充歌词、翻译、罗马音
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
             }));
             // 猫耳的专辑需要单独请求专辑信息接口！
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
@@ -6271,7 +6275,7 @@ public class MusicServerUtils {
                     content = commentJson.getString("content");
 
                     commentInfo = new NetCommentInfo();
-                    commentInfo.setBeReplied(true);
+                    commentInfo.setSub(true);
                     commentInfo.setUserId(userId);
                     commentInfo.setUsername(username);
                     commentInfo.setProfileUrl(profileUrl);
@@ -6379,7 +6383,7 @@ public class MusicServerUtils {
 
                         NetCommentInfo ci = new NetCommentInfo();
                         ci.setSource(NetMusicSource.QQ);
-                        ci.setBeReplied(true);
+                        ci.setSub(true);
                         ci.setUserId(uId);
                         ci.setUsername(StringUtils.isEmpty(uname) ? "null" : uname.substring(1));
                         ci.setContent(StringUtils.isEmpty(cnt) ? "该评论已被删除" : cnt);
@@ -6445,37 +6449,35 @@ public class MusicServerUtils {
 
                     // 被回复的评论
                     JSONObject reply = commentJson.optJSONObject("reply");
+                    if (reply == null) continue;
+                    username = StringUtils.decode(reply.getString("u_name"));
+                    profileUrl = reply.getString("u_pic");
+                    content = reply.getString("msg");
+                    time = TimeUtils.strToPhrase(reply.getString("time"));
+                    likedCount = reply.getInt("like_num");
 
-                    if (reply != null) {
-                        username = StringUtils.decode(reply.getString("u_name"));
-                        profileUrl = reply.getString("u_pic");
-                        content = reply.getString("msg");
-                        time = TimeUtils.strToPhrase(reply.getString("time"));
-                        likedCount = reply.getInt("like_num");
+                    NetCommentInfo rCommentInfo = new NetCommentInfo();
+                    rCommentInfo.setSource(NetMusicSource.KW);
+                    rCommentInfo.setSub(true);
+                    rCommentInfo.setUsername(username);
+                    rCommentInfo.setProfileUrl(profileUrl);
+                    rCommentInfo.setContent(content);
+                    rCommentInfo.setTime(time);
+                    rCommentInfo.setLikedCount(likedCount);
+                    String finalProfileUrl1 = profileUrl;
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = extractProfile(finalProfileUrl1);
+                        rCommentInfo.setProfile(profile);
+                    });
 
-                        NetCommentInfo rCommentInfo = new NetCommentInfo();
-                        rCommentInfo.setSource(NetMusicSource.KW);
-                        rCommentInfo.setBeReplied(true);
-                        rCommentInfo.setUsername(username);
-                        rCommentInfo.setProfileUrl(profileUrl);
-                        rCommentInfo.setContent(content);
-                        rCommentInfo.setTime(time);
-                        rCommentInfo.setLikedCount(likedCount);
-                        String finalProfileUrl1 = profileUrl;
-                        GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage profile = extractProfile(finalProfileUrl1);
-                            rCommentInfo.setProfile(profile);
-                        });
-
-                        commentInfos.add(rCommentInfo);
-                    }
+                    commentInfos.add(rCommentInfo);
                 }
             }
         }
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
-            JSONArray commentArray = null;
+            JSONArray commentArray;
             if (isRadio) {
                 String url = hotOnly ? GET_HOT_RADIO_COMMENTS_XM_API : GET_NEW_RADIO_COMMENTS_XM_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
@@ -6504,7 +6506,7 @@ public class MusicServerUtils {
                     String smallHeader = commentJson.getString("smallHeader");
                     String profileUrl = isRadio ? smallHeader : "http:" + smallHeader;
                     String content = commentJson.getString("content");
-                    String time = TimeUtils.msToPhrase(commentJson.getLong(isRadio ? "updatedAt" : "commentTime"));
+                    String time = TimeUtils.msToPhrase(commentJson.getLong(isRadio ? "createdAt" : "commentTime"));
                     Integer likedCount = commentJson.getInt("likes");
                     Integer score = commentJson.optInt("newAlbumScore", -1);
 
@@ -6518,12 +6520,48 @@ public class MusicServerUtils {
                     commentInfo.setLikedCount(likedCount);
                     commentInfo.setScore(score);
 
+                    String finalProfileUrl1 = profileUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage profile = extractProfile(profileUrl);
+                        BufferedImage profile = extractProfile(finalProfileUrl1);
                         commentInfo.setProfile(profile);
                     });
 
                     commentInfos.add(commentInfo);
+
+                    // 回复
+                    JSONArray replies = commentJson.optJSONArray("replies");
+                    if (replies == null) continue;
+                    for (int j = 0, s = replies.size(); j < s; j++) {
+                        JSONObject cj = replies.getJSONObject(j);
+
+                        userId = cj.getString("uid");
+                        username = cj.getString("nickname");
+                        smallHeader = cj.getString("smallHeader");
+                        profileUrl = isRadio ? smallHeader : "http:" + smallHeader;
+                        content = cj.getString("content");
+                        time = isRadio ? TimeUtils.msToPhrase(cj.getLong("createdAt")) : cj.getString("createAt");
+                        likedCount = cj.getInt("likes");
+                        score = cj.optInt("newAlbumScore", -1);
+
+                        NetCommentInfo ci = new NetCommentInfo();
+                        ci.setSource(NetMusicSource.XM);
+                        ci.setSub(true);
+                        ci.setUserId(userId);
+                        ci.setUsername(username);
+                        ci.setProfileUrl(profileUrl);
+                        ci.setContent(content);
+                        ci.setTime(time);
+                        ci.setLikedCount(likedCount);
+                        ci.setScore(score);
+
+                        String finalProfileUrl = profileUrl;
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage profile = extractProfile(finalProfileUrl);
+                            ci.setProfile(profile);
+                        });
+
+                        commentInfos.add(ci);
+                    }
                 }
             }
         }
@@ -6556,12 +6594,43 @@ public class MusicServerUtils {
                 commentInfo.setTime(time);
                 commentInfo.setLikedCount(likedCount);
 
+                String finalProfileUrl1 = profileUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage profile = extractProfile(profileUrl);
+                    BufferedImage profile = extractProfile(finalProfileUrl1);
                     commentInfo.setProfile(profile);
                 });
 
                 commentInfos.add(commentInfo);
+
+                JSONArray subComments = commentJson.getJSONArray("subcomments");
+                for (int j = 0, s = subComments.size(); j < s; j++) {
+                    JSONObject cj = subComments.getJSONObject(j);
+
+                    userId = cj.getString("userid");
+                    username = cj.getString("username");
+                    profileUrl = cj.getString("icon");
+                    content = cj.getString("comment_content");
+                    time = TimeUtils.strToPhrase(cj.getString("ctime"));
+                    likedCount = cj.getInt("like_num");
+
+                    NetCommentInfo ci = new NetCommentInfo();
+                    ci.setSource(NetMusicSource.ME);
+                    ci.setSub(true);
+                    ci.setUserId(userId);
+                    ci.setUsername(username);
+                    ci.setProfileUrl(profileUrl);
+                    ci.setContent(content);
+                    ci.setTime(time);
+                    ci.setLikedCount(likedCount);
+
+                    String finalProfileUrl = profileUrl;
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = extractProfile(finalProfileUrl);
+                        ci.setProfile(profile);
+                    });
+
+                    commentInfos.add(ci);
+                }
             }
         }
 
@@ -6577,7 +6646,7 @@ public class MusicServerUtils {
             for (int i = 0, len = commentArray.size(); i < len; i++) {
                 JSONObject commentJson = commentArray.getJSONObject(i);
 
-                String userId = commentJson.getString("appid");
+                String userId = commentJson.getString("third_id");
                 String username = commentJson.getString("uname");
                 String profileUrl = commentJson.getString("avatar");
                 String content = commentJson.getString("content");
@@ -6593,12 +6662,44 @@ public class MusicServerUtils {
                 commentInfo.setTime(time);
                 commentInfo.setLikedCount(likedCount);
 
+                String finalProfileUrl1 = profileUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage profile = extractProfile(profileUrl);
+                    BufferedImage profile = extractProfile(finalProfileUrl1);
                     commentInfo.setProfile(profile);
                 });
 
                 commentInfos.add(commentInfo);
+
+                // 回复
+                JSONArray replies = commentJson.getJSONArray("reply_list");
+                for (int j = 0, s = replies.size(); j < s; j++) {
+                    JSONObject cj = replies.getJSONObject(j);
+
+                    userId = cj.getString("third_id");
+                    username = cj.getString("uname");
+                    profileUrl = cj.getString("avatar");
+                    content = cj.getString("content");
+                    time = TimeUtils.msToPhrase(cj.getLong("create_time") * 1000);
+                    likedCount = cj.getInt("like_count");
+
+                    NetCommentInfo ci = new NetCommentInfo();
+                    ci.setSource(NetMusicSource.HK);
+                    ci.setSub(true);
+                    ci.setUserId(userId);
+                    ci.setUsername(username);
+                    ci.setProfileUrl(profileUrl);
+                    ci.setContent(content);
+                    ci.setTime(time);
+                    ci.setLikedCount(likedCount);
+
+                    String finalProfileUrl = profileUrl;
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = extractProfile(finalProfileUrl);
+                        ci.setProfile(profile);
+                    });
+
+                    commentInfos.add(ci);
+                }
             }
         }
 
@@ -6726,12 +6827,46 @@ public class MusicServerUtils {
                 commentInfo.setTime(time);
                 commentInfo.setLikedCount(likedCount);
 
+                String finalProfileUrl1 = profileUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage profile = extractProfile(profileUrl);
+                    BufferedImage profile = extractProfile(finalProfileUrl1);
                     commentInfo.setProfile(profile);
                 });
 
                 commentInfos.add(commentInfo);
+
+                // 回复
+                JSONArray replies = commentJson.optJSONArray("replies");
+                if (replies == null) continue;
+                for (int j = 0, s = replies.size(); j < s; j++) {
+                    JSONObject cj = replies.getJSONObject(j);
+                    JSONObject mem = cj.getJSONObject("member");
+
+                    userId = cj.getString("mid");
+                    username = mem.getString("uname");
+                    profileUrl = mem.getString("avatar");
+                    content = cj.getJSONObject("content").getString("message");
+                    time = TimeUtils.msToPhrase(cj.getLong("ctime") * 1000);
+                    likedCount = cj.getInt("like");
+
+                    NetCommentInfo ci = new NetCommentInfo();
+                    ci.setSource(NetMusicSource.BI);
+                    ci.setSub(true);
+                    ci.setUserId(userId);
+                    ci.setUsername(username);
+                    ci.setProfileUrl(profileUrl);
+                    ci.setContent(content);
+                    ci.setTime(time);
+                    ci.setLikedCount(likedCount);
+
+                    String finalProfileUrl = profileUrl;
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = extractProfile(finalProfileUrl);
+                        ci.setProfile(profile);
+                    });
+
+                    commentInfos.add(ci);
+                }
             }
         }
 
@@ -13887,24 +14022,53 @@ public class MusicServerUtils {
                     userInfo.setRadioCount(dramas.getJSONObject("pagination").getInt("count"));
                 GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(cv.getString("icon"))));
             } else {
-                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, uid))
-                        .execute()
-                        .body();
-                Document doc = Jsoup.parse(userInfoBody);
+                Runnable getProgramCount = () -> {
+                    // 用户节目数
+                    if (!userInfo.hasProgramCount()) {
+                        GlobalExecutors.requestExecutor.submit(() -> {
+                            String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, uid, 1, 1))
+                                    .execute()
+                                    .body();
+                            Integer programCount = JSONObject.fromObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getInt("count");
+                            userInfo.setProgramCount(programCount);
+                        });
+                    }
+                };
+                Runnable fillUserInfo = () -> {
+                    String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, uid))
+                            .execute()
+                            .body();
+                    Document doc = Jsoup.parse(userInfoBody);
 
-                if (!userInfo.hasLevel())
-                    userInfo.setLevel(Integer.parseInt(doc.select("span.level").first().text().replace("LV", "")));
-                if (!userInfo.hasGender()) userInfo.setGender("保密");
-                if (!userInfo.hasSign())
-                    userInfo.setSign(doc.select("#t_u_n_a").first().text());
-                if (!userInfo.hasFollow())
-                    userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
-                if (!userInfo.hasFollowed())
-                    userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
-                GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-                String bgUrl = ReUtil.get("style=\"background-image:url\\((.*?)\\)\"", userInfoBody, 1);
-                GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(
-                        (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl)));
+                    if (!userInfo.hasLevel())
+                        userInfo.setLevel(Integer.parseInt(doc.select("span.level").first().text().replace("LV", "")));
+                    if (!userInfo.hasGender()) userInfo.setGender("保密");
+                    if (!userInfo.hasSign())
+                        userInfo.setSign(doc.select("#t_u_n_a").first().text());
+                    if (!userInfo.hasFollow())
+                        userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
+                    if (!userInfo.hasFollowed())
+                        userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
+                    GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+                    String bgUrl = ReUtil.get("style=\"background-image:url\\((.*?)\\)\"", userInfoBody, 1);
+                    GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(
+                            (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl)));
+                };
+
+                List<Future<?>> taskList = new LinkedList<>();
+
+                taskList.add(GlobalExecutors.requestExecutor.submit(fillUserInfo));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getProgramCount));
+
+                taskList.forEach(task -> {
+                    try {
+                        task.get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
 
@@ -18063,33 +18227,61 @@ public class MusicServerUtils {
 
             // 猫耳
             else if (source == NetMusicSource.ME) {
-                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, id))
-                        .execute()
-                        .body();
-                Document doc = Jsoup.parse(userInfoBody);
-
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.ME);
-                userInfo.setId(id);
-                Element tun = doc.getElementById("t_u_n");
-                // 判断账号是否已注销
-                if (tun != null) {
-                    userInfo.setName(tun.getElementsByTag("a").first().text());
-                    String avaUrl = "https:" + doc.getElementById("topusermainicon").getElementsByTag("img").first().attr("src");
-                    userInfo.setAvatarThumbUrl(avaUrl);
-                    userInfo.setAvatarUrl(avaUrl);
-                    userInfo.setGender("保密");
-                    userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
-                    userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
 
-                    String finalAvatarThumbUrl = avaUrl;
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
-                        userInfo.setAvatarThumb(avatarThumb);
+                Runnable getProgramCount = () -> {
+                    // 用户节目数
+                    GlobalExecutors.requestExecutor.submit(() -> {
+                        String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, id, 1, 1))
+                                .execute()
+                                .body();
+                        Integer programCount = JSONObject.fromObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getInt("count");
+                        userInfo.setProgramCount(programCount);
                     });
+                };
+                Runnable fillUserInfo = () -> {
+                    String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, id))
+                            .execute()
+                            .body();
+                    Document doc = Jsoup.parse(userInfoBody);
 
-                    res.add(userInfo);
-                }
+                    userInfo.setSource(NetMusicSource.ME);
+                    userInfo.setId(id);
+                    Element tun = doc.getElementById("t_u_n");
+                    // 判断账号是否已注销
+                    if (tun != null) {
+                        userInfo.setName(tun.getElementsByTag("a").first().text());
+                        String avaUrl = "https:" + doc.getElementById("topusermainicon").getElementsByTag("img").first().attr("src");
+                        userInfo.setAvatarThumbUrl(avaUrl);
+                        userInfo.setAvatarUrl(avaUrl);
+                        userInfo.setGender("保密");
+                        userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
+                        userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
+
+                        String finalAvatarThumbUrl = avaUrl;
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                            userInfo.setAvatarThumb(avatarThumb);
+                        });
+
+                        res.add(userInfo);
+                    }
+                };
+
+                List<Future<?>> taskList = new LinkedList<>();
+
+                taskList.add(GlobalExecutors.requestExecutor.submit(fillUserInfo));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getProgramCount));
+
+                taskList.forEach(task -> {
+                    try {
+                        task.get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
 
             // 好看
@@ -19077,6 +19269,28 @@ public class MusicServerUtils {
             JSONObject urlJson = JSONObject.fromObject(playUrlBody);
             String lrcUrl = urlJson.getJSONObject("data").getString("lyric");
             netMusicInfo.setLrc(StringUtils.isNotEmpty(lrcUrl) ? HttpRequest.get(lrcUrl).execute().body() : "");
+            netMusicInfo.setTrans("");
+            netMusicInfo.setRoma("");
+        }
+
+        // 猫耳(弹幕)
+        else if (source == NetMusicSource.ME) {
+            String dmBody = HttpRequest.get(String.format(DM_ME_API, id))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(dmBody);
+            Elements elements = doc.select("d");
+            // 限制弹幕数量，避免引发性能问题
+            final int dmLimit = 300;
+            List<Element> ds = elements.subList(0, Math.min(elements.size(), dmLimit));
+            StringBuffer sb = new StringBuffer();
+            for (Element d : ds) {
+                Double time = Double.parseDouble(d.attr("p").split(",", 2)[0]);
+                sb.append(TimeUtils.formatToLrcTime(time));
+                sb.append(d.text());
+                sb.append("\n");
+            }
+            netMusicInfo.setLrc(sb.toString());
             netMusicInfo.setTrans("");
             netMusicInfo.setRoma("");
         } else {

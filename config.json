@@ -37,27 +37,25 @@
 			"djId":"48536908"
 		},
 		{
-			"coverImgUrl":"",
-			"playCount":55981,
+			"playCount":55990,
 			"trackCount":69,
 			"dj":"时间代码",
 			"name":"随身听英语-BBC",
 			"source":0,
 			"id":"791886614",
 			"category":"知识、外语世界",
-			"coverImgThumbUrl":"http://p2.music.126.net/ZFDFxYiA0VBk6RWI48gtzw==/109951163594727703.jpg",
+			"coverImgThumbUrl":"http://p1.music.126.net/ZFDFxYiA0VBk6RWI48gtzw==/109951163594727703.jpg",
 			"djId":"285059948"
 		},
 		{
-			"coverImgUrl":"",
-			"playCount":441747,
+			"playCount":441760,
 			"trackCount":36,
 			"dj":"代码时间",
 			"name":"代码时间",
 			"source":0,
 			"id":"336355127",
 			"category":"知识、行业观察",
-			"coverImgThumbUrl":"http://p2.music.126.net/BBK9kY31geOOdnkaxiwCdw==/3442570909917251.jpg",
+			"coverImgThumbUrl":"http://p1.music.126.net/BBK9kY31geOOdnkaxiwCdw==/3442570909917251.jpg",
 			"djId":"289680033"
 		}
 	],
@@ -204,6 +202,22 @@
 	],
 	"musicDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/",
 	"tasks":[
+		{
+			"total":75467464,
+			"name":"从一画开天到万宗归一简介 - 从一画开天到万宗归一",
+			"finished":75467464,
+			"dest":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/从一画开天到万宗归一简介 - 从一画开天到万宗归一.mp3",
+			"type":0,
+			"url":"https://aod.cos.tx.xmcdn.com/storages/107a-audiofreehighqps/42/29/CMCoOSADQNImBH-KyABXHCxO.mp3",
+			"status":1,
+			"musicInfo":{
+				"artist":"从一画开天到万宗归一",
+				"format":"mp3",
+				"name":"从一画开天到万宗归一简介",
+				"source":5,
+				"id":"339237415"
+			}
+		},
 		{
 			"total":22024219,
 			"name":"英语口语 - Henry(下) - 真业余西",
@@ -478,6 +492,7 @@
 	"lyricType":0,
 	"chineseType":0,
 	"history":[
+		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\从一画开天到万宗归一简介 - 从一画开天到万宗归一.mp3",
 		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\英语口语 - Henry(下) - 真业余西.m4a",
 		{
 			"duration":247,
@@ -4034,19 +4049,6 @@
 			"source":7,
 			"id":"5948345",
 			"programId":""
-		},
-		{
-			"duration":326.77,
-			"albumName":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】异地男友煲电话粥，结果……",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6233543",
-			"programId":""
 		}
 	],
 	"collection":[
@@ -5134,7 +5136,7 @@
 	"miniX":1037,
 	"autoDownloadLyric":true,
 	"miniY":-9,
-	"musicPlaying":-1,
+	"musicPlaying":0,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
@@ -5920,6 +5922,7 @@
 		}
 	],
 	"playQueue":[
+		"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\从一画开天到万宗归一简介 - 从一画开天到万宗归一.mp3",
 		{
 			"duration":247,
 			"albumName":"Punching Bag",

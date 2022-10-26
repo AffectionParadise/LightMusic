@@ -48,6 +48,9 @@ public class Fonts {
     public static final Font EMOJI = new Font("Segoe UI Emoji", Font.PLAIN, FONT_SIZE);
     public static final Font EMOJI_BIG = new Font("Segoe UI Emoji", Font.PLAIN, BIG_SIZE);
     public static final Font EMOJI_HUGE = new Font("Segoe UI Emoji", Font.BOLD, HUGE_SIZE);
+//    public static final Font EMOJI = FontUtils.loadFont(SimplePath.FONT_PATH+"emoji.ttf", FONT_SIZE);
+//    public static final Font EMOJI_BIG = FontUtils.loadFont(SimplePath.FONT_PATH+"emoji.ttf", BIG_SIZE);
+//    public static final Font EMOJI_HUGE = FontUtils.loadFont(SimplePath.FONT_PATH+"emoji.ttf", HUGE_SIZE);
     // sans-serif
     public static final Font SANS_SERIF = new Font("sans-serif", Font.PLAIN, FONT_SIZE);
     public static final Font SANS_SERIF_BIG = new Font("sans-serif", Font.PLAIN, BIG_SIZE);

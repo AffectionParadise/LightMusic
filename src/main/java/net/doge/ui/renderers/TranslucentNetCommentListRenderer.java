@@ -67,16 +67,16 @@ public class TranslucentNetCommentListRenderer extends DefaultListCellRenderer {
         label.setDrawBg(isSelected || index == hoverIndex);
 
         NetCommentInfo netCommentInfo = (NetCommentInfo) value;
-        boolean beReplied = netCommentInfo.isBeReplied();
+        boolean sub = netCommentInfo.isSub();
         BufferedImage profile = netCommentInfo.getProfile();
 
         int lw = list.getVisibleRect().width - 10;
 
         // 使图标靠上
         label.setVerticalTextPosition(TOP);
-        label.setText(StringUtils.textToHtmlWithSpace(StringUtils.wrapLineByWidth(netCommentInfo.toString(), lw - (beReplied ? 235 : 160))));
+        label.setText(StringUtils.textToHtmlWithSpace(StringUtils.wrapLineByWidth(netCommentInfo.toString(), lw - (sub ? 235 : 160))));
         label.setIconTextGap(15);
-        label.setBorder(BorderFactory.createEmptyBorder(0, beReplied ? 120 : 45, 0, 0));
+        label.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
         label.setFont(customFont);
         label.setIcon(profile != null ? new ImageIcon(profile) : isSelected ? defaultProfileS : defaultProfile);
 

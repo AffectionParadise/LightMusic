@@ -332,7 +332,8 @@ public class StringUtils {
         for (int i = 0, len = text.length(); i < len; i++) {
             int codePoint = text.codePointAt(i);
             char[] chars = Character.toChars(codePoint);
-            if ((!withSpace || chars[0] != ' ') && cMap.containsKey(chars[0])) {
+            String str = new String(chars);
+            if ((withSpace || chars[0] != ' ') && cMap.containsKey(chars[0])) {
                 sb.append(cMap.get(chars[0]));
                 continue;
             }
@@ -341,8 +342,8 @@ public class StringUtils {
                     // 中文
                     if (j == 0) sb.append(chars[0]);
                     else
-                        sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES[j].getFontName(), new String(chars)));
-                    if (chars.length == 2) i++;
+                        sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES[j].getFontName(), str));
+                    i += chars.length - 1;
                     break;
                 }
             }
@@ -350,27 +351,6 @@ public class StringUtils {
         sb.append("</div></html>");
         return sb.toString();
     }
-
-//    /**
-//     * 将无法显示的字符通过 HTML 换种字体显示
-//     *
-//     * @param text
-//     * @return
-//     */
-//    public static String textToHtml(String text, boolean autoWrap) {
-//        if (text.startsWith("<html>") || text.trim().equals("")) return text;
-//        StringBuffer sb = new StringBuffer();
-//        sb.append("<html><div style=\"white-space:nowrap;\">");
-//        for (int i = 0, len = text.length(); i < len; i++) {
-//            char ch = text.charAt(i);
-//            // 韩语
-//            if (CharsetUtils.isKnChar(ch)) sb.append("<font face=\"Malgun Gothic\">" + ch + "</font>");
-//            else sb.append(ch);
-//            if (autoWrap && i > 0 && i % 50 == 0) sb.append("<br>");
-//        }
-//        sb.append("</div></html>");
-//        return sb.toString();
-//    }
 
     /**
      * 去掉字符串中所有 HTML 标签，并将转义后的符号还原
@@ -403,19 +383,22 @@ public class StringUtils {
         int sw = 0;
         JLabel label = new JLabel();
         for (int i = 0, len = text.length(); i < len; i++) {
-            char ch = text.charAt(i);
+            int codePoint = text.codePointAt(i);
+            char[] chars = Character.toChars(codePoint);
+            String str = new String(chars);
 
             for (int j = 0, l = Fonts.TYPES.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(ch)) {
-                    if (ch != '\n') {
-                        int tw = label.getFontMetrics(Fonts.TYPES[j]).stringWidth(ch + "");
+                if (Fonts.TYPES[j].canDisplay(codePoint)) {
+                    if (chars[0] != '\n') {
+                        int tw = label.getFontMetrics(Fonts.TYPES[j]).stringWidth(str);
                         sw += tw;
                         if (sw >= thresholdWidth) {
                             sb.append('\n');
                             sw = tw;
                         }
                     } else sw = 0;
-                    sb.append(ch);
+                    sb.append(str);
+                    i += chars.length - 1;
                     break;
                 }
             }
