@@ -3,6 +3,7 @@ package net.doge.models;
 import net.doge.constants.NetMusicSource;
 import lombok.Data;
 import net.doge.utils.StringUtils;
+import net.doge.utils.TimeUtils;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -37,8 +38,43 @@ public class NetArtistInfo {
     // MV 数量
     private Integer mvNum;
 
+    // 性别
+    private String gender;
+    // 生日
+    private String birthday;
+    // 职业
+    private String career;
+    // 血型
+    private String bloodType;
+    // 别名
+    private String alias;
+    // 社团
+    private String group;
+
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
+
+    public String getTag() {
+        boolean hasBirth = hasBirthday();
+        String[] s = null;
+        boolean isShort = false;
+        if (hasBirth) {
+            s = birthday.split("/");
+            isShort = s.length < 3;
+        }
+        return (hasGender() ? "性别：" + gender + "\n" : "")
+                + (hasBirth ? "生日：" + birthday + (isShort ? "" : TimeUtils.yearToAge(Integer.parseInt(s[0]))) + "\n"
+                + "星座：" + (isShort ? TimeUtils.getConstellation(Integer.parseInt(s[0]), Integer.parseInt(s[1]))
+                : TimeUtils.getConstellation(Integer.parseInt(s[1]), Integer.parseInt(s[2]))) + "\n" : "")
+                + (hasCareer() ? "职业：" + career + "\n" : "")
+                + (hasBloodType() ? "血型：" + bloodType + "\n" : "")
+                + (hasAlias() ? "别名：" + alias + "\n" : "")
+                + (hasGroup() ? "社团：" + group + "\n" : "");
+    }
+
+    public boolean fromME() {
+        return source == NetMusicSource.ME;
+    }
 
     public boolean hasCoverImg() {
         return coverImg != null;
@@ -58,6 +94,34 @@ public class NetArtistInfo {
 
     public boolean hasMvNum() {
         return mvNum != null && mvNum >= 0;
+    }
+
+    public boolean hasGender() {
+        return StringUtils.isNotEmpty(gender);
+    }
+
+    public boolean hasBirthday() {
+        return StringUtils.isNotEmpty(birthday);
+    }
+
+    public boolean hasCareer() {
+        return StringUtils.isNotEmpty(career);
+    }
+
+    public boolean hasBloodType() {
+        return StringUtils.isNotEmpty(bloodType);
+    }
+
+    public boolean hasAlias() {
+        return StringUtils.isNotEmpty(alias);
+    }
+
+    public boolean hasGroup() {
+        return StringUtils.isNotEmpty(group);
+    }
+
+    public boolean hasDescription() {
+        return StringUtils.isNotEmpty(description);
     }
 
     public void setCoverImgThumb(BufferedImage coverImgThumb) {

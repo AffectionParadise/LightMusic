@@ -1907,6 +1907,8 @@ public class PlayerFrame extends JFrame {
     private JLabel collectionItemCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
     // 歌单标签
     private JLabel playlistTagLabel = new JLabel("", SwingConstants.CENTER);
+    private JLabel artistTagLabel = new JLabel("", SwingConstants.CENTER);
+    private JLabel radioTagLabel = new JLabel("", SwingConstants.CENTER);
     private JLabel userTagLabel = new JLabel("", SwingConstants.CENTER);
     private JLabel recommendItemTagLabel = new JLabel("", SwingConstants.CENTER);
     private JLabel collectionItemTagLabel = new JLabel("", SwingConstants.CENTER);
@@ -3534,7 +3536,6 @@ public class PlayerFrame extends JFrame {
 
                 NetUserInfo netUserInfo = new NetUserInfo();
                 netUserInfo.setSource(jsonObject.optInt(ConfigConstants.NET_USER_SOURCE));
-                netUserInfo.setCV(jsonObject.optBoolean(ConfigConstants.NET_USER_IS_CV));
                 netUserInfo.setId(jsonObject.optString(ConfigConstants.NET_USER_ID));
                 netUserInfo.setName(jsonObject.optString(ConfigConstants.NET_USER_NAME));
                 netUserInfo.setGender(jsonObject.optString(ConfigConstants.NET_USER_GENDER));
@@ -3987,7 +3988,6 @@ public class PlayerFrame extends JFrame {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(ConfigConstants.NET_USER_SOURCE, netUserInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_USER_IS_CV, netUserInfo.isCV());
             jsonObject.put(ConfigConstants.NET_USER_ID, netUserInfo.getId());
             jsonObject.put(ConfigConstants.NET_USER_NAME, netUserInfo.getName());
             jsonObject.put(ConfigConstants.NET_USER_GENDER, netUserInfo.getGender());
@@ -5457,14 +5457,16 @@ public class PlayerFrame extends JFrame {
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         collectionItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
-                        collectionItemTagLabel.setText("");
-                        collectionItemTagLabel.setVisible(false);
+                        collectionItemTagLabel.setText(LOADING_MSG);
+                        collectionItemTagLabel.setVisible(true);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtils.fillArtistInfo(artistInfo);
                                 collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
+                                if (artistInfo.getTag() != null)
+                                    collectionItemTagLabel.setText(StringUtils.textToHtml("".equals(artistInfo.getTag()) ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
                                     collectionItemDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
@@ -5481,6 +5483,7 @@ public class PlayerFrame extends JFrame {
                                 }
                             } catch (IOException | HttpException e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
+                                collectionItemTagLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
                             }
                         });
@@ -5551,14 +5554,16 @@ public class PlayerFrame extends JFrame {
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         collectionItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
-                        collectionItemTagLabel.setText("");
-                        collectionItemTagLabel.setVisible(false);
+                        collectionItemTagLabel.setText(LOADING_MSG);
+                        collectionItemTagLabel.setVisible(true);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtils.fillRadioInfo(radioInfo);
                                 collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
+                                if (radioInfo.getTag() != null)
+                                    collectionItemTagLabel.setText(StringUtils.textToHtml("".equals(radioInfo.getTag()) ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
                                     collectionItemDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
@@ -5575,6 +5580,7 @@ public class PlayerFrame extends JFrame {
                                 }
                             } catch (IOException | HttpException e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
+                                collectionItemTagLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
                             }
                         });
@@ -5786,7 +5792,7 @@ public class PlayerFrame extends JFrame {
                             // 网易云/猫耳用户才显示下拉框
                             if (userInfo.fromNetCloud())
                                 collectionRecordTypeComboBox.setModel(collectionRecordTypeComboBoxModel);
-                            else if (userInfo.fromME() && !userInfo.isCV())
+                            else if (userInfo.fromME())
                                 collectionRecordTypeComboBox.setModel(collectionOrderComboBoxModel);
 
                             CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
@@ -5808,7 +5814,7 @@ public class PlayerFrame extends JFrame {
                             collectionLeftBox.add(musicCollectionToolBar, 0);
                             SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
                             collectionRecordTypeComboBox.setUI(ui);
-                            collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() && !userInfo.isCV());
+                            collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME());
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForUserCollectionModel.clear();
@@ -8227,7 +8233,9 @@ public class PlayerFrame extends JFrame {
         playlistTagLabel.setFont(globalFont);
         playlistDescriptionLabel.setFont(globalFont);
         albumDescriptionLabel.setFont(globalFont);
+        artistTagLabel.setFont(globalFont);
         artistDescriptionLabel.setFont(globalFont);
+        radioTagLabel.setFont(globalFont);
         radioDescriptionLabel.setFont(globalFont);
         rankingDescriptionLabel.setFont(globalFont);
         userTagLabel.setFont(globalFont);
@@ -8240,8 +8248,10 @@ public class PlayerFrame extends JFrame {
         // 描述标签垂直对齐方式
         playlistTagLabel.setVerticalAlignment(SwingConstants.TOP);
         playlistDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
+        artistTagLabel.setVerticalAlignment(SwingConstants.TOP);
         albumDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         artistDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
+        radioTagLabel.setVerticalAlignment(SwingConstants.TOP);
         radioDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         rankingDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         userTagLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -8288,6 +8298,8 @@ public class PlayerFrame extends JFrame {
         // 边框间距
         Border eb = BorderFactory.createEmptyBorder(15, 0, 0, 0);
         playlistTagLabel.setBorder(eb);
+        artistTagLabel.setBorder(eb);
+        radioTagLabel.setBorder(eb);
         userTagLabel.setBorder(eb);
         recommendItemTagLabel.setBorder(eb);
         collectionItemTagLabel.setBorder(eb);
@@ -8309,8 +8321,10 @@ public class PlayerFrame extends JFrame {
         albumCoverAndNameLabel.setMaximumSize(size);
         albumDescriptionLabel.setMaximumSize(size);
         artistCoverAndNameLabel.setMaximumSize(size);
+        artistTagLabel.setMaximumSize(size);
         artistDescriptionLabel.setMaximumSize(size);
         radioCoverAndNameLabel.setMaximumSize(size);
+        radioTagLabel.setMaximumSize(size);
         radioDescriptionLabel.setMaximumSize(size);
         rankingCoverAndNameLabel.setMaximumSize(size);
         rankingDescriptionLabel.setMaximumSize(size);
@@ -8402,8 +8416,10 @@ public class PlayerFrame extends JFrame {
         albumDescriptionPanel.add(albumCoverAndNameLabel);
         albumDescriptionPanel.add(albumDescriptionLabel);
         artistDescriptionPanel.add(artistCoverAndNameLabel);
+        artistDescriptionPanel.add(artistTagLabel);
         artistDescriptionPanel.add(artistDescriptionLabel);
         radioDescriptionPanel.add(radioCoverAndNameLabel);
+        radioDescriptionPanel.add(radioTagLabel);
         radioDescriptionPanel.add(radioDescriptionLabel);
         rankingDescriptionPanel.add(rankingCoverAndNameLabel);
         rankingDescriptionPanel.add(rankingDescriptionLabel);
@@ -8481,6 +8497,8 @@ public class PlayerFrame extends JFrame {
             int si = tabbedPane.getSelectedIndex();
             if (si == TabIndex.PERSONAL) l = collectionItemTagLabel;
             else if (si == TabIndex.NET_PLAYLIST) l = playlistTagLabel;
+            else if (si == TabIndex.NET_ARTIST) l = artistTagLabel;
+            else if (si == TabIndex.NET_RADIO) l = radioTagLabel;
             else if (si == TabIndex.NET_USER) l = userTagLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemTagLabel;
             if (l == null || l.getText().isEmpty()) return;
@@ -9652,6 +9670,7 @@ public class PlayerFrame extends JFrame {
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
                         netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
+                        netAlbumCountPanel.add(netAlbumCountLabel, 1);
                         netAlbumCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netAlbumList.setModel(emptyListModel);
@@ -10446,7 +10465,8 @@ public class PlayerFrame extends JFrame {
                         && currArtistMusicInfo == null
                         && currBuddyArtistInfo == null
                         && currArtistMvInfo == null
-                        && currArtistRadioInfo == null) {
+                        && currArtistRadioInfo == null
+                        && currCVRadioInfo == null) {
                     // 删除标题标签
                     netArtistToolBar.add(netArtistSearchTextField);
                     netArtistToolBar.add(netArtistClearInputButton);
@@ -10543,6 +10563,7 @@ public class PlayerFrame extends JFrame {
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
                         netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
+                        netArtistCountPanel.add(netArtistCountLabel, 1);
                         netArtistCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netArtistList.setModel(emptyListModel);
@@ -10590,14 +10611,16 @@ public class PlayerFrame extends JFrame {
         // 搜索歌手跳页事件
         Runnable searchArtistGoPageAction = () -> {
             boolean songRequest = currArtistMusicInfo != null, artistRequest = currArtistArtistInfo != null,
-                    buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null;
-            if (artistRequest || buddyRequest || radioRequest || !songRequest && !mvRequest && !netArtistCurrKeyword.equals("")) {
+                    buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null,
+                    radioCVRequest = currCVRadioInfo != null;
+            if (artistRequest || buddyRequest || radioRequest || radioCVRequest || !songRequest && !mvRequest && !netArtistCurrKeyword.equals("")) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
                         CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtils.getSimilarArtists(currArtistArtistInfo)
                                 : buddyRequest ? MusicServerUtils.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage)
                                 : radioRequest ? MusicServerUtils.getRadioArtists(currArtistRadioInfo)
+                                : radioCVRequest ? MusicServerUtils.getRadioArtists(currCVRadioInfo)
                                 : MusicServerUtils.searchArtists(netArtistCurrKeyword, limit, netArtistCurrPage);
                         List<NetArtistInfo> netArtistInfos = result.data;
                         Integer total = result.total;
@@ -10895,11 +10918,14 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     artistCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
                     artistCoverAndNameLabel.setText(LOADING_MSG);
+                    artistTagLabel.setText(LOADING_MSG);
                     artistDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtils.fillArtistInfo(artistInfo);
                             artistCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
+                            if (artistInfo.getTag() != null)
+                                artistTagLabel.setText(StringUtils.textToHtml("".equals(artistInfo.getTag()) ? "" : artistInfo.getTag()));
                             if (artistInfo.getDescription() != null)
                                 artistDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
                             if (artistInfo.hasCoverImg()) {
@@ -10916,6 +10942,7 @@ public class PlayerFrame extends JFrame {
                             }
                         } catch (IOException | HttpException e) {
                             artistCoverAndNameLabel.setText(LOAD_FAILED);
+                            artistTagLabel.setText(LOAD_FAILED);
                             artistDescriptionLabel.setText(LOAD_FAILED);
                         }
                     });
@@ -11775,6 +11802,7 @@ public class PlayerFrame extends JFrame {
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
                         netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
+                        netRadioCountPanel.add(netRadioCountLabel, 1);
                         netRadioCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netRadioList.setModel(emptyListModel);
@@ -12125,11 +12153,14 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     radioCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
                     radioCoverAndNameLabel.setText(LOADING_MSG);
+                    radioTagLabel.setText(LOADING_MSG);
                     radioDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtils.fillRadioInfo(radioInfo);
                             radioCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
+                            if (radioInfo.getTag() != null)
+                                radioTagLabel.setText(StringUtils.textToHtml("".equals(radioInfo.getTag()) ? "" : "标签：" + radioInfo.getTag()));
                             if (radioInfo.getDescription() != null)
                                 radioDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
                             if (radioInfo.hasCoverImg()) {
@@ -12146,6 +12177,7 @@ public class PlayerFrame extends JFrame {
                             }
                         } catch (IOException | HttpException e) {
                             radioCoverAndNameLabel.setText(LOAD_FAILED);
+                            radioTagLabel.setText(LOAD_FAILED);
                             radioDescriptionLabel.setText(LOAD_FAILED);
                         }
                     });
@@ -12550,99 +12582,50 @@ public class PlayerFrame extends JFrame {
             else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
-                    if (netRadioInfo.fromME()) {
-                        clearRequestForUser();
-                        // 获取 CV
-                        CommonResult<NetUserInfo> result = MusicServerUtils.getRadioCVs(currCVRadioInfo = netRadioInfo);
-                        List<NetUserInfo> netUserInfos = result.data;
-                        Integer total = result.total;
-                        netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 标题
-                        netUserTitleLabel.setText(netRadioInfo.getName() + " 的 CV");
-                        netUserToolBar.removeAll();
-                        netUserToolBar.add(netUserBackwardButton);
-                        netUserToolBar.add(Box.createHorizontalGlue());
-                        netUserToolBar.add(netUserTitleLabel);
-                        netUserToolBar.add(Box.createHorizontalGlue());
-                        // 更新数量显示
-                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
-                        netUserCountPanel.add(netUserCountLabel, 2);
-                        netUserLeftBox.add(netUserCountPanel);
-                        netUserPlayAllButton.setVisible(false);
-                        netUserRecordTypeComboBox.setVisible(false);
-                        netUserCountPanel.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netUserList.setModel(emptyListModel);
-                        netUserListModel.clear();
-                        netUserInfos.forEach(userInfo -> {
-                            globalExecutor.submit(() -> updateCollection(userInfo));
-                            // 设置图片加载后重绘的事件
-                            userInfo.setInvokeLater(() -> {
-                                updateRenderer(netUserList);
-                                updateRenderer(collectionList);
-                                netUserList.repaint();
-                                collectionList.repaint();
-                            });
-                            netUserListModel.addElement(userInfo);
+                    clearRequestForArtist();
+                    // 搜索演职员
+                    CommonResult<NetArtistInfo> result = MusicServerUtils.getRadioArtists(currArtistRadioInfo = netRadioInfo);
+                    List<NetArtistInfo> netArtistInfos = result.data;
+                    netArtistCurrPage = netArtistMaxPage = 1;
+                    // 标题
+                    netArtistTitleLabel.setText(netRadioInfo.getName() + " 的演职员");
+                    netArtistToolBar.removeAll();
+                    netArtistToolBar.add(netArtistBackwardButton);
+                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(netArtistTitleLabel);
+                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    // 更新数量显示
+                    netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
+                    netArtistCountPanel.add(netArtistCountLabel, 1);
+                    netArtistLeftBox.add(netArtistCountPanel);
+                    netArtistPlayAllButton.setVisible(false);
+                    netArtistCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netArtistList.setModel(emptyListModel);
+                    netArtistListModel.clear();
+                    netArtistInfos.forEach(artistInfo -> {
+                        globalExecutor.submit(() -> updateCollection(artistInfo));
+                        // 设置图片加载后重绘的事件
+                        artistInfo.setInvokeLater(() -> {
+                            updateRenderer(netArtistList);
+                            updateRenderer(collectionList);
+                            netArtistList.repaint();
+                            collectionList.repaint();
                         });
-                        netUserList.setModel(netUserListModel);
-                        netUserBackwardButton.setEnabled(true);
-                        netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
-                        if (netUserListModel.isEmpty()) {
-                            netUserLeftBox.remove(netUserScrollPane);
-                            netUserLeftBox.add(emptyHintPanel);
-                        } else {
-                            netUserLeftBox.remove(emptyHintPanel);
-                            netUserLeftBox.add(netUserScrollPane);
-                        }
-                        netUserScrollPane.getVerticalScrollBar().setValue(0);
-                        tabbedPane.setSelectedIndex(TabIndex.NET_USER);
+                        netArtistListModel.addElement(artistInfo);
+                    });
+                    netArtistList.setModel(netArtistListModel);
+                    netArtistBackwardButton.setEnabled(true);
+                    netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
+                    if (netArtistListModel.isEmpty()) {
+                        netArtistLeftBox.remove(netArtistScrollPane);
+                        netArtistLeftBox.add(emptyHintPanel);
                     } else {
-                        clearRequestForArtist();
-                        // 搜索演职员
-                        CommonResult<NetArtistInfo> result = MusicServerUtils.getRadioArtists(currArtistRadioInfo = netRadioInfo);
-                        List<NetArtistInfo> netArtistInfos = result.data;
-                        netArtistCurrPage = netArtistMaxPage = 1;
-                        // 标题
-                        netArtistTitleLabel.setText(netRadioInfo.getName() + " 的演职员");
-                        netArtistToolBar.removeAll();
-                        netArtistToolBar.add(netArtistBackwardButton);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
-                        netArtistToolBar.add(netArtistTitleLabel);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
-                        // 更新数量显示
-                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
-                        netArtistCountPanel.add(netArtistCountLabel, 1);
-                        netArtistLeftBox.add(netArtistCountPanel);
-                        netArtistPlayAllButton.setVisible(false);
-                        netArtistCountPanel.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netArtistList.setModel(emptyListModel);
-                        netArtistListModel.clear();
-                        netArtistInfos.forEach(artistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(artistInfo));
-                            // 设置图片加载后重绘的事件
-                            artistInfo.setInvokeLater(() -> {
-                                updateRenderer(netArtistList);
-                                updateRenderer(collectionList);
-                                netArtistList.repaint();
-                                collectionList.repaint();
-                            });
-                            netArtistListModel.addElement(artistInfo);
-                        });
-                        netArtistList.setModel(netArtistListModel);
-                        netArtistBackwardButton.setEnabled(true);
-                        netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
-                        if (netArtistListModel.isEmpty()) {
-                            netArtistLeftBox.remove(netArtistScrollPane);
-                            netArtistLeftBox.add(emptyHintPanel);
-                        } else {
-                            netArtistLeftBox.remove(emptyHintPanel);
-                            netArtistLeftBox.add(netArtistScrollPane);
-                        }
-                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
-                        tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
+                        netArtistLeftBox.remove(emptyHintPanel);
+                        netArtistLeftBox.add(netArtistScrollPane);
                     }
+                    netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                    tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
                     new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -14183,7 +14166,7 @@ public class PlayerFrame extends JFrame {
                 if (currFollowUserUserInfo == null && currFollowedUserUserInfo == null
                         && currUserPlaylistInfo == null && currUserMvInfo == null && currUserRadioInfo == null
                         && currUserCommentInfo == null && currSubscriberPlaylistInfo == null
-                        && currSubscriberRadioInfo == null && currUserArtistInfo == null && currCVRadioInfo == null) {
+                        && currSubscriberRadioInfo == null && currUserArtistInfo == null) {
                     // 删除标题标签
                     netUserToolBar.add(netUserSearchTextField);
                     netUserToolBar.add(netUserClearInputButton);
@@ -14280,6 +14263,7 @@ public class PlayerFrame extends JFrame {
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
+                        netUserCountPanel.add(netUserCountLabel, 2);
                         netUserCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netUserList.setModel(emptyListModel);
@@ -14329,8 +14313,8 @@ public class PlayerFrame extends JFrame {
                     playlistRequest = currUserPlaylistInfo != null, mvRequest = currUserMvInfo != null, radioRequest = currUserRadioInfo != null,
                     commentRequest = currUserCommentInfo != null, playlistSubRequest = currSubscriberPlaylistInfo != null,
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
-                    songRequest = currAuthorMusicInfo != null, radioCVRequest = currCVRadioInfo != null;
-            if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest || radioCVRequest ||
+                    songRequest = currAuthorMusicInfo != null;
+            if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
                     !playlistRequest && !mvRequest && !radioRequest && !commentRequest && !songRequest && !netUserCurrKeyword.equals("")) {
                 loadingAndRun(() -> {
                     try {
@@ -14340,7 +14324,6 @@ public class PlayerFrame extends JFrame {
                                 : playlistSubRequest ? MusicServerUtils.getPlaylistSubscribers(currSubscriberPlaylistInfo, limit, netUserCurrPage)
                                 : radioSubRequest ? MusicServerUtils.getRadioSubscribers(currSubscriberRadioInfo, limit, netUserCurrPage)
                                 : artistRequest ? MusicServerUtils.getArtistFans(currUserArtistInfo, limit, netUserCurrPage)
-                                : radioCVRequest ? MusicServerUtils.getRadioCVs(currCVRadioInfo)
                                 : MusicServerUtils.searchUsers(netUserCurrKeyword, limit, netUserCurrPage);
                         List<NetUserInfo> netUserInfos = result.data;
                         Integer total = result.total;
@@ -14702,7 +14685,7 @@ public class PlayerFrame extends JFrame {
                     try {
                         // 网易云/猫耳用户才显示下拉框
                         if (userInfo.fromNetCloud()) netUserRecordTypeComboBox.setModel(recordTypeComboBoxModel);
-                        else if (userInfo.fromME() && !userInfo.isCV())
+                        else if (userInfo.fromME())
                             netUserRecordTypeComboBox.setModel(orderComboBoxModel);
 
                         // 得到用户的音乐信息
@@ -14711,7 +14694,7 @@ public class PlayerFrame extends JFrame {
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() && !userInfo.isCV());
+                        netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME());
                         // 更新用户歌曲数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netMusicInUserCurrPage, netMusicInUserMaxPage));
                         userListCountBox.add(netUserCountPanel);
@@ -17807,13 +17790,15 @@ public class PlayerFrame extends JFrame {
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         recommendItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
-                        recommendItemTagLabel.setText("");
-                        recommendItemTagLabel.setVisible(false);
+                        recommendItemTagLabel.setText(LOADING_MSG);
+                        recommendItemTagLabel.setVisible(true);
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtils.fillArtistInfo(artistInfo);
                                 recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
+                                if (artistInfo.getTag() != null)
+                                    recommendItemTagLabel.setText(StringUtils.textToHtml("".equals(artistInfo.getTag()) ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
                                     recommendItemDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
@@ -17830,6 +17815,7 @@ public class PlayerFrame extends JFrame {
                                 }
                             } catch (IOException | HttpException e) {
                                 recommendItemCoverAndNameLabel.setText(LOAD_FAILED);
+                                recommendItemTagLabel.setText(LOAD_FAILED);
                                 recommendItemDescriptionLabel.setText(LOAD_FAILED);
                             }
                         });
@@ -17899,13 +17885,15 @@ public class PlayerFrame extends JFrame {
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         recommendItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
-                        recommendItemTagLabel.setText("");
-                        recommendItemTagLabel.setVisible(false);
+                        recommendItemTagLabel.setText(LOADING_MSG);
+                        recommendItemTagLabel.setVisible(true);
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtils.fillRadioInfo(radioInfo);
                                 recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
+                                if (radioInfo.getTag() != null)
+                                    recommendItemTagLabel.setText(StringUtils.textToHtml("".equals(radioInfo.getTag()) ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
                                     recommendItemDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
@@ -17922,6 +17910,7 @@ public class PlayerFrame extends JFrame {
                                 }
                             } catch (IOException | HttpException e) {
                                 recommendItemCoverAndNameLabel.setText(LOAD_FAILED);
+                                recommendItemTagLabel.setText(LOAD_FAILED);
                                 recommendItemDescriptionLabel.setText(LOAD_FAILED);
                             }
                         });
@@ -21712,27 +21701,29 @@ public class PlayerFrame extends JFrame {
         collectionItemDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         collectionItemDescriptionScrollPane.setBorder(null);
 
-        playlistCoverAndNameLabel.setForeground(style.getLabelColor());
-        albumCoverAndNameLabel.setForeground(style.getLabelColor());
-        artistCoverAndNameLabel.setForeground(style.getLabelColor());
-        radioCoverAndNameLabel.setForeground(style.getLabelColor());
-        rankingCoverAndNameLabel.setForeground(style.getLabelColor());
-        userCoverAndNameLabel.setForeground(style.getLabelColor());
-        recommendItemCoverAndNameLabel.setForeground(style.getLabelColor());
-        collectionItemCoverAndNameLabel.setForeground(style.getLabelColor());
+        playlistCoverAndNameLabel.setForeground(labelColor);
+        albumCoverAndNameLabel.setForeground(labelColor);
+        artistCoverAndNameLabel.setForeground(labelColor);
+        radioCoverAndNameLabel.setForeground(labelColor);
+        rankingCoverAndNameLabel.setForeground(labelColor);
+        userCoverAndNameLabel.setForeground(labelColor);
+        recommendItemCoverAndNameLabel.setForeground(labelColor);
+        collectionItemCoverAndNameLabel.setForeground(labelColor);
 
-        playlistTagLabel.setForeground(style.getLabelColor());
-        playlistDescriptionLabel.setForeground(style.getLabelColor());
-        albumDescriptionLabel.setForeground(style.getLabelColor());
-        artistDescriptionLabel.setForeground(style.getLabelColor());
-        radioDescriptionLabel.setForeground(style.getLabelColor());
-        rankingDescriptionLabel.setForeground(style.getLabelColor());
-        userTagLabel.setForeground(style.getLabelColor());
-        userDescriptionLabel.setForeground(style.getLabelColor());
-        recommendItemTagLabel.setForeground(style.getLabelColor());
-        recommendItemDescriptionLabel.setForeground(style.getLabelColor());
-        collectionItemTagLabel.setForeground(style.getLabelColor());
-        collectionItemDescriptionLabel.setForeground(style.getLabelColor());
+        playlistTagLabel.setForeground(labelColor);
+        playlistDescriptionLabel.setForeground(labelColor);
+        albumDescriptionLabel.setForeground(labelColor);
+        artistTagLabel.setForeground(labelColor);
+        artistDescriptionLabel.setForeground(labelColor);
+        radioTagLabel.setForeground(labelColor);
+        radioDescriptionLabel.setForeground(labelColor);
+        rankingDescriptionLabel.setForeground(labelColor);
+        userTagLabel.setForeground(labelColor);
+        userDescriptionLabel.setForeground(labelColor);
+        recommendItemTagLabel.setForeground(labelColor);
+        recommendItemDescriptionLabel.setForeground(labelColor);
+        collectionItemTagLabel.setForeground(labelColor);
+        collectionItemDescriptionLabel.setForeground(labelColor);
 
         musicList.setOpaque(opaque);
         netMusicList.setOpaque(opaque);
@@ -22978,6 +22969,7 @@ public class PlayerFrame extends JFrame {
         currBuddyArtistInfo = null;
         currArtistMvInfo = null;
         currArtistRadioInfo = null;
+        currCVRadioInfo = null;
     }
 
     // 清除电台请求实例
@@ -23010,7 +23002,6 @@ public class PlayerFrame extends JFrame {
         currUserCommentInfo = null;
         currSubscriberPlaylistInfo = null;
         currSubscriberRadioInfo = null;
-        currCVRadioInfo = null;
     }
 
     // 退出播放器

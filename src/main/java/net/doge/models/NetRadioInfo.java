@@ -35,6 +35,8 @@ public class NetRadioInfo {
     private BufferedImage coverImgThumb;
     // 封面图片缩略图 url
     private String coverImgThumbUrl;
+    // 标签
+    private String tag;
     // 描述
     private String description;
     // 播放量
@@ -75,6 +77,10 @@ public class NetRadioInfo {
 
     public boolean hasName() {
         return StringUtils.isNotEmpty(name);
+    }
+
+    public boolean hasTag() {
+        return StringUtils.isNotEmpty(tag);
     }
 
     public boolean hasDescription() {
