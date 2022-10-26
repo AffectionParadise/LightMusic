@@ -59,7 +59,7 @@ public class NetArtistInfo {
         String[] s = null;
         boolean isShort = false;
         if (hasBirth) {
-            s = birthday.split("/");
+            s = birthday.split("-");
             isShort = s.length < 3;
         }
         return (hasGender() ? "性别：" + gender + "\n" : "")

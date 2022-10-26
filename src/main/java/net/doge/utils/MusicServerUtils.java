@@ -13497,7 +13497,7 @@ public class MusicServerUtils {
             if (!artistInfo.hasGroup()) artistInfo.setGroup(cv.getString("group"));
             if (!artistInfo.hasBirthday()) {
                 int year = cv.getInt("birthyear"), month = cv.getInt("birthmonth"), day = cv.getInt("birthday");
-                artistInfo.setBirthday(year <= 0 ? month <= 0 ? null : month + "-" + day : null);
+                artistInfo.setBirthday(year <= 0 ? month <= 0 ? null : month + "-" + day : year + "-" + month + "-" + day);
             }
             if (!artistInfo.hasDescription()) artistInfo.setDescription(cv.getString("profile"));
             if (!artistInfo.hasSongNum())
