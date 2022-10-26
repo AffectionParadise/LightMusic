@@ -2968,17 +2968,15 @@ public class PlayerFrame extends JFrame {
                     task = new Task(downloadList, type, netMusicInfo, null);
 
                     task.setInvokeLater(() -> {
-                        if (netMusicInfo.isMp3()) {
-                            try {
-                                String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleLrcFileName();
-                                // 写入歌曲信息
-                                MusicUtils.writeMP3Info(dest, netMusicInfo);
-                                // 自动下载歌词
-                                if (isAutoDownloadLrc && StringUtils.isNotEmpty(netMusicInfo.getLrc()))
-                                    FileUtils.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleLrcFileName();
+                            // 写入歌曲信息
+                            MusicUtils.writeMP3Info(dest, netMusicInfo);
+                            // 自动下载歌词
+                            if (isAutoDownloadLrc && StringUtils.isNotEmpty(netMusicInfo.getLrc()))
+                                FileUtils.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     });
                 } else if (type == TaskType.MV) {
@@ -3878,8 +3876,8 @@ public class PlayerFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_PLAYLIST_SOURCE, netPlaylistInfo.getSource());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_ID, netPlaylistInfo.getId());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_NAME, netPlaylistInfo.getName());
-                jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR, netPlaylistInfo.getCreator());
-                jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR_ID, netPlaylistInfo.getCreatorId());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR, netPlaylistInfo.getCreator());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR_ID, netPlaylistInfo.getCreatorId());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL, netPlaylistInfo.getCoverImgThumbUrl());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, netPlaylistInfo.getTrackCount());
             jsonObject.put(ConfigConstants.NET_PLAYLIST_PLAY_COUNT, netPlaylistInfo.getPlayCount());
@@ -18264,10 +18262,6 @@ public class PlayerFrame extends JFrame {
                             else restartTaskMenuItem.setEnabled(true);
                             if (cancelTaskMenuItem.isEnabled() && restartTaskMenuItem.isEnabled()) break;
                         }
-//                        cancelTaskMenuItem.setForeground(cancelTaskMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        restartTaskMenuItem.setForeground(restartTaskMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        downloadEditInfoMenuItem.setForeground(downloadEditInfoMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        SwingUtilities.updateComponentTreeUI(downloadPopupMenu);
                         downloadPopupMenu.show(downloadList, e.getX(), e.getY());
                     }
                 }
@@ -22339,16 +22333,14 @@ public class PlayerFrame extends JFrame {
         // 创建下载任务，并加入队列
         Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
         task.setInvokeLater(() -> {
-            if (musicInfo.isMp3()) {
-                // 写入歌曲信息
-                try {
-                    MusicUtils.writeMP3Info(destMusicPath, musicInfo);
-                    // 自动下载歌词
-                    if (isAutoDownloadLrc && StringUtils.isNotEmpty(musicInfo.getLrc()))
-                        FileUtils.writeStr(musicInfo.getLrc(), destLrcPath, false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            // 写入歌曲信息
+            try {
+                MusicUtils.writeMP3Info(destMusicPath, musicInfo);
+                // 自动下载歌词
+                if (isAutoDownloadLrc && StringUtils.isNotEmpty(musicInfo.getLrc()))
+                    FileUtils.writeStr(musicInfo.getLrc(), destLrcPath, false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
         task.start();
@@ -22368,16 +22360,14 @@ public class PlayerFrame extends JFrame {
                 // 创建下载任务，并加入队列
                 Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
                 task.setInvokeLater(() -> {
-                    if (musicInfo.isMp3()) {
-                        // 写入歌曲信息
-                        try {
-                            MusicUtils.writeMP3Info(destMusicPath, musicInfo);
-                            // 自动下载歌词
-                            if (isAutoDownloadLrc && StringUtils.isNotEmpty(musicInfo.getLrc()))
-                                FileUtils.writeStr(musicInfo.getLrc(), destLrcPath, false);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    // 写入歌曲信息
+                    try {
+                        MusicUtils.writeMP3Info(destMusicPath, musicInfo);
+                        // 自动下载歌词
+                        if (isAutoDownloadLrc && StringUtils.isNotEmpty(musicInfo.getLrc()))
+                            FileUtils.writeStr(musicInfo.getLrc(), destLrcPath, false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 });
                 task.start();

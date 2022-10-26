@@ -68,7 +68,7 @@ public class TimeUtils {
             // MM-dd 转为 yyyy-MM-dd
             if (index < 3) str = Calendar.getInstance().get(Calendar.YEAR) + "-" + str;
             // yyyy-MM-dd 或 yyyy-MM-dd HH:mm:ss 或 yyyy-MM-dd HH:mm
-            DateFormat fmt = null;
+            DateFormat fmt;
             if (!str.contains(" ")) fmt = dateFormatter;
             else if (str.split(":").length > 2) fmt = formatter;
             else fmt = dateShortTimeFormatter;

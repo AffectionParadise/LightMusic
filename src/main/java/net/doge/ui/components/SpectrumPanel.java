@@ -81,12 +81,12 @@ public class SpectrumPanel extends JFXPanel {
                     break;
                 case SpectrumConstants.LINE:
                     if (i + 1 >= barNum) return;
-                    g2d.drawLine(
-                            imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
-                            ph - sHeight,
-                            imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP),
-                            ph - (int) specs[i + 1]
-                    );
+                    int x1 = imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    int y1 = ph - sHeight;
+                    int x2 = imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    int y2 = ph - (int) specs[i + 1];
+                    if (y1 == ph && y2 == ph) continue;
+                    g2d.drawLine(x1, y1, x2, y2);
                     break;
                 case SpectrumConstants.CURVE:
                     if (i + 1 >= barNum) return;
@@ -95,6 +95,7 @@ public class SpectrumPanel extends JFXPanel {
                     int p2x = imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
                     int p2y = ph - (int) specs[i + 1];
                     int p3x = (p1x + p2x) / 2;
+                    if (p1y == ph && p2y == ph) continue;
                     GeneralPath path = new GeneralPath();
                     path.moveTo(p1x, p1y);
                     path.curveTo(p3x, p1y, p3x, p2y, p2x, p2y);
@@ -121,6 +122,48 @@ public class SpectrumPanel extends JFXPanel {
                     path.curveTo(p3x, p1y, p3x, p2y, p2x, p2y);
                     path.lineTo(p2x, ph);
                     path.lineTo(p1x, ph);
+                    path.lineTo(p1x, p1y);
+                    g2d.fill(path);
+                    break;
+                case SpectrumConstants.SYM_HILL:
+                    if (i + 1 >= barNum) return;
+                    // 上半部分
+                    p1x = imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p1y = (ph - sHeight) / 2;
+                    p2x = imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p2y = (ph - (int) specs[i + 1]) / 2;
+                    polygon = new Polygon(new int[]{p1x, p1x, p2x, p2x}, new int[]{p1y, ph / 2, ph / 2, p2y}, 4);
+                    g2d.fill(polygon);
+                    // 下半部分
+                    p1y = (ph + sHeight) / 2;
+                    p2y = (ph + (int) specs[i + 1]) / 2;
+                    polygon = new Polygon(new int[]{p1x, p1x, p2x, p2x}, new int[]{p1y, ph / 2, ph / 2, p2y}, 4);
+                    g2d.fill(polygon);
+                    break;
+                case SpectrumConstants.SYM_WAVE:
+                    if (i + 1 >= barNum) return;
+                    // 上半部分
+                    p1x = imgX + SpectrumConstants.BAR_WIDTH / 2 + i * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p1y = (ph - sHeight) / 2;
+                    p2x = imgX + SpectrumConstants.BAR_WIDTH / 2 + (i + 1) * (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                    p2y = (ph - (int) specs[i + 1]) / 2;
+                    p3x = (p1x + p2x) / 2;
+                    path = new GeneralPath();
+                    path.moveTo(p1x, p1y);
+                    path.curveTo(p3x, p1y, p3x, p2y, p2x, p2y);
+                    path.lineTo(p2x, ph / 2);
+                    path.lineTo(p1x, ph / 2);
+                    path.lineTo(p1x, p1y);
+                    g2d.fill(path);
+                    // 下半部分
+                    p1y = (ph + sHeight) / 2;
+                    p2y = (ph + (int) specs[i + 1]) / 2;
+                    p3x = (p1x + p2x) / 2;
+                    path = new GeneralPath();
+                    path.moveTo(p1x, p1y);
+                    path.curveTo(p3x, p1y, p3x, p2y, p2x, p2y);
+                    path.lineTo(p2x, ph / 2);
+                    path.lineTo(p1x, ph / 2);
                     path.lineTo(p1x, p1y);
                     g2d.fill(path);
                     break;

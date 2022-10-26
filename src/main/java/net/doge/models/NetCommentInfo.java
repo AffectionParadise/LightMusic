@@ -14,10 +14,8 @@ import java.awt.image.BufferedImage;
 public class NetCommentInfo {
     // 来源
     private int source;
-    // 被回复
-    private boolean beReplied;
-    // 是否为热评
-//    private boolean hot;
+    // 是否是子评论
+    private boolean sub;
     // 用户 id
     private String userId;
     // 用户名
@@ -38,8 +36,16 @@ public class NetCommentInfo {
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
 
+    public boolean hasTime() {
+        return StringUtils.isNotEmpty(time);
+    }
+
     public boolean hasProfileUrl() {
         return StringUtils.isNotEmpty(profileUrl);
+    }
+
+    public boolean hasLikedCount() {
+        return likedCount != null && likedCount >= 0;
     }
 
     public boolean hasScore() {
@@ -60,10 +66,11 @@ public class NetCommentInfo {
     }
 
     public String toString() {
-        return (beReplied ? "回复  " : "")
-                + username + "  " + (time == null ? "" : time) + "    " + (hasScore() ? StringUtils.genStar(score) + " " + score + " 分" : "") + "\n"
+        return username
+                + (hasTime() ? "    " + time : "")
+                + (hasScore() ? "    " + StringUtils.genStar(score) + " " + score + " 分" : "") + "\n"
                 + content + "\n"
-                + (beReplied ? "" : "❤ " + StringUtils.formatNumberWithoutSuffix(likedCount));
+                + (hasLikedCount() ? "❤ " + StringUtils.formatNumberWithoutSuffix(likedCount) : "");
     }
 
     public String toSimpleString() {

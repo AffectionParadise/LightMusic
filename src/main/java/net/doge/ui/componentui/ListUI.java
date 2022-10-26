@@ -23,10 +23,14 @@ public class ListUI extends BasicListUI {
 
     @Override
     protected void updateLayoutState() {
-        try {
-            super.updateLayoutState();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            super.updateLayoutState();
+        boolean cont = true;
+        while (cont) {
+            try {
+                super.updateLayoutState();
+                cont = false;
+            } catch (ArrayIndexOutOfBoundsException e) {
+
+            }
         }
     }
 
