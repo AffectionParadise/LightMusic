@@ -157,7 +157,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             String name = netPlaylistInfo.hasName() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netPlaylistInfo.getName(), maxWidth)) : "";
             String creator = netPlaylistInfo.hasCreator() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netPlaylistInfo.getCreator(), maxWidth)) : "";
             String playCount = netPlaylistInfo.hasPlayCount() ? StringUtils.formatNumber(netPlaylistInfo.getPlayCount()) : "";
-            String trackCount = netPlaylistInfo.hasTrackCount() ? netPlaylistInfo.getTrackCount() + " 首歌曲" : "";
+            String trackCount = netPlaylistInfo.hasTrackCount() ? netPlaylistInfo.getTrackCount() + " 歌曲" : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -235,7 +235,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             String source = StringUtils.textToHtml(NetMusicSource.names[netAlbumInfo.getSource()]);
             String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netAlbumInfo.getName(), maxWidth));
             String artist = netAlbumInfo.hasArtist() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netAlbumInfo.getArtist(), maxWidth)) : "";
-            String songNum = netAlbumInfo.hasSongNum() ? netAlbumInfo.isPhoto() ? netAlbumInfo.getSongNum() + " 张图片" : netAlbumInfo.getSongNum() + " 首歌曲" : "";
+            String songNum = netAlbumInfo.hasSongNum() ? netAlbumInfo.isPhoto() ? netAlbumInfo.getSongNum() + " 图片" : netAlbumInfo.getSongNum() + " 歌曲" : "";
             String publishTime = netAlbumInfo.hasPublishTime() ? netAlbumInfo.getPublishTime() + " 发行" : "";
 
             iconLabel.setText(source);
@@ -314,9 +314,9 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
             String source = StringUtils.textToHtml(NetMusicSource.names[netArtistInfo.getSource()]);
             String name = netArtistInfo.hasName() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netArtistInfo.getName(), maxWidth)) : "";
-            String songNum = netArtistInfo.hasSongNum() ? netArtistInfo.getSongNum() + " 首歌曲" : "";
-            String albumNum = netArtistInfo.hasAlbumNum() ? netArtistInfo.getAlbumNum() + " 张专辑" : "";
-            String mvNum = netArtistInfo.hasMvNum() ? netArtistInfo.getMvNum() + " 部 MV" : "";
+            String songNum = netArtistInfo.hasSongNum() ? netArtistInfo.fromME() ? netArtistInfo.getSongNum() + " 电台" : netArtistInfo.getSongNum() + " 歌曲" : "";
+            String albumNum = netArtistInfo.hasAlbumNum() ? netArtistInfo.getAlbumNum() + " 专辑" : "";
+            String mvNum = netArtistInfo.hasMvNum() ? netArtistInfo.getMvNum() + " MV" : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -409,7 +409,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.getName(), maxWidth));
             String dj = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", maxWidth));
             String category = netRadioInfo.hasCategory() ? netRadioInfo.getCategory() : "";
-            String trackCount = netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() + " 期节目" : "";
+            String trackCount = netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() + " 节目" : "";
             String playCount = netRadioInfo.hasPlayCount() ? StringUtils.formatNumber(netRadioInfo.getPlayCount()) : "";
 //        String createTime = netRadioInfo.hasCreateTime() ? netRadioInfo.getCreateTime() : "";
 

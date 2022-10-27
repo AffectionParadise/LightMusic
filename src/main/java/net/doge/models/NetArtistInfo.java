@@ -17,6 +17,8 @@ import java.util.Objects;
 public class NetArtistInfo {
     // 歌手来源
     private int source = NetMusicSource.NET_CLOUD;
+    // 是否是社团(猫耳)
+    private boolean isOrganization;
     // 歌手 id
     private String id;
     // 歌手名称
@@ -74,6 +76,14 @@ public class NetArtistInfo {
 
     public boolean fromME() {
         return source == NetMusicSource.ME;
+    }
+
+    public boolean isCV() {
+        return fromME() && !isOrganization;
+    }
+
+    public boolean isOrganization() {
+        return isOrganization;
     }
 
     public boolean hasCoverImg() {

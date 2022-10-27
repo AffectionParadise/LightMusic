@@ -1,10 +1,5 @@
 package net.doge.ui.renderers;
 
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import net.doge.constants.Fonts;
 import net.doge.models.Statement;
 import net.doge.ui.components.StringTwoColor;
 import net.doge.ui.componentui.LabelUI;
@@ -13,7 +8,6 @@ import net.doge.utils.StringUtils;
 import lombok.Data;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicListUI;
 import java.awt.*;
 
 /**
@@ -56,18 +50,19 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         JLabel label = (JLabel) component;
         Statement statement = (Statement) value;
+        String lyric = statement.toString();
 
         label.setUI(index != row ? normalLabelUI : highlightLabelUI);
         setForeground(backgroundColor);
         // 所有标签透明
         label.setOpaque(false);
-        setText(StringUtils.textToHtml(StringUtils.wrapLineByWidth(statement.toString(), thresholdWidth)));
+        setText(StringUtils.textToHtml(StringUtils.wrapLineByWidth(lyric, thresholdWidth)));
         if (rows == null) {
             // 高亮的行的样式
             if (index == row) {
                 setFont(highlightFont);
-                if (stc == null || !stc.getTxt().equals(getText()) || !stc.getC1().equals(foregroundColor) || !stc.getC2().equals(backgroundColor))
-                    stc = new StringTwoColor(this, foregroundColor, backgroundColor, ratio, false, thresholdWidth);
+                if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foregroundColor) || !stc.getC2().equals(backgroundColor))
+                    stc = new StringTwoColor(this, lyric, foregroundColor, backgroundColor, ratio, false, thresholdWidth);
                 else stc.setRatio(ratio);
                 setIcon(stc.getImageIcon());
                 setText("");

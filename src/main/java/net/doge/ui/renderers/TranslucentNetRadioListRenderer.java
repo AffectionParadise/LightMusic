@@ -151,7 +151,7 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
         String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.getName(), maxWidth));
         String dj = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", maxWidth));
         String category = netRadioInfo.hasCategory() ? netRadioInfo.getCategory() : "";
-        String trackCount = netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() + " 期节目" : "";
+        String trackCount = netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() + " 节目" : "";
         String playCount = netRadioInfo.hasPlayCount() ? StringUtils.formatNumber(netRadioInfo.getPlayCount()) : "";
 //        String createTime = netRadioInfo.hasCreateTime() ? netRadioInfo.getCreateTime() : "";
 

@@ -135,9 +135,9 @@ public class TranslucentNetArtistListRenderer extends DefaultListCellRenderer {
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String source = StringUtils.textToHtml(NetMusicSource.names[netArtistInfo.getSource()]);
         String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netArtistInfo.getName(), maxWidth));
-        String songNum = netArtistInfo.hasSongNum() ? netArtistInfo.getSongNum() + " 首歌曲" : "";
-        String albumNum = netArtistInfo.hasAlbumNum() ? netArtistInfo.getAlbumNum() + " 张专辑" : "";
-        String mvNum = netArtistInfo.hasMvNum() ? netArtistInfo.getMvNum() + " 部 MV" : "";
+        String songNum = netArtistInfo.hasSongNum() ? netArtistInfo.fromME() ? netArtistInfo.getSongNum() + " 电台" : netArtistInfo.getSongNum() + " 歌曲" : "";
+        String albumNum = netArtistInfo.hasAlbumNum() ? netArtistInfo.getAlbumNum() + " 专辑" : "";
+        String mvNum = netArtistInfo.hasMvNum() ? netArtistInfo.getMvNum() + " MV" : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

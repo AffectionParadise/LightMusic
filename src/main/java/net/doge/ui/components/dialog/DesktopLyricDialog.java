@@ -100,8 +100,8 @@ public class DesktopLyricDialog extends JDialog {
         this.ratio = ratio;
 
         tempLabel.setText(lyric);
-        if (stc == null || !stc.getTxt().equals(lyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(themeColor))
-            stc = new StringTwoColor(tempLabel, foreColor, themeColor, ratio, true, width);
+        if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(themeColor))
+            stc = new StringTwoColor(tempLabel, lyric, foreColor, themeColor, ratio, true, width);
         else stc.setRatio(ratio);
         lyricLabel.setIcon(stc.getImageIcon());
         // Icon 对象可能不变，一定要手动重绘刷新！

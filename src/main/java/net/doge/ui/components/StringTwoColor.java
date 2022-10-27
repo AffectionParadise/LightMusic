@@ -17,7 +17,7 @@ import javax.swing.*;
 public class StringTwoColor {
     private int width;
     private int height;
-    private String txt;
+    private String text;
     private boolean isDesktopLyric;
     private Color c1;
     private Color c2;
@@ -36,8 +36,8 @@ public class StringTwoColor {
      * @param isDesktopLyric 是否是桌面歌词
      * @param widthThreshold 文字最大宽度
      */
-    public StringTwoColor(JLabel label, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
-        this.txt = label.getText();
+    public StringTwoColor(JLabel label, String text, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
+        this.text = text;
         this.c1 = c1;
         this.c2 = c2;
         this.isDesktopLyric = isDesktopLyric;
@@ -52,8 +52,6 @@ public class StringTwoColor {
         for (int i = 0, len = metricsBig.length; i < len; i++) metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG[i]);
         for (int i = 0, len = metricsHuge.length; i < len; i++)
             metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE[i]);
-
-        String text = StringUtils.removeHTMLLabel(txt);
 
         if (StringUtils.isEmpty(text)) return;
 

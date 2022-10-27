@@ -170,6 +170,8 @@ public class ConfigConstants {
 
     // 歌手来源
     public final static String NET_ARTIST_SOURCE = "source";
+    // 是否是社团
+    public final static String NET_ARTIST_IS_ORGANIZATION = "isOrganization";
     // 歌手 id
     public final static String NET_ARTIST_ID = "id";
     // 歌手名称

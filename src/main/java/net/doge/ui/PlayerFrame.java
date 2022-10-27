@@ -3450,6 +3450,7 @@ public class PlayerFrame extends JFrame {
 
                 NetArtistInfo netArtistInfo = new NetArtistInfo();
                 netArtistInfo.setSource(jsonObject.optInt(ConfigConstants.NET_ARTIST_SOURCE));
+                netArtistInfo.setOrganization(jsonObject.optBoolean(ConfigConstants.NET_ARTIST_IS_ORGANIZATION));
                 netArtistInfo.setId(jsonObject.optString(ConfigConstants.NET_ARTIST_ID));
                 netArtistInfo.setName(jsonObject.optString(ConfigConstants.NET_ARTIST_NAME));
                 netArtistInfo.setCoverImgUrl(jsonObject.optString(ConfigConstants.NET_ARTIST_COVER_IMG_URL));
@@ -3910,6 +3911,7 @@ public class PlayerFrame extends JFrame {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(ConfigConstants.NET_ARTIST_SOURCE, netArtistInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_ARTIST_IS_ORGANIZATION, netArtistInfo.isOrganization());
             jsonObject.put(ConfigConstants.NET_ARTIST_ID, netArtistInfo.getId());
             jsonObject.put(ConfigConstants.NET_ARTIST_NAME, netArtistInfo.getName());
             jsonObject.put(ConfigConstants.NET_ARTIST_COVER_IMG_URL, netArtistInfo.getCoverImgUrl());
@@ -10617,8 +10619,8 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
-                        CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtils.getSimilarArtists(currArtistArtistInfo)
-                                : buddyRequest ? MusicServerUtils.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage)
+                        CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtils.getSimilarArtists(currArtistArtistInfo, netArtistCurrPage)
+                                : buddyRequest ? MusicServerUtils.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage, limit)
                                 : radioRequest ? MusicServerUtils.getRadioArtists(currArtistRadioInfo)
                                 : radioCVRequest ? MusicServerUtils.getRadioArtists(currCVRadioInfo)
                                 : MusicServerUtils.searchArtists(netArtistCurrKeyword, limit, netArtistCurrPage);
@@ -11272,9 +11274,10 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForArtist();
                     // 搜索相似歌手
-                    CommonResult<NetArtistInfo> result = MusicServerUtils.getSimilarArtists(currArtistArtistInfo = netArtistInfo);
+                    CommonResult<NetArtistInfo> result = MusicServerUtils.getSimilarArtists(currArtistArtistInfo = netArtistInfo, netArtistCurrPage = 1);
                     List<NetArtistInfo> netArtistInfos = result.data;
-                    netArtistCurrPage = netArtistMaxPage = 1;
+                    Integer total = result.total;
+                    netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
                     netArtistTitleLabel.setText(netArtistInfo.getName() + " 的相似歌手");
                     netArtistToolBar.removeAll();
@@ -11407,7 +11410,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForArtist();
                     // 搜索歌手合作人
-                    CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistBuddies(currBuddyArtistInfo = netArtistInfo, netArtistCurrPage = 1);
+                    CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistBuddies(currBuddyArtistInfo = netArtistInfo, netArtistCurrPage = 1, limit);
                     List<NetArtistInfo> netArtistInfos = result.data;
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11475,7 +11478,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForRadio();
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtils.getArtistRadios(currRadioArtistInfo = netArtistInfo, netRadioCurrPage = 1);
+                    CommonResult<NetRadioInfo> result = MusicServerUtils.getArtistRadios(currRadioArtistInfo = netArtistInfo, netRadioCurrPage = 1, limit);
                     List<NetRadioInfo> netRadioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11855,7 +11858,7 @@ public class PlayerFrame extends JFrame {
                     try {
                         // 搜索电台并显示电台列表
                         CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtils.getUserRadios(currRadioUserInfo, limit, netRadioCurrPage)
-                                : artistRequest ? MusicServerUtils.getArtistRadios(currRadioArtistInfo, netRadioCurrPage)
+                                : artistRequest ? MusicServerUtils.getArtistRadios(currRadioArtistInfo, netRadioCurrPage, limit)
                                 : radioRequest ? MusicServerUtils.getSimilarRadios(currRadioRadioInfo)
                                 : MusicServerUtils.searchRadios(netRadioCurrKeyword, limit, netRadioCurrPage);
                         List<NetRadioInfo> netRadioInfos = result.data;
@@ -14166,7 +14169,8 @@ public class PlayerFrame extends JFrame {
                 if (currFollowUserUserInfo == null && currFollowedUserUserInfo == null
                         && currUserPlaylistInfo == null && currUserMvInfo == null && currUserRadioInfo == null
                         && currUserCommentInfo == null && currSubscriberPlaylistInfo == null
-                        && currSubscriberRadioInfo == null && currUserArtistInfo == null) {
+                        && currSubscriberRadioInfo == null && currUserArtistInfo == null
+                        && currAuthorMusicInfo == null) {
                     // 删除标题标签
                     netUserToolBar.add(netUserSearchTextField);
                     netUserToolBar.add(netUserClearInputButton);
