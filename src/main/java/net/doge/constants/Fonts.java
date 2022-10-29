@@ -24,6 +24,11 @@ public class Fonts {
     public static final Font NORMAL_BIG = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, BIG_SIZE);
     public static final Font NORMAL_HUGE = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_BOLD_NAME, HUGE_SIZE);
 
+//    public static final Font NORMAL = new Font("微软雅黑", Font.PLAIN, FONT_SIZE);
+//    public static final Font NORMAL_MEDIUM = new Font("微软雅黑", Font.PLAIN, MEDIUM_SIZE);
+//    public static final Font NORMAL_BIG = new Font("微软雅黑", Font.PLAIN, BIG_SIZE);
+//    public static final Font NORMAL_HUGE = new Font("微软雅黑", Font.PLAIN, HUGE_SIZE);
+
     // 韩语 俄语
     public static final Font MALGUN_GOTHIC = new Font("Malgun Gothic", Font.PLAIN, FONT_SIZE);
     public static final Font MALGUN_GOTHIC_BIG = new Font("Malgun Gothic", Font.PLAIN, BIG_SIZE);
@@ -48,7 +53,7 @@ public class Fonts {
     public static final Font EMOJI = new Font("Segoe UI Emoji", Font.PLAIN, FONT_SIZE);
     public static final Font EMOJI_BIG = new Font("Segoe UI Emoji", Font.PLAIN, BIG_SIZE);
     public static final Font EMOJI_HUGE = new Font("Segoe UI Emoji", Font.BOLD, HUGE_SIZE);
-//    public static final Font EMOJI = FontUtils.loadFont(SimplePath.FONT_PATH+"emoji.ttf", FONT_SIZE);
+    //    public static final Font EMOJI = FontUtils.loadFont(SimplePath.FONT_PATH+"emoji.ttf", FONT_SIZE);
 //    public static final Font EMOJI_BIG = FontUtils.loadFont(SimplePath.FONT_PATH+"emoji.ttf", BIG_SIZE);
 //    public static final Font EMOJI_HUGE = FontUtils.loadFont(SimplePath.FONT_PATH+"emoji.ttf", HUGE_SIZE);
     // sans-serif

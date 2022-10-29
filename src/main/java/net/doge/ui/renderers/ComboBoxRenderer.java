@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import net.doge.constants.Colors;
 import net.doge.models.MusicPlayer;
 import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.CustomPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,12 +31,13 @@ public class ComboBoxRenderer extends DefaultListCellRenderer {
 
         CustomLabel label = new CustomLabel();
 
-        label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 0));
+        label.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         label.setDrawBg(isSelected);
+        label.setHorizontalAlignment(CENTER);
         label.setText((String) value);
         label.setFont(font);
         label.setForeground(foreColor);
-        label.setOpaque(false);
+
         return label;
     }
 }

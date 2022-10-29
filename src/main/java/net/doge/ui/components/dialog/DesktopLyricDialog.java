@@ -232,6 +232,7 @@ public class DesktopLyricDialog extends JDialog {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (f.desktopLyricLocked) return;
+                if (e.getButton() != MouseEvent.BUTTON1) return;
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
@@ -240,6 +241,8 @@ public class DesktopLyricDialog extends JDialog {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (f.desktopLyricLocked) return;
+                // mouseDragged 不能正确返回 button 值，需要借助此方法
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
                 Point p = getLocation();
                 int nx = p.x + e.getX() - origin.x, ny = p.y + e.getY() - origin.y;
                 Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
