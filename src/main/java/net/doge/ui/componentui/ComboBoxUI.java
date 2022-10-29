@@ -42,6 +42,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
         if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new Dimension(width, 30));
 
         comboBox.setLightWeightPopupEnabled(false);
+        comboBox.setFocusable(false);
     }
 
     public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Font font, Color foreColor, int width) {
@@ -61,6 +62,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
             g2d.setColor(foreColor);
             g2d.drawString(text, (bounds.width - sw) / 2, (bounds.height - sh) / 2 + 16);
         }
+//        super.paintCurrentValue(g, bounds, hasFocus);
     }
 
     @Override
@@ -71,7 +73,6 @@ public class ComboBoxUI extends BasicComboBoxUI {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 10, 10);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-//        super.paintCurrentValueBackground(g, bounds, hasFocus);
     }
 
     @Override

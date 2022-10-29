@@ -1538,29 +1538,23 @@ public class MusicServerUtils {
     private static final String CAT_ORGANIZATIONS_ME_API = "https://www.missevan.com/organization/getorganizations?initial=%s&p=%s&page_size=%s";
 
     // 新晋电台 API
-    private static final String NEW_RADIO_API
-            = prefix + "/dj/toplist?type=new&limit=200";
+    private static final String NEW_RADIO_API = prefix + "/dj/toplist?type=new&limit=200";
     // 推荐个性电台 API
-    private static final String PERSONALIZED_RADIO_API
-            = prefix + "/personalized/djprogram";
+    private static final String PERSONALIZED_RADIO_API = prefix + "/personalized/djprogram";
     // 推荐电台 API
-    private static final String RECOMMEND_RADIO_API
-            = prefix + "/dj/recommend";
+    private static final String RECOMMEND_RADIO_API = prefix + "/dj/recommend";
     // 付费精品电台 API
-    private static final String PAY_RADIO_API
-            = prefix + "/dj/toplist/pay?limit=100";
+    private static final String PAY_RADIO_API = prefix + "/dj/toplist/pay?limit=100";
     // 付费精选电台 API
-    private static final String PAY_GIFT_RADIO_API
-            = prefix + "/dj/paygift?offset=%s&limit=%s";
+    private static final String PAY_GIFT_RADIO_API = prefix + "/dj/paygift?offset=%s&limit=%s";
     // 推荐电台 API (QQ)
-    private static final String RECOMMEND_RADIO_QQ_API
-            = prefixQQ33 + "/radio/category";
+    private static final String RECOMMEND_RADIO_QQ_API = prefixQQ33 + "/radio/category";
     // 推荐广播剧 API (猫耳)
-    private static final String REC_RADIO_ME_API
-            = "https://www.missevan.com/drama/site/recommend";
+    private static final String REC_RADIO_ME_API = "https://www.missevan.com/drama/site/recommend";
     // 夏日推荐 API (猫耳)
-    private static final String SUMMER_RADIO_ME_API
-            = "https://www.missevan.com/dramaapi/summerdrama";
+    private static final String SUMMER_RADIO_ME_API = "https://www.missevan.com/dramaapi/summerdrama";
+    // 频道 API (猫耳)
+//    private static final String CHANNEL_ME_API = "https://www.missevan.com/explore/channels?type=0";
 
 
     // 分类热门电台标签 API
@@ -9574,6 +9568,40 @@ public class MusicServerUtils {
 
             return new CommonResult<>(res, t);
         };
+        // 频道
+//        Callable<CommonResult<NetRadioInfo>> getChannelsMe = () -> {
+//            LinkedList<NetRadioInfo> res = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String radioInfoBody = HttpRequest.get(String.format(CHANNEL_ME_API))
+//                    .execute()
+//                    .body();
+//            Document doc = Jsoup.parse(radioInfoBody);
+//            Elements radios = doc.select(".item.blk > a");
+//            t = radios.size();
+//            for (int i = (page - 1) * limit, len = Math.min(radios.size(), page * limit); i < len; i++) {
+//                Element radio = radios.get(i);
+//
+//                String radioId = radio.attr("href").replace("/explore/channel/","");
+//                String radioName = radio.select("b").text();
+//                String coverImgThumbUrl = "https:" + radioJson.getString("cover");
+//                String description = StringUtils.removeHTMLLabel(radioJson.getString("abstract"));
+//
+//                NetRadioInfo radioInfo = new NetRadioInfo();
+//                radioInfo.setSource(NetMusicSource.ME);
+//                radioInfo.setId(radioId);
+//                radioInfo.setName(radioName);
+//                radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                radioInfo.setDescription(description);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                    radioInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//
+//                res.add(radioInfo);
+//            }
+//            return new CommonResult<>(res, t);
+//        };
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
 
@@ -12906,7 +12934,8 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-            JSONObject info = playlistInfoJson.getJSONObject("info");
+            JSONObject info = playlistInfoJson.optJSONObject("info");
+            if (info == null) return;
             JSONObject album = info.getJSONObject("album");
 
             String coverImgUrl = album.getString("front_cover");

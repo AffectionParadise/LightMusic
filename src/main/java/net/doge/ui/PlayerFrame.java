@@ -2268,6 +2268,7 @@ public class PlayerFrame extends JFrame {
         topBox.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1) return;
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
@@ -2275,6 +2276,8 @@ public class PlayerFrame extends JFrame {
         topBox.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                // mouseDragged 不能正确返回 button 值，需要借助此方法
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
                 Point p = getLocation();
                 setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
             }
@@ -2282,6 +2285,7 @@ public class PlayerFrame extends JFrame {
         titleLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1) return;
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
@@ -2289,6 +2293,8 @@ public class PlayerFrame extends JFrame {
         titleLabel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                // mouseDragged 不能正确返回 button 值，需要借助此方法
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
                 Point p = getLocation();
                 setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
             }
@@ -19674,8 +19680,8 @@ public class PlayerFrame extends JFrame {
 
         SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
 
-        if (simpleMusicInfo.hasAlbumImage()) showAlbumImage();
-        else simpleMusicInfo.setInvokeLater(() -> showAlbumImage());
+        if (!simpleMusicInfo.hasAlbumImage()) simpleMusicInfo.setInvokeLater(() -> showAlbumImage());
+        else showAlbumImage();
     }
 
     // 显示专辑图片

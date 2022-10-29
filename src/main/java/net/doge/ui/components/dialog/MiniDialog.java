@@ -132,6 +132,7 @@ public class MiniDialog extends JDialog {
         globalPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1) return;
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
@@ -161,6 +162,8 @@ public class MiniDialog extends JDialog {
         globalPanel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                // mouseDragged 不能正确返回 button 值，需要借助此方法
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
                 dragged = true;
                 // 动画过程拖动时停止动画
                 if (locationTimer.isRunning()) locationTimer.stop();

@@ -38,8 +38,10 @@ public class StringUtils {
 
     static {
         cMap.put(' ', "&nbsp;");
+        cMap.put('&', "&amp;");
         cMap.put('<', "&lt;");
         cMap.put('>', "&gt;");
+        cMap.put('\'', "&apos;");
         cMap.put('\n', "<br>");
     }
 
@@ -184,16 +186,6 @@ public class StringUtils {
     }
 
     /**
-     * 转为简体中文
-     *
-     * @param s
-     * @return
-     */
-    public static String toSimplifiedChinese(String s) {
-        return ZhConverterUtil.toSimple(s);
-    }
-
-    /**
      * 日语转为罗马音
      *
      * @param s
@@ -222,10 +214,6 @@ public class StringUtils {
      * @return
      */
     public static String formatNumber(long n) {
-//        if (n < 10000) return n + "";
-//        if (n < 100000000) return String.format("%.1f 万", (double) (n - 500) / 10000).replace(".0", "");
-//        return String.format("%.1f 亿", (double) (n - 5000000) / 100000000).replace(".0", "");
-
         if (n < 10000) return n + " 播放";
         if (n < 100000000) return String.format("%s 万 播放", (double) (n / 1000) / 10).replace(".0", "");
         return String.format("%s 亿 播放", (double) (n / 10000000) / 10).replace(".0", "");
@@ -238,10 +226,6 @@ public class StringUtils {
      * @return
      */
     public static String formatNumberWithoutSuffix(long n) {
-//        if (n < 10000) return n + "";
-//        if (n < 100000000) return String.format("%.1f 万", (double) (n - 500) / 10000).replace(".0", "");
-//        return String.format("%.1f 亿", (double) (n - 5000000) / 100000000).replace(".0", "");
-
         if (n < 10000) return n + "";
         if (n < 100000000) return String.format("%s 万", (double) (n / 1000) / 10).replace(".0", "");
         return String.format("%s 亿", (double) (n / 10000000) / 10).replace(".0", "");

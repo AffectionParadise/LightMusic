@@ -10,24 +10,12 @@ public class CustomLabel extends JLabel {
         super();
     }
 
-    public CustomLabel(String text) {
-        super(text);
-    }
-
-    public CustomLabel(String text, Icon icon, int horizontalAlignment) {
-        super(text, icon, horizontalAlignment);
-    }
-
-    public CustomLabel(String text, int horizontalAlignment) {
-        super(text, horizontalAlignment);
-    }
-
     public void setDrawBg(boolean drawBg) {
         this.drawBg = drawBg;
     }
 
     @Override
-    public void paint(Graphics g) {
+    protected void paintComponent(Graphics g) {
         if(drawBg) {
             Graphics2D g2d = (Graphics2D) g;
             // 画背景
@@ -38,6 +26,6 @@ public class CustomLabel extends JLabel {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

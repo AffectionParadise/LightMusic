@@ -228,6 +228,7 @@ public class VideoDialog extends JDialog {
         topBox.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1) return;
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
@@ -235,6 +236,8 @@ public class VideoDialog extends JDialog {
         topBox.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                // mouseDragged 不能正确返回 button 值，需要借助此方法
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
                 Point p = getLocation();
                 setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
             }
