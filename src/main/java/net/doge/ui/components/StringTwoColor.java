@@ -47,11 +47,12 @@ public class StringTwoColor {
         Font labelFont = label.getFont();
 
         FontMetrics metrics = label.getFontMetrics(labelFont);
-        FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.length];
-        FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.length];
-        for (int i = 0, len = metricsBig.length; i < len; i++) metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG[i]);
+        FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
+        FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
+        for (int i = 0, len = metricsBig.length; i < len; i++)
+            metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i));
         for (int i = 0, len = metricsHuge.length; i < len; i++)
-            metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE[i]);
+            metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i));
 
         if (StringUtils.isEmpty(text)) return;
 
@@ -66,14 +67,14 @@ public class StringTwoColor {
             String str = new String(chars);
 
             for (int j = 0, l = metricsBig.length; j < l; j++) {
-                if (labelFont == Fonts.NORMAL_BIG && Fonts.TYPES_BIG[j].canDisplay(codePoint)) {
+                if (labelFont == Fonts.NORMAL_BIG && Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) {
                     width += metricsBig[j].stringWidth(str);
                     i += chars.length - 1;
                     break;
                 }
             }
             for (int j = 0, l = metricsHuge.length; j < l; j++) {
-                if (labelFont == Fonts.NORMAL_HUGE && Fonts.TYPES_HUGE[j].canDisplay(codePoint)) {
+                if (labelFont == Fonts.NORMAL_HUGE && Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) {
                     width += metricsHuge[j].stringWidth(str);
                     i += chars.length - 1;
                     break;
@@ -121,9 +122,10 @@ public class StringTwoColor {
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
                 for (int j = 0, l = metricsBig.length; j < l; j++) {
-                    if (Fonts.TYPES_BIG[j].canDisplay(codePoint)) {
-                        g1.setFont(Fonts.TYPES_BIG[j]);
-                        g2.setFont(Fonts.TYPES_BIG[j]);
+                    Font font = Fonts.TYPES_BIG.get(j);
+                    if (font.canDisplay(codePoint)) {
+                        g1.setFont(font);
+                        g2.setFont(font);
                         g1.drawString(str, widthDrawn, dy);
                         g2.drawString(str, widthDrawn, dy);
                         widthDrawn += metricsBig[j].stringWidth(str);
@@ -138,7 +140,8 @@ public class StringTwoColor {
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
                 for (int j = 0, l = metricsHuge.length; j < l; j++) {
-                    if (Fonts.TYPES_HUGE[j].canDisplay(codePoint)) {
+                    Font font = Fonts.TYPES_HUGE.get(j);
+                    if (font.canDisplay(codePoint)) {
 //                        Shape shape = Fonts.TYPES_HUGE[j].createGlyphVector(metricsHuge[j].getFontRenderContext(), str).getOutline();
 //                        // 文字阴影
 //                        g1.setColor(shadowColor);
@@ -159,8 +162,8 @@ public class StringTwoColor {
 //                        g2.setColor(borderColor);
 //                        g1.draw(shape);
 //                        g2.draw(shape);
-                        g1.setFont(Fonts.TYPES_HUGE[j]);
-                        g2.setFont(Fonts.TYPES_HUGE[j]);
+                        g1.setFont(font);
+                        g2.setFont(font);
                         g1.drawString(str, widthDrawn, dy);
                         g2.drawString(str, widthDrawn, dy);
                         widthDrawn += metricsHuge[j].stringWidth(str);

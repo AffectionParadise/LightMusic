@@ -319,12 +319,12 @@ public class StringUtils {
                 sb.append(cMap.get(chars[0]));
                 continue;
             }
-            for (int j = 0, l = Fonts.TYPES.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(codePoint)) {
+            for (int j = 0, l = Fonts.TYPES.size(); j < l; j++) {
+                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
                     // 中文
                     if (j == 0) sb.append(chars[0]);
                     else
-                        sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES[j].getFontName(), str));
+                        sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES.get(j).getFontName(), str));
                     i += chars.length - 1;
                     break;
                 }
@@ -369,10 +369,10 @@ public class StringUtils {
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
 
-            for (int j = 0, l = Fonts.TYPES.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(codePoint)) {
+            for (int j = 0, l = Fonts.TYPES.size(); j < l; j++) {
+                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
                     if (chars[0] != '\n') {
-                        int tw = label.getFontMetrics(Fonts.TYPES[j]).stringWidth(str);
+                        int tw = label.getFontMetrics(Fonts.TYPES.get(j)).stringWidth(str);
                         sw += tw;
                         if (sw >= thresholdWidth) {
                             sb.append('\n');

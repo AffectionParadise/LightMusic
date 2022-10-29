@@ -107,9 +107,9 @@ public class CustomTextField extends JTextField {
         int stringHeight = fontMetrics.getHeight();
         g2d.setColor(foregroundColor);
 
-        FontMetrics[] metrics = new FontMetrics[Fonts.TYPES.length];
+        FontMetrics[] metrics = new FontMetrics[Fonts.TYPES.size()];
         for (int i = 0, len = metrics.length; i < len; i++) {
-            metrics[i] = getFontMetrics(Fonts.TYPES[i]);
+            metrics[i] = getFontMetrics(Fonts.TYPES.get(i));
         }
 
         // 计算宽度
@@ -119,7 +119,7 @@ public class CustomTextField extends JTextField {
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
             for (int j = 0, l = metrics.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(codePoint)) {
+                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
                     stringWidth += metrics[j].stringWidth(str);
                     i += chars.length - 1;
                     break;
@@ -133,10 +133,10 @@ public class CustomTextField extends JTextField {
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
             for (int j = 0, l = metrics.length; j < l; j++) {
-                if (Fonts.TYPES[j].canDisplay(codePoint)) {
+                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
                     // 只画普通字体显示不出来的文字
                     if (j != 0) {
-                        g2d.setFont(Fonts.TYPES[j]);
+                        g2d.setFont(Fonts.TYPES.get(j));
                         g2d.drawString(str, (rect.width - stringWidth) / 2 + widthDrawn, (rect.height - stringHeight) / 2 + 16);
                     }
                     widthDrawn += metrics[j].stringWidth(str);
