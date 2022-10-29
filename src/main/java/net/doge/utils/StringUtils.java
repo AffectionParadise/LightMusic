@@ -38,10 +38,8 @@ public class StringUtils {
 
     static {
         cMap.put(' ', "&nbsp;");
-        cMap.put('&', "&amp;");
         cMap.put('<', "&lt;");
         cMap.put('>', "&gt;");
-        cMap.put('\'', "&apos;");
         cMap.put('\n', "<br>");
     }
 

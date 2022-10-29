@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
  */
 public class MiniDialog extends JDialog {
     private final int WIDTH = 480;
-    private final int HEIGHT = 70;
+    private final int HEIGHT = 76;
     private final int offsetX = WIDTH - 6;
     private final int offsetY = HEIGHT - 6;
     private final String CLOSE_TIP = "关闭";
@@ -228,7 +228,7 @@ public class MiniDialog extends JDialog {
         infoLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         infoLabel.setOpaque(false);
         infoLabel.setIconTextGap(10);
-        infoLabel.setPreferredSize(new Dimension(240, 60));
+        infoLabel.setPreferredSize(new Dimension(240, 66));
 
         // 提示
         playLastButton.setToolTipText(lastButton.getToolTipText());

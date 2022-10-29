@@ -43,6 +43,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
         comboBox.setLightWeightPopupEnabled(false);
         comboBox.setFocusable(false);
+        comboBox.setForeground(foreColor);
     }
 
     public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Font font, Color foreColor, int width) {
@@ -50,20 +51,19 @@ public class ComboBoxUI extends BasicComboBoxUI {
         comboBox.setPreferredSize(new Dimension(width, 30));
     }
 
-    @Override
-    public void paintCurrentValue(Graphics g, Rectangle bounds, boolean hasFocus) {
-        // 画文字
-        String text = (String) comboBox.getSelectedItem();
-        if (text != null) {
-            Graphics2D g2d = (Graphics2D) g;
-            FontMetrics metrics = comboBox.getFontMetrics(font);
-            int sw = metrics.stringWidth(text);
-            int sh = metrics.getHeight();
-            g2d.setColor(foreColor);
-            g2d.drawString(text, (bounds.width - sw) / 2, (bounds.height - sh) / 2 + 16);
-        }
-//        super.paintCurrentValue(g, bounds, hasFocus);
-    }
+//    @Override
+//    public void paintCurrentValue(Graphics g, Rectangle bounds, boolean hasFocus) {
+//        // 画文字
+//        String text = (String) comboBox.getSelectedItem();
+//        if (text != null) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            FontMetrics metrics = comboBox.getFontMetrics(font);
+//            int sw = metrics.stringWidth(text);
+//            int sh = metrics.getHeight();
+//            g2d.setColor(foreColor);
+//            g2d.drawString(text, (bounds.width - sw) / 2, (bounds.height - sh) / 2 + 16);
+//        }
+//    }
 
     @Override
     public void paintCurrentValueBackground(Graphics g, Rectangle bounds, boolean hasFocus) {

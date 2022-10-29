@@ -19104,7 +19104,7 @@ public class PlayerFrame extends JFrame {
         changePaneButton.setFont(globalFont);
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         changePaneButton.setIconTextGap(10);
-        changePaneButton.setPreferredSize(new Dimension(280, 60));
+        changePaneButton.setPreferredSize(new Dimension(280, 66));
         changePaneButton.setFocusable(false);
         changePaneButton.setText(NO_LRC_MSG);
         changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton, changePaneButtonUI, THIS));
@@ -19488,7 +19488,7 @@ public class PlayerFrame extends JFrame {
         FlowLayout fl = new FlowLayout();
         fl.setHgap(12);
         controlPanel.setLayout(fl);
-        controlPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 12));
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(9, 0, 0, 12));
 //        controlPanel.add(changePanePanel);
         controlPanel.add(backwardButton);
         controlPanel.add(lastButton);
@@ -19519,7 +19519,7 @@ public class PlayerFrame extends JFrame {
         fl = new FlowLayout();
         fl.setHgap(6);
         controlLrcPanel.setLayout(fl);
-        controlLrcPanel.setBorder(BorderFactory.createEmptyBorder(19, 0, 0, 0));
+        controlLrcPanel.setBorder(BorderFactory.createEmptyBorder(23, 0, 0, 0));
         controlLrcPanel.add(desktopLyricButton);
         controlLrcPanel.add(switchLrcTypeButton);
         controlLrcPanel.add(switchChineseButton);

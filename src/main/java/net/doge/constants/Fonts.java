@@ -10,7 +10,7 @@ import java.awt.*;
  * @Date 2021/1/3
  */
 public class Fonts {
-    private static final int FONT_SIZE = 15;
+    private static final int FONT_SIZE = 16;
     private static final int MEDIUM_SIZE = 18;
     private static final int BIG_SIZE = FONT_SIZE + 10;
     public static final int HUGE_SIZE = BIG_SIZE + 20;
