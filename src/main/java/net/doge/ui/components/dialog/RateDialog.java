@@ -1,6 +1,7 @@
 package net.doge.ui.components.dialog;
 
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.Colors;
 import net.doge.constants.EqualizerData;
 import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
@@ -83,7 +84,7 @@ public class RateDialog extends JDialog {
         add(globalPanel, BorderLayout.CENTER);
 
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         pack();
 
         // 调整位置使之在按钮上方

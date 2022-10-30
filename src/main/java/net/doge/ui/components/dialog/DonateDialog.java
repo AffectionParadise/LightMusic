@@ -2,6 +2,7 @@ package net.doge.ui.components.dialog;
 
 import javafx.embed.swing.JFXPanel;
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.GlobalExecutors;
 import net.doge.constants.SimplePath;
@@ -15,6 +16,9 @@ import net.doge.utils.StringUtils;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.Future;
@@ -41,7 +45,6 @@ public class DonateDialog extends JDialog {
     private String title = "捐赠";
 
     // 标题面板
-    private Box topBox = new Box(BoxLayout.X_AXIS);
     private JPanel topPanel = new JPanel();
     private JLabel titleLabel = new JLabel();
     private JPanel windowCtrlPanel = new JPanel();
@@ -98,16 +101,34 @@ public class DonateDialog extends JDialog {
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
-        topBox.add(topPanel);
-        topBox.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        mainPanel.add(topBox, BorderLayout.NORTH);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        mainPanel.add(topPanel, BorderLayout.NORTH);
     }
 
     public void showDialog() {
-        Color labelColor = f.getCurrUIStyle().getLabelColor();
+        Color labelColor = style.getLabelColor();
+        // 解决 setUndecorated(true) 后窗口不能拖动的问题
+        Point origin = new Point();
+        topPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1) return;
+                origin.x = e.getX();
+                origin.y = e.getY();
+            }
+        });
+        topPanel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                // mouseDragged 不能正确返回 button 值，需要借助此方法
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
+                Point p = getLocation();
+                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
+            }
+        });
         // Dialog 背景透明
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
 
         messageLabel.setFont(globalFont);
         weixinLabel.setFont(globalFont);

@@ -155,7 +155,7 @@ public abstract class ImageViewDialog extends JDialog {
 
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(f);
 
         updateBlur();

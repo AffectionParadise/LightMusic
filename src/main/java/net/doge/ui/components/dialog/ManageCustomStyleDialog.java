@@ -1,6 +1,7 @@
 package net.doge.ui.components.dialog;
 
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.constants.UIStyleConstants;
@@ -129,7 +130,7 @@ public class ManageCustomStyleDialog extends JDialog {
 
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(f);
 
         updateBlur();

@@ -2259,7 +2259,7 @@ public class PlayerFrame extends JFrame {
         // 窗口透明
         // setWindowOpaque 存在性能问题，别用
 //        AWTUtilities.setWindowOpaque(THIS, false);
-//        setBackground(new Color(0, 0, 0, 0));
+//        setBackground(Colors.TRANSLUCENT);
         // 窗口大小适应
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -22636,6 +22636,7 @@ public class PlayerFrame extends JFrame {
             else if (d instanceof ImageViewDialog) ((ImageViewDialog) d).updateBlur();
             else if (d instanceof RateDialog) ((RateDialog) d).updateBlur();
             else if (d instanceof ColorChooserDialog) ((ColorChooserDialog) d).updateBlur();
+            else if (d instanceof DonateDialog) ((DonateDialog) d).updateBlur();
         }
     }
 
@@ -22711,46 +22712,6 @@ public class PlayerFrame extends JFrame {
             globalPanelTimer.start();
         });
     }
-
-    // 毛玻璃虚化
-//    void doGlassBlur() {
-//        blurExecutor.submit(() -> {
-//            if (!player.loadedMusic()) return;
-//            Rectangle rect = getBounds();
-//            setVisible(false);
-//            BufferedImage bgImg = ImageUtils.getScreenCapture(rect);
-//            setVisible(true);
-//            int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
-//            if (gw == 0 || gh == 0) {
-//                gw = WINDOW_WIDTH;
-//                gh = WINDOW_HEIGHT;
-//            }
-//            // 改变迷你窗口背景
-//            if (miniDialog != null) {
-//                BufferedImage finalImage = bgImg;
-//                miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalImage));
-//            }
-//            // 高斯模糊
-//            bgImg = ImageUtils.doDelicateBlur(bgImg);
-//            // 设置圆角
-////                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
-//            globalPanel.setBackgroundImage(bgImg);
-//            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
-//            // 更新弹出菜单
-//            if (currPopup != null) currPopup.repaint();
-//            // 更新对话框
-//            for (JDialog d : currDialogs) {
-//                if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
-//                else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
-//                else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
-//                else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
-//                else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
-//                else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
-//                else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
-//                else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
-//            }
-//        });
-//    }
 
     // 筛选个人音乐
     void filterPersonalMusic() {

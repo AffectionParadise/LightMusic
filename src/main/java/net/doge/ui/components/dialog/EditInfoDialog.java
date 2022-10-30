@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.Format;
 import net.doge.constants.SimplePath;
@@ -202,7 +203,7 @@ public class EditInfoDialog extends JDialog {
 
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         pack();
         setLocationRelativeTo(f);
 

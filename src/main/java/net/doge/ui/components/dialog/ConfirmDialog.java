@@ -1,5 +1,6 @@
 package net.doge.ui.components.dialog;
 
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.SimpleMusicInfo;
@@ -88,7 +89,7 @@ public class ConfirmDialog extends JDialog {
         Color labelColor = f.getCurrUIStyle().getLabelColor();
         // Dialog 背景透明
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         messageLabel.setFont(font);
         yes.setFont(font);
         no.setFont(font);

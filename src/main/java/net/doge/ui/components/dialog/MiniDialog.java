@@ -1,6 +1,7 @@
 package net.doge.ui.components.dialog;
 
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.MusicPlayer;
@@ -200,7 +201,7 @@ public class MiniDialog extends JDialog {
         initView();
 
         // Dialog 背景透明
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         globalPanel.setOpaque(false);
         add(globalPanel);
     }

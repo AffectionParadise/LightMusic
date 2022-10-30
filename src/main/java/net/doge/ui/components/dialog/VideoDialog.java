@@ -107,7 +107,6 @@ public class VideoDialog extends JDialog {
     private JFXPanel jfxPanel = new JFXPanel();
 
     // 标题面板
-    private Box topBox = new Box(BoxLayout.X_AXIS);
     private JPanel topPanel = new JPanel();
     private JLabel titleLabel = new JLabel();
     private JPanel windowCtrlPanel = new JPanel();
@@ -225,7 +224,7 @@ public class VideoDialog extends JDialog {
 
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
-        topBox.addMouseListener(new MouseAdapter() {
+        topPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1) return;
@@ -233,7 +232,7 @@ public class VideoDialog extends JDialog {
                 origin.y = e.getY();
             }
         });
-        topBox.addMouseMotionListener(new MouseMotionAdapter() {
+        topPanel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 // mouseDragged 不能正确返回 button 值，需要借助此方法
@@ -251,7 +250,7 @@ public class VideoDialog extends JDialog {
                 currTimeLabel.setVisible(false);
                 currTimeLabel.setVisible(true);
                 timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 20 * 2, 12));
-                setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
+                setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
             }
         });
 
@@ -440,9 +439,8 @@ public class VideoDialog extends JDialog {
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
-        topBox.add(topPanel);
-        topBox.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        globalPanel.add(topBox, BorderLayout.NORTH);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
     // 进度条
@@ -722,7 +720,7 @@ public class VideoDialog extends JDialog {
     void toFullScreen() {
         fullScreen = true;
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
-        topBox.setVisible(false);
+        topPanel.setVisible(false);
         bottomBox.setVisible(false);
         globalPanel.eraseBorder();
         setSize(ss.width, ss.height);
@@ -730,9 +728,9 @@ public class VideoDialog extends JDialog {
     }
 
     public void restoreWindow() {
-        setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
+        setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
         fullScreen = false;
-        topBox.setVisible(true);
+        topPanel.setVisible(true);
         bottomBox.setVisible(true);
         globalPanel.initBorder();
         fitMediaView();

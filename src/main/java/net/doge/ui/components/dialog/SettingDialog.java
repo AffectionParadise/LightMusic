@@ -189,7 +189,7 @@ public class SettingDialog extends JDialog {
         globalPanel.setOpaque(false);
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         pack();
         setLocationRelativeTo(f);
 

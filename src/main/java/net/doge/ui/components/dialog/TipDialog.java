@@ -1,6 +1,7 @@
 package net.doge.ui.components.dialog;
 
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.GlobalExecutors;
 import net.doge.models.UIStyle;
@@ -100,7 +101,7 @@ public class TipDialog extends JDialog {
         themeColor = f.getCurrUIStyle().getLabelColor();
         updateSize();
         // Dialog 背景透明
-        setBackground(new Color(0, 0, 0, 0));
+        setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(f);
         updateBlur();
 
