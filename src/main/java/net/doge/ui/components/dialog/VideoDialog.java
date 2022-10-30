@@ -248,7 +248,9 @@ public class VideoDialog extends JDialog {
             public void componentResized(ComponentEvent e) {
                 setLocationRelativeTo(null);
                 if (fullScreen) return;
-                timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getWidth() - durationLabel.getWidth() - 20 * 2, 12));
+                currTimeLabel.setVisible(false);
+                currTimeLabel.setVisible(true);
+                timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 20 * 2, 12));
                 setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topBox.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
             }
         });

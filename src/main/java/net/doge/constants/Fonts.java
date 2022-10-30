@@ -33,8 +33,8 @@ public class Fonts {
 //    public static final Font NORMAL_HUGE = new Font("微软雅黑", Font.PLAIN, HUGE_SIZE);
 
     // emoji
-    public static final Font EMOJI = new Font("Segoe UI Emoji", Font.PLAIN, FONT_SIZE);
-    public static final Font EMOJI_BIG = new Font("Segoe UI Emoji", Font.PLAIN, BIG_SIZE);
+    public static final Font EMOJI = new Font("Segoe UI Emoji", Font.BOLD, FONT_SIZE);
+    public static final Font EMOJI_BIG = new Font("Segoe UI Emoji", Font.BOLD, BIG_SIZE);
     public static final Font EMOJI_HUGE = new Font("Segoe UI Emoji", Font.BOLD, HUGE_SIZE);
 
     public static final List<Font> TYPES = new LinkedList<>();
@@ -51,8 +51,8 @@ public class Fonts {
         // 加载所有安装的字体
         String[] names = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(Locale.ENGLISH);
         for (String name : names) {
-            TYPES.add(new Font(name, Font.PLAIN, FONT_SIZE));
-            TYPES_BIG.add(new Font(name, Font.PLAIN, BIG_SIZE));
+            TYPES.add(new Font(name, Font.BOLD, FONT_SIZE));
+            TYPES_BIG.add(new Font(name, Font.BOLD, BIG_SIZE));
             TYPES_HUGE.add(new Font(name, Font.BOLD, HUGE_SIZE));
         }
     }

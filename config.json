@@ -62,7 +62,7 @@
 		}
 	],
 	"currUIStyle":22,
-	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv/",
+	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv\\",
 	"videoRate":1,
 	"playlistHistorySearch":[
 		"治愈轻音：繁星",
@@ -105,6 +105,7 @@
 	],
 	"playMode":103,
 	"isBlur":true,
+	"windowSize":3,
 	"fobTime":10,
 	"balance":0,
 	"artistHistorySearch":[
@@ -202,7 +203,7 @@
 			"coverImgThumbUrl":"https://p1.music.126.net/2bepi13lhHf8qVDoHGPJUg==/109951163734122907.jpg"
 		}
 	],
-	"musicDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music/",
+	"musicDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\music\\",
 	"tasks":[
 		{
 			"total":75467464,
@@ -5083,7 +5084,7 @@
 		"红豆",
 		"第33"
 	],
-	"cachePath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\cache/",
+	"cachePath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\cache\\",
 	"maxConcurrentTaskCount":5,
 	"equalizerData":[
 		0,
@@ -5137,7 +5138,7 @@
 	"miniX":1037,
 	"autoDownloadLyric":true,
 	"miniY":-9,
-	"musicPlaying":0,
+	"musicPlaying":-1,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,

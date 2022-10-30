@@ -4,10 +4,7 @@ import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.Fonts;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.SimplePath;
-import net.doge.constants.SpectrumConstants;
+import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomTextField;
@@ -17,7 +14,6 @@ import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.JsonUtils;
-import net.doge.utils.StringUtils;
 import net.sf.json.JSONObject;
 
 import javax.swing.*;
@@ -98,6 +94,9 @@ public class SettingDialog extends JDialog {
     private JPanel closeOptionPanel = new JPanel();
     private JLabel closeOptionLabel = new JLabel("关闭主界面时：");
     private JComboBox<String> closeOptionComboBox = new JComboBox();
+    private JPanel windowSizePanel = new JPanel();
+    private JLabel windowSizeLabel = new JLabel("窗口大小：");
+    private JComboBox<String> windowSizeComboBox = new JComboBox();
     private JPanel fobPanel = new JPanel();
     private JLabel fobLabel = new JLabel("快进/快退时间：");
     private JComboBox<String> fobComboBox = new JComboBox();
@@ -268,6 +267,8 @@ public class SettingDialog extends JDialog {
         maxConcurrentTaskCountTextField.setFont(globalFont);
         closeOptionLabel.setFont(globalFont);
         closeOptionComboBox.setFont(globalFont);
+        windowSizeLabel.setFont(globalFont);
+        windowSizeComboBox.setFont(globalFont);
         fobLabel.setFont(globalFont);
         fobComboBox.setFont(globalFont);
         specStyleLabel.setFont(globalFont);
@@ -289,6 +290,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setLayout(fl);
         maxConcurrentTaskCountPanel.setLayout(fl);
         closeOptionPanel.setLayout(fl);
+        windowSizePanel.setLayout(fl);
         fobPanel.setLayout(fl);
         specStylePanel.setLayout(fl);
         balancePanel.setLayout(fl);
@@ -306,6 +308,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setBorder(b);
         maxConcurrentTaskCountPanel.setBorder(b);
         closeOptionPanel.setBorder(b);
+        windowSizePanel.setBorder(b);
         fobPanel.setBorder(b);
         specStylePanel.setBorder(b);
         balancePanel.setBorder(b);
@@ -324,6 +327,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountPanel.setOpaque(false);
         maxConcurrentTaskCountPanel.setOpaque(false);
         closeOptionPanel.setOpaque(false);
+        windowSizePanel.setOpaque(false);
         fobPanel.setOpaque(false);
         specStylePanel.setOpaque(false);
         balancePanel.setOpaque(false);
@@ -340,6 +344,7 @@ public class SettingDialog extends JDialog {
         autoDownloadLrcCheckBox.setOpaque(false);
         videoOnlyCheckBox.setOpaque(false);
         closeOptionComboBox.setOpaque(false);
+        windowSizeComboBox.setOpaque(false);
         fobComboBox.setOpaque(false);
         specStyleComboBox.setOpaque(false);
         balanceComboBox.setOpaque(false);
@@ -348,6 +353,7 @@ public class SettingDialog extends JDialog {
         autoDownloadLrcCheckBox.setFocusPainted(false);
         videoOnlyCheckBox.setFocusPainted(false);
         closeOptionComboBox.setFocusable(false);
+        windowSizeComboBox.setFocusable(false);
         fobComboBox.setFocusable(false);
         specStyleComboBox.setFocusable(false);
         balanceComboBox.setFocusable(false);
@@ -364,6 +370,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountLabel.setForeground(labelColor);
         maxConcurrentTaskCountLabel.setForeground(labelColor);
         closeOptionLabel.setForeground(labelColor);
+        windowSizeLabel.setForeground(labelColor);
         fobLabel.setForeground(labelColor);
         specStyleLabel.setForeground(labelColor);
         balanceLabel.setForeground(labelColor);
@@ -397,12 +404,14 @@ public class SettingDialog extends JDialog {
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
         closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f, globalFont, buttonColor));
+        windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f, globalFont, buttonColor));
         fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, globalFont, buttonColor));
         specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, globalFont, buttonColor));
         balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, globalFont, buttonColor));
 
         // 下拉框边框
         closeOptionComboBox.setBorder(null);
+        windowSizeComboBox.setBorder(null);
         fobComboBox.setBorder(null);
         specStyleComboBox.setBorder(null);
         balanceComboBox.setBorder(null);
@@ -580,11 +589,13 @@ public class SettingDialog extends JDialog {
         maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountLabel);
         maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountTextField);
 
-        closeOptionComboBox.addItem("询问");
-        closeOptionComboBox.addItem("隐藏到托盘");
-        closeOptionComboBox.addItem("退出程序");
+        for (String name : CloseWindowOptions.names) closeOptionComboBox.addItem(name);
         closeOptionPanel.add(closeOptionLabel);
         closeOptionPanel.add(closeOptionComboBox);
+
+        for (String name : WindowSize.names) windowSizeComboBox.addItem(name);
+        windowSizePanel.add(windowSizeLabel);
+        windowSizePanel.add(windowSizeComboBox);
 
         for (int i = 5; i <= 60; i += 5) {
             String item = i + " 秒";
@@ -626,6 +637,7 @@ public class SettingDialog extends JDialog {
         centerPanel.add(maxSearchHistoryCountPanel);
         centerPanel.add(maxConcurrentTaskCountPanel);
         centerPanel.add(closeOptionPanel);
+        centerPanel.add(windowSizePanel);
         centerPanel.add(fobPanel);
 //        centerPanel.add(ratePanel);
         centerPanel.add(specStylePanel);
@@ -645,6 +657,7 @@ public class SettingDialog extends JDialog {
         maxSearchHistoryCountTextField.setText(String.valueOf(f.maxSearchHistoryCount));
         maxConcurrentTaskCountTextField.setText(String.valueOf(((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize()));
         closeOptionComboBox.setSelectedIndex(f.currCloseWindowOption);
+        windowSizeComboBox.setSelectedIndex(f.windowSize);
         specStyleComboBox.setSelectedIndex(f.currSpecStyle);
         balanceComboBox.setSelectedIndex(Double.valueOf(f.currBalance).intValue() + 1);
     }
@@ -723,6 +736,11 @@ public class SettingDialog extends JDialog {
             }
 
         f.currCloseWindowOption = closeOptionComboBox.getSelectedIndex();
+        f.windowSize = windowSizeComboBox.getSelectedIndex();
+        f.windowWidth = WindowSize.dimensions[f.windowSize][0];
+        f.windowHeight = WindowSize.dimensions[f.windowSize][1];
+        if (f.windowState != WindowState.MAXIMIZED) f.setSize(f.windowWidth, f.windowHeight);
+
         f.forwardOrBackwardTime = Integer.parseInt(((String) fobComboBox.getSelectedItem()).replace(" 秒", ""));
 //        f.currRate = Double.parseDouble(((String) rateComboBox.getSelectedItem()).replace("x", ""));
 //        f.getPlayer().setRate(f.currRate);

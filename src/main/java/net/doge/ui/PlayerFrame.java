@@ -66,8 +66,8 @@ public class PlayerFrame extends JFrame {
     private final PlayerFrame THIS = this;
     private final String TITLE = "轻音";
     // 窗口宽高
-    private final int WINDOW_WIDTH = 1245;
-    private final int WINDOW_HEIGHT = 788;
+    public int windowWidth = 1245;
+    public int windowHeight = 788;
     private final String SONG_NAME_LABEL = "歌曲名：";
     private final String ARTIST_LABEL = "艺术家：";
     private final String ALBUM_NAME_LABEL = "专辑名：";
@@ -124,7 +124,7 @@ public class PlayerFrame extends JFrame {
     private final String NO_MUSIC_MSG = "没有可以播放的歌曲";
     private final String ALREADY_PLAYING_MSG = "当前歌曲已经在播放";
     private final String NO_IMG_MSG = "没有可加载的图片";
-    private final String NO_PRIVILEGE_MSG = "获取资源失败";
+    private final String GET_RESOURCE_FAILED_MSG = "获取资源失败";
     private final String NO_NET_MSG = "无法连接到服务器";
     private final String TIME_OUT_MSG = "请求超时";
     private final String API_ERROR_MSG = "接口异常，请稍候再试";
@@ -567,9 +567,10 @@ public class PlayerFrame extends JFrame {
         for (UIStyle style : PreDefinedUIStyle.styles) styles.add(style);
     }
 
-    private int windowState = WindowState.NORMAL;
+    public int windowState = WindowState.NORMAL;
     // 关闭窗口操作
-    public int currCloseWindowOption = CloseWindowOptions.ASK;
+    public int currCloseWindowOption;
+    public int windowSize;
     public int forwardOrBackwardTime;
     public int videoForwardOrBackwardTime;
     // 播放视频时是否关闭主界面
@@ -2252,17 +2253,37 @@ public class PlayerFrame extends JFrame {
         });
         // 窗口圆角
         setDefaultLookAndFeelDecorated(true);
-        SwingUtilities.invokeLater(() -> setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 10, 10)));
         // 窗口透明
         // setWindowOpaque 存在性能问题，别用
 //        AWTUtilities.setWindowOpaque(THIS, false);
 //        setBackground(new Color(0, 0, 0, 0));
-        // 窗口大小
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        // 窗口最小尺寸
-        setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        // 窗口弹出在屏幕中央
-        setLocationRelativeTo(null);
+        // 窗口大小适应
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if (windowState == WindowState.MAXIMIZED) return;
+                setLocationRelativeTo(null);
+                // 窗口圆角
+                SwingUtilities.invokeLater(() -> setShape(new RoundRectangle2D.Double(0, 0, windowWidth, windowHeight, 10, 10)));
+                // 避免标签字太多超宽！！！
+                Dimension ld = new Dimension((int) (windowWidth * 0.3), 60);
+                songNameLabel.setPreferredSize(ld);
+                artistLabel.setPreferredSize(ld);
+                albumLabel.setPreferredSize(ld);
+                // 歌词面板
+                Dimension d = new Dimension((int) (windowWidth * 0.6), windowHeight);
+                Dimension d2 = new Dimension((int) (windowWidth * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
+                lrcScrollPane.setPreferredSize(d);
+                spectrumPanel.setPreferredSize(d2);
+                // 时间条
+                currTimeLabel.setVisible(false);
+                currTimeLabel.setVisible(true);
+                timeBar.setPreferredSize(new Dimension(windowWidth - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
+                // 背景
+                if (isBlur) doBlur();
+                else doStyleBlur(currUIStyle);
+            }
+        });
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
         topBox.addMouseListener(new MouseAdapter() {
@@ -2521,6 +2542,7 @@ public class PlayerFrame extends JFrame {
         // 最大化
         maximizeButton.addActionListener(e -> {
             if (windowState == NORMAL) {
+                windowState = WindowState.MAXIMIZED;
                 maximizeButton.setIcon(ImageUtils.dye(restoreIcon, currUIStyle.getButtonColor()));
                 // 取消桌面歌词显示
                 desktopLyricDialog.setVisible(false);
@@ -2528,27 +2550,20 @@ public class PlayerFrame extends JFrame {
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
                 Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
                 setBounds(0, 0, screenSize.width, screenSize.height - insets.bottom);
-                timeBar.setPreferredSize(new Dimension(getWidth() - currTimeLabel.getWidth() - durationLabel.getWidth() - 35 * 2, 12));
                 setShape(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
+                currTimeLabel.setVisible(false);
+                currTimeLabel.setVisible(true);
+                timeBar.setPreferredSize(new Dimension(getWidth() - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
                 if (isBlur) doBlur();
                 else doStyleBlur(currUIStyle);
-                windowState = WindowState.MAXIMIZED;
             } else {
+                windowState = WindowState.NORMAL;
                 maximizeButton.setIcon(ImageUtils.dye(maximizeIcon, currUIStyle.getButtonColor()));
                 // 如果开启桌面歌词，恢复桌面歌词显示
                 desktopLyricDialog.setVisible(showDesktopLyric);
                 // 恢复窗口大小
-                setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-                setLocationRelativeTo(null);
-                timeBar.setPreferredSize(new Dimension(getWidth() - currTimeLabel.getWidth() - durationLabel.getWidth() - 35 * 2, 12));
-                setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 10, 10));
-                if (isBlur) doBlur();
-                else doStyleBlur(currUIStyle);
-                windowState = WindowState.NORMAL;
+                setSize(windowWidth, windowHeight);
             }
-            // 设置歌词面板大小
-            Dimension d = new Dimension((int) (getWidth() * 0.6), getHeight());
-            lrcScrollPane.setPreferredSize(d);
 
             // 改变专辑图片大小并重新加载
             if (player.loadedMusic()) {
@@ -2763,6 +2778,11 @@ public class PlayerFrame extends JFrame {
         }
         // 载入关闭窗口操作
         currCloseWindowOption = config.optInt(ConfigConstants.CLOSE_WINDOW_OPTION, CloseWindowOptions.ASK);
+        // 载入窗口大小
+        windowSize = config.optInt(ConfigConstants.WINDOW_SIZE, WindowSize.MIDDLE);
+        windowWidth = WindowSize.dimensions[windowSize][0];
+        windowHeight = WindowSize.dimensions[windowSize][1];
+        setSize(windowWidth, windowHeight);
         // 载入播放视频是否关闭主界面
         videoOnly = config.optBoolean(ConfigConstants.VIDEO_ONLY, true);
         // 载入歌曲下载路径
@@ -3589,6 +3609,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.CURR_UI_STYLE, ListUtils.search(styles, currUIStyle));
         // 存入关闭窗口操作
         config.put(ConfigConstants.CLOSE_WINDOW_OPTION, currCloseWindowOption);
+        // 存入窗口大小
+        config.put(ConfigConstants.WINDOW_SIZE, windowSize);
         // 存入播放视频是否隐藏主界面
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
         // 存入歌曲下载路径
@@ -6001,25 +6023,7 @@ public class PlayerFrame extends JFrame {
         songNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         artistLabel.setHorizontalAlignment(SwingConstants.CENTER);
         albumLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        // 避免标签字太多超宽！！！
-        songNameLabel.setPreferredSize(new Dimension((int) (WINDOW_WIDTH * 0.3), 60));
-        artistLabel.setPreferredSize(new Dimension((int) (WINDOW_WIDTH * 0.3), 60));
-        albumLabel.setPreferredSize(new Dimension((int) (WINDOW_WIDTH * 0.3), 60));
 
-
-//        leftInfoBox.addComponentListener(new ComponentAdapter() {
-//            @SneakyThrows
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-//                Dimension size = leftInfoBox.getSize();
-////                albumImageLabel.setPreferredSize(new Dimension((int) (size.width * 0.8), (int) (size.height * 0.7)));
-////                leftBottomBox.setPreferredSize(new Dimension((int) (size.width * 0.8), (int) (size.height * 0.3)));
-//                // 改变专辑图片大小并重新加载
-//                albumImageWidth = albumImageHeight = (int) (WINDOW_WIDTH * 0.25);
-//                if (player.loadedFile()) loadAlbumImage();
-//                repaint();
-//            }
-//        });
         // 添加左下的标签
         leftBottomBox.add(Box.createVerticalGlue());
         leftBottomBox.add(songNameLabel);
@@ -7250,7 +7254,7 @@ public class PlayerFrame extends JFrame {
         // 在线音乐跳页事件
         Runnable netMusicGoPageAction = () -> {
             boolean songRequest = currMusicMusicInfo != null;
-            if (songRequest || !netMusicCurrKeyword.equals("")) {
+            if (songRequest || StringUtils.isNotEmpty(netMusicCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 显示节目搜索分类标签
@@ -8742,7 +8746,7 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 boolean songRequest = currPlaylistMusicInfo != null, playlistRequest = currPlaylistPlaylistInfo != null,
                         commentRequest = currPlaylistCommentInfo != null, userRequest = currPlaylistUserInfo != null;
-                if (songRequest || playlistRequest || commentRequest || userRequest || !netPlaylistCurrKeyword.equals("")) {
+                if (songRequest || playlistRequest || commentRequest || userRequest || StringUtils.isNotEmpty(netPlaylistCurrKeyword)) {
                     try {
                         // 搜索歌单并显示歌单列表
                         CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtils.getRelatedPlaylists(currPlaylistMusicInfo)
@@ -9727,7 +9731,7 @@ public class PlayerFrame extends JFrame {
         Runnable searchAlbumGoPageAction = () -> {
             boolean songRequest = currAlbumMusicInfo != null, artistRequest = currAlbumArtistInfo != null, albumRequest = currAlbumAlbumInfo != null,
                     userRequest = currAlbumUserInfo != null, commentRequest = currAlbumCommentInfo != null;
-            if (artistRequest || albumRequest || userRequest || commentRequest || !songRequest && StringUtils.isNotEmpty(netAlbumCurrKeyword)) {
+            if (artistRequest || albumRequest || userRequest || commentRequest || songRequest || StringUtils.isNotEmpty(netAlbumCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索专辑并显示专辑列表
@@ -9735,6 +9739,7 @@ public class PlayerFrame extends JFrame {
                                 : albumRequest ? MusicServerUtils.getSimilarAlbums(currAlbumAlbumInfo)
                                 : userRequest ? MusicServerUtils.getUserAlbums(currAlbumUserInfo, limit, netAlbumCurrPage)
                                 : commentRequest ? MusicServerUtils.getUserAlbums(currAlbumCommentInfo, limit, netAlbumCurrPage)
+                                : songRequest ? MusicServerUtils.getAlbumInfo(currAlbumMusicInfo.getAlbumId(), currAlbumMusicInfo.getSource())
                                 : MusicServerUtils.searchAlbums(netAlbumCurrKeyword, limit, netAlbumCurrPage);
                         List<NetAlbumInfo> netAlbumInfos = result.data;
                         Integer total = result.total;
@@ -10621,7 +10626,7 @@ public class PlayerFrame extends JFrame {
             boolean songRequest = currArtistMusicInfo != null, artistRequest = currArtistArtistInfo != null,
                     buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null,
                     radioCVRequest = currCVRadioInfo != null;
-            if (artistRequest || buddyRequest || radioRequest || radioCVRequest || !songRequest && !mvRequest && !netArtistCurrKeyword.equals("")) {
+            if (artistRequest || buddyRequest || radioRequest || radioCVRequest || songRequest || mvRequest || StringUtils.isNotEmpty(netArtistCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
@@ -10629,6 +10634,8 @@ public class PlayerFrame extends JFrame {
                                 : buddyRequest ? MusicServerUtils.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage, limit)
                                 : radioRequest ? MusicServerUtils.getRadioArtists(currArtistRadioInfo)
                                 : radioCVRequest ? MusicServerUtils.getRadioArtists(currCVRadioInfo)
+                                : songRequest ? MusicServerUtils.getArtistInfo(currArtistMusicInfo.getArtistId(), currArtistMusicInfo.getSource())
+                                : mvRequest ? MusicServerUtils.getArtistInfo(currArtistMvInfo.getCreatorId(), currArtistMvInfo.getSource())
                                 : MusicServerUtils.searchArtists(netArtistCurrKeyword, limit, netArtistCurrPage);
                         List<NetArtistInfo> netArtistInfos = result.data;
                         Integer total = result.total;
@@ -11859,13 +11866,15 @@ public class PlayerFrame extends JFrame {
         Runnable searchRadioGoPageAction = () -> {
             boolean songRequest = currRadioMusicInfo != null, songRecRequest = currRecRadioMusicInfo != null, userRequest = currRadioUserInfo != null,
                     artistRequest = currRadioArtistInfo != null, radioRequest = currRadioRadioInfo != null;
-            if (userRequest || artistRequest || radioRequest || !songRequest && !songRecRequest && !netRadioCurrKeyword.equals("")) {
+            if (userRequest || artistRequest || radioRequest || songRequest || songRecRequest || StringUtils.isNotEmpty(netRadioCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索电台并显示电台列表
                         CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtils.getUserRadios(currRadioUserInfo, limit, netRadioCurrPage)
                                 : artistRequest ? MusicServerUtils.getArtistRadios(currRadioArtistInfo, netRadioCurrPage, limit)
                                 : radioRequest ? MusicServerUtils.getSimilarRadios(currRadioRadioInfo)
+                                : songRequest ? MusicServerUtils.getRadioInfo(currRadioMusicInfo.getAlbumId(), currRadioMusicInfo.getSource())
+                                : songRecRequest ? MusicServerUtils.getRecRadios(currRecRadioMusicInfo)
                                 : MusicServerUtils.searchRadios(netRadioCurrKeyword, limit, netRadioCurrPage);
                         List<NetRadioInfo> netRadioInfos = result.data;
                         Integer total = result.total;
@@ -14325,7 +14334,7 @@ public class PlayerFrame extends JFrame {
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
                     songRequest = currAuthorMusicInfo != null;
             if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
-                    !playlistRequest && !mvRequest && !radioRequest && !commentRequest && !songRequest && !netUserCurrKeyword.equals("")) {
+                    playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtils.isNotEmpty(netUserCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索用户并显示用户列表
@@ -14334,6 +14343,11 @@ public class PlayerFrame extends JFrame {
                                 : playlistSubRequest ? MusicServerUtils.getPlaylistSubscribers(currSubscriberPlaylistInfo, limit, netUserCurrPage)
                                 : radioSubRequest ? MusicServerUtils.getRadioSubscribers(currSubscriberRadioInfo, limit, netUserCurrPage)
                                 : artistRequest ? MusicServerUtils.getArtistFans(currUserArtistInfo, limit, netUserCurrPage)
+                                : playlistRequest ? MusicServerUtils.getUserInfo(currUserPlaylistInfo.getCreatorId(), currUserPlaylistInfo.getSource())
+                                : mvRequest ? MusicServerUtils.getUserInfo(currUserMvInfo.getCreatorId(), currUserMvInfo.getSource())
+                                : radioRequest ? MusicServerUtils.getUserInfo(currUserRadioInfo.getDjId(), currUserRadioInfo.getSource())
+                                : commentRequest ? MusicServerUtils.getUserInfo(currUserCommentInfo.getUserId(), currUserCommentInfo.getSource())
+                                : songRequest ? MusicServerUtils.getUserInfo(currAuthorMusicInfo.getArtistId(), currAuthorMusicInfo.getSource())
                                 : MusicServerUtils.searchUsers(netUserCurrKeyword, limit, netUserCurrPage);
                         List<NetUserInfo> netUserInfos = result.data;
                         Integer total = result.total;
@@ -18941,13 +18955,9 @@ public class PlayerFrame extends JFrame {
             }
         });
         // 歌词面板最佳大小(JList 需要加到 JScrollPane 中才能调整大小！)
-        Dimension d = new Dimension((int) (WINDOW_WIDTH * 0.6), WINDOW_HEIGHT);
-        Dimension d2 = new Dimension((int) (WINDOW_WIDTH * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
-        Dimension d3 = new Dimension(1, SpectrumConstants.BAR_MAX_HEIGHT);
+        Dimension d = new Dimension(1, SpectrumConstants.BAR_MAX_HEIGHT);
         lrcScrollPane.setBorder(null);
-        lrcScrollPane.setPreferredSize(d);
-        spectrumPanel.setPreferredSize(d2);
-        spectrumPanel.setMinimumSize(d3);
+        spectrumPanel.setMinimumSize(d);
 //        lrcScrollPane.setMinimumSize(dimension);
 //        lrcScrollPane.setMaximumSize(new Dimension((int)(WINDOW_WIDTH * 0.6), (int)(WINDOW_HEIGHT * 1)));
         lrcAndSpecBox.add(lrcScrollPane);
@@ -19360,11 +19370,8 @@ public class PlayerFrame extends JFrame {
         switchBlurButton.addMouseListener(new ButtonMouseListener(switchBlurButton, THIS));
         switchBlurButton.setPreferredSize(new Dimension(blurOnIcon.getIconWidth(), blurOnIcon.getIconHeight()));
         switchBlurButton.addActionListener(e -> {
-            if (isBlur = !isBlur) {
-                doBlur();
-            } else {
-                doStyleBlur(currUIStyle);
-            }
+            if (isBlur = !isBlur) doBlur();
+            else doStyleBlur(currUIStyle);
             switchBlurButton.setIcon(ImageUtils.dye(isBlur ? blurOnIcon : blurOffIcon, currUIStyle.getButtonColor()));
         });
         // 音效按钮
@@ -19567,7 +19574,7 @@ public class PlayerFrame extends JFrame {
         durationLabel.setText(player.getDurationString());
         // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
         String t = durationLabel.getText().replaceAll("[1-9]", "0");
-        FontMetrics m = durationLabel.getFontMetrics(Fonts.NORMAL);
+        FontMetrics m = durationLabel.getFontMetrics(globalFont);
         Dimension d = new Dimension(m.stringWidth(t) + 2, durationLabel.getHeight());
         currTimeLabel.setPreferredSize(d);
         durationLabel.setPreferredSize(d);
@@ -19588,7 +19595,7 @@ public class PlayerFrame extends JFrame {
         if (!lrcTimer.isRunning()) lrcTimer.start();
 
         // 设置切换面板文字
-        final int maxLen = 38;
+        final int maxLen = 36;
         if (netMusicInfo != null)
             changePaneButton.setText(StringUtils.textToHtml(StringUtils.shorten(netMusicInfo.toSimpleString(), maxLen)));
         else
@@ -20151,26 +20158,22 @@ public class PlayerFrame extends JFrame {
                 if (url.endsWith(Format.WAV) || musicInfo.isFlac()) {
                     String fileName = musicInfo.toFileName();
                     file = new AudioFile(SimplePath.CACHE_PATH + fileName);
-                    // 下载歌曲并播放
-                    if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
-                        loading.start();
-                        loading.setText(LOADING_MSG);
-                        MusicServerUtils.download(
-                                loading,
-                                musicInfo.getUrl(),
-                                file.getPath());
-                    }
-                    // flac 格式下载完文件后转为 mp3 再播放
-                    if (musicInfo.isFlac()) {
-                        AudioFile tmpFile = new AudioFile(FileUtils.replaceSuffix(file, Format.MP3));
-                        if (!tmpFile.exists()) {
+                    AudioFile tmpFile = new AudioFile(FileUtils.replaceSuffix(file, Format.MP3));
+                    if (!tmpFile.exists()) {
+                        // 下载歌曲
+                        if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
+                            loading.start();
+                            loading.setText(LOADING_MSG);
+                            MusicServerUtils.download(loading, musicInfo.getUrl(), file.getPath());
+                        }
+                        // Flac 文件需要转换格式，并删除原来的文件
+                        if (musicInfo.isFlac()) {
                             loading.setText("转换音频文件格式......");
                             MusicUtils.convert(file, tmpFile);
-                            // 暂停一段时间，等待转换成功
-//                            Thread.sleep(1000);
+                            file.delete();
                         }
-                        file = tmpFile;
                     }
+                    file = tmpFile;
                     if (loading.isShowing()) loading.stop();
                 }
             } catch (Exception e) {
@@ -20181,7 +20184,7 @@ public class PlayerFrame extends JFrame {
                 } else if (e instanceof IllegalMediaException) {
                     new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
                 } else {
-                    new TipDialog(THIS, NO_PRIVILEGE_MSG).showDialog();
+                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                 }
                 // 异常后允许重试的情况下自动播放下一首，超出最大重试次数停止，防止死循环
                 if (currPlayMode != PlayMode.SINGLE && allowRetry) {
@@ -22310,7 +22313,7 @@ public class PlayerFrame extends JFrame {
                 } else if (e instanceof HttpException) {
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } else {
-                    new TipDialog(THIS, NO_PRIVILEGE_MSG).showDialog();
+                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                 }
             }
         });
@@ -22439,7 +22442,7 @@ public class PlayerFrame extends JFrame {
                 MusicServerUtils.fillMvInfo(netMvInfo);
                 String url = netMvInfo.getUrl();
                 if (StringUtils.isEmpty(url)) {
-                    new TipDialog(THIS, NO_PRIVILEGE_MSG).showDialog();
+                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                     return;
                 }
                 if (player.isPlaying()) playOrPause();
@@ -22455,7 +22458,7 @@ public class PlayerFrame extends JFrame {
                 } else if (e instanceof HttpException) {
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } else {
-                    new TipDialog(THIS, NO_PRIVILEGE_MSG).showDialog();
+                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                 }
             } finally {
                 dialog.close();
@@ -22472,7 +22475,7 @@ public class PlayerFrame extends JFrame {
                 MusicServerUtils.fillMvInfo(mvInfo);
                 String url = mvInfo.getUrl();
                 if (StringUtils.isEmpty(url)) {
-                    new TipDialog(THIS, NO_PRIVILEGE_MSG).showDialog();
+                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                     return;
                 }
 
@@ -22515,7 +22518,7 @@ public class PlayerFrame extends JFrame {
                 } else if (e instanceof HttpException) {
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } else {
-                    new TipDialog(THIS, NO_PRIVILEGE_MSG).showDialog();
+                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                 }
             } finally {
                 dialog.close();
@@ -22637,8 +22640,8 @@ public class PlayerFrame extends JFrame {
             if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
-                gw = WINDOW_WIDTH;
-                gh = WINDOW_HEIGHT;
+                gw = windowWidth;
+                gh = windowHeight;
             }
             try {
                 // 改变迷你窗口背景
