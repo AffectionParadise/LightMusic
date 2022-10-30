@@ -233,6 +233,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon clearCacheIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "clearCache.png");
     // 设置图标
     private ImageIcon settingsIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "settings.png");
+    // 捐赠图标
+    private ImageIcon donateIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "donate.png");
     // 指南图标
     private ImageIcon helpIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "help.png");
     // 列表为空提示图标
@@ -734,6 +736,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem clearCache = new CustomMenuItem("清空播放缓存      ");
     private CustomMenuItem manageStyleMenuItem = new CustomMenuItem("更换主题      ");
     private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义主题      ");
+    private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠      ");
     private CustomMenuItem helpMenuItem = new CustomMenuItem("指南      ");
 
     // 歌名
@@ -4082,6 +4085,7 @@ public class PlayerFrame extends JFrame {
         styleCustomMenuItem.setFont(globalFont);
         manageStyleMenuItem.setFont(globalFont);
         settingMenuItem.setFont(globalFont);
+        donateMenuItem.setFont(globalFont);
         helpMenuItem.setFont(globalFont);
 
         openFileInit();
@@ -4091,6 +4095,7 @@ public class PlayerFrame extends JFrame {
         individuationMenuInit();
 
         settingMenuItem.addActionListener(e -> new SettingDialog(THIS).showDialog());
+        donateMenuItem.addActionListener(e -> new DonateDialog(THIS).showDialog());
         helpMenuItem.addActionListener(e -> new ConfirmDialog(THIS, HELP_MSG, "确定").showDialog());
 
         mainMenu.add(closeSong);
@@ -4098,6 +4103,7 @@ public class PlayerFrame extends JFrame {
         mainMenu.addSeparator();
         mainMenu.add(settingMenuItem);
         mainMenu.addSeparator();
+        mainMenu.add(donateMenuItem);
         mainMenu.add(helpMenuItem);
     }
 
@@ -20594,6 +20600,7 @@ public class PlayerFrame extends JFrame {
         closeSong.setDisabledIcon(ImageUtils.dye(closeSongIcon, disabledColor));
         clearCache.setIcon(ImageUtils.dye(clearCacheIcon, menuItemColor));
         settingMenuItem.setIcon(ImageUtils.dye(settingsIcon, menuItemColor));
+        donateMenuItem.setIcon(ImageUtils.dye(donateIcon, menuItemColor));
         helpMenuItem.setIcon(ImageUtils.dye(helpIcon, menuItemColor));
 
         addFileMenuItem.setIcon(ImageUtils.dye(fileIcon, menuItemColor));
@@ -23075,7 +23082,20 @@ public class PlayerFrame extends JFrame {
         System.setProperty("swing.aatext", "true");
     }
 
+    static boolean validateHash() {
+        File f1 = new File(SimplePath.ICON_PATH + "weixin.png");
+        File f2 = new File(SimplePath.ICON_PATH + "alipay.png");
+        if (!f1.exists() || !"725224c2fab9943cccd00aadbe18a446ad2a989454ce304bc85b90dea939d655".equals(FileUtils.getHash(f1)))
+            return false;
+        if (!f2.exists() || !"dc902c3f48314ed24f5f0b62fb5854346e8b0faf80252f5da6aecc9951dda7cc".equals(FileUtils.getHash(f2)))
+            return false;
+        return true;
+    }
+
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, AWTException, IOException, InterruptedException {
+        GlobalExecutors.requestExecutor.execute(() -> {
+            if (!validateHash()) System.exit(-1);
+        });
         enableAntiAliasing();
         new PlayerFrame().initUI();
     }

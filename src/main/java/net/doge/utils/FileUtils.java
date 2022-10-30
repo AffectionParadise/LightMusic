@@ -1,5 +1,6 @@
 package net.doge.utils;
 
+import cn.hutool.core.io.FileUtil;
 import net.doge.models.Statement;
 
 import java.io.*;
@@ -7,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.Instant;
+import java.security.MessageDigest;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -42,6 +43,51 @@ public class FileUtils {
         String name = file.getName();
         return name.substring(name.lastIndexOf('.') + 1).toLowerCase();
     }
+
+    /**
+     * 计算文件hash值
+     */
+    public static String getHash(File file) {
+        FileInputStream fis = null;
+        String sha256 = null;
+        try {
+            fis = new FileInputStream(file);
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte buffer[] = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer, 0, 1024)) != -1) {
+                md.update(buffer, 0, length);
+            }
+            byte[] digest = md.digest();
+            sha256 = byte2hexLower(digest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sha256;
+    }
+
+    private static String byte2hexLower(byte[] b) {
+        String hs = "";
+        String stmp = "";
+        for (int i = 0; i < b.length; i++) {
+            stmp = Integer.toHexString(b[i] & 0XFF);
+            if (stmp.length() == 1) {
+                hs = hs + "0" + stmp;
+            } else {
+                hs = hs + stmp;
+            }
+        }
+        return hs;
+    }
+
 
     /**
      * 去掉文件名中的非法字符
