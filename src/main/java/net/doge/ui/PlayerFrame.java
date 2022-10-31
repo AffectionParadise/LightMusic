@@ -66,8 +66,8 @@ public class PlayerFrame extends JFrame {
     private final PlayerFrame THIS = this;
     private final String TITLE = "轻音";
     // 窗口宽高
-    public int windowWidth = 1245;
-    public int windowHeight = 788;
+    public int windowWidth;
+    public int windowHeight;
     private final String SONG_NAME_LABEL = "歌曲名：";
     private final String ARTIST_LABEL = "艺术家：";
     private final String ALBUM_NAME_LABEL = "专辑名：";
@@ -2264,24 +2264,35 @@ public class PlayerFrame extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                if (windowState == WindowState.MAXIMIZED) return;
+                int w = getWidth(), h = getHeight();
                 setLocationRelativeTo(null);
                 // 窗口圆角
-                SwingUtilities.invokeLater(() -> setShape(new RoundRectangle2D.Double(0, 0, windowWidth, windowHeight, 10, 10)));
+                SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
+                        : new RoundRectangle2D.Double(0, 0, w, h, 10, 10)));
                 // 避免标签字太多超宽！！！
-                Dimension ld = new Dimension((int) (windowWidth * 0.3), 60);
+                Dimension ld = new Dimension((int) (w * 0.3), (int) (h * 0.077));
                 songNameLabel.setPreferredSize(ld);
                 artistLabel.setPreferredSize(ld);
                 albumLabel.setPreferredSize(ld);
                 // 歌词面板
-                Dimension d = new Dimension((int) (windowWidth * 0.6), windowHeight);
-                Dimension d2 = new Dimension((int) (windowWidth * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
+                Dimension d = new Dimension((int) (w * 0.6), h);
+                Dimension d2 = new Dimension((int) (w * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
                 lrcScrollPane.setPreferredSize(d);
                 spectrumPanel.setPreferredSize(d2);
                 // 时间条
                 currTimeLabel.setVisible(false);
                 currTimeLabel.setVisible(true);
-                timeBar.setPreferredSize(new Dimension(windowWidth - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
+                timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
+                // 专辑图片
+                albumImageWidth = (int) (w * 0.33);
+                Dimension ad = new Dimension((int) (w * 0.4), Integer.MAX_VALUE);
+                albumImageLabel.setMaximumSize(ad);
+                if (player.loadedMusic()) {
+                    showAlbumImage();
+                    // 防止歌词面板错位
+                    infoAndLrcBox.add(leftInfoBox);
+                    infoAndLrcBox.add(lrcAndSpecBox);
+                }
                 // 背景
                 if (isBlur) doBlur();
                 else doStyleBlur(currUIStyle);
@@ -2553,12 +2564,6 @@ public class PlayerFrame extends JFrame {
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
                 Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
                 setBounds(0, 0, screenSize.width, screenSize.height - insets.bottom);
-                setShape(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
-                currTimeLabel.setVisible(false);
-                currTimeLabel.setVisible(true);
-                timeBar.setPreferredSize(new Dimension(getWidth() - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
-                if (isBlur) doBlur();
-                else doStyleBlur(currUIStyle);
             } else {
                 windowState = WindowState.NORMAL;
                 maximizeButton.setIcon(ImageUtils.dye(maximizeIcon, currUIStyle.getButtonColor()));
@@ -2566,15 +2571,6 @@ public class PlayerFrame extends JFrame {
                 desktopLyricDialog.setVisible(showDesktopLyric);
                 // 恢复窗口大小
                 setSize(windowWidth, windowHeight);
-            }
-
-            // 改变专辑图片大小并重新加载
-            if (player.loadedMusic()) {
-                try {
-                    loadAlbumImage();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
             }
         });
         // 关闭窗口
@@ -5979,6 +5975,7 @@ public class PlayerFrame extends JFrame {
         // 设置 HTML 标签并居中图片
         albumImageLabel.setText("<html></html>");
         albumImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        albumImageLabel.setVerticalAlignment(SwingConstants.CENTER);
         // 导出专辑图片事件
         saveAlbumImageMenuItem.addActionListener(e -> {
             saveImg(player.getMusicInfo().getAlbumImage());
@@ -19499,10 +19496,9 @@ public class PlayerFrame extends JFrame {
         });
         // 按钮水平隔开一段间距
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(12);
+        fl.setHgap(10);
         controlPanel.setLayout(fl);
-        controlPanel.setBorder(BorderFactory.createEmptyBorder(9, 0, 0, 12));
-//        controlPanel.add(changePanePanel);
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 12));
         controlPanel.add(backwardButton);
         controlPanel.add(lastButton);
         controlPanel.add(playOrPauseButton);
@@ -19519,7 +19515,7 @@ public class PlayerFrame extends JFrame {
         controlPanel.add(goToPlayQueueButton);
 
         fl = new FlowLayout();
-        fl.setHgap(12);
+        fl.setHgap(10);
         changePanePanel.setLayout(fl);
         changePanePanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         changePanePanel.add(changePaneButton);
@@ -19568,7 +19564,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 界面加载新文件
-    void loadUI(AudioFile file, NetMusicInfo netMusicInfo) throws IOException {
+    void loadUI(AudioFile file, NetMusicInfo netMusicInfo) {
         // 重置标题
         String title = TITLE + "（正在播放：" + (netMusicInfo != null ? netMusicInfo.toSimpleString() : file) + "）";
         titleLabel.setText(StringUtils.textToHtml(title));
@@ -19677,9 +19673,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 加载专辑图片
-    void loadAlbumImage() throws IOException {
-        albumImageWidth = (int) (getWidth() * 0.32);
-
+    void loadAlbumImage() {
         // 设置为默认专辑图片
         saveAlbumImageMenuItem.setEnabled(false);
         BufferedImage img = ImageUtils.width(ImageUtils.cropCenter(defaultAlbumImage), albumImageWidth);
@@ -23046,9 +23040,9 @@ public class PlayerFrame extends JFrame {
     static boolean validateHash() {
         File f1 = new File(SimplePath.ICON_PATH + "weixin.png");
         File f2 = new File(SimplePath.ICON_PATH + "alipay.png");
-        if (!f1.exists() || !"725224c2fab9943cccd00aadbe18a446ad2a989454ce304bc85b90dea939d655".equals(FileUtils.getHash(f1)))
+        if (!f1.exists() || !"254dd3cda4ac3b7f56505b097029afd6a9f2f450e91ee3a476b0c451391ab891".equals(FileUtils.getHash(f1)))
             return false;
-        if (!f2.exists() || !"dc902c3f48314ed24f5f0b62fb5854346e8b0faf80252f5da6aecc9951dda7cc".equals(FileUtils.getHash(f2)))
+        if (!f2.exists() || !"2646a9347bd43e2f5c9a15683de498e00f83ab74cd98f07522b23d58ed6e8cf7".equals(FileUtils.getHash(f2)))
             return false;
         return true;
     }

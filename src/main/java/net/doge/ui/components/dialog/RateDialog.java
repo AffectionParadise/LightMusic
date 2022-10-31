@@ -131,7 +131,7 @@ public class RateDialog extends JDialog {
         slider.setFocusable(false);
         slider.setUI(new VSliderUI(slider, style.getSliderColor(), style.getSliderColor()));
         slider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        slider.setPreferredSize(new Dimension(30, 500));
+        slider.setPreferredSize(new Dimension(35, 500));
         slider.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         slider.setMinimum(MIN_VAL);
         slider.setMaximum(MAX_VAL);

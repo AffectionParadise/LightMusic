@@ -42,8 +42,8 @@ public class VideoDialog extends JDialog {
     private final int TIME_BAR_MIN = 0;
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     private final int MAX_VOLUME = 100;
-    private final int MEDIA_WIDTH = 1200;
-    private final int MEDIA_HEIGHT = 675;
+    private int mediaWidth;
+    private int mediaHeight;
 
     // 最大阴影透明度
     private final int TOP_OPACITY = 30;
@@ -215,6 +215,9 @@ public class VideoDialog extends JDialog {
         title = netMvInfo.toSimpleString();
         style = f.getCurrUIStyle();
 
+        mediaWidth = WindowSize.videoDimensions[f.windowSize][0];
+        mediaHeight = WindowSize.videoDimensions[f.windowSize][1];
+
         initUI();
     }
 
@@ -250,13 +253,13 @@ public class VideoDialog extends JDialog {
                 currTimeLabel.setVisible(false);
                 currTimeLabel.setVisible(true);
                 timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 20 * 2, 12));
-                setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
+                setSize(mediaWidth + 2 * pixels, mediaHeight + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
             }
         });
 
         setUndecorated(true);
         setResizable(false);
-        setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + 2 * pixels);
+        setSize(mediaWidth + 2 * pixels, mediaHeight + 2 * pixels);
         globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
@@ -309,7 +312,7 @@ public class VideoDialog extends JDialog {
         int width = media.getWidth(), height = media.getHeight();
         if (width == 0 || height == 0) return;
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
-        int dw = fullScreen ? ss.width : MEDIA_WIDTH, dh = fullScreen ? ss.height : MEDIA_HEIGHT;
+        int dw = fullScreen ? ss.width : mediaWidth, dh = fullScreen ? ss.height : mediaHeight;
         // 调整为合适的尺寸
         int fw, fh;
         // 优先适应宽度
@@ -338,8 +341,8 @@ public class VideoDialog extends JDialog {
 //                @Override
 //                public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
 //                    int width = media.getWidth(), height = media.getHeight();
-//                    if (width > height) mediaView.setFitWidth(MEDIA_WIDTH);
-//                    else mediaView.setFitWidth(MEDIA_WIDTH_2);
+//                    if (width > height) mediaView.setFitWidth(mediaWidth);
+//                    else mediaView.setFitWidth(mediaWidth_2);
 //                }
 //            });
         media.heightProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -728,7 +731,7 @@ public class VideoDialog extends JDialog {
     }
 
     public void restoreWindow() {
-        setSize(MEDIA_WIDTH + 2 * pixels, MEDIA_HEIGHT + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
+        setSize(mediaWidth + 2 * pixels, mediaHeight + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
         fullScreen = false;
         topPanel.setVisible(true);
         bottomBox.setVisible(true);
