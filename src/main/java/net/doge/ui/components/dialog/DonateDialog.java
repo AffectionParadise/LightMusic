@@ -42,7 +42,11 @@ public class DonateDialog extends JDialog {
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
     // 标题
-    private String title = "捐赠";
+    private String title = "捐赠 & 感谢";
+    private String thankMsg = "同时感谢以下本项目使用到的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
+            "https://github.com/Binaryify/NeteaseCloudMusicApi\n" +
+            "https://github.com/jsososo/QQMusicApi\n" +
+            "https://github.com/jsososo/MiguMusicApi";
 
     // 标题面板
     private JPanel topPanel = new JPanel();
@@ -64,6 +68,8 @@ public class DonateDialog extends JDialog {
     private JLabel weixinLabel = new JLabel("微信");
     private JPanel rightPanel = new JPanel();
     private JLabel alipayLabel = new JLabel("支付宝");
+    private JPanel thankPanel = new JPanel();
+    private JLabel thankLabel = new JLabel(StringUtils.textToHtml(thankMsg));
     private JPanel buttonPanel = new JPanel();
     private ConfirmDialogPanel mainPanel = new ConfirmDialogPanel();
 
@@ -133,11 +139,13 @@ public class DonateDialog extends JDialog {
         messageLabel.setFont(globalFont);
         weixinLabel.setFont(globalFont);
         alipayLabel.setFont(globalFont);
+        thankLabel.setFont(globalFont);
         yes.setFont(globalFont);
 
         messageLabel.setForeground(labelColor);
         weixinLabel.setForeground(labelColor);
         alipayLabel.setForeground(labelColor);
+        thankLabel.setForeground(labelColor);
 
         messagePanel.add(messageLabel);
         messagePanel.setOpaque(false);
@@ -160,10 +168,16 @@ public class DonateDialog extends JDialog {
         cPanel.setLayout(new BoxLayout(cPanel, BoxLayout.X_AXIS));
         cPanel.add(leftPanel);
         cPanel.add(rightPanel);
+
+        thankPanel.setOpaque(false);
+        thankPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+        thankPanel.add(thankLabel);
+
         centerPanel.setOpaque(false);
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(messagePanel, BorderLayout.NORTH);
         centerPanel.add(cPanel, BorderLayout.CENTER);
+        centerPanel.add(thankPanel, BorderLayout.SOUTH);
 
         FlowLayout fl = new FlowLayout();
         fl.setHgap(20);

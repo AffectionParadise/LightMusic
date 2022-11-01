@@ -736,7 +736,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem clearCache = new CustomMenuItem("清空播放缓存      ");
     private CustomMenuItem manageStyleMenuItem = new CustomMenuItem("更换主题      ");
     private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义主题      ");
-    private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠      ");
+    private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠 & 感谢      ");
     private CustomMenuItem helpMenuItem = new CustomMenuItem("指南      ");
 
     // 歌名
