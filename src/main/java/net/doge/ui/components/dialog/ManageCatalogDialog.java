@@ -3,10 +3,7 @@ package net.doge.ui.components.dialog;
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.Colors;
-import net.doge.constants.Fonts;
-import net.doge.constants.SimplePath;
-import net.doge.constants.UIStyleConstants;
+import net.doge.constants.*;
 import net.doge.models.AudioFile;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
@@ -144,8 +141,11 @@ public class ManageCatalogDialog extends JDialog {
     public void updateBlur() {
         BufferedImage bufferedImage;
         boolean slight = false;
-        if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else {
+        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
+            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
+            if (f.blurType == BlurType.MC)
+                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+        } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();
             slight = style.isPureColor();

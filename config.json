@@ -104,7 +104,6 @@
 		"三国"
 	],
 	"playMode":103,
-	"isBlur":true,
 	"windowSize":1,
 	"fobTime":10,
 	"balance":0,
@@ -493,7 +492,12 @@
 	"spectrumStyle":0,
 	"lyricType":0,
 	"chineseType":0,
+	"blurType":2,
 	"history":[
+		"D:\\音乐\\嫁妆 - 安与骑兵.mp3",
+		"D:\\音乐\\雁书 - 艾热 AIR.mp3",
+		"D:\\音乐\\Let Me - 亚哲大大、Re_houseE.mp3",
+		"D:\\音乐\\世上的盐 - 苏运莹、万象凡音.mp3",
 		"D:\\音乐\\Nightcore - Stereo Love.mp3",
 		{
 			"duration":247,
@@ -934,7 +938,6 @@
 			"id":"6469472",
 			"programId":""
 		},
-		"D:\\音乐\\世上的盐 - 苏运莹、万象凡音.mp3",
 		{
 			"duration":224.426,
 			"albumName":"雨 RAIN RAIN RAIN",
@@ -1627,8 +1630,6 @@
 			"id":"1627940",
 			"programId":""
 		},
-		"D:\\音乐\\雁书 - 艾热 AIR.mp3",
-		"D:\\音乐\\Let Me - 亚哲大大、Re_houseE.mp3",
 		{
 			"duration":210.494,
 			"albumName":"",
@@ -4038,19 +4039,6 @@
 			"source":7,
 			"id":"5809581",
 			"programId":""
-		},
-		{
-			"duration":7.116,
-			"albumName":"",
-			"artist":"CV荻野",
-			"mvId":"",
-			"format":"m4a",
-			"name":"CV荻野-介绍音",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"5948345",
-			"programId":""
 		}
 	],
 	"collection":[
@@ -5138,14 +5126,13 @@
 	"miniX":1037,
 	"autoDownloadLyric":true,
 	"miniY":-9,
-	"musicPlaying":-1,
+	"musicPlaying":3,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
 	"musicList":[
 		"D:\\音乐\\Nightcore - Stereo Love.mp3",
 		"D:\\音乐\\世上的盐 - 苏运莹、万象凡音.mp3",
-		"D:\\音乐\\Let Me - 亚哲大大、Re_houseE.mp3",
 		"D:\\音乐\\雁书 - 艾热 AIR.mp3",
 		"D:\\音乐\\嫁妆 - 安与骑兵.mp3",
 		"D:\\音乐\\英雄联盟-音乐模式 - 一夕Clarence、球球特别大.mp3",
@@ -5928,7 +5915,6 @@
 	"playQueue":[
 		"D:\\音乐\\Nightcore - Stereo Love.mp3",
 		"D:\\音乐\\世上的盐 - 苏运莹、万象凡音.mp3",
-		"D:\\音乐\\Let Me - 亚哲大大、Re_houseE.mp3",
 		"D:\\音乐\\雁书 - 艾热 AIR.mp3",
 		"D:\\音乐\\嫁妆 - 安与骑兵.mp3",
 		"D:\\音乐\\英雄联盟-音乐模式 - 一夕Clarence、球球特别大.mp3",
@@ -6578,5 +6564,6 @@
 			"source":0,
 			"id":"19723756"
 		}
-	]
+	],
+	"lyricOffset":0.5
 }

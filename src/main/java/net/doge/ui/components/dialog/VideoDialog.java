@@ -278,15 +278,18 @@ public class VideoDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        boolean isPureColor = false;
-        if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else {
+        boolean slight = false;
+        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
+            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
+            if (f.blurType == BlurType.MC)
+                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+        } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();
-            isPureColor = style.isPureColor();
+            slight = style.isPureColor();
         }
         if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
-        doBlur(bufferedImage, isPureColor);
+        doBlur(bufferedImage, slight);
     }
 
     public void showDialog() {
@@ -785,7 +788,7 @@ public class VideoDialog extends JDialog {
         }
     }
 
-    void doBlur(BufferedImage bufferedImage, boolean isPureColor) {
+    void doBlur(BufferedImage bufferedImage, boolean slight) {
         Dimension size = getSize();
         int dw = size.width, dh = size.height;
         try {
@@ -797,7 +800,7 @@ public class VideoDialog extends JDialog {
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
             bufferedImage = ImageUtils.doBlur(bufferedImage);
-            if (!isPureColor) bufferedImage = ImageUtils.darker(bufferedImage);
+            if (!slight) bufferedImage = ImageUtils.darker(bufferedImage);
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();

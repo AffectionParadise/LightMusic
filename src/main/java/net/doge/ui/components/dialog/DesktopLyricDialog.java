@@ -33,6 +33,7 @@ public class DesktopLyricDialog extends JDialog {
     private PlayerFrame f;
     private UIStyle style;
     private Color foreColor;
+    private JPanel lyricPanel = new JPanel();
     public LyricLabel lyricLabel = new LyricLabel("", JLabel.CENTER);
     private JLabel tempLabel = new JLabel("", JLabel.CENTER);
     private MainPanel mainPanel = new MainPanel();
@@ -129,8 +130,10 @@ public class DesktopLyricDialog extends JDialog {
         tempLabel.setForeground(themeColor);
         tempLabel.setFont(font);
         setLyric(" ", 0);
+        lyricLabel.setHorizontalAlignment(SwingConstants.CENTER);
         lyricLabel.setVerticalAlignment(SwingConstants.CENTER);
-        lyricLabel.setVerticalTextPosition(SwingConstants.CENTER);
+        lyricLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+
         FlowLayout fl = new FlowLayout();
         fl.setHgap(15);
         buttonPanel.setLayout(fl);
@@ -149,10 +152,14 @@ public class DesktopLyricDialog extends JDialog {
         onTop.setVisible(false);
         close.setVisible(false);
 
+        lyricPanel.setOpaque(false);
+        lyricPanel.setLayout(new BorderLayout());
+        lyricPanel.add(lyricLabel);
+
         mainPanel.setOpaque(false);
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(buttonPanel, BorderLayout.NORTH);
-        mainPanel.add(lyricLabel, BorderLayout.CENTER);
+        mainPanel.add(lyricPanel, BorderLayout.CENTER);
 
         setLayout(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);

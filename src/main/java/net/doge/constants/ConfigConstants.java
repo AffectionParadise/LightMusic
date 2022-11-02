@@ -37,10 +37,12 @@ public class ConfigConstants {
     public final static String MAX_CONCURRENT_TASK_COUNT = "maxConcurrentTaskCount";
     // 是否显示频谱
     public final static String SHOW_SPECTRUM = "showSpectrum";
-    // 是否碟片虚化
-    public final static String IS_BLUR = "isBlur";
+    // 虚化类型
+    public final static String BLUR_TYPE = "blurType";
     // 是否自动下载歌词
     public final static String AUTO_DOWNLOAD_LYRIC = "autoDownloadLyric";
+    // 歌词偏移
+    public final static String LYRIC_OFFSET = "lyricOffset";
     // 是否显示桌面歌词
     public final static String SHOW_DESKTOP_LYRIC = "showDesktopLyric";
     // 是否锁定桌面歌词

@@ -2,10 +2,7 @@ package net.doge.ui.components.dialog;
 
 import javafx.embed.swing.JFXPanel;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.Colors;
-import net.doge.constants.Fonts;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.SimplePath;
+import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.DialogButton;
@@ -208,8 +205,11 @@ public class DonateDialog extends JDialog {
     public void updateBlur() {
         BufferedImage bufferedImage;
         boolean slight = false;
-        if (f.getIsBlur() && f.getPlayer().loadedMusic()) bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-        else {
+        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
+            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
+            if (f.blurType == BlurType.MC)
+                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+        } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();
             slight = style.isPureColor();

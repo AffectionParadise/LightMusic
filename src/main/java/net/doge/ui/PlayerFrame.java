@@ -285,8 +285,10 @@ public class PlayerFrame extends JFrame {
     private ImageIcon spectrumOnIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumOn.png");
     // 频谱关闭图标
     private ImageIcon spectrumOffIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumoff.png");
-    // 虚化开启图标
-    private ImageIcon blurOnIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOn.png");
+    // 高斯模糊图标
+    private ImageIcon gsBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOn.png");
+    // 纯主色调图标
+    private ImageIcon mcBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "pureColorBlur.png");
     // 虚化关闭图标
     private ImageIcon blurOffIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOff.png");
     // 音效图标
@@ -462,8 +464,12 @@ public class PlayerFrame extends JFrame {
     private ImageIcon removeMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "remove.png");
     // 复制歌词菜单项图标
     private ImageIcon copyLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "copyLrc.png");
+    // 定位歌词时间菜单项图标
+    private ImageIcon locateLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "locateLrc.png");
     // 查看歌词文件菜单项图标
     private ImageIcon browseLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "browseLrc.png");
+    // 歌词偏移菜单项图标
+    private ImageIcon lrcOffsetMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "lrcOffset.png");
     // 导出专辑图片菜单项图标
     private ImageIcon saveAlbumImgMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "saveAlbumImg.png");
     // 查看海报菜单项图标
@@ -478,7 +484,7 @@ public class PlayerFrame extends JFrame {
     private ImageIcon editInfoMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "editInfo.png");
 
     // 托盘图标
-    TrayIcon trayIconImg = new TrayIcon(trayIcon.getImage(), TITLE);
+    private TrayIcon trayIconImg = new TrayIcon(trayIcon.getImage(), TITLE);
 
     // 悬浮帮助提示
     private final String MINI_WINDOW_TIP = "迷你模式";
@@ -600,8 +606,6 @@ public class PlayerFrame extends JFrame {
     private List<Integer> shuffleList = new LinkedList<>();
     // 当前随机播放索引
     private int shuffleIndex;
-    // 当前选中歌词字符串(用于复制)
-    private String lrcSelected;
     // 当前中文歌词类型
     private int currChineseType = ChineseType.SIMPLIFIED;
     // 当前日文歌词类型
@@ -671,12 +675,12 @@ public class PlayerFrame extends JFrame {
 //    private int step = 3;
     // 是否静音
     public boolean isMute;
-    // 是否开启虚化
-    private boolean isBlur = true;
+    // 虚化类型
+    public int blurType;
     // 是否显示频谱
-    private boolean showSpectrum = true;
+    private boolean showSpectrum;
     // 是否自动下载歌词
-    public boolean isAutoDownloadLrc = true;
+    public boolean isAutoDownloadLrc;
     // 是否显示桌面歌词
     public boolean showDesktopLyric;
     // 是否锁定桌面歌词
@@ -778,16 +782,23 @@ public class PlayerFrame extends JFrame {
     private SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
     // 歌词右键弹出菜单
     private CustomPopupMenu lrcPopupMenu = new CustomPopupMenu(THIS);
-    // 右键菜单：复制歌词
     private CustomMenuItem copyMenuItem = new CustomMenuItem("复制这句歌词        ");
-    // 右键菜单：查看歌词文件
+    private CustomMenuItem locateLrcMenuItem = new CustomMenuItem("定位歌词时间        ");
     private CustomMenuItem browseLrcMenuItem = new CustomMenuItem("查看歌词文件        ");
-    // 右键菜单：查看歌词翻译文件
     private CustomMenuItem browseLrcTransMenuItem = new CustomMenuItem("查看歌词翻译文件        ");
-    // 右键菜单：下载歌词文件
     private CustomMenuItem downloadLrcMenuItem = new CustomMenuItem("下载歌词文件        ");
-    // 右键菜单：下载歌词翻译文件
     private CustomMenuItem downloadLrcTransMenuItem = new CustomMenuItem("下载歌词翻译文件        ");
+    private double lrcOffset;
+    private final double lrcOffsetRadius = 5;
+    private final String LRC_OFFSET_MSG = "当前歌词偏移：%.1f s";
+    private CustomMenuItem currLrcOffsetMenuItem = new CustomMenuItem("");
+    private CustomMenuItem[] calcLrcOffsetMenuItems = {
+            new CustomMenuItem("+0.5 s"),
+            new CustomMenuItem("+0.1 s"),
+            new CustomMenuItem("重置"),
+            new CustomMenuItem("-0.1 s"),
+            new CustomMenuItem("-0.5 s")
+    };
     // 歌词
     private Vector<Statement> statements;
     private String lrcStr;
@@ -840,7 +851,7 @@ public class PlayerFrame extends JFrame {
 //    };
 //    private CustomPopupMenu ratePopupMenu = new CustomPopupMenu(THIS);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
-    private CustomButton switchBlurButton = new CustomButton(blurOnIcon);
+    private CustomButton blurButton = new CustomButton(gsBlurIcon);
     private CustomButton soundEffectButton = new CustomButton(soundEffectIcon);
     private CustomButton sheetButton = new CustomButton(sheetIcon);
     private CustomButton goToPlayQueueButton = new CustomButton(goToPlayQueueIcon);
@@ -855,6 +866,12 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem sequenceMenuItem = new CustomMenuItem("顺序播放");
     private CustomMenuItem listCycleMenuItem = new CustomMenuItem("列表循环");
     private CustomMenuItem shuffleMenuItem = new CustomMenuItem("随机播放");
+
+    // 虚化模式右键菜单
+    private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
+    private CustomMenuItem blurOffMenuItem = new CustomMenuItem("跟随主题");
+    private CustomMenuItem gsBlurMenuItem = new CustomMenuItem("高斯模糊");
+    private CustomMenuItem mcBlurMenuItem = new CustomMenuItem("纯主色调");
 
     // 标签页
     private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.WRAP_TAB_LAYOUT);
@@ -2294,7 +2311,7 @@ public class PlayerFrame extends JFrame {
                     infoAndLrcBox.add(lrcAndSpecBox);
                 }
                 // 背景
-                if (isBlur) doBlur();
+                if (blurType != BlurType.OFF) doBlur();
                 else doStyleBlur(currUIStyle);
             }
         });
@@ -2811,14 +2828,17 @@ public class PlayerFrame extends JFrame {
         // 载入是否显示频谱
         showSpectrum = config.optBoolean(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
-        // 载入是否碟片虚化
-        isBlur = config.optBoolean(ConfigConstants.IS_BLUR, true);
-        switchBlurButton.setIcon(ImageUtils.dye(isBlur ? blurOnIcon : blurOffIcon, currUIStyle.getButtonColor()));
+        // 载入虚化类型
+        blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurType.GS);
+        blurButton.setIcon(ImageUtils.dye(blurType == BlurType.GS ? gsBlurIcon : blurType == BlurType.MC ? mcBlurIcon : blurOffIcon, currUIStyle.getButtonColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入上次选的风格
         int styleIndex = config.optInt(ConfigConstants.CURR_UI_STYLE, 0);
         changeUIStyle(styles.get(styleIndex));
+        // 载入歌词偏移
+        lrcOffset = config.optDouble(ConfigConstants.LYRIC_OFFSET, 0);
+        currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset));
         // 载入是否显示桌面歌词
         desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
         if (showDesktopLyric = config.optBoolean(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
@@ -3633,9 +3653,11 @@ public class PlayerFrame extends JFrame {
         // 存入是否显示频谱
         config.put(ConfigConstants.SHOW_SPECTRUM, showSpectrum);
         // 存入是否碟片虚化
-        config.put(ConfigConstants.IS_BLUR, isBlur);
+        config.put(ConfigConstants.BLUR_TYPE, blurType);
         // 存入是否自动下载歌词
         config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, isAutoDownloadLrc);
+        // 存入歌词偏移
+        config.put(ConfigConstants.LYRIC_OFFSET, lrcOffset);
         // 存入是否显示桌面歌词
         config.put(ConfigConstants.SHOW_DESKTOP_LYRIC, showDesktopLyric);
         // 存入是否锁定桌面歌词
@@ -18809,9 +18831,17 @@ public class PlayerFrame extends JFrame {
     void lrcListInit() {
         // 复制歌词
         copyMenuItem.addActionListener(e -> {
-            StringSelection stringSelection = new StringSelection(lrcSelected);
+            Statement stmt = lrcList.getSelectedValue();
+            StringSelection stringSelection = new StringSelection(stmt.toString());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
+        });
+        // 定位歌词时间
+        locateLrcMenuItem.addActionListener(e -> {
+            Statement stmt = lrcList.getSelectedValue();
+            double time = stmt.getTime() + lrcOffset;
+            player.seek(time);
+            seekLrc(time);
         });
         // 查看歌词文件
         browseLrcMenuItem.addActionListener(e -> {
@@ -18849,55 +18879,72 @@ public class PlayerFrame extends JFrame {
         downloadLrcTransMenuItem.addActionListener(e -> {
             downloadLrcTrans(player.getNetMusicInfo());
         });
+        currLrcOffsetMenuItem.setEnabled(false);
         // 字体
+        locateLrcMenuItem.setFont(globalFont);
         copyMenuItem.setFont(globalFont);
         browseLrcMenuItem.setFont(globalFont);
         browseLrcTransMenuItem.setFont(globalFont);
         downloadLrcMenuItem.setFont(globalFont);
         downloadLrcTransMenuItem.setFont(globalFont);
+        currLrcOffsetMenuItem.setFont(globalFont);
 
+        lrcPopupMenu.add(locateLrcMenuItem);
         lrcPopupMenu.add(copyMenuItem);
         lrcPopupMenu.add(browseLrcMenuItem);
         lrcPopupMenu.add(downloadLrcMenuItem);
         lrcPopupMenu.add(browseLrcTransMenuItem);
         lrcPopupMenu.add(downloadLrcTransMenuItem);
+        lrcPopupMenu.addSeparator();
+        lrcPopupMenu.add(currLrcOffsetMenuItem);
         lrcList.add(lrcPopupMenu);
-        // 不能选择
-        lrcList.setEnabled(true);
-        lrcList.addListSelectionListener(e -> lrcList.clearSelection());
+
+        for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
+            mi.setFont(globalFont);
+            mi.addActionListener(e -> {
+                String text = mi.getText();
+                if ("重置".equals(text)) lrcOffset = 0;
+                else lrcOffset += Double.parseDouble(text.replaceFirst(" s", ""));
+                if (lrcOffset > lrcOffsetRadius) lrcOffset = lrcOffsetRadius;
+                else if (lrcOffset < -lrcOffsetRadius) lrcOffset = -lrcOffsetRadius;
+                currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset));
+                if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
+            });
+            lrcPopupMenu.add(mi);
+        }
+
+        // 单选
+        lrcList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         // 不能获得焦点
         lrcList.setFocusable(false);
-        // 显示数量
-//        lrcList.setVisibleRowCount(LRC_INDEX * 2 + 1);
         // 右键弹出菜单
         lrcList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (lrcList.getModel().getSize() != 0) {
-                        int index = lrcList.locationToIndex(e.getPoint());
-                        if (index != -1) {
-                            String lyric = ((Statement) lrcListModel.get(index)).getLyric();
-                            if (!lyric.trim().equals("")) {
-                                lrcSelected = StringUtils.removeHTMLLabel(lyric);
-                                // 歌曲有歌词时才能查看
-                                browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS);
-                                // 在线音乐歌词有翻译才能查看翻译
-                                browseLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
-                                // 只允许下载在线音乐的歌词
-                                downloadLrcMenuItem.setEnabled(player.isPlayingNetMusic() && nextLrc != NextLrc.NOT_EXISTS);
-                                // 在线音乐歌词有翻译才能下载翻译
-                                downloadLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
+                    if (lrcList.getModel().getSize() == 0) return;
+                    int index = lrcList.locationToIndex(e.getPoint());
+                    if (index == -1) return;
+                    lrcList.setSelectedIndex(index);
+                    String lyric = lrcListModel.get(index).getLyric();
+                    if ("".equals(lyric.trim())) return;
+                    // 歌曲有歌词时才能查看
+                    locateLrcMenuItem.setEnabled(nextLrc >= 0);
+                    browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS);
+                    // 在线音乐歌词有翻译才能查看翻译
+                    browseLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
+                    // 只允许下载在线音乐的歌词
+                    downloadLrcMenuItem.setEnabled(player.isPlayingNetMusic() && nextLrc != NextLrc.NOT_EXISTS);
+                    // 在线音乐歌词有翻译才能下载翻译
+                    downloadLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
 
-//                                browseLrcMenuItem.setForeground(browseLrcMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                                browseLrcTransMenuItem.setForeground(browseLrcTransMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                                downloadLrcMenuItem.setForeground(downloadLrcMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                                downloadLrcTransMenuItem.setForeground(downloadLrcTransMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                                SwingUtilities.updateComponentTreeUI(lrcPopupMenu);
-                                lrcPopupMenu.show(lrcList, e.getX(), e.getY());
-                            }
-                        }
-                    }
+                    lrcPopupMenu.show(lrcList, e.getX(), e.getY());
+                }
+                // 双击定位歌词时间
+                else if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    String lyric = lrcList.getSelectedValue().getLyric();
+                    if ("".equals(lyric.trim())) return;
+                    if (nextLrc >= 0) locateLrcMenuItem.doClick();
                 }
             }
         });
@@ -19148,16 +19195,6 @@ public class PlayerFrame extends JFrame {
                 globalPanel.remove(netSheetBox);
                 globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
                 changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
-                // 更新 LAF
-//                SwingUtilities.updateComponentTreeUI(saveAlbumImageMenuItem);
-//                SwingUtilities.updateComponentTreeUI(copySongNameMenuItem);
-//                SwingUtilities.updateComponentTreeUI(copyArtistMenuItem);
-//                SwingUtilities.updateComponentTreeUI(copyAlbumMenuItem);
-//                SwingUtilities.updateComponentTreeUI(copyMenuItem);
-//                SwingUtilities.updateComponentTreeUI(browseLrcMenuItem);
-//                SwingUtilities.updateComponentTreeUI(browseLrcTransMenuItem);
-//                SwingUtilities.updateComponentTreeUI(downloadLrcMenuItem);
-//                SwingUtilities.updateComponentTreeUI(downloadLrcTransMenuItem);
                 currPane = MusicPane.LYRIC;
                 lastPane = -1;
             }
@@ -19247,8 +19284,6 @@ public class PlayerFrame extends JFrame {
         playModeButton.setFocusable(false);
         playModeButton.addMouseListener(new ButtonMouseListener(playModeButton, THIS));
         playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth(), listCycleIcon.getIconHeight()));
-        // 播放模式按钮绑定右键菜单
-//        playModeButton.setComponentPopupMenu(playModePopupMenu);
         // 播放模式切换事件
         playModeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -19277,11 +19312,8 @@ public class PlayerFrame extends JFrame {
         shuffleMenuItem.setFont(globalFont);
 
         playModePopupMenu.add(singleMenuItem);
-//        playModePopupMenu.addSeparator();
         playModePopupMenu.add(sequenceMenuItem);
-//        playModePopupMenu.addSeparator();
         playModePopupMenu.add(listCycleMenuItem);
-//        playModePopupMenu.addSeparator();
         playModePopupMenu.add(shuffleMenuItem);
 
         backwardButton.setToolTipText(BACKW_TIP);
@@ -19367,15 +19399,39 @@ public class PlayerFrame extends JFrame {
             else closeSpectrum();
             switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
         });
-        // 虚化开关按钮
-        switchBlurButton.setToolTipText(SWITCH_BLUR_TIP);
-        switchBlurButton.setFocusable(false);
-        switchBlurButton.addMouseListener(new ButtonMouseListener(switchBlurButton, THIS));
-        switchBlurButton.setPreferredSize(new Dimension(blurOnIcon.getIconWidth(), blurOnIcon.getIconHeight()));
-        switchBlurButton.addActionListener(e -> {
-            if (isBlur = !isBlur) doBlur();
-            else doStyleBlur(currUIStyle);
-            switchBlurButton.setIcon(ImageUtils.dye(isBlur ? blurOnIcon : blurOffIcon, currUIStyle.getButtonColor()));
+        // 虚化菜单
+        blurOffMenuItem.setFont(globalFont);
+        gsBlurMenuItem.setFont(globalFont);
+        mcBlurMenuItem.setFont(globalFont);
+        blurPopupMenu.add(blurOffMenuItem);
+        blurPopupMenu.add(gsBlurMenuItem);
+        blurPopupMenu.add(mcBlurMenuItem);
+        blurOffMenuItem.addActionListener(e -> {
+            blurType = BlurType.OFF;
+            doStyleBlur(currUIStyle);
+            blurButton.setIcon(ImageUtils.dye(blurOffIcon, currUIStyle.getButtonColor()));
+        });
+        gsBlurMenuItem.addActionListener(e -> {
+            blurType = BlurType.GS;
+            doBlur();
+            blurButton.setIcon(ImageUtils.dye(gsBlurIcon, currUIStyle.getButtonColor()));
+        });
+        mcBlurMenuItem.addActionListener(e -> {
+            blurType = BlurType.MC;
+            doBlur();
+            blurButton.setIcon(ImageUtils.dye(mcBlurIcon, currUIStyle.getButtonColor()));
+        });
+        // 虚化按钮
+        blurButton.setToolTipText(SWITCH_BLUR_TIP);
+        blurButton.setFocusable(false);
+        blurButton.addMouseListener(new ButtonMouseListener(blurButton, THIS));
+        blurButton.setPreferredSize(new Dimension(gsBlurIcon.getIconWidth(), gsBlurIcon.getIconHeight()));
+        blurButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int h = blurPopupMenu.getHeight();
+                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 133 : h));
+            }
         });
         // 音效按钮
         soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
@@ -19510,7 +19566,7 @@ public class PlayerFrame extends JFrame {
         controlPanel.add(volumePanel);
         controlPanel.add(rateButton);
         controlPanel.add(switchSpectrumButton);
-        controlPanel.add(switchBlurButton);
+        controlPanel.add(blurButton);
         controlPanel.add(soundEffectButton);
         controlPanel.add(goToPlayQueueButton);
 
@@ -19615,10 +19671,16 @@ public class PlayerFrame extends JFrame {
             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
         // 设置歌曲名称
         songNameLabel.setText(StringUtils.textToHtml(SONG_NAME_LABEL + player.getMusicInfo().getName()));
+        songNameLabel.setVisible(false);
+        songNameLabel.setVisible(true);
         // 设置艺术家
         artistLabel.setText(StringUtils.textToHtml(ARTIST_LABEL + player.getMusicInfo().getArtist()));
+        artistLabel.setVisible(false);
+        artistLabel.setVisible(true);
         // 设置专辑名称
         albumLabel.setText(StringUtils.textToHtml(ALBUM_NAME_LABEL + player.getMusicInfo().getAlbumName()));
+        albumLabel.setVisible(false);
+        albumLabel.setVisible(true);
         // 加载专辑图片
         loadAlbumImage();
     }
@@ -19657,7 +19719,7 @@ public class PlayerFrame extends JFrame {
             miniDialog.infoLabel.setText(changePaneButton.getText());
         }
         // 恢复背景
-        if (isBlur) doStyleBlur(currUIStyle);
+        if (blurType != BlurType.OFF) doStyleBlur(currUIStyle);
         // 禁止 MV、收藏、下载、评论、曲谱
         mvButton.setEnabled(false);
         collectButton.setEnabled(false);
@@ -19705,7 +19767,7 @@ public class PlayerFrame extends JFrame {
             if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
         }
         // 背景虚化
-        if (isBlur) doBlur();
+        if (blurType != BlurType.OFF) doBlur();
     }
 
     // 清空歌词
@@ -19874,7 +19936,7 @@ public class PlayerFrame extends JFrame {
                 if (nextLrc >= 0) {
                     double currTimeSeconds = player.getCurrTimeSeconds();
                     // 判断是否该高亮下一行歌词
-                    if (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime()) {
+                    if (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() + lrcOffset) {
                         // 删除第一行歌词，整体往上移
 //                        lrcListModel.set(LRC_INDEX - 7, lrcListModel.get(LRC_INDEX - 5));
 //                        lrcListModel.set(LRC_INDEX - 5, lrcListModel.get(LRC_INDEX - 3));
@@ -19895,12 +19957,13 @@ public class PlayerFrame extends JFrame {
                         return;
                     }
                     // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
-                    if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime())
+                    if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() + lrcOffset)
                         originalRatio.set(1);
                     else {
-                        double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime()) /
-                                ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() : (nextLrc < statements.size() ? statements.get(nextLrc).getTime()
-                                        : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime()) : 0;
+                        double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() - lrcOffset) /
+                                ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
+                                        : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
+                                        : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
                         originalRatio.set(tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio);
                     }
 //                    ((TranslucentLrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
@@ -20605,6 +20668,10 @@ public class PlayerFrame extends JFrame {
         listCycleMenuItem.setIcon(ImageUtils.dye(listCycleIcon, menuItemColor));
         shuffleMenuItem.setIcon(ImageUtils.dye(shuffleIcon, menuItemColor));
 
+        blurOffMenuItem.setIcon(ImageUtils.dye(blurOffIcon, menuItemColor));
+        gsBlurMenuItem.setIcon(ImageUtils.dye(gsBlurIcon, menuItemColor));
+        mcBlurMenuItem.setIcon(ImageUtils.dye(mcBlurIcon, menuItemColor));
+
         saveDescCoverImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
         saveDescBgImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
         copyDescNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
@@ -20739,6 +20806,8 @@ public class PlayerFrame extends JFrame {
         netSheetBrowseMenuItem.setIcon(ImageUtils.dye(browseSheetMenuItemIcon, menuItemColor));
         netSheetCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
 
+        locateLrcMenuItem.setIcon(ImageUtils.dye(locateLrcMenuItemIcon, menuItemColor));
+        locateLrcMenuItem.setDisabledIcon(ImageUtils.dye(locateLrcMenuItemIcon, disabledColor));
         copyMenuItem.setIcon(ImageUtils.dye(copyLrcMenuItemIcon, menuItemColor));
         browseLrcMenuItem.setIcon(ImageUtils.dye(browseLrcMenuItemIcon, menuItemColor));
         browseLrcMenuItem.setDisabledIcon(ImageUtils.dye(browseLrcMenuItemIcon, disabledColor));
@@ -20748,6 +20817,10 @@ public class PlayerFrame extends JFrame {
         downloadLrcMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
         downloadLrcTransMenuItem.setIcon(ImageUtils.dye(downloadIcon, menuItemColor));
         downloadLrcTransMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
+        currLrcOffsetMenuItem.setDisabledIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, disabledColor));
+        for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
+            mi.setIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, menuItemColor));
+        }
 
         saveAlbumImageMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
         saveAlbumImageMenuItem.setDisabledIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, disabledColor));
@@ -20811,6 +20884,7 @@ public class PlayerFrame extends JFrame {
         updateMenuItemStyle(lrcPopupMenu, menuItemColor);
 //        updateMenuItemStyle(ratePopupMenu, menuItemColor);
         updateMenuItemStyle(playModePopupMenu, menuItemColor);
+        updateMenuItemStyle(blurPopupMenu, menuItemColor);
         updateMenuItemStyle(mainMenu, menuItemColor);
         updateMenuItemStyle(musicPopupMenu, menuItemColor);
         updateMenuItemStyle(netMusicPopupMenu, menuItemColor);
@@ -21998,8 +22072,8 @@ public class PlayerFrame extends JFrame {
         rateButton.setContentAreaFilled(opaque);
         switchSpectrumButton.setOpaque(opaque);
         switchSpectrumButton.setContentAreaFilled(opaque);
-        switchBlurButton.setOpaque(opaque);
-        switchBlurButton.setContentAreaFilled(opaque);
+        blurButton.setOpaque(opaque);
+        blurButton.setContentAreaFilled(opaque);
         soundEffectButton.setOpaque(opaque);
         soundEffectButton.setContentAreaFilled(opaque);
         goToPlayQueueButton.setOpaque(opaque);
@@ -22041,7 +22115,7 @@ public class PlayerFrame extends JFrame {
         muteButton.setIcon(ImageUtils.dye((ImageIcon) muteButton.getIcon(), buttonColor));
         rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), buttonColor));
         switchSpectrumButton.setIcon(ImageUtils.dye((ImageIcon) switchSpectrumButton.getIcon(), buttonColor));
-        switchBlurButton.setIcon(ImageUtils.dye((ImageIcon) switchBlurButton.getIcon(), buttonColor));
+        blurButton.setIcon(ImageUtils.dye((ImageIcon) blurButton.getIcon(), buttonColor));
         soundEffectButton.setIcon(ImageUtils.dye((ImageIcon) soundEffectButton.getIcon(), buttonColor));
         goToPlayQueueButton.setIcon(ImageUtils.dye((ImageIcon) goToPlayQueueButton.getIcon(), buttonColor));
         desktopLyricButton.setIcon(ImageUtils.dye((ImageIcon) desktopLyricButton.getIcon(), buttonColor));
@@ -22066,7 +22140,7 @@ public class PlayerFrame extends JFrame {
         artistLabel.setForeground(labelColor);
         albumLabel.setForeground(labelColor);
         // 切换风格，包含背景图，虚化状态并载入了音乐就不换
-        if (!isBlur || !player.loadedMusic()) {
+        if (blurType == BlurType.OFF || !player.loadedMusic()) {
             doStyleBlur(style);
         }
         // 标题图标
@@ -22579,7 +22653,7 @@ public class PlayerFrame extends JFrame {
     void seekLrc(double t) {
         if (nextLrc < 0) return;
         for (int i = 0, size = statements.size(); i < size; i++) {
-            if (t < statements.get(i).getTime()) {
+            if (t < statements.get(i).getTime() + lrcOffset) {
                 nextLrc = i;
             } else if (i == size - 1) {
                 nextLrc = size;
@@ -22591,9 +22665,10 @@ public class PlayerFrame extends JFrame {
             }
             TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
             renderer.setRow(row);
-            double tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime()) /
-                    ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() : (nextLrc < statements.size() ? statements.get(nextLrc).getTime()
-                            : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime()) : 0;
+            double tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime() - lrcOffset) /
+                    ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
+                            : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
+                            : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
             originalRatio.set(tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio);
             break;
         }
@@ -22603,7 +22678,7 @@ public class PlayerFrame extends JFrame {
     public String getTimeLrc(double t) {
         if (nextLrc < 0) return "";
         for (int i = 0, size = statements.size(); i < size; i++) {
-            if (t < statements.get(i).getTime()) {
+            if (t < statements.get(i).getTime() + lrcOffset) {
                 if (i == 0) return statements.get(i).getLyric();
                 else return statements.get(i - 1).getLyric();
             } else if (i == size - 1) {
@@ -22640,6 +22715,7 @@ public class PlayerFrame extends JFrame {
             if (!player.loadedMusic()) return;
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
             if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
+            if (blurType == BlurType.MC) albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
                 gw = windowWidth;
@@ -23076,10 +23152,6 @@ public class PlayerFrame extends JFrame {
 //        return stylePopupMenu;
 //    }
 
-//    public JSlider getTimeBar() {
-//        return timeBar;
-//    }
-
     public JSlider getVolumeSlider() {
         return volumeSlider;
     }
@@ -23090,10 +23162,6 @@ public class PlayerFrame extends JFrame {
 
     public MusicPlayer getPlayer() {
         return player;
-    }
-
-    public boolean getIsBlur() {
-        return isBlur;
     }
 
     public GlobalPanel getGlobalPanel() {

@@ -3,7 +3,9 @@ package net.doge.utils;
 import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
+import com.jhlabs.image.GradientFilter;
 import com.jhlabs.image.ShadowFilter;
+import com.sun.imageio.plugins.common.PaletteBuilder;
 import net.coobird.thumbnailator.Thumbnails;
 
 import javax.swing.*;
@@ -13,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @Author yzx
@@ -678,25 +682,36 @@ public class ImageUtils {
      * @return
      */
     public static Color getAvgRGB(BufferedImage img, float alpha) {
-        BufferedImage bi = scale(img, 0.3f);
-        int w = bi.getWidth();
-        int h = bi.getHeight();
-        float[] dots = new float[]{0.15f, 0.35f, 0.5f, 0.7f, 0.85f};
-        int R = 0;
-        int G = 0;
-        int B = 0;
+        int w = img.getWidth(), h = img.getHeight();
+        List<Float> dots = new LinkedList<>();
+        for (float i = 0.05f; i < 1; i += 0.05f) dots.add(i);
+        int R = 0, G = 0, B = 0, s = dots.size();
         for (float dw : dots) {
             for (float dh : dots) {
-                int rgbVal = bi.getRGB((int) (w * dw), (int) (h * dh));
+                int rgbVal = img.getRGB((int) (w * dw), (int) (h * dh));
                 Color color = new Color(rgbVal);
                 R += color.getRed();
                 G += color.getGreen();
                 B += color.getBlue();
             }
         }
-        int cn = dots.length * dots.length;
+        int cn = s * s;
         return new Color(R / cn, G / cn, B / cn, (int) (255 * alpha));
     }
+
+//    /**
+//     * 生成两种颜色的水平渐变图像
+//     *
+//     * @param c1, c2
+//     * @return
+//     */
+//    public static BufferedImage horizontalGradient(BufferedImage img, Color c1, Color c2) {
+//        int w = img.getWidth(), h = img.getHeight();
+//        GradientFilter gf = new GradientFilter(new Point(0, h / 2), new Point(w, h / 2),
+//                c1.getRGB(), c2.getRGB(),
+//                false, GradientFilter.LINEAR, 1);
+//        return gf.filter(img, null);
+//    }
 
     /**
      * 图片添加阴影
