@@ -12,4 +12,6 @@ public class BlurType {
     public static final int GS = 1;
     // 纯主色调
     public static final int MC = 2;
+    // 线性渐变
+    public static final int LG = 3;
 }

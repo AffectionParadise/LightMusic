@@ -8,8 +8,8 @@ import net.doge.ui.components.DialogButton;
 import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.DefaultStyleListRenderer;
+import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -143,6 +143,10 @@ public class ManageCustomStyleDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+            else if (f.blurType == BlurType.LG) {
+                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
+                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+            }
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

@@ -4,11 +4,9 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.componentui.VSliderUI;
-import net.doge.ui.listeners.ButtonMouseListener;
+import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,8 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Dictionary;
-import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @Author yzx
@@ -103,6 +100,10 @@ public class RateDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+            else if (f.blurType == BlurType.LG) {
+                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
+                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+            }
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

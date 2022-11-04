@@ -7,8 +7,8 @@ import net.doge.ui.PlayerFrame;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.componentui.VSliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
+import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Author yzx
@@ -168,6 +169,10 @@ public class SoundEffectDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+            else if (f.blurType == BlurType.LG) {
+                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
+                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+            }
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

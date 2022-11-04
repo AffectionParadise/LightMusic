@@ -165,6 +165,8 @@ public class ConfigConstants {
     public final static String NET_ALBUM_NAME = "name";
     // 专辑艺术家
     public final static String NET_ALBUM_ARTIST = "artist";
+    // 专辑艺术家 id
+    public final static String NET_ALBUM_ARTIST_ID = "artistId";
     // 专辑封面缩略图 url
     public final static String NET_ALBUM_COVER_IMG_THUMB_URL = "coverImgThumbUrl";
     // 专辑歌曲数量

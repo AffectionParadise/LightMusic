@@ -14,6 +14,7 @@ public class Tags {
 
     public static Map<String, String[]> recPlaylistTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static Map<String, String[]> playlistTag = Collections.synchronizedMap(new LinkedHashMap<>());
+    public static Map<String, String[]> hotSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static Map<String, String[]> newSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static Map<String, String[]> newAlbumTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static Map<String, String[]> artistTag = Collections.synchronizedMap(new LinkedHashMap<>());

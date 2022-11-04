@@ -11,6 +11,7 @@ import net.doge.ui.components.SafeDocument;
 import net.doge.ui.componentui.ColorSliderUI;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
+import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -24,6 +25,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Author yzx
@@ -99,7 +101,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
-    private Color[] preColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.PINK, Color.MAGENTA,
+    private final Color[] preColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.PINK, Color.MAGENTA,
             Colors.BRICK_RED, Colors.DEEP_ORANGE, Colors.GOLD3, Colors.SPRING_GREEN, Colors.SKY, Colors.DEEP_BLUE, Colors.PINK3, Colors.ORCHID_3,
             Colors.DEEP_RED, Colors.BROWN, Colors.CARTON, Colors.TEA, Colors.CYAN_4, Colors.DODGER, Colors.PINK4, Colors.ORCHID_4};
     private boolean confirmed;
@@ -184,6 +186,10 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+            else if (f.blurType == BlurType.LG) {
+                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
+                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+            }
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

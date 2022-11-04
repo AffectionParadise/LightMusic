@@ -1,5 +1,6 @@
 package net.doge.ui;
 
+import cn.hutool.core.img.ColorUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
 import com.mpatric.mp3agic.InvalidDataException;
@@ -179,6 +180,7 @@ public class PlayerFrame extends JFrame {
     private final String PLAY_MV_MENU_ITEM_TEXT = "播放 MV        ";
     private final String DOWNLOAD_MENU_ITEM_TEXT = "下载        ";
     private final String COMMENT_MENU_ITEM_TEXT = "查看评论        ";
+    private final String ALBUM_ARTIST_MENU_ITEM_TEXT = "查看歌手/作者        ";
     private final String SIMILAR_ALBUM_MENU_ITEM_TEXT = "查看相似专辑        ";
     private final String ALBUM_PHOTOS_MENU_ITEM_TEXT = "查看专辑照片        ";
     private final String SHEET_MENU_ITEM_TEXT = "查看曲谱        ";
@@ -289,6 +291,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon gsBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOn.png");
     // 纯主色调图标
     private ImageIcon mcBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "pureColorBlur.png");
+    // 线性渐变图标
+    private ImageIcon lgBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "linearGradient.png");
     // 虚化关闭图标
     private ImageIcon blurOffIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOff.png");
     // 音效图标
@@ -872,6 +876,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem blurOffMenuItem = new CustomMenuItem("跟随主题");
     private CustomMenuItem gsBlurMenuItem = new CustomMenuItem("高斯模糊");
     private CustomMenuItem mcBlurMenuItem = new CustomMenuItem("纯主色调");
+    private CustomMenuItem lgBlurMenuItem = new CustomMenuItem("线性渐变");
 
     // 标签页
     private JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.WRAP_TAB_LAYOUT);
@@ -1320,6 +1325,8 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem netAlbumCollectMenuItem = new CustomMenuItem(COLLECT_MENU_ITEM_TEXT);
     // 专辑右键菜单：查看评论
     private CustomMenuItem netAlbumCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
+    // 专辑右键菜单：查看歌手/作者
+    private CustomMenuItem netAlbumArtistMenuItem = new CustomMenuItem(ALBUM_ARTIST_MENU_ITEM_TEXT);
     // 专辑右键菜单：查看相似专辑
     private CustomMenuItem netAlbumSimilarMenuItem = new CustomMenuItem(SIMILAR_ALBUM_MENU_ITEM_TEXT);
     // 专辑右键菜单：查看专辑照片
@@ -2141,6 +2148,8 @@ public class PlayerFrame extends JFrame {
     private NetUserInfo currMvUserInfo;
     // 当前歌手原歌曲
     private NetMusicInfo currArtistMusicInfo;
+    // 当前歌手原专辑
+    private NetAlbumInfo currArtistAlbumInfo;
     // 当前相似歌手原歌手
     private NetArtistInfo currArtistArtistInfo;
     // 当前合作人原歌手
@@ -2161,6 +2170,8 @@ public class PlayerFrame extends JFrame {
     private NetUserInfo currFollowedUserUserInfo;
     // 当前用户(作者)原歌曲
     private NetMusicInfo currAuthorMusicInfo;
+    // 当前用户(作者)原专辑
+    private NetAlbumInfo currAuthorAlbumInfo;
     // 当前用户(创建者)原歌单
     private NetPlaylistInfo currUserPlaylistInfo;
     // 当前用户(收藏者)原歌单
@@ -2830,7 +2841,8 @@ public class PlayerFrame extends JFrame {
         switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
         // 载入虚化类型
         blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurType.GS);
-        blurButton.setIcon(ImageUtils.dye(blurType == BlurType.GS ? gsBlurIcon : blurType == BlurType.MC ? mcBlurIcon : blurOffIcon, currUIStyle.getButtonColor()));
+        blurButton.setIcon(ImageUtils.dye(blurType == BlurType.GS ? gsBlurIcon : blurType == BlurType.MC ? mcBlurIcon :
+                blurType == BlurType.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getButtonColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入上次选的风格
@@ -3479,6 +3491,7 @@ public class PlayerFrame extends JFrame {
                 netAlbumInfo.setId(jsonObject.optString(ConfigConstants.NET_ALBUM_ID));
                 netAlbumInfo.setName(jsonObject.optString(ConfigConstants.NET_ALBUM_NAME));
                 netAlbumInfo.setArtist(jsonObject.optString(ConfigConstants.NET_ALBUM_ARTIST));
+                netAlbumInfo.setArtistId(jsonObject.optString(ConfigConstants.NET_ALBUM_ARTIST_ID));
                 netAlbumInfo.setCoverImgThumbUrl(jsonObject.optString(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL));
                 netAlbumInfo.setSongNum(jsonObject.optInt(ConfigConstants.NET_ALBUM_SONG_NUM, -1));
                 netAlbumInfo.setPublishTime(jsonObject.optString(ConfigConstants.NET_ALBUM_PUBLISH_TIME));
@@ -3946,6 +3959,7 @@ public class PlayerFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_ALBUM_ID, netAlbumInfo.getId());
             jsonObject.put(ConfigConstants.NET_ALBUM_NAME, netAlbumInfo.getName());
             jsonObject.put(ConfigConstants.NET_ALBUM_ARTIST, netAlbumInfo.getArtist());
+            jsonObject.put(ConfigConstants.NET_ALBUM_ARTIST_ID, netAlbumInfo.getArtistId());
             jsonObject.put(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL, netAlbumInfo.getCoverImgThumbUrl());
             jsonObject.put(ConfigConstants.NET_ALBUM_SONG_NUM, netAlbumInfo.getSongNum());
             jsonObject.put(ConfigConstants.NET_ALBUM_PUBLISH_TIME, netAlbumInfo.getPublishTime());
@@ -10271,6 +10285,123 @@ public class PlayerFrame extends JFrame {
             else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             getComments(netAlbumInfo, true);
         });
+        // 查看歌手/作者
+        netAlbumArtistMenuItem.addActionListener(e -> {
+            NetAlbumInfo netAlbumInfo;
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex == TabIndex.NET_ALBUM) netAlbumInfo = netAlbumList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL)
+                netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
+            else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
+            loadingAndRun(() -> {
+                try {
+                    if (netAlbumInfo.isPhoto()) {
+                        clearRequestForUser();
+                        // 获取歌手/作者
+                        currAuthorAlbumInfo = netAlbumInfo;
+                        CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
+                        List<NetUserInfo> netUserInfos = result.data;
+                        netUserCurrPage = netUserMaxPage = 1;
+                        // 标题
+                        netUserTitleLabel.setText(netAlbumInfo.toSimpleString() + " 的作者");
+                        netUserToolBar.removeAll();
+                        netUserToolBar.add(netUserBackwardButton);
+                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(netUserTitleLabel);
+                        netUserToolBar.add(Box.createHorizontalGlue());
+                        // 更新数量显示
+                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
+                        netUserCountPanel.add(netUserCountLabel, 2);
+                        netUserLeftBox.add(netUserCountPanel);
+                        netUserPlayAllButton.setVisible(false);
+                        netUserRecordTypeComboBox.setVisible(false);
+                        netUserCountPanel.setVisible(true);
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netUserList.setModel(emptyListModel);
+                        netUserListModel.clear();
+                        netUserInfos.forEach(userInfo -> {
+                            globalExecutor.submit(() -> updateCollection(userInfo));
+                            // 设置图片加载后重绘的事件
+                            userInfo.setInvokeLater(() -> {
+                                updateRenderer(netUserList);
+                                updateRenderer(collectionList);
+                                netUserList.repaint();
+                                collectionList.repaint();
+                            });
+                            netUserListModel.addElement(userInfo);
+                        });
+                        netUserList.setModel(netUserListModel);
+                        netUserBackwardButton.setEnabled(true);
+                        netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
+                        netUserLeftBox.remove(userListBox);
+                        if (netUserListModel.isEmpty()) {
+                            netUserLeftBox.remove(netUserScrollPane);
+                            netUserLeftBox.add(emptyHintPanel);
+                        } else {
+                            netUserLeftBox.remove(emptyHintPanel);
+                            netUserLeftBox.add(netUserScrollPane);
+                        }
+                        netUserScrollPane.getVerticalScrollBar().setValue(0);
+                        tabbedPane.setSelectedIndex(TabIndex.NET_USER);
+                    } else {
+                        clearRequestForArtist();
+                        // 搜索专辑歌手
+                        currArtistAlbumInfo = netAlbumInfo;
+                        CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
+                        List<NetArtistInfo> netArtistInfos = result.data;
+                        netArtistCurrPage = netArtistMaxPage = 1;
+                        // 标题
+                        netArtistTitleLabel.setText(netAlbumInfo.toSimpleString() + " 的歌手");
+                        netArtistToolBar.removeAll();
+                        netArtistToolBar.add(netArtistBackwardButton);
+                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(netArtistTitleLabel);
+                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        // 更新数量显示
+                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
+                        netArtistCountPanel.add(netArtistCountLabel, 1);
+                        netArtistLeftBox.add(netArtistCountPanel);
+                        netArtistPlayAllButton.setVisible(false);
+                        netArtistCountPanel.setVisible(true);
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netArtistList.setModel(emptyListModel);
+                        netArtistListModel.clear();
+                        netArtistInfos.forEach(artistInfo -> {
+                            globalExecutor.submit(() -> updateCollection(artistInfo));
+                            // 设置图片加载后重绘的事件
+                            artistInfo.setInvokeLater(() -> {
+                                netArtistList.repaint();
+                                collectionList.repaint();
+                            });
+                            netArtistListModel.addElement(artistInfo);
+                        });
+                        netArtistList.setModel(netArtistListModel);
+                        netArtistBackwardButton.setEnabled(true);
+                        netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
+                        netArtistLeftBox.remove(artistListBox);
+                        if (netArtistListModel.isEmpty()) {
+                            netArtistLeftBox.remove(netArtistScrollPane);
+                            netArtistLeftBox.add(emptyHintPanel);
+                        } else {
+                            netArtistLeftBox.remove(emptyHintPanel);
+                            netArtistLeftBox.add(netArtistScrollPane);
+                        }
+                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                        tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
+                    }
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        });
         // 查看相似专辑
         netAlbumSimilarMenuItem.addActionListener(e -> {
             NetAlbumInfo netAlbumInfo;
@@ -10390,20 +10521,18 @@ public class PlayerFrame extends JFrame {
         netAlbumPlayAllMenuItem.setFont(globalFont);
         netAlbumCollectMenuItem.setFont(globalFont);
         netAlbumCommentMenuItem.setFont(globalFont);
+        netAlbumArtistMenuItem.setFont(globalFont);
         netAlbumSimilarMenuItem.setFont(globalFont);
         netAlbumPhotosMenuItem.setFont(globalFont);
         netAlbumCopyNameMenuItem.setFont(globalFont);
         // 专辑列表右键菜单项
         netAlbumPopupMenu.add(netAlbumOpenMenuItem);
-//        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumPlayAllMenuItem);
-//        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumCollectMenuItem);
-//        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumCommentMenuItem);
+        netAlbumPopupMenu.add(netAlbumArtistMenuItem);
         netAlbumPopupMenu.add(netAlbumSimilarMenuItem);
         netAlbumPopupMenu.add(netAlbumPhotosMenuItem);
-//        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumCopyNameMenuItem);
         netAlbumList.add(netAlbumPopupMenu);
 
@@ -10501,6 +10630,7 @@ public class PlayerFrame extends JFrame {
                 netArtistToolBar.add(netArtistBackwardButton);
                 if (currArtistArtistInfo == null
                         && currArtistMusicInfo == null
+                        && currArtistAlbumInfo == null
                         && currBuddyArtistInfo == null
                         && currArtistMvInfo == null
                         && currArtistRadioInfo == null
@@ -10648,10 +10778,11 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索歌手跳页事件
         Runnable searchArtistGoPageAction = () -> {
-            boolean songRequest = currArtistMusicInfo != null, artistRequest = currArtistArtistInfo != null,
+            boolean songRequest = currArtistMusicInfo != null, albumRequest = currArtistAlbumInfo != null, artistRequest = currArtistArtistInfo != null,
                     buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null,
                     radioCVRequest = currCVRadioInfo != null;
-            if (artistRequest || buddyRequest || radioRequest || radioCVRequest || songRequest || mvRequest || StringUtils.isNotEmpty(netArtistCurrKeyword)) {
+            if (artistRequest || buddyRequest || radioRequest || radioCVRequest || songRequest ||
+                    albumRequest || mvRequest || StringUtils.isNotEmpty(netArtistCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
@@ -10660,6 +10791,7 @@ public class PlayerFrame extends JFrame {
                                 : radioRequest ? MusicServerUtils.getRadioArtists(currArtistRadioInfo)
                                 : radioCVRequest ? MusicServerUtils.getRadioArtists(currCVRadioInfo)
                                 : songRequest ? MusicServerUtils.getArtistInfo(currArtistMusicInfo.getArtistId(), currArtistMusicInfo.getSource())
+                                : albumRequest ? MusicServerUtils.getArtistInfo(currArtistAlbumInfo.getArtistId(), currArtistAlbumInfo.getSource())
                                 : mvRequest ? MusicServerUtils.getArtistInfo(currArtistMvInfo.getCreatorId(), currArtistMvInfo.getSource())
                                 : MusicServerUtils.searchArtists(netArtistCurrKeyword, limit, netArtistCurrPage);
                         List<NetArtistInfo> netArtistInfos = result.data;
@@ -14210,7 +14342,7 @@ public class PlayerFrame extends JFrame {
                         && currUserPlaylistInfo == null && currUserMvInfo == null && currUserRadioInfo == null
                         && currUserCommentInfo == null && currSubscriberPlaylistInfo == null
                         && currSubscriberRadioInfo == null && currUserArtistInfo == null
-                        && currAuthorMusicInfo == null) {
+                        && currAuthorMusicInfo == null && currAuthorAlbumInfo == null) {
                     // 删除标题标签
                     netUserToolBar.add(netUserSearchTextField);
                     netUserToolBar.add(netUserClearInputButton);
@@ -14357,7 +14489,7 @@ public class PlayerFrame extends JFrame {
                     playlistRequest = currUserPlaylistInfo != null, mvRequest = currUserMvInfo != null, radioRequest = currUserRadioInfo != null,
                     commentRequest = currUserCommentInfo != null, playlistSubRequest = currSubscriberPlaylistInfo != null,
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
-                    songRequest = currAuthorMusicInfo != null;
+                    songRequest = currAuthorMusicInfo != null, albumRequest = currAuthorAlbumInfo != null;
             if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
                     playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtils.isNotEmpty(netUserCurrKeyword)) {
                 loadingAndRun(() -> {
@@ -14373,6 +14505,7 @@ public class PlayerFrame extends JFrame {
                                 : radioRequest ? MusicServerUtils.getUserInfo(currUserRadioInfo.getDjId(), currUserRadioInfo.getSource())
                                 : commentRequest ? MusicServerUtils.getUserInfo(currUserCommentInfo.getUserId(), currUserCommentInfo.getSource())
                                 : songRequest ? MusicServerUtils.getUserInfo(currAuthorMusicInfo.getArtistId(), currAuthorMusicInfo.getSource())
+                                : albumRequest ? MusicServerUtils.getUserInfo(currAuthorAlbumInfo.getArtistId(), currAuthorAlbumInfo.getSource())
                                 : MusicServerUtils.searchUsers(netUserCurrKeyword, limit, netUserCurrPage);
                         List<NetUserInfo> netUserInfos = result.data;
                         Integer total = result.total;
@@ -16442,7 +16575,7 @@ public class PlayerFrame extends JFrame {
                     // 搜索歌曲并显示在在线播放列表
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtils.getHotMusicRecommend(
-                                limit, netRecommendCurrPage);
+                                (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetMusicInfo> netMusicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17023,7 +17156,13 @@ public class PlayerFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
-                    CommonResult<NetMusicInfo> result = MusicServerUtils.getHotMusicRecommend(limit, netRecommendCurrPage = 1);
+                    // 显示分类标签
+                    if (Tags.hotSongTag.isEmpty()) MusicServerUtils.initHotSongTag();
+                    ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
+                    for (String tag : Tags.hotSongTag.keySet()) netRecommendTagComboBox.addItem(tag);
+
+                    CommonResult<NetMusicInfo> result = MusicServerUtils.getHotMusicRecommend(
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetMusicInfo> netMusicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17047,7 +17186,7 @@ public class PlayerFrame extends JFrame {
                     }
                     // 不需要加载更多，删除加载更多的工具栏
                     recommendLeftBox.remove(musicRecommendToolBar);
-                    netRecommendTagComboBox.setVisible(false);
+                    netRecommendTagComboBox.setVisible(true);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
                     new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -18832,6 +18971,7 @@ public class PlayerFrame extends JFrame {
         // 复制歌词
         copyMenuItem.addActionListener(e -> {
             Statement stmt = lrcList.getSelectedValue();
+            if (stmt == null) return;
             StringSelection stringSelection = new StringSelection(stmt.toString());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
@@ -18839,6 +18979,7 @@ public class PlayerFrame extends JFrame {
         // 定位歌词时间
         locateLrcMenuItem.addActionListener(e -> {
             Statement stmt = lrcList.getSelectedValue();
+            if (stmt == null) return;
             double time = stmt.getTime() + lrcOffset;
             player.seek(time);
             seekLrc(time);
@@ -19403,9 +19544,11 @@ public class PlayerFrame extends JFrame {
         blurOffMenuItem.setFont(globalFont);
         gsBlurMenuItem.setFont(globalFont);
         mcBlurMenuItem.setFont(globalFont);
+        lgBlurMenuItem.setFont(globalFont);
         blurPopupMenu.add(blurOffMenuItem);
         blurPopupMenu.add(gsBlurMenuItem);
         blurPopupMenu.add(mcBlurMenuItem);
+        blurPopupMenu.add(lgBlurMenuItem);
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurType.OFF;
             doStyleBlur(currUIStyle);
@@ -19421,6 +19564,11 @@ public class PlayerFrame extends JFrame {
             doBlur();
             blurButton.setIcon(ImageUtils.dye(mcBlurIcon, currUIStyle.getButtonColor()));
         });
+        lgBlurMenuItem.addActionListener(e -> {
+            blurType = BlurType.LG;
+            doBlur();
+            blurButton.setIcon(ImageUtils.dye(lgBlurIcon, currUIStyle.getButtonColor()));
+        });
         // 虚化按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
         blurButton.setFocusable(false);
@@ -19430,7 +19578,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = blurPopupMenu.getHeight();
-                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 133 : h));
+                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 169 : h));
             }
         });
         // 音效按钮
@@ -19653,11 +19801,13 @@ public class PlayerFrame extends JFrame {
         if (!lrcTimer.isRunning()) lrcTimer.start();
 
         // 设置切换面板文字
-        final int maxLen = 36;
+        final int maxLen = 34;
         if (netMusicInfo != null)
             changePaneButton.setText(StringUtils.textToHtml(StringUtils.shorten(netMusicInfo.toSimpleString(), maxLen)));
         else
             changePaneButton.setText(StringUtils.textToHtml(StringUtils.shorten(file.toString(), maxLen)));
+        changePaneButton.setVisible(false);
+        changePaneButton.setVisible(true);
         if (miniDialog != null) miniDialog.infoLabel.setText(changePaneButton.getText());
         // 设置 MV、收藏、下载、评论、曲谱按钮
         mvButton.setEnabled(netMusicInfo != null && netMusicInfo.hasMv());
@@ -20671,6 +20821,7 @@ public class PlayerFrame extends JFrame {
         blurOffMenuItem.setIcon(ImageUtils.dye(blurOffIcon, menuItemColor));
         gsBlurMenuItem.setIcon(ImageUtils.dye(gsBlurIcon, menuItemColor));
         mcBlurMenuItem.setIcon(ImageUtils.dye(mcBlurIcon, menuItemColor));
+        lgBlurMenuItem.setIcon(ImageUtils.dye(lgBlurIcon, menuItemColor));
 
         saveDescCoverImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
         saveDescBgImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
@@ -20742,6 +20893,7 @@ public class PlayerFrame extends JFrame {
         netAlbumPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
         netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
         netAlbumCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
+        netAlbumArtistMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, menuItemColor));
         netAlbumSimilarMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
         netAlbumPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
         netAlbumCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
@@ -21368,7 +21520,7 @@ public class PlayerFrame extends JFrame {
         netRecommendPageTextField.setForeground(foreColor);
         netRecommendPageTextField.setCaretColor(foreColor);
         netRecommendTagComboBox.setOpaque(opaque);
-        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor, 220));
+        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor, 240));
         netRecommendPlayAllButton.setOpaque(opaque);
         netRecommendPlayAllButton.setForeground(buttonColor);
         netRecommendRefreshButton.setOpaque(opaque);
@@ -22715,7 +22867,12 @@ public class PlayerFrame extends JFrame {
             if (!player.loadedMusic()) return;
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
             if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
-            if (blurType == BlurType.MC) albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
+            if (blurType == BlurType.MC)
+                albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
+            else if (blurType == BlurType.LG) {
+                List<Color> colors = ColorThiefUtils.getPalette(albumImage, 2);
+                albumImage = ImageUtils.horizontalGradient(albumImage.getWidth(), albumImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+            }
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
                 gw = windowWidth;
@@ -22733,7 +22890,8 @@ public class PlayerFrame extends JFrame {
                 // 处理成 100 * 100 大小
                 bufferedImage = ImageUtils.width(bufferedImage, 100);
                 // 高斯模糊并暗化
-                bufferedImage = ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
+                bufferedImage = ImageUtils.doBlur(bufferedImage);
+                bufferedImage = ImageUtils.darker(bufferedImage);
                 // 放大至窗口大小
                 bufferedImage = ImageUtils.width(bufferedImage, gw);
                 int ih = bufferedImage.getHeight();
@@ -23016,6 +23174,7 @@ public class PlayerFrame extends JFrame {
     // 清除歌手请求实例
     void clearRequestForArtist() {
         currArtistMusicInfo = null;
+        currArtistAlbumInfo = null;
         currArtistArtistInfo = null;
         currBuddyArtistInfo = null;
         currArtistMvInfo = null;
@@ -23046,6 +23205,7 @@ public class PlayerFrame extends JFrame {
         currFollowUserUserInfo = null;
         currFollowedUserUserInfo = null;
         currAuthorMusicInfo = null;
+        currAuthorAlbumInfo = null;
         currUserPlaylistInfo = null;
         currUserArtistInfo = null;
         currUserMvInfo = null;

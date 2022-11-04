@@ -21,22 +21,31 @@ public class CustomMenuItem extends JMenuItem {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                entered = true;
-                repaint();
+                enter();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                entered = false;
-                repaint();
+                exit();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                entered = false;
-                repaint();
+                exit();
             }
         });
+
+        addMouseWheelListener(e -> exit());
+    }
+
+    private void enter() {
+        entered = true;
+        repaint();
+    }
+
+    private void exit() {
+        entered = false;
+        repaint();
     }
 
     private void createBorder() {

@@ -245,31 +245,23 @@ public class ColorUtils {
 //        );
 //    }
 
-    /**
-     * awt 的 Color 转为 JavaFx 的 Color
-     *
-     * @param color
-     * @return
-     */
-    public static javafx.scene.paint.Color javaFxColor(Color color) {
-        return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), (double) color.getAlpha() / 255);
-    }
+//    /**
+//     * awt 的 Color 转为 JavaFx 的 Color
+//     *
+//     * @param color
+//     * @return
+//     */
+//    public static javafx.scene.paint.Color javaFxColor(Color color) {
+//        return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), (double) color.getAlpha() / 255);
+//    }
 
-    /**
-     * JavaFx 的 Color 转为 awt 的 Color
-     *
-     * @param color
-     * @return
-     */
-    public static Color awtColor(javafx.scene.paint.Color color) {
-        return new Color((int) (255 * color.getRed()), (int) (255 * color.getGreen()), (int) (255 * color.getBlue()), (int) (255 * color.getOpacity()));
-    }
-
-//    public static Color getGradientColor(Color c1, Color c2, int i, int total) {
-//        int r1 = c1.getRed(), r2 = c2.getRed(), g1 = c1.getGreen(), g2 = c2.getGreen(), b1 = c1.getBlue(), b2 = c2.getBlue();
-//        return new Color(
-//                Math.min(r1, r2) + Math.abs(r1 - r2) * i / total,
-//                Math.min(g1, g2) + Math.abs(g1 - g2) * i / total,
-//                Math.min(b1, b2) + Math.abs(b1 - b2) * i / total);
+//    /**
+//     * JavaFx 的 Color 转为 awt 的 Color
+//     *
+//     * @param color
+//     * @return
+//     */
+//    public static Color awtColor(javafx.scene.paint.Color color) {
+//        return new Color((int) (255 * color.getRed()), (int) (255 * color.getGreen()), (int) (255 * color.getBlue()), (int) (255 * color.getOpacity()));
 //    }
 }

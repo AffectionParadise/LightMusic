@@ -1,5 +1,6 @@
 package net.doge.utils;
 
+import cn.hutool.core.img.ColorUtil;
 import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
@@ -278,7 +279,7 @@ public class ImageUtils {
      * 创建透明图片
      */
     public static BufferedImage createTranslucentImage(int w, int h) {
-        BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = bufferedImage.createGraphics();
         // 获取透明的 BufferedImage
         BufferedImage translucentImg = g.getDeviceConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
@@ -699,19 +700,21 @@ public class ImageUtils {
         return new Color(R / cn, G / cn, B / cn, (int) (255 * alpha));
     }
 
-//    /**
-//     * 生成两种颜色的水平渐变图像
-//     *
-//     * @param c1, c2
-//     * @return
-//     */
-//    public static BufferedImage horizontalGradient(BufferedImage img, Color c1, Color c2) {
-//        int w = img.getWidth(), h = img.getHeight();
-//        GradientFilter gf = new GradientFilter(new Point(0, h / 2), new Point(w, h / 2),
-//                c1.getRGB(), c2.getRGB(),
-//                false, GradientFilter.LINEAR, 1);
-//        return gf.filter(img, null);
-//    }
+    /**
+     * 生成两种颜色的水平渐变图像
+     *
+     * @return
+     */
+    public static BufferedImage horizontalGradient(int w, int h, Color c1, Color c2) {
+        BufferedImage img = createTranslucentImage(w, h);
+        Graphics2D g = img.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2, true);
+        g.setPaint(gp);
+        g.fillRect(0, 0, w, h);
+        g.dispose();
+        return img;
+    }
 
     /**
      * 图片添加阴影

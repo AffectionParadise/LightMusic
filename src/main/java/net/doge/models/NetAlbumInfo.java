@@ -23,6 +23,8 @@ public class NetAlbumInfo {
     private String name;
     // 艺术家
     private String artist;
+    // 艺术家 id
+    private String artistId;
     // 封面图片
     private BufferedImage coverImg;
     // 封面图片 url
@@ -55,6 +57,10 @@ public class NetAlbumInfo {
 
     public boolean hasArtist() {
         return StringUtils.isNotEmpty(artist);
+    }
+
+    public boolean hasArtistId() {
+        return StringUtils.isNotEmpty(artistId);
     }
 
     public boolean hasPublishTime() {

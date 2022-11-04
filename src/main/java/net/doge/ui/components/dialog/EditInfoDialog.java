@@ -4,7 +4,6 @@ import com.mpatric.mp3agic.ID3v1Genres;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import it.sauronsoftware.jave.EncoderException;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
@@ -18,10 +17,8 @@ import net.doge.ui.components.CustomTextField;
 import net.doge.ui.components.DialogButton;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.ui.listeners.JTextFieldHintListener;
 import net.doge.utils.*;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -32,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * @Author yzx
@@ -217,6 +215,10 @@ public class EditInfoDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+            else if (f.blurType == BlurType.LG) {
+                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
+                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+            }
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

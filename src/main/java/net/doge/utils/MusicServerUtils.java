@@ -468,10 +468,51 @@ public class MusicServerUtils {
      * @return
      */
     public static void initRecPlaylistTag() {
-        // 酷狗 QQ
-        Tags.recPlaylistTag.put("默认", new String[]{" ", "10000000", " "});
+        // 网易云 酷狗 QQ 猫耳
+        Tags.recPlaylistTag.put("默认", new String[]{"", " ", "10000000", " "});
 
-        final int c = 3;
+        final int c = 4;
+        // 网易云曲风
+        Runnable initRecPlaylistTag = () -> {
+            String tagBody = HttpRequest.get(String.format(STYLE_API))
+                    .execute()
+                    .body();
+            JSONObject tagJson = JSONObject.fromObject(tagBody);
+            JSONArray tags = tagJson.getJSONArray("data");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                JSONObject tag = tags.getJSONObject(i);
+
+                String name = tag.getString("tagName");
+                String id = tag.getString("tagId");
+
+                if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
+                Tags.recPlaylistTag.get(name)[0] = id;
+                // 子标签
+                JSONArray subTags = tag.optJSONArray("childrenTags");
+                if (subTags == null) continue;
+                for (int j = 0, s = subTags.size(); j < s; j++) {
+                    JSONObject subTag = subTags.getJSONObject(j);
+
+                    String subName = subTag.getString("tagName");
+                    String subId = subTag.getString("tagId");
+
+                    if (!Tags.recPlaylistTag.containsKey(subName)) Tags.recPlaylistTag.put(subName, new String[c]);
+                    Tags.recPlaylistTag.get(subName)[0] = subId;
+                    // 孙子标签
+                    JSONArray ssTags = subTag.optJSONArray("childrenTags");
+                    if (ssTags == null) continue;
+                    for (int k = 0, l = ssTags.size(); k < l; k++) {
+                        JSONObject ssTag = ssTags.getJSONObject(k);
+
+                        String ssName = ssTag.getString("tagName");
+                        String ssId = ssTag.getString("tagId");
+
+                        if (!Tags.recPlaylistTag.containsKey(ssName)) Tags.recPlaylistTag.put(ssName, new String[c]);
+                        Tags.recPlaylistTag.get(ssName)[0] = ssId;
+                    }
+                }
+            }
+        };
 
         // 酷狗
         Runnable initRecPlaylistTagKg = () -> {
@@ -490,7 +531,7 @@ public class MusicServerUtils {
                     String id = tagJson.getString("id");
 
                     if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
-                    Tags.recPlaylistTag.get(name)[0] = id;
+                    Tags.recPlaylistTag.get(name)[1] = id;
                 }
             }
         };
@@ -511,7 +552,7 @@ public class MusicServerUtils {
                     String id = tagJson.getString("id");
 
                     if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
-                    Tags.recPlaylistTag.get(name)[1] = id;
+                    Tags.recPlaylistTag.get(name)[2] = id;
                 }
             }
         };
@@ -533,13 +574,14 @@ public class MusicServerUtils {
                     String id = tagJsonArray.getString(0);
 
                     if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
-                    Tags.recPlaylistTag.get(name)[2] = id;
+                    Tags.recPlaylistTag.get(name)[3] = id;
                 }
             }
         };
 
         List<Future<?>> taskList = new LinkedList<>();
 
+        taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTag));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTagKg));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTagQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTagMe));
@@ -556,8 +598,9 @@ public class MusicServerUtils {
     }
 
     // 推荐歌单 API
-    private static final String RECOMMEND_PLAYLIST_API
-            = prefix + "/personalized?limit=100";
+    private static final String RECOMMEND_PLAYLIST_API = prefix + "/personalized?limit=100";
+    // 曲风歌单 API
+    private static final String STYLE_PLAYLIST_API = prefix + "/style/playlist?tagId=%s&cursor=%s&size=%s";
     // 推荐歌单 API (每页固定 30 条)(酷狗)
     private static final String RECOMMEND_PLAYLIST_KG_API
             = "http://m.kugou.com/plist/index?json=true&page=%s";
@@ -888,6 +931,72 @@ public class MusicServerUtils {
     private static final String EXP_PLAYLIST_ME_API
             = "https://www.missevan.com/explore/getAlbumFromTag/%s";
 
+    /**
+     * 加载飙升歌曲标签
+     *
+     * @return
+     */
+    public static void initHotSongTag() {
+        Tags.hotSongTag.put("默认", new String[]{""});
+
+        final int c = 1;
+        // 网易云曲风
+        Runnable initHotSongTag = () -> {
+            String tagBody = HttpRequest.get(String.format(STYLE_API))
+                    .execute()
+                    .body();
+            JSONObject tagJson = JSONObject.fromObject(tagBody);
+            JSONArray tags = tagJson.getJSONArray("data");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                JSONObject tag = tags.getJSONObject(i);
+
+                String name = tag.getString("tagName");
+                String id = tag.getString("tagId");
+
+                if (!Tags.hotSongTag.containsKey(name)) Tags.hotSongTag.put(name, new String[c]);
+                Tags.hotSongTag.get(name)[0] = id;
+                // 子标签
+                JSONArray subTags = tag.optJSONArray("childrenTags");
+                if (subTags == null) continue;
+                for (int j = 0, s = subTags.size(); j < s; j++) {
+                    JSONObject subTag = subTags.getJSONObject(j);
+
+                    String subName = subTag.getString("tagName");
+                    String subId = subTag.getString("tagId");
+
+                    if (!Tags.hotSongTag.containsKey(subName)) Tags.hotSongTag.put(subName, new String[c]);
+                    Tags.hotSongTag.get(subName)[0] = subId;
+                    // 孙子标签
+                    JSONArray ssTags = subTag.optJSONArray("childrenTags");
+                    if (ssTags == null) continue;
+                    for (int k = 0, l = ssTags.size(); k < l; k++) {
+                        JSONObject ssTag = ssTags.getJSONObject(k);
+
+                        String ssName = ssTag.getString("tagName");
+                        String ssId = ssTag.getString("tagId");
+
+                        if (!Tags.hotSongTag.containsKey(ssName)) Tags.hotSongTag.put(ssName, new String[c]);
+                        Tags.hotSongTag.get(ssName)[0] = ssId;
+                    }
+                }
+            }
+        };
+
+        List<Future<?>> taskList = new LinkedList<>();
+
+        taskList.add(GlobalExecutors.requestExecutor.submit(initHotSongTag));
+
+        taskList.forEach(task -> {
+            try {
+                task.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     // 飙升榜 API (酷狗)
     private static final String UP_MUSIC_KG_API
             = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=6666&page=%s&pagesize=%s";
@@ -909,26 +1018,90 @@ public class MusicServerUtils {
     // 尖叫热歌榜 API (咪咕)
     private static final String HOT_MUSIC_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=27186466";
 
+    // 曲风 API
+    private static final String STYLE_API = prefix + "/style/list";
+
     /**
      * 加载新歌标签
      *
      * @return
      */
     public static void initNewSongTag() {
-        Tags.newSongTag.put("默认", new String[]{"0", "1", "0"});
+        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "0"});
 
-        Tags.newSongTag.put("华语", new String[]{"7", "1", "0"});
-        Tags.newSongTag.put("内地", new String[]{"", "", "1"});
-        Tags.newSongTag.put("港台", new String[]{"", "", "2"});
-        Tags.newSongTag.put("欧美", new String[]{"96", "2", "3"});
-        Tags.newSongTag.put("韩国", new String[]{"16", "4", "4"});
-        Tags.newSongTag.put("日本", new String[]{"8", "5", "5"});
-        Tags.newSongTag.put("日韩", new String[]{"", "3", ""});
+        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "0"});
+        Tags.newSongTag.put("内地", new String[]{"", "", "", "1"});
+        Tags.newSongTag.put("港台", new String[]{"", "", "", "2"});
+        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "3"});
+        Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "4"});
+        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "5"});
+        Tags.newSongTag.put("日韩", new String[]{"", "", "3", ""});
+
+        final int c = 4;
+        // 网易云曲风
+        Runnable initNewSongTag = () -> {
+            String tagBody = HttpRequest.get(String.format(STYLE_API))
+                    .execute()
+                    .body();
+            JSONObject tagJson = JSONObject.fromObject(tagBody);
+            JSONArray tags = tagJson.getJSONArray("data");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                JSONObject tag = tags.getJSONObject(i);
+
+                String name = tag.getString("tagName");
+                String id = tag.getString("tagId");
+
+                if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
+                Tags.newSongTag.get(name)[1] = id;
+                // 子标签
+                JSONArray subTags = tag.optJSONArray("childrenTags");
+                if (subTags == null) continue;
+                for (int j = 0, s = subTags.size(); j < s; j++) {
+                    JSONObject subTag = subTags.getJSONObject(j);
+
+                    String subName = subTag.getString("tagName");
+                    String subId = subTag.getString("tagId");
+
+                    if (!Tags.newSongTag.containsKey(subName)) Tags.newSongTag.put(subName, new String[c]);
+                    Tags.newSongTag.get(subName)[1] = subId;
+                    // 孙子标签
+                    JSONArray ssTags = subTag.optJSONArray("childrenTags");
+                    if (ssTags == null) continue;
+                    for (int k = 0, l = ssTags.size(); k < l; k++) {
+                        JSONObject ssTag = ssTags.getJSONObject(k);
+
+                        String ssName = ssTag.getString("tagName");
+                        String ssId = ssTag.getString("tagId");
+
+                        if (!Tags.newSongTag.containsKey(ssName)) Tags.newSongTag.put(ssName, new String[c]);
+                        Tags.newSongTag.get(ssName)[1] = ssId;
+                    }
+                }
+            }
+        };
+
+        List<Future<?>> taskList = new LinkedList<>();
+
+        taskList.add(GlobalExecutors.requestExecutor.submit(initNewSongTag));
+
+        taskList.forEach(task -> {
+            try {
+                task.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
+    // 曲风歌曲(最热) API
+    private static final String STYLE_HOT_SONG_API = prefix + "/style/song?tagId=%s&sort=0&cursor=%s&size=%s";
+
     // 推荐新歌 API
-    private static final String RECOMMEND_NEW_SONG_API
-            = prefix + "/personalized/newsong?limit=100";
+    private static final String RECOMMEND_NEW_SONG_API = prefix + "/personalized/newsong?limit=100";
+    // 曲风歌曲(最新) API
+    private static final String STYLE_NEW_SONG_API = prefix + "/style/song?tagId=%s&sort=1&cursor=%s&size=%s";
     // 新歌速递 API
     private static final String FAST_NEW_SONG_API = prefix + "/top/song?type=%s";
     // 推荐新歌(华语) API (酷狗)
@@ -957,351 +1130,393 @@ public class MusicServerUtils {
      * @return
      */
     public static void initNewAlbumTag() {
-        Tags.newAlbumTag.put("默认", new String[]{"ALL", "", "1", "", ""});
+        Tags.newAlbumTag.put("默认", new String[]{"ALL", "", "", "1", "", ""});
 
-        Tags.newAlbumTag.put("华语", new String[]{"ZH", "Z_H", "", "", ""});
-        Tags.newAlbumTag.put("内地", new String[]{"", "", "1", "", ""});
-        Tags.newAlbumTag.put("港台", new String[]{"", "", "2", "", ""});
-        Tags.newAlbumTag.put("欧美", new String[]{"EA", "E_A", "3", "", ""});
-        Tags.newAlbumTag.put("韩国", new String[]{"KR", "KR", "4", "", ""});
-        Tags.newAlbumTag.put("日本", new String[]{"JP", "JP", "5", "", ""});
-        Tags.newAlbumTag.put("其他", new String[]{"", "", "6", "", ""});
+        Tags.newAlbumTag.put("华语", new String[]{"ZH", "Z_H", "", "", "", ""});
+        Tags.newAlbumTag.put("内地", new String[]{"", "", "", "1", "", ""});
+        Tags.newAlbumTag.put("港台", new String[]{"", "", "", "2", "", ""});
+        Tags.newAlbumTag.put("欧美", new String[]{"EA", "E_A", "", "3", "", ""});
+        Tags.newAlbumTag.put("韩国", new String[]{"KR", "KR", "", "4", "", ""});
+        Tags.newAlbumTag.put("日本", new String[]{"JP", "JP", "", "5", "", ""});
+        Tags.newAlbumTag.put("其他", new String[]{"", "", "", "6", "", ""});
 
         // 堆糖
-        Tags.newAlbumTag.put("家居生活", new String[]{"", "", "", "", "家居生活"});
-        Tags.newAlbumTag.put("家居生活 - 客厅", new String[]{"", "", "", "", "家居生活_客厅"});
-        Tags.newAlbumTag.put("家居生活 - 卧室", new String[]{"", "", "", "", "家居生活_卧室"});
-        Tags.newAlbumTag.put("家居生活 - 楼梯", new String[]{"", "", "", "", "家居生活_楼梯"});
-        Tags.newAlbumTag.put("家居生活 - 阁楼", new String[]{"", "", "", "", "家居生活_阁楼"});
-        Tags.newAlbumTag.put("家居生活 - 儿童房", new String[]{"", "", "", "", "家居生活_儿童房"});
-        Tags.newAlbumTag.put("家居生活 - 厨房", new String[]{"", "", "", "", "家居生活_厨房"});
-        Tags.newAlbumTag.put("家居生活 - 浴室", new String[]{"", "", "", "", "家居生活_浴室"});
-        Tags.newAlbumTag.put("家居生活 - 阳台", new String[]{"", "", "", "", "家居生活_阳台"});
-        Tags.newAlbumTag.put("家居生活 - 飘窗", new String[]{"", "", "", "", "家居生活_飘窗"});
-        Tags.newAlbumTag.put("家居生活 - 工作间", new String[]{"", "", "", "", "家居生活_工作间"});
-        Tags.newAlbumTag.put("家居生活 - 沙发", new String[]{"", "", "", "", "家居生活_沙发"});
-        Tags.newAlbumTag.put("家居生活 - 椅子", new String[]{"", "", "", "", "家居生活_椅子"});
-        Tags.newAlbumTag.put("家居生活 - 桌子", new String[]{"", "", "", "", "家居生活_桌子"});
-        Tags.newAlbumTag.put("家居生活 - 柜子", new String[]{"", "", "", "", "家居生活_柜子"});
-        Tags.newAlbumTag.put("家居生活 - 灯饰", new String[]{"", "", "", "", "家居生活_灯饰"});
-        Tags.newAlbumTag.put("家居生活 - 收纳", new String[]{"", "", "", "", "家居生活_收纳"});
-        Tags.newAlbumTag.put("家居生活 - 置物架", new String[]{"", "", "", "", "家居生活_置物架"});
-        Tags.newAlbumTag.put("家居生活 - 照片墙", new String[]{"", "", "", "", "家居生活_照片墙"});
-        Tags.newAlbumTag.put("家居生活 - zakka", new String[]{"", "", "", "", "家居生活_zakka"});
-        Tags.newAlbumTag.put("家居生活 - 北欧", new String[]{"", "", "", "", "家居生活_北欧"});
-        Tags.newAlbumTag.put("家居生活 - 地中海", new String[]{"", "", "", "", "家居生活_地中海"});
-        Tags.newAlbumTag.put("家居生活 - 简约", new String[]{"", "", "", "", "家居生活_简约"});
-        Tags.newAlbumTag.put("家居生活 - 宜家", new String[]{"", "", "", "", "家居生活_宜家"});
-        Tags.newAlbumTag.put("家居生活 - 田园", new String[]{"", "", "", "", "家居生活_田园"});
-        Tags.newAlbumTag.put("美食菜谱", new String[]{"", "", "", "", "美食菜谱"});
-        Tags.newAlbumTag.put("美食菜谱 - 菜谱", new String[]{"", "", "", "", "美食菜谱_菜谱"});
-        Tags.newAlbumTag.put("美食菜谱 - 家常菜", new String[]{"", "", "", "", "美食菜谱_家常菜"});
-        Tags.newAlbumTag.put("美食菜谱 - 主食", new String[]{"", "", "", "", "美食菜谱_主食"});
-        Tags.newAlbumTag.put("美食菜谱 - 汤粥羹", new String[]{"", "", "", "", "美食菜谱_汤粥羹"});
-        Tags.newAlbumTag.put("美食菜谱 - 西餐", new String[]{"", "", "", "", "美食菜谱_西餐"});
-        Tags.newAlbumTag.put("美食菜谱 - 日料", new String[]{"", "", "", "", "美食菜谱_日料"});
-        Tags.newAlbumTag.put("美食菜谱 - 早餐", new String[]{"", "", "", "", "美食菜谱_早餐"});
-        Tags.newAlbumTag.put("美食菜谱 - 便当", new String[]{"", "", "", "", "美食菜谱_便当"});
-        Tags.newAlbumTag.put("美食菜谱 - 甜点", new String[]{"", "", "", "", "美食菜谱_甜点"});
-        Tags.newAlbumTag.put("美食菜谱 - 糖果", new String[]{"", "", "", "", "美食菜谱_糖果"});
-        Tags.newAlbumTag.put("美食菜谱 - 饼干", new String[]{"", "", "", "", "美食菜谱_饼干"});
-        Tags.newAlbumTag.put("美食菜谱 - 蛋糕", new String[]{"", "", "", "", "美食菜谱_蛋糕"});
-        Tags.newAlbumTag.put("美食菜谱 - 翻糖", new String[]{"", "", "", "", "美食菜谱_翻糖"});
-        Tags.newAlbumTag.put("美食菜谱 - 马卡龙", new String[]{"", "", "", "", "美食菜谱_马卡龙"});
-        Tags.newAlbumTag.put("美食菜谱 - 冰淇淋", new String[]{"", "", "", "", "美食菜谱_冰淇淋"});
-        Tags.newAlbumTag.put("美食菜谱 - 水果", new String[]{"", "", "", "", "美食菜谱_水果"});
-        Tags.newAlbumTag.put("美食菜谱 - 冰品", new String[]{"", "", "", "", "美食菜谱_冰品"});
-        Tags.newAlbumTag.put("美食菜谱 - 咖啡", new String[]{"", "", "", "", "美食菜谱_咖啡"});
-        Tags.newAlbumTag.put("美食菜谱 - 调酒", new String[]{"", "", "", "", "美食菜谱_调酒"});
-        Tags.newAlbumTag.put("手工DIY", new String[]{"", "", "", "", "手工DIY"});
-        Tags.newAlbumTag.put("手工DIY - 废物利用", new String[]{"", "", "", "", "手工DIY_废物利用"});
-        Tags.newAlbumTag.put("手工DIY - 手工本子", new String[]{"", "", "", "", "手工DIY_手工本子"});
-        Tags.newAlbumTag.put("手工DIY - 橡皮章", new String[]{"", "", "", "", "手工DIY_橡皮章"});
-        Tags.newAlbumTag.put("手工DIY - 粘土", new String[]{"", "", "", "", "手工DIY_粘土"});
-        Tags.newAlbumTag.put("手工DIY - 羊毛毡", new String[]{"", "", "", "", "手工DIY_羊毛毡"});
-        Tags.newAlbumTag.put("手工DIY - 纽扣", new String[]{"", "", "", "", "手工DIY_纽扣"});
-        Tags.newAlbumTag.put("手工DIY - 拼豆", new String[]{"", "", "", "", "手工DIY_拼豆"});
-        Tags.newAlbumTag.put("手工DIY - 石绘", new String[]{"", "", "", "", "手工DIY_石绘"});
-        Tags.newAlbumTag.put("手工DIY - 针织钩花", new String[]{"", "", "", "", "手工DIY_针织钩花"});
-        Tags.newAlbumTag.put("手工DIY - 刺绣", new String[]{"", "", "", "", "手工DIY_刺绣"});
-        Tags.newAlbumTag.put("手工DIY - 十字绣", new String[]{"", "", "", "", "手工DIY_十字绣"});
-        Tags.newAlbumTag.put("手工DIY - 拼布", new String[]{"", "", "", "", "手工DIY_拼布"});
-        Tags.newAlbumTag.put("手工DIY - 不织布", new String[]{"", "", "", "", "手工DIY_不织布"});
-        Tags.newAlbumTag.put("手工DIY - 绳结", new String[]{"", "", "", "", "手工DIY_绳结"});
-        Tags.newAlbumTag.put("手工DIY - 串珠", new String[]{"", "", "", "", "手工DIY_串珠"});
-        Tags.newAlbumTag.put("手工DIY - 绕线", new String[]{"", "", "", "", "手工DIY_绕线"});
-        Tags.newAlbumTag.put("手工DIY - 折纸", new String[]{"", "", "", "", "手工DIY_折纸"});
-        Tags.newAlbumTag.put("手工DIY - 剪纸", new String[]{"", "", "", "", "手工DIY_剪纸"});
-        Tags.newAlbumTag.put("手工DIY - 衍纸", new String[]{"", "", "", "", "手工DIY_衍纸"});
-        Tags.newAlbumTag.put("手工DIY - 纸模", new String[]{"", "", "", "", "手工DIY_纸模"});
-        Tags.newAlbumTag.put("手工DIY - 卡片", new String[]{"", "", "", "", "手工DIY_卡片"});
-        Tags.newAlbumTag.put("时尚搭配", new String[]{"", "", "", "", "时尚搭配"});
-        Tags.newAlbumTag.put("时尚搭配 - 搭配达人", new String[]{"", "", "", "", "时尚搭配_搭配达人"});
-        Tags.newAlbumTag.put("时尚搭配 - 街拍", new String[]{"", "", "", "", "时尚搭配_街拍"});
-        Tags.newAlbumTag.put("时尚搭配 - 穿搭", new String[]{"", "", "", "", "时尚搭配_穿搭"});
-        Tags.newAlbumTag.put("时尚搭配 - 秀场", new String[]{"", "", "", "", "时尚搭配_秀场"});
-        Tags.newAlbumTag.put("时尚搭配 - 大片", new String[]{"", "", "", "", "时尚搭配_大片"});
-        Tags.newAlbumTag.put("时尚搭配 - 模特", new String[]{"", "", "", "", "时尚搭配_模特"});
-        Tags.newAlbumTag.put("时尚搭配 - 时尚博主", new String[]{"", "", "", "", "时尚搭配_时尚博主"});
-        Tags.newAlbumTag.put("时尚搭配 - 型男搭配", new String[]{"", "", "", "", "时尚搭配_型男搭配"});
-        Tags.newAlbumTag.put("时尚搭配 - 奢侈品", new String[]{"", "", "", "", "时尚搭配_奢侈品"});
-        Tags.newAlbumTag.put("时尚搭配 - 韩风", new String[]{"", "", "", "", "时尚搭配_韩风"});
-        Tags.newAlbumTag.put("时尚搭配 - 日系", new String[]{"", "", "", "", "时尚搭配_日系"});
-        Tags.newAlbumTag.put("时尚搭配 - 欧美", new String[]{"", "", "", "", "时尚搭配_欧美"});
-        Tags.newAlbumTag.put("时尚搭配 - 文艺", new String[]{"", "", "", "", "时尚搭配_文艺"});
-        Tags.newAlbumTag.put("时尚搭配 - 简约", new String[]{"", "", "", "", "时尚搭配_简约"});
-        Tags.newAlbumTag.put("时尚搭配 - 英伦", new String[]{"", "", "", "", "时尚搭配_英伦"});
-        Tags.newAlbumTag.put("时尚搭配 - 混搭", new String[]{"", "", "", "", "时尚搭配_混搭"});
-        Tags.newAlbumTag.put("时尚搭配 - 复古", new String[]{"", "", "", "", "时尚搭配_复古"});
-        Tags.newAlbumTag.put("时尚搭配 - 朋克", new String[]{"", "", "", "", "时尚搭配_朋克"});
-        Tags.newAlbumTag.put("时尚搭配 - 森系", new String[]{"", "", "", "", "时尚搭配_森系"});
-        Tags.newAlbumTag.put("时尚搭配 - 中性", new String[]{"", "", "", "", "时尚搭配_中性"});
-        Tags.newAlbumTag.put("时尚搭配 - OL", new String[]{"", "", "", "", "时尚搭配_OL"});
-        Tags.newAlbumTag.put("时尚搭配 - 民族风", new String[]{"", "", "", "", "时尚搭配_民族风"});
-        Tags.newAlbumTag.put("时尚搭配 - 明星款", new String[]{"", "", "", "", "时尚搭配_明星款"});
-        Tags.newAlbumTag.put("时尚搭配 - 碎花", new String[]{"", "", "", "", "时尚搭配_碎花"});
-        Tags.newAlbumTag.put("时尚搭配 - 蕾丝", new String[]{"", "", "", "", "时尚搭配_蕾丝"});
-        Tags.newAlbumTag.put("时尚搭配 - 豹纹", new String[]{"", "", "", "", "时尚搭配_豹纹"});
-        Tags.newAlbumTag.put("时尚搭配 - 波点", new String[]{"", "", "", "", "时尚搭配_波点"});
-        Tags.newAlbumTag.put("时尚搭配 - 条纹", new String[]{"", "", "", "", "时尚搭配_条纹"});
-        Tags.newAlbumTag.put("时尚搭配 - 撞色", new String[]{"", "", "", "", "时尚搭配_撞色"});
-        Tags.newAlbumTag.put("时尚搭配 - 黑色", new String[]{"", "", "", "", "时尚搭配_黑色"});
-        Tags.newAlbumTag.put("时尚搭配 - 红色", new String[]{"", "", "", "", "时尚搭配_红色"});
-        Tags.newAlbumTag.put("时尚搭配 - 紫色", new String[]{"", "", "", "", "时尚搭配_紫色"});
-        Tags.newAlbumTag.put("时尚搭配 - 粉色", new String[]{"", "", "", "", "时尚搭配_粉色"});
-        Tags.newAlbumTag.put("时尚搭配 - 彩色", new String[]{"", "", "", "", "时尚搭配_彩色"});
-        Tags.newAlbumTag.put("时尚搭配 - 渐变色", new String[]{"", "", "", "", "时尚搭配_渐变色"});
-        Tags.newAlbumTag.put("美妆造型", new String[]{"", "", "", "", "美妆造型"});
-        Tags.newAlbumTag.put("美妆造型 - 彩妆", new String[]{"", "", "", "", "美妆造型_彩妆"});
-        Tags.newAlbumTag.put("美妆造型 - 眼妆", new String[]{"", "", "", "", "美妆造型_眼妆"});
-        Tags.newAlbumTag.put("美妆造型 - 唇妆", new String[]{"", "", "", "", "美妆造型_唇妆"});
-        Tags.newAlbumTag.put("美妆造型 - 美甲", new String[]{"", "", "", "", "美妆造型_美甲"});
-        Tags.newAlbumTag.put("美妆造型 - 香水", new String[]{"", "", "", "", "美妆造型_香水"});
-        Tags.newAlbumTag.put("美妆造型 - 文身", new String[]{"", "", "", "", "美妆造型_文身"});
-        Tags.newAlbumTag.put("美妆造型 - 发型", new String[]{"", "", "", "", "美妆造型_发型"});
-        Tags.newAlbumTag.put("美妆造型 - 编发", new String[]{"", "", "", "", "美妆造型_编发"});
-        Tags.newAlbumTag.put("美妆造型 - 马尾", new String[]{"", "", "", "", "美妆造型_马尾"});
-        Tags.newAlbumTag.put("美妆造型 - 长发", new String[]{"", "", "", "", "美妆造型_长发"});
-        Tags.newAlbumTag.put("美妆造型 - 短发", new String[]{"", "", "", "", "美妆造型_短发"});
-        Tags.newAlbumTag.put("美妆造型 - 卷发", new String[]{"", "", "", "", "美妆造型_卷发"});
-        Tags.newAlbumTag.put("美妆造型 - 染发", new String[]{"", "", "", "", "美妆造型_染发"});
-        Tags.newAlbumTag.put("婚纱婚礼", new String[]{"", "", "", "", "婚纱婚礼"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 婚礼布置", new String[]{"", "", "", "", "婚纱婚礼_婚礼布置"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 结婚蛋糕", new String[]{"", "", "", "", "婚纱婚礼_结婚蛋糕"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 请柬", new String[]{"", "", "", "", "婚纱婚礼_请柬"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 喜糖", new String[]{"", "", "", "", "婚纱婚礼_喜糖"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 捧花", new String[]{"", "", "", "", "婚纱婚礼_捧花"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 结婚照", new String[]{"", "", "", "", "婚纱婚礼_结婚照"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 婚纱", new String[]{"", "", "", "", "婚纱婚礼_婚纱"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 伴娘服", new String[]{"", "", "", "", "婚纱婚礼_伴娘服"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 新娘发型", new String[]{"", "", "", "", "婚纱婚礼_新娘发型"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 婚戒", new String[]{"", "", "", "", "婚纱婚礼_婚戒"});
-        Tags.newAlbumTag.put("婚纱婚礼 - 婚鞋", new String[]{"", "", "", "", "婚纱婚礼_婚鞋"});
-        Tags.newAlbumTag.put("文字句子", new String[]{"", "", "", "", "文字句子"});
-        Tags.newAlbumTag.put("文字句子 - 手写", new String[]{"", "", "", "", "文字句子_手写"});
-        Tags.newAlbumTag.put("文字句子 - 语录", new String[]{"", "", "", "", "文字句子_语录"});
-        Tags.newAlbumTag.put("文字句子 - 情感", new String[]{"", "", "", "", "文字句子_情感"});
-        Tags.newAlbumTag.put("文字句子 - 英文", new String[]{"", "", "", "", "文字句子_英文"});
-        Tags.newAlbumTag.put("插画绘画", new String[]{"", "", "", "", "插画绘画"});
-        Tags.newAlbumTag.put("插画绘画 - 手绘", new String[]{"", "", "", "", "插画绘画_手绘"});
-        Tags.newAlbumTag.put("插画绘画 - 素描", new String[]{"", "", "", "", "插画绘画_素描"});
-        Tags.newAlbumTag.put("插画绘画 - 水彩", new String[]{"", "", "", "", "插画绘画_水彩"});
-        Tags.newAlbumTag.put("插画绘画 - 彩铅", new String[]{"", "", "", "", "插画绘画_彩铅"});
-        Tags.newAlbumTag.put("插画绘画 - 油画", new String[]{"", "", "", "", "插画绘画_油画"});
-        Tags.newAlbumTag.put("插画绘画 - 版画", new String[]{"", "", "", "", "插画绘画_版画"});
-        Tags.newAlbumTag.put("插画绘画 - 绘画教程", new String[]{"", "", "", "", "插画绘画_绘画教程"});
-        Tags.newAlbumTag.put("插画绘画 - Q版", new String[]{"", "", "", "", "插画绘画_Q版"});
-        Tags.newAlbumTag.put("插画绘画 - CG", new String[]{"", "", "", "", "插画绘画_CG"});
-        Tags.newAlbumTag.put("插画绘画 - 人物", new String[]{"", "", "", "", "插画绘画_人物"});
-        Tags.newAlbumTag.put("插画绘画 - 时装", new String[]{"", "", "", "", "插画绘画_时装"});
-        Tags.newAlbumTag.put("插画绘画 - 动物", new String[]{"", "", "", "", "插画绘画_动物"});
-        Tags.newAlbumTag.put("插画绘画 - 植物", new String[]{"", "", "", "", "插画绘画_植物"});
-        Tags.newAlbumTag.put("插画绘画 - 美食", new String[]{"", "", "", "", "插画绘画_美食"});
-        Tags.newAlbumTag.put("插画绘画 - 风景", new String[]{"", "", "", "", "插画绘画_风景"});
-        Tags.newAlbumTag.put("影音书籍", new String[]{"", "", "", "", "影音书籍"});
-        Tags.newAlbumTag.put("影音书籍 - 冰雪奇缘", new String[]{"", "", "", "", "影音书_冰雪奇缘"});
-        Tags.newAlbumTag.put("影音书籍 - 来自星星的你", new String[]{"", "", "", "", "影音书_来自星星的你"});
-        Tags.newAlbumTag.put("影音书籍 - 神偷奶爸", new String[]{"", "", "", "", "影音书_神偷奶爸"});
-        Tags.newAlbumTag.put("影音书籍 - 破产姐妹", new String[]{"", "", "", "", "影音书_破产姐妹"});
-        Tags.newAlbumTag.put("影音书籍 - 小时代", new String[]{"", "", "", "", "影音书_小时代"});
-        Tags.newAlbumTag.put("影音书籍 - 继承者们", new String[]{"", "", "", "", "影音书_继承者们"});
-        Tags.newAlbumTag.put("影音书籍 - 生活大爆炸", new String[]{"", "", "", "", "影音书_生活大爆炸"});
-        Tags.newAlbumTag.put("影音书籍 - 神探夏洛克", new String[]{"", "", "", "", "影音书_神探夏洛克"});
-        Tags.newAlbumTag.put("影音书籍 - 电影", new String[]{"", "", "", "", "影音书_电影"});
-        Tags.newAlbumTag.put("影音书籍 - 电视剧", new String[]{"", "", "", "", "影音书_电视剧"});
-        Tags.newAlbumTag.put("影音书籍 - 台词", new String[]{"", "", "", "", "影音书_台词"});
-        Tags.newAlbumTag.put("影音书籍 - 电影海报", new String[]{"", "", "", "", "影音书_电影海报"});
-        Tags.newAlbumTag.put("影音书籍 - 剧照", new String[]{"", "", "", "", "搞笑萌宠_奥莉"});
-        Tags.newAlbumTag.put("影音书籍 - 截图", new String[]{"", "", "", "", "影音书_截图"});
-        Tags.newAlbumTag.put("人物明星", new String[]{"", "", "", "", "人物明星"});
-        Tags.newAlbumTag.put("人物明星 - 美女", new String[]{"", "", "", "", "人物明星_美女"});
-        Tags.newAlbumTag.put("人物明星 - 美男", new String[]{"", "", "", "", "人物明星_美男"});
-        Tags.newAlbumTag.put("人物明星 - 演员", new String[]{"", "", "", "", "人物明星_演员"});
-        Tags.newAlbumTag.put("人物明星 - 赫本", new String[]{"", "", "", "", "人物明星_赫本"});
-        Tags.newAlbumTag.put("人物明星 - 安妮海瑟薇", new String[]{"", "", "", "", "人物明星_安妮海瑟薇"});
-        Tags.newAlbumTag.put("人物明星 - Taylor Swift", new String[]{"", "", "", "", "人物明星_Taylor Swift"});
-        Tags.newAlbumTag.put("人物明星 - 范冰冰", new String[]{"", "", "", "", "人物明星_范冰冰"});
-        Tags.newAlbumTag.put("人物明星 - Angelababy", new String[]{"", "", "", "", "人物明星_Angelababy"});
-        Tags.newAlbumTag.put("人物明星 - 水原希子", new String[]{"", "", "", "", "人物明星_水原希子"});
-        Tags.newAlbumTag.put("人物明星 - 张辛苑", new String[]{"", "", "", "", "人物明星_张辛苑"});
-        Tags.newAlbumTag.put("人物明星 - 张国荣", new String[]{"", "", "", "", "人物明星_张国荣"});
-        Tags.newAlbumTag.put("人物明星 - 张根硕", new String[]{"", "", "", "", "人物明星_张根硕"});
-        Tags.newAlbumTag.put("人物明星 - 李敏镐", new String[]{"", "", "", "", "人物明星_李敏镐"});
-        Tags.newAlbumTag.put("植物多肉", new String[]{"", "", "", "", "植物多肉"});
-        Tags.newAlbumTag.put("植物多肉 - 图鉴", new String[]{"", "", "", "", "植物多肉_图鉴"});
-        Tags.newAlbumTag.put("植物多肉 - 花卉", new String[]{"", "", "", "", "植物多肉_花卉"});
-        Tags.newAlbumTag.put("植物多肉 - 多肉", new String[]{"", "", "", "", "植物多肉_多肉"});
-        Tags.newAlbumTag.put("植物多肉 - 苔藓", new String[]{"", "", "", "", "植物多肉_苔藓"});
-        Tags.newAlbumTag.put("植物多肉 - 园艺", new String[]{"", "", "", "", "植物多肉_园艺"});
-        Tags.newAlbumTag.put("植物多肉 - 盆栽", new String[]{"", "", "", "", "植物多肉_盆栽"});
-        Tags.newAlbumTag.put("生活百科", new String[]{"", "", "", "", "生活百科"});
-        Tags.newAlbumTag.put("生活百科 - 小妙招", new String[]{"", "", "", "", "生活百科_小妙招"});
-        Tags.newAlbumTag.put("生活百科 - 日常清洁", new String[]{"", "", "", "", "生活百科_日常清洁"});
-        Tags.newAlbumTag.put("生活百科 - 孕产", new String[]{"", "", "", "", "生活百科_孕产"});
-        Tags.newAlbumTag.put("生活百科 - 育儿", new String[]{"", "", "", "", "生活百科_育儿"});
-        Tags.newAlbumTag.put("生活百科 - 养生", new String[]{"", "", "", "", "生活百科_养生"});
-        Tags.newAlbumTag.put("生活百科 - 美容保养", new String[]{"", "", "", "", "生活百科_美白"});
-        Tags.newAlbumTag.put("生活百科 - 健身", new String[]{"", "", "", "", "生活百科_健身"});
-        Tags.newAlbumTag.put("搞笑萌宠", new String[]{"", "", "", "", "搞笑萌宠"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 汪星人", new String[]{"", "", "", "", "搞笑萌宠_汪星人"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 喵星人", new String[]{"", "", "", "", "搞笑萌宠_喵星人"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 熊猫", new String[]{"", "", "", "", "搞笑萌宠_熊猫"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 刺猬", new String[]{"", "", "", "", "搞笑萌宠_刺猬"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 考拉", new String[]{"", "", "", "", "搞笑萌宠_考拉"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 长颈鹿", new String[]{"", "", "", "", "搞笑萌宠_长颈鹿"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 吱星人", new String[]{"", "", "", "", "搞笑萌宠_吱星人"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 袋鼠", new String[]{"", "", "", "", "搞笑萌宠_袋鼠"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 大象", new String[]{"", "", "", "", "搞笑萌宠_大象"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 鸟", new String[]{"", "", "", "", "搞笑萌宠_鸟"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 干脆面", new String[]{"", "", "", "", "搞笑萌宠_干脆面"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 兔子", new String[]{"", "", "", "", "搞笑萌宠_兔子"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 鱼", new String[]{"", "", "", "", "搞笑萌宠_鱼"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 萌娃", new String[]{"", "", "", "", "搞笑萌宠_萌娃"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 萝莉", new String[]{"", "", "", "", "搞笑萌宠_萝莉"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 正太", new String[]{"", "", "", "", "搞笑萌宠_正太"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 嘎蒙", new String[]{"", "", "", "", "搞笑萌宠_嘎蒙"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 奥莉", new String[]{"", "", "", "", "搞笑萌宠_奥莉"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 爸爸去哪儿", new String[]{"", "", "", "", "搞笑萌宠_爸爸去哪儿"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 萨摩耶", new String[]{"", "", "", "", "搞笑萌宠_萨摩耶"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 哈士奇", new String[]{"", "", "", "", "搞笑萌宠_哈士奇"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 治愈", new String[]{"", "", "", "", "搞笑萌宠_治愈"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 金毛", new String[]{"", "", "", "", "搞笑萌宠_金毛"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 折耳", new String[]{"", "", "", "", "搞笑萌宠_折耳"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 加菲猫", new String[]{"", "", "", "", "搞笑萌宠_加菲猫"});
-        Tags.newAlbumTag.put("搞笑萌宠 - grace", new String[]{"", "", "", "", "搞笑萌宠_grace"});
-        Tags.newAlbumTag.put("搞笑萌宠 - feynman", new String[]{"", "", "", "", "搞笑萌宠_feynman"});
-        Tags.newAlbumTag.put("搞笑萌宠 - 鹿", new String[]{"", "", "", "", "搞笑萌宠_鹿"});
-        Tags.newAlbumTag.put("人文艺术", new String[]{"", "", "", "", "人文艺术"});
-        Tags.newAlbumTag.put("人文艺术 - 打字机", new String[]{"", "", "", "", "人文艺术_打字机"});
-        Tags.newAlbumTag.put("人文艺术 - 老爷车", new String[]{"", "", "", "", "人文艺术_老爷车"});
-        Tags.newAlbumTag.put("人文艺术 - 铁皮", new String[]{"", "", "", "", "人文艺术_铁皮"});
-        Tags.newAlbumTag.put("人文艺术 - 音乐盒", new String[]{"", "", "", "", "人文艺术_音乐盒"});
-        Tags.newAlbumTag.put("人文艺术 - 招贴画", new String[]{"", "", "", "", "人文艺术_招贴画"});
-        Tags.newAlbumTag.put("人文艺术 - 国画", new String[]{"", "", "", "", "人文艺术_国画"});
-        Tags.newAlbumTag.put("人文艺术 - 书法", new String[]{"", "", "", "", "人文艺术_书法"});
-        Tags.newAlbumTag.put("人文艺术 - 戏曲", new String[]{"", "", "", "", "人文艺术_戏曲"});
-        Tags.newAlbumTag.put("人文艺术 - 陶艺", new String[]{"", "", "", "", "人文艺术_陶艺"});
-        Tags.newAlbumTag.put("人文艺术 - 文物", new String[]{"", "", "", "", "人文艺术_文物"});
-        Tags.newAlbumTag.put("人文艺术 - 珠宝", new String[]{"", "", "", "", "人文艺术_珠宝"});
-        Tags.newAlbumTag.put("人文艺术 - 人偶", new String[]{"", "", "", "", "人文艺术_人偶"});
-        Tags.newAlbumTag.put("设计", new String[]{"", "", "", "", "设计"});
-        Tags.newAlbumTag.put("设计 - 平面设计", new String[]{"", "", "", "", "设计_平面设计"});
-        Tags.newAlbumTag.put("设计 - 海报设计", new String[]{"", "", "", "", "设计_海报设计"});
-        Tags.newAlbumTag.put("设计 - 广告设计", new String[]{"", "", "", "", "设计_广告设计"});
-        Tags.newAlbumTag.put("设计 - 包装设计", new String[]{"", "", "", "", "设计_包装设计"});
-        Tags.newAlbumTag.put("设计 - VI设计", new String[]{"", "", "", "", "设计_VI设计"});
-        Tags.newAlbumTag.put("设计 - 雕塑", new String[]{"", "", "", "", "设计_雕塑"});
-        Tags.newAlbumTag.put("设计 - 建筑", new String[]{"", "", "", "", "设计_建筑"});
-        Tags.newAlbumTag.put("设计 - 配色", new String[]{"", "", "", "", "设计_配色"});
-        Tags.newAlbumTag.put("设计 - LOGO", new String[]{"", "", "", "", "设计_LOGO"});
-        Tags.newAlbumTag.put("设计 - 字体", new String[]{"", "", "", "", "设计_字体"});
-        Tags.newAlbumTag.put("设计 - 矢量素材", new String[]{"", "", "", "", "设计_矢量素材"});
-        Tags.newAlbumTag.put("古风", new String[]{"", "", "", "", "古风"});
-        Tags.newAlbumTag.put("古风 - 汉服", new String[]{"", "", "", "", "古风_汉服"});
-        Tags.newAlbumTag.put("古风 - 发簪", new String[]{"", "", "", "", "古风_发簪"});
-        Tags.newAlbumTag.put("古风 - 仕女", new String[]{"", "", "", "", "古风_仕女"});
-        Tags.newAlbumTag.put("古风 - 美男", new String[]{"", "", "", "", "古风_美男"});
-        Tags.newAlbumTag.put("古风 - 京剧", new String[]{"", "", "", "", "古风_京剧"});
-        Tags.newAlbumTag.put("古风 - 古建筑", new String[]{"", "", "", "", "古风_古建筑"});
-        Tags.newAlbumTag.put("壁纸", new String[]{"", "", "", "", "壁纸"});
-        Tags.newAlbumTag.put("壁纸 - 颜色", new String[]{"", "", "", "", "壁纸-颜色"});
-        Tags.newAlbumTag.put("壁纸 - 渐变", new String[]{"", "", "", "", "壁纸-渐变"});
-        Tags.newAlbumTag.put("壁纸 - 可爱", new String[]{"", "", "", "", "壁纸-可爱"});
-        Tags.newAlbumTag.put("壁纸 - 情侣", new String[]{"", "", "", "", "壁纸-情侣"});
-        Tags.newAlbumTag.put("壁纸 - 少女心", new String[]{"", "", "", "", "壁纸-少女心"});
-        Tags.newAlbumTag.put("壁纸 - 小清新", new String[]{"", "", "", "", "壁纸-小清新"});
-        Tags.newAlbumTag.put("壁纸 - 动漫", new String[]{"", "", "", "", "壁纸-动漫"});
-        Tags.newAlbumTag.put("壁纸 - 文字", new String[]{"", "", "", "", "壁纸-文字"});
-        Tags.newAlbumTag.put("壁纸 - 锁屏", new String[]{"", "", "", "", "壁纸-锁屏"});
-        Tags.newAlbumTag.put("壁纸 - 朋友圈", new String[]{"", "", "", "", "壁纸-朋友圈背景"});
-        Tags.newAlbumTag.put("壁纸 - 爱豆", new String[]{"", "", "", "", "壁纸-爱豆"});
-        Tags.newAlbumTag.put("壁纸 - 影视剧", new String[]{"", "", "", "", "壁纸-影视剧"});
-        Tags.newAlbumTag.put("壁纸 - 三屏壁纸", new String[]{"", "", "", "", "壁纸-三屏"});
-        Tags.newAlbumTag.put("壁纸 - 考试", new String[]{"", "", "", "", "壁纸-考试"});
-        Tags.newAlbumTag.put("壁纸 - 电脑", new String[]{"", "", "", "", "壁纸_电脑壁纸"});
-        Tags.newAlbumTag.put("壁纸 - 减肥", new String[]{"", "", "", "", "壁纸-减肥"});
-        Tags.newAlbumTag.put("旅行", new String[]{"", "", "", "", "旅行"});
-        Tags.newAlbumTag.put("旅行 - 城堡", new String[]{"", "", "", "", "旅行_城堡"});
-        Tags.newAlbumTag.put("旅行 - 岛屿", new String[]{"", "", "", "", "旅行_岛屿"});
-        Tags.newAlbumTag.put("旅行 - 教堂", new String[]{"", "", "", "", "旅行_教堂"});
-        Tags.newAlbumTag.put("旅行 - 小镇", new String[]{"", "", "", "", "旅行_小镇"});
-        Tags.newAlbumTag.put("旅行 - 夜景", new String[]{"", "", "", "", "旅行_夜景"});
-        Tags.newAlbumTag.put("旅行 - 森林", new String[]{"", "", "", "", "旅行_森林"});
-        Tags.newAlbumTag.put("旅行 - 赏花", new String[]{"", "", "", "", "旅行_赏花"});
-        Tags.newAlbumTag.put("旅行 - 欧洲", new String[]{"", "", "", "", "旅行_欧洲"});
-        Tags.newAlbumTag.put("旅行 - 日本", new String[]{"", "", "", "", "旅行_日本"});
-        Tags.newAlbumTag.put("旅行 - 马尔代夫", new String[]{"", "", "", "", "旅行_马尔代夫"});
-        Tags.newAlbumTag.put("旅行 - 西藏", new String[]{"", "", "", "", "旅行_西藏"});
-        Tags.newAlbumTag.put("旅行 - 云南", new String[]{"", "", "", "", "旅行_云南"});
-        Tags.newAlbumTag.put("旅行 - 四川", new String[]{"", "", "", "", "旅行_四川"});
-        Tags.newAlbumTag.put("旅行 - 厦门", new String[]{"", "", "", "", "旅行_厦门"});
-        Tags.newAlbumTag.put("头像", new String[]{"", "", "", "", "头像"});
-        Tags.newAlbumTag.put("头像 - 沙雕", new String[]{"", "", "", "", "表情-沙雕"});
-        Tags.newAlbumTag.put("头像 - 文字", new String[]{"", "", "", "", "表情包-文字"});
-        Tags.newAlbumTag.put("头像 - 可爱", new String[]{"", "", "", "", "表情包-可爱"});
-        Tags.newAlbumTag.put("头像 - 萌宠", new String[]{"", "", "", "", "表情包-萌宠"});
-        Tags.newAlbumTag.put("头像 - gif", new String[]{"", "", "", "", "表情包-gif"});
-        Tags.newAlbumTag.put("头像 - emoji", new String[]{"", "", "", "", "表情包-emoji"});
-        Tags.newAlbumTag.put("头像 - 女生", new String[]{"", "", "", "", "头像_女生"});
-        Tags.newAlbumTag.put("头像 - 男生", new String[]{"", "", "", "", "头像_男生"});
-        Tags.newAlbumTag.put("头像 - 情侣", new String[]{"", "", "", "", "头像_情侣"});
-        Tags.newAlbumTag.put("头像 - 欧美", new String[]{"", "", "", "", "头像_欧美"});
-        Tags.newAlbumTag.put("头像 - 文字", new String[]{"", "", "", "", "头像_文字"});
-        Tags.newAlbumTag.put("头像 - 个性", new String[]{"", "", "", "", "头像_个性"});
-        Tags.newAlbumTag.put("头像 - 卡通", new String[]{"", "", "", "", "头像_卡通"});
-        Tags.newAlbumTag.put("头像 - 沙雕", new String[]{"", "", "", "", "头像-沙雕"});
-        Tags.newAlbumTag.put("头像 - 欧美", new String[]{"", "", "", "", "头像-欧美"});
-        Tags.newAlbumTag.put("头像 - 团体", new String[]{"", "", "", "", "头像-团体"});
-        Tags.newAlbumTag.put("头像 - 想念熊", new String[]{"", "", "", "", "表情_想念熊"});
-        Tags.newAlbumTag.put("头像 - 炉石娘", new String[]{"", "", "", "", "表情_炉石娘"});
-        Tags.newAlbumTag.put("头像 - 牛轰轰", new String[]{"", "", "", "", "表情_牛轰轰"});
-        Tags.newAlbumTag.put("头像 - 偶系小Q", new String[]{"", "", "", "", "表情_偶系小Q"});
-        Tags.newAlbumTag.put("头像 - 小希与阿树", new String[]{"", "", "", "", "表情_小希与阿树"});
-        Tags.newAlbumTag.put("头像 - 长草的颜文字君", new String[]{"", "", "", "", "表情_长草的颜文字君"});
-        Tags.newAlbumTag.put("头像 - 豆包兔", new String[]{"", "", "", "", "表情_豆包兔"});
-        Tags.newAlbumTag.put("头像 - 梁阿渣", new String[]{"", "", "", "", "表情_梁阿渣"});
-        Tags.newAlbumTag.put("头像 - 冷先森漫画", new String[]{"", "", "", "", "表情_冷先森漫画"});
-        Tags.newAlbumTag.put("头像 - 贱婊情", new String[]{"", "", "", "", "表情_贱婊情"});
-        Tags.newAlbumTag.put("头像 - 小崽子", new String[]{"", "", "", "", "表情_小崽子"});
-        Tags.newAlbumTag.put("头像 - 肥志", new String[]{"", "", "", "", "表情_肥志"});
-        Tags.newAlbumTag.put("头像 - 花园夜", new String[]{"", "", "", "", "表情_花园夜"});
-        Tags.newAlbumTag.put("头像 - 制冷少女", new String[]{"", "", "", "", "表情_制冷少女"});
-        Tags.newAlbumTag.put("头像 - 虽虽酱", new String[]{"", "", "", "", "表情_虽虽酱"});
-        Tags.newAlbumTag.put("摄影", new String[]{"", "", "", "", "摄影"});
-        Tags.newAlbumTag.put("摄影 - 胶片", new String[]{"", "", "", "", "摄影_胶片"});
-        Tags.newAlbumTag.put("摄影 - LOMO", new String[]{"", "", "", "", "摄影_LOMO"});
-        Tags.newAlbumTag.put("摄影 - 移轴", new String[]{"", "", "", "", "摄影_移轴"});
-        Tags.newAlbumTag.put("摄影 - 创意", new String[]{"", "", "", "", "摄影_创意"});
-        Tags.newAlbumTag.put("摄影 - 人像", new String[]{"", "", "", "", "摄影_人像"});
-        Tags.newAlbumTag.put("摄影 - 静物", new String[]{"", "", "", "", "摄影_静物"});
-        Tags.newAlbumTag.put("摄影 - 风光", new String[]{"", "", "", "", "摄影_风光"});
-        Tags.newAlbumTag.put("摄影 - 黑白", new String[]{"", "", "", "", "摄影_黑白"});
-        Tags.newAlbumTag.put("摄影 - 水下摄影", new String[]{"", "", "", "", "摄影_水下摄影"});
-        Tags.newAlbumTag.put("表情", new String[]{"", "", "", "", "表情"});
-        Tags.newAlbumTag.put("素材", new String[]{"", "", "", "", "素材"});
-        Tags.newAlbumTag.put("动图", new String[]{"", "", "", "", "动图"});
+        Tags.newAlbumTag.put("家居生活", new String[]{"", "", "", "", "", "家居生活"});
+        Tags.newAlbumTag.put("家居生活 - 客厅", new String[]{"", "", "", "", "", "家居生活_客厅"});
+        Tags.newAlbumTag.put("家居生活 - 卧室", new String[]{"", "", "", "", "", "家居生活_卧室"});
+        Tags.newAlbumTag.put("家居生活 - 楼梯", new String[]{"", "", "", "", "", "家居生活_楼梯"});
+        Tags.newAlbumTag.put("家居生活 - 阁楼", new String[]{"", "", "", "", "", "家居生活_阁楼"});
+        Tags.newAlbumTag.put("家居生活 - 儿童房", new String[]{"", "", "", "", "", "家居生活_儿童房"});
+        Tags.newAlbumTag.put("家居生活 - 厨房", new String[]{"", "", "", "", "", "家居生活_厨房"});
+        Tags.newAlbumTag.put("家居生活 - 浴室", new String[]{"", "", "", "", "", "家居生活_浴室"});
+        Tags.newAlbumTag.put("家居生活 - 阳台", new String[]{"", "", "", "", "", "家居生活_阳台"});
+        Tags.newAlbumTag.put("家居生活 - 飘窗", new String[]{"", "", "", "", "", "家居生活_飘窗"});
+        Tags.newAlbumTag.put("家居生活 - 工作间", new String[]{"", "", "", "", "", "家居生活_工作间"});
+        Tags.newAlbumTag.put("家居生活 - 沙发", new String[]{"", "", "", "", "", "家居生活_沙发"});
+        Tags.newAlbumTag.put("家居生活 - 椅子", new String[]{"", "", "", "", "", "家居生活_椅子"});
+        Tags.newAlbumTag.put("家居生活 - 桌子", new String[]{"", "", "", "", "", "家居生活_桌子"});
+        Tags.newAlbumTag.put("家居生活 - 柜子", new String[]{"", "", "", "", "", "家居生活_柜子"});
+        Tags.newAlbumTag.put("家居生活 - 灯饰", new String[]{"", "", "", "", "", "家居生活_灯饰"});
+        Tags.newAlbumTag.put("家居生活 - 收纳", new String[]{"", "", "", "", "", "家居生活_收纳"});
+        Tags.newAlbumTag.put("家居生活 - 置物架", new String[]{"", "", "", "", "", "家居生活_置物架"});
+        Tags.newAlbumTag.put("家居生活 - 照片墙", new String[]{"", "", "", "", "", "家居生活_照片墙"});
+        Tags.newAlbumTag.put("家居生活 - zakka", new String[]{"", "", "", "", "", "家居生活_zakka"});
+        Tags.newAlbumTag.put("家居生活 - 北欧", new String[]{"", "", "", "", "", "家居生活_北欧"});
+        Tags.newAlbumTag.put("家居生活 - 地中海", new String[]{"", "", "", "", "", "家居生活_地中海"});
+        Tags.newAlbumTag.put("家居生活 - 简约", new String[]{"", "", "", "", "", "家居生活_简约"});
+        Tags.newAlbumTag.put("家居生活 - 宜家", new String[]{"", "", "", "", "", "家居生活_宜家"});
+        Tags.newAlbumTag.put("家居生活 - 田园", new String[]{"", "", "", "", "", "家居生活_田园"});
+        Tags.newAlbumTag.put("美食菜谱", new String[]{"", "", "", "", "", "美食菜谱"});
+        Tags.newAlbumTag.put("美食菜谱 - 菜谱", new String[]{"", "", "", "", "", "美食菜谱_菜谱"});
+        Tags.newAlbumTag.put("美食菜谱 - 家常菜", new String[]{"", "", "", "", "", "美食菜谱_家常菜"});
+        Tags.newAlbumTag.put("美食菜谱 - 主食", new String[]{"", "", "", "", "", "美食菜谱_主食"});
+        Tags.newAlbumTag.put("美食菜谱 - 汤粥羹", new String[]{"", "", "", "", "", "美食菜谱_汤粥羹"});
+        Tags.newAlbumTag.put("美食菜谱 - 西餐", new String[]{"", "", "", "", "", "美食菜谱_西餐"});
+        Tags.newAlbumTag.put("美食菜谱 - 日料", new String[]{"", "", "", "", "", "美食菜谱_日料"});
+        Tags.newAlbumTag.put("美食菜谱 - 早餐", new String[]{"", "", "", "", "", "美食菜谱_早餐"});
+        Tags.newAlbumTag.put("美食菜谱 - 便当", new String[]{"", "", "", "", "", "美食菜谱_便当"});
+        Tags.newAlbumTag.put("美食菜谱 - 甜点", new String[]{"", "", "", "", "", "美食菜谱_甜点"});
+        Tags.newAlbumTag.put("美食菜谱 - 糖果", new String[]{"", "", "", "", "", "美食菜谱_糖果"});
+        Tags.newAlbumTag.put("美食菜谱 - 饼干", new String[]{"", "", "", "", "", "美食菜谱_饼干"});
+        Tags.newAlbumTag.put("美食菜谱 - 蛋糕", new String[]{"", "", "", "", "", "美食菜谱_蛋糕"});
+        Tags.newAlbumTag.put("美食菜谱 - 翻糖", new String[]{"", "", "", "", "", "美食菜谱_翻糖"});
+        Tags.newAlbumTag.put("美食菜谱 - 马卡龙", new String[]{"", "", "", "", "", "美食菜谱_马卡龙"});
+        Tags.newAlbumTag.put("美食菜谱 - 冰淇淋", new String[]{"", "", "", "", "", "美食菜谱_冰淇淋"});
+        Tags.newAlbumTag.put("美食菜谱 - 水果", new String[]{"", "", "", "", "", "美食菜谱_水果"});
+        Tags.newAlbumTag.put("美食菜谱 - 冰品", new String[]{"", "", "", "", "", "美食菜谱_冰品"});
+        Tags.newAlbumTag.put("美食菜谱 - 咖啡", new String[]{"", "", "", "", "", "美食菜谱_咖啡"});
+        Tags.newAlbumTag.put("美食菜谱 - 调酒", new String[]{"", "", "", "", "", "美食菜谱_调酒"});
+        Tags.newAlbumTag.put("手工DIY", new String[]{"", "", "", "", "", "手工DIY"});
+        Tags.newAlbumTag.put("手工DIY - 废物利用", new String[]{"", "", "", "", "", "手工DIY_废物利用"});
+        Tags.newAlbumTag.put("手工DIY - 手工本子", new String[]{"", "", "", "", "", "手工DIY_手工本子"});
+        Tags.newAlbumTag.put("手工DIY - 橡皮章", new String[]{"", "", "", "", "", "手工DIY_橡皮章"});
+        Tags.newAlbumTag.put("手工DIY - 粘土", new String[]{"", "", "", "", "", "手工DIY_粘土"});
+        Tags.newAlbumTag.put("手工DIY - 羊毛毡", new String[]{"", "", "", "", "", "手工DIY_羊毛毡"});
+        Tags.newAlbumTag.put("手工DIY - 纽扣", new String[]{"", "", "", "", "", "手工DIY_纽扣"});
+        Tags.newAlbumTag.put("手工DIY - 拼豆", new String[]{"", "", "", "", "", "手工DIY_拼豆"});
+        Tags.newAlbumTag.put("手工DIY - 石绘", new String[]{"", "", "", "", "", "手工DIY_石绘"});
+        Tags.newAlbumTag.put("手工DIY - 针织钩花", new String[]{"", "", "", "", "", "手工DIY_针织钩花"});
+        Tags.newAlbumTag.put("手工DIY - 刺绣", new String[]{"", "", "", "", "", "手工DIY_刺绣"});
+        Tags.newAlbumTag.put("手工DIY - 十字绣", new String[]{"", "", "", "", "", "手工DIY_十字绣"});
+        Tags.newAlbumTag.put("手工DIY - 拼布", new String[]{"", "", "", "", "", "手工DIY_拼布"});
+        Tags.newAlbumTag.put("手工DIY - 不织布", new String[]{"", "", "", "", "", "手工DIY_不织布"});
+        Tags.newAlbumTag.put("手工DIY - 绳结", new String[]{"", "", "", "", "", "手工DIY_绳结"});
+        Tags.newAlbumTag.put("手工DIY - 串珠", new String[]{"", "", "", "", "", "手工DIY_串珠"});
+        Tags.newAlbumTag.put("手工DIY - 绕线", new String[]{"", "", "", "", "", "手工DIY_绕线"});
+        Tags.newAlbumTag.put("手工DIY - 折纸", new String[]{"", "", "", "", "", "手工DIY_折纸"});
+        Tags.newAlbumTag.put("手工DIY - 剪纸", new String[]{"", "", "", "", "", "手工DIY_剪纸"});
+        Tags.newAlbumTag.put("手工DIY - 衍纸", new String[]{"", "", "", "", "", "手工DIY_衍纸"});
+        Tags.newAlbumTag.put("手工DIY - 纸模", new String[]{"", "", "", "", "", "手工DIY_纸模"});
+        Tags.newAlbumTag.put("手工DIY - 卡片", new String[]{"", "", "", "", "", "手工DIY_卡片"});
+        Tags.newAlbumTag.put("时尚搭配", new String[]{"", "", "", "", "", "时尚搭配"});
+        Tags.newAlbumTag.put("时尚搭配 - 搭配达人", new String[]{"", "", "", "", "", "时尚搭配_搭配达人"});
+        Tags.newAlbumTag.put("时尚搭配 - 街拍", new String[]{"", "", "", "", "", "时尚搭配_街拍"});
+        Tags.newAlbumTag.put("时尚搭配 - 穿搭", new String[]{"", "", "", "", "", "时尚搭配_穿搭"});
+        Tags.newAlbumTag.put("时尚搭配 - 秀场", new String[]{"", "", "", "", "", "时尚搭配_秀场"});
+        Tags.newAlbumTag.put("时尚搭配 - 大片", new String[]{"", "", "", "", "", "时尚搭配_大片"});
+        Tags.newAlbumTag.put("时尚搭配 - 模特", new String[]{"", "", "", "", "", "时尚搭配_模特"});
+        Tags.newAlbumTag.put("时尚搭配 - 时尚博主", new String[]{"", "", "", "", "", "时尚搭配_时尚博主"});
+        Tags.newAlbumTag.put("时尚搭配 - 型男搭配", new String[]{"", "", "", "", "", "时尚搭配_型男搭配"});
+        Tags.newAlbumTag.put("时尚搭配 - 奢侈品", new String[]{"", "", "", "", "", "时尚搭配_奢侈品"});
+        Tags.newAlbumTag.put("时尚搭配 - 韩风", new String[]{"", "", "", "", "", "时尚搭配_韩风"});
+        Tags.newAlbumTag.put("时尚搭配 - 日系", new String[]{"", "", "", "", "", "时尚搭配_日系"});
+        Tags.newAlbumTag.put("时尚搭配 - 欧美", new String[]{"", "", "", "", "", "时尚搭配_欧美"});
+        Tags.newAlbumTag.put("时尚搭配 - 文艺", new String[]{"", "", "", "", "", "时尚搭配_文艺"});
+        Tags.newAlbumTag.put("时尚搭配 - 简约", new String[]{"", "", "", "", "", "时尚搭配_简约"});
+        Tags.newAlbumTag.put("时尚搭配 - 英伦", new String[]{"", "", "", "", "", "时尚搭配_英伦"});
+        Tags.newAlbumTag.put("时尚搭配 - 混搭", new String[]{"", "", "", "", "", "时尚搭配_混搭"});
+        Tags.newAlbumTag.put("时尚搭配 - 复古", new String[]{"", "", "", "", "", "时尚搭配_复古"});
+        Tags.newAlbumTag.put("时尚搭配 - 朋克", new String[]{"", "", "", "", "", "时尚搭配_朋克"});
+        Tags.newAlbumTag.put("时尚搭配 - 森系", new String[]{"", "", "", "", "", "时尚搭配_森系"});
+        Tags.newAlbumTag.put("时尚搭配 - 中性", new String[]{"", "", "", "", "", "时尚搭配_中性"});
+        Tags.newAlbumTag.put("时尚搭配 - OL", new String[]{"", "", "", "", "", "时尚搭配_OL"});
+        Tags.newAlbumTag.put("时尚搭配 - 民族风", new String[]{"", "", "", "", "", "时尚搭配_民族风"});
+        Tags.newAlbumTag.put("时尚搭配 - 明星款", new String[]{"", "", "", "", "", "时尚搭配_明星款"});
+        Tags.newAlbumTag.put("时尚搭配 - 碎花", new String[]{"", "", "", "", "", "时尚搭配_碎花"});
+        Tags.newAlbumTag.put("时尚搭配 - 蕾丝", new String[]{"", "", "", "", "", "时尚搭配_蕾丝"});
+        Tags.newAlbumTag.put("时尚搭配 - 豹纹", new String[]{"", "", "", "", "", "时尚搭配_豹纹"});
+        Tags.newAlbumTag.put("时尚搭配 - 波点", new String[]{"", "", "", "", "", "时尚搭配_波点"});
+        Tags.newAlbumTag.put("时尚搭配 - 条纹", new String[]{"", "", "", "", "", "时尚搭配_条纹"});
+        Tags.newAlbumTag.put("时尚搭配 - 撞色", new String[]{"", "", "", "", "", "时尚搭配_撞色"});
+        Tags.newAlbumTag.put("时尚搭配 - 黑色", new String[]{"", "", "", "", "", "时尚搭配_黑色"});
+        Tags.newAlbumTag.put("时尚搭配 - 红色", new String[]{"", "", "", "", "", "时尚搭配_红色"});
+        Tags.newAlbumTag.put("时尚搭配 - 紫色", new String[]{"", "", "", "", "", "时尚搭配_紫色"});
+        Tags.newAlbumTag.put("时尚搭配 - 粉色", new String[]{"", "", "", "", "", "时尚搭配_粉色"});
+        Tags.newAlbumTag.put("时尚搭配 - 彩色", new String[]{"", "", "", "", "", "时尚搭配_彩色"});
+        Tags.newAlbumTag.put("时尚搭配 - 渐变色", new String[]{"", "", "", "", "", "时尚搭配_渐变色"});
+        Tags.newAlbumTag.put("美妆造型", new String[]{"", "", "", "", "", "美妆造型"});
+        Tags.newAlbumTag.put("美妆造型 - 彩妆", new String[]{"", "", "", "", "", "美妆造型_彩妆"});
+        Tags.newAlbumTag.put("美妆造型 - 眼妆", new String[]{"", "", "", "", "", "美妆造型_眼妆"});
+        Tags.newAlbumTag.put("美妆造型 - 唇妆", new String[]{"", "", "", "", "", "美妆造型_唇妆"});
+        Tags.newAlbumTag.put("美妆造型 - 美甲", new String[]{"", "", "", "", "", "美妆造型_美甲"});
+        Tags.newAlbumTag.put("美妆造型 - 香水", new String[]{"", "", "", "", "", "美妆造型_香水"});
+        Tags.newAlbumTag.put("美妆造型 - 文身", new String[]{"", "", "", "", "", "美妆造型_文身"});
+        Tags.newAlbumTag.put("美妆造型 - 发型", new String[]{"", "", "", "", "", "美妆造型_发型"});
+        Tags.newAlbumTag.put("美妆造型 - 编发", new String[]{"", "", "", "", "", "美妆造型_编发"});
+        Tags.newAlbumTag.put("美妆造型 - 马尾", new String[]{"", "", "", "", "", "美妆造型_马尾"});
+        Tags.newAlbumTag.put("美妆造型 - 长发", new String[]{"", "", "", "", "", "美妆造型_长发"});
+        Tags.newAlbumTag.put("美妆造型 - 短发", new String[]{"", "", "", "", "", "美妆造型_短发"});
+        Tags.newAlbumTag.put("美妆造型 - 卷发", new String[]{"", "", "", "", "", "美妆造型_卷发"});
+        Tags.newAlbumTag.put("美妆造型 - 染发", new String[]{"", "", "", "", "", "美妆造型_染发"});
+        Tags.newAlbumTag.put("婚纱婚礼", new String[]{"", "", "", "", "", "婚纱婚礼"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 婚礼布置", new String[]{"", "", "", "", "", "婚纱婚礼_婚礼布置"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 结婚蛋糕", new String[]{"", "", "", "", "", "婚纱婚礼_结婚蛋糕"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 请柬", new String[]{"", "", "", "", "", "婚纱婚礼_请柬"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 喜糖", new String[]{"", "", "", "", "", "婚纱婚礼_喜糖"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 捧花", new String[]{"", "", "", "", "", "婚纱婚礼_捧花"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 结婚照", new String[]{"", "", "", "", "", "婚纱婚礼_结婚照"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 婚纱", new String[]{"", "", "", "", "", "婚纱婚礼_婚纱"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 伴娘服", new String[]{"", "", "", "", "", "婚纱婚礼_伴娘服"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 新娘发型", new String[]{"", "", "", "", "", "婚纱婚礼_新娘发型"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 婚戒", new String[]{"", "", "", "", "", "婚纱婚礼_婚戒"});
+        Tags.newAlbumTag.put("婚纱婚礼 - 婚鞋", new String[]{"", "", "", "", "", "婚纱婚礼_婚鞋"});
+        Tags.newAlbumTag.put("文字句子", new String[]{"", "", "", "", "", "文字句子"});
+        Tags.newAlbumTag.put("文字句子 - 手写", new String[]{"", "", "", "", "", "文字句子_手写"});
+        Tags.newAlbumTag.put("文字句子 - 语录", new String[]{"", "", "", "", "", "文字句子_语录"});
+        Tags.newAlbumTag.put("文字句子 - 情感", new String[]{"", "", "", "", "", "文字句子_情感"});
+        Tags.newAlbumTag.put("文字句子 - 英文", new String[]{"", "", "", "", "", "文字句子_英文"});
+        Tags.newAlbumTag.put("插画绘画", new String[]{"", "", "", "", "", "插画绘画"});
+        Tags.newAlbumTag.put("插画绘画 - 手绘", new String[]{"", "", "", "", "", "插画绘画_手绘"});
+        Tags.newAlbumTag.put("插画绘画 - 素描", new String[]{"", "", "", "", "", "插画绘画_素描"});
+        Tags.newAlbumTag.put("插画绘画 - 水彩", new String[]{"", "", "", "", "", "插画绘画_水彩"});
+        Tags.newAlbumTag.put("插画绘画 - 彩铅", new String[]{"", "", "", "", "", "插画绘画_彩铅"});
+        Tags.newAlbumTag.put("插画绘画 - 油画", new String[]{"", "", "", "", "", "插画绘画_油画"});
+        Tags.newAlbumTag.put("插画绘画 - 版画", new String[]{"", "", "", "", "", "插画绘画_版画"});
+        Tags.newAlbumTag.put("插画绘画 - 绘画教程", new String[]{"", "", "", "", "", "插画绘画_绘画教程"});
+        Tags.newAlbumTag.put("插画绘画 - Q版", new String[]{"", "", "", "", "", "插画绘画_Q版"});
+        Tags.newAlbumTag.put("插画绘画 - CG", new String[]{"", "", "", "", "", "插画绘画_CG"});
+        Tags.newAlbumTag.put("插画绘画 - 人物", new String[]{"", "", "", "", "", "插画绘画_人物"});
+        Tags.newAlbumTag.put("插画绘画 - 时装", new String[]{"", "", "", "", "", "插画绘画_时装"});
+        Tags.newAlbumTag.put("插画绘画 - 动物", new String[]{"", "", "", "", "", "插画绘画_动物"});
+        Tags.newAlbumTag.put("插画绘画 - 植物", new String[]{"", "", "", "", "", "插画绘画_植物"});
+        Tags.newAlbumTag.put("插画绘画 - 美食", new String[]{"", "", "", "", "", "插画绘画_美食"});
+        Tags.newAlbumTag.put("插画绘画 - 风景", new String[]{"", "", "", "", "", "插画绘画_风景"});
+        Tags.newAlbumTag.put("影音书籍", new String[]{"", "", "", "", "", "影音书籍"});
+        Tags.newAlbumTag.put("影音书籍 - 冰雪奇缘", new String[]{"", "", "", "", "", "影音书_冰雪奇缘"});
+        Tags.newAlbumTag.put("影音书籍 - 来自星星的你", new String[]{"", "", "", "", "", "影音书_来自星星的你"});
+        Tags.newAlbumTag.put("影音书籍 - 神偷奶爸", new String[]{"", "", "", "", "", "影音书_神偷奶爸"});
+        Tags.newAlbumTag.put("影音书籍 - 破产姐妹", new String[]{"", "", "", "", "", "影音书_破产姐妹"});
+        Tags.newAlbumTag.put("影音书籍 - 小时代", new String[]{"", "", "", "", "", "影音书_小时代"});
+        Tags.newAlbumTag.put("影音书籍 - 继承者们", new String[]{"", "", "", "", "", "影音书_继承者们"});
+        Tags.newAlbumTag.put("影音书籍 - 生活大爆炸", new String[]{"", "", "", "", "", "影音书_生活大爆炸"});
+        Tags.newAlbumTag.put("影音书籍 - 神探夏洛克", new String[]{"", "", "", "", "", "影音书_神探夏洛克"});
+        Tags.newAlbumTag.put("影音书籍 - 电影", new String[]{"", "", "", "", "", "影音书_电影"});
+        Tags.newAlbumTag.put("影音书籍 - 电视剧", new String[]{"", "", "", "", "", "影音书_电视剧"});
+        Tags.newAlbumTag.put("影音书籍 - 台词", new String[]{"", "", "", "", "", "影音书_台词"});
+        Tags.newAlbumTag.put("影音书籍 - 电影海报", new String[]{"", "", "", "", "", "影音书_电影海报"});
+        Tags.newAlbumTag.put("影音书籍 - 剧照", new String[]{"", "", "", "", "", "搞笑萌宠_奥莉"});
+        Tags.newAlbumTag.put("影音书籍 - 截图", new String[]{"", "", "", "", "", "影音书_截图"});
+        Tags.newAlbumTag.put("人物明星", new String[]{"", "", "", "", "", "人物明星"});
+        Tags.newAlbumTag.put("人物明星 - 美女", new String[]{"", "", "", "", "", "人物明星_美女"});
+        Tags.newAlbumTag.put("人物明星 - 美男", new String[]{"", "", "", "", "", "人物明星_美男"});
+        Tags.newAlbumTag.put("人物明星 - 演员", new String[]{"", "", "", "", "", "人物明星_演员"});
+        Tags.newAlbumTag.put("人物明星 - 赫本", new String[]{"", "", "", "", "", "人物明星_赫本"});
+        Tags.newAlbumTag.put("人物明星 - 安妮海瑟薇", new String[]{"", "", "", "", "", "人物明星_安妮海瑟薇"});
+        Tags.newAlbumTag.put("人物明星 - Taylor Swift", new String[]{"", "", "", "", "", "人物明星_Taylor Swift"});
+        Tags.newAlbumTag.put("人物明星 - 范冰冰", new String[]{"", "", "", "", "", "人物明星_范冰冰"});
+        Tags.newAlbumTag.put("人物明星 - Angelababy", new String[]{"", "", "", "", "", "人物明星_Angelababy"});
+        Tags.newAlbumTag.put("人物明星 - 水原希子", new String[]{"", "", "", "", "", "人物明星_水原希子"});
+        Tags.newAlbumTag.put("人物明星 - 张辛苑", new String[]{"", "", "", "", "", "人物明星_张辛苑"});
+        Tags.newAlbumTag.put("人物明星 - 张国荣", new String[]{"", "", "", "", "", "人物明星_张国荣"});
+        Tags.newAlbumTag.put("人物明星 - 张根硕", new String[]{"", "", "", "", "", "人物明星_张根硕"});
+        Tags.newAlbumTag.put("人物明星 - 李敏镐", new String[]{"", "", "", "", "", "人物明星_李敏镐"});
+        Tags.newAlbumTag.put("植物多肉", new String[]{"", "", "", "", "", "植物多肉"});
+        Tags.newAlbumTag.put("植物多肉 - 图鉴", new String[]{"", "", "", "", "", "植物多肉_图鉴"});
+        Tags.newAlbumTag.put("植物多肉 - 花卉", new String[]{"", "", "", "", "", "植物多肉_花卉"});
+        Tags.newAlbumTag.put("植物多肉 - 多肉", new String[]{"", "", "", "", "", "植物多肉_多肉"});
+        Tags.newAlbumTag.put("植物多肉 - 苔藓", new String[]{"", "", "", "", "", "植物多肉_苔藓"});
+        Tags.newAlbumTag.put("植物多肉 - 园艺", new String[]{"", "", "", "", "", "植物多肉_园艺"});
+        Tags.newAlbumTag.put("植物多肉 - 盆栽", new String[]{"", "", "", "", "", "植物多肉_盆栽"});
+        Tags.newAlbumTag.put("生活百科", new String[]{"", "", "", "", "", "生活百科"});
+        Tags.newAlbumTag.put("生活百科 - 小妙招", new String[]{"", "", "", "", "", "生活百科_小妙招"});
+        Tags.newAlbumTag.put("生活百科 - 日常清洁", new String[]{"", "", "", "", "", "生活百科_日常清洁"});
+        Tags.newAlbumTag.put("生活百科 - 孕产", new String[]{"", "", "", "", "", "生活百科_孕产"});
+        Tags.newAlbumTag.put("生活百科 - 育儿", new String[]{"", "", "", "", "", "生活百科_育儿"});
+        Tags.newAlbumTag.put("生活百科 - 养生", new String[]{"", "", "", "", "", "生活百科_养生"});
+        Tags.newAlbumTag.put("生活百科 - 美容保养", new String[]{"", "", "", "", "", "生活百科_美白"});
+        Tags.newAlbumTag.put("生活百科 - 健身", new String[]{"", "", "", "", "", "生活百科_健身"});
+        Tags.newAlbumTag.put("搞笑萌宠", new String[]{"", "", "", "", "", "搞笑萌宠"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 汪星人", new String[]{"", "", "", "", "", "搞笑萌宠_汪星人"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 喵星人", new String[]{"", "", "", "", "", "搞笑萌宠_喵星人"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 熊猫", new String[]{"", "", "", "", "", "搞笑萌宠_熊猫"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 刺猬", new String[]{"", "", "", "", "", "搞笑萌宠_刺猬"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 考拉", new String[]{"", "", "", "", "", "搞笑萌宠_考拉"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 长颈鹿", new String[]{"", "", "", "", "", "搞笑萌宠_长颈鹿"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 吱星人", new String[]{"", "", "", "", "", "搞笑萌宠_吱星人"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 袋鼠", new String[]{"", "", "", "", "", "搞笑萌宠_袋鼠"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 大象", new String[]{"", "", "", "", "", "搞笑萌宠_大象"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 鸟", new String[]{"", "", "", "", "", "搞笑萌宠_鸟"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 干脆面", new String[]{"", "", "", "", "", "搞笑萌宠_干脆面"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 兔子", new String[]{"", "", "", "", "", "搞笑萌宠_兔子"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 鱼", new String[]{"", "", "", "", "", "搞笑萌宠_鱼"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 萌娃", new String[]{"", "", "", "", "", "搞笑萌宠_萌娃"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 萝莉", new String[]{"", "", "", "", "", "搞笑萌宠_萝莉"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 正太", new String[]{"", "", "", "", "", "搞笑萌宠_正太"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 嘎蒙", new String[]{"", "", "", "", "", "搞笑萌宠_嘎蒙"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 奥莉", new String[]{"", "", "", "", "", "搞笑萌宠_奥莉"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 爸爸去哪儿", new String[]{"", "", "", "", "", "搞笑萌宠_爸爸去哪儿"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 萨摩耶", new String[]{"", "", "", "", "", "搞笑萌宠_萨摩耶"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 哈士奇", new String[]{"", "", "", "", "", "搞笑萌宠_哈士奇"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 治愈", new String[]{"", "", "", "", "", "搞笑萌宠_治愈"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 金毛", new String[]{"", "", "", "", "", "搞笑萌宠_金毛"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 折耳", new String[]{"", "", "", "", "", "搞笑萌宠_折耳"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 加菲猫", new String[]{"", "", "", "", "", "搞笑萌宠_加菲猫"});
+        Tags.newAlbumTag.put("搞笑萌宠 - grace", new String[]{"", "", "", "", "", "搞笑萌宠_grace"});
+        Tags.newAlbumTag.put("搞笑萌宠 - feynman", new String[]{"", "", "", "", "", "搞笑萌宠_feynman"});
+        Tags.newAlbumTag.put("搞笑萌宠 - 鹿", new String[]{"", "", "", "", "", "搞笑萌宠_鹿"});
+        Tags.newAlbumTag.put("人文艺术", new String[]{"", "", "", "", "", "人文艺术"});
+        Tags.newAlbumTag.put("人文艺术 - 打字机", new String[]{"", "", "", "", "", "人文艺术_打字机"});
+        Tags.newAlbumTag.put("人文艺术 - 老爷车", new String[]{"", "", "", "", "", "人文艺术_老爷车"});
+        Tags.newAlbumTag.put("人文艺术 - 铁皮", new String[]{"", "", "", "", "", "人文艺术_铁皮"});
+        Tags.newAlbumTag.put("人文艺术 - 音乐盒", new String[]{"", "", "", "", "", "人文艺术_音乐盒"});
+        Tags.newAlbumTag.put("人文艺术 - 招贴画", new String[]{"", "", "", "", "", "人文艺术_招贴画"});
+        Tags.newAlbumTag.put("人文艺术 - 国画", new String[]{"", "", "", "", "", "人文艺术_国画"});
+        Tags.newAlbumTag.put("人文艺术 - 书法", new String[]{"", "", "", "", "", "人文艺术_书法"});
+        Tags.newAlbumTag.put("人文艺术 - 戏曲", new String[]{"", "", "", "", "", "人文艺术_戏曲"});
+        Tags.newAlbumTag.put("人文艺术 - 陶艺", new String[]{"", "", "", "", "", "人文艺术_陶艺"});
+        Tags.newAlbumTag.put("人文艺术 - 文物", new String[]{"", "", "", "", "", "人文艺术_文物"});
+        Tags.newAlbumTag.put("人文艺术 - 珠宝", new String[]{"", "", "", "", "", "人文艺术_珠宝"});
+        Tags.newAlbumTag.put("人文艺术 - 人偶", new String[]{"", "", "", "", "", "人文艺术_人偶"});
+        Tags.newAlbumTag.put("设计", new String[]{"", "", "", "", "", "设计"});
+        Tags.newAlbumTag.put("设计 - 平面设计", new String[]{"", "", "", "", "", "设计_平面设计"});
+        Tags.newAlbumTag.put("设计 - 海报设计", new String[]{"", "", "", "", "", "设计_海报设计"});
+        Tags.newAlbumTag.put("设计 - 广告设计", new String[]{"", "", "", "", "", "设计_广告设计"});
+        Tags.newAlbumTag.put("设计 - 包装设计", new String[]{"", "", "", "", "", "设计_包装设计"});
+        Tags.newAlbumTag.put("设计 - VI设计", new String[]{"", "", "", "", "", "设计_VI设计"});
+        Tags.newAlbumTag.put("设计 - 雕塑", new String[]{"", "", "", "", "", "设计_雕塑"});
+        Tags.newAlbumTag.put("设计 - 建筑", new String[]{"", "", "", "", "", "设计_建筑"});
+        Tags.newAlbumTag.put("设计 - 配色", new String[]{"", "", "", "", "", "设计_配色"});
+        Tags.newAlbumTag.put("设计 - LOGO", new String[]{"", "", "", "", "", "设计_LOGO"});
+        Tags.newAlbumTag.put("设计 - 字体", new String[]{"", "", "", "", "", "设计_字体"});
+        Tags.newAlbumTag.put("设计 - 矢量素材", new String[]{"", "", "", "", "", "设计_矢量素材"});
+        Tags.newAlbumTag.put("古风", new String[]{"", "", "", "", "", "古风"});
+        Tags.newAlbumTag.put("古风 - 汉服", new String[]{"", "", "", "", "", "古风_汉服"});
+        Tags.newAlbumTag.put("古风 - 发簪", new String[]{"", "", "", "", "", "古风_发簪"});
+        Tags.newAlbumTag.put("古风 - 仕女", new String[]{"", "", "", "", "", "古风_仕女"});
+        Tags.newAlbumTag.put("古风 - 美男", new String[]{"", "", "", "", "", "古风_美男"});
+        Tags.newAlbumTag.put("古风 - 京剧", new String[]{"", "", "", "", "", "古风_京剧"});
+        Tags.newAlbumTag.put("古风 - 古建筑", new String[]{"", "", "", "", "", "古风_古建筑"});
+        Tags.newAlbumTag.put("壁纸", new String[]{"", "", "", "", "", "壁纸"});
+        Tags.newAlbumTag.put("壁纸 - 颜色", new String[]{"", "", "", "", "", "壁纸-颜色"});
+        Tags.newAlbumTag.put("壁纸 - 渐变", new String[]{"", "", "", "", "", "壁纸-渐变"});
+        Tags.newAlbumTag.put("壁纸 - 可爱", new String[]{"", "", "", "", "", "壁纸-可爱"});
+        Tags.newAlbumTag.put("壁纸 - 情侣", new String[]{"", "", "", "", "", "壁纸-情侣"});
+        Tags.newAlbumTag.put("壁纸 - 少女心", new String[]{"", "", "", "", "", "壁纸-少女心"});
+        Tags.newAlbumTag.put("壁纸 - 小清新", new String[]{"", "", "", "", "", "壁纸-小清新"});
+        Tags.newAlbumTag.put("壁纸 - 动漫", new String[]{"", "", "", "", "", "壁纸-动漫"});
+        Tags.newAlbumTag.put("壁纸 - 文字", new String[]{"", "", "", "", "", "壁纸-文字"});
+        Tags.newAlbumTag.put("壁纸 - 锁屏", new String[]{"", "", "", "", "", "壁纸-锁屏"});
+        Tags.newAlbumTag.put("壁纸 - 朋友圈", new String[]{"", "", "", "", "", "壁纸-朋友圈背景"});
+        Tags.newAlbumTag.put("壁纸 - 爱豆", new String[]{"", "", "", "", "", "壁纸-爱豆"});
+        Tags.newAlbumTag.put("壁纸 - 影视剧", new String[]{"", "", "", "", "", "壁纸-影视剧"});
+        Tags.newAlbumTag.put("壁纸 - 三屏壁纸", new String[]{"", "", "", "", "", "壁纸-三屏"});
+        Tags.newAlbumTag.put("壁纸 - 考试", new String[]{"", "", "", "", "", "壁纸-考试"});
+        Tags.newAlbumTag.put("壁纸 - 电脑", new String[]{"", "", "", "", "", "壁纸_电脑壁纸"});
+        Tags.newAlbumTag.put("壁纸 - 减肥", new String[]{"", "", "", "", "", "壁纸-减肥"});
+        Tags.newAlbumTag.put("旅行", new String[]{"", "", "", "", "", "旅行"});
+        Tags.newAlbumTag.put("旅行 - 城堡", new String[]{"", "", "", "", "", "旅行_城堡"});
+        Tags.newAlbumTag.put("旅行 - 岛屿", new String[]{"", "", "", "", "", "旅行_岛屿"});
+        Tags.newAlbumTag.put("旅行 - 教堂", new String[]{"", "", "", "", "", "旅行_教堂"});
+        Tags.newAlbumTag.put("旅行 - 小镇", new String[]{"", "", "", "", "", "旅行_小镇"});
+        Tags.newAlbumTag.put("旅行 - 夜景", new String[]{"", "", "", "", "", "旅行_夜景"});
+        Tags.newAlbumTag.put("旅行 - 森林", new String[]{"", "", "", "", "", "旅行_森林"});
+        Tags.newAlbumTag.put("旅行 - 赏花", new String[]{"", "", "", "", "", "旅行_赏花"});
+        Tags.newAlbumTag.put("旅行 - 欧洲", new String[]{"", "", "", "", "", "旅行_欧洲"});
+        Tags.newAlbumTag.put("旅行 - 日本", new String[]{"", "", "", "", "", "旅行_日本"});
+        Tags.newAlbumTag.put("旅行 - 马尔代夫", new String[]{"", "", "", "", "", "旅行_马尔代夫"});
+        Tags.newAlbumTag.put("旅行 - 西藏", new String[]{"", "", "", "", "", "旅行_西藏"});
+        Tags.newAlbumTag.put("旅行 - 云南", new String[]{"", "", "", "", "", "旅行_云南"});
+        Tags.newAlbumTag.put("旅行 - 四川", new String[]{"", "", "", "", "", "旅行_四川"});
+        Tags.newAlbumTag.put("旅行 - 厦门", new String[]{"", "", "", "", "", "旅行_厦门"});
+        Tags.newAlbumTag.put("头像", new String[]{"", "", "", "", "", "头像"});
+        Tags.newAlbumTag.put("头像 - 沙雕", new String[]{"", "", "", "", "", "表情-沙雕"});
+        Tags.newAlbumTag.put("头像 - 文字", new String[]{"", "", "", "", "", "表情包-文字"});
+        Tags.newAlbumTag.put("头像 - 可爱", new String[]{"", "", "", "", "", "表情包-可爱"});
+        Tags.newAlbumTag.put("头像 - 萌宠", new String[]{"", "", "", "", "", "表情包-萌宠"});
+        Tags.newAlbumTag.put("头像 - gif", new String[]{"", "", "", "", "", "表情包-gif"});
+        Tags.newAlbumTag.put("头像 - emoji", new String[]{"", "", "", "", "", "表情包-emoji"});
+        Tags.newAlbumTag.put("头像 - 女生", new String[]{"", "", "", "", "", "头像_女生"});
+        Tags.newAlbumTag.put("头像 - 男生", new String[]{"", "", "", "", "", "头像_男生"});
+        Tags.newAlbumTag.put("头像 - 情侣", new String[]{"", "", "", "", "", "头像_情侣"});
+        Tags.newAlbumTag.put("头像 - 欧美", new String[]{"", "", "", "", "", "头像_欧美"});
+        Tags.newAlbumTag.put("头像 - 文字", new String[]{"", "", "", "", "", "头像_文字"});
+        Tags.newAlbumTag.put("头像 - 个性", new String[]{"", "", "", "", "", "头像_个性"});
+        Tags.newAlbumTag.put("头像 - 卡通", new String[]{"", "", "", "", "", "头像_卡通"});
+        Tags.newAlbumTag.put("头像 - 沙雕", new String[]{"", "", "", "", "", "头像-沙雕"});
+        Tags.newAlbumTag.put("头像 - 欧美", new String[]{"", "", "", "", "", "头像-欧美"});
+        Tags.newAlbumTag.put("头像 - 团体", new String[]{"", "", "", "", "", "头像-团体"});
+        Tags.newAlbumTag.put("头像 - 想念熊", new String[]{"", "", "", "", "", "表情_想念熊"});
+        Tags.newAlbumTag.put("头像 - 炉石娘", new String[]{"", "", "", "", "", "表情_炉石娘"});
+        Tags.newAlbumTag.put("头像 - 牛轰轰", new String[]{"", "", "", "", "", "表情_牛轰轰"});
+        Tags.newAlbumTag.put("头像 - 偶系小Q", new String[]{"", "", "", "", "", "表情_偶系小Q"});
+        Tags.newAlbumTag.put("头像 - 小希与阿树", new String[]{"", "", "", "", "", "表情_小希与阿树"});
+        Tags.newAlbumTag.put("头像 - 长草的颜文字君", new String[]{"", "", "", "", "", "表情_长草的颜文字君"});
+        Tags.newAlbumTag.put("头像 - 豆包兔", new String[]{"", "", "", "", "", "表情_豆包兔"});
+        Tags.newAlbumTag.put("头像 - 梁阿渣", new String[]{"", "", "", "", "", "表情_梁阿渣"});
+        Tags.newAlbumTag.put("头像 - 冷先森漫画", new String[]{"", "", "", "", "", "表情_冷先森漫画"});
+        Tags.newAlbumTag.put("头像 - 贱婊情", new String[]{"", "", "", "", "", "表情_贱婊情"});
+        Tags.newAlbumTag.put("头像 - 小崽子", new String[]{"", "", "", "", "", "表情_小崽子"});
+        Tags.newAlbumTag.put("头像 - 肥志", new String[]{"", "", "", "", "", "表情_肥志"});
+        Tags.newAlbumTag.put("头像 - 花园夜", new String[]{"", "", "", "", "", "表情_花园夜"});
+        Tags.newAlbumTag.put("头像 - 制冷少女", new String[]{"", "", "", "", "", "表情_制冷少女"});
+        Tags.newAlbumTag.put("头像 - 虽虽酱", new String[]{"", "", "", "", "", "表情_虽虽酱"});
+        Tags.newAlbumTag.put("摄影", new String[]{"", "", "", "", "", "摄影"});
+        Tags.newAlbumTag.put("摄影 - 胶片", new String[]{"", "", "", "", "", "摄影_胶片"});
+        Tags.newAlbumTag.put("摄影 - LOMO", new String[]{"", "", "", "", "", "摄影_LOMO"});
+        Tags.newAlbumTag.put("摄影 - 移轴", new String[]{"", "", "", "", "", "摄影_移轴"});
+        Tags.newAlbumTag.put("摄影 - 创意", new String[]{"", "", "", "", "", "摄影_创意"});
+        Tags.newAlbumTag.put("摄影 - 人像", new String[]{"", "", "", "", "", "摄影_人像"});
+        Tags.newAlbumTag.put("摄影 - 静物", new String[]{"", "", "", "", "", "摄影_静物"});
+        Tags.newAlbumTag.put("摄影 - 风光", new String[]{"", "", "", "", "", "摄影_风光"});
+        Tags.newAlbumTag.put("摄影 - 黑白", new String[]{"", "", "", "", "", "摄影_黑白"});
+        Tags.newAlbumTag.put("摄影 - 水下摄影", new String[]{"", "", "", "", "", "摄影_水下摄影"});
+        Tags.newAlbumTag.put("表情", new String[]{"", "", "", "", "", "表情"});
+        Tags.newAlbumTag.put("素材", new String[]{"", "", "", "", "", "素材"});
+        Tags.newAlbumTag.put("动图", new String[]{"", "", "", "", "", "动图"});
 
-        final int c = 5;
+        final int c = 6;
+        // 网易云曲风
+        Runnable initAlbumTag = () -> {
+            String tagBody = HttpRequest.get(String.format(STYLE_API))
+                    .execute()
+                    .body();
+            JSONObject tagJson = JSONObject.fromObject(tagBody);
+            JSONArray tags = tagJson.getJSONArray("data");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                JSONObject tag = tags.getJSONObject(i);
+
+                String name = tag.getString("tagName");
+                String id = tag.getString("tagId");
+
+                if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
+                Tags.newAlbumTag.get(name)[2] = id;
+                // 子标签
+                JSONArray subTags = tag.optJSONArray("childrenTags");
+                if (subTags == null) continue;
+                for (int j = 0, s = subTags.size(); j < s; j++) {
+                    JSONObject subTag = subTags.getJSONObject(j);
+
+                    String subName = subTag.getString("tagName");
+                    String subId = subTag.getString("tagId");
+
+                    if (!Tags.newAlbumTag.containsKey(subName)) Tags.newAlbumTag.put(subName, new String[c]);
+                    Tags.newAlbumTag.get(subName)[2] = subId;
+                    // 孙子标签
+                    JSONArray ssTags = subTag.optJSONArray("childrenTags");
+                    if (ssTags == null) continue;
+                    for (int k = 0, l = ssTags.size(); k < l; k++) {
+                        JSONObject ssTag = ssTags.getJSONObject(k);
+
+                        String ssName = ssTag.getString("tagName");
+                        String ssId = ssTag.getString("tagId");
+
+                        if (!Tags.newAlbumTag.containsKey(ssName)) Tags.newAlbumTag.put(ssName, new String[c]);
+                        Tags.newAlbumTag.get(ssName)[2] = ssId;
+                    }
+                }
+            }
+        };
+
         // 豆瓣
         // 分类专辑标签
         Runnable initAlbumTagDb = () -> {
@@ -1317,12 +1532,13 @@ public class MusicServerUtils {
                 String id = tag.text();
 
                 if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
-                Tags.newAlbumTag.get(name)[3] = id;
+                Tags.newAlbumTag.get(name)[4] = id;
             }
         };
 
         List<Future<?>> taskList = new LinkedList<>();
 
+        taskList.add(GlobalExecutors.requestExecutor.submit(initAlbumTag));
         taskList.add(GlobalExecutors.requestExecutor.submit(initAlbumTagDb));
 
         taskList.forEach(task -> {
@@ -1337,23 +1553,19 @@ public class MusicServerUtils {
     }
 
     // 新碟上架 API
-    private static final String NEW_ALBUM_API
-            = prefix + "/top/album?area=%s";
+    private static final String NEW_ALBUM_API = prefix + "/top/album?area=%s";
     // 新碟上架(热门) API
-//    private static final String HOT_ALBUM_API
-//            = prefix + "/top/album?type=hot&area=%s";
+//    private static final String HOT_ALBUM_API = prefix + "/top/album?type=hot&area=%s";
     // 全部新碟 API
-    private static final String ALL_NEW_ALBUM_API
-            = prefix + "/album/new?area=%s&offset=%s&limit=%s";
+    private static final String ALL_NEW_ALBUM_API = prefix + "/album/new?area=%s&offset=%s&limit=%s";
     // 最新专辑 API
-    private static final String NEWEST_ALBUM_API
-            = prefix + "/album/newest";
+    private static final String NEWEST_ALBUM_API = prefix + "/album/newest";
     // 数字新碟上架 API
-    private static final String NEWEST_DI_ALBUM_API
-            = prefix + "/album/list?limit=200";
+    private static final String NEWEST_DI_ALBUM_API = prefix + "/album/list?limit=200";
     // 数字专辑语种风格馆 API
-    private static final String LANG_DI_ALBUM_API
-            = prefix + "/album/list/style?area=%s&limit=50";
+    private static final String LANG_DI_ALBUM_API = prefix + "/album/list/style?area=%s&limit=50";
+    // 曲风专辑 API
+    private static final String STYLE_ALBUM_API = prefix + "/style/album?tagId=%s&cursor=%s&size=%s";
     // 新碟推荐 API (QQ)
     private static final String NEW_ALBUM_QQ_API
             = prefixQQ33 + "/new/album?type=%s&num=100";
@@ -1398,52 +1610,94 @@ public class MusicServerUtils {
      * @return
      */
     public static void initArtistTag() {
-        Tags.artistTag.put("默认", new String[]{"1", "", "0 0", "-100 -100 -100 -100", "11", "0 ", "  ", " "});
+        Tags.artistTag.put("默认", new String[]{"1", "", "", "0 0", "-100 -100 -100 -100", "11", "0 ", "  ", " "});
 
-        Tags.artistTag.put("男", new String[]{"", "1 -1 -1", "1 0", "0 -100 -100 -100", "", "", "  男", ""});
-        Tags.artistTag.put("女", new String[]{"", "2 -1 -1", "2 0", "1 -100 -100 -100", "", "", "  女", ""});
-        Tags.artistTag.put("组合", new String[]{"", "3 -1 -1", "3 0", "2 -100 -100 -100", "16", "", "  组合", ""});
-        Tags.artistTag.put("乐队", new String[]{"", "", "", "", "", "", "  乐队", ""});
-        Tags.artistTag.put("华语", new String[]{"1", "-1 7 -1", "0 1", "", "11", "", "", ""});
-        Tags.artistTag.put("华语男", new String[]{"", "1 7 -1", "1 1", "", "", "1 ", "", ""});
-        Tags.artistTag.put("华语女", new String[]{"", "2 7 -1", "2 1", "", "", "2 ", "", ""});
-        Tags.artistTag.put("华语组合", new String[]{"", "3 7 -1", "3 1", "", "", "3 ", "", ""});
-        Tags.artistTag.put("内地", new String[]{"", "", "", "-100 -100 -100 200", "", "", " 内地 ", ""});
-        Tags.artistTag.put("内地男", new String[]{"", "", "", "0 -100 -100 200", "", "", " 内地 男", ""});
-        Tags.artistTag.put("内地女", new String[]{"", "", "", "1 -100 -100 200", "", "", " 内地 女", ""});
-        Tags.artistTag.put("内地组合", new String[]{"", "", "", "2 -100 -100 200", "", "", " 内地 组合", ""});
-        Tags.artistTag.put("内地乐队", new String[]{"", "", "", "", "", "", " 内地 乐队", ""});
-        Tags.artistTag.put("港台", new String[]{"", "", "", "-100 -100 -100 2", "", "", " 港台 ", ""});
-        Tags.artistTag.put("港台男", new String[]{"", "", "", "0 -100 -100 2", "", "", " 港台 男", ""});
-        Tags.artistTag.put("港台女", new String[]{"", "", "", "1 -100 -100 2", "", "", " 港台 女", ""});
-        Tags.artistTag.put("港台组合", new String[]{"", "", "", "2 -100 -100 2", "", "", " 港台 组合", ""});
-        Tags.artistTag.put("港台乐队", new String[]{"", "", "", "", "", "", " 港台 乐队", ""});
-        Tags.artistTag.put("欧美", new String[]{"2", "-1 96 -1", "0 2", "-100 -100 -100 5", "13", "", " 欧美 ", ""});
-        Tags.artistTag.put("欧美男", new String[]{"", "1 96 -1", "1 2", "0 -100 -100 5", "", "7 ", " 欧美 男", ""});
-        Tags.artistTag.put("欧美女", new String[]{"", "2 96 -1", "2 2", "1 -100 -100 5", "", "8 ", " 欧美 女", ""});
-        Tags.artistTag.put("欧美组合", new String[]{"", "3 96 -1", "3 2", "2 -100 -100 5", "", "9 ", " 欧美 组合", ""});
-        Tags.artistTag.put("欧美乐队", new String[]{"", "", "", "", "", "", " 欧美 乐队", ""});
-        Tags.artistTag.put("韩国", new String[]{"3", "-1 16 -1", "0 6", "-100 -100 -100 3", "", "", " 韩国 ", ""});
-        Tags.artistTag.put("韩国男", new String[]{"", "1 16 -1", "1 6", "0 -100 -100 3", "", "", " 韩国 男", ""});
-        Tags.artistTag.put("韩国女", new String[]{"", "2 16 -1", "2 6", "1 -100 -100 3", "", "", " 韩国 女", ""});
-        Tags.artistTag.put("韩国组合", new String[]{"", "3 16 -1", "3 6", "2 -100 -100 3", "", "", " 韩国 组合", ""});
-        Tags.artistTag.put("韩国乐队", new String[]{"", "", "", "", "", "", " 韩国 乐队", ""});
-        Tags.artistTag.put("日本", new String[]{"4", "-1 8 -1", "0 5", "-100 -100 -100 4", "", "", " 日本 ", ""});
-        Tags.artistTag.put("日本男", new String[]{"", "1 8 -1", "1 5", "0 -100 -100 4", "", "", " 日本 男", ""});
-        Tags.artistTag.put("日本女", new String[]{"", "2 8 -1", "2 5", "1 -100 -100 4", "", "", " 日本 女", ""});
-        Tags.artistTag.put("日本组合", new String[]{"", "3 8 -1", "3 5", "2 -100 -100 4", "", "", " 日本 组合", ""});
-        Tags.artistTag.put("日本乐队", new String[]{"", "", "", "", "", "", " 日本 乐队", ""});
-        Tags.artistTag.put("日韩", new String[]{"", "", "0 3", "", "12", "", "", ""});
-        Tags.artistTag.put("日韩男", new String[]{"", "", "1 3", "", "", "4 ", "", ""});
-        Tags.artistTag.put("日韩女", new String[]{"", "", "2 3", "", "", "5 ", "", ""});
-        Tags.artistTag.put("日韩组合", new String[]{"", "", "3 3", "", "", "6 ", "", ""});
-        Tags.artistTag.put("其他", new String[]{"", "-1 0 -1", "0 4", "-100 -100 -100 6", "", "10 ", " 其他 ", ""});
-        Tags.artistTag.put("其他男", new String[]{"", "1 0 -1", "1 4", "0 -100 -100 6", "", "", " 其他 男", ""});
-        Tags.artistTag.put("其他女", new String[]{"", "2 0 -1", "2 4", "1 -100 -100 6", "", "", " 其他 女", ""});
-        Tags.artistTag.put("其他组合", new String[]{"", "3 0 -1", "3 4", "2 -100 -100 6", "", "", " 其他 组合", ""});
-        Tags.artistTag.put("其他乐队", new String[]{"", "", "", "", "", "", " 其他 乐队", ""});
+        Tags.artistTag.put("男", new String[]{"", "1 -1 -1", "", "1 0", "0 -100 -100 -100", "", "", "  男", ""});
+        Tags.artistTag.put("女", new String[]{"", "2 -1 -1", "", "2 0", "1 -100 -100 -100", "", "", "  女", ""});
+        Tags.artistTag.put("组合", new String[]{"", "3 -1 -1", "", "3 0", "2 -100 -100 -100", "16", "", "  组合", ""});
+        Tags.artistTag.put("乐队", new String[]{"", "", "", "", "", "", "", "  乐队", ""});
+        Tags.artistTag.put("华语", new String[]{"1", "-1 7 -1", "", "0 1", "", "11", "", "", ""});
+        Tags.artistTag.put("华语男", new String[]{"", "1 7 -1", "", "1 1", "", "", "1 ", "", ""});
+        Tags.artistTag.put("华语女", new String[]{"", "2 7 -1", "", "2 1", "", "", "2 ", "", ""});
+        Tags.artistTag.put("华语组合", new String[]{"", "3 7 -1", "", "3 1", "", "", "3 ", "", ""});
+        Tags.artistTag.put("内地", new String[]{"", "", "", "", "-100 -100 -100 200", "", "", " 内地 ", ""});
+        Tags.artistTag.put("内地男", new String[]{"", "", "", "", "0 -100 -100 200", "", "", " 内地 男", ""});
+        Tags.artistTag.put("内地女", new String[]{"", "", "", "", "1 -100 -100 200", "", "", " 内地 女", ""});
+        Tags.artistTag.put("内地组合", new String[]{"", "", "", "", "2 -100 -100 200", "", "", " 内地 组合", ""});
+        Tags.artistTag.put("内地乐队", new String[]{"", "", "", "", "", "", "", " 内地 乐队", ""});
+        Tags.artistTag.put("港台", new String[]{"", "", "", "", "-100 -100 -100 2", "", "", " 港台 ", ""});
+        Tags.artistTag.put("港台男", new String[]{"", "", "", "", "0 -100 -100 2", "", "", " 港台 男", ""});
+        Tags.artistTag.put("港台女", new String[]{"", "", "", "", "1 -100 -100 2", "", "", " 港台 女", ""});
+        Tags.artistTag.put("港台组合", new String[]{"", "", "", "", "2 -100 -100 2", "", "", " 港台 组合", ""});
+        Tags.artistTag.put("港台乐队", new String[]{"", "", "", "", "", "", "", " 港台 乐队", ""});
+        Tags.artistTag.put("欧美", new String[]{"2", "-1 96 -1", "", "0 2", "-100 -100 -100 5", "13", "", " 欧美 ", ""});
+        Tags.artistTag.put("欧美男", new String[]{"", "1 96 -1", "", "1 2", "0 -100 -100 5", "", "7 ", " 欧美 男", ""});
+        Tags.artistTag.put("欧美女", new String[]{"", "2 96 -1", "", "2 2", "1 -100 -100 5", "", "8 ", " 欧美 女", ""});
+        Tags.artistTag.put("欧美组合", new String[]{"", "3 96 -1", "", "3 2", "2 -100 -100 5", "", "9 ", " 欧美 组合", ""});
+        Tags.artistTag.put("欧美乐队", new String[]{"", "", "", "", "", "", "", " 欧美 乐队", ""});
+        Tags.artistTag.put("韩国", new String[]{"3", "-1 16 -1", "", "0 6", "-100 -100 -100 3", "", "", " 韩国 ", ""});
+        Tags.artistTag.put("韩国男", new String[]{"", "1 16 -1", "", "1 6", "0 -100 -100 3", "", "", " 韩国 男", ""});
+        Tags.artistTag.put("韩国女", new String[]{"", "2 16 -1", "", "2 6", "1 -100 -100 3", "", "", " 韩国 女", ""});
+        Tags.artistTag.put("韩国组合", new String[]{"", "3 16 -1", "", "3 6", "2 -100 -100 3", "", "", " 韩国 组合", ""});
+        Tags.artistTag.put("韩国乐队", new String[]{"", "", "", "", "", "", "", " 韩国 乐队", ""});
+        Tags.artistTag.put("日本", new String[]{"4", "-1 8 -1", "", "0 5", "-100 -100 -100 4", "", "", " 日本 ", ""});
+        Tags.artistTag.put("日本男", new String[]{"", "1 8 -1", "", "1 5", "0 -100 -100 4", "", "", " 日本 男", ""});
+        Tags.artistTag.put("日本女", new String[]{"", "2 8 -1", "", "2 5", "1 -100 -100 4", "", "", " 日本 女", ""});
+        Tags.artistTag.put("日本组合", new String[]{"", "3 8 -1", "", "3 5", "2 -100 -100 4", "", "", " 日本 组合", ""});
+        Tags.artistTag.put("日本乐队", new String[]{"", "", "", "", "", "", "", " 日本 乐队", ""});
+        Tags.artistTag.put("日韩", new String[]{"", "", "", "0 3", "", "12", "", "", ""});
+        Tags.artistTag.put("日韩男", new String[]{"", "", "", "1 3", "", "", "4 ", "", ""});
+        Tags.artistTag.put("日韩女", new String[]{"", "", "", "2 3", "", "", "5 ", "", ""});
+        Tags.artistTag.put("日韩组合", new String[]{"", "", "", "3 3", "", "", "6 ", "", ""});
+        Tags.artistTag.put("其他", new String[]{"", "-1 0 -1", "", "0 4", "-100 -100 -100 6", "", "10 ", " 其他 ", ""});
+        Tags.artistTag.put("其他男", new String[]{"", "1 0 -1", "", "1 4", "0 -100 -100 6", "", "", " 其他 男", ""});
+        Tags.artistTag.put("其他女", new String[]{"", "2 0 -1", "", "2 4", "1 -100 -100 6", "", "", " 其他 女", ""});
+        Tags.artistTag.put("其他组合", new String[]{"", "3 0 -1", "", "3 4", "2 -100 -100 6", "", "", " 其他 组合", ""});
+        Tags.artistTag.put("其他乐队", new String[]{"", "", "", "", "", "", "", " 其他 乐队", ""});
 
-        final int c = 8;
+        final int c = 9;
+        // 网易云曲风
+        Runnable initStyleArtistTag = () -> {
+            String tagBody = HttpRequest.get(String.format(STYLE_API))
+                    .execute()
+                    .body();
+            JSONObject tagJson = JSONObject.fromObject(tagBody);
+            JSONArray tags = tagJson.getJSONArray("data");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                JSONObject tag = tags.getJSONObject(i);
+
+                String name = tag.getString("tagName");
+                String id = tag.getString("tagId");
+
+                if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
+                Tags.artistTag.get(name)[2] = id;
+                // 子标签
+                JSONArray subTags = tag.optJSONArray("childrenTags");
+                if (subTags == null) continue;
+                for (int j = 0, s = subTags.size(); j < s; j++) {
+                    JSONObject subTag = subTags.getJSONObject(j);
+
+                    String subName = subTag.getString("tagName");
+                    String subId = subTag.getString("tagId");
+
+                    if (!Tags.artistTag.containsKey(subName)) Tags.artistTag.put(subName, new String[c]);
+                    Tags.artistTag.get(subName)[2] = subId;
+                    // 孙子标签
+                    JSONArray ssTags = subTag.optJSONArray("childrenTags");
+                    if (ssTags == null) continue;
+                    for (int k = 0, l = ssTags.size(); k < l; k++) {
+                        JSONObject ssTag = ssTags.getJSONObject(k);
+
+                        String ssName = ssTag.getString("tagName");
+                        String ssId = ssTag.getString("tagId");
+
+                        if (!Tags.artistTag.containsKey(ssName)) Tags.artistTag.put(ssName, new String[c]);
+                        Tags.artistTag.get(ssName)[2] = ssId;
+                    }
+                }
+            }
+        };
+
         // QQ + 网易云 + 千千
         // 分类歌手标签
         Runnable initArtistTagQq = () -> {
@@ -1462,7 +1716,7 @@ public class MusicServerUtils {
                 String id = tagJson.getString("id");
 
                 if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-                Tags.artistTag.get(name)[3] = String.format("-100 %s -100 -100", id);
+                Tags.artistTag.get(name)[4] = String.format("-100 %s -100 -100", id);
             }
             // 首字母
             JSONArray index = data.getJSONArray("index");
@@ -1474,24 +1728,25 @@ public class MusicServerUtils {
                 String id = tagJson.getString("id");
 
                 if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-                Tags.artistTag.get(name)[3] = String.format("-100 -100 %s -100", id);
+                Tags.artistTag.get(name)[4] = String.format("-100 -100 %s -100", id);
 
                 // 网易云
                 Tags.artistTag.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : name);
 
                 // 酷我
-                if (!"#".equals(name)) Tags.artistTag.get(name)[5] = String.format("0 %s", name);
+                if (!"#".equals(name)) Tags.artistTag.get(name)[6] = String.format("0 %s", name);
 
                 // 千千
-                Tags.artistTag.get(name)[6] = String.format("%s  ", "#".equals(name) ? "other" : name);
+                Tags.artistTag.get(name)[7] = String.format("%s  ", "#".equals(name) ? "other" : name);
 
                 // 猫耳
-                Tags.artistTag.get(name)[7] = String.format("%s", "#".equals(name) ? "0" : String.valueOf(name.charAt(0) - 64));
+                Tags.artistTag.get(name)[8] = String.format("%s", "#".equals(name) ? "0" : String.valueOf(name.charAt(0) - 64));
             }
         };
 
         List<Future<?>> taskList = new LinkedList<>();
 
+        taskList.add(GlobalExecutors.requestExecutor.submit(initStyleArtistTag));
         taskList.add(GlobalExecutors.requestExecutor.submit(initArtistTagQq));
 
         taskList.forEach(task -> {
@@ -1511,6 +1766,8 @@ public class MusicServerUtils {
     private static final String HOT_ARTIST_LIST_API = prefix + "/top/artists?offset=%s&limit=%s";
     // 分类歌手 API
     private static final String CAT_ARTIST_API = prefix + "/artist/list?type=%s&area=%s&initial=%s&offset=%s&limit=%s";
+    // 曲风歌手 API
+    private static final String STYLE_ARTIST_API = prefix + "/style/artist?tagId=%s&cursor=%s&size=%s";
     // 热门歌手推荐 API (酷狗)
     private static final String HOT_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=1&page=%s&pagesize=%s";
     // 飙升歌手推荐 API (酷狗)
@@ -4083,6 +4340,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
                 String artist = parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
                 Integer songNum = albumJson.getInt("size");
                 String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -4091,6 +4349,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -4121,6 +4380,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumid");
                 String albumName = albumJson.getString("albumname");
                 String artist = albumJson.getString("singername");
+                String artistId = albumJson.getString("singerid");
 //            String description = albumJson.getString("intro");
                 String publishTime = albumJson.getString("publishtime").replace(" 00:00:00", "");
                 Integer songNum = albumJson.getInt("songcount");
@@ -4131,6 +4391,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //            albumInfo.setCoverImgUrl(coverImgUrl);
 //            albumInfo.setDescription(description);
@@ -4164,6 +4425,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumMID");
                 String albumName = albumJson.getString("albumName");
                 String artist = parseArtists(albumJson, NetMusicSource.QQ);
+                String artistId = albumJson.getJSONArray("singer_list").getJSONObject(0).getString("mid");
                 String publishTime = albumJson.getString("publicTime");
                 Integer songNum = albumJson.getInt("song_count");
                 String coverImgThumbUrl = albumJson.getString("albumPic").replaceFirst("http:", "https:");
@@ -4173,6 +4435,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -4201,8 +4464,9 @@ public class MusicServerUtils {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
                     String albumId = albumJson.getString("albumid");
-                    String albumName = albumJson.getString("album").replace("&nbsp;", " ");
+                    String albumName = StringUtils.removeHTMLLabel(albumJson.getString("album"));
                     String artist = albumJson.getString("artist");
+                    String artistId = albumJson.getString("artistid");
                     String publishTime = albumJson.getString("releaseDate");
                     String coverImgThumbUrl = albumJson.getString("pic");
 
@@ -4211,6 +4475,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
                     GlobalExecutors.imageExecutor.execute(() -> {
@@ -4243,6 +4508,7 @@ public class MusicServerUtils {
                     String albumId = albumJson.getString("id");
                     String albumName = albumJson.getString("name");
                     String artist = parseArtists(albumJson, NetMusicSource.MG);
+                    String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String publishTime = albumJson.getString("publishTime");
                     Integer songNum = albumJson.getInt("songCount");
                     String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -4252,6 +4518,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime("null".equals(publishTime) ? "" : publishTime);
                     albumInfo.setSongNum(songNum);
@@ -4282,6 +4549,8 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
+                JSONArray artistArray = albumJson.optJSONArray("artist");
+                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String rd = albumJson.optString("releaseDate");
                 String publishTime = StringUtils.isNotEmpty(rd) ? rd.split("T")[0] : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
@@ -4292,6 +4561,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -4360,6 +4630,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
                 String artist = albumJson.getJSONObject("user").getString("username");
+                String artistId = albumJson.getJSONObject("user").getString("id");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("updated_at_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getInt("count");
@@ -4369,6 +4640,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -4397,6 +4669,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
                 String artist = mainJson.getJSONObject("sender").getString("username");
+                String artistId = mainJson.getJSONObject("sender").getString("id");
                 String publishTime = TimeUtils.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getInt("count");
@@ -4406,6 +4679,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -4516,11 +4790,7 @@ public class MusicServerUtils {
                 Integer songNum = artistJson.getInt("songNum");
                 Integer albumNum = artistJson.getInt("albumNum");
                 Integer mvNum = artistJson.getInt("mvNum");
-                // QQ 需要提前记录歌手封面 url
-                String coverImgUrl = artistJson.getString("singerPic")
-                        .replaceFirst("150x150", "500x500")
-                        .replaceFirst("http:", "https:");
-                String coverImgThumbUrl = coverImgUrl;
+                String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, artistId);
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetMusicSource.QQ);
@@ -4529,7 +4799,6 @@ public class MusicServerUtils {
                 artistInfo.setSongNum(songNum);
                 artistInfo.setAlbumNum(albumNum);
                 artistInfo.setMvNum(mvNum);
-                artistInfo.setCoverImgUrl(coverImgUrl);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
@@ -7238,6 +7507,48 @@ public class MusicServerUtils {
             }
             return new CommonResult<>(res, t);
         };
+        // 曲风歌单
+        Callable<CommonResult<NetPlaylistInfo>> getStylePlaylists = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[0])) {
+                String playlistInfoBody = HttpRequest.get(String.format(STYLE_PLAYLIST_API, s[0], (page - 1) * limit, limit))
+                        .execute()
+                        .body();
+                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject data = playlistInfoJson.getJSONObject("data");
+                JSONArray playlistArray = data.getJSONArray("playlist");
+                t = data.getJSONObject("page").getInt("total");
+                for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+                    String playlistId = playlistJson.getString("id");
+                    String playlistName = playlistJson.getString("name");
+                    String creator = playlistJson.getString("userName");
+                    String creatorId = playlistJson.getString("userId");
+                    Long playCount = playlistJson.getLong("playCount");
+                    Integer trackCount = playlistJson.getInt("songCount");
+                    String coverImgThumbUrl = playlistJson.getString("cover");
+
+                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                    playlistInfo.setId(playlistId);
+                    playlistInfo.setName(playlistName);
+                    playlistInfo.setCreator(creator);
+                    playlistInfo.setCreatorId(creatorId);
+                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    playlistInfo.setPlayCount(playCount);
+                    playlistInfo.setTrackCount(trackCount);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        playlistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(playlistInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
 
         // 酷狗(接口分页)
         // 每页固定 30 条的推荐歌单
@@ -7284,8 +7595,8 @@ public class MusicServerUtils {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[0])) {
-                String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, s[0].trim(), page))
+            if (StringUtils.isNotEmpty(s[1])) {
+                String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, s[1].trim(), page))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -7323,8 +7634,8 @@ public class MusicServerUtils {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[0])) {
-                String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, s[0].trim(), page))
+            if (StringUtils.isNotEmpty(s[1])) {
+                String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, s[1].trim(), page))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -7440,8 +7751,8 @@ public class MusicServerUtils {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[1])) {
-                String cat = s[1];
+            if (StringUtils.isNotEmpty(s[2])) {
+                String cat = s[2];
                 boolean isAll = "10000000".equals(cat);
                 String url;
                 if (isAll) {
@@ -7777,8 +8088,8 @@ public class MusicServerUtils {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[2])) {
-                String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, s[2].trim(), page, limit))
+            if (StringUtils.isNotEmpty(s[3])) {
+                String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, s[3].trim(), page, limit))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -7818,6 +8129,7 @@ public class MusicServerUtils {
         boolean dt = defaultTag.equals(tag);
 
         if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylists));
+        if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStylePlaylists));
 
         if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKg));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendTagPlaylistsKg));
@@ -8656,8 +8968,6 @@ public class MusicServerUtils {
                     });
 
                     res.add(artistInfo);
-//                if (!set.contains(artistInfo)) res.add(artistInfo);
-//                set.add(artistInfo);
                 }
             }
             return new CommonResult<>(res, t);
@@ -8694,9 +9004,6 @@ public class MusicServerUtils {
                 });
 
                 res.add(artistInfo);
-                // 热门歌手一部分与歌手榜重复，需要去重
-//                if (!set.contains(artistInfo)) res.add(artistInfo);
-//                set.add(artistInfo);
             }
             return new CommonResult<>(res, t);
         };
@@ -8734,9 +9041,44 @@ public class MusicServerUtils {
                     });
 
                     res.add(artistInfo);
-                    // 热门歌手一部分与歌手榜重复，需要去重
-//                if (!set.contains(artistInfo)) res.add(artistInfo);
-//                set.add(artistInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 曲风歌手
+        Callable<CommonResult<NetArtistInfo>> getStyleArtist = () -> {
+            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[2])) {
+                String artistInfoBody = HttpRequest.get(String.format(STYLE_ARTIST_API, s[2], (page - 1) * limit, limit))
+                        .execute()
+                        .body();
+                JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
+                JSONObject data = artistInfoJson.getJSONObject("data");
+                JSONArray artistArray = data.getJSONArray("artists");
+                t = data.getJSONObject("page").getInt("total");
+                for (int i = 0, len = artistArray.size(); i < len; i++) {
+                    JSONObject artistJson = artistArray.getJSONObject(i);
+
+                    String artistId = artistJson.getString("id");
+                    String artistName = artistJson.getString("name");
+                    Integer songNum = artistJson.getInt("musicSize");
+                    Integer albumNum = artistJson.getInt("albumSize");
+                    String coverImgThumbUrl = artistJson.getString("img1v1Url");
+
+                    NetArtistInfo artistInfo = new NetArtistInfo();
+                    artistInfo.setId(artistId);
+                    artistInfo.setName(artistName);
+                    artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    artistInfo.setSongNum(songNum);
+                    artistInfo.setAlbumNum(albumNum);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        artistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(artistInfo);
                 }
             }
             return new CommonResult<>(res, t);
@@ -8748,8 +9090,8 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[2])) {
-                String[] split = s[2].split(" ");
+            if (StringUtils.isNotEmpty(s[3])) {
+                String[] split = s[3].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(HOT_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
                         .execute()
                         .body();
@@ -8792,8 +9134,8 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[2])) {
-                String[] split = s[2].split(" ");
+            if (StringUtils.isNotEmpty(s[3])) {
+                String[] split = s[3].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(UP_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
                         .execute()
                         .body();
@@ -8835,9 +9177,9 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[3])) {
+            if (StringUtils.isNotEmpty(s[4])) {
                 final int num = 80;
-                String[] split = s[3].split(" ");
+                String[] split = s[4].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(ARTIST_LIST_QQ_API, split[0], split[1], split[2], split[3], (page - 1) / 4 + 1))
                         .execute()
                         .body();
@@ -8850,14 +9192,12 @@ public class MusicServerUtils {
 
                     String artistId = artistJson.getString("singer_mid");
                     String artistName = artistJson.getString("singer_name");
-                    String coverImgUrl = String.format(ARTIST_IMG_QQ_API, artistId);
-                    String coverImgThumbUrl = coverImgUrl;
+                    String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, artistId);
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
                     artistInfo.setSource(NetMusicSource.QQ);
                     artistInfo.setId(artistId);
                     artistInfo.setName(artistName);
-                    artistInfo.setCoverImgUrl(coverImgUrl);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
@@ -8876,8 +9216,8 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[4])) {
-                HttpResponse resp = kwRequest(String.format(ARTIST_LIST_KW_API, s[4], page, limit)).execute();
+            if (StringUtils.isNotEmpty(s[5])) {
+                HttpResponse resp = kwRequest(String.format(ARTIST_LIST_KW_API, s[5], page, limit)).execute();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
                     JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
@@ -8918,8 +9258,8 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[5])) {
-                String[] sp = s[5].split(" ", -1);
+            if (StringUtils.isNotEmpty(s[6])) {
+                String[] sp = s[6].split(" ", -1);
                 HttpResponse resp = kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
                         .header(Header.REFERER, StringUtils.isNotEmpty(sp[1]) ? "http://www.kuwo.cn/singers" : "")
                         .execute();
@@ -9033,7 +9373,7 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[6])) {
+            if (StringUtils.isNotEmpty(s[7])) {
                 HttpResponse resp = HttpRequest.get(buildQianUrl(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis())))
                         .execute();
                 String artistInfoBody = resp.body();
@@ -9074,9 +9414,9 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[6])) {
+            if (StringUtils.isNotEmpty(s[7])) {
                 // 分割时保留空串
-                String[] sp = s[6].split(" ", -1);
+                String[] sp = s[7].split(" ", -1);
                 HttpResponse resp = HttpRequest.get(buildQianUrl(
                                 String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis())))
                         .execute();
@@ -9116,7 +9456,7 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[7])) {
+            if (StringUtils.isNotEmpty(s[8])) {
                 String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[7].trim(), page, limit))
                         .execute()
                         .body();
@@ -9152,7 +9492,7 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[7])) {
+            if (StringUtils.isNotEmpty(s[8])) {
                 String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[7].trim(), page, limit))
                         .execute()
                         .body();
@@ -9192,6 +9532,7 @@ public class MusicServerUtils {
         taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRanking));
         if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtist));
         taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtist));
+        if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleArtist));
 
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtistKg));
         taskList.add(GlobalExecutors.requestExecutor.submit(getUpArtistKg));
@@ -10746,15 +11087,58 @@ public class MusicServerUtils {
     /**
      * 获取飙升歌曲
      */
-    public static CommonResult<NetMusicInfo> getHotMusicRecommend(int limit, int page) {
+    public static CommonResult<NetMusicInfo> getHotMusicRecommend(String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> musicInfos = new LinkedList<>();
+
+        final String defaultTag = "默认";
+        String[] s = Tags.hotSongTag.get(tag);
 
         // 网易云(榜单就是歌单，固定榜单 id 直接请求歌单音乐接口，接口分页)
         // 飙升榜
         Callable<CommonResult<NetMusicInfo>> getUpMusic = () -> getMusicInfoInPlaylist(String.valueOf(19723756), NetMusicSource.NET_CLOUD, limit, page);
         // 热歌榜
         Callable<CommonResult<NetMusicInfo>> getHotMusic = () -> getMusicInfoInPlaylist(String.valueOf(3778678), NetMusicSource.NET_CLOUD, limit, page);
+        // 曲风歌曲(最热)
+        Callable<CommonResult<NetMusicInfo>> getStyleHotSong = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[0])) {
+                String musicInfoBody = HttpRequest.get(String.format(STYLE_HOT_SONG_API, s[0], (page - 1) * limit, limit))
+                        .execute()
+                        .body();
+                JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+                JSONObject data = musicInfoJson.getJSONObject("data");
+                JSONArray songsArray = data.getJSONArray("songs");
+                t = data.getJSONObject("page").getInt("total");
+                for (int i = 0, len = songsArray.size(); i < len; i++) {
+                    JSONObject songJson = songsArray.getJSONObject(i);
+
+                    String songId = songJson.getString("id");
+                    String songName = songJson.getString("name").trim();
+                    String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                    String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
+                    String albumName = songJson.getJSONObject("al").getString("name");
+                    String albumId = songJson.getJSONObject("al").getString("id");
+                    Double duration = songJson.getDouble("dt") / 1000;
+                    String mvId = songJson.getString("mv");
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setId(songId);
+                    musicInfo.setName(songName);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
+                    res.add(musicInfo);
+                }
+            }
+
+            return new CommonResult<>(res, t);
+        };
 
         // 酷狗
         // 飙升榜
@@ -11045,19 +11429,25 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusic));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusic));
+        boolean dt = defaultTag.equals(tag);
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getTop500Kg));
+        if (dt) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusic));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusic));
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getPopularMusicQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicQq));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getTop500Kg));
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicKw));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getPopularMusicQq));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicQq));
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicMg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKw));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicKw));
+
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicMg));
+        } else {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getStyleHotSong));
+        }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -11165,6 +11555,46 @@ public class MusicServerUtils {
             }
             return new CommonResult<>(res, t);
         };
+        // 曲风歌曲(最新)
+        Callable<CommonResult<NetMusicInfo>> getStyleNewSong = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[1])) {
+                String musicInfoBody = HttpRequest.get(String.format(STYLE_NEW_SONG_API, s[1], (page - 1) * limit, limit))
+                        .execute()
+                        .body();
+                JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+                JSONObject data = musicInfoJson.getJSONObject("data");
+                JSONArray songsArray = data.getJSONArray("songs");
+                t = data.getJSONObject("page").getInt("total");
+                for (int i = 0, len = songsArray.size(); i < len; i++) {
+                    JSONObject songJson = songsArray.getJSONObject(i);
+
+                    String songId = songJson.getString("id");
+                    String songName = songJson.getString("name").trim();
+                    String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                    String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
+                    String albumName = songJson.getJSONObject("al").getString("name");
+                    String albumId = songJson.getJSONObject("al").getString("id");
+                    Double duration = songJson.getDouble("dt") / 1000;
+                    String mvId = songJson.getString("mv");
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setId(songId);
+                    musicInfo.setName(songName);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
+                    res.add(musicInfo);
+                }
+            }
+
+            return new CommonResult<>(res, t);
+        };
 
         // 酷狗
         // 华语新歌(接口分页)
@@ -11172,8 +11602,8 @@ public class MusicServerUtils {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[1])) {
-                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, s[1], page, limit))
+            if (StringUtils.isNotEmpty(s[2])) {
+                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, s[2], page, limit))
                         .execute()
                         .body();
                 JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
@@ -11214,8 +11644,8 @@ public class MusicServerUtils {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[2])) {
-                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_QQ_API, s[2]))
+            if (StringUtils.isNotEmpty(s[3])) {
+                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_QQ_API, s[3]))
                         .execute()
                         .body();
                 JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
@@ -11369,6 +11799,7 @@ public class MusicServerUtils {
 
         if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSong));
         taskList.add(GlobalExecutors.requestExecutor.submit(getFastNewSong));
+        if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleNewSong));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKg));
         taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongQq));
         if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKw));
@@ -11424,6 +11855,7 @@ public class MusicServerUtils {
                     String albumId = albumJson.getString("id");
                     String albumName = albumJson.getString("name");
                     String artist = parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                    String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
                     Integer songNum = albumJson.getInt("size");
                     String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -11432,6 +11864,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
                     albumInfo.setSongNum(songNum);
@@ -11505,6 +11938,7 @@ public class MusicServerUtils {
                     String albumId = albumJson.getString("id");
                     String albumName = albumJson.getString("name");
                     String artist = parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                    String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
                     Integer songNum = albumJson.getInt("size");
                     String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -11513,6 +11947,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
                     albumInfo.setSongNum(songNum);
@@ -11543,6 +11978,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
                 String artist = parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
                 Integer songNum = albumJson.getInt("size");
                 String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -11551,6 +11987,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -11633,14 +12070,56 @@ public class MusicServerUtils {
             }
             return new CommonResult<>(res, t);
         };
+        // 曲风专辑
+        Callable<CommonResult<NetAlbumInfo>> getStyleAlbums = () -> {
+            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[2])) {
+                String albumInfoBody = HttpRequest.get(String.format(STYLE_ALBUM_API, s[2], (page - 1) * limit, limit))
+                        .execute()
+                        .body();
+                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+                JSONObject data = albumInfoJson.getJSONObject("data");
+                JSONArray albumArray = data.getJSONArray("albums");
+                t = data.getJSONObject("page").getInt("total");
+                for (int i = 0, len = albumArray.size(); i < len; i++) {
+                    JSONObject albumJson = albumArray.getJSONObject(i);
+
+                    String albumId = albumJson.getString("id");
+                    String albumName = albumJson.getString("name");
+                    String artist = parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                    String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                    String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
+                    Integer songNum = albumJson.getInt("size");
+                    String coverImgThumbUrl = albumJson.getString("picUrl");
+
+                    NetAlbumInfo albumInfo = new NetAlbumInfo();
+                    albumInfo.setId(albumId);
+                    albumInfo.setName(albumName);
+                    albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
+                    albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    albumInfo.setPublishTime(publishTime);
+                    albumInfo.setSongNum(songNum);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        albumInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(albumInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
 
         // QQ(程序分页)
         Callable<CommonResult<NetAlbumInfo>> getNewAlbumsQq = () -> {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[2])) {
-                String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_QQ_API, s[2]))
+            if (StringUtils.isNotEmpty(s[3])) {
+                String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_QQ_API, s[3]))
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
@@ -11652,6 +12131,7 @@ public class MusicServerUtils {
                     String albumId = albumJson.getString("mid");
                     String albumName = albumJson.getString("name");
                     String artist = parseArtists(albumJson, NetMusicSource.QQ);
+                    String artistId = albumJson.getJSONArray("singers").getJSONObject(0).getString("mid");
                     String publishTime = albumJson.getString("release_time");
 //            Integer songNum = albumJson.getJSONObject("ex").getInt("track_nums");
                     String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
@@ -11661,6 +12141,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
 //            albumInfo.setSongNum(songNum);
@@ -11694,6 +12175,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
                 String artist = parseArtists(albumJson, NetMusicSource.MG);
+                String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = albumJson.getString("publishTime");
                 Integer songNum = albumJson.getInt("songCount");
                 String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -11703,6 +12185,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -11732,7 +12215,8 @@ public class MusicServerUtils {
 
                 String albumId = albumJson.getString("albumId");
                 String albumName = albumJson.getString("title");
-                String artist = albumJson.getString("singer");
+                String artist = albumJson.getString("singer").replace("|", "、");
+                String artistId = albumJson.getString("singerId").split("\\|")[0];
                 String publishTime = albumJson.getString("publishTime");
                 Integer songNum = albumJson.getInt("totalCount");
                 String coverImgThumbUrl = albumJson.getJSONArray("imgItems").getJSONObject(0).getString("img");
@@ -11742,6 +12226,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -11774,6 +12259,8 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
+                JSONArray artistArray = albumJson.optJSONArray("artist");
+                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String releaseDate = albumJson.optString("releaseDate");
                 if (StringUtils.isEmpty(releaseDate)) releaseDate = albumJson.getString("pushTime");
@@ -11785,6 +12272,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -11814,6 +12302,8 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
+                JSONArray artistArray = albumJson.optJSONArray("artist");
+                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getInt("trackCount");
@@ -11823,6 +12313,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -11852,6 +12343,8 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
+                JSONArray artistArray = albumJson.optJSONArray("artist");
+                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getInt("trackCount");
@@ -11861,6 +12354,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -11892,6 +12386,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
                 String artist = mainJson.getJSONObject("sender").getString("username");
+                String artistId = mainJson.getJSONObject("sender").getString("id");
 //                String publishTime = TimeUtils.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getInt("count");
@@ -11901,6 +12396,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -11918,8 +12414,8 @@ public class MusicServerUtils {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[4])) {
-                HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[4], (page - 1) * limit, limit, System.currentTimeMillis())).execute();
+            if (StringUtils.isNotEmpty(s[5])) {
+                HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[5], (page - 1) * limit, limit, System.currentTimeMillis())).execute();
                 String albumInfoBody = resp.body();
                 JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
@@ -11932,6 +12428,7 @@ public class MusicServerUtils {
                     String albumId = albumJson.getString("id");
                     String albumName = albumJson.getString("name");
                     String artist = mainJson.getJSONObject("sender").getString("username");
+                    String artistId = mainJson.getJSONObject("sender").getString("id");
                     String publishTime = TimeUtils.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                     String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                     Integer songNum = albumJson.getInt("count");
@@ -11941,6 +12438,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
                     albumInfo.setSongNum(songNum);
@@ -12002,8 +12500,8 @@ public class MusicServerUtils {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[3])) {
-                String radioInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[3], (page - 1) * limit))
+            if (StringUtils.isNotEmpty(s[4])) {
+                String radioInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[4], (page - 1) * limit))
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
@@ -12068,6 +12566,7 @@ public class MusicServerUtils {
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbums));
             taskList.add(GlobalExecutors.requestExecutor.submit(getAllNewAlbums));
             taskList.add(GlobalExecutors.requestExecutor.submit(getLangDiAlbums));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getStyleAlbums));
 
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQq));
 
@@ -12975,7 +13474,8 @@ public class MusicServerUtils {
 
                 String albumId = albumJson.getString("id");
                 String name = albumJson.getString("name");
-                String artist = albumJson.getJSONObject("artist").getString("name");
+                String artist = parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
                 String coverImgThumbUrl = albumJson.getString("picUrl");
                 Integer songNum = albumJson.getInt("size");
@@ -12984,6 +13484,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
@@ -13006,6 +13507,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumid");
                 String name = albumJson.getString("albumname");
                 String artist = albumJson.getString("singername");
+                String artistId = albumJson.getString("singerid");
                 String publishTime = albumJson.getString("publishtime").split(" ")[0];
                 String coverImgThumbUrl = albumJson.getString("imgurl").replace("/{size}", "");
 //                Integer songNum = albumJson.getInt("songcount");
@@ -13015,6 +13517,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                albumInfo.setSongNum(songNum);
@@ -13037,6 +13540,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("mid");
                 String name = albumJson.getString("albumName");
                 String artist = parseArtists(albumJson, NetMusicSource.QQ);
+                String artistId = albumJson.getJSONArray("ar").getJSONObject(0).getString("mid");
                 String publishTime = albumJson.getString("publishTime");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
 //                Integer songNum = albumJson.getInt("songcount");
@@ -13046,6 +13550,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                albumInfo.setSongNum(songNum);
@@ -13068,6 +13573,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumid");
                 String name = albumJson.getString("album");
                 String artist = albumJson.getString("artist");
+                String artistId = albumJson.getString("artistid");
                 String publishTime = albumJson.getString("releaseDate");
                 String coverImgThumbUrl = albumJson.getString("pic");
                 Integer songNum = albumJson.getInt("total");
@@ -13077,6 +13583,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
@@ -13099,6 +13606,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String name = albumJson.getString("name");
                 String artist = parseArtists(albumJson, NetMusicSource.MG);
+                String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = albumJson.getString("publishTime");
                 String coverImgThumbUrl = "https:" + albumJson.getString("picUrl");
                 Integer songNum = albumJson.getJSONArray("songList").size();
@@ -13108,6 +13616,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
@@ -13130,6 +13639,8 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumAssetCode");
                 String name = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
+                JSONArray artistArray = albumJson.optJSONArray("artist");
+                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 String coverImgThumbUrl = albumJson.getString("pic");
                 Integer songNum = albumJson.getJSONArray("trackList").size();
@@ -13139,6 +13650,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
@@ -13393,11 +13905,17 @@ public class MusicServerUtils {
                 JSONObject artistJson = artistInfoJson.getJSONObject("data");
 
                 String name = artistJson.getString("singername");
+                String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, id);
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetMusicSource.QQ);
                 artistInfo.setId(id);
                 artistInfo.setName(name);
+                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    artistInfo.setCoverImgThumb(coverImgThumb);
+                });
 
                 res.add(artistInfo);
             }
@@ -13443,7 +13961,7 @@ public class MusicServerUtils {
 
                 String artistId = artistJson.getString("id");
                 String name = artistJson.getString("name");
-                String coverImgThumbUrl = artistJson.getString("picUrl");
+                String coverImgThumbUrl = "https:" + artistJson.getString("picUrl");
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetMusicSource.MG);
@@ -13569,9 +14087,9 @@ public class MusicServerUtils {
             JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
 
-//            String coverImgUrl = String.format(ARTIST_IMG_QQ_API, artistInfo.getId());
+            String coverImgUrl = String.format(ARTIST_IMG_QQ_API, id);
             String description = data.optString("desc");
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(artistInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
         }
 
@@ -15170,6 +15688,7 @@ public class MusicServerUtils {
                 String id = albumJson.getString("id");
                 String name = albumJson.getString("name");
                 String artists = parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                String arId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
                 Integer songNum = albumJson.getInt("size");
                 String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -15178,6 +15697,7 @@ public class MusicServerUtils {
                 albumInfo.setId(id);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artists);
+                albumInfo.setArtistId(arId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -15204,6 +15724,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumid");
                 String albumName = albumJson.getString("albumname");
                 String artist = albumJson.getString("singername");
+                String arId = albumJson.getString("singerid");
                 String coverImgThumbUrl = albumJson.getString("imgurl").replace("/{size}", "");
                 String description = albumJson.getString("intro");
                 String publishTime = albumJson.getString("publishtime").replace(" 00:00:00", "");
@@ -15214,6 +15735,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(arId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setDescription(description);
                 albumInfo.setPublishTime(publishTime);
@@ -15241,6 +15763,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("album_mid");
                 String albumName = albumJson.getString("album_name");
                 String artist = parseArtists(albumJson, NetMusicSource.QQ);
+                String arId = albumJson.getJSONArray("singers").getJSONObject(0).getString("singer_mid");
                 String publishTime = albumJson.getString("pub_time");
                 Integer songNum = albumJson.getJSONObject("latest_song").getInt("song_count");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
@@ -15250,6 +15773,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(arId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -15276,8 +15800,9 @@ public class MusicServerUtils {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
                     String albumId = albumJson.getString("albumid");
-                    String albumName = albumJson.getString("album").replace("&nbsp;", " ");
-                    String artist = albumJson.getString("artist").replace("&nbsp;", " ");
+                    String albumName = StringUtils.removeHTMLLabel(albumJson.getString("album"));
+                    String artist = StringUtils.removeHTMLLabel(albumJson.getString("artist"));
+                    String arId = albumJson.getString("artistid");
                     String publishTime = albumJson.getString("releaseDate");
                     String coverImgThumbUrl = albumJson.getString("pic");
 
@@ -15286,6 +15811,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(arId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
                     GlobalExecutors.imageExecutor.execute(() -> {
@@ -15314,6 +15840,7 @@ public class MusicServerUtils {
                     String albumId = albumJson.getString("id");
                     String albumName = albumJson.getString("name");
                     String artist = parseArtists(albumJson, NetMusicSource.MG);
+                    String arId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String coverImgThumbUrl = "http:" + albumJson.getString("picUrl");
 //                    String publishTime = albumJson.getString("publishTime");
 //                    Integer songNum = albumJson.getInt("songCount");
@@ -15323,6 +15850,7 @@ public class MusicServerUtils {
                     albumInfo.setId(albumId);
                     albumInfo.setName(albumName);
                     albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(arId);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                    albumInfo.setPublishTime(publishTime);
 //                    albumInfo.setSongNum(songNum);
@@ -15350,6 +15878,8 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
+                JSONArray artistArray = albumJson.optJSONArray("artist");
+                String arId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getJSONArray("trackList").size();
@@ -15359,6 +15889,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(arId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -16368,6 +16899,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albummid");
                 String albumName = albumJson.getString("albumname");
                 String artist = parseArtists(albumJson, NetMusicSource.QQ);
+                String artistId = albumJson.getJSONArray("singer").getJSONObject(0).getString("mid");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("pubtime") * 1000);
                 Integer songNum = albumJson.getInt("songnum");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
@@ -16377,6 +16909,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -16611,6 +17144,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("albummid");
                 String albumName = albumJson.getString("albumname");
                 String artist = parseArtists(albumJson, NetMusicSource.QQ);
+                String artistId = albumJson.getJSONArray("singer").getJSONObject(0).getString("mid");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("pubtime") * 1000);
                 Integer songNum = albumJson.getInt("songnum");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
@@ -16620,6 +17154,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -16686,6 +17221,7 @@ public class MusicServerUtils {
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
                 String artist = albumJson.getJSONObject("user").getString("username");
+                String artistId = albumJson.getJSONObject("user").getString("id");
                 String publishTime = TimeUtils.msToDate(albumJson.getLong("updated_at_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getInt("count");
@@ -16695,6 +17231,7 @@ public class MusicServerUtils {
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
+                albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
@@ -17873,15 +18410,13 @@ public class MusicServerUtils {
 
                     String artistId = artistJson.getString("mid");
                     String artistName = artistJson.getString("name");
-                    String coverImgThumbUrl = artistJson.getString("pic");
-                    String coverImgUrl = String.format(ARTIST_IMG_QQ_API, artistId);
+                    String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, artistId);
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
                     artistInfo.setSource(NetMusicSource.QQ);
                     artistInfo.setId(artistId);
                     artistInfo.setName(artistName);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    artistInfo.setCoverImgUrl(coverImgUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
@@ -19591,6 +20126,11 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(lrcBody).getJSONObject("data");
+            if (data.isNullObject()) {
+                netMusicInfo.setLrc(null);
+                netMusicInfo.setTrans(null);
+                return;
+            }
             // 酷我歌词返回的是数组，需要先处理成字符串！
             // lrclist 可能是数组也可能为 null ！
             JSONArray lrcArray = data.optJSONArray("lrclist");

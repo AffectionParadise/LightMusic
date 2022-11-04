@@ -7,6 +7,7 @@ import net.doge.constants.Fonts;
 import net.doge.constants.GlobalExecutors;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
+import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 //import sun.font.FontDesignMetrics;
@@ -14,7 +15,7 @@ import net.doge.utils.StringUtils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -121,6 +122,10 @@ public class TipDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+            else if (f.blurType == BlurType.LG) {
+                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
+                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+            }
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();
