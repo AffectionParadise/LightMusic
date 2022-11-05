@@ -2,14 +2,12 @@ package net.doge.ui.components.dialog;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ColorPicker;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
-import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomTextField;
-import net.doge.ui.components.DialogButton;
 import net.doge.models.UIStyle;
+import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.*;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
@@ -60,44 +58,44 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
-    private JPanel centerPanel = new JPanel();
-    private JPanel buttonPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
+    private CustomPanel buttonPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private final JLabel[] labels = {
-            new JLabel("主题名称："),
-            new JLabel("背景图片："),
-            new JLabel("列表前景色："),
-            new JLabel("列表选中项颜色："),
-            new JLabel("歌词文字颜色："),
-            new JLabel("歌词高亮颜色："),
-            new JLabel("文字标签颜色："),
-            new JLabel("进度条颜色："),
-            new JLabel("按钮颜色："),
-            new JLabel("滚动条颜色："),
-            new JLabel("音量滑动条颜色："),
-            new JLabel("频谱颜色："),
-            new JLabel("菜单项颜色：")
+    private final CustomLabel[] labels = {
+            new CustomLabel("主题名称："),
+            new CustomLabel("背景图片："),
+            new CustomLabel("列表前景色："),
+            new CustomLabel("列表选中项颜色："),
+            new CustomLabel("歌词文字颜色："),
+            new CustomLabel("歌词高亮颜色："),
+            new CustomLabel("文字标签颜色："),
+            new CustomLabel("进度条颜色："),
+            new CustomLabel("按钮颜色："),
+            new CustomLabel("滚动条颜色："),
+            new CustomLabel("音量滑动条颜色："),
+            new CustomLabel("频谱颜色："),
+            new CustomLabel("菜单项颜色：")
     };
 
     private final Component[] components = {
             new CustomTextField(15),
             new DialogButton("选择图片"),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel()
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel()
     };
     private DialogButton pureColor = new DialogButton("纯色");
 
@@ -264,9 +262,9 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -276,16 +274,10 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -296,10 +288,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
 
     void initView() {
         centerPanel.setLayout(new GridLayout(7, 2));
-
-        // 容器透明
-        centerPanel.setOpaque(false);
-        buttonPanel.setOpaque(false);
 
         // 获得传入的界面样式
         results[0] = showedStyle.getStyleName();
@@ -320,8 +308,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         Border eb = BorderFactory.createEmptyBorder(0, 20, 0, 20);
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            panel.setOpaque(false);
+            CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
             panel.setBorder(eb);
             // 添加标签
             labels[i].setForeground(style.getLabelColor());
@@ -331,10 +318,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             if (components[i] instanceof CustomTextField) {
                 CustomTextField component = (CustomTextField) components[i];
                 Color foreColor = style.getForeColor();
-//                component.addFocusListener(new JTextFieldHintListener(component, "", foreColor));
                 component.setForeground(foreColor);
                 component.setCaretColor(foreColor);
-                component.setOpaque(false);
                 component.setFont(globalFont);
                 // 加载风格名称
                 component.setText((String) results[i]);
@@ -387,8 +372,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                     });
                     pack();
                 });
-            } else if (components[i] instanceof JLabel) {
-                JLabel component = (JLabel) components[i];
+            } else if (components[i] instanceof CustomLabel) {
+                CustomLabel component = (CustomLabel) components[i];
                 component.setFont(globalFont);
                 // 鼠标光标
                 component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -429,7 +414,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             pack();
             setLocationRelativeTo(f);
         });
-        ((JPanel) centerPanel.getComponent(1)).add(pureColor);
+        ((CustomPanel) centerPanel.getComponent(1)).add(pureColor);
     }
 
     @Override

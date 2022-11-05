@@ -1,25 +1,19 @@
 package net.doge.ui.renderers;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.NetAlbumInfo;
-import net.doge.models.NetPlaylistInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
-import net.doge.utils.FontUtils;
 import net.doge.utils.ImageUtils;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 
 /**
  * @Author yzx
@@ -62,51 +56,18 @@ public class TranslucentNetAlbumListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetAlbumInfo netAlbumInfo = (NetAlbumInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setFont(customFont);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : albumIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel artistLabel = new JLabel();
-        JLabel songNumLabel = new JLabel();
-        JLabel publishTimeLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel artistLabel = new CustomLabel();
+        CustomLabel songNumLabel = new CustomLabel();
+        CustomLabel publishTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(40);
         iconLabel.setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : isSelected ? albumSIcon : albumIcon);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        artistLabel.setHorizontalAlignment(CENTER);
-        songNumLabel.setHorizontalAlignment(CENTER);
-        publishTimeLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        artistLabel.setVerticalAlignment(CENTER);
-        songNumLabel.setVerticalAlignment(CENTER);
-        publishTimeLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        artistLabel.setOpaque(false);
-        songNumLabel.setOpaque(false);
-        publishTimeLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -158,7 +119,7 @@ public class TranslucentNetAlbumListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -170,6 +131,6 @@ public class TranslucentNetAlbumListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

@@ -4,6 +4,7 @@ import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.*;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import lombok.AllArgsConstructor;
@@ -86,48 +87,21 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        setFont(customFont);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
         list.setFixedCellWidth(list.getVisibleRect().width - 10);
+        
         if (value instanceof NetPlaylistInfo) {
             NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
-            JLabel iconLabel = new JLabel();
-            JLabel nameLabel = new JLabel();
-            JLabel creatorLabel = new JLabel();
-            JLabel playCountLabel = new JLabel();
-            JLabel trackCountLabel = new JLabel();
+            CustomLabel iconLabel = new CustomLabel();
+            CustomLabel nameLabel = new CustomLabel();
+            CustomLabel creatorLabel = new CustomLabel();
+            CustomLabel playCountLabel = new CustomLabel();
+            CustomLabel trackCountLabel = new CustomLabel();
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
             iconLabel.setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : isSelected ? playlistSIcon : playlistIcon);
-
-            iconLabel.setHorizontalAlignment(CENTER);
-            nameLabel.setHorizontalAlignment(CENTER);
-            creatorLabel.setHorizontalAlignment(CENTER);
-            playCountLabel.setHorizontalAlignment(CENTER);
-            trackCountLabel.setHorizontalAlignment(CENTER);
-
-            iconLabel.setVerticalAlignment(CENTER);
-            nameLabel.setVerticalAlignment(CENTER);
-            creatorLabel.setVerticalAlignment(CENTER);
-            playCountLabel.setVerticalAlignment(CENTER);
-            trackCountLabel.setVerticalAlignment(CENTER);
-
-            outerPanel.setOpaque(false);
-            iconLabel.setOpaque(false);
-            nameLabel.setOpaque(false);
-            creatorLabel.setOpaque(false);
-            playCountLabel.setOpaque(false);
-            trackCountLabel.setOpaque(false);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -179,34 +153,15 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             NetAlbumInfo netAlbumInfo = (NetAlbumInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
-            JLabel iconLabel = new JLabel();
-            JLabel nameLabel = new JLabel();
-            JLabel artistLabel = new JLabel();
-            JLabel songNumLabel = new JLabel();
-            JLabel publishTimeLabel = new JLabel();
+            CustomLabel iconLabel = new CustomLabel();
+            CustomLabel nameLabel = new CustomLabel();
+            CustomLabel artistLabel = new CustomLabel();
+            CustomLabel songNumLabel = new CustomLabel();
+            CustomLabel publishTimeLabel = new CustomLabel();
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
             iconLabel.setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : isSelected ? albumSIcon : albumIcon);
-
-            iconLabel.setHorizontalAlignment(CENTER);
-            nameLabel.setHorizontalAlignment(CENTER);
-            artistLabel.setHorizontalAlignment(CENTER);
-            songNumLabel.setHorizontalAlignment(CENTER);
-            publishTimeLabel.setHorizontalAlignment(CENTER);
-
-            iconLabel.setVerticalAlignment(CENTER);
-            nameLabel.setVerticalAlignment(CENTER);
-            artistLabel.setVerticalAlignment(CENTER);
-            songNumLabel.setVerticalAlignment(CENTER);
-            publishTimeLabel.setVerticalAlignment(CENTER);
-
-            outerPanel.setOpaque(false);
-            iconLabel.setOpaque(false);
-            nameLabel.setOpaque(false);
-            artistLabel.setOpaque(false);
-            songNumLabel.setOpaque(false);
-            publishTimeLabel.setOpaque(false);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -259,34 +214,15 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             NetArtistInfo netArtistInfo = (NetArtistInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
-            JLabel iconLabel = new JLabel();
-            JLabel nameLabel = new JLabel();
-            JLabel songNumLabel = new JLabel();
-            JLabel albumNumLabel = new JLabel();
-            JLabel mvNumLabel = new JLabel();
+            CustomLabel iconLabel = new CustomLabel();
+            CustomLabel nameLabel = new CustomLabel();
+            CustomLabel songNumLabel = new CustomLabel();
+            CustomLabel albumNumLabel = new CustomLabel();
+            CustomLabel mvNumLabel = new CustomLabel();
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
             iconLabel.setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : isSelected ? artistSIcon : artistIcon);
-
-            iconLabel.setHorizontalAlignment(CENTER);
-            nameLabel.setHorizontalAlignment(CENTER);
-            songNumLabel.setHorizontalAlignment(CENTER);
-            albumNumLabel.setHorizontalAlignment(CENTER);
-            mvNumLabel.setHorizontalAlignment(CENTER);
-
-            iconLabel.setVerticalAlignment(CENTER);
-            nameLabel.setVerticalAlignment(CENTER);
-            songNumLabel.setVerticalAlignment(CENTER);
-            albumNumLabel.setVerticalAlignment(CENTER);
-            mvNumLabel.setVerticalAlignment(CENTER);
-
-            outerPanel.setOpaque(false);
-            iconLabel.setOpaque(false);
-            nameLabel.setOpaque(false);
-            songNumLabel.setOpaque(false);
-            albumNumLabel.setOpaque(false);
-            mvNumLabel.setOpaque(false);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -338,47 +274,22 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             NetRadioInfo netRadioInfo = (NetRadioInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
-            JLabel iconLabel = new JLabel();
-            JLabel nameLabel = new JLabel();
-            JLabel djLabel = new JLabel();
-            JLabel categoryLabel = new JLabel();
-            JLabel trackCountLabel = new JLabel();
-            JLabel playCountLabel = new JLabel();
-//        JLabel createTimeLabel = new JLabel();
+            CustomLabel iconLabel = new CustomLabel();
+            CustomLabel nameLabel = new CustomLabel();
+            CustomLabel dCustomLabel = new CustomLabel();
+            CustomLabel categoryLabel = new CustomLabel();
+            CustomLabel trackCountLabel = new CustomLabel();
+            CustomLabel playCountLabel = new CustomLabel();
+//        CustomLabel createTimeLabel = new CustomLabel();
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(25);
             iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : isSelected ? radioSIcon : radioIcon);
 
-            iconLabel.setHorizontalAlignment(CENTER);
-            nameLabel.setHorizontalAlignment(CENTER);
-            djLabel.setHorizontalAlignment(CENTER);
-            categoryLabel.setHorizontalAlignment(CENTER);
-            trackCountLabel.setHorizontalAlignment(CENTER);
-            playCountLabel.setHorizontalAlignment(CENTER);
-//        createTimeLabel.setHorizontalAlignment(CENTER);
-
-            iconLabel.setVerticalAlignment(CENTER);
-            nameLabel.setVerticalAlignment(CENTER);
-            djLabel.setVerticalAlignment(CENTER);
-            categoryLabel.setVerticalAlignment(CENTER);
-            trackCountLabel.setVerticalAlignment(CENTER);
-            playCountLabel.setVerticalAlignment(CENTER);
-//        createTimeLabel.setVerticalAlignment(CENTER);
-
-            outerPanel.setOpaque(false);
-            iconLabel.setOpaque(false);
-            nameLabel.setOpaque(false);
-            djLabel.setOpaque(false);
-            categoryLabel.setOpaque(false);
-            trackCountLabel.setOpaque(false);
-            playCountLabel.setOpaque(false);
-//        createTimeLabel.setOpaque(false);
-
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(isSelected ? selectedColor : foreColor);
             nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            djLabel.setForeground(isSelected ? selectedColor : foreColor);
+            dCustomLabel.setForeground(isSelected ? selectedColor : foreColor);
             categoryLabel.setForeground(isSelected ? selectedColor : foreColor);
             trackCountLabel.setForeground(isSelected ? selectedColor : foreColor);
             playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -386,7 +297,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setFont(customFont);
             nameLabel.setFont(customFont);
-            djLabel.setFont(customFont);
+            dCustomLabel.setFont(customFont);
             categoryLabel.setFont(customFont);
             trackCountLabel.setFont(customFont);
             playCountLabel.setFont(customFont);
@@ -398,7 +309,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             outerPanel.add(iconLabel);
             outerPanel.add(nameLabel);
-            outerPanel.add(djLabel);
+            outerPanel.add(dCustomLabel);
             outerPanel.add(categoryLabel);
             outerPanel.add(trackCountLabel);
             outerPanel.add(playCountLabel);
@@ -415,7 +326,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setText(source);
             nameLabel.setText(name);
-            djLabel.setText(dj);
+            dCustomLabel.setText(dj);
             categoryLabel.setText(category);
             trackCountLabel.setText(trackCount);
             playCountLabel.setText(playCount);
@@ -423,7 +334,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             Dimension ps = iconLabel.getPreferredSize();
             Dimension ps2 = nameLabel.getPreferredSize();
-            Dimension ps3 = djLabel.getPreferredSize();
+            Dimension ps3 = dCustomLabel.getPreferredSize();
             int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
             Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
             outerPanel.setPreferredSize(d);
@@ -436,38 +347,16 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             NetMvInfo netMvInfo = (NetMvInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
-            JLabel iconLabel = new JLabel();
-            JLabel nameLabel = new JLabel();
-            JLabel artistLabel = new JLabel();
-            JLabel durationLabel = new JLabel();
-            JLabel playCountLabel = new JLabel();
-            JLabel pubTimeLabel = new JLabel();
+            CustomLabel iconLabel = new CustomLabel();
+            CustomLabel nameLabel = new CustomLabel();
+            CustomLabel artistLabel = new CustomLabel();
+            CustomLabel durationLabel = new CustomLabel();
+            CustomLabel playCountLabel = new CustomLabel();
+            CustomLabel pubTimeLabel = new CustomLabel();
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(10);
             iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : isSelected ? mvSIcon : mvIcon);
-
-            iconLabel.setHorizontalAlignment(CENTER);
-            nameLabel.setHorizontalAlignment(CENTER);
-            artistLabel.setHorizontalAlignment(CENTER);
-            durationLabel.setHorizontalAlignment(CENTER);
-            playCountLabel.setHorizontalAlignment(CENTER);
-            pubTimeLabel.setHorizontalAlignment(CENTER);
-
-            iconLabel.setVerticalAlignment(CENTER);
-            nameLabel.setVerticalAlignment(CENTER);
-            artistLabel.setVerticalAlignment(CENTER);
-            durationLabel.setVerticalAlignment(CENTER);
-            playCountLabel.setVerticalAlignment(CENTER);
-            pubTimeLabel.setVerticalAlignment(CENTER);
-
-            outerPanel.setOpaque(false);
-            iconLabel.setOpaque(false);
-            nameLabel.setOpaque(false);
-            artistLabel.setOpaque(false);
-            durationLabel.setOpaque(false);
-            playCountLabel.setOpaque(false);
-            pubTimeLabel.setOpaque(false);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -525,34 +414,15 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             NetRankingInfo netRankingInfo = (NetRankingInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
-            JLabel iconLabel = new JLabel();
-            JLabel nameLabel = new JLabel();
-            JLabel playCountLabel = new JLabel();
-            JLabel updateFreLabel = new JLabel();
-            JLabel updateTimeLabel = new JLabel();
+            CustomLabel iconLabel = new CustomLabel();
+            CustomLabel nameLabel = new CustomLabel();
+            CustomLabel playCountLabel = new CustomLabel();
+            CustomLabel updateFreLabel = new CustomLabel();
+            CustomLabel updateTimeLabel = new CustomLabel();
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
             iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : isSelected ? rankingSIcon : rankingIcon);
-
-            iconLabel.setHorizontalAlignment(CENTER);
-            nameLabel.setHorizontalAlignment(CENTER);
-            playCountLabel.setHorizontalAlignment(CENTER);
-            updateFreLabel.setHorizontalAlignment(CENTER);
-            updateTimeLabel.setHorizontalAlignment(CENTER);
-
-            iconLabel.setVerticalAlignment(CENTER);
-            nameLabel.setVerticalAlignment(CENTER);
-            playCountLabel.setVerticalAlignment(CENTER);
-            updateFreLabel.setVerticalAlignment(CENTER);
-            updateTimeLabel.setVerticalAlignment(CENTER);
-
-            outerPanel.setOpaque(false);
-            iconLabel.setOpaque(false);
-            nameLabel.setOpaque(false);
-            playCountLabel.setOpaque(false);
-            updateFreLabel.setOpaque(false);
-            updateTimeLabel.setOpaque(false);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -604,46 +474,18 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             NetUserInfo netUserInfo = (NetUserInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
-            JLabel avatarLabel = new JLabel();
-            JLabel nameLabel = new JLabel();
-            JLabel genderLabel = new JLabel();
-//        JLabel birthdayLabel = new JLabel();
-//        JLabel areaLabel = new JLabel();
-            JLabel followLabel = new JLabel();
-            JLabel followedLabel = new JLabel();
-            JLabel playlistCountLabel = new JLabel();
+            CustomLabel avatarLabel = new CustomLabel();
+            CustomLabel nameLabel = new CustomLabel();
+            CustomLabel genderLabel = new CustomLabel();
+//        CustomLabel birthdayLabel = new CustomLabel();
+//        CustomLabel areaLabel = new CustomLabel();
+            CustomLabel followLabel = new CustomLabel();
+            CustomLabel followedLabel = new CustomLabel();
+            CustomLabel playlistCountLabel = new CustomLabel();
 
             avatarLabel.setHorizontalTextPosition(LEFT);
             avatarLabel.setIconTextGap(25);
             avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : isSelected ? userSIcon : userIcon);
-
-            avatarLabel.setHorizontalAlignment(CENTER);
-            nameLabel.setHorizontalAlignment(CENTER);
-            genderLabel.setHorizontalAlignment(CENTER);
-//        birthdayLabel.setHorizontalAlignment(CENTER);
-//        areaLabel.setHorizontalAlignment(CENTER);
-            followLabel.setHorizontalAlignment(CENTER);
-            followedLabel.setHorizontalAlignment(CENTER);
-            playlistCountLabel.setHorizontalAlignment(CENTER);
-
-            avatarLabel.setVerticalAlignment(CENTER);
-            nameLabel.setVerticalAlignment(CENTER);
-            genderLabel.setVerticalAlignment(CENTER);
-//        birthdayLabel.setVerticalAlignment(CENTER);
-//        areaLabel.setVerticalAlignment(CENTER);
-            followLabel.setVerticalAlignment(CENTER);
-            followedLabel.setVerticalAlignment(CENTER);
-            playlistCountLabel.setVerticalAlignment(CENTER);
-
-            outerPanel.setOpaque(false);
-            avatarLabel.setOpaque(false);
-            nameLabel.setOpaque(false);
-            genderLabel.setOpaque(false);
-//        birthdayLabel.setOpaque(false);
-//        areaLabel.setOpaque(false);
-            followLabel.setOpaque(false);
-            followedLabel.setOpaque(false);
-            playlistCountLabel.setOpaque(false);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             avatarLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -711,13 +553,11 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             return outerPanel;
         }
 
-        // 所有标签透明
-//        label.setOpaque(false);
         return this;
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -729,6 +569,6 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

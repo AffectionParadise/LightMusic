@@ -1,25 +1,19 @@
 package net.doge.ui.renderers;
 
-import net.doge.constants.ImageConstants;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.SimplePath;
-import net.doge.models.NetArtistInfo;
-import net.doge.models.NetRadioInfo;
-import net.doge.ui.components.CustomPanel;
-import net.doge.utils.FontUtils;
-import net.doge.utils.ImageUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constants.ImageConstants;
+import net.doge.constants.NetMusicSource;
+import net.doge.constants.SimplePath;
+import net.doge.models.NetRadioInfo;
+import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.CustomPanel;
+import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 
 /**
  * @Author yzx
@@ -62,65 +56,25 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetRadioInfo netRadioInfo = (NetRadioInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setFont(customFont);
-//        setIcon(radioIcon);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : radioIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel djLabel = new JLabel();
-        JLabel categoryLabel = new JLabel();
-        JLabel trackCountLabel = new JLabel();
-        JLabel playCountLabel = new JLabel();
-//        JLabel createTimeLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel dCustomLabel = new CustomLabel();
+        CustomLabel categoryLabel = new CustomLabel();
+        CustomLabel trackCountLabel = new CustomLabel();
+        CustomLabel playCountLabel = new CustomLabel();
+//        CustomLabel createTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(25);
         iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : isSelected ? radioSIcon : radioIcon);
 
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        djLabel.setHorizontalAlignment(CENTER);
-        categoryLabel.setHorizontalAlignment(CENTER);
-        trackCountLabel.setHorizontalAlignment(CENTER);
-        playCountLabel.setHorizontalAlignment(CENTER);
-//        createTimeLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        djLabel.setVerticalAlignment(CENTER);
-        categoryLabel.setVerticalAlignment(CENTER);
-        trackCountLabel.setVerticalAlignment(CENTER);
-        playCountLabel.setVerticalAlignment(CENTER);
-//        createTimeLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        djLabel.setOpaque(false);
-        categoryLabel.setOpaque(false);
-        trackCountLabel.setOpaque(false);
-        playCountLabel.setOpaque(false);
-//        createTimeLabel.setOpaque(false);
-
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
         nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        djLabel.setForeground(isSelected ? selectedColor : foreColor);
+        dCustomLabel.setForeground(isSelected ? selectedColor : foreColor);
         categoryLabel.setForeground(isSelected ? selectedColor : foreColor);
         trackCountLabel.setForeground(isSelected ? selectedColor : foreColor);
         playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -128,7 +82,7 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        djLabel.setFont(customFont);
+        dCustomLabel.setFont(customFont);
         categoryLabel.setFont(customFont);
         trackCountLabel.setFont(customFont);
         playCountLabel.setFont(customFont);
@@ -140,7 +94,7 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
 
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
-        outerPanel.add(djLabel);
+        outerPanel.add(dCustomLabel);
         outerPanel.add(categoryLabel);
         outerPanel.add(trackCountLabel);
         outerPanel.add(playCountLabel);
@@ -157,7 +111,7 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        djLabel.setText(dj);
+        dCustomLabel.setText(dj);
         categoryLabel.setText(category);
         trackCountLabel.setText(trackCount);
         playCountLabel.setText(playCount);
@@ -165,7 +119,7 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
 
         Dimension ps = iconLabel.getPreferredSize();
         Dimension ps2 = nameLabel.getPreferredSize();
-        Dimension ps3 = djLabel.getPreferredSize();
+        Dimension ps3 = dCustomLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
         Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
         outerPanel.setPreferredSize(d);
@@ -177,7 +131,7 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -189,6 +143,6 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

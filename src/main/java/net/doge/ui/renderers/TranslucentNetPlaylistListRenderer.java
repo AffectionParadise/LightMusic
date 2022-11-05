@@ -60,52 +60,18 @@ public class TranslucentNetPlaylistListRenderer extends DefaultListCellRenderer 
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//
-//        setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(netPlaylistInfo.toString()));
-//        setFont(customFont);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : playlistIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel creatorLabel = new JLabel();
-        JLabel playCountLabel = new JLabel();
-        JLabel trackCountLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel creatorLabel = new CustomLabel();
+        CustomLabel playCountLabel = new CustomLabel();
+        CustomLabel trackCountLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(40);
         iconLabel.setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : isSelected ? playlistSIcon : playlistIcon);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        creatorLabel.setHorizontalAlignment(CENTER);
-        playCountLabel.setHorizontalAlignment(CENTER);
-        trackCountLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        creatorLabel.setVerticalAlignment(CENTER);
-        playCountLabel.setVerticalAlignment(CENTER);
-        trackCountLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        creatorLabel.setOpaque(false);
-        playCountLabel.setOpaque(false);
-        trackCountLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -157,7 +123,7 @@ public class TranslucentNetPlaylistListRenderer extends DefaultListCellRenderer 
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -169,6 +135,6 @@ public class TranslucentNetPlaylistListRenderer extends DefaultListCellRenderer 
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

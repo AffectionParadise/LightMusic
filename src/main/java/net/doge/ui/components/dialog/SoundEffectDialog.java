@@ -4,6 +4,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.*;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.componentui.VSliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
@@ -39,65 +40,65 @@ public class SoundEffectDialog extends JDialog {
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
-    private JPanel centerPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private JPanel soundEffectPanel = new JPanel();
-    private JPanel sliderPanel = new JPanel();
+    private CustomPanel soundEffectPanel = new CustomPanel();
+    private CustomPanel sliderPanel = new CustomPanel();
 
-    private JLabel soundEffectLabel = new JLabel("音效：");
-    private JComboBox comboBox = new JComboBox<>();
-    private final JPanel[] panels = {
-            new JPanel(),
-            new JPanel(),
-            new JPanel(),
-            new JPanel(),
-            new JPanel(),
-            new JPanel(),
-            new JPanel(),
-            new JPanel(),
-            new JPanel(),
-            new JPanel()
+    private CustomLabel soundEffectLabel = new CustomLabel("音效：");
+    private CustomComboBox comboBox = new CustomComboBox<>();
+    private final CustomPanel[] panels = {
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel(),
+            new CustomPanel()
     };
-    private final JLabel[] vals = {
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel()
+    private final CustomLabel[] vals = {
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel()
     };
-    private final JSlider[] sliders = {
-            new JSlider(),
-            new JSlider(),
-            new JSlider(),
-            new JSlider(),
-            new JSlider(),
-            new JSlider(),
-            new JSlider(),
-            new JSlider(),
-            new JSlider(),
-            new JSlider()
+    private final CustomSlider[] sliders = {
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider(),
+            new CustomSlider()
     };
-    private final JLabel[] hzs = {
-            new JLabel("31"),
-            new JLabel("62"),
-            new JLabel("125"),
-            new JLabel("250"),
-            new JLabel("500"),
-            new JLabel("1k"),
-            new JLabel("2k"),
-            new JLabel("4k"),
-            new JLabel("8k"),
-            new JLabel("16k")
+    private final CustomLabel[] hzs = {
+            new CustomLabel("31"),
+            new CustomLabel("62"),
+            new CustomLabel("125"),
+            new CustomLabel("250"),
+            new CustomLabel("500"),
+            new CustomLabel("1k"),
+            new CustomLabel("2k"),
+            new CustomLabel("4k"),
+            new CustomLabel("8k"),
+            new CustomLabel("16k")
     };
     private boolean fitting;
 
@@ -185,9 +186,9 @@ public class SoundEffectDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -197,16 +198,10 @@ public class SoundEffectDialog extends JDialog {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -217,10 +212,6 @@ public class SoundEffectDialog extends JDialog {
 
     void initView() {
         centerPanel.setLayout(new BorderLayout());
-        // 容器透明
-        centerPanel.setOpaque(false);
-        soundEffectPanel.setOpaque(false);
-        sliderPanel.setOpaque(false);
 
         // 音效选择面板
         soundEffectLabel.setFont(globalFont);
@@ -242,13 +233,10 @@ public class SoundEffectDialog extends JDialog {
                 }
             }
         });
-        // 下拉框透明
-        comboBox.setOpaque(false);
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
         comboBox.setUI(new ComboBoxUI(comboBox, f, globalFont, buttonColor, 220));
-        // 下拉框边框
-        comboBox.setBorder(null);
+
         soundEffectPanel.add(soundEffectLabel);
         soundEffectPanel.add(comboBox);
         centerPanel.add(soundEffectPanel, BorderLayout.NORTH);
@@ -256,12 +244,9 @@ public class SoundEffectDialog extends JDialog {
         // 滑动条面板
         sliderPanel.setLayout(new GridLayout(1, 10));
         for (int i = 0, len = panels.length; i < len; i++) {
-            JSlider s = sliders[i];
+            CustomSlider s = sliders[i];
             // 滑动条
-            s.setOpaque(false);
-            s.setFocusable(false);
             s.setUI(new VSliderUI(s, style.getSliderColor(), style.getSliderColor()));
-            s.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             s.setPreferredSize(new Dimension(30, 300));
             s.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
             s.setMinimum(EqualizerData.MIN_GAIN);
@@ -292,7 +277,6 @@ public class SoundEffectDialog extends JDialog {
             hzs[i].setFont(globalFont);
             hzs[i].setHorizontalAlignment(SwingConstants.CENTER);
 
-            panels[i].setOpaque(false);
             panels[i].setLayout(new BorderLayout());
             panels[i].setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
             panels[i].add(vals[i], BorderLayout.NORTH);
@@ -314,7 +298,7 @@ public class SoundEffectDialog extends JDialog {
     double[] getData() {
         double[] data = new double[EqualizerData.BAND_NUM];
         int i = 0;
-        for (JSlider slider : sliders) data[i++] = slider.getValue();
+        for (CustomSlider slider : sliders) data[i++] = slider.getValue();
         return data;
     }
 

@@ -1,17 +1,15 @@
 package net.doge.ui.components;
 
 import lombok.Data;
-import net.doge.constants.Colors;
+import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Fonts;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
-import net.coobird.thumbnailator.Thumbnails;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.swing.*;
 
 @Data
 public class StringTwoColor {

@@ -4,6 +4,9 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.CustomSlider;
 import net.doge.ui.componentui.VSliderUI;
 import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
@@ -33,9 +36,9 @@ public class RateDialog extends JDialog {
     private final int MIN_VAL = 1;
     private final int MAX_VAL = 80;
 
-    private JPanel centerPanel = new JPanel();
-    private final JLabel valLabel = new JLabel();
-    private final JSlider slider = new JSlider();
+    private CustomPanel centerPanel = new CustomPanel();
+    private final CustomLabel valLabel = new CustomLabel();
+    private final CustomSlider slider = new CustomSlider();
 
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
@@ -115,23 +118,17 @@ public class RateDialog extends JDialog {
 
     void initView() {
         centerPanel.setLayout(new BorderLayout());
-        // 容器透明
-        centerPanel.setOpaque(false);
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
         // 标签
         valLabel.setFont(globalFont);
         valLabel.setForeground(style.getLabelColor());
-        valLabel.setHorizontalAlignment(SwingConstants.CENTER);
         centerPanel.add(valLabel, BorderLayout.NORTH);
 
         // 滑动条
         slider.setFont(Fonts.NORMAL);
         slider.setForeground(style.getLabelColor());
-        slider.setOpaque(false);
-        slider.setFocusable(false);
         slider.setUI(new VSliderUI(slider, style.getSliderColor(), style.getSliderColor()));
-        slider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         slider.setPreferredSize(new Dimension(35, 500));
         slider.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         slider.setMinimum(MIN_VAL);
@@ -141,21 +138,7 @@ public class RateDialog extends JDialog {
         int val = (int) (rate * 10);
         valLabel.setText(String.format("%.1fx", rate).replace(".0", ""));
         slider.setValue(val);
-//        slider.setPaintTicks(true);
-//        slider.setPaintLabels(true);
-//        slider.setMajorTickSpacing(10);
-//        slider.setMinorTickSpacing(1);
-//        slider.setSnapToTicks(true);
-//        Dictionary<Integer, Component> table = slider.getLabelTable();
-//        Enumeration<Integer> keys = table.keys();
-//        Dimension d = new Dimension(60, 20);
-//        while (keys.hasMoreElements()) {
-//            Integer v = keys.nextElement();
-//            JLabel l = (JLabel) table.get(v);
-//            float newVal = (float) Integer.parseInt(l.getText()) / 10;
-//            l.setPreferredSize(d);
-//            l.setText(String.format("%.1f", newVal).replace(".0", ""));
-//        }
+
         slider.addChangeListener(e -> {
             // 更新值
             float newVal = (float) slider.getValue() / 10;

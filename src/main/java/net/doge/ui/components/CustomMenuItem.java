@@ -1,7 +1,5 @@
 package net.doge.ui.components;
 
-import net.doge.ui.componentui.MenuItemUI;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

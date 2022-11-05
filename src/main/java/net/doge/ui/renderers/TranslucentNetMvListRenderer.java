@@ -5,6 +5,7 @@ import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.NetMvInfo;
 import net.doge.models.NetRadioInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import lombok.AllArgsConstructor;
@@ -62,55 +63,19 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetMvInfo netMvInfo = (NetMvInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setFont(customFont);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : mvIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel artistLabel = new JLabel();
-        JLabel durationLabel = new JLabel();
-        JLabel playCountLabel = new JLabel();
-        JLabel pubTimeLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel artistLabel = new CustomLabel();
+        CustomLabel durationLabel = new CustomLabel();
+        CustomLabel playCountLabel = new CustomLabel();
+        CustomLabel pubTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : isSelected ? mvSIcon : mvIcon);
         iconLabel.setIconTextGap(10);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        artistLabel.setHorizontalAlignment(CENTER);
-        durationLabel.setHorizontalAlignment(CENTER);
-        playCountLabel.setHorizontalAlignment(CENTER);
-        pubTimeLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        artistLabel.setVerticalAlignment(CENTER);
-        durationLabel.setVerticalAlignment(CENTER);
-        playCountLabel.setVerticalAlignment(CENTER);
-        pubTimeLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        artistLabel.setOpaque(false);
-        durationLabel.setOpaque(false);
-        playCountLabel.setOpaque(false);
-        pubTimeLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -167,7 +132,7 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -179,6 +144,6 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

@@ -1,18 +1,11 @@
 package net.doge.ui.renderers;
 
-import net.doge.constants.ImageConstants;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.MusicPlayer;
-import net.doge.models.NetMvInfo;
-import net.doge.models.UIStyle;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
-import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,29 +38,13 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
         UIStyle style = (UIStyle) value;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel typeLabel = new JLabel();
-        JLabel inUseLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel typeLabel = new CustomLabel();
+        CustomLabel inUseLabel = new CustomLabel();
 
         BufferedImage img = style.getImgThumb();
         if (img != null) iconLabel.setIcon(new ImageIcon(img));
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        typeLabel.setHorizontalAlignment(CENTER);
-        inUseLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        typeLabel.setVerticalAlignment(CENTER);
-        inUseLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        typeLabel.setOpaque(false);
-        inUseLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -111,7 +88,7 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -123,6 +100,6 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

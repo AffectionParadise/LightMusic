@@ -8,6 +8,7 @@ import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.NetMvInfo;
 import net.doge.models.NetRankingInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -62,52 +63,18 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetRankingInfo netRankingInfo = (NetRankingInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setFont(customFont);
-//        setIcon(rankingIcon);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : rankingIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel playCountLabel = new JLabel();
-        JLabel updateFreLabel = new JLabel();
-        JLabel updateTimeLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel playCountLabel = new CustomLabel();
+        CustomLabel updateFreLabel = new CustomLabel();
+        CustomLabel updateTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(40);
         iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : isSelected ? rankingSIcon : rankingIcon);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        playCountLabel.setHorizontalAlignment(CENTER);
-        updateFreLabel.setHorizontalAlignment(CENTER);
-        updateTimeLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        playCountLabel.setVerticalAlignment(CENTER);
-        updateFreLabel.setVerticalAlignment(CENTER);
-        updateTimeLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        playCountLabel.setOpaque(false);
-        updateFreLabel.setOpaque(false);
-        updateTimeLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -158,7 +125,7 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -170,6 +137,6 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

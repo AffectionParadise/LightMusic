@@ -8,22 +8,33 @@ public class CustomButton extends JButton {
 
     public CustomButton() {
         super();
+        init();
     }
 
     public CustomButton(String text) {
         super(text);
+        init();
     }
 
     public CustomButton(Icon icon) {
         super(icon);
+        init();
     }
 
     public CustomButton(String text, Icon icon) {
         super(text, icon);
+        init();
     }
 
     public void setDrawBg(boolean drawBg) {
         this.drawBg = drawBg;
+    }
+
+    private void init() {
+        setOpaque(false);
+        setContentAreaFilled(false);
+        setFocusable(false);
+        setFocusPainted(false);
     }
 
     @Override
@@ -36,7 +47,7 @@ public class CustomButton extends JButton {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         if (drawBg) {
             Rectangle rect = getVisibleRect();
             Graphics2D g2d = (Graphics2D) g;
@@ -48,6 +59,11 @@ public class CustomButton extends JButton {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
+    }
+
+    @Override
+    protected void paintBorder(Graphics g) {
+
     }
 }

@@ -5,6 +5,7 @@ import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.NetAlbumInfo;
 import net.doge.models.NetArtistInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.FontUtils;
 import net.doge.utils.ImageUtils;
@@ -62,52 +63,18 @@ public class TranslucentNetArtistListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetArtistInfo netArtistInfo = (NetArtistInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setFont(customFont);
-//        setIcon(artistIcon);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : artistIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
-
+        
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel songNumLabel = new JLabel();
-        JLabel albumNumLabel = new JLabel();
-        JLabel mvNumLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel songNumLabel = new CustomLabel();
+        CustomLabel albumNumLabel = new CustomLabel();
+        CustomLabel mvNumLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(40);
         iconLabel.setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : isSelected ? artistSIcon : artistIcon);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        songNumLabel.setHorizontalAlignment(CENTER);
-        albumNumLabel.setHorizontalAlignment(CENTER);
-        mvNumLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        songNumLabel.setVerticalAlignment(CENTER);
-        albumNumLabel.setVerticalAlignment(CENTER);
-        mvNumLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        songNumLabel.setOpaque(false);
-        albumNumLabel.setOpaque(false);
-        mvNumLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -158,7 +125,7 @@ public class TranslucentNetArtistListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -170,6 +137,6 @@ public class TranslucentNetArtistListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

@@ -709,7 +709,7 @@ public class ImageUtils {
         BufferedImage img = createTranslucentImage(w, h);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2, true);
+        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2);
         g.setPaint(gp);
         g.fillRect(0, 0, w, h);
         g.dispose();

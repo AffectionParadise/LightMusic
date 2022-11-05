@@ -1,6 +1,5 @@
 package net.doge.ui;
 
-import cn.hutool.core.img.ColorUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
 import com.mpatric.mp3agic.InvalidDataException;
@@ -9,39 +8,40 @@ import it.sauronsoftware.jave.EncoderException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.media.MediaException;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import net.doge.exceptions.IllegalMediaException;
-import net.doge.exceptions.NoPrivilegeException;
-import net.doge.ui.components.*;
-import net.doge.ui.components.dialog.*;
-import net.doge.exceptions.NoLyricException;
+import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
-import net.doge.ui.renderers.*;
-import net.doge.ui.listeners.JTextFieldHintListener;
+import net.doge.exceptions.IllegalMediaException;
+import net.doge.exceptions.NoLyricException;
+import net.doge.exceptions.NoPrivilegeException;
 import net.doge.models.*;
+import net.doge.ui.components.*;
+import net.doge.ui.components.dialog.ColorChooserDialog;
+import net.doge.ui.components.dialog.*;
 import net.doge.ui.componentui.*;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.ChangePaneButtonMouseListener;
+import net.doge.ui.listeners.JTextFieldHintListener;
 import net.doge.ui.listeners.ScrollPaneListener;
+import net.doge.ui.renderers.*;
 import net.doge.utils.*;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.media.AudioSpectrumListener;
-import javafx.scene.media.MediaPlayer;
-import net.coobird.thumbnailator.Thumbnails;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -59,8 +59,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class PlayerFrame extends JFrame {
@@ -154,56 +154,56 @@ public class PlayerFrame extends JFrame {
     // 加载 MV 提示
     private final String LOADING_MV_MSG = "请稍候，MV 加载中......";
     private final String DEFAULT_TIME = TimeUtils.format(0);
-    private final String PLAY_MENU_ITEM_TEXT = "播放        ";
-    private final String NEXT_PLAY_MENU_ITEM_TEXT = "下一首播放        ";
-    private final String OPEN_MENU_ITEM_TEXT = "打开        ";
-    private final String PLAY_ALL_MENU_ITEM_TEXT = "播放全部        ";
-    private final String BROWSE_ALBUM_MENU_ITEM_TEXT = "查看歌手专辑        ";
-    private final String BROWSE_MV_MENU_ITEM_TEXT = "查看歌手 MV        ";
-    private final String SIMILAR_ARTIST_MENU_ITEM_TEXT = "查看相似歌手        ";
-    private final String ARTIST_FANS_MENU_ITEM_TEXT = "查看歌手粉丝        ";
-    private final String ARTIST_BUDDY_MENU_ITEM_TEXT = "查看歌手合作人        ";
-    private final String ARTIST_RADIO_MENU_ITEM_TEXT = "查看歌手电台        ";
-    private final String ARTIST_PHOTOS_MENU_ITEM_TEXT = "查看歌手照片        ";
-    private final String USER_PLAYLIST_MENU_ITEM_TEXT = "查看用户歌单        ";
-    private final String USER_ALBUM_MENU_ITEM_TEXT = "查看用户专辑        ";
-    private final String USER_RADIO_MENU_ITEM_TEXT = "查看用户电台        ";
-    private final String USER_VIDEO_MENU_ITEM_TEXT = "查看用户视频        ";
-    private final String USER_FOLLOW_MENU_ITEM_TEXT = "查看用户关注        ";
-    private final String USER_FOLLOWED_MENU_ITEM_TEXT = "查看用户粉丝        ";
-    private final String RADIO_DJ_MENU_ITEM_TEXT = "查看主播        ";
-    private final String EDIT_INFO_MENU_ITEM_TEXT = "编辑歌曲信息        ";
-    private final String LOCATE_FILE_MENU_ITEM_TEXT = "打开文件所在位置        ";
-    private final String REMOVE_MENU_ITEM_TEXT = "从列表删除        ";
-    private final String COLLECT_MENU_ITEM_TEXT = "收藏        ";
-    private final String CANCEL_COLLECTION_MENU_ITEM_TEXT = "取消收藏        ";
-    private final String PLAY_MV_MENU_ITEM_TEXT = "播放 MV        ";
-    private final String DOWNLOAD_MENU_ITEM_TEXT = "下载        ";
-    private final String COMMENT_MENU_ITEM_TEXT = "查看评论        ";
-    private final String ALBUM_ARTIST_MENU_ITEM_TEXT = "查看歌手/作者        ";
-    private final String SIMILAR_ALBUM_MENU_ITEM_TEXT = "查看相似专辑        ";
-    private final String ALBUM_PHOTOS_MENU_ITEM_TEXT = "查看专辑照片        ";
-    private final String SHEET_MENU_ITEM_TEXT = "查看曲谱        ";
-    private final String SEARCH_SONG_MENU_ITEM_TEXT = "搜索这首歌曲        ";
-    private final String SIMILAR_SONG_MENU_ITEM_TEXT = "查看相似歌曲        ";
-    private final String RELATED_PLAYLIST_MENU_ITEM_TEXT = "查看相关歌单        ";
-    private final String AUTHOR_MENU_ITEM_TEXT = "查看歌手/作者        ";
-    private final String ALBUM_MENU_ITEM_TEXT = "查看专辑/电台        ";
-    private final String SIMILAR_PLAYLIST_MENU_ITEM_TEXT = "查看相似歌单        ";
-    private final String PLAYLIST_CREATOR_MENU_ITEM_TEXT = "查看创建者        ";
-    private final String PLAYLIST_SUBSCRIBER_MENU_ITEM_TEXT = "查看收藏者        ";
-    private final String RADIO_SUBSCRIBER_MENU_ITEM_TEXT = "查看订阅者        ";
-    private final String SIMILAR_RADIO_MENU_ITEM_TEXT = "查看相似电台        ";
-    private final String RADIO_ARTISTS_MENU_ITEM_TEXT = "查看演职员/CV        ";
-    private final String RADIO_PHOTOS_MENU_ITEM_TEXT = "查看电台照片        ";
-    private final String RADIO_POSTERS_MENU_ITEM_TEXT = "查看电台海报        ";
-    private final String REC_RADIO_MENU_ITEM_TEXT = "查看推荐电台        ";
-    private final String RELATED_MV_MENU_ITEM_TEXT = "查看相关 MV        ";
-    private final String SIMILAR_MV_MENU_ITEM_TEXT = "查看相似 MV        ";
-    private final String VIDEO_EPISODE_MENU_ITEM_TEXT = "查看视频分集        ";
-    private final String MV_CREATOR_MENU_ITEM_TEXT = "查看歌手/发布者        ";
-    private final String COPY_NAME_MENU_ITEM_TEXT = "复制名称        ";
-    private final String SAVE_ALBUM_IMAGE_TEXT = "导出专辑图片        ";
+    private final String PLAY_MENU_ITEM_TEXT = "播放";
+    private final String NEXT_PLAY_MENU_ITEM_TEXT = "下一首播放";
+    private final String OPEN_MENU_ITEM_TEXT = "打开";
+    private final String PLAY_ALL_MENU_ITEM_TEXT = "播放全部";
+    private final String BROWSE_ALBUM_MENU_ITEM_TEXT = "查看歌手专辑";
+    private final String BROWSE_MV_MENU_ITEM_TEXT = "查看歌手 MV";
+    private final String SIMILAR_ARTIST_MENU_ITEM_TEXT = "查看相似歌手";
+    private final String ARTIST_FANS_MENU_ITEM_TEXT = "查看歌手粉丝";
+    private final String ARTIST_BUDDY_MENU_ITEM_TEXT = "查看歌手合作人";
+    private final String ARTIST_RADIO_MENU_ITEM_TEXT = "查看歌手电台";
+    private final String ARTIST_PHOTOS_MENU_ITEM_TEXT = "查看歌手照片";
+    private final String USER_PLAYLIST_MENU_ITEM_TEXT = "查看用户歌单";
+    private final String USER_ALBUM_MENU_ITEM_TEXT = "查看用户专辑";
+    private final String USER_RADIO_MENU_ITEM_TEXT = "查看用户电台";
+    private final String USER_VIDEO_MENU_ITEM_TEXT = "查看用户视频";
+    private final String USER_FOLLOW_MENU_ITEM_TEXT = "查看用户关注";
+    private final String USER_FOLLOWED_MENU_ITEM_TEXT = "查看用户粉丝";
+    private final String RADIO_DJ_MENU_ITEM_TEXT = "查看主播";
+    private final String EDIT_INFO_MENU_ITEM_TEXT = "编辑歌曲信息";
+    private final String LOCATE_FILE_MENU_ITEM_TEXT = "打开文件所在位置";
+    private final String REMOVE_MENU_ITEM_TEXT = "从列表删除";
+    private final String COLLECT_MENU_ITEM_TEXT = "收藏";
+    private final String CANCEL_COLLECTION_MENU_ITEM_TEXT = "取消收藏";
+    private final String PLAY_MV_MENU_ITEM_TEXT = "播放 MV";
+    private final String DOWNLOAD_MENU_ITEM_TEXT = "下载";
+    private final String COMMENT_MENU_ITEM_TEXT = "查看评论";
+    private final String ALBUM_ARTIST_MENU_ITEM_TEXT = "查看歌手/作者";
+    private final String SIMILAR_ALBUM_MENU_ITEM_TEXT = "查看相似专辑";
+    private final String ALBUM_PHOTOS_MENU_ITEM_TEXT = "查看专辑照片";
+    private final String SHEET_MENU_ITEM_TEXT = "查看曲谱";
+    private final String SEARCH_SONG_MENU_ITEM_TEXT = "搜索这首歌曲";
+    private final String SIMILAR_SONG_MENU_ITEM_TEXT = "查看相似歌曲";
+    private final String RELATED_PLAYLIST_MENU_ITEM_TEXT = "查看相关歌单";
+    private final String AUTHOR_MENU_ITEM_TEXT = "查看歌手/作者";
+    private final String ALBUM_MENU_ITEM_TEXT = "查看专辑/电台";
+    private final String SIMILAR_PLAYLIST_MENU_ITEM_TEXT = "查看相似歌单";
+    private final String PLAYLIST_CREATOR_MENU_ITEM_TEXT = "查看创建者";
+    private final String PLAYLIST_SUBSCRIBER_MENU_ITEM_TEXT = "查看收藏者";
+    private final String RADIO_SUBSCRIBER_MENU_ITEM_TEXT = "查看订阅者";
+    private final String SIMILAR_RADIO_MENU_ITEM_TEXT = "查看相似电台";
+    private final String RADIO_ARTISTS_MENU_ITEM_TEXT = "查看演职员/CV";
+    private final String RADIO_PHOTOS_MENU_ITEM_TEXT = "查看电台照片";
+    private final String RADIO_POSTERS_MENU_ITEM_TEXT = "查看电台海报";
+    private final String REC_RADIO_MENU_ITEM_TEXT = "查看推荐电台";
+    private final String RELATED_MV_MENU_ITEM_TEXT = "查看相关 MV";
+    private final String SIMILAR_MV_MENU_ITEM_TEXT = "查看相似 MV";
+    private final String VIDEO_EPISODE_MENU_ITEM_TEXT = "查看视频分集";
+    private final String MV_CREATOR_MENU_ITEM_TEXT = "查看歌手/发布者";
+    private final String COPY_NAME_MENU_ITEM_TEXT = "复制名称";
+    private final String SAVE_ALBUM_IMAGE_TEXT = "导出专辑图片";
 
     // 托盘图标
     private ImageIcon trayIcon = new ImageIcon(SimplePath.ICON_PATH + "tray.png");
@@ -353,10 +353,14 @@ public class PlayerFrame extends JFrame {
     private ImageIcon goIcon = new ImageIcon(SimplePath.ICON_PATH + "go.png");
     // 播放全部图标
     private ImageIcon playAllIcon = new ImageIcon(SimplePath.ICON_PATH + "playAll.png");
+    // 第一页图标
+    private ImageIcon startPageIcon = new ImageIcon(SimplePath.ICON_PATH + "startPage.png");
     // 上一页图标
     private ImageIcon lastPageIcon = new ImageIcon(SimplePath.ICON_PATH + "lastPage.png");
     // 下一页图标
     private ImageIcon nextPageIcon = new ImageIcon(SimplePath.ICON_PATH + "nextPage.png");
+    // 最后一页图标
+    private ImageIcon endPageIcon = new ImageIcon(SimplePath.ICON_PATH + "endPage.png");
     // 个人音乐图标
     private ImageIcon personalMusicIcon = new ImageIcon(SimplePath.ICON_PATH + "favorite.png");
     // 离线音乐图标
@@ -542,9 +546,11 @@ public class PlayerFrame extends JFrame {
     private final String BACKWARD_TIP = "后退";
     private final String PLAY_ALL_TIP = "播放全部";
     private final String REFRESH_TIP = "刷新";
+    private final String START_PAGE_TIP = "第一页";
     private final String LAST_PAGE_TIP = "上一页";
     private final String GO_TIP = "跳页";
     private final String NEXT_PAGE_TIP = "下一页";
+    private final String END_PAGE_TIP = "最后一页";
     private final String LOCAL_MUSIC_TIP = "离线音乐";
     private final String HISTORY_TIP = "播放历史";
     private final String COLLECTION_TIP = "收藏";
@@ -725,12 +731,12 @@ public class PlayerFrame extends JFrame {
     private MusicPlayer player = new MusicPlayer(THIS);
 
     // 标题部分
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
     // 窗口控制按钮
     private CustomButton hideDetailButton = new CustomButton(hideDetailIcon);
-    private JLabel splitLabel = new JLabel(splitIcon);
+    private CustomLabel splitLabel = new CustomLabel(splitIcon);
     private CustomButton miniButton = new CustomButton(miniIcon);
     private CustomButton minimizeButton = new CustomButton(minimizeIcon);
     private CustomButton maximizeButton = new CustomButton(maximizeIcon);
@@ -748,13 +754,13 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem helpMenuItem = new CustomMenuItem("指南      ");
 
     // 歌名
-    private JLabel songNameLabel = new JLabel();
+    private CustomLabel songNameLabel = new CustomLabel();
     // 艺术家
-    private JLabel artistLabel = new JLabel();
+    private CustomLabel artistLabel = new CustomLabel();
     // 专辑
-    private JLabel albumLabel = new JLabel();
+    private CustomLabel albumLabel = new CustomLabel();
     // 专辑图片
-    private JLabel albumImageLabel = new JLabel();
+    private CustomLabel albumImageLabel = new CustomLabel();
     // 专辑图片右键弹出菜单
     private CustomPopupMenu albumImagePopupMenu = new CustomPopupMenu(THIS);
     // 右键菜单：导出专辑图片
@@ -763,13 +769,13 @@ public class PlayerFrame extends JFrame {
     private CustomPopupMenu songNamePopupMenu = new CustomPopupMenu(THIS);
     private CustomPopupMenu artistPopupMenu = new CustomPopupMenu(THIS);
     private CustomPopupMenu albumPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem copySongNameMenuItem = new CustomMenuItem("复制歌曲名        ");
-    private CustomMenuItem copyArtistMenuItem = new CustomMenuItem("复制艺术家        ");
-    private CustomMenuItem copyAlbumMenuItem = new CustomMenuItem("复制专辑名        ");
+    private CustomMenuItem copySongNameMenuItem = new CustomMenuItem("复制歌曲名");
+    private CustomMenuItem copyArtistMenuItem = new CustomMenuItem("复制艺术家");
+    private CustomMenuItem copyAlbumMenuItem = new CustomMenuItem("复制专辑名");
 
-    JSlider timeBar = new JSlider(JSlider.HORIZONTAL);
-    private JLabel currTimeLabel = new JLabel(DEFAULT_TIME);
-    private JLabel durationLabel = new JLabel(DEFAULT_TIME);
+    private CustomSlider timeBar = new CustomSlider();
+    private CustomLabel currTimeLabel = new CustomLabel(DEFAULT_TIME);
+    private CustomLabel durationLabel = new CustomLabel(DEFAULT_TIME);
 
     // 换肤按钮
     private CustomButton styleToolButton = new CustomButton(styleIcon);
@@ -779,19 +785,19 @@ public class PlayerFrame extends JFrame {
 //    private List<CustomRadioButtonMenuItem> stylePopupMenuItems = fetchStyleMenuItems();
 
     // 歌词列表
-    private LyricList<Statement> lrcList = new LyricList<>();
-    private JScrollPane lrcScrollPane = new JScrollPane(lrcList);
+    private CustomList<Statement> lrcList = new CustomList<>();
+    private CustomScrollPane lrcScrollPane = new CustomScrollPane(lrcList);
     private DefaultListModel<Statement> lrcListModel = new DefaultListModel<>();
     // 频谱面板
     private SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
     // 歌词右键弹出菜单
     private CustomPopupMenu lrcPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem copyMenuItem = new CustomMenuItem("复制这句歌词        ");
-    private CustomMenuItem locateLrcMenuItem = new CustomMenuItem("定位歌词时间        ");
-    private CustomMenuItem browseLrcMenuItem = new CustomMenuItem("查看歌词文件        ");
-    private CustomMenuItem browseLrcTransMenuItem = new CustomMenuItem("查看歌词翻译文件        ");
-    private CustomMenuItem downloadLrcMenuItem = new CustomMenuItem("下载歌词文件        ");
-    private CustomMenuItem downloadLrcTransMenuItem = new CustomMenuItem("下载歌词翻译文件        ");
+    private CustomMenuItem copyMenuItem = new CustomMenuItem("复制这句歌词");
+    private CustomMenuItem locateLrcMenuItem = new CustomMenuItem("定位歌词时间");
+    private CustomMenuItem browseLrcMenuItem = new CustomMenuItem("查看歌词文件");
+    private CustomMenuItem browseLrcTransMenuItem = new CustomMenuItem("查看歌词翻译文件");
+    private CustomMenuItem downloadLrcMenuItem = new CustomMenuItem("下载歌词文件");
+    private CustomMenuItem downloadLrcTransMenuItem = new CustomMenuItem("下载歌词翻译文件");
     private double lrcOffset;
     private final double lrcOffsetRadius = 5;
     private final String LRC_OFFSET_MSG = "当前歌词偏移：%.1f s";
@@ -821,9 +827,9 @@ public class PlayerFrame extends JFrame {
     private CustomButton playModeButton = new CustomButton(listCycleIcon);
     private CustomButton forwardButton = new CustomButton(forwIcon);
     private CustomButton backwardButton = new CustomButton(backwIcon);
-    private JPanel volumePanel = new JPanel();
+    private CustomPanel volumePanel = new CustomPanel();
     public CustomButton muteButton = new CustomButton(soundIcon);
-    private JSlider volumeSlider = new JSlider();
+    private CustomSlider volumeSlider = new CustomSlider();
     private CustomButton rateButton = new CustomButton(rateIcon);
     //    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
 //    private CustomRadioButtonMenuItem[] rateMenuItems = {
@@ -883,107 +889,107 @@ public class PlayerFrame extends JFrame {
     // 个人音乐 Tab 面板
 //    private Box personalMusicBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel personalMusicPanel = new CustomPanel();
-    private JLabel personalMusicLabel = new JLabel("个人音乐", personalMusicIcon, JLabel.CENTER);
+    private CustomLabel personalMusicLabel = new CustomLabel("个人音乐", personalMusicIcon, CustomLabel.CENTER);
     // 音乐馆 Tab 面板
 //    private Box netMusicBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netMusicPanel = new CustomPanel();
-    private JLabel netMusicLabel = new JLabel("音乐馆", netMusicIcon, JLabel.CENTER);
+    private CustomLabel netMusicLabel = new CustomLabel("音乐馆", netMusicIcon, CustomLabel.CENTER);
     // 歌单广场 Tab 面板
 //    private Box netPlaylistBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netPlaylistPanel = new CustomPanel();
-    private JLabel netPlaylistLabel = new JLabel("歌单广场", playlistIcon, JLabel.CENTER);
+    private CustomLabel netPlaylistLabel = new CustomLabel("歌单广场", playlistIcon, CustomLabel.CENTER);
     // 专辑库 Tab 面板
 //    private Box netAlbumBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netAlbumPanel = new CustomPanel();
-    private JLabel netAlbumLabel = new JLabel("专辑库", netAlbumIcon, JLabel.CENTER);
+    private CustomLabel netAlbumLabel = new CustomLabel("专辑库", netAlbumIcon, CustomLabel.CENTER);
     // 歌手汇 Tab 面板
 //    private Box netArtistBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netArtistPanel = new CustomPanel();
-    private JLabel netArtistLabel = new JLabel("歌手汇", netArtistIcon, JLabel.CENTER);
+    private CustomLabel netArtistLabel = new CustomLabel("歌手汇", netArtistIcon, CustomLabel.CENTER);
     // 电台 Tab 面板
 //    private Box netRadioBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netRadioPanel = new CustomPanel();
-    private JLabel netRadioLabel = new JLabel("电台", netRadioIcon, JLabel.CENTER);
+    private CustomLabel netRadioLabel = new CustomLabel("电台", netRadioIcon, CustomLabel.CENTER);
     // MV Tab 面板
 //    private Box netMvBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netMvPanel = new CustomPanel();
-    private JLabel netMvLabel = new JLabel("MV", netMvIcon, JLabel.CENTER);
+    private CustomLabel netMvLabel = new CustomLabel("MV", netMvIcon, CustomLabel.CENTER);
     // 榜单 Tab 面板
 //    private Box netRankingBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netRankingPanel = new CustomPanel();
-    private JLabel netRankingLabel = new JLabel("榜单", netRankingIcon, JLabel.CENTER);
+    private CustomLabel netRankingLabel = new CustomLabel("榜单", netRankingIcon, CustomLabel.CENTER);
     // 用户 Tab 面板
 //    private Box netUserBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel netUserPanel = new CustomPanel();
-    private JLabel netUserLabel = new JLabel("用户", netUserIcon, JLabel.CENTER);
+    private CustomLabel netUserLabel = new CustomLabel("用户", netUserIcon, CustomLabel.CENTER);
     // 推荐 Tab 面板
 //    private Box recommendBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel recommendPanel = new CustomPanel();
-    private JLabel recommendLabel = new JLabel("推荐", recommendIcon, JLabel.CENTER);
+    private CustomLabel recommendLabel = new CustomLabel("推荐", recommendIcon, CustomLabel.CENTER);
     // 下载管理 Tab 面板
 //    private Box downloadManagementBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel downloadManagementPanel = new CustomPanel();
-    private JLabel downloadManagementLabel = new JLabel("下载管理", downloadManagementIcon, JLabel.CENTER);
+    private CustomLabel downloadManagementLabel = new CustomLabel("下载管理", downloadManagementIcon, CustomLabel.CENTER);
     // 播放队列 Tab 面板
 //    private Box playQueueBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel playQueuePanel = new CustomPanel();
-    private JLabel playQueueLabel = new JLabel("播放队列", playQueueIcon, JLabel.CENTER);
+    private CustomLabel playQueueLabel = new CustomLabel("播放队列", playQueueIcon, CustomLabel.CENTER);
 
     // 收藏标签页
     private JTabbedPane collectionTabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
     // 音乐收藏 Tab 面板
 //    private Box musicCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel musicCollectionPanel = new CustomPanel();
-    private JLabel musicCollectionLabel = new JLabel("歌曲", netMusicIcon, JLabel.CENTER);
+    private CustomLabel musicCollectionLabel = new CustomLabel("歌曲", netMusicIcon, CustomLabel.CENTER);
     // 歌单收藏 Tab 面板
 //    private Box playlistCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel playlistCollectionPanel = new CustomPanel();
-    private JLabel playlistCollectionLabel = new JLabel("歌单", playlistIcon, JLabel.CENTER);
+    private CustomLabel playlistCollectionLabel = new CustomLabel("歌单", playlistIcon, CustomLabel.CENTER);
     // 专辑收藏 Tab 面板
 //    private Box albumCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel albumCollectionPanel = new CustomPanel();
-    private JLabel albumCollectionLabel = new JLabel("专辑", netAlbumIcon, JLabel.CENTER);
+    private CustomLabel albumCollectionLabel = new CustomLabel("专辑", netAlbumIcon, CustomLabel.CENTER);
     // 歌手收藏 Tab 面板
 //    private Box artistCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel artistCollectionPanel = new CustomPanel();
-    private JLabel artistCollectionLabel = new JLabel("歌手", netArtistIcon, JLabel.CENTER);
+    private CustomLabel artistCollectionLabel = new CustomLabel("歌手", netArtistIcon, CustomLabel.CENTER);
     // 电台收藏 Tab 面板
 //    private Box radioCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel radioCollectionPanel = new CustomPanel();
-    private JLabel radioCollectionLabel = new JLabel("电台", netRadioIcon, JLabel.CENTER);
+    private CustomLabel radioCollectionLabel = new CustomLabel("电台", netRadioIcon, CustomLabel.CENTER);
     // MV 收藏 Tab 面板
 //    private Box mvCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel mvCollectionPanel = new CustomPanel();
-    private JLabel mvCollectionLabel = new JLabel(" MV ", netMvIcon, JLabel.CENTER);
+    private CustomLabel mvCollectionLabel = new CustomLabel(" MV ", netMvIcon, CustomLabel.CENTER);
     // 榜单收藏 Tab 面板
 //    private Box rankingCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel rankingCollectionPanel = new CustomPanel();
-    private JLabel rankingCollectionLabel = new JLabel("榜单", netRankingIcon, JLabel.CENTER);
+    private CustomLabel rankingCollectionLabel = new CustomLabel("榜单", netRankingIcon, CustomLabel.CENTER);
     // 用户收藏 Tab 面板
 //    private Box userCollectionBox = new Box(BoxLayout.Y_AXIS);
     private CustomPanel userCollectionPanel = new CustomPanel();
-    private JLabel userCollectionLabel = new JLabel("用户", netUserIcon, JLabel.CENTER);
+    private CustomLabel userCollectionLabel = new CustomLabel("用户", netUserIcon, CustomLabel.CENTER);
 
     // 空 ListModel，用于其他 ListModel 的 clear 时暂时显示，防止卡顿
     private DefaultListModel emptyListModel = new DefaultListModel<>();
     private DefaultListModel emptyLrcListModel = new DefaultListModel<>();
 
     // 列表为空提示面板
-    private JPanel emptyHintPanel = new JPanel();
+    private CustomPanel emptyHintPanel = new CustomPanel();
     // 列表为空提示标签
-    private JLabel emptyHintLabel = new JLabel("列表空空如也~");
+    private CustomLabel emptyHintLabel = new CustomLabel("列表空空如也~");
 
     // 个人音乐播放列表
-    private JList musicList = new JList<>();
-    private JScrollPane musicScrollPane = new JScrollPane(musicList);
+    private CustomList musicList = new CustomList<>();
+    private CustomScrollPane musicScrollPane = new CustomScrollPane(musicList);
     // 离线音乐 ListModel
     private DefaultListModel musicListModel = new DefaultListModel<>();
     // 播放历史 ListModel
     public DefaultListModel historyModel = new DefaultListModel<>();
 
     // 收藏列表
-    private JList collectionList = new JList<>();
-    private JScrollPane collectionScrollPane = new JScrollPane(collectionList);
+    private CustomList collectionList = new CustomList<>();
+    private CustomScrollPane collectionScrollPane = new CustomScrollPane(collectionList);
     // 歌曲收藏 ListModel
     private DefaultListModel collectionModel = new DefaultListModel<>();
     // 歌单收藏 ListModel
@@ -1013,15 +1019,15 @@ public class PlayerFrame extends JFrame {
     // 作为收藏用户单独的 ListModel，切换
     private DefaultListModel netMusicListForUserCollectionModel = new DefaultListModel<>();
     // 收藏数量面板
-    private JPanel collectionCountPanel = new JPanel();
+    private CustomPanel collectionCountPanel = new CustomPanel();
     // 收藏数量标签
-    private JLabel collectionCountLabel = new JLabel("");
+    private CustomLabel collectionCountLabel = new CustomLabel("");
     // 收藏音乐工具栏
-    private JToolBar musicCollectionToolBar = new JToolBar();
+    private CustomToolBar musicCollectionToolBar = new CustomToolBar();
     // 收藏返回按钮
     private CustomButton collectionBackwardButton = new CustomButton(backwardIcon);
     // 收藏用户听歌记录类型下拉框
-    private JComboBox<String> collectionRecordTypeComboBox = new JComboBox();
+    private CustomComboBox<String> collectionRecordTypeComboBox = new CustomComboBox();
     private DefaultComboBoxModel<String> collectionRecordTypeComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> collectionOrderComboBoxModel = new DefaultComboBoxModel<>();
     // 收藏播放全部按钮
@@ -1032,10 +1038,14 @@ public class PlayerFrame extends JFrame {
     private CustomTextField collectionPageTextField = new CustomTextField(3);
     // 收藏跳页按钮
     private CustomButton collectionGoButton = new CustomButton(goIcon);
+    // 收藏第一页按钮
+    private CustomButton collectionStartPageButton = new CustomButton(startPageIcon);
     // 收藏上一页按钮
     private CustomButton collectionLastPageButton = new CustomButton(lastPageIcon);
     // 收藏下一页按钮
     private CustomButton collectionNextPageButton = new CustomButton(nextPageIcon);
+    // 收藏最后一页按钮
+    private CustomButton collectionEndPageButton = new CustomButton(endPageIcon);
 
     // 筛选 ListModel
     private DefaultListModel filterModel = new DefaultListModel<>();
@@ -1078,7 +1088,7 @@ public class PlayerFrame extends JFrame {
     // 右键菜单：删除
     private CustomMenuItem removeMenuItem = new CustomMenuItem(REMOVE_MENU_ITEM_TEXT);
     // 个人音乐工具栏
-    private JToolBar personalMusicToolBar = new JToolBar();
+    private CustomToolBar personalMusicToolBar = new CustomToolBar();
     // 离线音乐按钮
     private CustomButton localMusicButton = new CustomButton(localMusicIcon);
     // 播放历史按钮
@@ -1087,7 +1097,7 @@ public class PlayerFrame extends JFrame {
     private CustomButton collectionButton = new CustomButton(collectionIcon);
 
     // 播放列表工具栏
-    private JToolBar musicToolBar = new JToolBar();
+    private CustomToolBar musicToolBar = new CustomToolBar();
     // 添加按钮
     private CustomButton addToolButton = new CustomButton(addIcon);
     // 添加按钮弹出菜单
@@ -1133,11 +1143,11 @@ public class PlayerFrame extends JFrame {
     // 清除输入按钮
     private CustomButton clearInputToolButton = new CustomButton(clearInputIcon);
     // 歌曲数量标签
-    private JLabel countLabel = new JLabel("");
+    private CustomLabel countLabel = new CustomLabel("");
 
     // 在线播放列表
-    private JList<NetMusicInfo> netMusicList = new JList<>();
-    private JScrollPane netMusicScrollPane = new JScrollPane(netMusicList);
+    private CustomList<NetMusicInfo> netMusicList = new CustomList<>();
+    private CustomScrollPane netMusicScrollPane = new CustomScrollPane(netMusicList);
     private DefaultListModel netMusicListModel = new DefaultListModel<>();
     // 在线音乐右键弹出菜单
     private CustomPopupMenu netMusicPopupMenu = new CustomPopupMenu(THIS);
@@ -1172,7 +1182,7 @@ public class PlayerFrame extends JFrame {
     // 在线音乐右键菜单：复制名称
     private CustomMenuItem netMusicCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 在线音乐工具栏
-    private JToolBar netMusicToolBar = new JToolBar();
+    private CustomToolBar netMusicToolBar = new CustomToolBar();
     // 在线音乐搜索框
     private CustomTextField searchTextField = new CustomTextField(8);
     // 在线音乐清除输入按钮
@@ -1182,65 +1192,69 @@ public class PlayerFrame extends JFrame {
     // 在线音乐加载更多按钮
 //    private CustomButton moreButton = new CustomButton(MORE_TIP, moreIcon);
     // 在线音乐标题标签
-    private JLabel netMusicTitleLabel = new JLabel();
+    private CustomLabel netMusicTitleLabel = new CustomLabel();
     // 歌曲数量面板
-    private JPanel netMusicCountPanel = new JPanel();
+    private CustomPanel netMusicCountPanel = new CustomPanel();
     // 歌曲数量标签
-    private JLabel netMusicCountLabel = new JLabel("");
+    private CustomLabel netMusicCountLabel = new CustomLabel("");
     // 在线音乐关键词面板
-    private JPanel netMusicKeywordsPanel = new JPanel();
-    private JScrollPane netMusicKeywordsPanelScrollPane = new JScrollPane(netMusicKeywordsPanel);
+    private CustomPanel netMusicKeywordsPanel = new CustomPanel();
+    private CustomScrollPane netMusicKeywordsPanelScrollPane = new CustomScrollPane(netMusicKeywordsPanel);
     // 在线音乐搜索建议面板
-    private JPanel netMusicSearchSuggestionPanel = new JPanel();
+    private CustomPanel netMusicSearchSuggestionPanel = new CustomPanel();
     // 在线音乐搜索建议面板 内部面板1
-    private JPanel netMusicSearchSuggestionInnerPanel1 = new JPanel();
+    private CustomPanel netMusicSearchSuggestionInnerPanel1 = new CustomPanel();
     // 在线音乐搜索建议标签
-    private JLabel netMusicSearchSuggestionLabel = new JLabel("搜索建议");
+    private CustomLabel netMusicSearchSuggestionLabel = new CustomLabel("搜索建议");
     // 刷新搜索建议按钮
     private CustomButton netMusicRefreshSearchSuggestionButton = new CustomButton(refreshIcon);
     // 在线音乐搜索建议面板 内部面板2
-    private JPanel netMusicSearchSuggestionInnerPanel2 = new JPanel();
+    private CustomPanel netMusicSearchSuggestionInnerPanel2 = new CustomPanel();
     // 在线音乐热搜面板
-    private JPanel netMusicHotSearchPanel = new JPanel();
+    private CustomPanel netMusicHotSearchPanel = new CustomPanel();
     // 在线音乐热搜面板 内部面板1
-    private JPanel netMusicHotSearchInnerPanel1 = new JPanel();
+    private CustomPanel netMusicHotSearchInnerPanel1 = new CustomPanel();
     // 在线音乐热搜标签
-    private JLabel netMusicHotSearchLabel = new JLabel("热门搜索");
+    private CustomLabel netMusicHotSearchLabel = new CustomLabel("热门搜索");
     // 刷新热搜按钮
     private CustomButton netMusicRefreshHotSearchButton = new CustomButton(refreshIcon);
     // 在线音乐热搜面板 内部面板2
-    private JPanel netMusicHotSearchInnerPanel2 = new JPanel();
+    private CustomPanel netMusicHotSearchInnerPanel2 = new CustomPanel();
     // 在线音乐搜索历史面板
-    private JPanel netMusicHistorySearchPanel = new JPanel();
+    private CustomPanel netMusicHistorySearchPanel = new CustomPanel();
     // 在线音乐搜索历史面板 内部面板1
-    private JPanel netMusicHistorySearchInnerPanel1 = new JPanel();
+    private CustomPanel netMusicHistorySearchInnerPanel1 = new CustomPanel();
     // 在线音乐搜索历史标签
-    private JLabel netMusicHistorySearchLabel = new JLabel("搜索历史");
+    private CustomLabel netMusicHistorySearchLabel = new CustomLabel("搜索历史");
     // 清空搜索历史按钮
     private CustomButton netMusicClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 在线音乐搜索历史面板 内部面板2
-    public JPanel netMusicHistorySearchInnerPanel2 = new JPanel();
+    public CustomPanel netMusicHistorySearchInnerPanel2 = new CustomPanel();
     // 返回关键词面板按钮
     private CustomButton netMusicBackwardButton = new CustomButton(backwardIcon);
     // 在线音乐搜索类型下拉框
-    private JComboBox<String> netMusicSearchTypeComboBox = new JComboBox();
-    private JComboBox<String> netMusicSearchSubTypeComboBox = new JComboBox();
+    private CustomComboBox<String> netMusicSearchTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> netMusicSearchSubTypeComboBox = new CustomComboBox();
     // 在线音乐刷新按钮
     private CustomButton netMusicRefreshButton = new CustomButton(refreshIcon);
     // 在线音乐页数框
     private CustomTextField netMusicPageTextField = new CustomTextField(3);
     // 在线音乐跳页按钮
     private CustomButton netMusicGoButton = new CustomButton(goIcon);
+    // 在线音乐第一页按钮
+    private CustomButton netMusicStartPageButton = new CustomButton(startPageIcon);
     // 在线音乐上一页按钮
     private CustomButton netMusicLastPageButton = new CustomButton(lastPageIcon);
     // 在线音乐下一页按钮
     private CustomButton netMusicNextPageButton = new CustomButton(nextPageIcon);
+    // 在线音乐最后一页按钮
+    private CustomButton netMusicEndPageButton = new CustomButton(endPageIcon);
 
     // 歌单列表
-    private JList<NetPlaylistInfo> netPlaylistList = new JList<>();
-    private JScrollPane netPlaylistScrollPane = new JScrollPane(netPlaylistList);
+    private CustomList<NetPlaylistInfo> netPlaylistList = new CustomList<>();
+    private CustomScrollPane netPlaylistScrollPane = new CustomScrollPane(netPlaylistList);
     private DefaultListModel netPlaylistListModel = new DefaultListModel<>();
-    // 作为歌单单独的 ListModel，与 netMusicListModel 在同一 JList 中切换
+    // 作为歌单单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
     private DefaultListModel netMusicListForPlaylistModel = new DefaultListModel<>();
     // 歌单右键弹出菜单
     private CustomPopupMenu netPlaylistPopupMenu = new CustomPopupMenu(THIS);
@@ -1261,9 +1275,9 @@ public class PlayerFrame extends JFrame {
     // 歌单右键菜单：复制名称
     private CustomMenuItem netPlaylistCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 在线歌单工具栏
-    private JToolBar netPlaylistToolBar = new JToolBar();
+    private CustomToolBar netPlaylistToolBar = new CustomToolBar();
     // 歌单标题标签
-    private JLabel netPlaylistTitleLabel = new JLabel();
+    private CustomLabel netPlaylistTitleLabel = new CustomLabel();
     // 返回歌单按钮
     private CustomButton netPlaylistBackwardButton = new CustomButton(backwardIcon);
     // 歌单搜索框
@@ -1282,38 +1296,38 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netPlaylistPageTextField = new CustomTextField(3);
     // 歌单跳页按钮
     private CustomButton netPlaylistGoButton = new CustomButton(goIcon);
+    // 歌单第一页按钮
+    private CustomButton netPlaylistStartPageButton = new CustomButton(startPageIcon);
     // 歌单上一页按钮
     private CustomButton netPlaylistLastPageButton = new CustomButton(lastPageIcon);
     // 歌单下一页按钮
     private CustomButton netPlaylistNextPageButton = new CustomButton(nextPageIcon);
-    //    // 当前歌单面板
-//    private JPanel netCurrPlaylistPanel = new JPanel();
-//    // 当前歌单标签
-//    private JLabel netCurrPlaylistLabel = new JLabel("");
+    // 歌单最后一页按钮
+    private CustomButton netPlaylistEndPageButton = new CustomButton(endPageIcon);
     // 歌单数量面板
-    private JPanel netPlaylistCountPanel = new JPanel();
+    private CustomPanel netPlaylistCountPanel = new CustomPanel();
     // 歌单数量标签
-    private JLabel netPlaylistCountLabel = new JLabel("");
+    private CustomLabel netPlaylistCountLabel = new CustomLabel("");
     // 歌单关键词面板
-    private JPanel netPlaylistKeywordsPanel = new JPanel();
-    private JScrollPane netPlaylistKeywordsPanelScrollPane = new JScrollPane(netPlaylistKeywordsPanel);
+    private CustomPanel netPlaylistKeywordsPanel = new CustomPanel();
+    private CustomScrollPane netPlaylistKeywordsPanelScrollPane = new CustomScrollPane(netPlaylistKeywordsPanel);
     // 歌单搜索历史面板
-    private JPanel netPlaylistHistorySearchPanel = new JPanel();
+    private CustomPanel netPlaylistHistorySearchPanel = new CustomPanel();
     // 歌单搜索历史面板 内部面板1
-    private JPanel netPlaylistHistorySearchInnerPanel1 = new JPanel();
+    private CustomPanel netPlaylistHistorySearchInnerPanel1 = new CustomPanel();
     // 歌单搜索历史标签
-    private JLabel netPlaylistHistorySearchLabel = new JLabel("搜索历史");
+    private CustomLabel netPlaylistHistorySearchLabel = new CustomLabel("搜索历史");
     // 清空搜索历史按钮
     private CustomButton netPlaylistClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 歌单搜索历史面板 内部面板2
-    public JPanel netPlaylistHistorySearchInnerPanel2 = new JPanel();
+    public CustomPanel netPlaylistHistorySearchInnerPanel2 = new CustomPanel();
 
     // 专辑列表
-    private JList<NetAlbumInfo> netAlbumList = new JList<>();
-    private JScrollPane netAlbumScrollPane = new JScrollPane(netAlbumList);
+    private CustomList<NetAlbumInfo> netAlbumList = new CustomList<>();
+    private CustomScrollPane netAlbumScrollPane = new CustomScrollPane(netAlbumList);
     private DefaultListModel<NetAlbumInfo> netAlbumListModel = new DefaultListModel<>();
     private DefaultListModel<NetAlbumInfo> netAlbumListForArtistModel = new DefaultListModel<>();
-    // 作为专辑单独的 ListModel，与 netMusicListModel 在同一 JList 中切换
+    // 作为专辑单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
     private DefaultListModel netMusicListForAlbumModel = new DefaultListModel<>();
     // 专辑右键弹出菜单
     private CustomPopupMenu netAlbumPopupMenu = new CustomPopupMenu(THIS);
@@ -1334,11 +1348,11 @@ public class PlayerFrame extends JFrame {
     // 专辑右键菜单：复制名称
     private CustomMenuItem netAlbumCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 在线专辑工具栏
-    private JToolBar netAlbumToolBar = new JToolBar();
+    private CustomToolBar netAlbumToolBar = new CustomToolBar();
     // 返回专辑按钮
     private CustomButton netAlbumBackwardButton = new CustomButton(backwardIcon);
     // 专辑标题标签
-    private JLabel netAlbumTitleLabel = new JLabel();
+    private CustomLabel netAlbumTitleLabel = new CustomLabel();
     // 专辑清除输入按钮
     private CustomButton netAlbumClearInputButton = new CustomButton(clearInputIcon);
     // 专辑搜索框
@@ -1355,31 +1369,31 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netAlbumPageTextField = new CustomTextField(3);
     // 专辑跳页按钮
     private CustomButton netAlbumGoButton = new CustomButton(goIcon);
+    // 专辑第一页按钮
+    private CustomButton netAlbumStartPageButton = new CustomButton(startPageIcon);
     // 专辑上一页按钮
     private CustomButton netAlbumLastPageButton = new CustomButton(lastPageIcon);
     // 专辑下一页按钮
     private CustomButton netAlbumNextPageButton = new CustomButton(nextPageIcon);
-    //    // 当前专辑面板
-//    private JPanel netCurrAlbumPanel = new JPanel();
-//    // 当前专辑标签
-//    private JLabel netCurrAlbumLabel = new JLabel("");
+    // 专辑最后一页按钮
+    private CustomButton netAlbumEndPageButton = new CustomButton(endPageIcon);
     // 专辑数量面板
-    private JPanel netAlbumCountPanel = new JPanel();
+    private CustomPanel netAlbumCountPanel = new CustomPanel();
     // 专辑数量标签
-    private JLabel netAlbumCountLabel = new JLabel("");
+    private CustomLabel netAlbumCountLabel = new CustomLabel("");
     // 专辑关键词面板
-    private JPanel netAlbumKeywordsPanel = new JPanel();
-    private JScrollPane netAlbumKeywordsPanelScrollPane = new JScrollPane(netAlbumKeywordsPanel);
+    private CustomPanel netAlbumKeywordsPanel = new CustomPanel();
+    private CustomScrollPane netAlbumKeywordsPanelScrollPane = new CustomScrollPane(netAlbumKeywordsPanel);
     // 专辑搜索历史面板
-    private JPanel netAlbumHistorySearchPanel = new JPanel();
+    private CustomPanel netAlbumHistorySearchPanel = new CustomPanel();
     // 专辑搜索历史面板 内部面板1
-    private JPanel netAlbumHistorySearchInnerPanel1 = new JPanel();
+    private CustomPanel netAlbumHistorySearchInnerPanel1 = new CustomPanel();
     // 专辑搜索历史标签
-    private JLabel netAlbumHistorySearchLabel = new JLabel("搜索历史");
+    private CustomLabel netAlbumHistorySearchLabel = new CustomLabel("搜索历史");
     // 清空搜索历史按钮
     private CustomButton netAlbumClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 专辑搜索历史面板 内部面板2
-    public JPanel netAlbumHistorySearchInnerPanel2 = new JPanel();
+    public CustomPanel netAlbumHistorySearchInnerPanel2 = new CustomPanel();
     // 当前专辑原歌曲
     private NetMusicInfo currAlbumMusicInfo;
     // 当前艺术家
@@ -1390,10 +1404,10 @@ public class PlayerFrame extends JFrame {
     private NetUserInfo currAlbumUserInfo;
 
     // 歌手列表
-    private JList<NetArtistInfo> netArtistList = new JList<>();
-    private JScrollPane netArtistScrollPane = new JScrollPane(netArtistList);
+    private CustomList<NetArtistInfo> netArtistList = new CustomList<>();
+    private CustomScrollPane netArtistScrollPane = new CustomScrollPane(netArtistList);
     private DefaultListModel netArtistListModel = new DefaultListModel<>();
-    // 作为歌手单独的 ListModel，与 netMusicListModel 在同一 JList 中切换
+    // 作为歌手单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
     private DefaultListModel netMusicListForArtistModel = new DefaultListModel<>();
     // 歌手右键弹出菜单
     private CustomPopupMenu netArtistPopupMenu = new CustomPopupMenu(THIS);
@@ -1420,9 +1434,9 @@ public class PlayerFrame extends JFrame {
     // 歌手右键菜单：复制名称
     private CustomMenuItem netArtistCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 歌手工具栏
-    private JToolBar netArtistToolBar = new JToolBar();
+    private CustomToolBar netArtistToolBar = new CustomToolBar();
     // 歌手标题标签
-    private JLabel netArtistTitleLabel = new JLabel();
+    private CustomLabel netArtistTitleLabel = new CustomLabel();
     // 返回歌手按钮
     private CustomButton netArtistBackwardButton = new CustomButton(backwardIcon);
     // 歌手清除输入按钮
@@ -1441,37 +1455,37 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netArtistPageTextField = new CustomTextField(3);
     // 歌手跳页按钮
     private CustomButton netArtistGoButton = new CustomButton(goIcon);
+    // 歌手第一页按钮
+    private CustomButton netArtistStartPageButton = new CustomButton(startPageIcon);
     // 歌手上一页按钮
     private CustomButton netArtistLastPageButton = new CustomButton(lastPageIcon);
     // 歌手下一页按钮
     private CustomButton netArtistNextPageButton = new CustomButton(nextPageIcon);
-    //    // 当前歌手面板
-//    private JPanel netCurrArtistPanel = new JPanel();
-//    // 当前歌手标签
-//    private JLabel netCurrArtistLabel = new JLabel("");
+    // 歌手最后一页按钮
+    private CustomButton netArtistEndPageButton = new CustomButton(endPageIcon);
     // 歌手数量面板
-    private JPanel netArtistCountPanel = new JPanel();
+    private CustomPanel netArtistCountPanel = new CustomPanel();
     // 歌手数量标签
-    private JLabel netArtistCountLabel = new JLabel("");
+    private CustomLabel netArtistCountLabel = new CustomLabel("");
     // 歌手关键词面板
-    private JPanel netArtistKeywordsPanel = new JPanel();
-    private JScrollPane netArtistKeywordsPanelScrollPane = new JScrollPane(netArtistKeywordsPanel);
+    private CustomPanel netArtistKeywordsPanel = new CustomPanel();
+    private CustomScrollPane netArtistKeywordsPanelScrollPane = new CustomScrollPane(netArtistKeywordsPanel);
     // 歌手搜索历史面板
-    private JPanel netArtistHistorySearchPanel = new JPanel();
+    private CustomPanel netArtistHistorySearchPanel = new CustomPanel();
     // 歌手搜索历史面板 内部面板1
-    private JPanel netArtistHistorySearchInnerPanel1 = new JPanel();
+    private CustomPanel netArtistHistorySearchInnerPanel1 = new CustomPanel();
     // 歌手搜索历史标签
-    private JLabel netArtistHistorySearchLabel = new JLabel("搜索历史");
+    private CustomLabel netArtistHistorySearchLabel = new CustomLabel("搜索历史");
     // 清空搜索历史按钮
     private CustomButton netArtistClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 歌手搜索历史面板 内部面板2
-    public JPanel netArtistHistorySearchInnerPanel2 = new JPanel();
+    public CustomPanel netArtistHistorySearchInnerPanel2 = new CustomPanel();
 
     // 电台列表
-    private JList<NetRadioInfo> netRadioList = new JList<>();
-    private JScrollPane netRadioScrollPane = new JScrollPane(netRadioList);
+    private CustomList<NetRadioInfo> netRadioList = new CustomList<>();
+    private CustomScrollPane netRadioScrollPane = new CustomScrollPane(netRadioList);
     private DefaultListModel netRadioListModel = new DefaultListModel<>();
-    // 作为电台单独的 ListModel，与 netMusicListModel 在同一 JList 中切换
+    // 作为电台单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
     private DefaultListModel netMusicListForRadioModel = new DefaultListModel<>();
     // 电台右键弹出菜单
     private CustomPopupMenu netRadioPopupMenu = new CustomPopupMenu(THIS);
@@ -1498,9 +1512,9 @@ public class PlayerFrame extends JFrame {
     // 电台右键菜单：复制名称
     private CustomMenuItem netRadioCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 电台工具栏
-    private JToolBar netRadioToolBar = new JToolBar();
+    private CustomToolBar netRadioToolBar = new CustomToolBar();
     // 电台标题标签
-    private JLabel netRadioTitleLabel = new JLabel();
+    private CustomLabel netRadioTitleLabel = new CustomLabel();
     // 返回电台按钮
     private CustomButton netRadioBackwardButton = new CustomButton(backwardIcon);
     // 电台搜索框
@@ -1519,35 +1533,35 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netRadioPageTextField = new CustomTextField(3);
     // 电台跳页按钮
     private CustomButton netRadioGoButton = new CustomButton(goIcon);
+    // 电台第一页按钮
+    private CustomButton netRadioStartPageButton = new CustomButton(startPageIcon);
     // 电台上一页按钮
     private CustomButton netRadioLastPageButton = new CustomButton(lastPageIcon);
     // 电台下一页按钮
     private CustomButton netRadioNextPageButton = new CustomButton(nextPageIcon);
-    //    // 当前电台面板
-//    private JPanel netCurrRadioPanel = new JPanel();
-//    // 当前电台标签
-//    private JLabel netCurrRadioLabel = new JLabel("");
+    // 电台最后一页按钮
+    private CustomButton netRadioEndPageButton = new CustomButton(endPageIcon);
     // 电台数量面板
-    private JPanel netRadioCountPanel = new JPanel();
+    private CustomPanel netRadioCountPanel = new CustomPanel();
     // 电台数量标签
-    private JLabel netRadioCountLabel = new JLabel("");
+    private CustomLabel netRadioCountLabel = new CustomLabel("");
     // 电台关键词面板
-    private JPanel netRadioKeywordsPanel = new JPanel();
-    private JScrollPane netRadioKeywordsPanelScrollPane = new JScrollPane(netRadioKeywordsPanel);
+    private CustomPanel netRadioKeywordsPanel = new CustomPanel();
+    private CustomScrollPane netRadioKeywordsPanelScrollPane = new CustomScrollPane(netRadioKeywordsPanel);
     // 电台搜索历史面板
-    private JPanel netRadioHistorySearchPanel = new JPanel();
+    private CustomPanel netRadioHistorySearchPanel = new CustomPanel();
     // 电台搜索历史面板 内部面板1
-    private JPanel netRadioHistorySearchInnerPanel1 = new JPanel();
+    private CustomPanel netRadioHistorySearchInnerPanel1 = new CustomPanel();
     // 电台搜索历史标签
-    private JLabel netRadioHistorySearchLabel = new JLabel("搜索历史");
+    private CustomLabel netRadioHistorySearchLabel = new CustomLabel("搜索历史");
     // 清空搜索历史按钮
     private CustomButton netRadioClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 电台搜索历史面板 内部面板2
-    public JPanel netRadioHistorySearchInnerPanel2 = new JPanel();
+    public CustomPanel netRadioHistorySearchInnerPanel2 = new CustomPanel();
 
     //  MV 列表
-    private JList<NetMvInfo> netMvList = new JList<>();
-    private JScrollPane netMvScrollPane = new JScrollPane(netMvList);
+    private CustomList<NetMvInfo> netMvList = new CustomList<>();
+    private CustomScrollPane netMvScrollPane = new CustomScrollPane(netMvList);
     private DefaultListModel netMvListModel = new DefaultListModel<>();
     // MV 右键弹出菜单
     private CustomPopupMenu netMvPopupMenu = new CustomPopupMenu(THIS);
@@ -1568,9 +1582,9 @@ public class PlayerFrame extends JFrame {
     // MV 右键菜单：复制名称
     private CustomMenuItem netMvCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // MV 工具栏
-    private JToolBar netMvToolBar = new JToolBar();
+    private CustomToolBar netMvToolBar = new CustomToolBar();
     // MV 标题标签
-    private JLabel netMvTitleLabel = new JLabel();
+    private CustomLabel netMvTitleLabel = new CustomLabel();
     // MV 搜索框
     private CustomTextField netMvSearchTextField = new CustomTextField(8);
     // MV 清除输入按钮
@@ -1580,48 +1594,48 @@ public class PlayerFrame extends JFrame {
     // MV 加载更多按钮
 //    private CustomButton netMvMoreButton = new CustomButton(MORE_TIP, moreIcon);
     // MV 排序类型下拉框
-    private JComboBox<String> netMvSortTypeComboBox = new JComboBox();
+    private CustomComboBox<String> netMvSortTypeComboBox = new CustomComboBox();
     // MV 刷新按钮
     private CustomButton netMvRefreshButton = new CustomButton(refreshIcon);
     // MV 页数框
     private CustomTextField netMvPageTextField = new CustomTextField(3);
     // MV 跳页按钮
     private CustomButton netMvGoButton = new CustomButton(goIcon);
+    // MV 第一页按钮
+    private CustomButton netMvStartPageButton = new CustomButton(startPageIcon);
     // MV 上一页按钮
     private CustomButton netMvLastPageButton = new CustomButton(lastPageIcon);
     // MV 下一页按钮
     private CustomButton netMvNextPageButton = new CustomButton(nextPageIcon);
-    //    // 当前 MV 面板
-//    private JPanel netCurrMvPanel = new JPanel();
-//    // 当前 MV 标签
-//    private JLabel netCurrMvLabel = new JLabel("");
+    // MV 最后一页按钮
+    private CustomButton netMvEndPageButton = new CustomButton(endPageIcon);
     //  MV 数量面板
-    private JPanel netMvCountPanel = new JPanel();
+    private CustomPanel netMvCountPanel = new CustomPanel();
     //  MV 数量标签
-    private JLabel netMvCountLabel = new JLabel("");
+    private CustomLabel netMvCountLabel = new CustomLabel("");
     // MV 关键词面板
-    private JPanel netMvKeywordsPanel = new JPanel();
-    private JScrollPane netMvKeywordsPanelScrollPane = new JScrollPane(netMvKeywordsPanel);
+    private CustomPanel netMvKeywordsPanel = new CustomPanel();
+    private CustomScrollPane netMvKeywordsPanelScrollPane = new CustomScrollPane(netMvKeywordsPanel);
     // MV 搜索历史面板
-    private JPanel netMvHistorySearchPanel = new JPanel();
+    private CustomPanel netMvHistorySearchPanel = new CustomPanel();
     // MV 搜索历史面板 内部面板1
-    private JPanel netMvHistorySearchInnerPanel1 = new JPanel();
+    private CustomPanel netMvHistorySearchInnerPanel1 = new CustomPanel();
     // MV 搜索历史标签
-    private JLabel netMvHistorySearchLabel = new JLabel("搜索历史");
+    private CustomLabel netMvHistorySearchLabel = new CustomLabel("搜索历史");
     // 清空搜索历史按钮
     private CustomButton netMvClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // MV 搜索历史面板 内部面板2
-    public JPanel netMvHistorySearchInnerPanel2 = new JPanel();
+    public CustomPanel netMvHistorySearchInnerPanel2 = new CustomPanel();
     // 返回关键词面板按钮
     private CustomButton netMvBackwardButton = new CustomButton(backwardIcon);
     // 当前艺术家
     private NetArtistInfo currMvArtistInfo;
 
     // 榜单列表
-    private JList<NetRankingInfo> netRankingList = new JList<>();
-    private JScrollPane netRankingScrollPane = new JScrollPane(netRankingList);
+    private CustomList<NetRankingInfo> netRankingList = new CustomList<>();
+    private CustomScrollPane netRankingScrollPane = new CustomScrollPane(netRankingList);
     private DefaultListModel netRankingListModel = new DefaultListModel<>();
-    // 作为榜单单独的 ListModel，与 netMusicListModel 在同一 JList 中切换
+    // 作为榜单单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
     private DefaultListModel netMusicListForRankingModel = new DefaultListModel<>();
     // 榜单右键弹出菜单
     private CustomPopupMenu netRankingPopupMenu = new CustomPopupMenu(THIS);
@@ -1636,7 +1650,7 @@ public class PlayerFrame extends JFrame {
     // 榜单右键菜单：复制名称
     private CustomMenuItem netRankingCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 榜单工具栏
-    private JToolBar netRankingToolBar = new JToolBar();
+    private CustomToolBar netRankingToolBar = new CustomToolBar();
     // 返回榜单按钮
     private CustomButton netRankingBackwardButton = new CustomButton(backwardIcon);
     // 榜单播放全部按钮
@@ -1647,20 +1661,24 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netRankingPageTextField = new CustomTextField(3);
     // 榜单跳页按钮
     private CustomButton netRankingGoButton = new CustomButton(goIcon);
+    // 榜单第一页按钮
+    private CustomButton netRankingStartPageButton = new CustomButton(startPageIcon);
     // 榜单上一页按钮
     private CustomButton netRankingLastPageButton = new CustomButton(lastPageIcon);
     // 榜单下一页按钮
     private CustomButton netRankingNextPageButton = new CustomButton(nextPageIcon);
+    // 榜单最后一页按钮
+    private CustomButton netRankingEndPageButton = new CustomButton(endPageIcon);
     // 榜单数量面板
-    private JPanel netRankingCountPanel = new JPanel();
+    private CustomPanel netRankingCountPanel = new CustomPanel();
     // 榜单数量标签
-    private JLabel netRankingCountLabel = new JLabel("");
+    private CustomLabel netRankingCountLabel = new CustomLabel("");
 
     // 用户列表
-    private JList<NetUserInfo> netUserList = new JList<>();
-    private JScrollPane netUserScrollPane = new JScrollPane(netUserList);
+    private CustomList<NetUserInfo> netUserList = new CustomList<>();
+    private CustomScrollPane netUserScrollPane = new CustomScrollPane(netUserList);
     private DefaultListModel netUserListModel = new DefaultListModel<>();
-    // 作为用户单独的 ListModel，与 netMusicListModel 在同一 JList 中切换
+    // 作为用户单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
     private DefaultListModel netMusicListForUserModel = new DefaultListModel<>();
     // 用户右键弹出菜单
     private CustomPopupMenu netUserPopupMenu = new CustomPopupMenu(THIS);
@@ -1685,11 +1703,11 @@ public class PlayerFrame extends JFrame {
     // 用户右键菜单：复制名称
     private CustomMenuItem netUserCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 用户工具栏
-    private JToolBar netUserToolBar = new JToolBar();
+    private CustomToolBar netUserToolBar = new CustomToolBar();
     // 用户标题标签
-    private JLabel netUserTitleLabel = new JLabel();
+    private CustomLabel netUserTitleLabel = new CustomLabel();
     // 用户听歌记录类型下拉框
-    private JComboBox<String> netUserRecordTypeComboBox = new JComboBox();
+    private CustomComboBox<String> netUserRecordTypeComboBox = new CustomComboBox();
     private DefaultComboBoxModel<String> recordTypeComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> orderComboBoxModel = new DefaultComboBoxModel<>();
     // 返回用户按钮
@@ -1710,35 +1728,35 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netUserPageTextField = new CustomTextField(3);
     // 用户跳页按钮
     private CustomButton netUserGoButton = new CustomButton(goIcon);
+    // 用户第一页按钮
+    private CustomButton netUserStartPageButton = new CustomButton(startPageIcon);
     // 用户上一页按钮
     private CustomButton netUserLastPageButton = new CustomButton(lastPageIcon);
     // 用户下一页按钮
     private CustomButton netUserNextPageButton = new CustomButton(nextPageIcon);
-    //    // 当前用户面板
-//    private JPanel netCurrUserPanel = new JPanel();
-//    // 当前用户标签
-//    private JLabel netCurrUserLabel = new JLabel("");
+    // 用户最后一页按钮
+    private CustomButton netUserEndPageButton = new CustomButton(endPageIcon);
     // 用户数量面板
-    private JPanel netUserCountPanel = new JPanel();
+    private CustomPanel netUserCountPanel = new CustomPanel();
     // 用户数量标签
-    private JLabel netUserCountLabel = new JLabel("");
+    private CustomLabel netUserCountLabel = new CustomLabel("");
     // 用户关键词面板
-    private JPanel netUserKeywordsPanel = new JPanel();
-    private JScrollPane netUserKeywordsPanelScrollPane = new JScrollPane(netUserKeywordsPanel);
+    private CustomPanel netUserKeywordsPanel = new CustomPanel();
+    private CustomScrollPane netUserKeywordsPanelScrollPane = new CustomScrollPane(netUserKeywordsPanel);
     // 用户搜索历史面板
-    private JPanel netUserHistorySearchPanel = new JPanel();
+    private CustomPanel netUserHistorySearchPanel = new CustomPanel();
     // 用户搜索历史面板 内部面板1
-    private JPanel netUserHistorySearchInnerPanel1 = new JPanel();
+    private CustomPanel netUserHistorySearchInnerPanel1 = new CustomPanel();
     // 用户搜索历史标签
-    private JLabel netUserHistorySearchLabel = new JLabel("搜索历史");
+    private CustomLabel netUserHistorySearchLabel = new CustomLabel("搜索历史");
     // 清空搜索历史按钮
     private CustomButton netUserClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 用户搜索历史面板 内部面板2
-    public JPanel netUserHistorySearchInnerPanel2 = new JPanel();
+    public CustomPanel netUserHistorySearchInnerPanel2 = new CustomPanel();
 
     // 推荐歌单/专辑/歌手/电台列表
-    private JList itemRecommendList = new JList<>();
-    private JScrollPane itemRecommendScrollPane = new JScrollPane(itemRecommendList);
+    private CustomList itemRecommendList = new CustomList<>();
+    private CustomScrollPane itemRecommendScrollPane = new CustomScrollPane(itemRecommendList);
     // 推荐歌单 ListModel
     private DefaultListModel playlistRecommendListModel = new DefaultListModel<>();
     // 作为推荐歌单单独的 ListModel，切换
@@ -1760,7 +1778,7 @@ public class PlayerFrame extends JFrame {
     // 推荐单曲 ListModel
     private DefaultListModel netMusicRecommendListModel = new DefaultListModel<>();
     // 推荐工具栏
-    private JToolBar recommendToolBar = new JToolBar();
+    private CustomToolBar recommendToolBar = new CustomToolBar();
     // 推荐歌单按钮
     private CustomButton playlistRecommendButton = new CustomButton(playlistRecommendIcon);
     // 精品歌单按钮
@@ -1782,21 +1800,21 @@ public class PlayerFrame extends JFrame {
     // 推荐 MV 按钮
     private CustomButton mvRecommendButton = new CustomButton(mvRecommendIcon);
     //    // 当前推荐歌单/专辑/歌手/电台面板
-//    private JPanel currItemRecommendPanel = new JPanel();
+//    private CustomPanel currItemRecommendPanel = new CustomPanel();
 //    // 当前推荐歌单/专辑/歌手/电台标签
-//    private JLabel currItemRecommendLabel = new JLabel("");
+//    private CustomLabel currItemRecommendLabel = new CustomLabel("");
     // 推荐数量面板
-    private JPanel recommendCountPanel = new JPanel();
+    private CustomPanel recommendCountPanel = new CustomPanel();
     // 推荐数量标签
-    private JLabel recommendCountLabel = new JLabel("");
+    private CustomLabel recommendCountLabel = new CustomLabel("");
     // 推荐歌单/专辑/歌手/电台音乐工具栏
-    private JToolBar musicRecommendToolBar = new JToolBar();
+    private CustomToolBar musicRecommendToolBar = new CustomToolBar();
     // 返回推荐歌单/专辑/歌手/电台按钮
     private CustomButton recommendBackwardButton = new CustomButton(backwardIcon);
     // 歌单/专辑/歌手/电台音乐加载更多按钮
 //    private CustomButton musicMoreRecommendButton = new CustomButton(MORE_TIP, moreIcon);
     // 推荐歌单标签下拉框
-    private JComboBox<String> netRecommendTagComboBox = new JComboBox();
+    private CustomComboBox<String> netRecommendTagComboBox = new CustomComboBox();
     // 推荐播放全部按钮
     private CustomButton netRecommendPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 推荐刷新按钮
@@ -1805,34 +1823,38 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netRecommendPageTextField = new CustomTextField(3);
     // 推荐跳页按钮
     private CustomButton netRecommendGoButton = new CustomButton(goIcon);
+    // 推荐第一页按钮
+    private CustomButton netRecommendStartPageButton = new CustomButton(startPageIcon);
     // 推荐上一页按钮
     private CustomButton netRecommendLastPageButton = new CustomButton(lastPageIcon);
     // 推荐下一页按钮
     private CustomButton netRecommendNextPageButton = new CustomButton(nextPageIcon);
+    // 推荐最后一页按钮
+    private CustomButton netRecommendEndPageButton = new CustomButton(endPageIcon);
 
     // 下载列表
-    private JList<Task> downloadList = new JList<>();
-    private JScrollPane downloadListScrollPane = new JScrollPane(downloadList);
+    private CustomList<Task> downloadList = new CustomList<>();
+    private CustomScrollPane downloadListScrollPane = new CustomScrollPane(downloadList);
     // 下载列表 ListModel
     private DefaultListModel<Task> downloadListModel = new DefaultListModel<>();
     // 下载右键弹出菜单
     private CustomPopupMenu downloadPopupMenu = new CustomPopupMenu(THIS);
     // 下载右键菜单：播放
-    private CustomMenuItem downloadPlayMenuItem = new CustomMenuItem("播放        ");
+    private CustomMenuItem downloadPlayMenuItem = new CustomMenuItem(PLAY_MENU_ITEM_TEXT);
     // 下载右键菜单：下一首播放
     private CustomMenuItem downloadNextPlayMenuItem = new CustomMenuItem(NEXT_PLAY_MENU_ITEM_TEXT);
     // 下载右键菜单：打开文件所在位置
-    private CustomMenuItem downloadLocateFileMenuItem = new CustomMenuItem("打开文件所在位置        ");
+    private CustomMenuItem downloadLocateFileMenuItem = new CustomMenuItem("打开文件所在位置");
     // 下载右键菜单：编辑歌曲信息
-    private CustomMenuItem downloadEditInfoMenuItem = new CustomMenuItem("编辑歌曲信息        ");
+    private CustomMenuItem downloadEditInfoMenuItem = new CustomMenuItem("编辑歌曲信息");
     // 下载右键菜单：取消任务
-    private CustomMenuItem cancelTaskMenuItem = new CustomMenuItem("取消下载        ");
+    private CustomMenuItem cancelTaskMenuItem = new CustomMenuItem("取消下载");
     // 下载右键菜单：重新开始
-    private CustomMenuItem restartTaskMenuItem = new CustomMenuItem("重新下载        ");
+    private CustomMenuItem restartTaskMenuItem = new CustomMenuItem("重新下载");
     // 下载右键菜单：删除任务
-    private CustomMenuItem removeTaskMenuItem = new CustomMenuItem("删除任务        ");
+    private CustomMenuItem removeTaskMenuItem = new CustomMenuItem("删除任务");
     // 下载工具栏
-    private JToolBar downloadToolBar = new JToolBar();
+    private CustomToolBar downloadToolBar = new CustomToolBar();
     // 重新开始选中任务按钮
     private CustomButton restartSelectedTasksButton = new CustomButton(restartTaskMenuItemIcon);
     // 取消选中任务按钮
@@ -1846,12 +1868,12 @@ public class PlayerFrame extends JFrame {
     // 删除全部任务按钮
     private CustomButton removeAllTasksButton = new CustomButton(removeAllTasksIcon);
     // 下载任务数量标签
-    private JLabel taskCountLabel = new JLabel("共 0 项任务");
+    private CustomLabel taskCountLabel = new CustomLabel("共 0 项任务");
 
     // 播放队列
-    private JList playQueue = new JList<>();
+    private CustomList playQueue = new CustomList<>();
     private ListCellRenderer playQueueRenderer;
-    private JScrollPane playQueueScrollPane = new JScrollPane(playQueue);
+    private CustomScrollPane playQueueScrollPane = new CustomScrollPane(playQueue);
     // 播放队列 ListModel
     private DefaultListModel playQueueModel = new DefaultListModel<>();
     // 播放队列右键弹出菜单
@@ -1891,9 +1913,9 @@ public class PlayerFrame extends JFrame {
     // 播放队列右键菜单：编辑歌曲信息
     private CustomMenuItem playQueueEditInfoMenuItem = new CustomMenuItem(EDIT_INFO_MENU_ITEM_TEXT);
     // 播放队列右键菜单：删除
-    private CustomMenuItem playQueueRemoveMenuItem = new CustomMenuItem("从播放队列删除        ");
+    private CustomMenuItem playQueueRemoveMenuItem = new CustomMenuItem("从播放队列删除");
     // 播放队列工具栏
-    private JToolBar playQueueToolBar = new JToolBar();
+    private CustomToolBar playQueueToolBar = new CustomToolBar();
     // 删除选中歌曲按钮
     private CustomButton playQueueRemoveToolButton = new CustomButton(removeIcon);
     // 清空播放队列按钮
@@ -1907,68 +1929,68 @@ public class PlayerFrame extends JFrame {
     // 下移按钮
     private CustomButton playQueueMoveDownToolButton = new CustomButton(moveDownIcon);
     // 歌曲数量标签
-    private JLabel playQueueCountLabel = new JLabel("共 0 首");
+    private CustomLabel playQueueCountLabel = new CustomLabel("共 0 首");
 
     // 描述面板弹出菜单
     private CustomPopupMenu descriptionPanelPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem saveDescCoverImgMenuItem = new CustomMenuItem("导出封面        ");
-    private CustomMenuItem saveDescBgImgMenuItem = new CustomMenuItem("导出背景        ");
-    private CustomMenuItem copyDescNameMenuItem = new CustomMenuItem("复制名称        ");
-    private CustomMenuItem copyDescTagMenuItem = new CustomMenuItem("复制标签        ");
-    private CustomMenuItem copyDescMenuItem = new CustomMenuItem("复制描述        ");
-    private JPanel playlistDescriptionPanel = new JPanel();
-    private JPanel albumDescriptionPanel = new JPanel();
-    private JPanel artistDescriptionPanel = new JPanel();
-    private JPanel radioDescriptionPanel = new JPanel();
-    private JPanel rankingDescriptionPanel = new JPanel();
-    private JPanel userDescriptionPanel = new JPanel();
-    private JPanel recommendItemDescriptionPanel = new JPanel();
-    private JPanel collectionItemDescriptionPanel = new JPanel();
+    private CustomMenuItem saveDescCoverImgMenuItem = new CustomMenuItem("导出封面");
+    private CustomMenuItem saveDescBgImgMenuItem = new CustomMenuItem("导出背景");
+    private CustomMenuItem copyDescNameMenuItem = new CustomMenuItem("复制名称");
+    private CustomMenuItem copyDescTagMenuItem = new CustomMenuItem("复制标签");
+    private CustomMenuItem copyDescMenuItem = new CustomMenuItem("复制描述");
+    private CustomPanel playlistDescriptionPanel = new CustomPanel();
+    private CustomPanel albumDescriptionPanel = new CustomPanel();
+    private CustomPanel artistDescriptionPanel = new CustomPanel();
+    private CustomPanel radioDescriptionPanel = new CustomPanel();
+    private CustomPanel rankingDescriptionPanel = new CustomPanel();
+    private CustomPanel userDescriptionPanel = new CustomPanel();
+    private CustomPanel recommendItemDescriptionPanel = new CustomPanel();
+    private CustomPanel collectionItemDescriptionPanel = new CustomPanel();
     // 歌单/专辑/歌手/电台封面图和名称标签
-    private JLabel playlistCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel albumCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel artistCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel radioCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel rankingCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel userCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel recommendItemCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel collectionItemCoverAndNameLabel = new JLabel("", SwingConstants.CENTER);
+    private CustomLabel playlistCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel albumCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel artistCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel radioCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel rankingCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel userCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel recommendItemCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel collectionItemCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
     // 歌单标签
-    private JLabel playlistTagLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel artistTagLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel radioTagLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel userTagLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel recommendItemTagLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel collectionItemTagLabel = new JLabel("", SwingConstants.CENTER);
+    private CustomLabel playlistTagLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel artistTagLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel radioTagLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel userTagLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel recommendItemTagLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel collectionItemTagLabel = new CustomLabel("", SwingConstants.CENTER);
     // 歌单/专辑/歌手/电台描述标签
-    private JLabel playlistDescriptionLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel albumDescriptionLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel artistDescriptionLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel radioDescriptionLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel rankingDescriptionLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel userDescriptionLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel recommendItemDescriptionLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel collectionItemDescriptionLabel = new JLabel("", SwingConstants.CENTER);
+    private CustomLabel playlistDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel albumDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel artistDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel radioDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel rankingDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel userDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel recommendItemDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel collectionItemDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
     // 描述部分滚动条
-    private JScrollPane playlistDescriptionScrollPane = new JScrollPane(playlistDescriptionPanel);
-    private JScrollPane albumDescriptionScrollPane = new JScrollPane(albumDescriptionPanel);
-    private JScrollPane artistDescriptionScrollPane = new JScrollPane(artistDescriptionPanel);
-    private JScrollPane radioDescriptionScrollPane = new JScrollPane(radioDescriptionPanel);
-    private JScrollPane rankingDescriptionScrollPane = new JScrollPane(rankingDescriptionPanel);
-    private JScrollPane userDescriptionScrollPane = new JScrollPane(userDescriptionPanel);
-    private JScrollPane recommendItemDescriptionScrollPane = new JScrollPane(recommendItemDescriptionPanel);
-    private JScrollPane collectionItemDescriptionScrollPane = new JScrollPane(collectionItemDescriptionPanel);
+    private CustomScrollPane playlistDescriptionScrollPane = new CustomScrollPane(playlistDescriptionPanel);
+    private CustomScrollPane albumDescriptionScrollPane = new CustomScrollPane(albumDescriptionPanel);
+    private CustomScrollPane artistDescriptionScrollPane = new CustomScrollPane(artistDescriptionPanel);
+    private CustomScrollPane radioDescriptionScrollPane = new CustomScrollPane(radioDescriptionPanel);
+    private CustomScrollPane rankingDescriptionScrollPane = new CustomScrollPane(rankingDescriptionPanel);
+    private CustomScrollPane userDescriptionScrollPane = new CustomScrollPane(userDescriptionPanel);
+    private CustomScrollPane recommendItemDescriptionScrollPane = new CustomScrollPane(recommendItemDescriptionPanel);
+    private CustomScrollPane collectionItemDescriptionScrollPane = new CustomScrollPane(collectionItemDescriptionPanel);
 
     // 全局 Panel
     private GlobalPanel globalPanel = new GlobalPanel();
     // 页面切换 Panel
-    private JPanel changePanePanel = new JPanel();
+    private CustomPanel changePanePanel = new CustomPanel();
     // 控制面板 Panel
-    private JPanel controlPanel = new JPanel();
+    private CustomPanel controlPanel = new CustomPanel();
     // 歌词控制面板 Panel
-    private JPanel controlLrcPanel = new JPanel();
+    private CustomPanel controlLrcPanel = new CustomPanel();
     // 进度条 Panel
-    private JPanel progressPanel = new JPanel();
+    private CustomPanel progressPanel = new CustomPanel();
 
     // 顶部盒子
     private Box topBox = new Box(BoxLayout.X_AXIS);
@@ -2031,80 +2053,88 @@ public class PlayerFrame extends JFrame {
     // 评论盒子
     private Box netCommentBox = new Box(BoxLayout.Y_AXIS);
     // 评论列表
-    private JList<NetCommentInfo> netCommentList = new JList<>();
-    private JScrollPane netCommentScrollPane = new JScrollPane(netCommentList);
+    private CustomList<NetCommentInfo> netCommentList = new CustomList<>();
+    private CustomScrollPane netCommentScrollPane = new CustomScrollPane(netCommentList);
     private DefaultListModel<NetCommentInfo> netCommentListModel = new DefaultListModel<>();
     // 评论右键弹出菜单
     private CustomPopupMenu netCommentPopupMenu = new CustomPopupMenu(THIS);
     // 评论右键菜单：复制评论
-    private CustomMenuItem netCommentCopyMenuItem = new CustomMenuItem("复制评论        ");
+    private CustomMenuItem netCommentCopyMenuItem = new CustomMenuItem("复制评论");
     // 评论右键菜单：导出用户头像
-    private CustomMenuItem netCommentSaveProfileMenuItem = new CustomMenuItem("导出用户头像        ");
+    private CustomMenuItem netCommentSaveProfileMenuItem = new CustomMenuItem("导出用户头像");
     // 评论右键菜单：查看用户
-    private CustomMenuItem netCommentUserMenuItem = new CustomMenuItem("查看用户        ");
+    private CustomMenuItem netCommentUserMenuItem = new CustomMenuItem("查看用户");
     // 评论右键菜单：查看用户歌单
-    private CustomMenuItem netCommentPlaylistMenuItem = new CustomMenuItem("查看用户歌单        ");
+    private CustomMenuItem netCommentPlaylistMenuItem = new CustomMenuItem("查看用户歌单");
     // 评论右键菜单：查看用户专辑
-    private CustomMenuItem netCommentAlbumMenuItem = new CustomMenuItem("查看用户专辑        ");
+    private CustomMenuItem netCommentAlbumMenuItem = new CustomMenuItem("查看用户专辑");
     // 评论工具栏
-    private JToolBar netCommentToolBar = new JToolBar();
+    private CustomToolBar netCommentToolBar = new CustomToolBar();
     // 评论返回按钮
     private CustomButton netCommentBackwardButton = new CustomButton(backwardIcon);
     // 评论标题标签
-    private JLabel netCommentTitleLabel = new JLabel("");
+    private CustomLabel netCommentTitleLabel = new CustomLabel("");
     // 评论类型下拉框
-    private JComboBox<String> netCommentTypeComboBox = new JComboBox();
+    private CustomComboBox<String> netCommentTypeComboBox = new CustomComboBox();
     // 评论刷新按钮
     private CustomButton netCommentRefreshButton = new CustomButton(refreshIcon);
     // 评论页数框
     private CustomTextField netCommentPageTextField = new CustomTextField(3);
     // 评论跳页按钮
     private CustomButton netCommentGoButton = new CustomButton(goIcon);
+    // 评论第一页按钮
+    private CustomButton netCommentStartPageButton = new CustomButton(startPageIcon);
     // 评论上一页按钮
     private CustomButton netCommentLastPageButton = new CustomButton(lastPageIcon);
     // 评论下一页按钮
     private CustomButton netCommentNextPageButton = new CustomButton(nextPageIcon);
+    // 评论最后一页按钮
+    private CustomButton netCommentEndPageButton = new CustomButton(endPageIcon);
     // 评论数量面板
-    private JPanel netCommentCountPanel = new JPanel();
+    private CustomPanel netCommentCountPanel = new CustomPanel();
     // 评论数量标签
-    private JLabel netCommentCountLabel = new JLabel("");
+    private CustomLabel netCommentCountLabel = new CustomLabel("");
     // 当前显示评论的对象信息
     private Object currCommentObjectInfo;
 
     // 曲谱盒子
     private Box netSheetBox = new Box(BoxLayout.Y_AXIS);
     // 曲谱列表
-    private JList<NetSheetInfo> netSheetList = new JList<>();
-    private JScrollPane netSheetScrollPane = new JScrollPane(netSheetList);
+    private CustomList<NetSheetInfo> netSheetList = new CustomList<>();
+    private CustomScrollPane netSheetScrollPane = new CustomScrollPane(netSheetList);
     private DefaultListModel<NetSheetInfo> netSheetListModel = new DefaultListModel<>();
     // 曲谱右键弹出菜单
     private CustomPopupMenu netSheetPopupMenu = new CustomPopupMenu(THIS);
     // 曲谱右键菜单：查看曲谱
-    private CustomMenuItem netSheetBrowseMenuItem = new CustomMenuItem("查看曲谱        ");
+    private CustomMenuItem netSheetBrowseMenuItem = new CustomMenuItem("查看曲谱");
     // 曲谱右键菜单：复制名称
-    private CustomMenuItem netSheetCopyNameMenuItem = new CustomMenuItem("复制名称        ");
+    private CustomMenuItem netSheetCopyNameMenuItem = new CustomMenuItem("复制名称");
     // 曲谱工具栏
-    private JToolBar netSheetToolBar = new JToolBar();
+    private CustomToolBar netSheetToolBar = new CustomToolBar();
     // 曲谱返回按钮
     private CustomButton netSheetBackwardButton = new CustomButton(backwardIcon);
     // 曲谱标题标签
-    private JLabel netSheetTitleLabel = new JLabel("");
+    private CustomLabel netSheetTitleLabel = new CustomLabel("");
     //    // 曲谱类型下拉框
-//    private JComboBox<String> netSheetTypeComboBox = new JComboBox();
+//    private CustomComboBox<String> netSheetTypeComboBox = new CustomComboBox();
     // 曲谱刷新按钮
     private CustomButton netSheetRefreshButton = new CustomButton(refreshIcon);
     // 曲谱页数框
     private CustomTextField netSheetPageTextField = new CustomTextField(3);
     // 曲谱跳页按钮
     private CustomButton netSheetGoButton = new CustomButton(goIcon);
+    // 曲谱第一页按钮
+    private CustomButton netSheetStartPageButton = new CustomButton(startPageIcon);
     // 曲谱上一页按钮
     private CustomButton netSheetLastPageButton = new CustomButton(lastPageIcon);
     // 曲谱下一页按钮
     private CustomButton netSheetNextPageButton = new CustomButton(nextPageIcon);
+    // 曲谱最后一页按钮
+    private CustomButton netSheetEndPageButton = new CustomButton(endPageIcon);
     // 曲谱数量面板
-    private JPanel netSheetCountPanel = new JPanel();
+    private CustomPanel netSheetCountPanel = new CustomPanel();
     // 曲谱数量标签
-    private JLabel netSheetCountLabel = new JLabel("");
+    private CustomLabel netSheetCountLabel = new CustomLabel("");
     // 当前显示曲谱的歌曲信息
     private NetMusicInfo currSheetMusicInfo;
 
@@ -2519,8 +2549,9 @@ public class PlayerFrame extends JFrame {
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setIcon(titleIcon);
-        titleLabel.setIconTextGap(15);          // 标题图标与文字间距
+        titleLabel.setIconTextGap(15);
         titleLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -2657,22 +2688,6 @@ public class PlayerFrame extends JFrame {
         minimizeButton.addMouseListener(new ButtonMouseListener(minimizeButton, THIS));
         maximizeButton.addMouseListener(new ButtonMouseListener(maximizeButton, THIS));
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, THIS));
-        // 不能聚焦
-        hideDetailButton.setFocusable(false);
-        styleToolButton.setFocusable(false);
-        mainMenuButton.setFocusable(false);
-        miniButton.setFocusable(false);
-        minimizeButton.setFocusable(false);
-        maximizeButton.setFocusable(false);
-        closeButton.setFocusable(false);
-        // 无填充
-        hideDetailButton.setContentAreaFilled(false);
-        styleToolButton.setContentAreaFilled(false);
-        mainMenuButton.setContentAreaFilled(false);
-        miniButton.setContentAreaFilled(false);
-        minimizeButton.setContentAreaFilled(false);
-        maximizeButton.setContentAreaFilled(false);
-        closeButton.setContentAreaFilled(false);
 
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         fl.setHgap(16);
@@ -3127,8 +3142,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMusicHistorySearchInnerPanel2.add(b);
@@ -3171,8 +3184,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netPlaylistHistorySearchInnerPanel2.add(b);
@@ -3215,8 +3226,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netAlbumHistorySearchInnerPanel2.add(b);
@@ -3259,8 +3268,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netArtistHistorySearchInnerPanel2.add(b);
@@ -3303,8 +3310,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netRadioHistorySearchInnerPanel2.add(b);
@@ -3347,8 +3352,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMvHistorySearchInnerPanel2.add(b);
@@ -3391,8 +3394,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netUserHistorySearchInnerPanel2.add(b);
@@ -4300,74 +4301,50 @@ public class PlayerFrame extends JFrame {
         personalMusicLabel.setIconTextGap(gap);
         personalMusicLabel.setVerticalAlignment(SwingConstants.CENTER);
         personalMusicPanel.add(personalMusicLabel);
-        personalMusicPanel.setOpaque(false);
-//        personalMusicBox.add(personalMusicPanel);
 
         netMusicLabel.setIconTextGap(gap);
         netMusicLabel.setVerticalAlignment(SwingConstants.CENTER);
         netMusicPanel.add(netMusicLabel);
-        netMusicPanel.setOpaque(false);
-//        netMusicBox.add(netMusicPanel);
 
         netPlaylistLabel.setIconTextGap(gap);
         netPlaylistLabel.setVerticalAlignment(SwingConstants.CENTER);
         netPlaylistPanel.add(netPlaylistLabel);
-        netPlaylistPanel.setOpaque(false);
-//        netPlaylistBox.add(netPlaylistPanel);
 
         netAlbumLabel.setIconTextGap(gap);
         netAlbumLabel.setVerticalAlignment(SwingConstants.CENTER);
         netAlbumPanel.add(netAlbumLabel);
-        netAlbumPanel.setOpaque(false);
-//        netAlbumBox.add(netAlbumPanel);
 
         netArtistLabel.setIconTextGap(gap);
         netArtistLabel.setVerticalAlignment(SwingConstants.CENTER);
         netArtistPanel.add(netArtistLabel);
-        netArtistPanel.setOpaque(false);
-//        netArtistBox.add(netArtistPanel);
 
         netRadioLabel.setIconTextGap(gap);
         netRadioLabel.setVerticalAlignment(SwingConstants.CENTER);
         netRadioPanel.add(netRadioLabel);
-        netRadioPanel.setOpaque(false);
-//        netRadioBox.add(netRadioPanel);
 
         netMvLabel.setIconTextGap(gap);
         netMvLabel.setVerticalAlignment(SwingConstants.CENTER);
         netMvPanel.add(netMvLabel);
-        netMvPanel.setOpaque(false);
-//        netMvBox.add(netMvPanel);
 
         netRankingLabel.setIconTextGap(gap);
         netRankingLabel.setVerticalAlignment(SwingConstants.CENTER);
         netRankingPanel.add(netRankingLabel);
-        netRankingPanel.setOpaque(false);
-//        netRankingBox.add(netRankingPanel);
 
         netUserLabel.setIconTextGap(gap);
         netUserLabel.setVerticalAlignment(SwingConstants.CENTER);
         netUserPanel.add(netUserLabel);
-        netUserPanel.setOpaque(false);
-//        netUserBox.add(netUserPanel);
 
         recommendLabel.setIconTextGap(gap);
         recommendLabel.setVerticalAlignment(SwingConstants.CENTER);
         recommendPanel.add(recommendLabel);
-        recommendPanel.setOpaque(false);
-//        recommendBox.add(recommendPanel);
 
         downloadManagementLabel.setIconTextGap(gap);
         downloadManagementLabel.setVerticalAlignment(SwingConstants.CENTER);
         downloadManagementPanel.add(downloadManagementLabel);
-        downloadManagementPanel.setOpaque(false);
-//        downloadManagementBox.add(downloadManagementPanel);
 
         playQueueLabel.setIconTextGap(gap);
         playQueueLabel.setVerticalAlignment(SwingConstants.CENTER);
         playQueuePanel.add(playQueueLabel);
-        playQueuePanel.setOpaque(false);
-//        playQueueBox.add(playQueuePanel);
 
         // 标签大小统一
         Dimension d = new Dimension(130, 42);
@@ -4746,43 +4723,27 @@ public class PlayerFrame extends JFrame {
         int gap = 10;
         musicCollectionLabel.setIconTextGap(gap);
         musicCollectionPanel.add(musicCollectionLabel);
-        musicCollectionPanel.setOpaque(false);
-//        musicCollectionBox.add(musicCollectionPanel);
 
         playlistCollectionLabel.setIconTextGap(gap);
         playlistCollectionPanel.add(playlistCollectionLabel);
-        playlistCollectionPanel.setOpaque(false);
-//        playlistCollectionBox.add(playlistCollectionPanel);
 
         albumCollectionLabel.setIconTextGap(gap);
         albumCollectionPanel.add(albumCollectionLabel);
-        albumCollectionPanel.setOpaque(false);
-//        albumCollectionBox.add(albumCollectionPanel);
 
         artistCollectionLabel.setIconTextGap(gap);
         artistCollectionPanel.add(artistCollectionLabel);
-        artistCollectionPanel.setOpaque(false);
-//        artistCollectionBox.add(artistCollectionPanel);
 
         radioCollectionLabel.setIconTextGap(gap);
         radioCollectionPanel.add(radioCollectionLabel);
-        radioCollectionPanel.setOpaque(false);
-//        radioCollectionBox.add(radioCollectionPanel);
 
         mvCollectionLabel.setIconTextGap(gap);
         mvCollectionPanel.add(mvCollectionLabel);
-        mvCollectionPanel.setOpaque(false);
-//        mvCollectionBox.add(mvCollectionPanel);
 
         rankingCollectionLabel.setIconTextGap(gap);
         rankingCollectionPanel.add(rankingCollectionLabel);
-        rankingCollectionPanel.setOpaque(false);
-//        rankingCollectionBox.add(rankingCollectionPanel);
 
         userCollectionLabel.setIconTextGap(gap);
         userCollectionPanel.add(userCollectionLabel);
-        userCollectionPanel.setOpaque(false);
-//        userCollectionBox.add(userCollectionPanel);
 
         // 添加标签对应的内容
         collectionTabbedPane.addTab(null, null, musicCollectionLeftBox);
@@ -5185,6 +5146,15 @@ public class PlayerFrame extends JFrame {
         collectionRefreshButton.addActionListener(e -> {
             collectionGoPageAction.run();
         });
+        // 第一页按钮事件
+        collectionStartPageButton.addActionListener(e -> {
+            if (netMusicInCollectionCurrPage == 1) {
+                new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                return;
+            }
+            netMusicInCollectionCurrPage = 1;
+            collectionGoPageAction.run();
+        });
         // 上一页按钮事件
         collectionLastPageButton.addActionListener(e -> {
             if (netMusicInCollectionCurrPage == 1) {
@@ -5203,6 +5173,15 @@ public class PlayerFrame extends JFrame {
             netMusicInCollectionCurrPage++;
             collectionGoPageAction.run();
         });
+        // 最后一页按钮事件
+        collectionEndPageButton.addActionListener(e -> {
+            if (netMusicInCollectionCurrPage == netMusicInCollectionMaxPage) {
+                new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                return;
+            }
+            netMusicInCollectionCurrPage = netMusicInCollectionMaxPage;
+            collectionGoPageAction.run();
+        });
         // 跳页按钮事件
         collectionGoButton.addActionListener(e -> {
             String text = collectionPageTextField.getText();
@@ -5216,51 +5195,40 @@ public class PlayerFrame extends JFrame {
             netMusicInCollectionCurrPage = destPage;
             collectionGoPageAction.run();
         });
-        // 边框
-        collectionRecordTypeComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         collectionRecordTypeComboBox.setVisible(false);
         // 控制按钮大小
         Dimension dimension = new Dimension(20, 20);
         collectionRefreshButton.setPreferredSize(dimension);
+        collectionStartPageButton.setPreferredSize(dimension);
         collectionLastPageButton.setPreferredSize(dimension);
         collectionGoButton.setPreferredSize(dimension);
         collectionNextPageButton.setPreferredSize(dimension);
+        collectionEndPageButton.setPreferredSize(dimension);
         // 全局字体
         collectionRecordTypeComboBox.setFont(globalFont);
         collectionPlayAllButton.setFont(globalFont);
         collectionCountLabel.setFont(globalFont);
         collectionPageTextField.setFont(globalFont);
-        // 按钮去掉周围的虚线框
-        collectionBackwardButton.setFocusPainted(false);
-        collectionPlayAllButton.setFocusPainted(false);
-        collectionRefreshButton.setFocusPainted(false);
-        collectionLastPageButton.setFocusPainted(false);
-        collectionGoButton.setFocusPainted(false);
-        collectionNextPageButton.setFocusPainted(false);
-        // 去掉填充
-        collectionBackwardButton.setContentAreaFilled(false);
-        collectionPlayAllButton.setContentAreaFilled(false);
-        collectionRefreshButton.setContentAreaFilled(false);
-        collectionLastPageButton.setContentAreaFilled(false);
-        collectionGoButton.setContentAreaFilled(false);
-        collectionNextPageButton.setContentAreaFilled(false);
         // 按钮悬浮与点击效果
         collectionBackwardButton.addMouseListener(new ButtonMouseListener(collectionBackwardButton, THIS));
         collectionPlayAllButton.addMouseListener(new ButtonMouseListener(collectionPlayAllButton, THIS));
         collectionRefreshButton.addMouseListener(new ButtonMouseListener(collectionRefreshButton, THIS));
+        collectionStartPageButton.addMouseListener(new ButtonMouseListener(collectionStartPageButton, THIS));
         collectionLastPageButton.addMouseListener(new ButtonMouseListener(collectionLastPageButton, THIS));
         collectionGoButton.addMouseListener(new ButtonMouseListener(collectionGoButton, THIS));
         collectionNextPageButton.addMouseListener(new ButtonMouseListener(collectionNextPageButton, THIS));
+        collectionEndPageButton.addMouseListener(new ButtonMouseListener(collectionEndPageButton, THIS));
         // 提示语
         collectionBackwardButton.setToolTipText(BACKWARD_TIP);
         collectionPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         collectionRefreshButton.setToolTipText(REFRESH_TIP);
+        collectionStartPageButton.setToolTipText(START_PAGE_TIP);
         collectionLastPageButton.setToolTipText(LAST_PAGE_TIP);
         collectionGoButton.setToolTipText(GO_TIP);
         collectionNextPageButton.setToolTipText(NEXT_PAGE_TIP);
+        collectionEndPageButton.setToolTipText(END_PAGE_TIP);
 
         // 收藏歌单/专辑/歌手/电台/榜单中歌曲的工具栏，暂时不放入
-        musicCollectionToolBar.setFloatable(false);
         musicCollectionToolBar.add(collectionBackwardButton);
         musicCollectionToolBar.add(Box.createHorizontalGlue());
 
@@ -5271,8 +5239,10 @@ public class PlayerFrame extends JFrame {
         collectionCountPanel.add(collectionRefreshButton);
         collectionCountPanel.add(collectionPageTextField);
         collectionCountPanel.add(collectionGoButton);
+        collectionCountPanel.add(collectionStartPageButton);
         collectionCountPanel.add(collectionLastPageButton);
         collectionCountPanel.add(collectionNextPageButton);
+        collectionCountPanel.add(collectionEndPageButton);
         collectionCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         collectionLeftBox.add(collectionCountPanel);
     }
@@ -5998,7 +5968,6 @@ public class PlayerFrame extends JFrame {
         // 滚动条
         collectionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         collectionScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        collectionScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         // 最佳大小
         collectionScrollPane.setPreferredSize(new Dimension(200, 600));
         playlistCollectionLeftBox.add(collectionScrollPane);
@@ -6202,14 +6171,6 @@ public class PlayerFrame extends JFrame {
         localMusicButton.setFont(globalFont);
         historyButton.setFont(globalFont);
         collectionButton.setFont(globalFont);
-        // 按钮去掉周围的虚线框
-        localMusicButton.setFocusPainted(false);
-        historyButton.setFocusPainted(false);
-        collectionButton.setFocusPainted(false);
-        // 去掉按钮填充
-        localMusicButton.setContentAreaFilled(false);
-        historyButton.setContentAreaFilled(false);
-        collectionButton.setContentAreaFilled(false);
         // 按钮悬浮和点击效果
         localMusicButton.addMouseListener(new ButtonMouseListener(localMusicButton, THIS));
         historyButton.addMouseListener(new ButtonMouseListener(historyButton, THIS));
@@ -6233,8 +6194,7 @@ public class PlayerFrame extends JFrame {
         collectionButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         collectionButton.setIconTextGap(gap);
 //        collectionButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-        // 不可浮动
-        personalMusicToolBar.setFloatable(false);
+
 //        // 推荐工具栏网格布局
         personalMusicToolBar.setLayout(new GridLayout(1, 3));
         personalMusicToolBar.add(localMusicButton);
@@ -6245,30 +6205,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始化离线音乐工具栏
     void musicToolBarInit() {
-        // 按钮去掉周围的虚线框
-        addToolButton.setFocusPainted(false);
-        reimportToolButton.setFocusPainted(false);
-        manageCatalogToolButton.setFocusPainted(false);
-        removeToolButton.setFocusPainted(false);
-        clearToolButton.setFocusPainted(false);
-        duplicateToolButton.setFocusPainted(false);
-        reverseToolButton.setFocusPainted(false);
-        sortToolButton.setFocusPainted(false);
-        moveUpToolButton.setFocusPainted(false);
-        moveDownToolButton.setFocusPainted(false);
-        clearInputToolButton.setFocusPainted(false);
-        // 按钮去掉填充
-        addToolButton.setContentAreaFilled(false);
-        reimportToolButton.setContentAreaFilled(false);
-        manageCatalogToolButton.setContentAreaFilled(false);
-        removeToolButton.setContentAreaFilled(false);
-        clearToolButton.setContentAreaFilled(false);
-        duplicateToolButton.setContentAreaFilled(false);
-        reverseToolButton.setContentAreaFilled(false);
-        sortToolButton.setContentAreaFilled(false);
-        moveUpToolButton.setContentAreaFilled(false);
-        moveDownToolButton.setContentAreaFilled(false);
-        clearInputToolButton.setContentAreaFilled(false);
         // 按钮悬浮和点击效果
         addToolButton.addMouseListener(new ButtonMouseListener(addToolButton, THIS));
         reimportToolButton.addMouseListener(new ButtonMouseListener(reimportToolButton, THIS));
@@ -6638,7 +6574,7 @@ public class PlayerFrame extends JFrame {
         // 点击上下移按钮事件
         moveUpToolButton.addActionListener(e -> {
             int index = collectionTabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                     || index == CollectionTabIndex.MUSIC) {
                 list = musicList;
@@ -6655,7 +6591,7 @@ public class PlayerFrame extends JFrame {
         });
         moveDownToolButton.addActionListener(e -> {
             int index = collectionTabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                     || index == CollectionTabIndex.MUSIC) {
                 list = musicList;
@@ -6740,8 +6676,7 @@ public class PlayerFrame extends JFrame {
         clearInputToolButton.setToolTipText(CLEAR_INPUT_TIP);
         // 清除输入按钮初始不可见
         clearInputToolButton.setVisible(false);
-        // 不可浮动
-        musicToolBar.setFloatable(false);
+
         musicToolBar.add(addToolButton);
         musicToolBar.add(reimportToolButton);
         musicToolBar.add(manageCatalogToolButton);
@@ -7127,7 +7062,6 @@ public class PlayerFrame extends JFrame {
         musicScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 歌单最佳大小
         musicScrollPane.setPreferredSize(new Dimension(260, 3000));
-        musicScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         leftBox.add(musicScrollPane);
     }
 
@@ -7214,8 +7148,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -7370,6 +7302,15 @@ public class PlayerFrame extends JFrame {
         netMusicRefreshButton.addActionListener(e -> {
             netMusicGoPageAction.run();
         });
+        // 第一页按钮
+        netMusicStartPageButton.addActionListener(e -> {
+            if (netMusicCurrPage == 1) {
+                new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                return;
+            }
+            netMusicCurrPage = 1;
+            netMusicGoPageAction.run();
+        });
         // 上一页按钮事件
         netMusicLastPageButton.addActionListener(e -> {
             if (netMusicCurrPage == 1) {
@@ -7388,6 +7329,15 @@ public class PlayerFrame extends JFrame {
             netMusicCurrPage++;
             netMusicGoPageAction.run();
         });
+        // 最后一页按钮
+        netMusicEndPageButton.addActionListener(e -> {
+            if (netMusicCurrPage == netMusicMaxPage) {
+                new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                return;
+            }
+            netMusicCurrPage = netMusicMaxPage;
+            netMusicGoPageAction.run();
+        });
         // 跳页按钮事件
         netMusicGoButton.addActionListener(e -> {
             String text = netMusicPageTextField.getText();
@@ -7404,33 +7354,21 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netMusicRefreshButton.setPreferredSize(dimension);
+        netMusicStartPageButton.setPreferredSize(dimension);
         netMusicLastPageButton.setPreferredSize(dimension);
         netMusicGoButton.setPreferredSize(dimension);
         netMusicNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netMusicBackwardButton.setFocusPainted(false);
-        netMusicClearInputButton.setFocusPainted(false);
-        searchButton.setFocusPainted(false);
-        netMusicRefreshButton.setFocusPainted(false);
-        netMusicLastPageButton.setFocusPainted(false);
-        netMusicGoButton.setFocusPainted(false);
-        netMusicNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netMusicBackwardButton.setContentAreaFilled(false);
-        netMusicClearInputButton.setContentAreaFilled(false);
-        searchButton.setContentAreaFilled(false);
-        netMusicRefreshButton.setContentAreaFilled(false);
-        netMusicLastPageButton.setContentAreaFilled(false);
-        netMusicGoButton.setContentAreaFilled(false);
-        netMusicNextPageButton.setContentAreaFilled(false);
+        netMusicEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netMusicBackwardButton.addMouseListener(new ButtonMouseListener(netMusicBackwardButton, THIS));
         netMusicClearInputButton.addMouseListener(new ButtonMouseListener(netMusicClearInputButton, THIS));
         searchButton.addMouseListener(new ButtonMouseListener(searchButton, THIS));
         netMusicRefreshButton.addMouseListener(new ButtonMouseListener(netMusicRefreshButton, THIS));
+        netMusicStartPageButton.addMouseListener(new ButtonMouseListener(netMusicStartPageButton, THIS));
         netMusicLastPageButton.addMouseListener(new ButtonMouseListener(netMusicLastPageButton, THIS));
         netMusicGoButton.addMouseListener(new ButtonMouseListener(netMusicGoButton, THIS));
         netMusicNextPageButton.addMouseListener(new ButtonMouseListener(netMusicNextPageButton, THIS));
+        netMusicEndPageButton.addMouseListener(new ButtonMouseListener(netMusicEndPageButton, THIS));
         // 全局字体
         netMusicTitleLabel.setFont(globalFont);
         searchTextField.setFont(globalFont);
@@ -7443,15 +7381,12 @@ public class PlayerFrame extends JFrame {
         netMusicClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
         searchButton.setToolTipText(SEARCH_TIP);
         netMusicRefreshButton.setToolTipText(REFRESH_TIP);
+        netMusicStartPageButton.setToolTipText(START_PAGE_TIP);
         netMusicLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netMusicGoButton.setToolTipText(GO_TIP);
         netMusicNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 边框
-        Border eb = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-        netMusicSearchTypeComboBox.setBorder(eb);
-        netMusicSearchSubTypeComboBox.setBorder(eb);
-        // 不可浮动
-        netMusicToolBar.setFloatable(false);
+        netMusicEndPageButton.setToolTipText(END_PAGE_TIP);
+
         // 回到关键词面板起始不可用
         netMusicBackwardButton.setEnabled(false);
         // 清除输入按钮初始不可见
@@ -7470,8 +7405,10 @@ public class PlayerFrame extends JFrame {
         netMusicCountPanel.add(netMusicRefreshButton);
         netMusicCountPanel.add(netMusicPageTextField);
         netMusicCountPanel.add(netMusicGoButton);
+        netMusicCountPanel.add(netMusicStartPageButton);
         netMusicCountPanel.add(netMusicLastPageButton);
         netMusicCountPanel.add(netMusicNextPageButton);
+        netMusicCountPanel.add(netMusicEndPageButton);
         netMusicCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netMusicCountPanel.setVisible(false);
         netLeftBox.add(netMusicCountPanel);
@@ -8174,8 +8111,6 @@ public class PlayerFrame extends JFrame {
         // 刷新搜索建议按钮
         netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.submit(() -> updateSearchSuggestion()));
         netMusicRefreshSearchSuggestionButton.setPreferredSize(new Dimension(20, 20));
-        netMusicRefreshSearchSuggestionButton.setFocusable(false);
-        netMusicRefreshSearchSuggestionButton.setContentAreaFilled(false);
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshSearchSuggestionButton.addMouseListener(new ButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
 
@@ -8198,8 +8133,6 @@ public class PlayerFrame extends JFrame {
         // 刷新热门搜索按钮
         netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.submit(() -> updateHotSearch()));
         netMusicRefreshHotSearchButton.setPreferredSize(new Dimension(20, 20));
-        netMusicRefreshHotSearchButton.setFocusable(false);
-        netMusicRefreshHotSearchButton.setContentAreaFilled(false);
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshHotSearchButton.addMouseListener(new ButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
 
@@ -8226,8 +8159,6 @@ public class PlayerFrame extends JFrame {
             netMusicKeywordsPanel.repaint();
         });
         netMusicClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
-        netMusicClearHistorySearchButton.setFocusable(false);
-        netMusicClearHistorySearchButton.setContentAreaFilled(false);
         netMusicClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMusicClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMusicClearHistorySearchButton, THIS));
 
@@ -8245,7 +8176,6 @@ public class PlayerFrame extends JFrame {
         netMusicKeywordsPanel.setLayout(new BoxLayout(netMusicKeywordsPanel, BoxLayout.Y_AXIS));
 //        // 滚动条监听器
 //        netMusicKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netMusicKeywordsPanelScrollPane, THIS));
-        netMusicKeywordsPanelScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netMusicKeywordsPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         netMusicKeywordsPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -8265,7 +8195,6 @@ public class PlayerFrame extends JFrame {
         });
         // 在线歌单最佳大小
         netMusicScrollPane.setPreferredSize(new Dimension(200, 600));
-        netMusicScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netLeftBox.add(netMusicScrollPane);
     }
 
@@ -8408,24 +8337,6 @@ public class PlayerFrame extends JFrame {
         userDescriptionScrollPane.setMaximumSize(size);
         recommendItemDescriptionScrollPane.setMaximumSize(size);
         collectionItemDescriptionScrollPane.setMaximumSize(size);
-        // 滚动速度
-        JScrollBar playlistDescriptionScrollBar = playlistDescriptionScrollPane.getVerticalScrollBar();
-        JScrollBar albumDescriptionScrollBar = albumDescriptionScrollPane.getVerticalScrollBar();
-        JScrollBar artistDescriptionScrollBar = artistDescriptionScrollPane.getVerticalScrollBar();
-        JScrollBar radioDescriptionScrollBar = radioDescriptionScrollPane.getVerticalScrollBar();
-        JScrollBar rankingDescriptionScrollBar = rankingDescriptionScrollPane.getVerticalScrollBar();
-        JScrollBar userDescriptionScrollBar = userDescriptionScrollPane.getVerticalScrollBar();
-        JScrollBar recommendItemDescriptionScrollBar = recommendItemDescriptionScrollPane.getVerticalScrollBar();
-        JScrollBar collectionItemDescriptionScrollBar = collectionItemDescriptionScrollPane.getVerticalScrollBar();
-        int increment = 30;
-        playlistDescriptionScrollBar.setUnitIncrement(increment);
-        albumDescriptionScrollBar.setUnitIncrement(increment);
-        artistDescriptionScrollBar.setUnitIncrement(increment);
-        radioDescriptionScrollBar.setUnitIncrement(increment);
-        rankingDescriptionScrollBar.setUnitIncrement(increment);
-        userDescriptionScrollBar.setUnitIncrement(increment);
-        recommendItemDescriptionScrollBar.setUnitIncrement(increment);
-        collectionItemDescriptionScrollBar.setUnitIncrement(increment);
         // 滚动条监听器
         playlistDescriptionScrollPane.addMouseListener(new ScrollPaneListener(playlistDescriptionScrollPane, THIS));
         albumDescriptionScrollPane.addMouseListener(new ScrollPaneListener(albumDescriptionScrollPane, THIS));
@@ -8436,22 +8347,22 @@ public class PlayerFrame extends JFrame {
         recommendItemDescriptionScrollPane.addMouseListener(new ScrollPaneListener(recommendItemDescriptionScrollPane, THIS));
         collectionItemDescriptionScrollPane.addMouseListener(new ScrollPaneListener(collectionItemDescriptionScrollPane, THIS));
         // 滚动条显示机制
-        playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        playlistDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        albumDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        albumDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        artistDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        artistDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        radioDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        radioDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        rankingDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        rankingDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        userDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        userDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        recommendItemDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        recommendItemDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        collectionItemDescriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        collectionItemDescriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        playlistDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        albumDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        albumDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        artistDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        artistDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        radioDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        radioDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        rankingDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        rankingDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        userDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        userDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        recommendItemDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        recommendItemDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        collectionItemDescriptionScrollPane.setHorizontalScrollBarPolicy(CustomScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        collectionItemDescriptionScrollPane.setVerticalScrollBarPolicy(CustomScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         // 描述面板更新
         playlistDescriptionPanel.setLayout(new BoxLayout(playlistDescriptionPanel, BoxLayout.Y_AXIS));
         albumDescriptionPanel.setLayout(new BoxLayout(albumDescriptionPanel, BoxLayout.Y_AXIS));
@@ -8529,7 +8440,7 @@ public class PlayerFrame extends JFrame {
             if (o instanceof NetUserInfo) saveImg(((NetUserInfo) o).getBgImg());
         });
         copyDescNameMenuItem.addActionListener(e -> {
-            JLabel l = null;
+            CustomLabel l = null;
             int si = tabbedPane.getSelectedIndex();
             if (si == TabIndex.PERSONAL) l = collectionItemCoverAndNameLabel;
             else if (si == TabIndex.NET_PLAYLIST) l = playlistCoverAndNameLabel;
@@ -8544,7 +8455,7 @@ public class PlayerFrame extends JFrame {
             clipboard.setContents(stringSelection, null);
         });
         copyDescTagMenuItem.addActionListener(e -> {
-            JLabel l = null;
+            CustomLabel l = null;
             int si = tabbedPane.getSelectedIndex();
             if (si == TabIndex.PERSONAL) l = collectionItemTagLabel;
             else if (si == TabIndex.NET_PLAYLIST) l = playlistTagLabel;
@@ -8558,7 +8469,7 @@ public class PlayerFrame extends JFrame {
             clipboard.setContents(stringSelection, null);
         });
         copyDescMenuItem.addActionListener(e -> {
-            JLabel l = null;
+            CustomLabel l = null;
             int si = tabbedPane.getSelectedIndex();
             if (si == TabIndex.PERSONAL) l = collectionItemDescriptionLabel;
             else if (si == TabIndex.NET_PLAYLIST) l = playlistDescriptionLabel;
@@ -8711,8 +8622,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -8897,6 +8806,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInPlaylist.run();
             }
         });
+        // 第一页按钮事件
+        netPlaylistStartPageButton.addActionListener(e -> {
+            Component lc = netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1);
+            // 当前显示的是歌单列表，跳到第一页歌单
+            if (lc == netPlaylistScrollPane || lc == emptyHintPanel) {
+                if (netPlaylistCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netPlaylistCurrPage = 1;
+                searchPlaylistGoPageAction.run();
+            }
+            // 当前显示的是某歌单的歌曲，跳到第一页歌曲
+            else {
+                if (netMusicInPlaylistCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInPlaylistCurrPage = 1;
+                searchMusicInPlaylist.run();
+            }
+        });
         // 上一页按钮事件
         netPlaylistLastPageButton.addActionListener(e -> {
             Component lc = netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1);
@@ -8941,6 +8872,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInPlaylist.run();
             }
         });
+        // 最后一页按钮事件
+        netPlaylistEndPageButton.addActionListener(e -> {
+            Component lc = netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1);
+            // 当前显示的是歌单列表，跳到最后一页歌单
+            if (lc == netPlaylistScrollPane || lc == emptyHintPanel) {
+                if (netPlaylistCurrPage == netPlaylistMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netPlaylistCurrPage = netPlaylistMaxPage;
+                searchPlaylistGoPageAction.run();
+            }
+            // 当前显示的是某歌单的歌曲，跳到最后一页歌曲
+            else {
+                if (netMusicInPlaylistCurrPage == netMusicInPlaylistMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInPlaylistCurrPage = netMusicInPlaylistMaxPage;
+                searchMusicInPlaylist.run();
+            }
+        });
         // 跳页按钮事件
         netPlaylistGoButton.addActionListener(e -> {
             Component lc = netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1);
@@ -8979,36 +8932,22 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netPlaylistRefreshButton.setPreferredSize(dimension);
+        netPlaylistStartPageButton.setPreferredSize(dimension);
         netPlaylistLastPageButton.setPreferredSize(dimension);
         netPlaylistGoButton.setPreferredSize(dimension);
         netPlaylistNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netPlaylistBackwardButton.setFocusPainted(false);
-        netPlaylistClearInputButton.setFocusPainted(false);
-        netPlaylistSearchButton.setFocusPainted(false);
-        netPlaylistPlayAllButton.setFocusPainted(false);
-        netPlaylistRefreshButton.setFocusPainted(false);
-        netPlaylistLastPageButton.setFocusPainted(false);
-        netPlaylistGoButton.setFocusPainted(false);
-        netPlaylistNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netPlaylistBackwardButton.setContentAreaFilled(false);
-        netPlaylistClearInputButton.setContentAreaFilled(false);
-        netPlaylistSearchButton.setContentAreaFilled(false);
-        netPlaylistPlayAllButton.setContentAreaFilled(false);
-        netPlaylistRefreshButton.setContentAreaFilled(false);
-        netPlaylistLastPageButton.setContentAreaFilled(false);
-        netPlaylistGoButton.setContentAreaFilled(false);
-        netPlaylistNextPageButton.setContentAreaFilled(false);
+        netPlaylistEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netPlaylistBackwardButton.addMouseListener(new ButtonMouseListener(netPlaylistBackwardButton, THIS));
         netPlaylistClearInputButton.addMouseListener(new ButtonMouseListener(netPlaylistClearInputButton, THIS));
         netPlaylistSearchButton.addMouseListener(new ButtonMouseListener(netPlaylistSearchButton, THIS));
         netPlaylistPlayAllButton.addMouseListener(new ButtonMouseListener(netPlaylistPlayAllButton, THIS));
         netPlaylistRefreshButton.addMouseListener(new ButtonMouseListener(netPlaylistRefreshButton, THIS));
+        netPlaylistStartPageButton.addMouseListener(new ButtonMouseListener(netPlaylistStartPageButton, THIS));
         netPlaylistLastPageButton.addMouseListener(new ButtonMouseListener(netPlaylistLastPageButton, THIS));
         netPlaylistGoButton.addMouseListener(new ButtonMouseListener(netPlaylistGoButton, THIS));
         netPlaylistNextPageButton.addMouseListener(new ButtonMouseListener(netPlaylistNextPageButton, THIS));
+        netPlaylistEndPageButton.addMouseListener(new ButtonMouseListener(netPlaylistEndPageButton, THIS));
         // 全局字体
         netPlaylistTitleLabel.setFont(globalFont);
         netPlaylistSearchTextField.setFont(globalFont);
@@ -9021,11 +8960,12 @@ public class PlayerFrame extends JFrame {
         netPlaylistSearchButton.setToolTipText(SEARCH_TIP);
         netPlaylistPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netPlaylistRefreshButton.setToolTipText(REFRESH_TIP);
+        netPlaylistStartPageButton.setToolTipText(START_PAGE_TIP);
         netPlaylistLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netPlaylistGoButton.setToolTipText(GO_TIP);
         netPlaylistNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netPlaylistToolBar.setFloatable(false);
+        netPlaylistEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netPlaylistToolBar.add(netPlaylistBackwardButton);
         netPlaylistToolBar.add(netPlaylistSearchTextField);
         netPlaylistToolBar.add(netPlaylistClearInputButton);
@@ -9038,8 +8978,10 @@ public class PlayerFrame extends JFrame {
         netPlaylistCountPanel.add(netPlaylistRefreshButton);
         netPlaylistCountPanel.add(netPlaylistPageTextField);
         netPlaylistCountPanel.add(netPlaylistGoButton);
+        netPlaylistCountPanel.add(netPlaylistStartPageButton);
         netPlaylistCountPanel.add(netPlaylistLastPageButton);
         netPlaylistCountPanel.add(netPlaylistNextPageButton);
+        netPlaylistCountPanel.add(netPlaylistEndPageButton);
         netPlaylistCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netPlaylistCountPanel.setVisible(false);
         netPlaylistLeftBox.add(netPlaylistCountPanel);
@@ -9263,7 +9205,7 @@ public class PlayerFrame extends JFrame {
         // 收藏歌单
         netPlaylistCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (index == TabIndex.NET_PLAYLIST) list = netPlaylistList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
@@ -9543,8 +9485,6 @@ public class PlayerFrame extends JFrame {
             netPlaylistKeywordsPanel.repaint();
         });
         netPlaylistClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
-        netPlaylistClearHistorySearchButton.setFocusable(false);
-        netPlaylistClearHistorySearchButton.setContentAreaFilled(false);
         netPlaylistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netPlaylistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netPlaylistClearHistorySearchButton, THIS));
 
@@ -9562,7 +9502,6 @@ public class PlayerFrame extends JFrame {
         netPlaylistKeywordsPanel.setLayout(new BoxLayout(netPlaylistKeywordsPanel, BoxLayout.Y_AXIS));
 //        // 滚动条监听器
 //        netPlaylistKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netPlaylistKeywordsPanelScrollPane, THIS));
-        netPlaylistKeywordsPanelScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netPlaylistKeywordsPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         netPlaylistKeywordsPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -9576,7 +9515,6 @@ public class PlayerFrame extends JFrame {
         netPlaylistScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 在线歌单最佳大小
         netPlaylistScrollPane.setPreferredSize(new Dimension(200, 600));
-        netPlaylistScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netPlaylistLeftBox.add(netPlaylistScrollPane);
     }
 
@@ -9694,8 +9632,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -9887,6 +9823,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInAlbum.run();
             }
         });
+        // 第一页按钮事件
+        netAlbumStartPageButton.addActionListener(e -> {
+            Component lc = netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1);
+            // 当前显示的是专辑列表，跳到第一页专辑
+            if (lc == netAlbumScrollPane || lc == emptyHintPanel) {
+                if (netAlbumCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netAlbumCurrPage = 1;
+                searchAlbumGoPageAction.run();
+            }
+            // 当前显示的是某专辑的歌曲，跳到第一页歌曲
+            else {
+                if (netMusicInAlbumCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInAlbumCurrPage = 1;
+                searchMusicInAlbum.run();
+            }
+        });
         // 上一页按钮事件
         netAlbumLastPageButton.addActionListener(e -> {
             Component lc = netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1);
@@ -9931,6 +9889,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInAlbum.run();
             }
         });
+        // 最后一页按钮事件
+        netAlbumEndPageButton.addActionListener(e -> {
+            Component lc = netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1);
+            // 当前显示的是专辑列表，跳到最后一页专辑
+            if (lc == netAlbumScrollPane || lc == emptyHintPanel) {
+                if (netAlbumCurrPage == netAlbumMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netAlbumCurrPage = netAlbumMaxPage;
+                searchAlbumGoPageAction.run();
+            }
+            // 当前显示的是某专辑的歌曲，跳到最后一页歌曲
+            else {
+                if (netMusicInAlbumCurrPage == netMusicInAlbumMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInAlbumCurrPage = netMusicInAlbumMaxPage;
+                searchMusicInAlbum.run();
+            }
+        });
         // 跳页按钮事件
         netAlbumGoButton.addActionListener(e -> {
             Component lc = netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1);
@@ -9969,36 +9949,22 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netAlbumRefreshButton.setPreferredSize(dimension);
+        netAlbumStartPageButton.setPreferredSize(dimension);
         netAlbumLastPageButton.setPreferredSize(dimension);
         netAlbumGoButton.setPreferredSize(dimension);
         netAlbumNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netAlbumBackwardButton.setFocusPainted(false);
-        netAlbumClearInputButton.setFocusPainted(false);
-        netAlbumSearchButton.setFocusPainted(false);
-        netAlbumPlayAllButton.setFocusPainted(false);
-        netAlbumRefreshButton.setFocusPainted(false);
-        netAlbumLastPageButton.setFocusPainted(false);
-        netAlbumGoButton.setFocusPainted(false);
-        netAlbumNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netAlbumBackwardButton.setContentAreaFilled(false);
-        netAlbumClearInputButton.setContentAreaFilled(false);
-        netAlbumSearchButton.setContentAreaFilled(false);
-        netAlbumPlayAllButton.setContentAreaFilled(false);
-        netAlbumRefreshButton.setContentAreaFilled(false);
-        netAlbumLastPageButton.setContentAreaFilled(false);
-        netAlbumGoButton.setContentAreaFilled(false);
-        netAlbumNextPageButton.setContentAreaFilled(false);
+        netAlbumEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netAlbumBackwardButton.addMouseListener(new ButtonMouseListener(netAlbumBackwardButton, THIS));
         netAlbumClearInputButton.addMouseListener(new ButtonMouseListener(netAlbumClearInputButton, THIS));
         netAlbumSearchButton.addMouseListener(new ButtonMouseListener(netAlbumSearchButton, THIS));
         netAlbumPlayAllButton.addMouseListener(new ButtonMouseListener(netAlbumPlayAllButton, THIS));
         netAlbumRefreshButton.addMouseListener(new ButtonMouseListener(netAlbumRefreshButton, THIS));
+        netAlbumStartPageButton.addMouseListener(new ButtonMouseListener(netAlbumStartPageButton, THIS));
         netAlbumLastPageButton.addMouseListener(new ButtonMouseListener(netAlbumLastPageButton, THIS));
         netAlbumGoButton.addMouseListener(new ButtonMouseListener(netAlbumGoButton, THIS));
         netAlbumNextPageButton.addMouseListener(new ButtonMouseListener(netAlbumNextPageButton, THIS));
+        netAlbumEndPageButton.addMouseListener(new ButtonMouseListener(netAlbumEndPageButton, THIS));
         // 全局字体
         netAlbumTitleLabel.setFont(globalFont);
         netAlbumSearchTextField.setFont(globalFont);
@@ -10011,11 +9977,12 @@ public class PlayerFrame extends JFrame {
         netAlbumSearchButton.setToolTipText(SEARCH_TIP);
         netAlbumPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netAlbumRefreshButton.setToolTipText(REFRESH_TIP);
+        netAlbumStartPageButton.setToolTipText(START_PAGE_TIP);
         netAlbumLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netAlbumGoButton.setToolTipText(GO_TIP);
         netAlbumNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netAlbumToolBar.setFloatable(false);
+        netAlbumEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netAlbumToolBar.add(netAlbumBackwardButton);
         netAlbumToolBar.add(netAlbumSearchTextField);
         netAlbumToolBar.add(netAlbumClearInputButton);
@@ -10028,8 +9995,10 @@ public class PlayerFrame extends JFrame {
         netAlbumCountPanel.add(netAlbumRefreshButton);
         netAlbumCountPanel.add(netAlbumPageTextField);
         netAlbumCountPanel.add(netAlbumGoButton);
+        netAlbumCountPanel.add(netAlbumStartPageButton);
         netAlbumCountPanel.add(netAlbumLastPageButton);
         netAlbumCountPanel.add(netAlbumNextPageButton);
+        netAlbumCountPanel.add(netAlbumEndPageButton);
         netAlbumCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netAlbumCountPanel.setVisible(false);
         netAlbumLeftBox.add(netAlbumCountPanel);
@@ -10038,8 +10007,6 @@ public class PlayerFrame extends JFrame {
     // 初始化在线专辑列表
     void netAlbumListInit() {
         netAlbumList.setModel(netAlbumListModel);
-        // 只能单选
-//        netAlbumList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         netAlbumList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -10253,7 +10220,7 @@ public class PlayerFrame extends JFrame {
         // 收藏专辑
         netAlbumCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (index == TabIndex.NET_ALBUM) list = netAlbumList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
@@ -10546,8 +10513,6 @@ public class PlayerFrame extends JFrame {
             netAlbumKeywordsPanel.repaint();
         });
         netAlbumClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
-        netAlbumClearHistorySearchButton.setFocusable(false);
-        netAlbumClearHistorySearchButton.setContentAreaFilled(false);
         netAlbumClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netAlbumClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netAlbumClearHistorySearchButton, THIS));
 
@@ -10565,7 +10530,6 @@ public class PlayerFrame extends JFrame {
         netAlbumKeywordsPanel.setLayout(new BoxLayout(netAlbumKeywordsPanel, BoxLayout.Y_AXIS));
 //        // 滚动条监听器
 //        netAlbumKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netAlbumKeywordsPanelScrollPane, THIS));
-        netAlbumKeywordsPanelScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netAlbumKeywordsPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         netAlbumKeywordsPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -10579,7 +10543,6 @@ public class PlayerFrame extends JFrame {
         netAlbumScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 在线专辑最佳大小
         netAlbumScrollPane.setPreferredSize(new Dimension(200, 600));
-        netAlbumScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netAlbumLeftBox.add(netAlbumScrollPane);
     }
 
@@ -10704,8 +10667,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -10901,6 +10862,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInArtist.run();
             }
         });
+        // 第一页按钮事件
+        netArtistStartPageButton.addActionListener(e -> {
+            Component lc = netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1);
+            // 当前显示的是歌手列表，跳到第一页歌手
+            if (lc == netArtistScrollPane || lc == emptyHintPanel) {
+                if (netArtistCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netArtistCurrPage = 1;
+                searchArtistGoPageAction.run();
+            }
+            // 当前显示的是某歌手的歌曲，跳到第一页歌曲
+            else {
+                if (netMusicInArtistCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInArtistCurrPage = 1;
+                searchMusicInArtist.run();
+            }
+        });
         // 上一页按钮事件
         netArtistLastPageButton.addActionListener(e -> {
             Component lc = netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1);
@@ -10945,6 +10928,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInArtist.run();
             }
         });
+        // 最后一页按钮事件
+        netArtistEndPageButton.addActionListener(e -> {
+            Component lc = netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1);
+            // 当前显示的是歌手列表，跳到最后一页歌手
+            if (lc == netArtistScrollPane || lc == emptyHintPanel) {
+                if (netArtistCurrPage == netArtistMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netArtistCurrPage = netArtistMaxPage;
+                searchArtistGoPageAction.run();
+            }
+            // 当前显示的是某歌手的歌曲，跳到最后一页歌曲
+            else {
+                if (netMusicInArtistCurrPage == netMusicInArtistMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInArtistCurrPage = netMusicInArtistMaxPage;
+                searchMusicInArtist.run();
+            }
+        });
         // 跳页按钮事件
         netArtistGoButton.addActionListener(e -> {
             Component lc = netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1);
@@ -10983,36 +10988,22 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netArtistRefreshButton.setPreferredSize(dimension);
+        netArtistStartPageButton.setPreferredSize(dimension);
         netArtistLastPageButton.setPreferredSize(dimension);
         netArtistGoButton.setPreferredSize(dimension);
         netArtistNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netArtistBackwardButton.setFocusPainted(false);
-        netArtistClearInputButton.setFocusPainted(false);
-        netArtistSearchButton.setFocusPainted(false);
-        netArtistPlayAllButton.setFocusPainted(false);
-        netArtistRefreshButton.setFocusPainted(false);
-        netArtistLastPageButton.setFocusPainted(false);
-        netArtistGoButton.setFocusPainted(false);
-        netArtistNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netArtistBackwardButton.setContentAreaFilled(false);
-        netArtistClearInputButton.setContentAreaFilled(false);
-        netArtistSearchButton.setContentAreaFilled(false);
-        netArtistPlayAllButton.setContentAreaFilled(false);
-        netArtistRefreshButton.setContentAreaFilled(false);
-        netArtistLastPageButton.setContentAreaFilled(false);
-        netArtistGoButton.setContentAreaFilled(false);
-        netArtistNextPageButton.setContentAreaFilled(false);
+        netArtistEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netArtistBackwardButton.addMouseListener(new ButtonMouseListener(netArtistBackwardButton, THIS));
         netArtistClearInputButton.addMouseListener(new ButtonMouseListener(netArtistClearInputButton, THIS));
         netArtistSearchButton.addMouseListener(new ButtonMouseListener(netArtistSearchButton, THIS));
         netArtistPlayAllButton.addMouseListener(new ButtonMouseListener(netArtistPlayAllButton, THIS));
         netArtistRefreshButton.addMouseListener(new ButtonMouseListener(netArtistRefreshButton, THIS));
+        netArtistStartPageButton.addMouseListener(new ButtonMouseListener(netArtistStartPageButton, THIS));
         netArtistLastPageButton.addMouseListener(new ButtonMouseListener(netArtistLastPageButton, THIS));
         netArtistGoButton.addMouseListener(new ButtonMouseListener(netArtistGoButton, THIS));
         netArtistNextPageButton.addMouseListener(new ButtonMouseListener(netArtistNextPageButton, THIS));
+        netArtistEndPageButton.addMouseListener(new ButtonMouseListener(netArtistEndPageButton, THIS));
         // 全局字体
         netArtistTitleLabel.setFont(globalFont);
         netArtistSearchTextField.setFont(globalFont);
@@ -11025,11 +11016,12 @@ public class PlayerFrame extends JFrame {
         netArtistSearchButton.setToolTipText(SEARCH_TIP);
         netArtistPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netArtistRefreshButton.setToolTipText(REFRESH_TIP);
+        netArtistStartPageButton.setToolTipText(START_PAGE_TIP);
         netArtistLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netArtistGoButton.setToolTipText(GO_TIP);
         netArtistNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netArtistToolBar.setFloatable(false);
+        netArtistEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netArtistToolBar.add(netArtistBackwardButton);
         netArtistToolBar.add(netArtistSearchTextField);
         netArtistToolBar.add(netArtistClearInputButton);
@@ -11042,8 +11034,10 @@ public class PlayerFrame extends JFrame {
         netArtistCountPanel.add(netArtistRefreshButton);
         netArtistCountPanel.add(netArtistPageTextField);
         netArtistCountPanel.add(netArtistGoButton);
+        netArtistCountPanel.add(netArtistStartPageButton);
         netArtistCountPanel.add(netArtistLastPageButton);
         netArtistCountPanel.add(netArtistNextPageButton);
+        netArtistCountPanel.add(netArtistEndPageButton);
         netArtistCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netArtistCountPanel.setVisible(false);
         netArtistLeftBox.add(netArtistCountPanel);
@@ -11271,7 +11265,7 @@ public class PlayerFrame extends JFrame {
         // 收藏歌手
         netArtistCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (index == TabIndex.NET_ARTIST) list = netArtistList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
@@ -11792,8 +11786,6 @@ public class PlayerFrame extends JFrame {
             netArtistKeywordsPanel.repaint();
         });
         netArtistClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
-        netArtistClearHistorySearchButton.setFocusable(false);
-        netArtistClearHistorySearchButton.setContentAreaFilled(false);
         netArtistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netArtistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netArtistClearHistorySearchButton, THIS));
 
@@ -11811,7 +11803,6 @@ public class PlayerFrame extends JFrame {
         netArtistKeywordsPanel.setLayout(new BoxLayout(netArtistKeywordsPanel, BoxLayout.Y_AXIS));
 //        // 滚动条监听器
 //        netArtistKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netArtistKeywordsPanelScrollPane, THIS));
-        netArtistKeywordsPanelScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netArtistKeywordsPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         netArtistKeywordsPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -11825,7 +11816,6 @@ public class PlayerFrame extends JFrame {
         netArtistScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 歌手最佳大小
         netArtistScrollPane.setPreferredSize(new Dimension(200, 600));
-        netArtistScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netArtistLeftBox.add(netArtistScrollPane);
     }
 
@@ -11948,8 +11938,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -12139,6 +12127,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInRadio.run();
             }
         });
+        // 第一页按钮事件
+        netRadioStartPageButton.addActionListener(e -> {
+            Component lc = netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1);
+            // 当前显示的是电台列表，跳到第一页电台
+            if (lc == netRadioScrollPane || lc == emptyHintPanel) {
+                if (netRadioCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netRadioCurrPage = 1;
+                searchRadioGoPageAction.run();
+            }
+            // 当前显示的是某电台的歌曲，跳到第一页歌曲
+            else {
+                if (netMusicInRadioCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInRadioCurrPage = 1;
+                searchMusicInRadio.run();
+            }
+        });
         // 上一页按钮事件
         netRadioLastPageButton.addActionListener(e -> {
             Component lc = netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1);
@@ -12183,6 +12193,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInRadio.run();
             }
         });
+        // 最后一页按钮事件
+        netRadioEndPageButton.addActionListener(e -> {
+            Component lc = netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1);
+            // 当前显示的是电台列表，跳到最后一页电台
+            if (lc == netRadioScrollPane || lc == emptyHintPanel) {
+                if (netRadioCurrPage == netRadioMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netRadioCurrPage = netRadioMaxPage;
+                searchRadioGoPageAction.run();
+            }
+            // 当前显示的是某电台的歌曲，跳到最后一页歌曲
+            else {
+                if (netMusicInRadioCurrPage == netMusicInRadioMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInRadioCurrPage = netMusicInRadioMaxPage;
+                searchMusicInRadio.run();
+            }
+        });
         // 跳页按钮事件
         netRadioGoButton.addActionListener(e -> {
             Component lc = netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1);
@@ -12221,36 +12253,22 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netRadioRefreshButton.setPreferredSize(dimension);
+        netRadioStartPageButton.setPreferredSize(dimension);
         netRadioLastPageButton.setPreferredSize(dimension);
         netRadioGoButton.setPreferredSize(dimension);
         netRadioNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netRadioBackwardButton.setFocusPainted(false);
-        netRadioClearInputButton.setFocusPainted(false);
-        netRadioSearchButton.setFocusPainted(false);
-        netRadioPlayAllButton.setFocusPainted(false);
-        netRadioRefreshButton.setFocusPainted(false);
-        netRadioLastPageButton.setFocusPainted(false);
-        netRadioGoButton.setFocusPainted(false);
-        netRadioNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netRadioBackwardButton.setContentAreaFilled(false);
-        netRadioClearInputButton.setContentAreaFilled(false);
-        netRadioSearchButton.setContentAreaFilled(false);
-        netRadioPlayAllButton.setContentAreaFilled(false);
-        netRadioRefreshButton.setContentAreaFilled(false);
-        netRadioLastPageButton.setContentAreaFilled(false);
-        netRadioGoButton.setContentAreaFilled(false);
-        netRadioNextPageButton.setContentAreaFilled(false);
+        netRadioEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netRadioBackwardButton.addMouseListener(new ButtonMouseListener(netRadioBackwardButton, THIS));
         netRadioClearInputButton.addMouseListener(new ButtonMouseListener(netRadioClearInputButton, THIS));
         netRadioSearchButton.addMouseListener(new ButtonMouseListener(netRadioSearchButton, THIS));
         netRadioPlayAllButton.addMouseListener(new ButtonMouseListener(netRadioPlayAllButton, THIS));
         netRadioRefreshButton.addMouseListener(new ButtonMouseListener(netRadioRefreshButton, THIS));
+        netRadioStartPageButton.addMouseListener(new ButtonMouseListener(netRadioStartPageButton, THIS));
         netRadioLastPageButton.addMouseListener(new ButtonMouseListener(netRadioLastPageButton, THIS));
         netRadioGoButton.addMouseListener(new ButtonMouseListener(netRadioGoButton, THIS));
         netRadioNextPageButton.addMouseListener(new ButtonMouseListener(netRadioNextPageButton, THIS));
+        netRadioEndPageButton.addMouseListener(new ButtonMouseListener(netRadioEndPageButton, THIS));
         // 全局字体
         netRadioTitleLabel.setFont(globalFont);
         netRadioSearchTextField.setFont(globalFont);
@@ -12263,11 +12281,12 @@ public class PlayerFrame extends JFrame {
         netRadioSearchButton.setToolTipText(SEARCH_TIP);
         netRadioPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netRadioRefreshButton.setToolTipText(REFRESH_TIP);
+        netRadioStartPageButton.setToolTipText(START_PAGE_TIP);
         netRadioLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netRadioGoButton.setToolTipText(GO_TIP);
         netRadioNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netRadioToolBar.setFloatable(false);
+        netRadioEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netRadioToolBar.add(netRadioBackwardButton);
         netRadioToolBar.add(netRadioSearchTextField);
         netRadioToolBar.add(netRadioClearInputButton);
@@ -12280,8 +12299,10 @@ public class PlayerFrame extends JFrame {
         netRadioCountPanel.add(netRadioRefreshButton);
         netRadioCountPanel.add(netRadioPageTextField);
         netRadioCountPanel.add(netRadioGoButton);
+        netRadioCountPanel.add(netRadioStartPageButton);
         netRadioCountPanel.add(netRadioLastPageButton);
         netRadioCountPanel.add(netRadioNextPageButton);
+        netRadioCountPanel.add(netRadioEndPageButton);
         netRadioCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netRadioCountPanel.setVisible(false);
         netRadioLeftBox.add(netRadioCountPanel);
@@ -12509,7 +12530,7 @@ public class PlayerFrame extends JFrame {
         // 收藏电台
         netRadioCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (index == TabIndex.NET_RADIO) list = netRadioList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
@@ -12931,8 +12952,6 @@ public class PlayerFrame extends JFrame {
             netRadioKeywordsPanel.repaint();
         });
         netRadioClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
-        netRadioClearHistorySearchButton.setFocusable(false);
-        netRadioClearHistorySearchButton.setContentAreaFilled(false);
         netRadioClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netRadioClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netRadioClearHistorySearchButton, THIS));
 
@@ -12950,7 +12969,6 @@ public class PlayerFrame extends JFrame {
         netRadioKeywordsPanel.setLayout(new BoxLayout(netRadioKeywordsPanel, BoxLayout.Y_AXIS));
 //        // 滚动条监听器
 //        netRadioKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netRadioKeywordsPanelScrollPane, THIS));
-        netRadioKeywordsPanelScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netRadioKeywordsPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         netRadioKeywordsPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -12964,7 +12982,6 @@ public class PlayerFrame extends JFrame {
         netRadioScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 电台最佳大小
         netRadioScrollPane.setPreferredSize(new Dimension(200, 600));
-        netRadioScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netRadioLeftBox.add(netRadioScrollPane);
     }
 
@@ -13047,8 +13064,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -13185,6 +13200,15 @@ public class PlayerFrame extends JFrame {
         netMvRefreshButton.addActionListener(e -> {
             searchMvGoPageAction.run();
         });
+        // 第一页按钮事件
+        netMvStartPageButton.addActionListener(e -> {
+            if (netMvCurrPage == 1) {
+                new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                return;
+            }
+            netMvCurrPage = 1;
+            searchMvGoPageAction.run();
+        });
         // 上一页按钮事件
         netMvLastPageButton.addActionListener(e -> {
             if (netMvCurrPage == 1) {
@@ -13203,6 +13227,15 @@ public class PlayerFrame extends JFrame {
             netMvCurrPage++;
             searchMvGoPageAction.run();
         });
+        // 最后一页按钮事件
+        netMvEndPageButton.addActionListener(e -> {
+            if (netMvCurrPage == netMvMaxPage) {
+                new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                return;
+            }
+            netMvCurrPage = netMvMaxPage;
+            searchMvGoPageAction.run();
+        });
         // 跳页按钮事件
         netMvGoButton.addActionListener(e -> {
             String text = netMvPageTextField.getText();
@@ -13219,57 +13252,44 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netMvRefreshButton.setPreferredSize(dimension);
+        netMvStartPageButton.setPreferredSize(dimension);
         netMvLastPageButton.setPreferredSize(dimension);
         netMvGoButton.setPreferredSize(dimension);
         netMvNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netMvBackwardButton.setFocusPainted(false);
-        netMvClearInputButton.setFocusPainted(false);
-        netMvSearchButton.setFocusPainted(false);
-        netMvRefreshButton.setFocusPainted(false);
-        netMvLastPageButton.setFocusPainted(false);
-        netMvGoButton.setFocusPainted(false);
-        netMvNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netMvBackwardButton.setContentAreaFilled(false);
-        netMvClearInputButton.setContentAreaFilled(false);
-        netMvSearchButton.setContentAreaFilled(false);
-        netMvRefreshButton.setContentAreaFilled(false);
-        netMvLastPageButton.setContentAreaFilled(false);
-        netMvGoButton.setContentAreaFilled(false);
-        netMvNextPageButton.setContentAreaFilled(false);
+        netMvEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netMvBackwardButton.addMouseListener(new ButtonMouseListener(netMvBackwardButton, THIS));
         netMvClearInputButton.addMouseListener(new ButtonMouseListener(netMvClearInputButton, THIS));
         netMvSearchButton.addMouseListener(new ButtonMouseListener(netMvSearchButton, THIS));
         netMvRefreshButton.addMouseListener(new ButtonMouseListener(netMvRefreshButton, THIS));
+        netMvStartPageButton.addMouseListener(new ButtonMouseListener(netMvStartPageButton, THIS));
         netMvLastPageButton.addMouseListener(new ButtonMouseListener(netMvLastPageButton, THIS));
         netMvGoButton.addMouseListener(new ButtonMouseListener(netMvGoButton, THIS));
         netMvNextPageButton.addMouseListener(new ButtonMouseListener(netMvNextPageButton, THIS));
+        netMvEndPageButton.addMouseListener(new ButtonMouseListener(netMvEndPageButton, THIS));
         // 全局字体
         netMvTitleLabel.setFont(globalFont);
         netMvSearchTextField.setFont(globalFont);
         netMvSortTypeComboBox.setFont(globalFont);
         netMvPageTextField.setFont(globalFont);
         netMvCountLabel.setFont(globalFont);
-        // 边框
-        netMvSortTypeComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        // 不可见
         netMvSortTypeComboBox.setVisible(false);
         // 帮助提示
         netMvBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
         netMvClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
         netMvSearchButton.setToolTipText(SEARCH_TIP);
         netMvRefreshButton.setToolTipText(REFRESH_TIP);
+        netMvStartPageButton.setToolTipText(START_PAGE_TIP);
         netMvLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netMvGoButton.setToolTipText(GO_TIP);
         netMvNextPageButton.setToolTipText(NEXT_PAGE_TIP);
+        netMvEndPageButton.setToolTipText(END_PAGE_TIP);
         // 回到关键词面板起始不可用
         netMvBackwardButton.setEnabled(false);
         // 清除输入按钮初始不可见
         netMvClearInputButton.setVisible(false);
 
-        // 不可浮动
-        netMvToolBar.setFloatable(false);
         netMvToolBar.add(netMvBackwardButton);
         netMvToolBar.add(netMvSearchTextField);
         netMvToolBar.add(netMvClearInputButton);
@@ -13282,8 +13302,10 @@ public class PlayerFrame extends JFrame {
         netMvCountPanel.add(netMvRefreshButton);
         netMvCountPanel.add(netMvPageTextField);
         netMvCountPanel.add(netMvGoButton);
+        netMvCountPanel.add(netMvStartPageButton);
         netMvCountPanel.add(netMvLastPageButton);
         netMvCountPanel.add(netMvNextPageButton);
+        netMvCountPanel.add(netMvEndPageButton);
         netMvCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netMvCountPanel.setVisible(false);
         netMvLeftBox.add(netMvCountPanel);
@@ -13388,7 +13410,7 @@ public class PlayerFrame extends JFrame {
         // 收藏 MV
         netMvCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (index == TabIndex.NET_MV) list = netMvList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
@@ -13723,8 +13745,6 @@ public class PlayerFrame extends JFrame {
             netMvKeywordsPanel.repaint();
         });
         netMvClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
-        netMvClearHistorySearchButton.setFocusable(false);
-        netMvClearHistorySearchButton.setContentAreaFilled(false);
         netMvClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMvClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMvClearHistorySearchButton, THIS));
 
@@ -13742,7 +13762,6 @@ public class PlayerFrame extends JFrame {
         netMvKeywordsPanel.setLayout(new BoxLayout(netMvKeywordsPanel, BoxLayout.Y_AXIS));
 //        // 滚动条监听器
 //        netMvKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netMvKeywordsPanelScrollPane, THIS));
-        netMvKeywordsPanelScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netMvKeywordsPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         netMvKeywordsPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -13756,7 +13775,6 @@ public class PlayerFrame extends JFrame {
         netMvScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         //  MV 最佳大小
         netMvScrollPane.setPreferredSize(new Dimension(200, 600));
-        netMvScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netMvLeftBox.add(netMvScrollPane);
     }
 
@@ -13886,15 +13904,39 @@ public class PlayerFrame extends JFrame {
                 searchMusicInRanking.run();
             }
         });
-        // 上一页按钮事件
-        netRankingLastPageButton.addActionListener(e -> {
-            // 当前显示的是榜单列表
-            if (netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1)
-                    == netRankingScrollPane) {
+        // 第一页按钮事件
+        netRankingStartPageButton.addActionListener(e -> {
+            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+            // 当前显示的是榜单列表，跳到第一页榜单
+            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
                 if (netRankingCurrPage == 1) {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
+                netRankingCurrPage = 1;
+                getRankingAction.run();
+            }
+            // 当前显示的是某榜单的歌曲，跳到第一页歌曲
+            else {
+                if (netMusicInRankingCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInRankingCurrPage = 1;
+                searchMusicInRanking.run();
+            }
+        });
+        // 上一页按钮事件
+        netRankingLastPageButton.addActionListener(e -> {
+            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+            // 当前显示的是榜单列表，跳到上一页榜单
+            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
+                if (netRankingCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netRankingCurrPage--;
+                getRankingAction.run();
             }
             // 当前显示的是某榜单的歌曲，跳到上一页歌曲
             else {
@@ -13908,13 +13950,15 @@ public class PlayerFrame extends JFrame {
         });
         // 下一页按钮事件
         netRankingNextPageButton.addActionListener(e -> {
-            // 当前显示的是榜单列表
-            if (netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1)
-                    == netRankingScrollPane) {
+            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+            // 当前显示的是榜单列表，跳到下一页榜单
+            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
                 if (netRankingCurrPage == netRankingMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
+                netRankingCurrPage++;
+                getRankingAction.run();
             }
             // 当前显示的是某榜单的歌曲，跳到下一页歌曲
             else {
@@ -13923,6 +13967,28 @@ public class PlayerFrame extends JFrame {
                     return;
                 }
                 netMusicInRankingCurrPage++;
+                searchMusicInRanking.run();
+            }
+        });
+        // 最后一页按钮事件
+        netRankingEndPageButton.addActionListener(e -> {
+            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+            // 当前显示的是榜单列表，跳到最后一页榜单
+            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
+                if (netRankingCurrPage == netRankingMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netRankingCurrPage = netRankingMaxPage;
+                getRankingAction.run();
+            }
+            // 当前显示的是某榜单的歌曲，跳到最后一页歌曲
+            else {
+                if (netMusicInRankingCurrPage == netMusicInRankingMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInRankingCurrPage = netMusicInRankingMaxPage;
                 searchMusicInRanking.run();
             }
         });
@@ -13962,30 +14028,20 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netRankingRefreshButton.setPreferredSize(dimension);
+        netRankingStartPageButton.setPreferredSize(dimension);
         netRankingLastPageButton.setPreferredSize(dimension);
         netRankingGoButton.setPreferredSize(dimension);
         netRankingNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netRankingBackwardButton.setFocusPainted(false);
-        netRankingPlayAllButton.setFocusPainted(false);
-        netRankingRefreshButton.setFocusPainted(false);
-        netRankingLastPageButton.setFocusPainted(false);
-        netRankingGoButton.setFocusPainted(false);
-        netRankingNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netRankingBackwardButton.setContentAreaFilled(false);
-        netRankingPlayAllButton.setContentAreaFilled(false);
-        netRankingRefreshButton.setContentAreaFilled(false);
-        netRankingLastPageButton.setContentAreaFilled(false);
-        netRankingGoButton.setContentAreaFilled(false);
-        netRankingNextPageButton.setContentAreaFilled(false);
+        netRankingEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netRankingBackwardButton.addMouseListener(new ButtonMouseListener(netRankingBackwardButton, THIS));
         netRankingPlayAllButton.addMouseListener(new ButtonMouseListener(netRankingPlayAllButton, THIS));
         netRankingRefreshButton.addMouseListener(new ButtonMouseListener(netRankingRefreshButton, THIS));
+        netRankingStartPageButton.addMouseListener(new ButtonMouseListener(netRankingStartPageButton, THIS));
         netRankingLastPageButton.addMouseListener(new ButtonMouseListener(netRankingLastPageButton, THIS));
         netRankingGoButton.addMouseListener(new ButtonMouseListener(netRankingGoButton, THIS));
         netRankingNextPageButton.addMouseListener(new ButtonMouseListener(netRankingNextPageButton, THIS));
+        netRankingEndPageButton.addMouseListener(new ButtonMouseListener(netRankingEndPageButton, THIS));
         // 全局字体
         netRankingPageTextField.setFont(globalFont);
         netRankingPlayAllButton.setFont(globalFont);
@@ -13994,11 +14050,12 @@ public class PlayerFrame extends JFrame {
         netRankingBackwardButton.setToolTipText(BACKWARD_TIP);
         netRankingPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netRankingRefreshButton.setToolTipText(REFRESH_TIP);
+        netRankingStartPageButton.setToolTipText(START_PAGE_TIP);
         netRankingLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netRankingGoButton.setToolTipText(GO_TIP);
         netRankingNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netRankingToolBar.setFloatable(false);
+        netRankingEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netRankingToolBar.add(netRankingBackwardButton);
         netRankingToolBar.add(Box.createHorizontalGlue());
         netRankingLeftBox.add(netRankingToolBar);
@@ -14009,8 +14066,10 @@ public class PlayerFrame extends JFrame {
         netRankingCountPanel.add(netRankingRefreshButton);
         netRankingCountPanel.add(netRankingPageTextField);
         netRankingCountPanel.add(netRankingGoButton);
+        netRankingCountPanel.add(netRankingStartPageButton);
         netRankingCountPanel.add(netRankingLastPageButton);
         netRankingCountPanel.add(netRankingNextPageButton);
+        netRankingCountPanel.add(netRankingEndPageButton);
         netRankingCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netRankingCountPanel.setVisible(false);
         netRankingLeftBox.add(netRankingCountPanel);
@@ -14224,7 +14283,7 @@ public class PlayerFrame extends JFrame {
         // 收藏榜单
         netRankingCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (index == TabIndex.NET_RANKING) list = netRankingList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
@@ -14287,7 +14346,6 @@ public class PlayerFrame extends JFrame {
         netRankingScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 榜单最佳大小
         netRankingScrollPane.setPreferredSize(new Dimension(200, 600));
-        netRankingScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netRankingLeftBox.add(netRankingScrollPane);
     }
 
@@ -14412,8 +14470,6 @@ public class PlayerFrame extends JFrame {
                     }
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -14627,6 +14683,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInUser.run();
             }
         });
+        // 第一页按钮事件
+        netUserStartPageButton.addActionListener(e -> {
+            Component lc = netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1);
+            // 当前显示的是用户列表，跳到第一页用户
+            if (lc == netUserScrollPane || lc == emptyHintPanel) {
+                if (netUserCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netUserCurrPage = 1;
+                searchUserGoPageAction.run();
+            }
+            // 当前显示的是某用户的歌曲，跳到第一页歌曲
+            else {
+                if (netMusicInUserCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInUserCurrPage = 1;
+                searchMusicInUser.run();
+            }
+        });
         // 上一页按钮事件
         netUserLastPageButton.addActionListener(e -> {
             Component lc = netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1);
@@ -14671,6 +14749,28 @@ public class PlayerFrame extends JFrame {
                 searchMusicInUser.run();
             }
         });
+        // 最后一页按钮事件
+        netUserEndPageButton.addActionListener(e -> {
+            Component lc = netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1);
+            // 当前显示的是用户列表，跳到最后一页用户
+            if (lc == netUserScrollPane || lc == emptyHintPanel) {
+                if (netUserCurrPage == netUserMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netUserCurrPage = netUserMaxPage;
+                searchUserGoPageAction.run();
+            }
+            // 当前显示的是某用户的歌曲，跳到最后一页歌曲
+            else {
+                if (netMusicInUserCurrPage == netMusicInUserMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInUserCurrPage = netMusicInUserMaxPage;
+                searchMusicInUser.run();
+            }
+        });
         // 跳页按钮事件
         netUserGoButton.addActionListener(e -> {
             Component lc = netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1);
@@ -14701,8 +14801,6 @@ public class PlayerFrame extends JFrame {
                 searchMusicInUser.run();
             }
         });
-        // 边框
-        netUserRecordTypeComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         // 按钮被禁止的图标
         netUserBackwardButton.setEnabled(false);
         // 按钮初始不可见
@@ -14712,36 +14810,22 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netUserRefreshButton.setPreferredSize(dimension);
+        netUserStartPageButton.setPreferredSize(dimension);
         netUserLastPageButton.setPreferredSize(dimension);
         netUserGoButton.setPreferredSize(dimension);
         netUserNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netUserBackwardButton.setFocusPainted(false);
-        netUserClearInputButton.setFocusPainted(false);
-        netUserSearchButton.setFocusPainted(false);
-        netUserPlayAllButton.setFocusPainted(false);
-        netUserRefreshButton.setFocusPainted(false);
-        netUserLastPageButton.setFocusPainted(false);
-        netUserGoButton.setFocusPainted(false);
-        netUserNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netUserBackwardButton.setContentAreaFilled(false);
-        netUserClearInputButton.setContentAreaFilled(false);
-        netUserSearchButton.setContentAreaFilled(false);
-        netUserPlayAllButton.setContentAreaFilled(false);
-        netUserRefreshButton.setContentAreaFilled(false);
-        netUserLastPageButton.setContentAreaFilled(false);
-        netUserGoButton.setContentAreaFilled(false);
-        netUserNextPageButton.setContentAreaFilled(false);
+        netUserEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netUserBackwardButton.addMouseListener(new ButtonMouseListener(netUserBackwardButton, THIS));
         netUserClearInputButton.addMouseListener(new ButtonMouseListener(netUserClearInputButton, THIS));
         netUserSearchButton.addMouseListener(new ButtonMouseListener(netUserSearchButton, THIS));
         netUserPlayAllButton.addMouseListener(new ButtonMouseListener(netUserPlayAllButton, THIS));
         netUserRefreshButton.addMouseListener(new ButtonMouseListener(netUserRefreshButton, THIS));
+        netUserStartPageButton.addMouseListener(new ButtonMouseListener(netUserStartPageButton, THIS));
         netUserLastPageButton.addMouseListener(new ButtonMouseListener(netUserLastPageButton, THIS));
         netUserGoButton.addMouseListener(new ButtonMouseListener(netUserGoButton, THIS));
         netUserNextPageButton.addMouseListener(new ButtonMouseListener(netUserNextPageButton, THIS));
+        netUserEndPageButton.addMouseListener(new ButtonMouseListener(netUserEndPageButton, THIS));
         // 全局字体
         netUserTitleLabel.setFont(globalFont);
         netUserRecordTypeComboBox.setFont(globalFont);
@@ -14755,11 +14839,12 @@ public class PlayerFrame extends JFrame {
         netUserSearchButton.setToolTipText(SEARCH_TIP);
         netUserPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netUserRefreshButton.setToolTipText(REFRESH_TIP);
+        netUserStartPageButton.setToolTipText(START_PAGE_TIP);
         netUserLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netUserGoButton.setToolTipText(GO_TIP);
         netUserNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netUserToolBar.setFloatable(false);
+        netUserEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netUserToolBar.add(netUserBackwardButton);
         netUserToolBar.add(netUserSearchTextField);
         netUserToolBar.add(netUserClearInputButton);
@@ -14773,8 +14858,10 @@ public class PlayerFrame extends JFrame {
         netUserCountPanel.add(netUserRefreshButton);
         netUserCountPanel.add(netUserPageTextField);
         netUserCountPanel.add(netUserGoButton);
+        netUserCountPanel.add(netUserStartPageButton);
         netUserCountPanel.add(netUserLastPageButton);
         netUserCountPanel.add(netUserNextPageButton);
+        netUserCountPanel.add(netUserEndPageButton);
         netUserCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netUserCountPanel.setVisible(false);
         netUserLeftBox.add(netUserCountPanel);
@@ -15019,7 +15106,7 @@ public class PlayerFrame extends JFrame {
         // 收藏用户
         netUserCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            JList list;
+            CustomList list;
             if (index == TabIndex.NET_USER) list = netUserList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
@@ -15485,8 +15572,6 @@ public class PlayerFrame extends JFrame {
             netUserKeywordsPanel.repaint();
         });
         netUserClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
-        netUserClearHistorySearchButton.setFocusable(false);
-        netUserClearHistorySearchButton.setContentAreaFilled(false);
         netUserClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netUserClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netUserClearHistorySearchButton, THIS));
 
@@ -15504,7 +15589,6 @@ public class PlayerFrame extends JFrame {
         netUserKeywordsPanel.setLayout(new BoxLayout(netUserKeywordsPanel, BoxLayout.Y_AXIS));
 //        // 滚动条监听器
 //        netUserKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netUserKeywordsPanelScrollPane, THIS));
-        netUserKeywordsPanelScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netUserKeywordsPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         netUserKeywordsPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -15518,7 +15602,6 @@ public class PlayerFrame extends JFrame {
         netUserScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 用户最佳大小
         netUserScrollPane.setPreferredSize(new Dimension(200, 600));
-        netUserScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         netUserLeftBox.add(netUserScrollPane);
     }
 
@@ -15688,6 +15771,15 @@ public class PlayerFrame extends JFrame {
         netCommentRefreshButton.addActionListener(e -> {
             getComments(currCommentObjectInfo, false);
         });
+        // 第一页按钮事件
+        netCommentStartPageButton.addActionListener(e -> {
+            if (netCommentCurrPage == 1) {
+                new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                return;
+            }
+            netCommentCurrPage = 1;
+            getComments(currCommentObjectInfo, false);
+        });
         // 上一页按钮事件
         netCommentLastPageButton.addActionListener(e -> {
             if (netCommentCurrPage == 1) {
@@ -15706,6 +15798,15 @@ public class PlayerFrame extends JFrame {
             netCommentCurrPage++;
             getComments(currCommentObjectInfo, false);
         });
+        // 最后一页按钮事件
+        netCommentEndPageButton.addActionListener(e -> {
+            if (netCommentCurrPage == netCommentMaxPage) {
+                new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                return;
+            }
+            netCommentCurrPage = netCommentMaxPage;
+            getComments(currCommentObjectInfo, false);
+        });
         // 跳页按钮事件
         netCommentGoButton.addActionListener(e -> {
             String text = netCommentPageTextField.getText();
@@ -15722,29 +15823,19 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netCommentRefreshButton.setPreferredSize(dimension);
+        netCommentStartPageButton.setPreferredSize(dimension);
         netCommentLastPageButton.setPreferredSize(dimension);
         netCommentGoButton.setPreferredSize(dimension);
         netCommentNextPageButton.setPreferredSize(dimension);
-        // 边框
-        netCommentTypeComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        // 按钮去掉周围的虚线框
-        netCommentBackwardButton.setFocusPainted(false);
-        netCommentRefreshButton.setFocusPainted(false);
-        netCommentLastPageButton.setFocusPainted(false);
-        netCommentGoButton.setFocusPainted(false);
-        netCommentNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netCommentBackwardButton.setContentAreaFilled(false);
-        netCommentRefreshButton.setContentAreaFilled(false);
-        netCommentLastPageButton.setContentAreaFilled(false);
-        netCommentGoButton.setContentAreaFilled(false);
-        netCommentNextPageButton.setContentAreaFilled(false);
+        netCommentEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netCommentBackwardButton.addMouseListener(new ButtonMouseListener(netCommentBackwardButton, THIS));
         netCommentRefreshButton.addMouseListener(new ButtonMouseListener(netCommentRefreshButton, THIS));
+        netCommentStartPageButton.addMouseListener(new ButtonMouseListener(netCommentStartPageButton, THIS));
         netCommentLastPageButton.addMouseListener(new ButtonMouseListener(netCommentLastPageButton, THIS));
         netCommentGoButton.addMouseListener(new ButtonMouseListener(netCommentGoButton, THIS));
         netCommentNextPageButton.addMouseListener(new ButtonMouseListener(netCommentNextPageButton, THIS));
+        netCommentEndPageButton.addMouseListener(new ButtonMouseListener(netCommentEndPageButton, THIS));
         // 全局字体
         netCommentTypeComboBox.setFont(globalFont);
         netCommentPageTextField.setFont(globalFont);
@@ -15753,11 +15844,12 @@ public class PlayerFrame extends JFrame {
         // 帮助提示
         netCommentBackwardButton.setToolTipText(BACKWARD_TIP);
         netCommentRefreshButton.setToolTipText(REFRESH_TIP);
+        netCommentStartPageButton.setToolTipText(START_PAGE_TIP);
         netCommentLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netCommentGoButton.setToolTipText(GO_TIP);
         netCommentNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netCommentToolBar.setFloatable(false);
+        netCommentEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netCommentToolBar.setBorder(BorderFactory.createEmptyBorder(0, 37, 0, 0));
         netCommentToolBar.add(netCommentBackwardButton);
         netCommentToolBar.add(Box.createHorizontalGlue());
@@ -15771,8 +15863,10 @@ public class PlayerFrame extends JFrame {
         netCommentCountPanel.add(netCommentRefreshButton);
         netCommentCountPanel.add(netCommentPageTextField);
         netCommentCountPanel.add(netCommentGoButton);
+        netCommentCountPanel.add(netCommentStartPageButton);
         netCommentCountPanel.add(netCommentLastPageButton);
         netCommentCountPanel.add(netCommentNextPageButton);
+        netCommentCountPanel.add(netCommentEndPageButton);
         netCommentCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netCommentCountPanel.setVisible(false);
         netCommentBox.add(netCommentCountPanel);
@@ -16101,6 +16195,15 @@ public class PlayerFrame extends JFrame {
         netSheetRefreshButton.addActionListener(e -> {
             getSheets(currSheetMusicInfo, false);
         });
+        // 第一页按钮事件
+        netSheetStartPageButton.addActionListener(e -> {
+            if (netSheetCurrPage == 1) {
+                new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                return;
+            }
+            netSheetCurrPage = 1;
+            getSheets(currSheetMusicInfo, false);
+        });
         // 上一页按钮事件
         netSheetLastPageButton.addActionListener(e -> {
             if (netSheetCurrPage == 1) {
@@ -16119,6 +16222,15 @@ public class PlayerFrame extends JFrame {
             netSheetCurrPage++;
             getSheets(currSheetMusicInfo, false);
         });
+        // 最后一页按钮事件
+        netSheetEndPageButton.addActionListener(e -> {
+            if (netSheetCurrPage == netSheetMaxPage) {
+                new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                return;
+            }
+            netSheetCurrPage = netSheetMaxPage;
+            getSheets(currSheetMusicInfo, false);
+        });
         // 跳页按钮事件
         netSheetGoButton.addActionListener(e -> {
             String text = netSheetPageTextField.getText();
@@ -16135,27 +16247,19 @@ public class PlayerFrame extends JFrame {
         // 按钮大小限制
         Dimension dimension = new Dimension(20, 20);
         netSheetRefreshButton.setPreferredSize(dimension);
+        netSheetStartPageButton.setPreferredSize(dimension);
         netSheetLastPageButton.setPreferredSize(dimension);
         netSheetGoButton.setPreferredSize(dimension);
         netSheetNextPageButton.setPreferredSize(dimension);
-        // 按钮去掉周围的虚线框
-        netSheetBackwardButton.setFocusPainted(false);
-        netSheetRefreshButton.setFocusPainted(false);
-        netSheetLastPageButton.setFocusPainted(false);
-        netSheetGoButton.setFocusPainted(false);
-        netSheetNextPageButton.setFocusPainted(false);
-        // 按钮填充
-        netSheetBackwardButton.setContentAreaFilled(false);
-        netSheetRefreshButton.setContentAreaFilled(false);
-        netSheetLastPageButton.setContentAreaFilled(false);
-        netSheetGoButton.setContentAreaFilled(false);
-        netSheetNextPageButton.setContentAreaFilled(false);
+        netSheetEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
         netSheetBackwardButton.addMouseListener(new ButtonMouseListener(netSheetBackwardButton, THIS));
         netSheetRefreshButton.addMouseListener(new ButtonMouseListener(netSheetRefreshButton, THIS));
+        netSheetStartPageButton.addMouseListener(new ButtonMouseListener(netSheetStartPageButton, THIS));
         netSheetLastPageButton.addMouseListener(new ButtonMouseListener(netSheetLastPageButton, THIS));
         netSheetGoButton.addMouseListener(new ButtonMouseListener(netSheetGoButton, THIS));
         netSheetNextPageButton.addMouseListener(new ButtonMouseListener(netSheetNextPageButton, THIS));
+        netSheetEndPageButton.addMouseListener(new ButtonMouseListener(netSheetEndPageButton, THIS));
         // 全局字体
         netSheetPageTextField.setFont(globalFont);
         netSheetTitleLabel.setFont(globalFont);
@@ -16163,11 +16267,12 @@ public class PlayerFrame extends JFrame {
         // 帮助提示
         netSheetBackwardButton.setToolTipText(BACKWARD_TIP);
         netSheetRefreshButton.setToolTipText(REFRESH_TIP);
+        netSheetStartPageButton.setToolTipText(START_PAGE_TIP);
         netSheetLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netSheetGoButton.setToolTipText(GO_TIP);
         netSheetNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        // 不可浮动
-        netSheetToolBar.setFloatable(false);
+        netSheetEndPageButton.setToolTipText(END_PAGE_TIP);
+
         netSheetToolBar.setBorder(BorderFactory.createEmptyBorder(0, 37, 0, 0));
         netSheetToolBar.add(netSheetBackwardButton);
         netSheetToolBar.add(Box.createHorizontalGlue());
@@ -16180,8 +16285,10 @@ public class PlayerFrame extends JFrame {
         netSheetCountPanel.add(netSheetRefreshButton);
         netSheetCountPanel.add(netSheetPageTextField);
         netSheetCountPanel.add(netSheetGoButton);
+        netSheetCountPanel.add(netSheetStartPageButton);
         netSheetCountPanel.add(netSheetLastPageButton);
         netSheetCountPanel.add(netSheetNextPageButton);
+        netSheetCountPanel.add(netSheetEndPageButton);
         netSheetCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netSheetCountPanel.setVisible(false);
         netSheetBox.add(netSheetCountPanel);
@@ -16961,6 +17068,27 @@ public class PlayerFrame extends JFrame {
                 recommendGoPageAction.run();
             }
         });
+        // 第一页按钮事件
+        netRecommendStartPageButton.addActionListener(e -> {
+            // 当前显示的是推荐列表，跳到第一页推荐
+            if (!recommendBackwardButton.isEnabled()) {
+                if (netRecommendCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netRecommendCurrPage = 1;
+                recommendGoPageAction.run();
+            }
+            // 当前显示的是推荐里的歌曲，跳到第一页歌曲
+            else {
+                if (netMusicInRecommendCurrPage == 1) {
+                    new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInRecommendCurrPage = 1;
+                recommendGoPageAction.run();
+            }
+        });
         // 上一页按钮事件
         netRecommendLastPageButton.addActionListener(e -> {
             // 当前显示的是推荐列表，跳到上一页推荐
@@ -17001,6 +17129,28 @@ public class PlayerFrame extends JFrame {
                     return;
                 }
                 netMusicInRecommendCurrPage++;
+                recommendGoPageAction.run();
+            }
+        });
+        // 最后一页按钮事件
+        netRecommendEndPageButton.addActionListener(e -> {
+            // 当前显示的是推荐列表，跳到最后一页推荐
+            if (!recommendBackwardButton.isEnabled()) {
+                // netRecommendMaxPage 为 -1 时，页数未知
+                if (netRecommendCurrPage == netRecommendMaxPage && netRecommendMaxPage > 0) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netRecommendCurrPage = netRecommendMaxPage;
+                recommendGoPageAction.run();
+            }
+            // 当前显示的是某推荐里的歌曲，跳到最后一页歌曲
+            else {
+                if (netMusicInRecommendCurrPage == netMusicInRecommendMaxPage) {
+                    new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
+                    return;
+                }
+                netMusicInRecommendCurrPage = netMusicInRecommendMaxPage;
                 recommendGoPageAction.run();
             }
         });
@@ -17586,9 +17736,11 @@ public class PlayerFrame extends JFrame {
         // 控制按钮大小
         Dimension dimension = new Dimension(20, 20);
         netRecommendRefreshButton.setPreferredSize(dimension);
+        netRecommendStartPageButton.setPreferredSize(dimension);
         netRecommendLastPageButton.setPreferredSize(dimension);
         netRecommendGoButton.setPreferredSize(dimension);
         netRecommendNextPageButton.setPreferredSize(dimension);
+        netRecommendEndPageButton.setPreferredSize(dimension);
         // 全局字体
         playlistRecommendButton.setFont(globalFont);
         highQualityPlaylistButton.setFont(globalFont);
@@ -17604,42 +17756,6 @@ public class PlayerFrame extends JFrame {
         netRecommendPlayAllButton.setFont(globalFont);
         recommendCountLabel.setFont(globalFont);
         netRecommendPageTextField.setFont(globalFont);
-        // 边框
-        netRecommendTagComboBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        // 按钮去掉周围的虚线框
-        playlistRecommendButton.setFocusPainted(false);
-        highQualityPlaylistButton.setFocusPainted(false);
-        hotMusicButton.setFocusPainted(false);
-        netMusicRecommendButton.setFocusPainted(false);
-        newAlbumRecommendButton.setFocusPainted(false);
-        artistListRecommendButton.setFocusPainted(false);
-        newRadioRecommendButton.setFocusPainted(false);
-        hotRadioRecommendButton.setFocusPainted(false);
-        programRecommendButton.setFocusPainted(false);
-        mvRecommendButton.setFocusPainted(false);
-        recommendBackwardButton.setFocusPainted(false);
-        netRecommendPlayAllButton.setFocusPainted(false);
-        netRecommendRefreshButton.setFocusPainted(false);
-        netRecommendLastPageButton.setFocusPainted(false);
-        netRecommendGoButton.setFocusPainted(false);
-        netRecommendNextPageButton.setFocusPainted(false);
-        // 去掉填充
-        playlistRecommendButton.setContentAreaFilled(false);
-        highQualityPlaylistButton.setContentAreaFilled(false);
-        hotMusicButton.setContentAreaFilled(false);
-        netMusicRecommendButton.setContentAreaFilled(false);
-        newAlbumRecommendButton.setContentAreaFilled(false);
-        artistListRecommendButton.setContentAreaFilled(false);
-        newRadioRecommendButton.setContentAreaFilled(false);
-        hotRadioRecommendButton.setContentAreaFilled(false);
-        programRecommendButton.setContentAreaFilled(false);
-        mvRecommendButton.setContentAreaFilled(false);
-        recommendBackwardButton.setContentAreaFilled(false);
-        netRecommendPlayAllButton.setContentAreaFilled(false);
-        netRecommendRefreshButton.setContentAreaFilled(false);
-        netRecommendLastPageButton.setContentAreaFilled(false);
-        netRecommendGoButton.setContentAreaFilled(false);
-        netRecommendNextPageButton.setContentAreaFilled(false);
         // 按钮悬浮与点击效果
         playlistRecommendButton.addMouseListener(new ButtonMouseListener(playlistRecommendButton, THIS));
         highQualityPlaylistButton.addMouseListener(new ButtonMouseListener(highQualityPlaylistButton, THIS));
@@ -17654,9 +17770,11 @@ public class PlayerFrame extends JFrame {
         recommendBackwardButton.addMouseListener(new ButtonMouseListener(recommendBackwardButton, THIS));
         netRecommendPlayAllButton.addMouseListener(new ButtonMouseListener(netRecommendPlayAllButton, THIS));
         netRecommendRefreshButton.addMouseListener(new ButtonMouseListener(netRecommendRefreshButton, THIS));
+        netRecommendStartPageButton.addMouseListener(new ButtonMouseListener(netRecommendStartPageButton, THIS));
         netRecommendLastPageButton.addMouseListener(new ButtonMouseListener(netRecommendLastPageButton, THIS));
         netRecommendGoButton.addMouseListener(new ButtonMouseListener(netRecommendGoButton, THIS));
         netRecommendNextPageButton.addMouseListener(new ButtonMouseListener(netRecommendNextPageButton, THIS));
+        netRecommendEndPageButton.addMouseListener(new ButtonMouseListener(netRecommendEndPageButton, THIS));
         // 提示语
         playlistRecommendButton.setToolTipText(RECOMMEND_PLAYLIST_TIP);
         highQualityPlaylistButton.setToolTipText(HIGH_QUALITY_PLAYLIST_TIP);
@@ -17671,9 +17789,11 @@ public class PlayerFrame extends JFrame {
         recommendBackwardButton.setToolTipText(BACKWARD_TIP);
         netRecommendPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netRecommendRefreshButton.setToolTipText(REFRESH_TIP);
+        netRecommendStartPageButton.setToolTipText(START_PAGE_TIP);
         netRecommendLastPageButton.setToolTipText(LAST_PAGE_TIP);
         netRecommendGoButton.setToolTipText(GO_TIP);
         netRecommendNextPageButton.setToolTipText(NEXT_PAGE_TIP);
+        netRecommendEndPageButton.setToolTipText(END_PAGE_TIP);
         // 按钮文字
         playlistRecommendButton.setText(RECOMMEND_PLAYLIST_TIP);
         highQualityPlaylistButton.setText(HIGH_QUALITY_PLAYLIST_TIP);
@@ -17707,8 +17827,7 @@ public class PlayerFrame extends JFrame {
         programRecommendButton.setIconTextGap(gap);
         mvRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         mvRecommendButton.setIconTextGap(gap);
-        // 不可浮动
-        recommendToolBar.setFloatable(false);
+
         // 推荐工具栏网格布局
         recommendToolBar.setLayout(new GridLayout(2, 4));
         recommendToolBar.add(playlistRecommendButton);
@@ -17724,7 +17843,6 @@ public class PlayerFrame extends JFrame {
         recommendLeftBox.add(recommendToolBar);
 
         // 推荐歌单/专辑中歌曲的工具栏，暂时不放入
-        musicRecommendToolBar.setFloatable(false);
         musicRecommendToolBar.add(recommendBackwardButton);
         musicRecommendToolBar.add(Box.createHorizontalGlue());
 
@@ -17735,8 +17853,10 @@ public class PlayerFrame extends JFrame {
         recommendCountPanel.add(netRecommendRefreshButton);
         recommendCountPanel.add(netRecommendPageTextField);
         recommendCountPanel.add(netRecommendGoButton);
+        recommendCountPanel.add(netRecommendStartPageButton);
         recommendCountPanel.add(netRecommendLastPageButton);
         recommendCountPanel.add(netRecommendNextPageButton);
+        recommendCountPanel.add(netRecommendEndPageButton);
         recommendCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         recommendCountPanel.setVisible(false);
         recommendLeftBox.add(recommendCountPanel);
@@ -18251,26 +18371,11 @@ public class PlayerFrame extends JFrame {
         itemRecommendScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         // 最佳大小
         itemRecommendScrollPane.setPreferredSize(new Dimension(200, 3000));
-        itemRecommendScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         recommendLeftBox.add(itemRecommendScrollPane);
     }
 
     // 初始化下载工具条
     void downloadToolBarInit() {
-        // 按钮去掉周围的虚线框
-        restartSelectedTasksButton.setFocusPainted(false);
-        cancelSelectedTasksButton.setFocusPainted(false);
-        removeSelectedTasksButton.setFocusPainted(false);
-        restartAllTasksButton.setFocusPainted(false);
-        cancelAllTasksButton.setFocusPainted(false);
-        removeAllTasksButton.setFocusPainted(false);
-        // 去掉按钮填充
-        restartSelectedTasksButton.setContentAreaFilled(false);
-        cancelSelectedTasksButton.setContentAreaFilled(false);
-        removeSelectedTasksButton.setContentAreaFilled(false);
-        restartAllTasksButton.setContentAreaFilled(false);
-        cancelAllTasksButton.setContentAreaFilled(false);
-        removeAllTasksButton.setContentAreaFilled(false);
         // 按钮悬浮和点击效果
         restartSelectedTasksButton.addMouseListener(new ButtonMouseListener(restartSelectedTasksButton, THIS));
         cancelSelectedTasksButton.addMouseListener(new ButtonMouseListener(cancelSelectedTasksButton, THIS));
@@ -18336,8 +18441,7 @@ public class PlayerFrame extends JFrame {
         restartAllTasksButton.setToolTipText(RESTART_ALL_TASKS_TIP);
         cancelAllTasksButton.setToolTipText(CANCEL_ALL_TASKS_TIP);
         removeAllTasksButton.setToolTipText(REMOVE_ALL_TASKS_TIP);
-        // 不可浮动
-        downloadToolBar.setFloatable(false);
+
         downloadToolBar.add(restartSelectedTasksButton);
         downloadToolBar.add(restartAllTasksButton);
         downloadToolBar.add(cancelSelectedTasksButton);
@@ -18532,20 +18636,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始化播放队列工具条
     void playQueueToolBarInit() {
-        // 按钮去掉周围的虚线框
-        playQueueRemoveToolButton.setFocusPainted(false);
-        playQueueClearToolButton.setFocusPainted(false);
-        playQueueDuplicateToolButton.setFocusPainted(false);
-        playQueueReverseToolButton.setFocusPainted(false);
-        playQueueMoveUpToolButton.setFocusPainted(false);
-        playQueueMoveDownToolButton.setFocusPainted(false);
-        // 去掉按钮填充
-        playQueueRemoveToolButton.setContentAreaFilled(false);
-        playQueueClearToolButton.setContentAreaFilled(false);
-        playQueueDuplicateToolButton.setContentAreaFilled(false);
-        playQueueReverseToolButton.setContentAreaFilled(false);
-        playQueueMoveUpToolButton.setContentAreaFilled(false);
-        playQueueMoveDownToolButton.setContentAreaFilled(false);
         // 按钮悬浮和点击效果
         playQueueRemoveToolButton.addMouseListener(new ButtonMouseListener(playQueueRemoveToolButton, THIS));
         playQueueClearToolButton.addMouseListener(new ButtonMouseListener(playQueueClearToolButton, THIS));
@@ -18660,8 +18750,7 @@ public class PlayerFrame extends JFrame {
         playQueueReverseToolButton.setToolTipText(REVERSE_TIP);
         playQueueMoveUpToolButton.setToolTipText(MOVE_UP_TIP);
         playQueueMoveDownToolButton.setToolTipText(MOVE_DOWN_TIP);
-        // 不可浮动
-        playQueueToolBar.setFloatable(false);
+
         playQueueToolBar.add(playQueueRemoveToolButton);
         playQueueToolBar.add(playQueueClearToolButton);
         playQueueToolBar.add(playQueueDuplicateToolButton);
@@ -19056,8 +19145,6 @@ public class PlayerFrame extends JFrame {
 
         // 单选
         lrcList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        // 不能获得焦点
-        lrcList.setFocusable(false);
         // 右键弹出菜单
         lrcList.addMouseListener(new MouseAdapter() {
             @Override
@@ -19145,7 +19232,7 @@ public class PlayerFrame extends JFrame {
                 swAction.run();
             }
         });
-        // 歌词面板最佳大小(JList 需要加到 JScrollPane 中才能调整大小！)
+        // 歌词面板最佳大小(CustomList 需要加到 CustomScrollPane 中才能调整大小！)
         Dimension d = new Dimension(1, SpectrumConstants.BAR_MAX_HEIGHT);
         lrcScrollPane.setBorder(null);
         spectrumPanel.setMinimumSize(d);
@@ -19259,19 +19346,11 @@ public class PlayerFrame extends JFrame {
         currTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         durationLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        timeBar.setFocusable(false);
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
-        // 实时监听进度条值的变化，更新显示进度，看起来更平滑
-//        timeBar.addChangeListener(e -> timeBar.repaint());
         // 拖动播放时间条
         timeBar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                timeBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
-
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (player.isEmpty()) return;
@@ -19306,7 +19385,6 @@ public class PlayerFrame extends JFrame {
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         changePaneButton.setIconTextGap(10);
         changePaneButton.setPreferredSize(new Dimension(280, 66));
-        changePaneButton.setFocusable(false);
         changePaneButton.setText(NO_LRC_MSG);
         changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton, changePaneButtonUI, THIS));
         changePaneButton.addActionListener(e -> {
@@ -19343,14 +19421,12 @@ public class PlayerFrame extends JFrame {
         });
         // MV
         mvButton.setToolTipText(MV_TIP);
-        mvButton.setFocusable(false);
         mvButton.setEnabled(false);
         mvButton.addMouseListener(new ButtonMouseListener(mvButton, THIS));
         mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth(), mvIcon.getIconHeight()));
         mvButton.addActionListener(e -> playMv(MvType.PLAYING));
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
-        collectButton.setFocusable(false);
         collectButton.setEnabled(false);
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, THIS));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth(), collectIcon.getIconHeight()));
@@ -19369,14 +19445,12 @@ public class PlayerFrame extends JFrame {
         });
         // 下载
         downloadButton.setToolTipText(DOWNLOAD_TIP);
-        downloadButton.setFocusable(false);
         downloadButton.setEnabled(false);
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, THIS));
         downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth(), downloadIcon.getIconHeight()));
         downloadButton.addActionListener(e -> singleDownload(player.getNetMusicInfo()));
         // 评论
         commentButton.setToolTipText(COMMENT_TIP);
-        commentButton.setFocusable(false);
         commentButton.setEnabled(false);
         commentButton.addMouseListener(new ButtonMouseListener(commentButton, THIS));
         commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth(), commentIcon.getIconHeight()));
@@ -19387,7 +19461,6 @@ public class PlayerFrame extends JFrame {
         });
         // 曲谱
         sheetButton.setToolTipText(SHEET_TIP);
-        sheetButton.setFocusable(false);
         sheetButton.setEnabled(false);
         sheetButton.addMouseListener(new ButtonMouseListener(sheetButton, THIS));
         sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth(), sheetIcon.getIconHeight()));
@@ -19397,16 +19470,13 @@ public class PlayerFrame extends JFrame {
                 getSheets(netMusicInfo, currPane != MusicPane.SHEET);
         });
         lastButton.setToolTipText(LAST_TIP);
-        lastButton.setFocusable(false);
         lastButton.addMouseListener(new ButtonMouseListener(lastButton, THIS));
         lastButton.setPreferredSize(new Dimension(lastIcon.getIconWidth(), lastIcon.getIconHeight()));
         lastButton.addActionListener(e -> playLast());
         playOrPauseButton.setPreferredSize(new Dimension(playIcon.getIconWidth(), playIcon.getIconHeight()));
-        playOrPauseButton.setFocusable(false);
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, THIS));
         playOrPauseButton.addActionListener(e -> playOrPause());
         nextButton.setToolTipText(NEXT_TIP);
-        nextButton.setFocusable(false);
         nextButton.addMouseListener(new ButtonMouseListener(nextButton, THIS));
         nextButton.setPreferredSize(new Dimension(nextIcon.getIconWidth(), nextIcon.getIconHeight()));
         nextButton.addActionListener(e -> {
@@ -19422,7 +19492,6 @@ public class PlayerFrame extends JFrame {
         });
         // 默认提示语为“列表循环”
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
-        playModeButton.setFocusable(false);
         playModeButton.addMouseListener(new ButtonMouseListener(playModeButton, THIS));
         playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth(), listCycleIcon.getIconHeight()));
         // 播放模式切换事件
@@ -19458,11 +19527,9 @@ public class PlayerFrame extends JFrame {
         playModePopupMenu.add(shuffleMenuItem);
 
         backwardButton.setToolTipText(BACKW_TIP);
-        backwardButton.setFocusable(false);
         backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, THIS));
         backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth(), backwIcon.getIconHeight()));
         forwardButton.setToolTipText(FORW_TIP);
-        forwardButton.setFocusable(false);
         forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, THIS));
         forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth(), forwIcon.getIconHeight()));
         // 快进快退
@@ -19477,7 +19544,6 @@ public class PlayerFrame extends JFrame {
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
-        muteButton.setFocusable(false);
         muteButton.addMouseListener(new ButtonMouseListener(muteButton, THIS));
         muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth(), muteIcon.getIconHeight()));
         muteButton.addActionListener(e -> {
@@ -19491,7 +19557,6 @@ public class PlayerFrame extends JFrame {
             player.setMute(isMute);
         });
         // 音量调节滑动条
-        volumeSlider.setFocusable(false);
         volumeSlider.setPreferredSize(new Dimension(100, 12));
         volumeSlider.setMaximum(MAX_VOLUME);
         volumeSlider.setValue(DEFAULT_VOLUME);
@@ -19503,8 +19568,6 @@ public class PlayerFrame extends JFrame {
                 player.setMute(isMute = false);
             }
         });
-        // 移入手势
-        volumeSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         // 倍速菜单和按钮
 //        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
 //            menuItem.setFont(globalFont);
@@ -19516,7 +19579,6 @@ public class PlayerFrame extends JFrame {
 //            ratePopupMenu.add(menuItem);
 //        }
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.setFocusable(false);
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, THIS));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
 //        rateButton.setComponentPopupMenu(ratePopupMenu);
@@ -19532,7 +19594,6 @@ public class PlayerFrame extends JFrame {
         });
         // 频谱开关按钮
         switchSpectrumButton.setToolTipText(SWITCH_SPECTRUM_TIP);
-        switchSpectrumButton.setFocusable(false);
         switchSpectrumButton.addMouseListener(new ButtonMouseListener(switchSpectrumButton, THIS));
         switchSpectrumButton.setPreferredSize(new Dimension(spectrumOnIcon.getIconWidth(), spectrumOnIcon.getIconHeight()));
         switchSpectrumButton.addActionListener(e -> {
@@ -19571,7 +19632,6 @@ public class PlayerFrame extends JFrame {
         });
         // 虚化按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
-        blurButton.setFocusable(false);
         blurButton.addMouseListener(new ButtonMouseListener(blurButton, THIS));
         blurButton.setPreferredSize(new Dimension(gsBlurIcon.getIconWidth(), gsBlurIcon.getIconHeight()));
         blurButton.addMouseListener(new MouseAdapter() {
@@ -19583,13 +19643,11 @@ public class PlayerFrame extends JFrame {
         });
         // 音效按钮
         soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
-        soundEffectButton.setFocusable(false);
         soundEffectButton.addMouseListener(new ButtonMouseListener(soundEffectButton, THIS));
         soundEffectButton.setPreferredSize(new Dimension(soundEffectIcon.getIconWidth(), soundEffectIcon.getIconHeight()));
         soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS, true).showDialog());
         // 跳到播放队列按钮
         goToPlayQueueButton.setToolTipText(GO_TO_PLAY_QUEUE_TIP);
-        goToPlayQueueButton.setFocusable(false);
         goToPlayQueueButton.setPreferredSize(new Dimension(goToPlayQueueIcon.getIconWidth(), goToPlayQueueIcon.getIconHeight()));
         goToPlayQueueButton.addMouseListener(new ButtonMouseListener(goToPlayQueueButton, THIS));
         goToPlayQueueButton.addMouseListener(new MouseAdapter() {
@@ -19609,7 +19667,6 @@ public class PlayerFrame extends JFrame {
         });
         // 桌面歌词开关
         desktopLyricButton.setToolTipText(DESKTOP_LRC_TIP);
-        desktopLyricButton.setFocusable(false);
         desktopLyricButton.addMouseListener(new ButtonMouseListener(desktopLyricButton, THIS));
         desktopLyricButton.setPreferredSize(new Dimension(desktopLyricOnIcon.getIconWidth(), desktopLyricOnIcon.getIconHeight()));
         desktopLyricButton.addActionListener(e -> {
@@ -19624,7 +19681,6 @@ public class PlayerFrame extends JFrame {
         });
         // 繁简切换按钮
         switchChineseButton.setToolTipText(SWITCH_CHINESE_TIP);
-        switchChineseButton.setFocusable(false);
         switchChineseButton.addMouseListener(new ButtonMouseListener(switchChineseButton, THIS));
         switchChineseButton.setPreferredSize(new Dimension(tradChineseIcon.getIconWidth(), tradChineseIcon.getIconHeight()));
         switchChineseButton.addActionListener(e -> {
@@ -19647,7 +19703,6 @@ public class PlayerFrame extends JFrame {
         });
         // 日文罗马音切换按钮
         switchJapaneseButton.setToolTipText(SWITCH_JAPANESE_TIP);
-        switchJapaneseButton.setFocusable(false);
         switchJapaneseButton.addMouseListener(new ButtonMouseListener(switchJapaneseButton, THIS));
         switchJapaneseButton.setPreferredSize(new Dimension(kanaIcon.getIconWidth(), kanaIcon.getIconHeight()));
         switchJapaneseButton.addActionListener(e -> {
@@ -19676,7 +19731,6 @@ public class PlayerFrame extends JFrame {
         });
         // 歌词原文/翻译切换按钮
         switchLrcTypeButton.setToolTipText(SWITCH_LRC_TYPE_TIP);
-        switchLrcTypeButton.setFocusable(false);
         switchLrcTypeButton.addMouseListener(new ButtonMouseListener(switchLrcTypeButton, THIS));
         switchLrcTypeButton.setPreferredSize(new Dimension(originalIcon.getIconWidth(), originalIcon.getIconHeight()));
         switchLrcTypeButton.addActionListener(e -> {
@@ -19922,7 +19976,7 @@ public class PlayerFrame extends JFrame {
 
     // 清空歌词
     void clearLrc() {
-        // 解决 JList 选中第一行更新缓慢的 BUG
+        // 解决 CustomList 选中第一行更新缓慢的 BUG
 //        lrcList.setModel(emptyListModel);
         lrcListModel.clear();
         if (statements != null) statements.clear();
@@ -20224,7 +20278,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 添加到下一首播放
-    void nextPlay(JList list) {
+    void nextPlay(CustomList list) {
         DefaultListModel model = (DefaultListModel) list.getModel();
 
         Object obj = list.getSelectedValue();
@@ -20266,7 +20320,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放选中歌曲，返回是否播放成功
-    boolean playSelected(JList list, boolean allowRetry) {
+    boolean playSelected(CustomList list, boolean allowRetry) {
         AudioFile file = null;
         NetMusicInfo musicInfo = null;
 
@@ -20686,7 +20740,6 @@ public class PlayerFrame extends JFrame {
         // 开始动画之前先判断在不在运行，防止重复运行动画造成卡顿！
         if (!spectrumTimer.isRunning()) spectrumTimer.start();
         spectrumPanel.setVisible(true);
-//        lrcScrollPane.setBorder(BorderFactory.createEmptyBorder(26, 0, 0, 0));
     }
 
     // 关闭频谱
@@ -20694,7 +20747,6 @@ public class PlayerFrame extends JFrame {
         spectrumTimer.stop();
         spectrumPanel.setDrawSpectrum(false);
         spectrumPanel.setVisible(false);
-//        lrcScrollPane.setBorder(BorderFactory.createEmptyBorder(26, 0, 26, 0));
     }
 
     // 改变所有单选菜单项图标
@@ -20745,7 +20797,6 @@ public class PlayerFrame extends JFrame {
     public void changeUIStyle(UIStyle style) throws IOException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, AWTException {
         currUIStyle = style;
 
-        boolean opaque = false;
         Color buttonColor = style.getButtonColor();
         Color labelColor = style.getLabelColor();
         Color selectedColor = style.getSelectedColor();
@@ -20756,8 +20807,6 @@ public class PlayerFrame extends JFrame {
         trayIconImg.setImage(ImageUtils.dye(trayIcon, buttonColor).getImage());
 
         // 标题栏
-        topPanel.setOpaque(opaque);
-        titleLabel.setOpaque(opaque);
         titleLabel.setForeground(style.getButtonColor());
         titleLabel.setIcon(ImageUtils.dye((ImageIcon) titleLabel.getIcon(), buttonColor));
         hideDetailButton.setIcon(ImageUtils.dye((ImageIcon) hideDetailButton.getIcon(), buttonColor));
@@ -20768,13 +20817,10 @@ public class PlayerFrame extends JFrame {
         minimizeButton.setIcon(ImageUtils.dye((ImageIcon) minimizeButton.getIcon(), buttonColor));
         maximizeButton.setIcon(ImageUtils.dye((ImageIcon) maximizeButton.getIcon(), buttonColor));
         closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), buttonColor));
-        windowCtrlPanel.setOpaque(opaque);
 
         // 列表为空提示面板
-        emptyHintLabel.setOpaque(opaque);
         emptyHintLabel.setIcon(ImageUtils.dye(emptyHintIcon, labelColor));
         emptyHintLabel.setForeground(labelColor);
-        emptyHintPanel.setOpaque(opaque);
 
         // 按钮被禁用时颜色
         Color disabledColor = ColorUtils.darker(buttonColor, 0.3f);
@@ -21075,99 +21121,32 @@ public class PlayerFrame extends JFrame {
         tabbedPane.setUI(new TabbedPaneUI());
         collectionTabbedPane.setUI(new TabbedPaneUI());
 
-        addToolButton.setOpaque(opaque);
-        reimportToolButton.setOpaque(opaque);
-        manageCatalogToolButton.setOpaque(opaque);
-        removeToolButton.setOpaque(opaque);
-        clearToolButton.setOpaque(opaque);
-        duplicateToolButton.setOpaque(opaque);
-        reverseToolButton.setOpaque(opaque);
-        sortToolButton.setOpaque(opaque);
-        moveUpToolButton.setOpaque(opaque);
-        moveDownToolButton.setOpaque(opaque);
-        clearInputToolButton.setOpaque(opaque);
-        countLabel.setOpaque(opaque);
         // 关键词面板
-        netMusicBackwardButton.setOpaque(opaque);
-        netMusicKeywordsPanel.setOpaque(opaque);
-        netPlaylistKeywordsPanel.setOpaque(opaque);
-        netAlbumKeywordsPanel.setOpaque(opaque);
-        netArtistKeywordsPanel.setOpaque(opaque);
-        netRadioKeywordsPanel.setOpaque(opaque);
-        netMvBackwardButton.setOpaque(opaque);
-        netMvKeywordsPanel.setOpaque(opaque);
-        netUserKeywordsPanel.setOpaque(opaque);
-
-        netMusicSearchSuggestionPanel.setOpaque(opaque);
-        netMusicSearchSuggestionInnerPanel1.setOpaque(opaque);
-        netMusicSearchSuggestionInnerPanel2.setOpaque(opaque);
         netMusicSearchSuggestionLabel.setForeground(style.getLabelColor());
-        netMusicSearchSuggestionLabel.setOpaque(opaque);
-        netMusicRefreshSearchSuggestionButton.setOpaque(opaque);
         netMusicRefreshSearchSuggestionButton.setIcon(ImageUtils.dye((ImageIcon) netMusicRefreshSearchSuggestionButton.getIcon(), buttonColor));
 
-        netMusicHotSearchPanel.setOpaque(opaque);
-        netMusicHotSearchInnerPanel1.setOpaque(opaque);
-        netMusicHotSearchInnerPanel2.setOpaque(opaque);
         netMusicHotSearchLabel.setForeground(style.getLabelColor());
-        netMusicHotSearchLabel.setOpaque(opaque);
-        netMusicRefreshHotSearchButton.setOpaque(opaque);
         netMusicRefreshHotSearchButton.setIcon(ImageUtils.dye((ImageIcon) netMusicRefreshHotSearchButton.getIcon(), buttonColor));
 
-        netMusicHistorySearchPanel.setOpaque(opaque);
-        netMusicHistorySearchInnerPanel1.setOpaque(opaque);
-        netMusicHistorySearchInnerPanel2.setOpaque(opaque);
         netMusicHistorySearchLabel.setForeground(style.getLabelColor());
-        netMusicHistorySearchLabel.setOpaque(opaque);
-        netMusicClearHistorySearchButton.setOpaque(opaque);
         netMusicClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netMusicClearHistorySearchButton.getIcon(), buttonColor));
 
-        netPlaylistHistorySearchPanel.setOpaque(opaque);
-        netPlaylistHistorySearchInnerPanel1.setOpaque(opaque);
-        netPlaylistHistorySearchInnerPanel2.setOpaque(opaque);
         netPlaylistHistorySearchLabel.setForeground(style.getLabelColor());
-        netPlaylistHistorySearchLabel.setOpaque(opaque);
-        netPlaylistClearHistorySearchButton.setOpaque(opaque);
         netPlaylistClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistClearHistorySearchButton.getIcon(), buttonColor));
 
-        netAlbumHistorySearchPanel.setOpaque(opaque);
-        netAlbumHistorySearchInnerPanel1.setOpaque(opaque);
-        netAlbumHistorySearchInnerPanel2.setOpaque(opaque);
         netAlbumHistorySearchLabel.setForeground(style.getLabelColor());
-        netAlbumHistorySearchLabel.setOpaque(opaque);
-        netAlbumClearHistorySearchButton.setOpaque(opaque);
         netAlbumClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumClearHistorySearchButton.getIcon(), buttonColor));
 
-        netArtistHistorySearchPanel.setOpaque(opaque);
-        netArtistHistorySearchInnerPanel1.setOpaque(opaque);
-        netArtistHistorySearchInnerPanel2.setOpaque(opaque);
         netArtistHistorySearchLabel.setForeground(style.getLabelColor());
-        netArtistHistorySearchLabel.setOpaque(opaque);
-        netArtistClearHistorySearchButton.setOpaque(opaque);
         netArtistClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netArtistClearHistorySearchButton.getIcon(), buttonColor));
 
-        netRadioHistorySearchPanel.setOpaque(opaque);
-        netRadioHistorySearchInnerPanel1.setOpaque(opaque);
-        netRadioHistorySearchInnerPanel2.setOpaque(opaque);
         netRadioHistorySearchLabel.setForeground(style.getLabelColor());
-        netRadioHistorySearchLabel.setOpaque(opaque);
-        netRadioClearHistorySearchButton.setOpaque(opaque);
         netRadioClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netRadioClearHistorySearchButton.getIcon(), buttonColor));
 
-        netMvHistorySearchPanel.setOpaque(opaque);
-        netMvHistorySearchInnerPanel1.setOpaque(opaque);
-        netMvHistorySearchInnerPanel2.setOpaque(opaque);
         netMvHistorySearchLabel.setForeground(style.getLabelColor());
-        netMvHistorySearchLabel.setOpaque(opaque);
-        netMvClearHistorySearchButton.setOpaque(opaque);
         netMvClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netMvClearHistorySearchButton.getIcon(), buttonColor));
 
-        netUserHistorySearchPanel.setOpaque(opaque);
-        netUserHistorySearchInnerPanel1.setOpaque(opaque);
-        netUserHistorySearchInnerPanel2.setOpaque(opaque);
         netUserHistorySearchLabel.setForeground(style.getLabelColor());
-        netUserHistorySearchLabel.setOpaque(opaque);
-        netUserClearHistorySearchButton.setOpaque(opaque);
         netUserClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netUserClearHistorySearchButton.getIcon(), buttonColor));
 
         Component[] components = netMusicSearchSuggestionInnerPanel2.getComponents();
@@ -21234,7 +21213,6 @@ public class PlayerFrame extends JFrame {
             }
         }
         // 筛选框透明
-        filterTextField.setOpaque(opaque);
         FocusListener[] focusListeners = filterTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21245,8 +21223,6 @@ public class PlayerFrame extends JFrame {
         filterTextField.setForeground(filterTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         filterTextField.setCaretColor(foreColor);
         // 在线音乐搜索栏透明
-        searchTextField.setOpaque(opaque);
-        netMusicPageTextField.setOpaque(opaque);
         focusListeners = searchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21256,29 +21232,11 @@ public class PlayerFrame extends JFrame {
         }
         searchTextField.setForeground(searchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         searchTextField.setCaretColor(foreColor);
-//        focusListeners = netMusicPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
-        netMusicSearchTypeComboBox.setOpaque(opaque);
         netMusicSearchTypeComboBox.setUI(new ComboBoxUI(netMusicSearchTypeComboBox, THIS, globalFont, buttonColor));
-        netMusicSearchSubTypeComboBox.setOpaque(opaque);
         netMusicSearchSubTypeComboBox.setUI(new ComboBoxUI(netMusicSearchSubTypeComboBox, THIS, globalFont, buttonColor));
         netMusicPageTextField.setForeground(foreColor);
         netMusicPageTextField.setCaretColor(foreColor);
-        netMusicClearInputButton.setOpaque(opaque);
-        searchButton.setOpaque(opaque);
-        netMusicRefreshButton.setOpaque(opaque);
-        netMusicLastPageButton.setOpaque(opaque);
-        netMusicGoButton.setOpaque(opaque);
-        netMusicNextPageButton.setOpaque(opaque);
         // 歌单搜索栏透明
-        netPlaylistBackwardButton.setOpaque(opaque);
-        netPlaylistSearchTextField.setOpaque(opaque);
-        netPlaylistPageTextField.setOpaque(opaque);
         focusListeners = netPlaylistSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21288,27 +21246,10 @@ public class PlayerFrame extends JFrame {
         }
         netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netPlaylistSearchTextField.setCaretColor(foreColor);
-//        focusListeners = netPlaylistPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netPlaylistPageTextField.setForeground(foreColor);
         netPlaylistPageTextField.setCaretColor(foreColor);
-        netPlaylistClearInputButton.setOpaque(opaque);
-        netPlaylistSearchButton.setOpaque(opaque);
-        netPlaylistPlayAllButton.setOpaque(opaque);
         netPlaylistPlayAllButton.setForeground(buttonColor);
-        netPlaylistRefreshButton.setOpaque(opaque);
-        netPlaylistLastPageButton.setOpaque(opaque);
-        netPlaylistGoButton.setOpaque(opaque);
-        netPlaylistNextPageButton.setOpaque(opaque);
         // 专辑搜索栏透明
-        netAlbumBackwardButton.setOpaque(opaque);
-        netAlbumSearchTextField.setOpaque(opaque);
-        netAlbumPageTextField.setOpaque(opaque);
         focusListeners = netAlbumSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21318,27 +21259,10 @@ public class PlayerFrame extends JFrame {
         }
         netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netAlbumSearchTextField.setCaretColor(foreColor);
-//        focusListeners = netAlbumPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netAlbumPageTextField.setForeground(foreColor);
         netAlbumPageTextField.setCaretColor(foreColor);
-        netAlbumClearInputButton.setOpaque(opaque);
-        netAlbumSearchButton.setOpaque(opaque);
-        netAlbumPlayAllButton.setOpaque(opaque);
         netAlbumPlayAllButton.setForeground(buttonColor);
-        netAlbumRefreshButton.setOpaque(opaque);
-        netAlbumLastPageButton.setOpaque(opaque);
-        netAlbumGoButton.setOpaque(opaque);
-        netAlbumNextPageButton.setOpaque(opaque);
         // 歌手搜索栏透明
-        netArtistBackwardButton.setOpaque(opaque);
-        netArtistSearchTextField.setOpaque(opaque);
-        netArtistPageTextField.setOpaque(opaque);
         focusListeners = netArtistSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21348,27 +21272,10 @@ public class PlayerFrame extends JFrame {
         }
         netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netArtistSearchTextField.setCaretColor(foreColor);
-//        focusListeners = netArtistPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netArtistPageTextField.setForeground(foreColor);
         netArtistPageTextField.setCaretColor(foreColor);
-        netArtistClearInputButton.setOpaque(opaque);
-        netArtistSearchButton.setOpaque(opaque);
-        netArtistPlayAllButton.setOpaque(opaque);
         netArtistPlayAllButton.setForeground(buttonColor);
-        netArtistRefreshButton.setOpaque(opaque);
-        netArtistLastPageButton.setOpaque(opaque);
-        netArtistGoButton.setOpaque(opaque);
-        netArtistNextPageButton.setOpaque(opaque);
         // 电台搜索栏透明
-        netRadioBackwardButton.setOpaque(opaque);
-        netRadioSearchTextField.setOpaque(opaque);
-        netRadioPageTextField.setOpaque(opaque);
         focusListeners = netRadioSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21378,26 +21285,10 @@ public class PlayerFrame extends JFrame {
         }
         netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netRadioSearchTextField.setCaretColor(foreColor);
-//        focusListeners = netRadioPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netRadioPageTextField.setForeground(foreColor);
         netRadioPageTextField.setCaretColor(foreColor);
-        netRadioClearInputButton.setOpaque(opaque);
-        netRadioSearchButton.setOpaque(opaque);
-        netRadioPlayAllButton.setOpaque(opaque);
         netRadioPlayAllButton.setForeground(buttonColor);
-        netRadioRefreshButton.setOpaque(opaque);
-        netRadioLastPageButton.setOpaque(opaque);
-        netRadioGoButton.setOpaque(opaque);
-        netRadioNextPageButton.setOpaque(opaque);
         // MV 搜索栏透明
-        netMvSearchTextField.setOpaque(opaque);
-        netMvPageTextField.setOpaque(opaque);
         focusListeners = netMvSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21407,43 +21298,13 @@ public class PlayerFrame extends JFrame {
         }
         netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netMvSearchTextField.setCaretColor(foreColor);
-//        focusListeners = netMvPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netMvPageTextField.setForeground(foreColor);
         netMvPageTextField.setCaretColor(foreColor);
-        netMvClearInputButton.setOpaque(opaque);
-        netMvSearchButton.setOpaque(opaque);
-        netMvRefreshButton.setOpaque(opaque);
-        netMvLastPageButton.setOpaque(opaque);
-        netMvGoButton.setOpaque(opaque);
-        netMvNextPageButton.setOpaque(opaque);
         // 榜单搜索栏透明
-        netRankingBackwardButton.setOpaque(opaque);
-        netRankingPageTextField.setOpaque(opaque);
-//        focusListeners = netRankingPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netRankingPageTextField.setForeground(foreColor);
         netRankingPageTextField.setCaretColor(foreColor);
-        netRankingPlayAllButton.setOpaque(opaque);
         netRankingPlayAllButton.setForeground(buttonColor);
-        netRankingRefreshButton.setOpaque(opaque);
-        netRankingLastPageButton.setOpaque(opaque);
-        netRankingGoButton.setOpaque(opaque);
-        netRankingNextPageButton.setOpaque(opaque);
         // 用户搜索栏透明
-        netUserBackwardButton.setOpaque(opaque);
-        netUserSearchTextField.setOpaque(opaque);
-        netUserPageTextField.setOpaque(opaque);
         focusListeners = netUserSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof JTextFieldHintListener) {
@@ -21453,127 +21314,41 @@ public class PlayerFrame extends JFrame {
         }
         netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netUserSearchTextField.setCaretColor(foreColor);
-//        focusListeners = netUserPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
-        netUserRecordTypeComboBox.setOpaque(opaque);
         netUserRecordTypeComboBox.setUI(new ComboBoxUI(netUserRecordTypeComboBox, THIS, globalFont, buttonColor));
         netUserPageTextField.setForeground(foreColor);
         netUserPageTextField.setCaretColor(foreColor);
-        netUserClearInputButton.setOpaque(opaque);
-        netUserSearchButton.setOpaque(opaque);
-        netUserPlayAllButton.setOpaque(opaque);
         netUserPlayAllButton.setForeground(buttonColor);
-        netUserRefreshButton.setOpaque(opaque);
-        netUserLastPageButton.setOpaque(opaque);
-        netUserGoButton.setOpaque(opaque);
-        netUserNextPageButton.setOpaque(opaque);
         // 评论栏透明
-        netCommentBackwardButton.setOpaque(opaque);
-        netCommentTitleLabel.setOpaque(opaque);
-        netCommentPageTextField.setOpaque(opaque);
-//        focusListeners = netCommentPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
-        netCommentTypeComboBox.setOpaque(opaque);
         netCommentTypeComboBox.setUI(new ComboBoxUI(netCommentTypeComboBox, THIS, globalFont, buttonColor));
         netCommentPageTextField.setForeground(foreColor);
         netCommentPageTextField.setCaretColor(foreColor);
-        netCommentRefreshButton.setOpaque(opaque);
-        netCommentLastPageButton.setOpaque(opaque);
-        netCommentGoButton.setOpaque(opaque);
-        netCommentNextPageButton.setOpaque(opaque);
         // 曲谱栏透明
-        netSheetBackwardButton.setOpaque(opaque);
-        netSheetTitleLabel.setOpaque(opaque);
-        netSheetPageTextField.setOpaque(opaque);
-//        focusListeners = netSheetPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netSheetPageTextField.setForeground(foreColor);
         netSheetPageTextField.setCaretColor(foreColor);
-        netSheetRefreshButton.setOpaque(opaque);
-        netSheetLastPageButton.setOpaque(opaque);
-        netSheetGoButton.setOpaque(opaque);
-        netSheetNextPageButton.setOpaque(opaque);
         // 推荐页码文本框
-        netRecommendPageTextField.setOpaque(opaque);
-//        focusListeners = netRecommendPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
         netRecommendPageTextField.setForeground(foreColor);
         netRecommendPageTextField.setCaretColor(foreColor);
-        netRecommendTagComboBox.setOpaque(opaque);
         netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor, 240));
-        netRecommendPlayAllButton.setOpaque(opaque);
         netRecommendPlayAllButton.setForeground(buttonColor);
-        netRecommendRefreshButton.setOpaque(opaque);
-        netRecommendLastPageButton.setOpaque(opaque);
-        netRecommendGoButton.setOpaque(opaque);
-        netRecommendNextPageButton.setOpaque(opaque);
         // 收藏页码文本框
-        collectionPageTextField.setOpaque(opaque);
-//        focusListeners = collectionPageTextField.getFocusListeners();
-//        for (FocusListener focusListener : focusListeners) {
-//            if (focusListener instanceof JTextFieldHintListener) {
-//                ((JTextFieldHintListener) focusListener).setInputColor(foreColor);
-//                ((JTextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(foreColor));
-//            }
-//        }
-        collectionRecordTypeComboBox.setOpaque(opaque);
         collectionRecordTypeComboBox.setUI(new ComboBoxUI(collectionRecordTypeComboBox, THIS, globalFont, buttonColor));
         collectionPageTextField.setForeground(foreColor);
         collectionPageTextField.setCaretColor(foreColor);
-        collectionPlayAllButton.setOpaque(opaque);
         collectionPlayAllButton.setForeground(buttonColor);
-        collectionRefreshButton.setOpaque(opaque);
-        collectionLastPageButton.setOpaque(opaque);
-        collectionGoButton.setOpaque(opaque);
-        collectionNextPageButton.setOpaque(opaque);
         // 推荐工具栏按钮透明
-        playlistRecommendButton.setOpaque(opaque);
         playlistRecommendButton.setForeground(buttonColor);
-        highQualityPlaylistButton.setOpaque(opaque);
         highQualityPlaylistButton.setForeground(buttonColor);
-        hotMusicButton.setOpaque(opaque);
         hotMusicButton.setForeground(buttonColor);
-        netMusicRecommendButton.setOpaque(opaque);
         netMusicRecommendButton.setForeground(buttonColor);
-        newAlbumRecommendButton.setOpaque(opaque);
         newAlbumRecommendButton.setForeground(buttonColor);
-        artistListRecommendButton.setOpaque(opaque);
         artistListRecommendButton.setForeground(buttonColor);
-        newRadioRecommendButton.setOpaque(opaque);
         newRadioRecommendButton.setForeground(buttonColor);
-        hotRadioRecommendButton.setOpaque(opaque);
         hotRadioRecommendButton.setForeground(buttonColor);
-        programRecommendButton.setOpaque(opaque);
         programRecommendButton.setForeground(buttonColor);
-        mvRecommendButton.setOpaque(opaque);
         mvRecommendButton.setForeground(buttonColor);
-        recommendBackwardButton.setOpaque(opaque);
         // 个人音乐工具栏按钮透明
-        localMusicButton.setOpaque(opaque);
         localMusicButton.setForeground(buttonColor);
-        historyButton.setOpaque(opaque);
         historyButton.setForeground(buttonColor);
-        collectionButton.setOpaque(opaque);
         collectionButton.setForeground(buttonColor);
         // 工具栏按钮颜色
         localMusicButton.setIcon(ImageUtils.dye((ImageIcon) localMusicButton.getIcon(), buttonColor));
@@ -21595,83 +21370,102 @@ public class PlayerFrame extends JFrame {
         netMusicClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netMusicClearInputButton.getIcon(), buttonColor));
         searchButton.setIcon(ImageUtils.dye((ImageIcon) searchButton.getIcon(), buttonColor));
         netMusicRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netMusicRefreshButton.getIcon(), buttonColor));
+        netMusicStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicStartPageButton.getIcon(), buttonColor));
         netMusicLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicLastPageButton.getIcon(), buttonColor));
         netMusicGoButton.setIcon(ImageUtils.dye((ImageIcon) netMusicGoButton.getIcon(), buttonColor));
         netMusicNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicNextPageButton.getIcon(), buttonColor));
+        netMusicEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicEndPageButton.getIcon(), buttonColor));
         // 歌单搜索栏按钮颜色
         netPlaylistBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), buttonColor));
         netPlaylistClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistClearInputButton.getIcon(), buttonColor));
         netPlaylistSearchButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistSearchButton.getIcon(), buttonColor));
         netPlaylistPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistPlayAllButton.getIcon(), buttonColor));
         netPlaylistRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistRefreshButton.getIcon(), buttonColor));
+        netPlaylistStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistStartPageButton.getIcon(), buttonColor));
         netPlaylistLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistLastPageButton.getIcon(), buttonColor));
         netPlaylistGoButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistGoButton.getIcon(), buttonColor));
         netPlaylistNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistNextPageButton.getIcon(), buttonColor));
+        netPlaylistEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistEndPageButton.getIcon(), buttonColor));
         // 专辑搜索栏按钮颜色
         netAlbumBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumBackwardButton.getIcon(), buttonColor));
         netAlbumClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumClearInputButton.getIcon(), buttonColor));
         netAlbumSearchButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumSearchButton.getIcon(), buttonColor));
         netAlbumPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumPlayAllButton.getIcon(), buttonColor));
         netAlbumRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumRefreshButton.getIcon(), buttonColor));
+        netAlbumStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumStartPageButton.getIcon(), buttonColor));
         netAlbumLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumLastPageButton.getIcon(), buttonColor));
         netAlbumGoButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumGoButton.getIcon(), buttonColor));
         netAlbumNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumNextPageButton.getIcon(), buttonColor));
+        netAlbumEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumEndPageButton.getIcon(), buttonColor));
         // 歌手搜索栏按钮颜色
         netArtistBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netArtistBackwardButton.getIcon(), buttonColor));
         netArtistClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netArtistClearInputButton.getIcon(), buttonColor));
         netArtistSearchButton.setIcon(ImageUtils.dye((ImageIcon) netArtistSearchButton.getIcon(), buttonColor));
         netArtistPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netArtistPlayAllButton.getIcon(), buttonColor));
         netArtistRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netArtistRefreshButton.getIcon(), buttonColor));
+        netArtistStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistStartPageButton.getIcon(), buttonColor));
         netArtistLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistLastPageButton.getIcon(), buttonColor));
         netArtistGoButton.setIcon(ImageUtils.dye((ImageIcon) netArtistGoButton.getIcon(), buttonColor));
         netArtistNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistNextPageButton.getIcon(), buttonColor));
+        netArtistEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistEndPageButton.getIcon(), buttonColor));
         // 电台搜索栏按钮颜色
         netRadioBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netRadioBackwardButton.getIcon(), buttonColor));
         netRadioClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netRadioClearInputButton.getIcon(), buttonColor));
         netRadioSearchButton.setIcon(ImageUtils.dye((ImageIcon) netRadioSearchButton.getIcon(), buttonColor));
         netRadioPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netRadioPlayAllButton.getIcon(), buttonColor));
         netRadioRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netRadioRefreshButton.getIcon(), buttonColor));
+        netRadioStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioStartPageButton.getIcon(), buttonColor));
         netRadioLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioLastPageButton.getIcon(), buttonColor));
         netRadioGoButton.setIcon(ImageUtils.dye((ImageIcon) netRadioGoButton.getIcon(), buttonColor));
         netRadioNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioNextPageButton.getIcon(), buttonColor));
+        netRadioEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioEndPageButton.getIcon(), buttonColor));
         // MV 搜索栏按钮颜色
-        netMvSortTypeComboBox.setOpaque(opaque);
         netMvSortTypeComboBox.setUI(new ComboBoxUI(netMvSortTypeComboBox, THIS, globalFont, buttonColor));
         netMvBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netMvBackwardButton.getIcon(), buttonColor));
         netMvClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netMvClearInputButton.getIcon(), buttonColor));
         netMvSearchButton.setIcon(ImageUtils.dye((ImageIcon) netMvSearchButton.getIcon(), buttonColor));
         netMvRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netMvRefreshButton.getIcon(), buttonColor));
+        netMvStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvStartPageButton.getIcon(), buttonColor));
         netMvLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvLastPageButton.getIcon(), buttonColor));
         netMvGoButton.setIcon(ImageUtils.dye((ImageIcon) netMvGoButton.getIcon(), buttonColor));
         netMvNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvNextPageButton.getIcon(), buttonColor));
+        netMvEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvEndPageButton.getIcon(), buttonColor));
         // 榜单搜索栏按钮颜色
         netRankingBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netRankingBackwardButton.getIcon(), buttonColor));
         netRankingPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netRankingPlayAllButton.getIcon(), buttonColor));
         netRankingRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netRankingRefreshButton.getIcon(), buttonColor));
+        netRankingStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingStartPageButton.getIcon(), buttonColor));
         netRankingLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingLastPageButton.getIcon(), buttonColor));
         netRankingGoButton.setIcon(ImageUtils.dye((ImageIcon) netRankingGoButton.getIcon(), buttonColor));
         netRankingNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingNextPageButton.getIcon(), buttonColor));
+        netRankingEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingEndPageButton.getIcon(), buttonColor));
         // 用户搜索栏按钮颜色
         netUserBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netUserBackwardButton.getIcon(), buttonColor));
         netUserClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netUserClearInputButton.getIcon(), buttonColor));
         netUserSearchButton.setIcon(ImageUtils.dye((ImageIcon) netUserSearchButton.getIcon(), buttonColor));
         netUserPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netUserPlayAllButton.getIcon(), buttonColor));
         netUserRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netUserRefreshButton.getIcon(), buttonColor));
+        netUserStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserStartPageButton.getIcon(), buttonColor));
         netUserLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserLastPageButton.getIcon(), buttonColor));
         netUserGoButton.setIcon(ImageUtils.dye((ImageIcon) netUserGoButton.getIcon(), buttonColor));
         netUserNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserNextPageButton.getIcon(), buttonColor));
+        netUserEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserEndPageButton.getIcon(), buttonColor));
         // 评论栏按钮颜色
         netCommentBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netCommentBackwardButton.getIcon(), buttonColor));
         netCommentRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netCommentRefreshButton.getIcon(), buttonColor));
+        netCommentStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentStartPageButton.getIcon(), buttonColor));
         netCommentLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentLastPageButton.getIcon(), buttonColor));
         netCommentGoButton.setIcon(ImageUtils.dye((ImageIcon) netCommentGoButton.getIcon(), buttonColor));
         netCommentNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentNextPageButton.getIcon(), buttonColor));
+        netCommentEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentEndPageButton.getIcon(), buttonColor));
         // 曲谱栏按钮颜色
         netSheetBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netSheetBackwardButton.getIcon(), buttonColor));
         netSheetRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netSheetRefreshButton.getIcon(), buttonColor));
+        netSheetStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetStartPageButton.getIcon(), buttonColor));
         netSheetLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetLastPageButton.getIcon(), buttonColor));
         netSheetGoButton.setIcon(ImageUtils.dye((ImageIcon) netSheetGoButton.getIcon(), buttonColor));
         netSheetNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetNextPageButton.getIcon(), buttonColor));
+        netSheetEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetEndPageButton.getIcon(), buttonColor));
         // 推荐工具栏按钮颜色
         playlistRecommendButton.setIcon(ImageUtils.dye((ImageIcon) playlistRecommendButton.getIcon(), buttonColor));
         highQualityPlaylistButton.setIcon(ImageUtils.dye((ImageIcon) highQualityPlaylistButton.getIcon(), buttonColor));
@@ -21686,16 +21480,20 @@ public class PlayerFrame extends JFrame {
         recommendBackwardButton.setIcon(ImageUtils.dye((ImageIcon) recommendBackwardButton.getIcon(), buttonColor));
         netRecommendPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendPlayAllButton.getIcon(), buttonColor));
         netRecommendRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendRefreshButton.getIcon(), buttonColor));
+        netRecommendStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendStartPageButton.getIcon(), buttonColor));
         netRecommendLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendLastPageButton.getIcon(), buttonColor));
         netRecommendGoButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendGoButton.getIcon(), buttonColor));
         netRecommendNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendNextPageButton.getIcon(), buttonColor));
+        netRecommendEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendEndPageButton.getIcon(), buttonColor));
         // 收藏工具栏按钮颜色
         collectionBackwardButton.setIcon(ImageUtils.dye((ImageIcon) collectionBackwardButton.getIcon(), buttonColor));
         collectionPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) collectionPlayAllButton.getIcon(), buttonColor));
         collectionRefreshButton.setIcon(ImageUtils.dye((ImageIcon) collectionRefreshButton.getIcon(), buttonColor));
+        collectionStartPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionStartPageButton.getIcon(), buttonColor));
         collectionLastPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionLastPageButton.getIcon(), buttonColor));
         collectionGoButton.setIcon(ImageUtils.dye((ImageIcon) collectionGoButton.getIcon(), buttonColor));
         collectionNextPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionNextPageButton.getIcon(), buttonColor));
+        collectionEndPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionEndPageButton.getIcon(), buttonColor));
         // 下载工具栏按钮颜色
         restartSelectedTasksButton.setIcon(ImageUtils.dye((ImageIcon) restartSelectedTasksButton.getIcon(), buttonColor));
         cancelSelectedTasksButton.setIcon(ImageUtils.dye((ImageIcon) cancelSelectedTasksButton.getIcon(), buttonColor));
@@ -21710,24 +21508,6 @@ public class PlayerFrame extends JFrame {
         playQueueReverseToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueReverseToolButton.getIcon(), buttonColor));
         playQueueMoveUpToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueMoveUpToolButton.getIcon(), buttonColor));
         playQueueMoveDownToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueMoveDownToolButton.getIcon(), buttonColor));
-
-        personalMusicToolBar.setOpaque(opaque);
-        musicToolBar.setOpaque(opaque);
-        netMusicToolBar.setOpaque(opaque);
-        netPlaylistToolBar.setOpaque(opaque);
-        netAlbumToolBar.setOpaque(opaque);
-        netArtistToolBar.setOpaque(opaque);
-        netRadioToolBar.setOpaque(opaque);
-        netMvToolBar.setOpaque(opaque);
-        netRankingToolBar.setOpaque(opaque);
-        netUserToolBar.setOpaque(opaque);
-        netCommentToolBar.setOpaque(opaque);
-        netSheetToolBar.setOpaque(opaque);
-        recommendToolBar.setOpaque(opaque);
-        musicRecommendToolBar.setOpaque(opaque);
-        musicCollectionToolBar.setOpaque(opaque);
-        downloadToolBar.setOpaque(opaque);
-        playQueueToolBar.setOpaque(opaque);
 
         // 工具栏下面的标签颜色
         countLabel.setForeground(foreColor);
@@ -21754,50 +21534,7 @@ public class PlayerFrame extends JFrame {
         collectionCountLabel.setForeground(foreColor);
         taskCountLabel.setForeground(foreColor);
         playQueueCountLabel.setForeground(foreColor);
-        // 个人音乐数量显示透明
-        countLabel.setOpaque(opaque);
-        // 在线歌曲数量显示透明
-        netMusicCountLabel.setOpaque(opaque);
-        netMusicCountPanel.setOpaque(opaque);
-        // 歌单数量显示透明
-        netPlaylistCountLabel.setOpaque(opaque);
-        netPlaylistCountPanel.setOpaque(opaque);
-        // 专辑数量显示透明
-        netAlbumTitleLabel.setOpaque(opaque);
-        netAlbumCountLabel.setOpaque(opaque);
-        netAlbumCountPanel.setOpaque(opaque);
-        // 歌手数量显示透明
-        netArtistCountLabel.setOpaque(opaque);
-        netArtistCountPanel.setOpaque(opaque);
-        // 电台数量显示透明
-        netRadioCountLabel.setOpaque(opaque);
-        netRadioCountPanel.setOpaque(opaque);
-        // MV 数量显示透明
-        netMvTitleLabel.setOpaque(opaque);
-        netMvCountLabel.setOpaque(opaque);
-        netMvCountPanel.setOpaque(opaque);
-        // 榜单数量显示透明
-        netRankingCountLabel.setOpaque(opaque);
-        netRankingCountPanel.setOpaque(opaque);
-        // 用户数量显示透明
-        netUserCountLabel.setOpaque(opaque);
-        netUserCountPanel.setOpaque(opaque);
-        // 评论数量显示透明
-        netCommentCountLabel.setOpaque(opaque);
-        netCommentCountPanel.setOpaque(opaque);
-        // 曲谱数量显示透明
-        netSheetCountLabel.setOpaque(opaque);
-        netSheetCountPanel.setOpaque(opaque);
-        // 推荐数量显示透明
-        recommendCountLabel.setOpaque(opaque);
-        recommendCountPanel.setOpaque(opaque);
-        // 收藏数量显示透明
-        collectionCountLabel.setOpaque(opaque);
-        collectionCountPanel.setOpaque(opaque);
-        // 下载任务数量显示透明
-        taskCountLabel.setOpaque(opaque);
-        // 播放队列数量显示透明
-        playQueueCountLabel.setOpaque(opaque);
+
         // 播放列表透明
         TranslucentMusicListRenderer musicListRenderer = new TranslucentMusicListRenderer(globalFont, player);
         musicListRenderer.setForeColor(foreColor);
@@ -21876,70 +21613,29 @@ public class PlayerFrame extends JFrame {
         this.playQueueRenderer = playQueueRenderer;
 
         // 歌单/专辑/歌手/电台/榜单描述
-        playlistDescriptionPanel.setOpaque(opaque);
-        albumDescriptionPanel.setOpaque(opaque);
-        artistDescriptionPanel.setOpaque(opaque);
-        radioDescriptionPanel.setOpaque(opaque);
-        rankingDescriptionPanel.setOpaque(opaque);
-        userDescriptionPanel.setOpaque(opaque);
-        recommendItemDescriptionPanel.setOpaque(opaque);
-        collectionItemDescriptionPanel.setOpaque(opaque);
-        playlistDescriptionScrollPane.setOpaque(opaque);
-        playlistDescriptionScrollPane.getViewport().setOpaque(opaque);
-        playlistDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        playlistDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
         playlistDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         playlistDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        playlistDescriptionScrollPane.setBorder(null);
-        albumDescriptionScrollPane.setOpaque(opaque);
-        albumDescriptionScrollPane.getViewport().setOpaque(opaque);
-        albumDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        albumDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
+
         albumDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         albumDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        albumDescriptionScrollPane.setBorder(null);
-        artistDescriptionScrollPane.setOpaque(opaque);
-        artistDescriptionScrollPane.getViewport().setOpaque(opaque);
-        artistDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        artistDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
+
         artistDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         artistDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        artistDescriptionScrollPane.setBorder(null);
-        radioDescriptionScrollPane.setOpaque(opaque);
-        radioDescriptionScrollPane.getViewport().setOpaque(opaque);
-        radioDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        radioDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
+
         radioDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         radioDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        radioDescriptionScrollPane.setBorder(null);
-        rankingDescriptionScrollPane.setOpaque(opaque);
-        rankingDescriptionScrollPane.getViewport().setOpaque(opaque);
-        rankingDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        rankingDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
+
         rankingDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         rankingDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        rankingDescriptionScrollPane.setBorder(null);
-        userDescriptionScrollPane.setOpaque(opaque);
-        userDescriptionScrollPane.getViewport().setOpaque(opaque);
-        userDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        userDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
+
         userDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         userDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        userDescriptionScrollPane.setBorder(null);
-        recommendItemDescriptionScrollPane.setOpaque(opaque);
-        recommendItemDescriptionScrollPane.getViewport().setOpaque(opaque);
-        recommendItemDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        recommendItemDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
+
         recommendItemDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         recommendItemDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        recommendItemDescriptionScrollPane.setBorder(null);
-        collectionItemDescriptionScrollPane.setOpaque(opaque);
-        collectionItemDescriptionScrollPane.getViewport().setOpaque(opaque);
-        collectionItemDescriptionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        collectionItemDescriptionScrollPane.getVerticalScrollBar().setOpaque(opaque);
+
         collectionItemDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
         collectionItemDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        collectionItemDescriptionScrollPane.setBorder(null);
 
         playlistCoverAndNameLabel.setForeground(labelColor);
         albumCoverAndNameLabel.setForeground(labelColor);
@@ -21965,203 +21661,72 @@ public class PlayerFrame extends JFrame {
         collectionItemTagLabel.setForeground(labelColor);
         collectionItemDescriptionLabel.setForeground(labelColor);
 
-        musicList.setOpaque(opaque);
-        netMusicList.setOpaque(opaque);
-        netPlaylistList.setOpaque(opaque);
-        netAlbumList.setOpaque(opaque);
-        netArtistList.setOpaque(opaque);
-        netRadioList.setOpaque(opaque);
-        netRankingList.setOpaque(opaque);
-        netUserList.setOpaque(opaque);
-        netCommentList.setOpaque(opaque);
-        netSheetList.setOpaque(opaque);
-        netMvList.setOpaque(opaque);
-        itemRecommendList.setOpaque(opaque);
-        collectionList.setOpaque(opaque);
-        downloadList.setOpaque(opaque);
-        playQueue.setOpaque(opaque);
-        // 注意滚动条透明的写法！
-        musicScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        musicScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        musicScrollPane.setOpaque(opaque);
-        musicScrollPane.getViewport().setOpaque(opaque);
-        netMusicKeywordsPanelScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netMusicKeywordsPanelScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netMusicKeywordsPanelScrollPane.setOpaque(opaque);
-        netMusicKeywordsPanelScrollPane.getViewport().setOpaque(opaque);
-        netMusicScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netMusicScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netMusicScrollPane.setOpaque(opaque);
-        netMusicScrollPane.getViewport().setOpaque(opaque);
-        netPlaylistKeywordsPanelScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netPlaylistKeywordsPanelScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netPlaylistKeywordsPanelScrollPane.setOpaque(opaque);
-        netPlaylistKeywordsPanelScrollPane.getViewport().setOpaque(opaque);
-        netPlaylistScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netPlaylistScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netPlaylistScrollPane.setOpaque(opaque);
-        netPlaylistScrollPane.getViewport().setOpaque(opaque);
-        netAlbumKeywordsPanelScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netAlbumKeywordsPanelScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netAlbumKeywordsPanelScrollPane.setOpaque(opaque);
-        netAlbumKeywordsPanelScrollPane.getViewport().setOpaque(opaque);
-        netAlbumScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netAlbumScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netAlbumScrollPane.setOpaque(opaque);
-        netAlbumScrollPane.getViewport().setOpaque(opaque);
-        netArtistKeywordsPanelScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netArtistKeywordsPanelScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netArtistKeywordsPanelScrollPane.setOpaque(opaque);
-        netArtistKeywordsPanelScrollPane.getViewport().setOpaque(opaque);
-        netArtistScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netArtistScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netArtistScrollPane.setOpaque(opaque);
-        netArtistScrollPane.getViewport().setOpaque(opaque);
-        netRadioKeywordsPanelScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netRadioKeywordsPanelScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netRadioKeywordsPanelScrollPane.setOpaque(opaque);
-        netRadioKeywordsPanelScrollPane.getViewport().setOpaque(opaque);
-        netRadioScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netRadioScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netRadioScrollPane.setOpaque(opaque);
-        netRadioScrollPane.getViewport().setOpaque(opaque);
-        netRankingScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netRankingScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netRankingScrollPane.setOpaque(opaque);
-        netRankingScrollPane.getViewport().setOpaque(opaque);
-        netUserKeywordsPanelScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netUserKeywordsPanelScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netUserKeywordsPanelScrollPane.setOpaque(opaque);
-        netUserKeywordsPanelScrollPane.getViewport().setOpaque(opaque);
-        netUserScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netUserScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netUserScrollPane.setOpaque(opaque);
-        netUserScrollPane.getViewport().setOpaque(opaque);
-        netCommentScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netCommentScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netCommentScrollPane.setOpaque(opaque);
-        netCommentScrollPane.getViewport().setOpaque(opaque);
-        netSheetScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netSheetScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netSheetScrollPane.setOpaque(opaque);
-        netSheetScrollPane.getViewport().setOpaque(opaque);
-        netMvKeywordsPanelScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netMvKeywordsPanelScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netMvKeywordsPanelScrollPane.setOpaque(opaque);
-        netMvKeywordsPanelScrollPane.getViewport().setOpaque(opaque);
-        netMvScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        netMvScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        netMvScrollPane.setOpaque(opaque);
-        netMvScrollPane.getViewport().setOpaque(opaque);
-        itemRecommendScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        itemRecommendScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        itemRecommendScrollPane.setOpaque(opaque);
-        itemRecommendScrollPane.getViewport().setOpaque(opaque);
-        collectionScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        collectionScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        collectionScrollPane.setOpaque(opaque);
-        collectionScrollPane.getViewport().setOpaque(opaque);
-        downloadListScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        downloadListScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        downloadListScrollPane.setOpaque(opaque);
-        downloadListScrollPane.getViewport().setOpaque(opaque);
-        playQueueScrollPane.getVerticalScrollBar().setOpaque(opaque);
-        playQueueScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        playQueueScrollPane.setOpaque(opaque);
-        playQueueScrollPane.getViewport().setOpaque(opaque);
-
         // 滚动面板消除边框、自定义样式
         musicScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         musicScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        musicScrollPane.setBorder(null);
         // 关键词面板列表滚动面板消除边框、自定义样式
         netMusicKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netMusicKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMusicKeywordsPanelScrollPane.setBorder(null);
         // 在线音乐列表滚动面板消除边框、自定义样式
         netMusicScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netMusicScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMusicScrollPane.setBorder(null);
         // 歌单关键词面板列表滚动面板消除边框、自定义样式
         netPlaylistKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netPlaylistKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netPlaylistKeywordsPanelScrollPane.setBorder(null);
         // 在线歌单滚动面板消除边框、自定义样式
         netPlaylistScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netPlaylistScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netPlaylistScrollPane.setBorder(null);
         // 专辑关键词面板列表滚动面板消除边框、自定义样式
         netAlbumKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netAlbumKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netAlbumKeywordsPanelScrollPane.setBorder(null);
         // 在线专辑滚动面板消除边框、自定义样式
         netAlbumScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netAlbumScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netAlbumScrollPane.setBorder(null);
         // 歌手关键词面板列表滚动面板消除边框、自定义样式
         netArtistKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netArtistKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netArtistKeywordsPanelScrollPane.setBorder(null);
         // 在线歌手滚动面板消除边框、自定义样式
         netArtistScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netArtistScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netArtistScrollPane.setBorder(null);
         // 电台关键词面板列表滚动面板消除边框、自定义样式
         netRadioKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netRadioKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netRadioKeywordsPanelScrollPane.setBorder(null);
         // 在线电台滚动面板消除边框、自定义样式
         netRadioScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netRadioScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netRadioScrollPane.setBorder(null);
         // MV 关键词面板列表滚动面板消除边框、自定义样式
         netMvKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netMvKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMvKeywordsPanelScrollPane.setBorder(null);
         // 在线 MV 滚动面板消除边框、自定义样式
         netMvScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netMvScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMvScrollPane.setBorder(null);
         // 榜单滚动面板消除边框、自定义样式
         netRankingScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netRankingScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netRankingScrollPane.setBorder(null);
         // 用户关键词面板列表滚动面板消除边框、自定义样式
         netUserKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netUserKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netUserKeywordsPanelScrollPane.setBorder(null);
         // 在线用户滚动面板消除边框、自定义样式
         netUserScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netUserScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netUserScrollPane.setBorder(null);
         // 评论滚动面板消除边框、自定义样式
         netCommentScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netCommentScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netCommentScrollPane.setBorder(null);
         // 曲谱滚动面板消除边框、自定义样式
         netSheetScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netSheetScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netSheetScrollPane.setBorder(null);
         // 推荐滚动面板消除边框、自定义样式
         itemRecommendScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         itemRecommendScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        itemRecommendScrollPane.setBorder(null);
         // 收藏滚动面板消除边框、自定义样式
         collectionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         collectionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        collectionScrollPane.setBorder(null);
         // 下载滚动面板消除边框、自定义样式
         downloadListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         downloadListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        downloadListScrollPane.setBorder(null);
         // 播放队列滚动面板消除边框、自定义样式
         playQueueScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         playQueueScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        playQueueScrollPane.setBorder(null);
-
-        // 歌词列表透明
-        // 设置 JLabel 禁用状态字体颜色，即歌词列表禁用状态字体颜色
-//        UIManager.put("Label.disabledForeground", style.getLrcColor());
 
         // 歌词高亮显示
         TranslucentLrcListRenderer lrcListRenderer = new TranslucentLrcListRenderer();
@@ -22174,15 +21739,9 @@ public class PlayerFrame extends JFrame {
         lrcList.setCellRenderer(lrcListRenderer);
         lrcList.setUI(new ListUI(LRC_INDEX - 1));  // 歌词禁用字体透明，需要用到自定义 List
 
-        lrcList.setOpaque(opaque);
-        lrcScrollPane.setOpaque(opaque);
-        lrcScrollPane.getViewport().setOpaque(opaque);
-        lrcScrollPane.getHorizontalScrollBar().setOpaque(opaque);
-        lrcScrollPane.getVerticalScrollBar().setOpaque(opaque);
         lrcScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
         // 进度条和控制面板透明
-        timeBar.setOpaque(opaque);
         timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), THIS, player, true));      // 自定义进度条 UI
         // 桌面歌词更新颜色
         desktopLyricDialog.setThemeColor(style.getLrcColor());
@@ -22191,53 +21750,9 @@ public class PlayerFrame extends JFrame {
         // 时间标签用进度条的颜色
         currTimeLabel.setForeground(style.getTimeBarColor());
         durationLabel.setForeground(style.getTimeBarColor());
-        progressPanel.setOpaque(opaque);
 
-        changePaneButton.setOpaque(opaque);
-        changePaneButton.setContentAreaFilled(opaque);
         changePaneButton.setForeground(style.getButtonColor());
-        mvButton.setOpaque(opaque);
-        mvButton.setContentAreaFilled(opaque);
-        collectButton.setOpaque(opaque);
-        collectButton.setContentAreaFilled(opaque);
-        downloadButton.setOpaque(opaque);
-        downloadButton.setContentAreaFilled(opaque);
-        commentButton.setOpaque(opaque);
-        commentButton.setContentAreaFilled(opaque);
-        sheetButton.setOpaque(opaque);
-        sheetButton.setContentAreaFilled(opaque);
-        lastButton.setOpaque(opaque);
-        lastButton.setContentAreaFilled(opaque);
-        playOrPauseButton.setOpaque(opaque);
-        playOrPauseButton.setContentAreaFilled(opaque);
-        nextButton.setOpaque(opaque);
-        nextButton.setContentAreaFilled(opaque);
-        playModeButton.setOpaque(opaque);
-        playModeButton.setContentAreaFilled(opaque);
-        backwardButton.setOpaque(opaque);
-        backwardButton.setContentAreaFilled(opaque);
-        forwardButton.setOpaque(opaque);
-        forwardButton.setContentAreaFilled(opaque);
-        muteButton.setOpaque(opaque);
-        muteButton.setContentAreaFilled(opaque);
-        rateButton.setOpaque(opaque);
-        rateButton.setContentAreaFilled(opaque);
-        switchSpectrumButton.setOpaque(opaque);
-        switchSpectrumButton.setContentAreaFilled(opaque);
-        blurButton.setOpaque(opaque);
-        blurButton.setContentAreaFilled(opaque);
-        soundEffectButton.setOpaque(opaque);
-        soundEffectButton.setContentAreaFilled(opaque);
-        goToPlayQueueButton.setOpaque(opaque);
-        goToPlayQueueButton.setContentAreaFilled(opaque);
-        desktopLyricButton.setOpaque(opaque);
-        desktopLyricButton.setContentAreaFilled(opaque);
-        switchChineseButton.setOpaque(opaque);
-        switchChineseButton.setContentAreaFilled(opaque);
-        switchJapaneseButton.setOpaque(opaque);
-        switchJapaneseButton.setContentAreaFilled(opaque);
-        switchLrcTypeButton.setOpaque(opaque);
-        switchLrcTypeButton.setContentAreaFilled(opaque);
+
         // 按钮图标颜色
         if (!player.loadedMusic() || player.loadedMusic() && !player.getMusicInfo().hasAlbumImage()) {
             changePaneButton.setIcon(ImageUtils.dye(new ImageIcon(
@@ -22274,12 +21789,7 @@ public class PlayerFrame extends JFrame {
         switchChineseButton.setIcon(ImageUtils.dye((ImageIcon) switchChineseButton.getIcon(), buttonColor));
         switchJapaneseButton.setIcon(ImageUtils.dye((ImageIcon) switchJapaneseButton.getIcon(), buttonColor));
         switchLrcTypeButton.setIcon(ImageUtils.dye((ImageIcon) switchLrcTypeButton.getIcon(), buttonColor));
-        volumeSlider.setOpaque(opaque);
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
-        volumePanel.setOpaque(opaque);
-        controlPanel.setOpaque(opaque);
-        controlLrcPanel.setOpaque(opaque);
-        changePanePanel.setOpaque(opaque);
 
         // 默认专辑图颜色
         if (!player.isEmpty() && !player.getMusicInfo().hasAlbumImage()) {
@@ -22381,7 +21891,7 @@ public class PlayerFrame extends JFrame {
         for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
 //            Box box = (Box) tabbedPane.getTabComponentAt(i);
             CustomPanel panel = (CustomPanel) (tabbedPane.getTabComponentAt(i));
-            JLabel label = (JLabel) (panel.getComponent(0));
+            CustomLabel label = (CustomLabel) (panel.getComponent(0));
             Rectangle rect = panel.getVisibleRect();
             if (i == index) {
                 label.setIcon(ImageUtils.dye((ImageIcon) label.getIcon(), selectedColor));
@@ -22791,8 +22301,8 @@ public class PlayerFrame extends JFrame {
         }
     }
 
-    // 更新 renderer ，避免 jlist 各个元素大小不变
-    void updateRenderer(JList list) {
+    // 更新 renderer ，避免 CustomList 各个元素大小不变
+    void updateRenderer(CustomList list) {
         ListCellRenderer renderer = list.getCellRenderer();
         if (renderer == null) return;
         synchronized (renderer) {
@@ -22870,7 +22380,7 @@ public class PlayerFrame extends JFrame {
             if (blurType == BlurType.MC)
                 albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
             else if (blurType == BlurType.LG) {
-                List<Color> colors = ColorThiefUtils.getPalette(albumImage, 2);
+                List<Color> colors = ColorThiefUtils.getPalette(albumImage, 3);
                 albumImage = ImageUtils.horizontalGradient(albumImage.getWidth(), albumImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
             }
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
@@ -23021,7 +22531,7 @@ public class PlayerFrame extends JFrame {
 
     // 从搜索历史删除关键词
     void removeKeywordInHistorySearch(String keyword, int type) {
-        JPanel p = null;
+        CustomPanel p = null;
         if (type == HistorySearchType.NET_MUSIC) p = netMusicHistorySearchInnerPanel2;
         else if (type == HistorySearchType.NET_PLAYLIST) p = netPlaylistHistorySearchInnerPanel2;
         else if (type == HistorySearchType.NET_ALBUM) p = netAlbumHistorySearchInnerPanel2;
@@ -23031,7 +22541,7 @@ public class PlayerFrame extends JFrame {
         else if (type == HistorySearchType.NET_USER) p = netUserHistorySearchInnerPanel2;
         Component[] components = p.getComponents();
         for (Component c : components) {
-            CustomButton b = (CustomButton) c;
+            DialogButton b = (DialogButton) c;
             if (b.getText().equals(keyword)) {
                 p.remove(b);
                 return;
@@ -23067,8 +22577,6 @@ public class PlayerFrame extends JFrame {
                     netLeftBox.add(netMusicScrollPane);
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMusicSearchSuggestionInnerPanel2.add(b);
             }
@@ -23121,8 +22629,6 @@ public class PlayerFrame extends JFrame {
                     netLeftBox.add(netMusicScrollPane);
                 });
                 b.setFont(globalFont);
-                b.setContentAreaFilled(false);
-                b.setFocusPainted(false);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMusicHotSearchInnerPanel2.add(b);
             }
@@ -23312,7 +22818,7 @@ public class PlayerFrame extends JFrame {
 //        return stylePopupMenu;
 //    }
 
-    public JSlider getVolumeSlider() {
+    public CustomSlider getVolumeSlider() {
         return volumeSlider;
     }
 

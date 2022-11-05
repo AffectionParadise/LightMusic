@@ -3,19 +3,18 @@ package net.doge.ui.components.dialog;
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.*;
-import net.doge.models.AudioFile;
+import net.doge.constants.BlurType;
+import net.doge.constants.Colors;
+import net.doge.constants.Fonts;
+import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomRadioButtonMenuItem;
-import net.doge.ui.components.DialogButton;
+import net.doge.ui.components.*;
 import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.DefaultCatalogListRenderer;
-import net.doge.ui.renderers.DefaultStyleListRenderer;
 import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -26,7 +25,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -52,15 +50,15 @@ public class ManageCatalogDialog extends JDialog {
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
-    private JPanel centerPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private final JLabel tipLabel = new JLabel("重新导入歌曲时将从以下目录查找歌曲");
-    private final JList<File> catalogList = new JList<>();
+    private final CustomLabel tipLabel = new CustomLabel("重新导入歌曲时将从以下目录查找歌曲");
+    private final CustomList<File> catalogList = new CustomList<>();
     private final DefaultListModel<File> catalogListModel = new DefaultListModel<>();
     private DialogButton allSelectButton;
     private DialogButton nonSelectButton;
@@ -162,9 +160,9 @@ public class ManageCatalogDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -174,16 +172,10 @@ public class ManageCatalogDialog extends JDialog {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -194,9 +186,6 @@ public class ManageCatalogDialog extends JDialog {
 
     // 组装界面
     void initView() {
-        // 容器透明
-        globalPanel.setOpaque(false);
-        centerPanel.setOpaque(false);
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
@@ -284,8 +273,6 @@ public class ManageCatalogDialog extends JDialog {
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
         catalogList.setCellRenderer(r);
-        catalogList.setOpaque(false);
-        catalogList.setFocusable(false);
         catalogList.setModel(catalogListModel);
         catalogList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -325,12 +312,11 @@ public class ManageCatalogDialog extends JDialog {
             }
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
-        JScrollPane sp = new JScrollPane(catalogList);
-        scrollPaneOpaque(sp);
-        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        CustomScrollPane sp = new CustomScrollPane(catalogList);
+        sp.setHorizontalScrollBar(null);
+        sp.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        sp.getVerticalScrollBar().setUnitIncrement(30);
-//        sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+        sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);
@@ -350,16 +336,6 @@ public class ManageCatalogDialog extends JDialog {
         for (File dir : catalogs) {
             catalogListModel.addElement(dir);
         }
-    }
-
-    void scrollPaneOpaque(JScrollPane sp) {
-        sp.setOpaque(false);
-        sp.getViewport().setOpaque(false);
-        sp.getHorizontalScrollBar().setOpaque(false);
-        sp.getVerticalScrollBar().setOpaque(false);
-        sp.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        sp.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
     }
 
     void doBlur(BufferedImage bufferedImage, boolean slight) {

@@ -5,8 +5,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.MediaException;
 import net.doge.constants.*;
 import net.doge.models.*;
-import net.doge.ui.components.CustomPopupMenu;
-import net.doge.ui.components.CustomRadioButtonMenuItem;
+import net.doge.ui.components.*;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.componentui.RadioButtonMenuItemUI;
 import net.doge.ui.componentui.SliderUI;
@@ -108,28 +107,28 @@ public class VideoDialog extends JDialog {
     private JFXPanel jfxPanel = new JFXPanel();
 
     // 标题面板
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
     // 进度条面板
-    private JPanel progressPanel = new JPanel();
-    private JSlider timeBar = new JSlider();
-    private JLabel currTimeLabel = new JLabel(DEFAULT_TIME);
-    private JLabel durationLabel = new JLabel(DEFAULT_TIME);
+    private CustomPanel progressPanel = new CustomPanel();
+    private CustomSlider timeBar = new CustomSlider();
+    private CustomLabel currTimeLabel = new CustomLabel(DEFAULT_TIME);
+    private CustomLabel durationLabel = new CustomLabel(DEFAULT_TIME);
 
     // 控制面板
-    private JPanel controlPanel = new JPanel();
-    private JPanel volumePanel = new JPanel();
-    private JButton playOrPauseButton = new JButton(playIcon);
-    private JButton backwardButton = new JButton(backwIcon);
-    private JButton forwardButton = new JButton(forwIcon);
-    public JButton muteButton = new JButton(soundIcon);
-    private JSlider volumeSlider = new JSlider();
-    private JButton collectButton = new JButton(collectIcon);
-    private JButton downloadButton = new JButton(downloadIcon);
-    private JButton rateButton = new JButton(rateIcon);
+    private CustomPanel controlPanel = new CustomPanel();
+    private CustomPanel volumePanel = new CustomPanel();
+    private CustomButton playOrPauseButton = new CustomButton(playIcon);
+    private CustomButton backwardButton = new CustomButton(backwIcon);
+    private CustomButton forwardButton = new CustomButton(forwIcon);
+    public CustomButton muteButton = new CustomButton(soundIcon);
+    private CustomSlider volumeSlider = new CustomSlider();
+    private CustomButton collectButton = new CustomButton(collectIcon);
+    private CustomButton downloadButton = new CustomButton(downloadIcon);
+    private CustomButton rateButton = new CustomButton(rateIcon);
     //    private CustomPopupMenu ratePopupMenu;
 //    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
 //    private CustomRadioButtonMenuItem[] rateMenuItems = {
@@ -159,8 +158,8 @@ public class VideoDialog extends JDialog {
 //            new CustomRadioButtonMenuItem("7x"),
 //            new CustomRadioButtonMenuItem("8x")
 //    };
-    private JButton fobTimeButton = new JButton(fobTimeIcon);
-    private JButton fullScreenButton = new JButton(fullScreenIcon);
+    private CustomButton fobTimeButton = new CustomButton(fobTimeIcon);
+    private CustomButton fullScreenButton = new CustomButton(fullScreenIcon);
     private CustomPopupMenu fobTimePopupMenu;
     private ButtonGroup fobTimeMenuItemsButtonGroup = new ButtonGroup();
     private CustomRadioButtonMenuItem[] fobTimeMenuItems = {
@@ -273,7 +272,6 @@ public class VideoDialog extends JDialog {
 
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
-        globalPanel.setOpaque(false);
         add(globalPanel);
     }
 
@@ -413,9 +411,9 @@ public class VideoDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(StringUtils.textToHtml(title));
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
@@ -436,16 +434,10 @@ public class VideoDialog extends JDialog {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(30, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -462,12 +454,9 @@ public class VideoDialog extends JDialog {
         durationLabel.setForeground(style.getTimeBarColor());
         currTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         durationLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        timeBar.setFocusable(false);
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
-        timeBar.setOpaque(false);
-        timeBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), f, mp, true));      // 自定义进度条 UI
         // 拖动播放时间条
         timeBar.addMouseListener(new MouseAdapter() {
@@ -484,7 +473,6 @@ public class VideoDialog extends JDialog {
             }
         });
         // 设置进度条最佳大小
-        progressPanel.setOpaque(false);
         progressPanel.add(currTimeLabel);
         progressPanel.add(timeBar);
         progressPanel.add(durationLabel);
@@ -497,9 +485,6 @@ public class VideoDialog extends JDialog {
 
     // 控制面板
     void initControlPanel() {
-        playOrPauseButton.setFocusable(false);
-        playOrPauseButton.setContentAreaFilled(false);
-        playOrPauseButton.setOpaque(false);
         playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
         playOrPauseButton.setPreferredSize(new Dimension(pauseIcon.getIconWidth(), pauseIcon.getIconHeight()));
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, f));
@@ -507,9 +492,6 @@ public class VideoDialog extends JDialog {
 
         // 快进
         forwardButton.setToolTipText(FORWARD_TIP);
-        forwardButton.setFocusable(false);
-        forwardButton.setOpaque(false);
-        forwardButton.setContentAreaFilled(false);
         forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), style.getButtonColor()));
         forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, f));
         forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth(), forwIcon.getIconHeight()));
@@ -518,9 +500,6 @@ public class VideoDialog extends JDialog {
         });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
-        backwardButton.setFocusable(false);
-        backwardButton.setOpaque(false);
-        backwardButton.setContentAreaFilled(false);
         backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), style.getButtonColor()));
         backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, f));
         backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth(), backwIcon.getIconHeight()));
@@ -529,9 +508,6 @@ public class VideoDialog extends JDialog {
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
-        muteButton.setFocusable(false);
-        muteButton.setOpaque(false);
-        muteButton.setContentAreaFilled(false);
         muteButton.setIcon(ImageUtils.dye(soundIcon, style.getButtonColor()));
         muteButton.addMouseListener(new ButtonMouseListener(muteButton, f));
         muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth(), muteIcon.getIconHeight()));
@@ -546,8 +522,6 @@ public class VideoDialog extends JDialog {
             mp.setMute(isMute);
         });
         // 音量调节滑动条
-        volumeSlider.setOpaque(false);
-        volumeSlider.setFocusable(false);
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), f, mp, false));
         volumeSlider.setPreferredSize(new Dimension(100, 12));
         volumeSlider.setMaximum(MAX_VOLUME);
@@ -568,9 +542,6 @@ public class VideoDialog extends JDialog {
         });
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
-        collectButton.setFocusable(false);
-        collectButton.setOpaque(false);
-        collectButton.setContentAreaFilled(false);
         collectButton.setIcon(ImageUtils.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, style.getButtonColor()));
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, f));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth(), collectIcon.getIconHeight()));
@@ -592,9 +563,6 @@ public class VideoDialog extends JDialog {
         // 下载
         downloadButton.setEnabled(!isLocal || !netMvInfo.isMp4());
         downloadButton.setToolTipText(DOWNLOAD_TIP);
-        downloadButton.setFocusable(false);
-        downloadButton.setOpaque(false);
-        downloadButton.setContentAreaFilled(false);
         downloadButton.setIcon(ImageUtils.dye(downloadIcon, style.getButtonColor()));
         downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, ColorUtils.darker(style.getButtonColor())));
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, f));
@@ -620,9 +588,6 @@ public class VideoDialog extends JDialog {
         rateButton.setFont(globalFont);
         rateButton.setForeground(style.getButtonColor());
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.setFocusable(false);
-        rateButton.setOpaque(false);
-        rateButton.setContentAreaFilled(false);
         rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getButtonColor()));
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, f));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
@@ -657,9 +622,6 @@ public class VideoDialog extends JDialog {
         fobTimeButton.setFont(globalFont);
         fobTimeButton.setForeground(style.getButtonColor());
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
-        fobTimeButton.setFocusable(false);
-        fobTimeButton.setOpaque(false);
-        fobTimeButton.setContentAreaFilled(false);
         fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), style.getButtonColor()));
         fobTimeButton.addMouseListener(new ButtonMouseListener(fobTimeButton, f));
         fobTimeButton.setPreferredSize(new Dimension(fobTimeIcon.getIconWidth(), fobTimeIcon.getIconHeight()));
@@ -673,9 +635,6 @@ public class VideoDialog extends JDialog {
         fullScreenButton.setFont(globalFont);
         fullScreenButton.setForeground(style.getButtonColor());
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
-        fullScreenButton.setFocusable(false);
-        fullScreenButton.setOpaque(false);
-        fullScreenButton.setContentAreaFilled(false);
         fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), style.getButtonColor()));
         fullScreenButton.addMouseListener(new ButtonMouseListener(fullScreenButton, f));
         fullScreenButton.setPreferredSize(new Dimension(fullScreenIcon.getIconWidth(), fullScreenIcon.getIconHeight()));
@@ -703,8 +662,6 @@ public class VideoDialog extends JDialog {
 
         updateRadioButtonMenuItemIcon();
 
-        controlPanel.setOpaque(false);
-        volumePanel.setOpaque(false);
         FlowLayout fl = new FlowLayout();
         fl.setHgap(13);
         controlPanel.setLayout(fl);

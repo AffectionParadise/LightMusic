@@ -1,16 +1,16 @@
 package net.doge.ui.components.dialog;
 
-import javafx.util.Duration;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.StringTwoColor;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
-//import sun.font.FontDesignMetrics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,11 +33,11 @@ public class DesktopLyricDialog extends JDialog {
     private PlayerFrame f;
     private UIStyle style;
     private Color foreColor;
-    private JPanel lyricPanel = new JPanel();
-    public LyricLabel lyricLabel = new LyricLabel("", JLabel.CENTER);
-    private JLabel tempLabel = new JLabel("", JLabel.CENTER);
+    private CustomPanel lyricPanel = new CustomPanel();
+    public LyricLabel lyricLabel = new LyricLabel("", CustomLabel.CENTER);
+    private CustomLabel tempLabel = new CustomLabel("", CustomLabel.CENTER);
     private MainPanel mainPanel = new MainPanel();
-    private JPanel buttonPanel = new JPanel();
+    private CustomPanel buttonPanel = new CustomPanel();
 
     private String LOCK_TIP = "锁定桌面歌词";
     private String UNLOCK_TIP = "解锁桌面歌词";
@@ -137,7 +137,6 @@ public class DesktopLyricDialog extends JDialog {
         FlowLayout fl = new FlowLayout();
         fl.setHgap(15);
         buttonPanel.setLayout(fl);
-        buttonPanel.setOpaque(false);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(lock);
         buttonPanel.add(restore);
@@ -152,11 +151,9 @@ public class DesktopLyricDialog extends JDialog {
         onTop.setVisible(false);
         close.setVisible(false);
 
-        lyricPanel.setOpaque(false);
         lyricPanel.setLayout(new BorderLayout());
         lyricPanel.add(lyricLabel);
 
-        mainPanel.setOpaque(false);
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(buttonPanel, BorderLayout.NORTH);
         mainPanel.add(lyricPanel, BorderLayout.CENTER);
@@ -280,20 +277,12 @@ public class DesktopLyricDialog extends JDialog {
             }
         });
 
-        lock.setBorder(null);
-        lock.setFocusable(false);
-        lock.setOpaque(false);
-        lock.setContentAreaFilled(false);
         lock.addMouseListener(new ButtonMouseListener(lock, f));
         lock.setPreferredSize(new Dimension(lockIcon.getIconWidth(), lockIcon.getIconHeight()));
         lock.addActionListener(e -> {
             f.desktopLyricLocked = !f.desktopLyricLocked;
             updateLock();
         });
-        restore.setBorder(null);
-        restore.setFocusable(false);
-        restore.setOpaque(false);
-        restore.setContentAreaFilled(false);
         restore.setToolTipText(RESTORE_TIP);
         restore.addMouseListener(new ButtonMouseListener(restore, f));
         restore.setPreferredSize(new Dimension(restoreIcon.getIconWidth(), restoreIcon.getIconHeight()));
@@ -302,40 +291,24 @@ public class DesktopLyricDialog extends JDialog {
             setLocation(dx, dy);
             hideUI();
         });
-        descendTrans.setBorder(null);
-        descendTrans.setFocusable(false);
-        descendTrans.setOpaque(false);
-        descendTrans.setContentAreaFilled(false);
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
         descendTrans.addMouseListener(new ButtonMouseListener(descendTrans, f));
         descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth(), descendTransIcon.getIconHeight()));
         descendTrans.addActionListener(e -> {
             lyricLabel.decreaseAlpha();
         });
-        ascendTrans.setBorder(null);
-        ascendTrans.setFocusable(false);
-        ascendTrans.setOpaque(false);
-        ascendTrans.setContentAreaFilled(false);
         ascendTrans.setToolTipText(ASCEND_TRANS_TIP);
         ascendTrans.addMouseListener(new ButtonMouseListener(ascendTrans, f));
         ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth(), ascendTransIcon.getIconHeight()));
         ascendTrans.addActionListener(e -> {
             lyricLabel.increaseAlpha();
         });
-        onTop.setBorder(null);
-        onTop.setFocusable(false);
-        onTop.setOpaque(false);
-        onTop.setContentAreaFilled(false);
         onTop.addMouseListener(new ButtonMouseListener(onTop, f));
         onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth(), onTopIcon.getIconHeight()));
         onTop.addActionListener(e -> {
             setAlwaysOnTop(f.desktopLyricOnTop = !f.desktopLyricOnTop);
             updateOnTop();
         });
-        close.setBorder(null);
-        close.setFocusable(false);
-        close.setOpaque(false);
-        close.setContentAreaFilled(false);
         close.setToolTipText(CLOSE_TIP);
         close.addMouseListener(new ButtonMouseListener(close, f));
         close.setPreferredSize(new Dimension(closeIcon.getIconWidth(), closeIcon.getIconHeight()));
@@ -350,7 +323,7 @@ public class DesktopLyricDialog extends JDialog {
         lyricLabel.setAlpha(alpha);
     }
 
-    private class LyricLabel extends JLabel {
+    private class LyricLabel extends CustomLabel {
         private float alpha = 1;
         private final float min = 0.2f;
         private final float max = 1f;
@@ -383,7 +356,7 @@ public class DesktopLyricDialog extends JDialog {
         }
     }
 
-    private class MainPanel extends JPanel {
+    private class MainPanel extends CustomPanel {
         private boolean drawBg;
 
         public MainPanel() {
@@ -396,7 +369,7 @@ public class DesktopLyricDialog extends JDialog {
         }
 
         @Override
-        public void paint(Graphics g) {
+        public void paintComponent(Graphics g) {
             if (!touchOver) {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -406,7 +379,7 @@ public class DesktopLyricDialog extends JDialog {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
             }
 
-            super.paint(g);
+            super.paintComponent(g);
         }
     }
 

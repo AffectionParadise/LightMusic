@@ -44,7 +44,7 @@ public class CustomPopupMenu extends JPopupMenu {
         if (b) {
             // 使 JPopupMenu 对应的 Window 透明！
             Window w = SwingUtilities.getWindowAncestor(this);
-            if(!w.getBackground().equals(Color.black)) {
+            if (!w.getBackground().equals(Color.black)) {
                 w.setVisible(false);
                 w.setBackground(Color.black);
             }

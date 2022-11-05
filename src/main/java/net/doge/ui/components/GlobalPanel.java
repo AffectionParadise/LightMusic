@@ -18,7 +18,7 @@ public class GlobalPanel extends JPanel {
     private float opacity;
 
     public GlobalPanel() {
-//        setOpaque(false);
+        setOpaque(false);
     }
 
     public void setBackgroundImage(BufferedImage backgroundImage) {

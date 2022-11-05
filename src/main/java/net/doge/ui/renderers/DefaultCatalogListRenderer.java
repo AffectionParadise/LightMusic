@@ -3,14 +3,12 @@ package net.doge.ui.renderers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.models.MusicPlayer;
-import net.doge.models.UIStyle;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
@@ -37,26 +35,10 @@ public class DefaultCatalogListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        File dir = (File) value;
-//
-//        setDrawBg(isSelected);
-//        setOpaque(false);
-//        setText(dir.getAbsolutePath());
-//        setFont(customFont);
-//        setForeground(isSelected ? selectedColor : foreColor);
-//        return this;
         File file = (File) value;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel nameLabel = new JLabel();
-
-        nameLabel.setHorizontalAlignment(CENTER);
-
-        nameLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        nameLabel.setOpaque(false);
+        CustomLabel nameLabel = new CustomLabel();
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         nameLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -85,7 +67,7 @@ public class DefaultCatalogListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -97,6 +79,6 @@ public class DefaultCatalogListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

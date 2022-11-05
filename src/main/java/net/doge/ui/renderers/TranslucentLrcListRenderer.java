@@ -1,11 +1,11 @@
 package net.doge.ui.renderers;
 
+import lombok.Data;
 import net.doge.models.Statement;
 import net.doge.ui.components.StringTwoColor;
 import net.doge.ui.componentui.LabelUI;
 import net.doge.ui.componentui.ListUI;
 import net.doge.utils.StringUtils;
-import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,6 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
     // 比例
     private double ratio;
     private int row;
-    private int[] rows;
 
     private int thresholdWidth = 700;
 
@@ -45,8 +44,7 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
         this.row = row;
     }
 
-    public Component getListCellRendererComponent(JList list, Object value,
-                                                  int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         JLabel label = (JLabel) component;
         Statement statement = (Statement) value;
@@ -57,29 +55,23 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
         // 所有标签透明
         label.setOpaque(false);
         setText(StringUtils.textToHtml(StringUtils.wrapLineByWidth(lyric, thresholdWidth)));
-        if (rows == null) {
-            // 高亮的行的样式
-            if (index == row) {
-                setFont(highlightFont);
-                if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foregroundColor) || !stc.getC2().equals(backgroundColor))
-                    stc = new StringTwoColor(this, lyric, foregroundColor, backgroundColor, ratio, false, thresholdWidth);
-                else stc.setRatio(ratio);
-                setIcon(stc.getImageIcon());
-                setText("");
-            }
-            // 其他行的样式
-            else {
-                setFont(defaultFont);
-            }
-            // 设置 list 对应行的高度
-            ((ListUI) list.getUI()).setCellHeight(index, getPreferredSize().height);
-        } else {
-            for (int i = 0; i < rows.length; i++) {
-                if (index == rows[i]) {
-                    setFont(getFont().deriveFont((float) (getFont().getSize() + 8)));
-                }
-            }
+
+        // 高亮的行的样式
+        if (index == row) {
+            setFont(highlightFont);
+            if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foregroundColor) || !stc.getC2().equals(backgroundColor))
+                stc = new StringTwoColor(this, lyric, foregroundColor, backgroundColor, ratio, false, thresholdWidth);
+            else stc.setRatio(ratio);
+            setIcon(stc.getImageIcon());
+            setText("");
         }
+        // 其他行的样式
+        else {
+            setFont(defaultFont);
+        }
+        // 设置 list 对应行的高度
+        ((ListUI) list.getUI()).setCellHeight(index, getPreferredSize().height);
+
         return this;
     }
 }

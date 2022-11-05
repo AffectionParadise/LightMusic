@@ -7,6 +7,7 @@ import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.NetUserInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -55,64 +56,21 @@ public class TranslucentNetUserListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetUserInfo netUserInfo = (NetUserInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setFont(customFont);
-//        setIcon(radioIcon);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netUserInfo.hasCoverImgThumb() ? new ImageIcon(netUserInfo.getCoverImgThumb()) : radioIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel avatarLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel genderLabel = new JLabel();
-//        JLabel birthdayLabel = new JLabel();
-//        JLabel areaLabel = new JLabel();
-        JLabel followLabel = new JLabel();
-        JLabel followedLabel = new JLabel();
-        JLabel playlistCountLabel = new JLabel();
+        CustomLabel avatarLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel genderLabel = new CustomLabel();
+//        CustomLabel birthdayLabel = new CustomLabel();
+//        CustomLabel areaLabel = new CustomLabel();
+        CustomLabel followLabel = new CustomLabel();
+        CustomLabel followedLabel = new CustomLabel();
+        CustomLabel playlistCountLabel = new CustomLabel();
 
         avatarLabel.setHorizontalTextPosition(LEFT);
         avatarLabel.setIconTextGap(25);
         avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : isSelected ? userSIcon : userIcon);
-
-        avatarLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        genderLabel.setHorizontalAlignment(CENTER);
-//        birthdayLabel.setHorizontalAlignment(CENTER);
-//        areaLabel.setHorizontalAlignment(CENTER);
-        followLabel.setHorizontalAlignment(CENTER);
-        followedLabel.setHorizontalAlignment(CENTER);
-        playlistCountLabel.setHorizontalAlignment(CENTER);
-
-        avatarLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        genderLabel.setVerticalAlignment(CENTER);
-//        birthdayLabel.setVerticalAlignment(CENTER);
-//        areaLabel.setVerticalAlignment(CENTER);
-        followLabel.setVerticalAlignment(CENTER);
-        followedLabel.setVerticalAlignment(CENTER);
-        playlistCountLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        avatarLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        genderLabel.setOpaque(false);
-//        birthdayLabel.setOpaque(false);
-//        areaLabel.setOpaque(false);
-        followLabel.setOpaque(false);
-        followedLabel.setOpaque(false);
-        playlistCountLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         avatarLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -182,7 +140,7 @@ public class TranslucentNetUserListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -194,6 +152,6 @@ public class TranslucentNetUserListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

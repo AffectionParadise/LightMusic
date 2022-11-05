@@ -80,8 +80,6 @@ public class ComboBoxUI extends BasicComboBoxUI {
         CustomButton btn = new CustomButton();
         btn.setIcon(arrowIcon);
         btn.addMouseListener(new ButtonMouseListener(btn, f));
-        btn.setContentAreaFilled(false);
-        btn.setOpaque(false);
         return btn;
     }
 

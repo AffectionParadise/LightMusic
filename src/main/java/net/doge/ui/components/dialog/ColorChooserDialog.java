@@ -5,9 +5,7 @@ import net.doge.constants.*;
 import net.doge.models.HSV;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomTextField;
-import net.doge.ui.components.DialogButton;
-import net.doge.ui.components.SafeDocument;
+import net.doge.ui.components.*;
 import net.doge.ui.componentui.ColorSliderUI;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
@@ -45,54 +43,54 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
-    private JPanel centerPanel = new JPanel();
-    private JPanel cPanel = new JPanel();
-    private JPanel leftPanel = new JPanel();
-    private JPanel rightPanel = new JPanel();
-    private JPanel tfPanel = new JPanel();
-    private JPanel buttonPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
+    private CustomPanel cPanel = new CustomPanel();
+    private CustomPanel leftPanel = new CustomPanel();
+    private CustomPanel rightPanel = new CustomPanel();
+    private CustomPanel tfPanel = new CustomPanel();
+    private CustomPanel buttonPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
     // 预定义颜色面板
     private Box preBox = Box.createVerticalBox();
-    private JPanel prePanel = new JPanel();
+    private CustomPanel prePanel = new CustomPanel();
     // 预设标签
-    private JPanel pPanel = new JPanel();
-    private JLabel preLabel = new JLabel("预设");
+    private CustomPanel pPanel = new CustomPanel();
+    private CustomLabel preLabel = new CustomLabel("预设");
 
     private Box customBox = Box.createVerticalBox();
     // 自定义标签
-    private JPanel customPanel = new JPanel();
-    private JLabel customLabel = new JLabel("自定义");
+    private CustomPanel customPanel = new CustomPanel();
+    private CustomLabel customLabel = new CustomLabel("自定义");
     // 调色板
-//    private JPanel palettePanel = new JPanel();
+//    private CustomPanel palettePanel = new CustomPanel();
 //    private PaletteLabel paletteLabel = new PaletteLabel();
-//    public JSlider vSlider = new JSlider();
+//    public CustomSlider vSlider = new CustomSlider();
     // r
-    private JLabel rlb = new JLabel("R");
-    public JSlider rSlider = new JSlider();
+    private CustomLabel rlb = new CustomLabel("R");
+    public CustomSlider rSlider = new CustomSlider();
     // g
-    private JLabel glb = new JLabel("G");
-    public JSlider gSlider = new JSlider();
+    private CustomLabel glb = new CustomLabel("G");
+    public CustomSlider gSlider = new CustomSlider();
     // b
-    private JLabel blb = new JLabel("B");
-    public JSlider bSlider = new JSlider();
+    private CustomLabel blb = new CustomLabel("B");
+    public CustomSlider bSlider = new CustomSlider();
     // 显示
-    private JLabel view = new JLabel();
+    private CustomLabel view = new CustomLabel();
 
-    private JComboBox<String> modelComboBox = new JComboBox();
+    private CustomComboBox<String> modelComboBox = new CustomComboBox();
     // 文本框
-    private JLabel rLabel = new JLabel("R：");
+    private CustomLabel rLabel = new CustomLabel("R：");
     private CustomTextField rTextField = new CustomTextField(3);
-    private JLabel gLabel = new JLabel("G：");
+    private CustomLabel gLabel = new CustomLabel("G：");
     private CustomTextField gTextField = new CustomTextField(3);
-    private JLabel bLabel = new JLabel("B：");
+    private CustomLabel bLabel = new CustomLabel("B：");
     private CustomTextField bTextField = new CustomTextField(3);
-    private JLabel hexLabel = new JLabel("Hex：");
+    private CustomLabel hexLabel = new CustomLabel("Hex：");
     private CustomTextField hexTextField = new CustomTextField(7);
 
     private DialogButton ok = new DialogButton("确定");
@@ -202,9 +200,9 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -214,16 +212,10 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -242,17 +234,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
     void initView() {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        // 容器透明
-        prePanel.setOpaque(false);
-        pPanel.setOpaque(false);
-        customPanel.setOpaque(false);
-//        palettePanel.setOpaque(false);
-        centerPanel.setOpaque(false);
-        cPanel.setOpaque(false);
-        leftPanel.setOpaque(false);
-        rightPanel.setOpaque(false);
-        tfPanel.setOpaque(false);
-        buttonPanel.setOpaque(false);
 
         Dimension d = new Dimension(1, 10);
         Box rBox = Box.createHorizontalBox();
@@ -333,7 +314,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         prePanel.setLayout(gl);
         prePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         for (Color c : preColors) {
-            JLabel l = new JLabel();
+            CustomLabel l = new CustomLabel();
             l.setIcon(ImageUtils.dyeCircle(50, c));
             l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             l.addMouseListener(new MouseAdapter() {
@@ -350,8 +331,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         customLabel.setForeground(labelColor);
         // 调色板
 //        paletteLabel.setPreferredSize(new Dimension(400, 100));
-//        vSlider.setOpaque(false);
-//        vSlider.setFocusable(false);
 //        vSlider.setOrientation(SwingConstants.VERTICAL);
 //        vSlider.setUI(new ColorVSliderUI(vSlider, this));
 //        vSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -367,8 +346,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
         rlb.setFont(globalFont);
         rlb.setForeground(labelColor);
-        rSlider.setOpaque(false);
-        rSlider.setFocusable(false);
         rSlider.setUI(new ColorSliderUI(rSlider, this));
         rSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         d = new Dimension(400, 12);
@@ -384,10 +361,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         });
         glb.setFont(globalFont);
         glb.setForeground(labelColor);
-        gSlider.setOpaque(false);
-        gSlider.setFocusable(false);
         gSlider.setUI(new ColorSliderUI(gSlider, this));
-        gSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         gSlider.setPreferredSize(d);
         gSlider.setMinimum(0);
         gSlider.addChangeListener(e -> {
@@ -400,10 +374,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         });
         blb.setFont(globalFont);
         blb.setForeground(labelColor);
-        bSlider.setOpaque(false);
-        bSlider.setFocusable(false);
         bSlider.setUI(new ColorSliderUI(bSlider, this));
-        bSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bSlider.setPreferredSize(d);
         bSlider.setMinimum(0);
         bSlider.addChangeListener(e -> {
@@ -439,10 +410,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
         // 下拉框
         modelComboBox.setFont(globalFont);
-        modelComboBox.setOpaque(false);
-        modelComboBox.setFocusable(false);
         modelComboBox.setUI(new ComboBoxUI(modelComboBox, f, globalFont, buttonColor, 80));
-        modelComboBox.setBorder(null);
         modelComboBox.addItem("RGB");
         modelComboBox.addItem("HSV");
         modelComboBox.addItemListener(e -> {
@@ -453,28 +421,24 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         // 文本框
         rLabel.setForeground(labelColor);
         rLabel.setFont(globalFont);
-        rTextField.setOpaque(false);
         rTextField.setFont(globalFont);
         rTextField.setForeground(foreColor);
         rTextField.setCaretColor(foreColor);
 
         gLabel.setForeground(labelColor);
         gLabel.setFont(globalFont);
-        gTextField.setOpaque(false);
         gTextField.setFont(globalFont);
         gTextField.setForeground(foreColor);
         gTextField.setCaretColor(foreColor);
 
         bLabel.setForeground(labelColor);
         bLabel.setFont(globalFont);
-        bTextField.setOpaque(false);
         bTextField.setFont(globalFont);
         bTextField.setForeground(foreColor);
         bTextField.setCaretColor(foreColor);
 
         hexLabel.setForeground(labelColor);
         hexLabel.setFont(globalFont);
-        hexTextField.setOpaque(false);
         hexTextField.setFont(globalFont);
         hexTextField.setForeground(foreColor);
         hexTextField.setCaretColor(foreColor);
@@ -670,7 +634,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         }
     }
 
-//    private class PaletteLabel extends JLabel {
+//    private class PaletteLabel extends CustomLabel {
 //        private Color currColor;
 //        private Point point;
 //

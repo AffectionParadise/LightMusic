@@ -5,6 +5,7 @@ import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.AudioFile;
 import net.doge.models.NetMusicInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import net.doge.models.MusicPlayer;
@@ -77,32 +78,6 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
-//        setFont(customFont);
-//        setIconTextGap(10);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        if (value instanceof AudioFile) {
-//            AudioFile file = (AudioFile) value;
-//            setText(StringUtils.textToHtml(file.toString()));
-//            // 播放中的文件图标不同
-//            if (!player.isPlayingFile(file)) setIcon(musicIcon);
-//            else setIcon(playingIcon);
-//        } else if (value instanceof NetMusicInfo) {
-//            NetMusicInfo musicInfo = (NetMusicInfo) value;
-//            setText(StringUtils.textToHtml(musicInfo.toString()));
-//            // 播放中的文件图标不同
-//            if (!player.isPlayingNetMusic(musicInfo)) {
-//                if (musicInfo.hasMv()) setIcon(musicMvIcon);
-//                else if (musicInfo.isProgram()) setIcon(programIcon);
-//                else setIcon(musicIcon);
-//            } else setIcon(playingIcon);
-//        }
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
         if (!(value instanceof AudioFile) && !(value instanceof NetMusicInfo)) return this;
 
         AudioFile file = null;
@@ -112,11 +87,11 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
         else netMusicInfo = (NetMusicInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel artistLabel = new JLabel();
-        JLabel albumNameLabel = new JLabel();
-        JLabel durationLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel artistLabel = new CustomLabel();
+        CustomLabel albumNameLabel = new CustomLabel();
+        CustomLabel durationLabel = new CustomLabel();
 
         if (isFile) {
             // 播放中的文件图标不同
@@ -133,26 +108,6 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setIconTextGap(15);
         iconLabel.setHorizontalTextPosition(LEFT);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        artistLabel.setHorizontalAlignment(CENTER);
-        albumNameLabel.setHorizontalAlignment(CENTER);
-        durationLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        artistLabel.setVerticalAlignment(CENTER);
-        albumNameLabel.setVerticalAlignment(CENTER);
-        durationLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        artistLabel.setOpaque(false);
-        albumNameLabel.setOpaque(false);
-        artistLabel.setOpaque(false);
-        durationLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -208,7 +163,7 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -220,6 +175,6 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

@@ -7,9 +7,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomTextField;
-import net.doge.ui.components.DialogButton;
-import net.doge.ui.components.SafeDocument;
+import net.doge.ui.components.*;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ColorThiefUtils;
@@ -53,67 +51,67 @@ public class SettingDialog extends JDialog {
     private ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
 
     private SettingDialogPanel globalPanel = new SettingDialogPanel();
-    private JPanel centerPanel = new JPanel();
-    private JPanel buttonPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
+    private CustomPanel buttonPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
     // 设置项
-    private JPanel autoDownloadLrcPanel = new JPanel();
-    private JCheckBox autoDownloadLrcCheckBox = new JCheckBox("下载歌曲时自动下载歌词");
-    private JPanel videoOnlyPanel = new JPanel();
-    private JCheckBox videoOnlyCheckBox = new JCheckBox("播放视频时隐藏主界面");
-    private JPanel musicDownPanel = new JPanel();
-    private JLabel musicDownLabel = new JLabel("歌曲下载路径：");
+    private CustomPanel autoDownloadLrcPanel = new CustomPanel();
+    private CustomCheckBox autoDownloadLrcCheckBox = new CustomCheckBox("下载歌曲时自动下载歌词");
+    private CustomPanel videoOnlyPanel = new CustomPanel();
+    private CustomCheckBox videoOnlyCheckBox = new CustomCheckBox("播放视频时隐藏主界面");
+    private CustomPanel musicDownPanel = new CustomPanel();
+    private CustomLabel musicDownLabel = new CustomLabel("歌曲下载路径：");
     private CustomTextField musicDownPathTextField = new CustomTextField(20);
     private DialogButton changeMusicDownPathButton;
     private DialogButton openMusicDownPathButton;
-    private JPanel mvDownPanel = new JPanel();
-    private JLabel mvDownLabel = new JLabel("MV 下载路径：");
+    private CustomPanel mvDownPanel = new CustomPanel();
+    private CustomLabel mvDownLabel = new CustomLabel("MV 下载路径：");
     private CustomTextField mvDownPathTextField = new CustomTextField(20);
     private DialogButton changeMvDownPathButton;
     private DialogButton openMvDownPathButton;
-    private JPanel cachePanel = new JPanel();
-    private JLabel cacheLabel = new JLabel("缓存路径：");
+    private CustomPanel cachePanel = new CustomPanel();
+    private CustomLabel cacheLabel = new CustomLabel("缓存路径：");
     private CustomTextField cachePathTextField = new CustomTextField(20);
     private DialogButton changeCachePathButton;
     private DialogButton openCachePathButton;
-    private JPanel maxCacheSizePanel = new JPanel();
-    private JLabel maxCacheSizeLabel = new JLabel("最大缓存大小(MB)：");
+    private CustomPanel maxCacheSizePanel = new CustomPanel();
+    private CustomLabel maxCacheSizeLabel = new CustomLabel("最大缓存大小(MB)：");
     private CustomTextField maxCacheSizeTextField = new CustomTextField(10);
-    private JPanel maxHistoryCountPanel = new JPanel();
-    private JLabel maxHistoryCountLabel = new JLabel("最大播放历史数量：");
+    private CustomPanel maxHistoryCountPanel = new CustomPanel();
+    private CustomLabel maxHistoryCountLabel = new CustomLabel("最大播放历史数量：");
     private CustomTextField maxHistoryCountTextField = new CustomTextField(10);
-    private JPanel maxSearchHistoryCountPanel = new JPanel();
-    private JLabel maxSearchHistoryCountLabel = new JLabel("最大搜索历史数量：");
+    private CustomPanel maxSearchHistoryCountPanel = new CustomPanel();
+    private CustomLabel maxSearchHistoryCountLabel = new CustomLabel("最大搜索历史数量：");
     private CustomTextField maxSearchHistoryCountTextField = new CustomTextField(10);
-    private JPanel maxConcurrentTaskCountPanel = new JPanel();
-    private JLabel maxConcurrentTaskCountLabel = new JLabel("同时下载的最大任务数：");
+    private CustomPanel maxConcurrentTaskCountPanel = new CustomPanel();
+    private CustomLabel maxConcurrentTaskCountLabel = new CustomLabel("同时下载的最大任务数：");
     private CustomTextField maxConcurrentTaskCountTextField = new CustomTextField(10);
-    private JPanel closeOptionPanel = new JPanel();
-    private JLabel closeOptionLabel = new JLabel("关闭主界面时：");
-    private JComboBox<String> closeOptionComboBox = new JComboBox();
-    private JPanel windowSizePanel = new JPanel();
-    private JLabel windowSizeLabel = new JLabel("窗口大小：");
-    private JComboBox<String> windowSizeComboBox = new JComboBox();
-    private JPanel fobPanel = new JPanel();
-    private JLabel fobLabel = new JLabel("快进/快退时间：");
-    private JComboBox<String> fobComboBox = new JComboBox();
-    //    private JPanel ratePanel = new JPanel();
-//    private JLabel rateLabel = new JLabel("播放速率：");
-//    private JComboBox<String> rateComboBox = new JComboBox();
+    private CustomPanel closeOptionPanel = new CustomPanel();
+    private CustomLabel closeOptionLabel = new CustomLabel("关闭主界面时：");
+    private CustomComboBox<String> closeOptionComboBox = new CustomComboBox();
+    private CustomPanel windowSizePanel = new CustomPanel();
+    private CustomLabel windowSizeLabel = new CustomLabel("窗口大小：");
+    private CustomComboBox<String> windowSizeComboBox = new CustomComboBox();
+    private CustomPanel fobPanel = new CustomPanel();
+    private CustomLabel fobLabel = new CustomLabel("快进/快退时间：");
+    private CustomComboBox<String> fobComboBox = new CustomComboBox();
+    //    private CustomPanel ratePanel = new CustomPanel();
+//    private CustomLabel rateLabel = new CustomLabel("播放速率：");
+//    private CustomComboBox<String> rateComboBox = new CustomComboBox();
 //    private String[] rates = {"0.25x", "0.5x", "0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "4x", "8x"};
-    private JPanel specStylePanel = new JPanel();
-    private JLabel specStyleLabel = new JLabel("频谱样式：");
-    private JComboBox<String> specStyleComboBox = new JComboBox();
-    private JPanel balancePanel = new JPanel();
-    private JLabel balanceLabel = new JLabel("声道平衡：");
-    private JComboBox<String> balanceComboBox = new JComboBox();
-    private JPanel backupPanel = new JPanel();
-    private JLabel backupLabel = new JLabel("播放列表备份/恢复（仅包括离线音乐列表、所有收藏列表）");
+    private CustomPanel specStylePanel = new CustomPanel();
+    private CustomLabel specStyleLabel = new CustomLabel("频谱样式：");
+    private CustomComboBox<String> specStyleComboBox = new CustomComboBox();
+    private CustomPanel balancePanel = new CustomPanel();
+    private CustomLabel balanceLabel = new CustomLabel("声道平衡：");
+    private CustomComboBox<String> balanceComboBox = new CustomComboBox();
+    private CustomPanel backupPanel = new CustomPanel();
+    private CustomLabel backupLabel = new CustomLabel("播放列表备份/恢复（仅包括离线音乐列表、所有收藏列表）");
     private DialogButton importListButton;
     private DialogButton exportListButton;
 
@@ -188,7 +186,6 @@ public class SettingDialog extends JDialog {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        globalPanel.setOpaque(false);
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
@@ -224,9 +221,9 @@ public class SettingDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -236,16 +233,10 @@ public class SettingDialog extends JDialog {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(30, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -323,50 +314,6 @@ public class SettingDialog extends JDialog {
         balancePanel.setBorder(b);
         backupPanel.setBorder(b);
 
-        // 容器透明
-        centerPanel.setOpaque(false);
-        buttonPanel.setOpaque(false);
-        autoDownloadLrcPanel.setOpaque(false);
-        videoOnlyPanel.setOpaque(false);
-        musicDownPanel.setOpaque(false);
-        mvDownPanel.setOpaque(false);
-        cachePanel.setOpaque(false);
-        maxCacheSizePanel.setOpaque(false);
-        maxHistoryCountPanel.setOpaque(false);
-        maxSearchHistoryCountPanel.setOpaque(false);
-        maxConcurrentTaskCountPanel.setOpaque(false);
-        closeOptionPanel.setOpaque(false);
-        windowSizePanel.setOpaque(false);
-        fobPanel.setOpaque(false);
-        specStylePanel.setOpaque(false);
-        balancePanel.setOpaque(false);
-        backupPanel.setOpaque(false);
-
-        // 组件透明
-        musicDownPathTextField.setOpaque(false);
-        mvDownPathTextField.setOpaque(false);
-        cachePathTextField.setOpaque(false);
-        maxCacheSizeTextField.setOpaque(false);
-        maxHistoryCountTextField.setOpaque(false);
-        maxSearchHistoryCountTextField.setOpaque(false);
-        maxConcurrentTaskCountTextField.setOpaque(false);
-        autoDownloadLrcCheckBox.setOpaque(false);
-        videoOnlyCheckBox.setOpaque(false);
-        closeOptionComboBox.setOpaque(false);
-        windowSizeComboBox.setOpaque(false);
-        fobComboBox.setOpaque(false);
-        specStyleComboBox.setOpaque(false);
-        balanceComboBox.setOpaque(false);
-
-        // 组件不可聚焦
-        autoDownloadLrcCheckBox.setFocusPainted(false);
-        videoOnlyCheckBox.setFocusPainted(false);
-        closeOptionComboBox.setFocusable(false);
-        windowSizeComboBox.setFocusable(false);
-        fobComboBox.setFocusable(false);
-        specStyleComboBox.setFocusable(false);
-        balanceComboBox.setFocusable(false);
-
         // 字体颜色
         Color labelColor = style.getLabelColor();
         autoDownloadLrcCheckBox.setForeground(labelColor);
@@ -417,13 +364,6 @@ public class SettingDialog extends JDialog {
         fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, globalFont, buttonColor));
         specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, globalFont, buttonColor));
         balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, globalFont, buttonColor));
-
-        // 下拉框边框
-        closeOptionComboBox.setBorder(null);
-        windowSizeComboBox.setBorder(null);
-        fobComboBox.setBorder(null);
-        specStyleComboBox.setBorder(null);
-        balanceComboBox.setBorder(null);
 
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("选择歌曲文件夹");
@@ -731,14 +671,14 @@ public class SettingDialog extends JDialog {
             f.historyModel.remove(f.maxHistoryCount);
 
         // 删除多余的搜索历史记录
-        JPanel[] ps = new JPanel[]{f.netMusicHistorySearchInnerPanel2,
+        CustomPanel[] ps = new CustomPanel[]{f.netMusicHistorySearchInnerPanel2,
                 f.netPlaylistHistorySearchInnerPanel2,
                 f.netAlbumHistorySearchInnerPanel2,
                 f.netArtistHistorySearchInnerPanel2,
                 f.netRadioHistorySearchInnerPanel2,
                 f.netMvHistorySearchInnerPanel2,
                 f.netUserHistorySearchInnerPanel2};
-        for (JPanel p : ps)
+        for (CustomPanel p : ps)
             for (int i = f.maxSearchHistoryCount, s = p.getComponentCount(); i < s; i++) {
                 p.remove(f.maxSearchHistoryCount);
                 p.repaint();

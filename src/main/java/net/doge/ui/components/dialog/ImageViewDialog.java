@@ -8,14 +8,11 @@ import net.doge.constants.*;
 import net.doge.models.CommonResult;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomButton;
-import net.doge.ui.components.CustomTextField;
-import net.doge.ui.components.SafeDocument;
+import net.doge.ui.components.*;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.ListUtils;
-import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -59,9 +56,9 @@ public abstract class ImageViewDialog extends JDialog {
     // 下一张图标
     private ImageIcon nextImgIcon = new ImageIcon(SimplePath.ICON_PATH + "nextPage.png");
     // 第一张图标
-    private ImageIcon firstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "firstImg.png");
+    private ImageIcon firstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "startPage.png");
     // 最后一张图标
-    private ImageIcon lstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "lastImg.png");
+    private ImageIcon lstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "endPage.png");
     // 保存图片图标
     private ImageIcon saveImgIcon = new ImageIcon(SimplePath.ICON_PATH + "saveImg.png");
     // 跳页图标
@@ -75,17 +72,17 @@ public abstract class ImageViewDialog extends JDialog {
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
-    private JPanel centerPanel = new JPanel();
-    private JPanel bottomPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
+    private CustomPanel bottomPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private JLabel imgLabel = new JLabel("", JLabel.CENTER);
+    private CustomLabel imgLabel = new CustomLabel("", CustomLabel.CENTER);
     public CustomButton lastImgButton = new CustomButton(lastImgIcon);
-    private JLabel pageLabel = new JLabel();
+    private CustomLabel pageLabel = new CustomLabel();
     // 页数框
     public CustomTextField pageTextField = new CustomTextField(3);
     // 跳页按钮
@@ -188,9 +185,9 @@ public abstract class ImageViewDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -200,16 +197,10 @@ public abstract class ImageViewDialog extends JDialog {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -220,10 +211,6 @@ public abstract class ImageViewDialog extends JDialog {
 
     // 组装界面
     void initView() {
-        // 容器透明
-        globalPanel.setOpaque(false);
-        centerPanel.setOpaque(false);
-        bottomPanel.setOpaque(false);
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
@@ -237,9 +224,6 @@ public abstract class ImageViewDialog extends JDialog {
 
         // 上/下一张按钮
         lastImgButton.setToolTipText(LAST_IMG);
-        lastImgButton.setFocusPainted(false);
-        lastImgButton.setOpaque(false);
-        lastImgButton.setContentAreaFilled(false);
         lastImgButton.setIcon(ImageUtils.dye((ImageIcon) lastImgButton.getIcon(), style.getButtonColor()));
         lastImgButton.addMouseListener(new ButtonMouseListener(lastImgButton, f));
         lastImgButton.setPreferredSize(new Dimension(lastImgIcon.getIconWidth(), lastImgIcon.getIconHeight()));
@@ -251,9 +235,6 @@ public abstract class ImageViewDialog extends JDialog {
             showImg(--p);
         });
         nextImgButton.setToolTipText(NEXT_IMG);
-        nextImgButton.setFocusPainted(false);
-        nextImgButton.setOpaque(false);
-        nextImgButton.setContentAreaFilled(false);
         nextImgButton.setIcon(ImageUtils.dye((ImageIcon) nextImgButton.getIcon(), style.getButtonColor()));
         nextImgButton.addMouseListener(new ButtonMouseListener(nextImgButton, f));
         nextImgButton.setPreferredSize(new Dimension(nextImgIcon.getIconWidth(), nextImgIcon.getIconHeight()));
@@ -267,9 +248,6 @@ public abstract class ImageViewDialog extends JDialog {
         });
         // 第一张/最后一张按钮
         firstImgButton.setToolTipText(FIRST_IMG);
-        firstImgButton.setFocusPainted(false);
-        firstImgButton.setOpaque(false);
-        firstImgButton.setContentAreaFilled(false);
         firstImgButton.setIcon(ImageUtils.dye((ImageIcon) firstImgButton.getIcon(), style.getButtonColor()));
         firstImgButton.addMouseListener(new ButtonMouseListener(firstImgButton, f));
         firstImgButton.setPreferredSize(new Dimension(firstImgIcon.getIconWidth(), firstImgIcon.getIconHeight()));
@@ -281,9 +259,6 @@ public abstract class ImageViewDialog extends JDialog {
             showImg(p = 1);
         });
         lstImgButton.setToolTipText(LST_IMG);
-        lstImgButton.setFocusPainted(false);
-        lstImgButton.setOpaque(false);
-        lstImgButton.setContentAreaFilled(false);
         lstImgButton.setIcon(ImageUtils.dye((ImageIcon) lstImgButton.getIcon(), style.getButtonColor()));
         lstImgButton.addMouseListener(new ButtonMouseListener(lstImgButton, f));
         lstImgButton.setPreferredSize(new Dimension(lstImgIcon.getIconWidth(), lstImgIcon.getIconHeight()));
@@ -306,14 +281,10 @@ public abstract class ImageViewDialog extends JDialog {
             }
         });
         pageTextField.setFont(globalFont);
-        pageTextField.setOpaque(false);
         pageTextField.setForeground(style.getForeColor());
         pageTextField.setCaretColor(style.getForeColor());
         // 跳页按钮
         goButton.setToolTipText(GO_TIP);
-        goButton.setFocusPainted(false);
-        goButton.setOpaque(false);
-        goButton.setContentAreaFilled(false);
         goButton.setIcon(ImageUtils.dye((ImageIcon) goButton.getIcon(), style.getButtonColor()));
         goButton.addMouseListener(new ButtonMouseListener(goButton, f));
         goButton.setPreferredSize(new Dimension(goIcon.getIconWidth(), goIcon.getIconHeight()));
@@ -332,9 +303,6 @@ public abstract class ImageViewDialog extends JDialog {
 
         // 保存图片
         saveImgButton.setToolTipText(SAVE_IMG);
-        saveImgButton.setFocusPainted(false);
-        saveImgButton.setOpaque(false);
-        saveImgButton.setContentAreaFilled(false);
         saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), style.getButtonColor()));
         saveImgButton.addMouseListener(new ButtonMouseListener(saveImgButton, f));
         saveImgButton.setPreferredSize(new Dimension(saveImgIcon.getIconWidth(), saveImgIcon.getIconHeight()));
@@ -429,23 +397,6 @@ public abstract class ImageViewDialog extends JDialog {
             }
         });
     }
-
-//    // 全局热键监听器
-//    void loadHotKeyListener() {
-//        Toolkit toolkit = Toolkit.getDefaultToolkit();
-//        toolkit.addAWTEventListener(event -> {
-//            if (event instanceof KeyEvent) {
-//                KeyEvent kE = (KeyEvent) event;
-//                if (kE.getID() == KeyEvent.KEY_RELEASED && isShowing() && !pageTextField.hasFocus()) {
-//                    if (kE.getKeyCode() == KeyEvent.VK_LEFT) {
-//                        lastImgButton.doClick();
-//                    } else if (kE.getKeyCode() == KeyEvent.VK_RIGHT) {
-//                        nextImgButton.doClick();
-//                    }
-//                }
-//            }
-//        }, AWTEvent.KEY_EVENT_MASK);
-//    }
 
     void doBlur(BufferedImage bufferedImage, boolean slight) {
         Dimension size = getSize();

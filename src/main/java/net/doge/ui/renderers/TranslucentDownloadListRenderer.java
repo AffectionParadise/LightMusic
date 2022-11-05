@@ -2,7 +2,9 @@ package net.doge.ui.renderers;
 
 import net.doge.constants.*;
 import net.doge.models.Task;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.CustomSlider;
 import net.doge.ui.componentui.MuteSliderUI;
 import net.doge.utils.FileUtils;
 import net.doge.utils.ImageUtils;
@@ -51,53 +53,22 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//        setIconTextGap(10);
-//        setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-//
-//        setText(StringUtils.textToHtmlWithSpace(getText()));
-//        setIcon(taskIcon);
-//        setFont(customFont);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
-
         Task task = (Task) value;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel(isSelected ? taskSIcon : taskIcon);
-        JLabel nameLabel = new JLabel();
-        JLabel typeLabel = new JLabel();
-        JLabel sizeLabel = new JLabel();
-        JSlider progressSlider = new JSlider();
-        JLabel percentLabel = new JLabel();
-        JLabel statusLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel(isSelected ? taskSIcon : taskIcon);
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel typeLabel = new CustomLabel();
+        CustomLabel sizeLabel = new CustomLabel();
+        CustomSlider progressSlider = new CustomSlider();
+        CustomLabel percentLabel = new CustomLabel();
+        CustomLabel statusLabel = new CustomLabel();
 
         iconLabel.setIconTextGap(15);
 
         progressSlider.setMinimum(0);
         progressSlider.setMaximum(100);
         progressSlider.setUI(new MuteSliderUI(progressSlider, isSelected ? selectedColor : foreColor));
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        typeLabel.setHorizontalAlignment(CENTER);
-        sizeLabel.setHorizontalAlignment(CENTER);
-        percentLabel.setHorizontalAlignment(CENTER);
-        statusLabel.setHorizontalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        typeLabel.setOpaque(false);
-        sizeLabel.setOpaque(false);
-        progressSlider.setOpaque(false);
-        percentLabel.setOpaque(false);
-        statusLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -155,7 +126,7 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -167,6 +138,6 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

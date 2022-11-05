@@ -2,22 +2,15 @@ package net.doge.ui.components;
 
 import net.doge.constants.Fonts;
 import net.doge.ui.PlayerFrame;
-import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
+import java.awt.geom.*;
 
 /**
  * @Author yzx

@@ -24,6 +24,7 @@ public class CustomTextField extends JTextField {
 
     public CustomTextField(int length) {
         super(length);
+        setOpaque(false);
         setHorizontalAlignment(CENTER);
         setMaximumSize(new Dimension(3000, 30));
         setSelectionColor(Colors.THEME);

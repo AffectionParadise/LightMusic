@@ -5,6 +5,9 @@ import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
+import net.doge.ui.components.CustomCheckBox;
+import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.DialogButton;
 import net.doge.ui.PlayerFrame;
 import net.doge.utils.ColorThiefUtils;
@@ -30,8 +33,8 @@ public class ConfirmDialog extends JDialog {
     // 阴影大小像素
     private final int pixels = 10;
 
-    Dimension size;
-    Font font = Fonts.NORMAL;
+    private Dimension size;
+    private Font font = Fonts.NORMAL;
     private DialogButton yes = new DialogButton("");
     private DialogButton no = new DialogButton("");
     private DialogButton cancel = new DialogButton("");
@@ -43,12 +46,12 @@ public class ConfirmDialog extends JDialog {
 
     private PlayerFrame f;
     private String message = "";
-    private JPanel messagePanel = new JPanel();
-    private JLabel messageLabel = new JLabel(message, JLabel.CENTER);
+    private CustomPanel messagePanel = new CustomPanel();
+    private CustomLabel messageLabel = new CustomLabel(message, CustomLabel.CENTER);
     private boolean showCheck;
-    private JPanel checkPanel = new JPanel();
-    private JCheckBox checkBox = new JCheckBox();
-    private JPanel buttonPanel = new JPanel();
+    private CustomPanel checkPanel = new CustomPanel();
+    private CustomCheckBox checkBox = new CustomCheckBox();
+    private CustomPanel buttonPanel = new CustomPanel();
     private ConfirmDialogPanel mainPanel = new ConfirmDialogPanel();
 
     public ConfirmDialog(PlayerFrame f, String message) {
@@ -96,13 +99,10 @@ public class ConfirmDialog extends JDialog {
         no.setFont(font);
         cancel.setFont(font);
         checkBox.setFont(font);
-        checkBox.setOpaque(false);
-        checkBox.setFocusPainted(false);
         checkBox.setForeground(labelColor);
         checkBox.setIconTextGap(10);
         checkBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
         checkBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
-        checkPanel.setOpaque(false);
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
         Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);
@@ -111,12 +111,10 @@ public class ConfirmDialog extends JDialog {
         messageLabel.setText(message);
         messageLabel.setForeground(labelColor);
         messagePanel.add(messageLabel);
-        messagePanel.setOpaque(false);
         messagePanel.setBorder(eb);
         FlowLayout fl = new FlowLayout();
         fl.setHgap(20);
         buttonPanel.setLayout(fl);
-        buttonPanel.setOpaque(false);
 
         if (StringUtils.isNotEmpty(yes.getText())) buttonPanel.add(yes);
         if (StringUtils.isNotEmpty(no.getText())) buttonPanel.add(no);

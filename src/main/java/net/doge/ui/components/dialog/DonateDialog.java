@@ -4,6 +4,9 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.DialogButton;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ColorThiefUtils;
@@ -45,10 +48,10 @@ public class DonateDialog extends JDialog {
             "https://github.com/jsososo/MiguMusicApi";
 
     // 标题面板
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
     // 收款码
     private ImageIcon weixinIcon = new ImageIcon(SimplePath.ICON_PATH + "weixin.png");
@@ -56,17 +59,17 @@ public class DonateDialog extends JDialog {
 
     private PlayerFrame f;
     private UIStyle style;
-    private JPanel messagePanel = new JPanel();
-    private JLabel messageLabel = new JLabel("如果您觉得这款软件还不错，可以请作者喝杯咖啡~~", JLabel.CENTER);
-    private JPanel centerPanel = new JPanel();
-    private JPanel cPanel = new JPanel();
-    private JPanel leftPanel = new JPanel();
-    private JLabel weixinLabel = new JLabel("微信");
-    private JPanel rightPanel = new JPanel();
-    private JLabel alipayLabel = new JLabel("支付宝");
-    private JPanel thankPanel = new JPanel();
-    private JLabel thankLabel = new JLabel(StringUtils.textToHtml(thankMsg));
-    private JPanel buttonPanel = new JPanel();
+    private CustomPanel messagePanel = new CustomPanel();
+    private CustomLabel messageLabel = new CustomLabel("如果您觉得这款软件还不错，可以请作者喝杯咖啡~~", CustomLabel.CENTER);
+    private CustomPanel centerPanel = new CustomPanel();
+    private CustomPanel cPanel = new CustomPanel();
+    private CustomPanel leftPanel = new CustomPanel();
+    private CustomLabel weixinLabel = new CustomLabel("微信");
+    private CustomPanel rightPanel = new CustomPanel();
+    private CustomLabel alipayLabel = new CustomLabel("支付宝");
+    private CustomPanel thankPanel = new CustomPanel();
+    private CustomLabel thankLabel = new CustomLabel(StringUtils.textToHtml(thankMsg));
+    private CustomPanel buttonPanel = new CustomPanel();
     private ConfirmDialogPanel mainPanel = new ConfirmDialogPanel();
 
     public DonateDialog(PlayerFrame f) {
@@ -79,9 +82,9 @@ public class DonateDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
-        titleLabel.setText(StringUtils.textToHtml(title));
+        titleLabel.setText(title);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
@@ -89,16 +92,10 @@ public class DonateDialog extends JDialog {
         closeButton.addActionListener(e -> close());
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(30, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -144,7 +141,6 @@ public class DonateDialog extends JDialog {
         thankLabel.setForeground(labelColor);
 
         messagePanel.add(messageLabel);
-        messagePanel.setOpaque(false);
         messagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
         weixinLabel.setVerticalTextPosition(SwingConstants.TOP);
@@ -158,18 +154,13 @@ public class DonateDialog extends JDialog {
         alipayLabel.setIcon(alipayIcon);
         leftPanel.add(weixinLabel);
         rightPanel.add(alipayLabel);
-        leftPanel.setOpaque(false);
-        rightPanel.setOpaque(false);
-        cPanel.setOpaque(false);
         cPanel.setLayout(new BoxLayout(cPanel, BoxLayout.X_AXIS));
         cPanel.add(leftPanel);
         cPanel.add(rightPanel);
 
-        thankPanel.setOpaque(false);
         thankPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
         thankPanel.add(thankLabel);
 
-        centerPanel.setOpaque(false);
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(messagePanel, BorderLayout.NORTH);
         centerPanel.add(cPanel, BorderLayout.CENTER);
@@ -178,7 +169,6 @@ public class DonateDialog extends JDialog {
         FlowLayout fl = new FlowLayout();
         fl.setHgap(20);
         buttonPanel.setLayout(fl);
-        buttonPanel.setOpaque(false);
         buttonPanel.add(yes);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
 

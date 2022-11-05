@@ -8,6 +8,7 @@ import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.NetMvInfo;
 import net.doge.models.NetSheetInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -62,64 +63,21 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//
         NetSheetInfo netSheetInfo = (NetSheetInfo) value;
-//        setIconTextGap(15);
-//        setText(StringUtils.textToHtml(getText()));
-//        setFont(customFont);
-//        setIcon(SheetIcon);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//        setIcon(netSheetInfo.hasCoverImgThumb() ? new ImageIcon(netSheetInfo.getCoverImgThumb()) : SheetIcon);
-//
-//        // 所有标签透明
-//        label.setOpaque(false);
-//        return this;
 
         CustomPanel outerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel difficultyLabel = new JLabel();
-        JLabel musicKeyLabel = new JLabel();
-        JLabel playVersionLabel = new JLabel();
-        JLabel chordNameLabel = new JLabel();
-        JLabel bpmLabel = new JLabel();
-        JLabel pageSizeLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel difficultyLabel = new CustomLabel();
+        CustomLabel musicKeyLabel = new CustomLabel();
+        CustomLabel playVersionLabel = new CustomLabel();
+        CustomLabel chordNameLabel = new CustomLabel();
+        CustomLabel bpmLabel = new CustomLabel();
+        CustomLabel pageSizeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(15);
         iconLabel.setIcon(netSheetInfo.hasCoverImg() ? new ImageIcon(netSheetInfo.getCoverImg()) : isSelected ? sheetSIcon : sheetIcon);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        difficultyLabel.setHorizontalAlignment(CENTER);
-        musicKeyLabel.setHorizontalAlignment(CENTER);
-        playVersionLabel.setHorizontalAlignment(CENTER);
-        chordNameLabel.setHorizontalAlignment(CENTER);
-        bpmLabel.setHorizontalAlignment(CENTER);
-        pageSizeLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        difficultyLabel.setVerticalAlignment(CENTER);
-        musicKeyLabel.setVerticalAlignment(CENTER);
-        playVersionLabel.setVerticalAlignment(CENTER);
-        chordNameLabel.setVerticalAlignment(CENTER);
-        bpmLabel.setVerticalAlignment(CENTER);
-        pageSizeLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        difficultyLabel.setOpaque(false);
-        musicKeyLabel.setOpaque(false);
-        playVersionLabel.setOpaque(false);
-        chordNameLabel.setOpaque(false);
-        bpmLabel.setOpaque(false);
-        pageSizeLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -185,7 +143,7 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -197,6 +155,6 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

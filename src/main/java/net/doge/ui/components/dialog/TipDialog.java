@@ -7,17 +7,17 @@ import net.doge.constants.Fonts;
 import net.doge.constants.GlobalExecutors;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.CustomLabel;
 import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
-//import sun.font.FontDesignMetrics;
 
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.border.Border;
 
 /**
  * @Author yzx
@@ -25,17 +25,17 @@ import javax.swing.border.Border;
  * @Date 2021/1/5
  */
 public class TipDialog extends JDialog {
-    TipDialog THIS = this;
-    Dimension size;
-    Font font = Fonts.NORMAL_MEDIUM;
-    Color themeColor;
-    int ms;
-    boolean closing;
+    private TipDialog THIS = this;
+    private Dimension size;
+    private Font font = Fonts.NORMAL_MEDIUM;
+    private Color themeColor;
+    private int ms;
+    private boolean closing;
 
-    PlayerFrame f;
-    String message = "";
-    JLabel messageLabel = new JLabel(message, JLabel.CENTER);
-    UndergroundPanel mainPanel = new UndergroundPanel();
+    private PlayerFrame f;
+    private String message = "";
+    private CustomLabel messageLabel = new CustomLabel(message, CustomLabel.CENTER);
+    private UndergroundPanel mainPanel = new UndergroundPanel();
 
     // 最大阴影透明度
     private final int TOP_OPACITY = 30;

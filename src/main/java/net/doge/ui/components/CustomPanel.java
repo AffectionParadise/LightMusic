@@ -8,6 +8,16 @@ public class CustomPanel extends JPanel {
 
     public CustomPanel() {
         super();
+        init();
+    }
+
+    public CustomPanel(LayoutManager layoutManager) {
+        super(layoutManager);
+        init();
+    }
+
+    private void init() {
+        setOpaque(false);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -15,9 +25,8 @@ public class CustomPanel extends JPanel {
         repaint();
     }
 
-
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         if(drawBg) {
             Graphics2D g2d = (Graphics2D) g;
             // 画背景
@@ -28,6 +37,6 @@ public class CustomPanel extends JPanel {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

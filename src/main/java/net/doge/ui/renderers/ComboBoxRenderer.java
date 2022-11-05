@@ -27,13 +27,10 @@ public class ComboBoxRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
         CustomLabel label = new CustomLabel();
 
         label.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         label.setDrawBg(isSelected);
-        label.setHorizontalAlignment(CENTER);
         label.setText((String) value);
         label.setFont(font);
         label.setForeground(foreColor);

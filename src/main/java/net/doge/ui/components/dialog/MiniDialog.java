@@ -8,6 +8,7 @@ import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.GlobalPanel;
 import net.doge.ui.listeners.ButtonMouseListener;
@@ -44,11 +45,11 @@ public class MiniDialog extends JDialog {
     private CustomPanel controlPanel = new CustomPanel();
 
     // 标签 + 按钮
-    public JLabel infoLabel = new JLabel();
-    public JButton playOrPauseButton = new JButton();
-    public JButton playLastButton = new JButton();
-    public JButton playNextButton = new JButton();
-    public JButton closeButton = new JButton();
+    public CustomLabel infoLabel = new CustomLabel();
+    public CustomButton playOrPauseButton = new CustomButton();
+    public CustomButton playLastButton = new CustomButton();
+    public CustomButton playNextButton = new CustomButton();
+    public CustomButton closeButton = new CustomButton();
 
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
@@ -203,7 +204,6 @@ public class MiniDialog extends JDialog {
 
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
-        globalPanel.setOpaque(false);
         add(globalPanel);
     }
 
@@ -228,7 +228,6 @@ public class MiniDialog extends JDialog {
         infoLabel.setText(changePaneButton.getText());
         infoLabel.setIcon(changePaneButton.getIcon());
         infoLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
-        infoLabel.setOpaque(false);
         infoLabel.setIconTextGap(10);
         infoLabel.setPreferredSize(new Dimension(240, 66));
 
@@ -237,24 +236,6 @@ public class MiniDialog extends JDialog {
         playOrPauseButton.setToolTipText(popButton.getToolTipText());
         playNextButton.setToolTipText(nextButton.getToolTipText());
         closeButton.setToolTipText(CLOSE_TIP);
-
-        // 不画聚焦
-        playLastButton.setFocusable(false);
-        playOrPauseButton.setFocusable(false);
-        playNextButton.setFocusable(false);
-        closeButton.setFocusable(false);
-
-        // 不画内部
-        playLastButton.setContentAreaFilled(false);
-        playOrPauseButton.setContentAreaFilled(false);
-        playNextButton.setContentAreaFilled(false);
-        closeButton.setContentAreaFilled(false);
-
-        // 透明
-        playLastButton.setOpaque(false);
-        playOrPauseButton.setOpaque(false);
-        playNextButton.setOpaque(false);
-        closeButton.setOpaque(false);
 
         // 监听事件
         playLastButton.addMouseListener(new ButtonMouseListener(playLastButton, f));
@@ -288,7 +269,6 @@ public class MiniDialog extends JDialog {
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
         fl.setHgap(20);
         controlPanel.setLayout(fl);
-        controlPanel.setOpaque(false);
 
         controlPanel.add(infoLabel);
         controlPanel.add(playLastButton);

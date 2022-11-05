@@ -1,11 +1,10 @@
 package net.doge.ui.components;
 
-import cn.hutool.core.img.ColorUtil;
 import net.doge.constants.Colors;
-import net.doge.constants.Fonts;
 import net.doge.utils.ColorUtils;
 import net.doge.utils.StringUtils;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,7 +14,7 @@ import java.awt.event.MouseListener;
  * @Description 对话框中的按钮自定义 UI
  * @Date 2020/12/13
  */
-public class DialogButton extends CustomButton implements MouseListener {
+public class DialogButton extends JButton implements MouseListener {
     private Color foreColor;
     private Color foreColorBk;
     private float alpha = 0.2f;

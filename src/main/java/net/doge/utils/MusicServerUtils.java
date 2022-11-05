@@ -4743,27 +4743,29 @@ public class MusicServerUtils {
             JSONObject result = artistInfoJson.optJSONObject("result");
             if (result != null) {
                 t = result.getInt("artistCount");
-                JSONArray ArtistArray = result.getJSONArray("artists");
-                for (int i = 0, len = ArtistArray.size(); i < len; i++) {
-                    JSONObject artistJson = ArtistArray.getJSONObject(i);
+                JSONArray artistArray = result.optJSONArray("artists");
+                if (artistArray != null) {
+                    for (int i = 0, len = artistArray.size(); i < len; i++) {
+                        JSONObject artistJson = artistArray.getJSONObject(i);
 
-                    String artistId = artistJson.getString("id");
-                    String artistName = artistJson.getString("name");
-                    Integer albumNum = artistJson.getInt("albumSize");
-                    Integer mvNum = artistJson.getInt("mvSize");
-                    String coverImgThumbUrl = artistJson.getString("img1v1Url");
+                        String artistId = artistJson.getString("id");
+                        String artistName = artistJson.getString("name");
+                        Integer albumNum = artistJson.getInt("albumSize");
+                        Integer mvNum = artistJson.getInt("mvSize");
+                        String coverImgThumbUrl = artistJson.getString("img1v1Url");
 
-                    NetArtistInfo artistInfo = new NetArtistInfo();
-                    artistInfo.setId(artistId);
-                    artistInfo.setName(artistName);
-                    artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    artistInfo.setAlbumNum(albumNum);
-                    artistInfo.setMvNum(mvNum);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                        artistInfo.setCoverImgThumb(coverImgThumb);
-                    });
-                    res.add(artistInfo);
+                        NetArtistInfo artistInfo = new NetArtistInfo();
+                        artistInfo.setId(artistId);
+                        artistInfo.setName(artistName);
+                        artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                        artistInfo.setAlbumNum(albumNum);
+                        artistInfo.setMvNum(mvNum);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            artistInfo.setCoverImgThumb(coverImgThumb);
+                        });
+                        res.add(artistInfo);
+                    }
                 }
             }
             return new CommonResult<>(res, t);
@@ -6435,7 +6437,7 @@ public class MusicServerUtils {
                     String userId = userJson.getString("mid");
                     String userName = userJson.getString("uname");
                     int gen = userJson.getInt("gender");
-                    String gender = gen == 1 ? "男" : gen == 2 ? "女" : "保密";
+                    String gender = gen == 1 ? "♂ 男" : gen == 2 ? "♀ 女" : "保密";
                     String avatarThumbUrl = "https:" + userJson.getString("upic");
                     String avatarUrl = avatarThumbUrl;
                     Integer programCount = userJson.getInt("videos");
@@ -14166,7 +14168,7 @@ public class MusicServerUtils {
 
                 if (!artistInfo.hasGender()) {
                     Integer gen = cv.getInt("gender");
-                    String gender = gen == 1 ? "男" : gen == 2 ? "女" : "保密";
+                    String gender = gen == 1 ? "♂ 男" : gen == 2 ? "♀ 女" : "保密";
                     artistInfo.setGender(gender);
                 }
                 if (!artistInfo.hasCareer()) {
@@ -14878,15 +14880,18 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
-            JSONObject data = userInfoJson.getJSONObject("data").getJSONObject("card");
-            if (!userInfo.hasLevel()) userInfo.setLevel(data.getJSONObject("level_info").getInt("current_level"));
-            if (!userInfo.hasGender()) userInfo.setGender(data.getString("sex"));
-            if (!userInfo.hasBirthday()) userInfo.setBirthday(data.getString("birthday"));
-            if (!userInfo.hasSign()) userInfo.setSign(data.getString("sign"));
-            if (!userInfo.hasFollow()) userInfo.setFollow(data.getInt("attention"));
-            if (!userInfo.hasFollowed()) userInfo.setFollowed(data.getInt("fans"));
+            JSONObject data = userInfoJson.getJSONObject("data");
+            JSONObject card = data.getJSONObject("card");
+
+            if (!userInfo.hasLevel()) userInfo.setLevel(card.getJSONObject("level_info").getInt("current_level"));
+            if (!userInfo.hasGender()) userInfo.setGender(card.getString("sex"));
+            if (!userInfo.hasBirthday()) userInfo.setBirthday(card.getString("birthday"));
+            if (!userInfo.hasSign()) userInfo.setSign(card.getString("sign"));
+            if (!userInfo.hasFollow()) userInfo.setFollow(card.getInt("attention"));
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(card.getInt("fans"));
+            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("archive_count"));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(userInfoJson.getJSONObject("data").getJSONObject("space").getString("s_img"))));
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(data.getJSONObject("space").getString("s_img"))));
         }
     }
 
@@ -19315,15 +19320,17 @@ public class MusicServerUtils {
                         .execute()
                         .body();
                 JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
-                JSONObject data = userInfoJson.getJSONObject("data").getJSONObject("card");
+                JSONObject data = userInfoJson.getJSONObject("data");
+                JSONObject card = data.getJSONObject("card");
 
-                String userId = data.getString("mid");
-                String userName = data.getString("name");
-                String gender = data.getString("sex");
+                String userId = card.getString("mid");
+                String userName = card.getString("name");
+                String gender = card.getString("sex");
                 gender = "男".equals(gender) ? "♂ " + gender : "女".equals(gender) ? "♀ " + gender : "保密";
-                String avatarThumbUrl = data.getString("face");
-                Integer follow = data.getInt("attention");
-                Integer followed = data.getInt("fans");
+                String avatarThumbUrl = card.getString("face");
+                Integer follow = card.getInt("attention");
+                Integer followed = card.getInt("fans");
+                Integer programCount = data.getInt("archive_count");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.BI);
@@ -19334,6 +19341,7 @@ public class MusicServerUtils {
                 userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
+                userInfo.setProgramCount(programCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
                     userInfo.setAvatarThumb(coverImgThumb);

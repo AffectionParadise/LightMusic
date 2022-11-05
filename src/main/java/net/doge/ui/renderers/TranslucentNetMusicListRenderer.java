@@ -1,22 +1,21 @@
 package net.doge.ui.renderers;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.MusicPlayer;
 import net.doge.models.NetMusicInfo;
+import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
-import net.doge.utils.FontUtils;
 import net.doge.utils.ImageUtils;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.utils.StringUtils;
 import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 /**
  * @Author yzx
@@ -74,34 +73,15 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        JLabel label = (JLabel) component;
-//        label.setForeground(isSelected ? selectedColor : foreColor);
-//        setDrawBg(isSelected);
-//        setIconTextGap(10);
-//        setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
-//
         NetMusicInfo musicInfo = (NetMusicInfo) value;
-//        // 播放中的文件图标不同
-//        if (!player.isPlayingNetMusic(musicInfo)) {
-//            if (musicInfo.hasMv()) setIcon(musicMvIcon);
-//            else if (musicInfo.isProgram()) setIcon(programIcon);
-//            else setIcon(musicIcon);
-//        } else setIcon(playingIcon);
-//        // 若有歌词匹配，在线音乐列表将显示歌词匹配
-//        setVerticalTextPosition(musicInfo.hasLrcMatch() ? TOP : CENTER);
-//        setText(StringUtils.textToHtml(musicInfo.toStringWithLrcMatch()));
-//        setFont(customFont);
-//        // 所有标签透明
-//        label.setOpaque(false);
-
+        
         CustomPanel outerPanel = new CustomPanel();
         CustomPanel innerPanel = new CustomPanel();
-        JLabel iconLabel = new JLabel();
-        JLabel nameLabel = new JLabel();
-        JLabel artistLabel = new JLabel();
-        JLabel albumNameLabel = new JLabel();
-        JLabel durationLabel = new JLabel();
+        CustomLabel iconLabel = new CustomLabel();
+        CustomLabel nameLabel = new CustomLabel();
+        CustomLabel artistLabel = new CustomLabel();
+        CustomLabel albumNameLabel = new CustomLabel();
+        CustomLabel durationLabel = new CustomLabel();
 
         // 播放中的文件图标不同
         if (!player.isPlayingNetMusic(musicInfo)) {
@@ -112,27 +92,6 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setIconTextGap(15);
         iconLabel.setHorizontalTextPosition(LEFT);
-
-        iconLabel.setHorizontalAlignment(CENTER);
-        nameLabel.setHorizontalAlignment(CENTER);
-        artistLabel.setHorizontalAlignment(CENTER);
-        albumNameLabel.setHorizontalAlignment(CENTER);
-        durationLabel.setHorizontalAlignment(CENTER);
-
-        iconLabel.setVerticalAlignment(CENTER);
-        nameLabel.setVerticalAlignment(CENTER);
-        artistLabel.setVerticalAlignment(CENTER);
-        albumNameLabel.setVerticalAlignment(CENTER);
-        durationLabel.setVerticalAlignment(CENTER);
-
-        outerPanel.setOpaque(false);
-        innerPanel.setOpaque(false);
-        iconLabel.setOpaque(false);
-        nameLabel.setOpaque(false);
-        artistLabel.setOpaque(false);
-        albumNameLabel.setOpaque(false);
-        artistLabel.setOpaque(false);
-        durationLabel.setOpaque(false);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(isSelected ? selectedColor : foreColor);
@@ -182,7 +141,7 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
 
         if (musicInfo.hasLrcMatch()) {
             String lrcMatch = StringUtils.textToHtml(StringUtils.wrapLineByWidth("词： " + musicInfo.getLrcMatch(), lw));
-            JLabel lrcMatchLabel = new JLabel(lrcMatch);
+            CustomLabel lrcMatchLabel = new CustomLabel(lrcMatch);
             lrcMatchLabel.setOpaque(false);
             lrcMatchLabel.setForeground(isSelected ? selectedColor : foreColor);
             lrcMatchLabel.setFont(customFont);
@@ -197,7 +156,7 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
@@ -209,6 +168,6 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
-        super.paint(g);
+        super.paintComponent(g);
     }
 }

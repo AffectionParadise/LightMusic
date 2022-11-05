@@ -4,7 +4,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.DialogButton;
+import net.doge.ui.components.*;
 import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.DefaultStyleListRenderer;
@@ -48,16 +48,16 @@ public class ManageCustomStyleDialog extends JDialog {
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
-    private JPanel centerPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private final JLabel tipLabel = new JLabel("应用、添加、编辑或删除主题（预设主题不能修改）");
-    private final JList<UIStyle> styleList = new JList<>();
-    private final JScrollPane styleListScrollPane = new JScrollPane(styleList);
+    private final CustomLabel tipLabel = new CustomLabel("应用、添加、编辑或删除主题（预设主题不能修改）");
+    private final CustomList<UIStyle> styleList = new CustomList<>();
+    private final CustomScrollPane styleListScrollPane = new CustomScrollPane(styleList);
     private final DefaultListModel<UIStyle> styleListModel = new DefaultListModel<>();
     private DialogButton allSelectButton;
     private DialogButton nonSelectButton;
@@ -159,9 +159,9 @@ public class ManageCustomStyleDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -171,16 +171,10 @@ public class ManageCustomStyleDialog extends JDialog {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -191,9 +185,6 @@ public class ManageCustomStyleDialog extends JDialog {
 
     // 组装界面
     void initView() {
-        // 容器透明
-        globalPanel.setOpaque(false);
-        centerPanel.setOpaque(false);
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
@@ -426,8 +417,6 @@ public class ManageCustomStyleDialog extends JDialog {
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
         styleList.setCellRenderer(r);
-        styleList.setOpaque(false);
-        styleList.setFocusable(false);
         styleList.setModel(styleListModel);
         styleList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -467,11 +456,10 @@ public class ManageCustomStyleDialog extends JDialog {
             }
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
-        scrollPaneOpaque();
-        styleListScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        styleListScrollPane.setHorizontalScrollBar(null);
+        styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         styleListScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
-        styleListScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);
@@ -493,16 +481,6 @@ public class ManageCustomStyleDialog extends JDialog {
         for (UIStyle style : styles) {
             styleListModel.addElement(style);
         }
-    }
-
-    void scrollPaneOpaque() {
-        styleListScrollPane.setOpaque(false);
-        styleListScrollPane.getViewport().setOpaque(false);
-        styleListScrollPane.getHorizontalScrollBar().setOpaque(false);
-        styleListScrollPane.getVerticalScrollBar().setOpaque(false);
-        styleListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
     }
 
     void updateRenderer(JList list) {
@@ -529,7 +507,8 @@ public class ManageCustomStyleDialog extends JDialog {
         DefaultStyleListRenderer r = (DefaultStyleListRenderer) styleList.getCellRenderer();
         r.setForeColor(st.getForeColor());
         r.setSelectedColor(st.getSelectedColor());
-        styleListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(st.getScrollBarColor()));
+        styleList.repaint();
+
         styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(st.getScrollBarColor()));
     }
 

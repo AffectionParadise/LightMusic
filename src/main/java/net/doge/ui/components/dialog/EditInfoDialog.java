@@ -13,8 +13,7 @@ import net.doge.models.AudioFile;
 import net.doge.models.MediaInfo;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomTextField;
-import net.doge.ui.components.DialogButton;
+import net.doge.ui.components.*;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.*;
@@ -51,39 +50,39 @@ public class EditInfoDialog extends JDialog {
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
-    private JPanel centerPanel = new JPanel();
-    private JPanel buttonPanel = new JPanel();
+    private CustomPanel centerPanel = new CustomPanel();
+    private CustomPanel buttonPanel = new CustomPanel();
 
-    private JPanel topPanel = new JPanel();
-    private JLabel titleLabel = new JLabel();
-    private JPanel windowCtrlPanel = new JPanel();
-    private JButton closeButton = new JButton(closeWindowIcon);
+    private CustomPanel topPanel = new CustomPanel();
+    private CustomLabel titleLabel = new CustomLabel();
+    private CustomPanel windowCtrlPanel = new CustomPanel();
+    private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private final JLabel[] labels = {
-            new JLabel("文件名："),
-            new JLabel("文件大小："),
-            new JLabel("创建时间："),
-            new JLabel("修改时间："),
-            new JLabel("访问时间："),
-            new JLabel("时长："),
-            new JLabel("标题："),
-            new JLabel("艺术家："),
-            new JLabel("专辑："),
-            new JLabel("流派："),
-            new JLabel("注释："),
-            new JLabel("版权："),
-            new JLabel("封面图片：")
+    private final CustomLabel[] labels = {
+            new CustomLabel("文件名："),
+            new CustomLabel("文件大小："),
+            new CustomLabel("创建时间："),
+            new CustomLabel("修改时间："),
+            new CustomLabel("访问时间："),
+            new CustomLabel("时长："),
+            new CustomLabel("标题："),
+            new CustomLabel("艺术家："),
+            new CustomLabel("专辑："),
+            new CustomLabel("流派："),
+            new CustomLabel("注释："),
+            new CustomLabel("版权："),
+            new CustomLabel("封面图片：")
     };
 
-    private JComboBox<String> comboBox = new JComboBox<>();
+    private CustomComboBox<String> comboBox = new CustomComboBox<>();
     private final int columns = 20;
     private final Component[] components = {
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
-            new JLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
+            new CustomLabel(),
             new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns),
@@ -231,9 +230,9 @@ public class EditInfoDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setOpaque(false);
         titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
         closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
         // 关闭窗口
@@ -243,16 +242,10 @@ public class EditInfoDialog extends JDialog {
         });
         // 鼠标事件
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        // 不能聚焦
-        closeButton.setFocusable(false);
-        // 无填充
-        closeButton.setContentAreaFilled(false);
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
         windowCtrlPanel.add(closeButton);
-        windowCtrlPanel.setOpaque(false);
-        topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
@@ -263,10 +256,6 @@ public class EditInfoDialog extends JDialog {
 
     void initView() {
         centerPanel.setLayout(new GridLayout(7, 2));
-
-        // 容器透明
-        centerPanel.setOpaque(false);
-        buttonPanel.setOpaque(false);
 
         // 获得传入的歌曲信息
         String fileName = file.getName();
@@ -300,8 +289,7 @@ public class EditInfoDialog extends JDialog {
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            panel.setOpaque(false);
+            CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
             panel.setBorder(b);
             // 添加标签
             labels[i].setForeground(style.getLabelColor());
@@ -309,8 +297,8 @@ public class EditInfoDialog extends JDialog {
             labels[i].setFont(globalFont);
             panel.add(labels[i]);
             // 组件配置
-            if (components[i] instanceof JLabel) {
-                JLabel component = (JLabel) components[i];
+            if (components[i] instanceof CustomLabel) {
+                CustomLabel component = (CustomLabel) components[i];
                 component.setForeground(style.getLabelColor());
                 component.setFont(globalFont);
                 component.setText(StringUtils.textToHtml((String) results[i]));
@@ -319,18 +307,13 @@ public class EditInfoDialog extends JDialog {
                 Color foreColor = style.getForeColor();
                 component.setForeground(foreColor);
                 component.setCaretColor(foreColor);
-                component.setOpaque(false);
                 component.setFont(globalFont);
                 component.setText((String) results[i]);
             } else if (components[i] instanceof JComboBox) {
                 JComboBox component = (JComboBox) components[i];
-                // 下拉框透明
-                component.setOpaque(false);
                 // 下拉框 UI
                 Color buttonColor = style.getButtonColor();
                 component.setUI(new ComboBoxUI(component, f, globalFont, buttonColor));
-                // 下拉框边框
-                component.setBorder(null);
 
                 component.setFont(globalFont);
                 int finalI = i;

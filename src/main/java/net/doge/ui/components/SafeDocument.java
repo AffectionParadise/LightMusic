@@ -1,6 +1,5 @@
 package net.doge.ui.components;
 
-import cn.hutool.core.util.StrUtil;
 import net.doge.utils.StringUtils;
 
 import javax.swing.text.AttributeSet;
