@@ -41,8 +41,6 @@ public class ComboBoxUI extends BasicComboBoxUI {
         final int width = 170;
         if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new Dimension(width, 30));
 
-        comboBox.setLightWeightPopupEnabled(false);
-        comboBox.setFocusable(false);
         comboBox.setForeground(foreColor);
     }
 

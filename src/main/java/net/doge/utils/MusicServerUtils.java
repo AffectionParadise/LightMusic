@@ -4550,7 +4550,7 @@ public class MusicServerUtils {
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.optJSONArray("artist");
-                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String rd = albumJson.optString("releaseDate");
                 String publishTime = StringUtils.isNotEmpty(rd) ? rd.split("T")[0] : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
@@ -12262,7 +12262,7 @@ public class MusicServerUtils {
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.optJSONArray("artist");
-                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String releaseDate = albumJson.optString("releaseDate");
                 if (StringUtils.isEmpty(releaseDate)) releaseDate = albumJson.getString("pushTime");
@@ -12305,7 +12305,7 @@ public class MusicServerUtils {
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.optJSONArray("artist");
-                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getInt("trackCount");
@@ -12346,7 +12346,7 @@ public class MusicServerUtils {
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.optJSONArray("artist");
-                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getInt("trackCount");
@@ -12823,7 +12823,8 @@ public class MusicServerUtils {
                     String mvId = mvJson.getString("mvhash");
                     String mvName = mvJson.getString("videoname");
                     String artistName = mvJson.getString("singername");
-                    String creatorId = mvJson.getJSONArray("authors").getJSONObject(0).getString("singerid");
+                    JSONArray artistArray = mvJson.getJSONArray("authors");
+                    String creatorId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("singerid") : "";
                     Long playCount = mvJson.getLong("playcount");
                     Double duration = mvJson.getDouble("duration") / 1000;
                     String pubTime = mvJson.getString("publish").split(" ")[0];
@@ -13642,7 +13643,7 @@ public class MusicServerUtils {
                 String name = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.optJSONArray("artist");
-                String artistId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 String coverImgThumbUrl = albumJson.getString("pic");
                 Integer songNum = albumJson.getJSONArray("trackList").size();
@@ -15884,7 +15885,7 @@ public class MusicServerUtils {
                 String albumName = albumJson.getString("title");
                 String artist = parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.optJSONArray("artist");
-                String arId = artistArray != null ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String arId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getJSONArray("trackList").size();

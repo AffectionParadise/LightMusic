@@ -333,7 +333,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 //        paletteLabel.setPreferredSize(new Dimension(400, 100));
 //        vSlider.setOrientation(SwingConstants.VERTICAL);
 //        vSlider.setUI(new ColorVSliderUI(vSlider, this));
-//        vSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 //        d = new Dimension(50, 100);
 //        vSlider.setPreferredSize(d);
 //        vSlider.setMinimum(0);
@@ -347,7 +346,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         rlb.setFont(globalFont);
         rlb.setForeground(labelColor);
         rSlider.setUI(new ColorSliderUI(rSlider, this));
-        rSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         d = new Dimension(400, 12);
         rSlider.setPreferredSize(d);
         rSlider.setMinimum(0);
@@ -585,8 +583,9 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         if (d1) rSlider.setValue(rgb ? (r = i) : (int) (h = i));
         else if (d2) gSlider.setValue(rgb ? (g = i) : (int) (s = i));
         else if (d3) bSlider.setValue(rgb ? (b = i) : (int) (v = i));
-//        vSlider.setValue((int) h);
-        updateUI();
+
+        if (!d4) hexTextField.setText(ColorUtils.toHex(makeColor(r, g, b)));
+        else updateUI();
     }
 
     @Override

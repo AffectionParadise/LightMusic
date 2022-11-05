@@ -67,6 +67,7 @@ public class TranslucentNetCommentListRenderer extends DefaultListCellRenderer {
 
         // 使图标靠上
         label.setVerticalTextPosition(TOP);
+        label.setHorizontalAlignment(LEFT);
         label.setText(StringUtils.textToHtmlWithSpace(StringUtils.wrapLineByWidth(netCommentInfo.toString(), lw - (sub ? 235 : 160))));
         label.setIconTextGap(15);
         label.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));

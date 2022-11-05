@@ -2,7 +2,6 @@ package net.doge.ui.componentui;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
-import javax.swing.plaf.basic.BasicListUI;
 import java.awt.*;
 
 /**

@@ -23,7 +23,6 @@ public class DialogButton extends JButton implements MouseListener {
         addMouseListener(this);
         setOpaque(false);
         setContentAreaFilled(false);
-        setFocusable(false);
         setFocusPainted(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }

@@ -27,7 +27,7 @@ public class StringTwoColor {
     private ImageIcon imgIcon;
 
     /**
-     * @param label          显示字体的JLabel
+     * @param label          显示字体的标签
      * @param c1             颜色1(走过的颜色)
      * @param c2             颜色2(未走过的颜色)
      * @param ratio          颜色1与颜色2所占部分的比值

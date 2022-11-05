@@ -7,6 +7,5 @@ public class CustomList<E> extends JList<E> {
     public CustomList() {
         super();
         setOpaque(false);
-        setFocusable(false);
     }
 }

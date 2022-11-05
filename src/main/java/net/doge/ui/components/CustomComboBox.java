@@ -9,6 +9,7 @@ public class CustomComboBox<T> extends JComboBox<T> {
         super();
         setOpaque(false);
         setFocusable(false);
+        setLightWeightPopupEnabled(false);
     }
 
     @Override

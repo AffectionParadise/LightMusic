@@ -23,11 +23,12 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
         this.b = b;
         this.ui = ui;
         this.f = f;
+
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         ui.setDrawMask(true);
         b.setUI(ui);
     }

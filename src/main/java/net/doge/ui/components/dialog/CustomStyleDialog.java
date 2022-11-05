@@ -113,11 +113,11 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     private Object[] results = new Object[components.length];
 
     // 父窗口和是否是模态，传入 OK 按钮文字，要展示的样式(添加则用当前样式，编辑则用选中样式)
-    public CustomStyleDialog(PlayerFrame f, boolean isModel, String okButtonText, UIStyle style) {
+    public CustomStyleDialog(PlayerFrame f, boolean isModel, String okButtonText, UIStyle showedStyle) {
         super(f, isModel);
         this.f = f;
         this.style = f.getCurrUIStyle();
-        this.showedStyle = style;
+        this.showedStyle = showedStyle;
 
         Color buttonColor = style.getButtonColor();
         okButton = new DialogButton(okButtonText, buttonColor);

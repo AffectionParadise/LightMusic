@@ -51,27 +51,27 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
         String lyric = statement.toString();
 
         label.setUI(index != row ? normalLabelUI : highlightLabelUI);
-        setForeground(backgroundColor);
+        label.setForeground(backgroundColor);
         // 所有标签透明
         label.setOpaque(false);
-        setText(StringUtils.textToHtml(StringUtils.wrapLineByWidth(lyric, thresholdWidth)));
+        label.setText(StringUtils.textToHtml(StringUtils.wrapLineByWidth(lyric, thresholdWidth)));
 
         // 高亮的行的样式
         if (index == row) {
-            setFont(highlightFont);
+            label.setFont(highlightFont);
             if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foregroundColor) || !stc.getC2().equals(backgroundColor))
                 stc = new StringTwoColor(this, lyric, foregroundColor, backgroundColor, ratio, false, thresholdWidth);
             else stc.setRatio(ratio);
-            setIcon(stc.getImageIcon());
-            setText("");
+            label.setIcon(stc.getImageIcon());
+            label.setText("");
         }
         // 其他行的样式
         else {
-            setFont(defaultFont);
+            label.setFont(defaultFont);
         }
         // 设置 list 对应行的高度
         ((ListUI) list.getUI()).setCellHeight(index, getPreferredSize().height);
 
-        return this;
+        return label;
     }
 }

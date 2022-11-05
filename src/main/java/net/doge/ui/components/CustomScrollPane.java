@@ -10,7 +10,7 @@ public class CustomScrollPane extends JScrollPane {
         init();
     }
 
-    public CustomScrollPane(JComponent comp) {
+    public CustomScrollPane(Component comp) {
         super(comp);
         init();
     }
@@ -18,13 +18,20 @@ public class CustomScrollPane extends JScrollPane {
     private void init() {
         setOpaque(false);
         getViewport().setOpaque(false);
-        getHorizontalScrollBar().setOpaque(false);
-        getVerticalScrollBar().setOpaque(false);
-        getVerticalScrollBar().setUnitIncrement(30);
-    }
 
-    @Override
-    protected void paintBorder(Graphics g) {
+        final int thickness = 10;
+        JScrollBar hs = getHorizontalScrollBar();
+        hs.setOpaque(false);
+        hs.setPreferredSize(new Dimension(0, thickness));
+        setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+        JScrollBar vs = getVerticalScrollBar();
+        vs.setOpaque(false);
+        vs.setPreferredSize(new Dimension(thickness, 0));
+        vs.setUnitIncrement(30);
+        // 滚动条不显示时也要占位
+        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
+
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     }
 }

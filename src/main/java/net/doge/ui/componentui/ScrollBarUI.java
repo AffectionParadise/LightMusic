@@ -29,9 +29,9 @@ public class ScrollBarUI extends BasicScrollBarUI {
     }
 
     // 创建空按钮去掉滚动条上的按钮
-    protected JButton createZeroButton() {
+    private JButton createZeroButton() {
         JButton button = new JButton("");
-        Dimension zeroDim = new Dimension(0,0);
+        Dimension zeroDim = new Dimension(0, 0);
         button.setPreferredSize(zeroDim);
         button.setMinimumSize(zeroDim);
         button.setMaximumSize(zeroDim);
@@ -57,23 +57,14 @@ public class ScrollBarUI extends BasicScrollBarUI {
      */
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
-        // 不要调用父类的方法，会画一个实心的滚动条，不好看
-//        super.paintThumb(g, c, thumbBounds);
-        if(active) {
+        if (active) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(thumbColor);
             // 避免锯齿
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             // 透明滚动条
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-            g2d.fillRoundRect(
-                    (int) thumbBounds.getX(),
-                    (int) thumbBounds.getY(),
-                    (int) thumbBounds.getWidth(),
-                    (int) thumbBounds.getHeight(),
-                    10,
-                    10
-            );
+            g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, 10, 10);
         }
     }
 
@@ -87,21 +78,5 @@ public class ScrollBarUI extends BasicScrollBarUI {
     @Override
     protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
 
-    }
-
-    /**
-     * 设置滚动条宽度
-     * @param c
-     * @return
-     */
-    @Override
-    public Dimension getPreferredSize(JComponent c) {
-        JScrollBar scrollBar = (JScrollBar) c;
-        if(scrollBar.getOrientation() == HORIZONTAL) {
-            scrollBar.setPreferredSize(new Dimension(0, 10));
-        } else {
-            scrollBar.setPreferredSize(new Dimension(10, 0));
-        }
-        return super.getPreferredSize(c);
     }
 }

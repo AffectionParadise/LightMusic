@@ -33,7 +33,6 @@ public class CustomButton extends JButton {
     private void init() {
         setOpaque(false);
         setContentAreaFilled(false);
-        setFocusable(false);
         setFocusPainted(false);
     }
 

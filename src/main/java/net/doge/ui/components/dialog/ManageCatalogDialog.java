@@ -57,9 +57,9 @@ public class ManageCatalogDialog extends JDialog {
     private CustomPanel windowCtrlPanel = new CustomPanel();
     private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private final CustomLabel tipLabel = new CustomLabel("重新导入歌曲时将从以下目录查找歌曲");
-    private final CustomList<File> catalogList = new CustomList<>();
-    private final DefaultListModel<File> catalogListModel = new DefaultListModel<>();
+    private CustomLabel tipLabel = new CustomLabel("重新导入歌曲时将从以下目录查找歌曲");
+    private CustomList<File> catalogList = new CustomList<>();
+    private DefaultListModel<File> catalogListModel = new DefaultListModel<>();
     private DialogButton allSelectButton;
     private DialogButton nonSelectButton;
     private DialogButton locateButton;
@@ -279,27 +279,26 @@ public class ManageCatalogDialog extends JDialog {
             public void mouseMoved(MouseEvent e) {
                 int index = catalogList.locationToIndex(e.getPoint());
                 Rectangle bounds = catalogList.getCellBounds(index, index);
-                if (bounds != null) setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 DefaultCatalogListRenderer renderer = (DefaultCatalogListRenderer) catalogList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    catalogList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                repaint();
             }
         });
         catalogList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 DefaultCatalogListRenderer renderer = (DefaultCatalogListRenderer) catalogList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    catalogList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                repaint();
             }
         });
         catalogList.addMouseListener(new MouseAdapter() {
@@ -313,9 +312,8 @@ public class ManageCatalogDialog extends JDialog {
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         CustomScrollPane sp = new CustomScrollPane(catalogList);
-        sp.setHorizontalScrollBar(null);
+        sp.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         sp.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);
@@ -323,7 +321,6 @@ public class ManageCatalogDialog extends JDialog {
 
         // 字体
         tipLabel.setFont(globalFont);
-        catalogList.setFont(globalFont);
         allSelectButton.setFont(globalFont);
         nonSelectButton.setFont(globalFont);
         locateButton.setFont(globalFont);
