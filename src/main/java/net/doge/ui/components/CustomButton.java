@@ -1,5 +1,7 @@
 package net.doge.ui.components;
 
+import net.doge.constants.Fonts;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -33,7 +35,9 @@ public class CustomButton extends JButton {
     private void init() {
         setOpaque(false);
         setContentAreaFilled(false);
+        setFocusable(false);
         setFocusPainted(false);
+        setFont(Fonts.NORMAL);
     }
 
     @Override

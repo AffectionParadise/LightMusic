@@ -3,6 +3,7 @@ package net.doge.ui.renderers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
@@ -25,7 +26,7 @@ import java.awt.*;
 @NoArgsConstructor
 public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色
@@ -35,10 +36,6 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
 
     private ImageIcon radioIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "radioItem.png"), ImageConstants.profileWidth));
     private ImageIcon radioSIcon;
-
-    public TranslucentNetRadioListRenderer(Font font) {
-        this.customFont = font;
-    }
 
     public void setForeColor(Color foreColor) {
         this.foreColor = foreColor;

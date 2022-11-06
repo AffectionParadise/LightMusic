@@ -1,5 +1,7 @@
 package net.doge.ui.components;
 
+import net.doge.constants.Fonts;
+
 import javax.swing.*;
 
 public class CustomCheckBox extends JCheckBox {
@@ -17,5 +19,6 @@ public class CustomCheckBox extends JCheckBox {
     private void init() {
         setOpaque(false);
         setFocusPainted(false);
+        setFont(Fonts.NORMAL);
     }
 }

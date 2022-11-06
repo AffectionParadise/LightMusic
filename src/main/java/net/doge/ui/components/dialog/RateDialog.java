@@ -40,9 +40,6 @@ public class RateDialog extends JDialog {
     private final CustomLabel valLabel = new CustomLabel();
     private final CustomSlider slider = new CustomSlider();
 
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
-
     private PlayerFrame f;
     private VideoDialog d;
     private JComponent comp;
@@ -121,7 +118,6 @@ public class RateDialog extends JDialog {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
         // 标签
-        valLabel.setFont(globalFont);
         valLabel.setForeground(style.getLabelColor());
         centerPanel.add(valLabel, BorderLayout.NORTH);
 

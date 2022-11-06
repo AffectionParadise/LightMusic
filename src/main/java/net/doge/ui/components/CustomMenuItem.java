@@ -1,5 +1,7 @@
 package net.doge.ui.components;
 
+import net.doge.constants.Fonts;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,8 +16,12 @@ public class CustomMenuItem extends JMenuItem {
 
     public CustomMenuItem(String text) {
         super(text);
+        setFont(Fonts.NORMAL);
         createBorder();
+        initResponse();
+    }
 
+    private void initResponse() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

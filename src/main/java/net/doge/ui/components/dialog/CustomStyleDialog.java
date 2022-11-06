@@ -101,9 +101,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
 
     private DialogButton okButton;
 
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
-
     private PlayerFrame f;
     private UIStyle style;
     // 面板展示的样式
@@ -222,7 +219,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             dispose();
             f.currDialogs.remove(this);
         });
-        okButton.setFont(globalFont);
         buttonPanel.add(okButton);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -262,7 +258,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -312,7 +307,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             panel.setBorder(eb);
             // 添加标签
             labels[i].setForeground(style.getLabelColor());
-            labels[i].setFont(globalFont);
             panel.add(labels[i]);
             // 组件配置
             if (components[i] instanceof CustomTextField) {
@@ -320,7 +314,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 Color foreColor = style.getForeColor();
                 component.setForeground(foreColor);
                 component.setCaretColor(foreColor);
-                component.setFont(globalFont);
                 // 加载风格名称
                 component.setText((String) results[i]);
                 Document document = component.getDocument();
@@ -329,7 +322,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             } else if (components[i] instanceof DialogButton) {
                 DialogButton component = (DialogButton) components[i];
                 component.setForeColor(style.getButtonColor());
-                component.setFont(globalFont);
                 labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载当前样式背景图(显示一个缩略图)
                 if (results[i] != null) {
@@ -374,7 +366,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 });
             } else if (components[i] instanceof CustomLabel) {
                 CustomLabel component = (CustomLabel) components[i];
-                component.setFont(globalFont);
                 // 鼠标光标
                 component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 // 获取风格颜色并显示成小方格
@@ -402,7 +393,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
 
         // 纯色按钮
         pureColor.setForeColor(style.getButtonColor());
-        pureColor.setFont(globalFont);
         pureColor.addActionListener(e -> {
             ColorChooserDialog d = new ColorChooserDialog(f, results[1] instanceof Color ? (Color) results[1] : Colors.THEME);
             d.showDialog();

@@ -34,7 +34,6 @@ public class DonateDialog extends JDialog {
     // 阴影大小像素
     private final int pixels = 10;
 
-    private Font globalFont = Fonts.NORMAL;
     private DialogButton yes = new DialogButton("确定");
 
     // 关闭窗口图标
@@ -60,7 +59,7 @@ public class DonateDialog extends JDialog {
     private PlayerFrame f;
     private UIStyle style;
     private CustomPanel messagePanel = new CustomPanel();
-    private CustomLabel messageLabel = new CustomLabel("如果您觉得这款软件还不错，可以请作者喝杯咖啡~~", CustomLabel.CENTER);
+    private CustomLabel messageLabel = new CustomLabel("如果您觉得这款软件还不错，可以请作者喝杯咖啡~~");
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel cPanel = new CustomPanel();
     private CustomPanel leftPanel = new CustomPanel();
@@ -82,7 +81,6 @@ public class DonateDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(title);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
@@ -128,12 +126,6 @@ public class DonateDialog extends JDialog {
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-
-        messageLabel.setFont(globalFont);
-        weixinLabel.setFont(globalFont);
-        alipayLabel.setFont(globalFont);
-        thankLabel.setFont(globalFont);
-        yes.setFont(globalFont);
 
         messageLabel.setForeground(labelColor);
         weixinLabel.setForeground(labelColor);

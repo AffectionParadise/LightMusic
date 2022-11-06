@@ -1,5 +1,7 @@
 package net.doge.ui.components;
 
+import net.doge.constants.Fonts;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,15 +23,13 @@ public class CustomLabel extends JLabel {
         init();
     }
 
-    public CustomLabel(String text, int horizontalAlignment) {
-        super(text, horizontalAlignment);
-    }
-
-    public CustomLabel(String text, Icon icon, int horizontalAlignment) {
-        super(text, icon, horizontalAlignment);
+    public CustomLabel(String text, Icon icon) {
+        super(text, icon, CENTER);
+        init();
     }
 
     private void init() {
+        setFont(Fonts.NORMAL);
         setHorizontalAlignment(CENTER);
         setVerticalAlignment(CENTER);
     }

@@ -71,9 +71,6 @@ public class ManageCustomStyleDialog extends JDialog {
     // 右部按钮盒子
     private Box rightBox = new Box(BoxLayout.Y_AXIS);
 
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
-
     private PlayerFrame f;
     private UIStyle style;
 
@@ -159,7 +156,6 @@ public class ManageCustomStyleDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -410,7 +406,6 @@ public class ManageCustomStyleDialog extends JDialog {
         rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
         DefaultStyleListRenderer r = new DefaultStyleListRenderer(f);
-        r.setCustomFont(globalFont);
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
         styleList.setCellRenderer(r);
@@ -458,15 +453,6 @@ public class ManageCustomStyleDialog extends JDialog {
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);
-
-        // 字体
-        tipLabel.setFont(globalFont);
-        allSelectButton.setFont(globalFont);
-        nonSelectButton.setFont(globalFont);
-        applyButton.setFont(globalFont);
-        addButton.setFont(globalFont);
-        editButton.setFont(globalFont);
-        removeButton.setFont(globalFont);
     }
 
     // 初始化数据

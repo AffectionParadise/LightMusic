@@ -119,9 +119,6 @@ public class SettingDialog extends JDialog {
     private DialogButton applyButton;
     private DialogButton cancelButton;
 
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
-
     private PlayerFrame f;
     private UIStyle style;
 
@@ -177,9 +174,6 @@ public class SettingDialog extends JDialog {
         });
         applyButton.addActionListener(e -> applySettings());
         cancelButton.addActionListener(e -> closeButton.doClick());
-        okButton.setFont(globalFont);
-        applyButton.setFont(globalFont);
-        cancelButton.setFont(globalFont);
         buttonPanel.add(okButton);
         buttonPanel.add(applyButton);
         buttonPanel.add(cancelButton);
@@ -221,7 +215,6 @@ public class SettingDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -247,35 +240,6 @@ public class SettingDialog extends JDialog {
 
     void initView() {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-
-        // 字体
-        autoDownloadLrcCheckBox.setFont(globalFont);
-        videoOnlyCheckBox.setFont(globalFont);
-        musicDownLabel.setFont(globalFont);
-        musicDownPathTextField.setFont(globalFont);
-        mvDownLabel.setFont(globalFont);
-        mvDownPathTextField.setFont(globalFont);
-        cacheLabel.setFont(globalFont);
-        cachePathTextField.setFont(globalFont);
-        maxCacheSizeLabel.setFont(globalFont);
-        maxCacheSizeTextField.setFont(globalFont);
-        maxHistoryCountLabel.setFont(globalFont);
-        maxHistoryCountTextField.setFont(globalFont);
-        maxSearchHistoryCountLabel.setFont(globalFont);
-        maxConcurrentTaskCountLabel.setFont(globalFont);
-        maxSearchHistoryCountTextField.setFont(globalFont);
-        maxConcurrentTaskCountTextField.setFont(globalFont);
-        closeOptionLabel.setFont(globalFont);
-        closeOptionComboBox.setFont(globalFont);
-        windowSizeLabel.setFont(globalFont);
-        windowSizeComboBox.setFont(globalFont);
-        fobLabel.setFont(globalFont);
-        fobComboBox.setFont(globalFont);
-        specStyleLabel.setFont(globalFont);
-        specStyleComboBox.setFont(globalFont);
-        balanceLabel.setFont(globalFont);
-        balanceComboBox.setFont(globalFont);
-        backupLabel.setFont(globalFont);
 
         // 对齐
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
@@ -359,11 +323,11 @@ public class SettingDialog extends JDialog {
 
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
-        closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f, globalFont, buttonColor));
-        windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f, globalFont, buttonColor));
-        fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, globalFont, buttonColor));
-        specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, globalFont, buttonColor));
-        balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, globalFont, buttonColor));
+        closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f, buttonColor));
+        windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f, buttonColor));
+        fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, buttonColor));
+        specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, buttonColor));
+        balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, buttonColor));
 
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("选择歌曲文件夹");
@@ -485,16 +449,6 @@ public class SettingDialog extends JDialog {
                 }
             });
         });
-
-        // 按钮字体
-        changeMusicDownPathButton.setFont(globalFont);
-        openMusicDownPathButton.setFont(globalFont);
-        changeMvDownPathButton.setFont(globalFont);
-        openMvDownPathButton.setFont(globalFont);
-        changeCachePathButton.setFont(globalFont);
-        openCachePathButton.setFont(globalFont);
-        importListButton.setFont(globalFont);
-        exportListButton.setFont(globalFont);
 
         // 复选框图标
         int gap = 10;

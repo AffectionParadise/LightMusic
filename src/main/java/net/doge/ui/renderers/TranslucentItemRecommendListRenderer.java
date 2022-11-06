@@ -1,5 +1,9 @@
 package net.doge.ui.renderers;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
@@ -7,19 +11,11 @@ import net.doge.models.*;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.utils.StringUtils;
 import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 
 /**
  * @Author yzx
@@ -31,7 +27,7 @@ import java.awt.image.BufferedImage;
 @NoArgsConstructor
 public class TranslucentItemRecommendListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色
@@ -54,10 +50,6 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
     private ImageIcon mvSIcon;
     private ImageIcon rankingSIcon;
     private ImageIcon userSIcon;
-
-    public TranslucentItemRecommendListRenderer(Font font) {
-        this.customFont = font;
-    }
 
     public void setForeColor(Color foreColor) {
         this.foreColor = foreColor;

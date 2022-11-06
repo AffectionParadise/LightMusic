@@ -3,6 +3,7 @@ package net.doge.ui.renderers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.SimplePath;
 import net.doge.models.NetCommentInfo;
@@ -24,7 +25,7 @@ import java.awt.image.BufferedImage;
 @NoArgsConstructor
 public class TranslucentNetCommentListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色
@@ -34,10 +35,6 @@ public class TranslucentNetCommentListRenderer extends DefaultListCellRenderer {
 
     private ImageIcon defaultProfile = new ImageIcon(ImageUtils.setRadius(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "profile.png"), ImageConstants.profileWidth), 0.1));
     private ImageIcon defaultProfileS;
-
-    public TranslucentNetCommentListRenderer(Font font) {
-        this.customFont = font;
-    }
 
     public void setForeColor(Color foreColor) {
         this.foreColor = foreColor;

@@ -97,8 +97,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     private DialogButton cancel = new DialogButton("取消");
     private DialogButton reset = new DialogButton("重置");
 
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
     private final Color[] preColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.PINK, Color.MAGENTA,
             Colors.BRICK_RED, Colors.DEEP_ORANGE, Colors.GOLD3, Colors.SPRING_GREEN, Colors.SKY, Colors.DEEP_BLUE, Colors.PINK3, Colors.ORCHID_3,
             Colors.DEEP_RED, Colors.BROWN, Colors.CARTON, Colors.TEA, Colors.CYAN_4, Colors.DODGER, Colors.PINK4, Colors.ORCHID_4};
@@ -200,7 +198,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -305,8 +302,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         Color buttonColor = style.getButtonColor();
 
         // 预设
-        preLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        preLabel.setFont(globalFont);
         preLabel.setForeground(labelColor);
         GridLayout gl = new GridLayout(3, 8);
         gl.setHgap(15);
@@ -326,8 +321,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             prePanel.add(l);
         }
         // 自定义
-        customLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        customLabel.setFont(globalFont);
         customLabel.setForeground(labelColor);
         // 调色板
 //        paletteLabel.setPreferredSize(new Dimension(400, 100));
@@ -343,7 +336,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 //            updateColor(makeColor(h, s, v), true);
 //        });
 
-        rlb.setFont(globalFont);
         rlb.setForeground(labelColor);
         rSlider.setUI(new ColorSliderUI(rSlider, this));
         d = new Dimension(400, 12);
@@ -357,7 +349,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             else h = val;
             updateColor(makeColor(), true);
         });
-        glb.setFont(globalFont);
         glb.setForeground(labelColor);
         gSlider.setUI(new ColorSliderUI(gSlider, this));
         gSlider.setPreferredSize(d);
@@ -370,7 +361,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             else s = val;
             updateColor(makeColor(), true);
         });
-        blb.setFont(globalFont);
         blb.setForeground(labelColor);
         bSlider.setUI(new ColorSliderUI(bSlider, this));
         bSlider.setPreferredSize(d);
@@ -386,7 +376,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
         // 按钮
         ok.setForeColor(buttonColor);
-        ok.setFont(globalFont);
         ok.addMouseListener(new ButtonMouseListener(ok, f));
         ok.addActionListener(e -> {
             confirmed = true;
@@ -394,21 +383,18 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             closeButton.doClick();
         });
         cancel.setForeColor(buttonColor);
-        cancel.setFont(globalFont);
         cancel.addMouseListener(new ButtonMouseListener(ok, f));
         cancel.addActionListener(e -> {
             closeButton.doClick();
         });
         reset.setForeColor(buttonColor);
-        reset.setFont(globalFont);
         reset.addMouseListener(new ButtonMouseListener(ok, f));
         reset.addActionListener(e -> {
             updateColor(source);
         });
 
         // 下拉框
-        modelComboBox.setFont(globalFont);
-        modelComboBox.setUI(new ComboBoxUI(modelComboBox, f, globalFont, buttonColor, 80));
+        modelComboBox.setUI(new ComboBoxUI(modelComboBox, f, buttonColor, 80));
         modelComboBox.addItem("RGB");
         modelComboBox.addItem("HSV");
         modelComboBox.addItemListener(e -> {
@@ -418,26 +404,18 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         });
         // 文本框
         rLabel.setForeground(labelColor);
-        rLabel.setFont(globalFont);
-        rTextField.setFont(globalFont);
         rTextField.setForeground(foreColor);
         rTextField.setCaretColor(foreColor);
 
         gLabel.setForeground(labelColor);
-        gLabel.setFont(globalFont);
-        gTextField.setFont(globalFont);
         gTextField.setForeground(foreColor);
         gTextField.setCaretColor(foreColor);
 
         bLabel.setForeground(labelColor);
-        bLabel.setFont(globalFont);
-        bTextField.setFont(globalFont);
         bTextField.setForeground(foreColor);
         bTextField.setCaretColor(foreColor);
 
         hexLabel.setForeground(labelColor);
-        hexLabel.setFont(globalFont);
-        hexTextField.setFont(globalFont);
         hexTextField.setForeground(foreColor);
         hexTextField.setCaretColor(foreColor);
         SafeDocument doc = new SafeDocument(7);

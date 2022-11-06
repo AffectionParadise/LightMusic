@@ -34,7 +34,7 @@ public class TipDialog extends JDialog {
 
     private PlayerFrame f;
     private String message = "";
-    private CustomLabel messageLabel = new CustomLabel(message, CustomLabel.CENTER);
+    private CustomLabel messageLabel = new CustomLabel(message);
     private UndergroundPanel mainPanel = new UndergroundPanel();
 
     // 最大阴影透明度

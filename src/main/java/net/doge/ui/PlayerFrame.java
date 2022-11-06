@@ -888,67 +888,67 @@ public class PlayerFrame extends JFrame {
     private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT, CustomTabbedPane.WRAP_TAB_LAYOUT);
     // 个人音乐 Tab 面板
     private CustomPanel personalMusicPanel = new CustomPanel();
-    private CustomLabel personalMusicLabel = new CustomLabel("个人音乐", personalMusicIcon, CustomLabel.CENTER);
+    private CustomLabel personalMusicLabel = new CustomLabel("个人音乐", personalMusicIcon);
     // 音乐馆 Tab 面板
     private CustomPanel netMusicPanel = new CustomPanel();
-    private CustomLabel netMusicLabel = new CustomLabel("音乐馆", netMusicIcon, CustomLabel.CENTER);
+    private CustomLabel netMusicLabel = new CustomLabel("音乐馆", netMusicIcon);
     // 歌单广场 Tab 面板
     private CustomPanel netPlaylistPanel = new CustomPanel();
-    private CustomLabel netPlaylistLabel = new CustomLabel("歌单广场", playlistIcon, CustomLabel.CENTER);
+    private CustomLabel netPlaylistLabel = new CustomLabel("歌单广场", playlistIcon);
     // 专辑库 Tab 面板
     private CustomPanel netAlbumPanel = new CustomPanel();
-    private CustomLabel netAlbumLabel = new CustomLabel("专辑库", netAlbumIcon, CustomLabel.CENTER);
+    private CustomLabel netAlbumLabel = new CustomLabel("专辑库", netAlbumIcon);
     // 歌手汇 Tab 面板
     private CustomPanel netArtistPanel = new CustomPanel();
-    private CustomLabel netArtistLabel = new CustomLabel("歌手汇", netArtistIcon, CustomLabel.CENTER);
+    private CustomLabel netArtistLabel = new CustomLabel("歌手汇", netArtistIcon);
     // 电台 Tab 面板
     private CustomPanel netRadioPanel = new CustomPanel();
-    private CustomLabel netRadioLabel = new CustomLabel("电台", netRadioIcon, CustomLabel.CENTER);
+    private CustomLabel netRadioLabel = new CustomLabel("电台", netRadioIcon);
     // MV Tab 面板
     private CustomPanel netMvPanel = new CustomPanel();
-    private CustomLabel netMvLabel = new CustomLabel("MV", netMvIcon, CustomLabel.CENTER);
+    private CustomLabel netMvLabel = new CustomLabel("MV", netMvIcon);
     // 榜单 Tab 面板
     private CustomPanel netRankingPanel = new CustomPanel();
-    private CustomLabel netRankingLabel = new CustomLabel("榜单", netRankingIcon, CustomLabel.CENTER);
+    private CustomLabel netRankingLabel = new CustomLabel("榜单", netRankingIcon);
     // 用户 Tab 面板
     private CustomPanel netUserPanel = new CustomPanel();
-    private CustomLabel netUserLabel = new CustomLabel("用户", netUserIcon, CustomLabel.CENTER);
+    private CustomLabel netUserLabel = new CustomLabel("用户", netUserIcon);
     // 推荐 Tab 面板
     private CustomPanel recommendPanel = new CustomPanel();
-    private CustomLabel recommendLabel = new CustomLabel("推荐", recommendIcon, CustomLabel.CENTER);
+    private CustomLabel recommendLabel = new CustomLabel("推荐", recommendIcon);
     // 下载管理 Tab 面板
     private CustomPanel downloadManagementPanel = new CustomPanel();
-    private CustomLabel downloadManagementLabel = new CustomLabel("下载管理", downloadManagementIcon, CustomLabel.CENTER);
+    private CustomLabel downloadManagementLabel = new CustomLabel("下载管理", downloadManagementIcon);
     // 播放队列 Tab 面板
     private CustomPanel playQueuePanel = new CustomPanel();
-    private CustomLabel playQueueLabel = new CustomLabel("播放队列", playQueueIcon, CustomLabel.CENTER);
+    private CustomLabel playQueueLabel = new CustomLabel("播放队列", playQueueIcon);
 
     // 收藏标签页
     private CustomTabbedPane collectionTabbedPane = new CustomTabbedPane(CustomTabbedPane.TOP, CustomTabbedPane.WRAP_TAB_LAYOUT);
     // 音乐收藏 Tab 面板
     private CustomPanel musicCollectionPanel = new CustomPanel();
-    private CustomLabel musicCollectionLabel = new CustomLabel("歌曲", netMusicIcon, CustomLabel.CENTER);
+    private CustomLabel musicCollectionLabel = new CustomLabel("歌曲", netMusicIcon);
     // 歌单收藏 Tab 面板
     private CustomPanel playlistCollectionPanel = new CustomPanel();
-    private CustomLabel playlistCollectionLabel = new CustomLabel("歌单", playlistIcon, CustomLabel.CENTER);
+    private CustomLabel playlistCollectionLabel = new CustomLabel("歌单", playlistIcon);
     // 专辑收藏 Tab 面板
     private CustomPanel albumCollectionPanel = new CustomPanel();
-    private CustomLabel albumCollectionLabel = new CustomLabel("专辑", netAlbumIcon, CustomLabel.CENTER);
+    private CustomLabel albumCollectionLabel = new CustomLabel("专辑", netAlbumIcon);
     // 歌手收藏 Tab 面板
     private CustomPanel artistCollectionPanel = new CustomPanel();
-    private CustomLabel artistCollectionLabel = new CustomLabel("歌手", netArtistIcon, CustomLabel.CENTER);
+    private CustomLabel artistCollectionLabel = new CustomLabel("歌手", netArtistIcon);
     // 电台收藏 Tab 面板
     private CustomPanel radioCollectionPanel = new CustomPanel();
-    private CustomLabel radioCollectionLabel = new CustomLabel("电台", netRadioIcon, CustomLabel.CENTER);
+    private CustomLabel radioCollectionLabel = new CustomLabel("电台", netRadioIcon);
     // MV 收藏 Tab 面板
     private CustomPanel mvCollectionPanel = new CustomPanel();
-    private CustomLabel mvCollectionLabel = new CustomLabel(" MV ", netMvIcon, CustomLabel.CENTER);
+    private CustomLabel mvCollectionLabel = new CustomLabel(" MV ", netMvIcon);
     // 榜单收藏 Tab 面板
     private CustomPanel rankingCollectionPanel = new CustomPanel();
-    private CustomLabel rankingCollectionLabel = new CustomLabel("榜单", netRankingIcon, CustomLabel.CENTER);
+    private CustomLabel rankingCollectionLabel = new CustomLabel("榜单", netRankingIcon);
     // 用户收藏 Tab 面板
     private CustomPanel userCollectionPanel = new CustomPanel();
-    private CustomLabel userCollectionLabel = new CustomLabel("用户", netUserIcon, CustomLabel.CENTER);
+    private CustomLabel userCollectionLabel = new CustomLabel("用户", netUserIcon);
 
     // 空 ListModel，用于其他 ListModel 的 clear 时暂时显示，防止卡顿
     private DefaultListModel emptyListModel = new DefaultListModel<>();
@@ -1927,30 +1927,30 @@ public class PlayerFrame extends JFrame {
     private CustomPanel recommendItemDescriptionPanel = new CustomPanel();
     private CustomPanel collectionItemDescriptionPanel = new CustomPanel();
     // 歌单/专辑/歌手/电台封面图和名称标签
-    private CustomLabel playlistCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel albumCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel artistCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel radioCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel rankingCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel userCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel recommendItemCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel collectionItemCoverAndNameLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel playlistCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel albumCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel artistCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel radioCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel rankingCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel userCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel recommendItemCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel collectionItemCoverAndNameLabel = new CustomLabel("");
     // 歌单标签
-    private CustomLabel playlistTagLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel artistTagLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel radioTagLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel userTagLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel recommendItemTagLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel collectionItemTagLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel playlistTagLabel = new CustomLabel("");
+    private CustomLabel artistTagLabel = new CustomLabel("");
+    private CustomLabel radioTagLabel = new CustomLabel("");
+    private CustomLabel userTagLabel = new CustomLabel("");
+    private CustomLabel recommendItemTagLabel = new CustomLabel("");
+    private CustomLabel collectionItemTagLabel = new CustomLabel("");
     // 歌单/专辑/歌手/电台描述标签
-    private CustomLabel playlistDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel albumDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel artistDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel radioDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel rankingDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel userDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel recommendItemDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
-    private CustomLabel collectionItemDescriptionLabel = new CustomLabel("", SwingConstants.CENTER);
+    private CustomLabel playlistDescriptionLabel = new CustomLabel("");
+    private CustomLabel albumDescriptionLabel = new CustomLabel("");
+    private CustomLabel artistDescriptionLabel = new CustomLabel("");
+    private CustomLabel radioDescriptionLabel = new CustomLabel("");
+    private CustomLabel rankingDescriptionLabel = new CustomLabel("");
+    private CustomLabel userDescriptionLabel = new CustomLabel("");
+    private CustomLabel recommendItemDescriptionLabel = new CustomLabel("");
+    private CustomLabel collectionItemDescriptionLabel = new CustomLabel("");
     // 描述部分滚动条
     private CustomScrollPane playlistDescriptionScrollPane = new CustomScrollPane(playlistDescriptionPanel);
     private CustomScrollPane albumDescriptionScrollPane = new CustomScrollPane(albumDescriptionPanel);
@@ -2526,7 +2526,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始化标题栏
     void titleBarInit() {
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setIcon(titleIcon);
         titleLabel.setIconTextGap(15);
@@ -2549,9 +2548,6 @@ public class PlayerFrame extends JFrame {
         });
         // 下一条格言
         nextMottoMenuItem.addActionListener(e -> updateMotto());
-
-        copyMottoMenuItem.setFont(globalFont);
-        nextMottoMenuItem.setFont(globalFont);
 
         mottoPopupMenu.add(copyMottoMenuItem);
         mottoPopupMenu.add(nextMottoMenuItem);
@@ -3121,7 +3117,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMusicHistorySearchInnerPanel2.add(b);
@@ -3163,7 +3158,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netPlaylistHistorySearchInnerPanel2.add(b);
@@ -3205,7 +3199,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netAlbumHistorySearchInnerPanel2.add(b);
@@ -3247,7 +3240,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netArtistHistorySearchInnerPanel2.add(b);
@@ -3289,7 +3281,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netRadioHistorySearchInnerPanel2.add(b);
@@ -3331,7 +3322,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMvHistorySearchInnerPanel2.add(b);
@@ -3373,7 +3363,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netUserHistorySearchInnerPanel2.add(b);
@@ -4092,15 +4081,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始主化菜单
     void mainMenuInit() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
-        // 字体
-        closeSong.setFont(globalFont);
-        clearCache.setFont(globalFont);
-        styleCustomMenuItem.setFont(globalFont);
-        manageStyleMenuItem.setFont(globalFont);
-        settingMenuItem.setFont(globalFont);
-        donateMenuItem.setFont(globalFont);
-        helpMenuItem.setFont(globalFont);
-
         openFileInit();
         openDirInit();
         closeSongInit();
@@ -4262,20 +4242,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始化标签页
     void tabbedPaneInit() {
-        // 全局字体
-        tabbedPane.setFont(globalFont);
-        personalMusicLabel.setFont(globalFont);
-        netMusicLabel.setFont(globalFont);
-        netPlaylistLabel.setFont(globalFont);
-        netAlbumLabel.setFont(globalFont);
-        netArtistLabel.setFont(globalFont);
-        netRadioLabel.setFont(globalFont);
-        netMvLabel.setFont(globalFont);
-        netRankingLabel.setFont(globalFont);
-        netUserLabel.setFont(globalFont);
-        recommendLabel.setFont(globalFont);
-        downloadManagementLabel.setFont(globalFont);
-        playQueueLabel.setFont(globalFont);
         // 组装标签面板
         int gap = 10;
         personalMusicLabel.setIconTextGap(gap);
@@ -4687,17 +4653,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始化收藏标签页
     void collectionTabbedPaneInit() {
-        // 全局字体
-        collectionTabbedPane.setFont(globalFont);
-        musicCollectionLabel.setFont(globalFont);
-        playlistCollectionLabel.setFont(globalFont);
-        albumCollectionLabel.setFont(globalFont);
-        artistCollectionLabel.setFont(globalFont);
-        radioCollectionLabel.setFont(globalFont);
-        mvCollectionLabel.setFont(globalFont);
-        rankingCollectionLabel.setFont(globalFont);
-        userCollectionLabel.setFont(globalFont);
-
         // 组装标签面板
         int gap = 10;
         musicCollectionLabel.setIconTextGap(gap);
@@ -5182,11 +5137,6 @@ public class PlayerFrame extends JFrame {
         collectionGoButton.setPreferredSize(dimension);
         collectionNextPageButton.setPreferredSize(dimension);
         collectionEndPageButton.setPreferredSize(dimension);
-        // 全局字体
-        collectionRecordTypeComboBox.setFont(globalFont);
-        collectionPlayAllButton.setFont(globalFont);
-        collectionCountLabel.setFont(globalFont);
-        collectionPageTextField.setFont(globalFont);
         // 按钮悬浮与点击效果
         collectionBackwardButton.addMouseListener(new ButtonMouseListener(collectionBackwardButton, THIS));
         collectionPlayAllButton.addMouseListener(new ButtonMouseListener(collectionPlayAllButton, THIS));
@@ -5948,12 +5898,8 @@ public class PlayerFrame extends JFrame {
 
     // 初始化标签
     void labelInit() {
-        // 字体
-        saveAlbumImageMenuItem.setFont(globalFont);
         // 设置 HTML 标签并居中图片
         albumImageLabel.setText("<html></html>");
-        albumImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        albumImageLabel.setVerticalAlignment(SwingConstants.CENTER);
         // 导出专辑图片事件
         saveAlbumImageMenuItem.addActionListener(e -> {
             saveImg(player.getMusicInfo().getAlbumImage());
@@ -5969,10 +5915,6 @@ public class PlayerFrame extends JFrame {
             }
         });
 
-        // 字体
-        copySongNameMenuItem.setFont(globalFont);
-        copyArtistMenuItem.setFont(globalFont);
-        copyAlbumMenuItem.setFont(globalFont);
         songNamePopupMenu.add(copySongNameMenuItem);
         artistPopupMenu.add(copyArtistMenuItem);
         albumPopupMenu.add(copyAlbumMenuItem);
@@ -5998,13 +5940,6 @@ public class PlayerFrame extends JFrame {
             clipboard.setContents(stringSelection, null);
         });
 
-        songNameLabel.setFont(globalFont);
-        artistLabel.setFont(globalFont);
-        albumLabel.setFont(globalFont);
-        songNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        artistLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        albumLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
         // 添加左下的标签
         leftBottomBox.add(Box.createVerticalGlue());
         leftBottomBox.add(songNameLabel);
@@ -6024,9 +5959,7 @@ public class PlayerFrame extends JFrame {
         infoAndLrcBox.add(leftInfoBox);
 
         // 列表为空提示
-        emptyHintLabel.setFont(globalFont);
         emptyHintPanel.setLayout(new GridLayout(1, 1));
-        emptyHintLabel.setHorizontalAlignment(SwingConstants.CENTER);
         emptyHintPanel.add(emptyHintLabel);
         emptyHintPanel.setPreferredSize(new Dimension(260, 1000));
     }
@@ -6140,10 +6073,6 @@ public class PlayerFrame extends JFrame {
 //        localMusicButton.setMaximumSize(dimension);
 //        historyButton.setMaximumSize(dimension);
 //        collectionButton.setMaximumSize(dimension);
-        // 全局字体
-        localMusicButton.setFont(globalFont);
-        historyButton.setFont(globalFont);
-        collectionButton.setFont(globalFont);
         // 按钮悬浮和点击效果
         localMusicButton.addMouseListener(new ButtonMouseListener(localMusicButton, THIS));
         historyButton.addMouseListener(new ButtonMouseListener(historyButton, THIS));
@@ -6160,15 +6089,12 @@ public class PlayerFrame extends JFrame {
         int gap = 15;
         localMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         localMusicButton.setIconTextGap(gap);
-//        localMusicButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         historyButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         historyButton.setIconTextGap(gap);
-//        historyButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         collectionButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         collectionButton.setIconTextGap(gap);
-//        collectionButton.setVerticalTextPosition(SwingConstants.BOTTOM);
 
-//        // 推荐工具栏网格布局
+        // 推荐工具栏网格布局
         personalMusicToolBar.setLayout(new GridLayout(1, 3));
         personalMusicToolBar.add(localMusicButton);
         personalMusicToolBar.add(historyButton);
@@ -6192,25 +6118,8 @@ public class PlayerFrame extends JFrame {
         clearInputToolButton.addMouseListener(new ButtonMouseListener(clearInputToolButton, THIS));
         // 标签左间距
         countLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        // 字体
-        countLabel.setFont(globalFont);
-        addFileMenuItem.setFont(globalFont);
-        addDirMenuItem.setFont(globalFont);
-        ascendingMenuItem.setFont(globalFont);
-        descendingMenuItem.setFont(globalFont);
-        sortBySongNameAndFileNameMenuItem.setFont(globalFont);
-        sortBySongNameMenuItem.setFont(globalFont);
-        sortByArtistNameMenuItem.setFont(globalFont);
-        sortByAlbumNameMenuItem.setFont(globalFont);
-        sortByFileNameMenuItem.setFont(globalFont);
-        sortByTimeMenuItem.setFont(globalFont);
-        sortByCreationTimeMenuItem.setFont(globalFont);
-        sortByLastModifiedTimeMenuItem.setFont(globalFont);
-        sortByLastAccessTimeMenuItem.setFont(globalFont);
-        sortBySizeMenuItem.setFont(globalFont);
 
         addPopupMenu.add(addFileMenuItem);
-//        addPopupMenu.addSeparator();
         addPopupMenu.add(addDirMenuItem);
         // 按钮绑定右键菜单，不过右键也会弹出
         addToolButton.setComponentPopupMenu(addPopupMenu);
@@ -6219,7 +6128,6 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-//                    SwingUtilities.updateComponentTreeUI(addPopupMenu);
                     addPopupMenu.show(addToolButton, e.getX(), e.getY());
                 }
             }
@@ -6634,7 +6542,6 @@ public class PlayerFrame extends JFrame {
 
             }
         });
-        filterTextField.setFont(globalFont);
         // 帮助提示
         addToolButton.setToolTipText(ADD_TIP);
         reimportToolButton.setToolTipText(REIMPORT_TIP);
@@ -6989,25 +6896,6 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        playMenuItem.setFont(globalFont);
-        nextPlayMenuItem.setFont(globalFont);
-        playMvMenuItem.setFont(globalFont);
-        collectMenuItem.setFont(globalFont);
-        downloadMenuItem.setFont(globalFont);
-        commentMenuItem.setFont(globalFont);
-        sheetMenuItem.setFont(globalFont);
-        searchSongMenuItem.setFont(globalFont);
-        similarSongMenuItem.setFont(globalFont);
-        relatedPlaylistMenuItem.setFont(globalFont);
-        authorMenuItem.setFont(globalFont);
-        albumMenuItem.setFont(globalFont);
-        recRadioMenuItem.setFont(globalFont);
-        relatedMvMenuItem.setFont(globalFont);
-        copyNameMenuItem.setFont(globalFont);
-        locateFileMenuItem.setFont(globalFont);
-        editInfoMenuItem.setFont(globalFont);
-        removeMenuItem.setFont(globalFont);
 
         musicPopupMenu.add(playMenuItem);
         musicPopupMenu.add(nextPlayMenuItem);
@@ -7115,7 +7003,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -7337,13 +7224,6 @@ public class PlayerFrame extends JFrame {
         netMusicGoButton.addMouseListener(new ButtonMouseListener(netMusicGoButton, THIS));
         netMusicNextPageButton.addMouseListener(new ButtonMouseListener(netMusicNextPageButton, THIS));
         netMusicEndPageButton.addMouseListener(new ButtonMouseListener(netMusicEndPageButton, THIS));
-        // 全局字体
-        netMusicTitleLabel.setFont(globalFont);
-        searchTextField.setFont(globalFont);
-        netMusicPageTextField.setFont(globalFont);
-        netMusicCountLabel.setFont(globalFont);
-        netMusicSearchTypeComboBox.setFont(globalFont);
-        netMusicSearchSubTypeComboBox.setFont(globalFont);
         // 帮助提示
         netMusicBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
         netMusicClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -8037,22 +7917,6 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netMusicPlayMenuItem.setFont(globalFont);
-        netMusicNextPlayMenuItem.setFont(globalFont);
-        netMusicPlayMvMenuItem.setFont(globalFont);
-        netMusicCollectMenuItem.setFont(globalFont);
-        netMusicDownloadMenuItem.setFont(globalFont);
-        netMusicCommentMenuItem.setFont(globalFont);
-        netMusicSheetMenuItem.setFont(globalFont);
-        netMusicSearchSongMenuItem.setFont(globalFont);
-        netMusicSimilarSongMenuItem.setFont(globalFont);
-        netMusicRelatedPlaylistMenuItem.setFont(globalFont);
-        netMusicAuthorMenuItem.setFont(globalFont);
-        netMusicAlbumMenuItem.setFont(globalFont);
-        netMusicRecRadioMenuItem.setFont(globalFont);
-        netMusicRelatedMvMenuItem.setFont(globalFont);
-        netMusicCopyNameMenuItem.setFont(globalFont);
 
         netMusicPopupMenu.add(netMusicPlayMenuItem);
         netMusicPopupMenu.add(netMusicNextPlayMenuItem);
@@ -8069,11 +7933,8 @@ public class PlayerFrame extends JFrame {
         netMusicPopupMenu.add(netMusicRecRadioMenuItem);
         netMusicPopupMenu.add(netMusicRelatedMvMenuItem);
         netMusicPopupMenu.add(netMusicCopyNameMenuItem);
-        netMusicList.add(netMusicPopupMenu);
 
         // 搜索建议面板
-        // “搜索建议” 标签
-        netMusicSearchSuggestionLabel.setFont(globalFont);
         // 刷新搜索建议按钮
         netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.submit(() -> updateSearchSuggestion()));
         netMusicRefreshSearchSuggestionButton.setPreferredSize(new Dimension(20, 20));
@@ -8094,8 +7955,6 @@ public class PlayerFrame extends JFrame {
         netMusicSearchSuggestionPanel.add(netMusicSearchSuggestionInnerPanel1);
         netMusicSearchSuggestionPanel.add(netMusicSearchSuggestionInnerPanel2);
         // 热搜面板
-        // “热门搜索” 标签
-        netMusicHotSearchLabel.setFont(globalFont);
         // 刷新热门搜索按钮
         netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.submit(() -> updateHotSearch()));
         netMusicRefreshHotSearchButton.setPreferredSize(new Dimension(20, 20));
@@ -8116,8 +7975,6 @@ public class PlayerFrame extends JFrame {
         netMusicHotSearchPanel.add(netMusicHotSearchInnerPanel1);
         netMusicHotSearchPanel.add(netMusicHotSearchInnerPanel2);
         // 搜索历史面板
-        // “搜索历史” 标签
-        netMusicHistorySearchLabel.setFont(globalFont);
         // 清空搜索历史按钮
         netMusicClearHistorySearchButton.addActionListener(e -> {
             netMusicHistorySearchInnerPanel2.removeAll();
@@ -8162,31 +8019,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始化描述盒子
     void descriptionPanelInit() {
-        // 字体
-        playlistCoverAndNameLabel.setFont(globalFont);
-        albumCoverAndNameLabel.setFont(globalFont);
-        artistCoverAndNameLabel.setFont(globalFont);
-        radioCoverAndNameLabel.setFont(globalFont);
-        rankingCoverAndNameLabel.setFont(globalFont);
-        userCoverAndNameLabel.setFont(globalFont);
-        recommendItemCoverAndNameLabel.setFont(globalFont);
-        collectionItemCoverAndNameLabel.setFont(globalFont);
-
-        playlistTagLabel.setFont(globalFont);
-        playlistDescriptionLabel.setFont(globalFont);
-        albumDescriptionLabel.setFont(globalFont);
-        artistTagLabel.setFont(globalFont);
-        artistDescriptionLabel.setFont(globalFont);
-        radioTagLabel.setFont(globalFont);
-        radioDescriptionLabel.setFont(globalFont);
-        rankingDescriptionLabel.setFont(globalFont);
-        userTagLabel.setFont(globalFont);
-        userDescriptionLabel.setFont(globalFont);
-        recommendItemTagLabel.setFont(globalFont);
-        recommendItemDescriptionLabel.setFont(globalFont);
-        collectionItemTagLabel.setFont(globalFont);
-        collectionItemDescriptionLabel.setFont(globalFont);
-
         // 描述标签垂直对齐方式
         playlistTagLabel.setVerticalAlignment(SwingConstants.TOP);
         playlistDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -8341,11 +8173,6 @@ public class PlayerFrame extends JFrame {
         collectionItemDescriptionPanel.add(collectionItemDescriptionLabel);
 
         // 右键菜单
-        saveDescCoverImgMenuItem.setFont(globalFont);
-        saveDescBgImgMenuItem.setFont(globalFont);
-        copyDescNameMenuItem.setFont(globalFont);
-        copyDescTagMenuItem.setFont(globalFont);
-        copyDescMenuItem.setFont(globalFont);
         descriptionPanelPopupMenu.add(saveDescCoverImgMenuItem);
         descriptionPanelPopupMenu.add(saveDescBgImgMenuItem);
         descriptionPanelPopupMenu.add(copyDescNameMenuItem);
@@ -8566,7 +8393,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -8893,12 +8719,6 @@ public class PlayerFrame extends JFrame {
         netPlaylistGoButton.addMouseListener(new ButtonMouseListener(netPlaylistGoButton, THIS));
         netPlaylistNextPageButton.addMouseListener(new ButtonMouseListener(netPlaylistNextPageButton, THIS));
         netPlaylistEndPageButton.addMouseListener(new ButtonMouseListener(netPlaylistEndPageButton, THIS));
-        // 全局字体
-        netPlaylistTitleLabel.setFont(globalFont);
-        netPlaylistSearchTextField.setFont(globalFont);
-        netPlaylistPageTextField.setFont(globalFont);
-        netPlaylistPlayAllButton.setFont(globalFont);
-        netPlaylistCountLabel.setFont(globalFont);
         // 帮助提示
         netPlaylistBackwardButton.setToolTipText(BACKWARD_TIP);
         netPlaylistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -9394,33 +9214,17 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netPlaylistOpenMenuItem.setFont(globalFont);
-        netPlaylistPlayAllMenuItem.setFont(globalFont);
-        netPlaylistCollectMenuItem.setFont(globalFont);
-        netPlaylistCommentMenuItem.setFont(globalFont);
-        netPlaylistSimilarPlaylistMenuItem.setFont(globalFont);
-        netPlaylistCreatorMenuItem.setFont(globalFont);
-        netPlaylistSubscriberMenuItem.setFont(globalFont);
-        netPlaylistCopyNameMenuItem.setFont(globalFont);
         // 歌单列表右键菜单项
         netPlaylistPopupMenu.add(netPlaylistOpenMenuItem);
-//        netPlaylistPopupMenu.addSeparator();
         netPlaylistPopupMenu.add(netPlaylistPlayAllMenuItem);
-//        netPlaylistPopupMenu.addSeparator();
         netPlaylistPopupMenu.add(netPlaylistCollectMenuItem);
-//        netPlaylistPopupMenu.addSeparator();
         netPlaylistPopupMenu.add(netPlaylistCommentMenuItem);
         netPlaylistPopupMenu.add(netPlaylistSimilarPlaylistMenuItem);
         netPlaylistPopupMenu.add(netPlaylistCreatorMenuItem);
         netPlaylistPopupMenu.add(netPlaylistSubscriberMenuItem);
-//        netPlaylistPopupMenu.addSeparator();
         netPlaylistPopupMenu.add(netPlaylistCopyNameMenuItem);
-        netPlaylistList.add(netPlaylistPopupMenu);
 
         // 搜索历史面板
-        // “搜索历史” 标签
-        netPlaylistHistorySearchLabel.setFont(globalFont);
         // 清空搜索历史按钮
         netPlaylistClearHistorySearchButton.addActionListener(e -> {
             netPlaylistHistorySearchInnerPanel2.removeAll();
@@ -9569,7 +9373,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -9903,12 +9706,6 @@ public class PlayerFrame extends JFrame {
         netAlbumGoButton.addMouseListener(new ButtonMouseListener(netAlbumGoButton, THIS));
         netAlbumNextPageButton.addMouseListener(new ButtonMouseListener(netAlbumNextPageButton, THIS));
         netAlbumEndPageButton.addMouseListener(new ButtonMouseListener(netAlbumEndPageButton, THIS));
-        // 全局字体
-        netAlbumTitleLabel.setFont(globalFont);
-        netAlbumSearchTextField.setFont(globalFont);
-        netAlbumPageTextField.setFont(globalFont);
-        netAlbumPlayAllButton.setFont(globalFont);
-        netAlbumCountLabel.setFont(globalFont);
         // 帮助提示
         netAlbumBackwardButton.setToolTipText(BACKWARD_TIP);
         netAlbumClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -10421,15 +10218,6 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netAlbumOpenMenuItem.setFont(globalFont);
-        netAlbumPlayAllMenuItem.setFont(globalFont);
-        netAlbumCollectMenuItem.setFont(globalFont);
-        netAlbumCommentMenuItem.setFont(globalFont);
-        netAlbumArtistMenuItem.setFont(globalFont);
-        netAlbumSimilarMenuItem.setFont(globalFont);
-        netAlbumPhotosMenuItem.setFont(globalFont);
-        netAlbumCopyNameMenuItem.setFont(globalFont);
         // 专辑列表右键菜单项
         netAlbumPopupMenu.add(netAlbumOpenMenuItem);
         netAlbumPopupMenu.add(netAlbumPlayAllMenuItem);
@@ -10439,11 +10227,8 @@ public class PlayerFrame extends JFrame {
         netAlbumPopupMenu.add(netAlbumSimilarMenuItem);
         netAlbumPopupMenu.add(netAlbumPhotosMenuItem);
         netAlbumPopupMenu.add(netAlbumCopyNameMenuItem);
-        netAlbumList.add(netAlbumPopupMenu);
 
         // 搜索历史面板
-        // “搜索历史” 标签
-        netAlbumHistorySearchLabel.setFont(globalFont);
         // 清空搜索历史按钮
         netAlbumClearHistorySearchButton.addActionListener(e -> {
             netAlbumHistorySearchInnerPanel2.removeAll();
@@ -10599,7 +10384,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -10937,12 +10721,6 @@ public class PlayerFrame extends JFrame {
         netArtistGoButton.addMouseListener(new ButtonMouseListener(netArtistGoButton, THIS));
         netArtistNextPageButton.addMouseListener(new ButtonMouseListener(netArtistNextPageButton, THIS));
         netArtistEndPageButton.addMouseListener(new ButtonMouseListener(netArtistEndPageButton, THIS));
-        // 全局字体
-        netArtistTitleLabel.setFont(globalFont);
-        netArtistSearchTextField.setFont(globalFont);
-        netArtistPageTextField.setFont(globalFont);
-        netArtistPlayAllButton.setFont(globalFont);
-        netArtistCountLabel.setFont(globalFont);
         // 帮助提示
         netArtistBackwardButton.setToolTipText(BACKWARD_TIP);
         netArtistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -11676,40 +11454,20 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netArtistOpenMenuItem.setFont(globalFont);
-        netArtistPlayAllMenuItem.setFont(globalFont);
-        netArtistCollectMenuItem.setFont(globalFont);
-        netArtistBrowseAlbumMenuItem.setFont(globalFont);
-        netArtistBrowseMvMenuItem.setFont(globalFont);
-        netArtistSimilarArtistMenuItem.setFont(globalFont);
-        netArtistFansMenuItem.setFont(globalFont);
-        netArtistBuddyMenuItem.setFont(globalFont);
-        netArtistRadiosMenuItem.setFont(globalFont);
-        netArtistPhotosMenuItem.setFont(globalFont);
-        netArtistCopyNameMenuItem.setFont(globalFont);
         // 歌手右键菜单项
         netArtistPopupMenu.add(netArtistOpenMenuItem);
-//        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistPlayAllMenuItem);
-//        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistCollectMenuItem);
-//        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistBrowseAlbumMenuItem);
-//        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistBrowseMvMenuItem);
         netArtistPopupMenu.add(netArtistSimilarArtistMenuItem);
         netArtistPopupMenu.add(netArtistFansMenuItem);
         netArtistPopupMenu.add(netArtistBuddyMenuItem);
         netArtistPopupMenu.add(netArtistRadiosMenuItem);
         netArtistPopupMenu.add(netArtistPhotosMenuItem);
-//        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistCopyNameMenuItem);
-        netArtistList.add(netArtistPopupMenu);
 
         // 搜索历史面板
-        // “搜索历史” 标签
-        netArtistHistorySearchLabel.setFont(globalFont);
         // 清空搜索历史按钮
         netArtistClearHistorySearchButton.addActionListener(e -> {
             netArtistHistorySearchInnerPanel2.removeAll();
@@ -11863,7 +11621,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -12195,12 +11952,6 @@ public class PlayerFrame extends JFrame {
         netRadioGoButton.addMouseListener(new ButtonMouseListener(netRadioGoButton, THIS));
         netRadioNextPageButton.addMouseListener(new ButtonMouseListener(netRadioNextPageButton, THIS));
         netRadioEndPageButton.addMouseListener(new ButtonMouseListener(netRadioEndPageButton, THIS));
-        // 全局字体
-        netRadioTitleLabel.setFont(globalFont);
-        netRadioSearchTextField.setFont(globalFont);
-        netRadioPageTextField.setFont(globalFont);
-        netRadioPlayAllButton.setFont(globalFont);
-        netRadioCountLabel.setFont(globalFont);
         // 帮助提示
         netRadioBackwardButton.setToolTipText(BACKWARD_TIP);
         netRadioClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -12836,25 +12587,10 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netRadioOpenMenuItem.setFont(globalFont);
-        netRadioPlayAllMenuItem.setFont(globalFont);
-        netRadioCollectMenuItem.setFont(globalFont);
-        netRadioCommentMenuItem.setFont(globalFont);
-        netRadioDjMenuItem.setFont(globalFont);
-        netRadioSubscriberMenuItem.setFont(globalFont);
-        netRadioSimilarMenuItem.setFont(globalFont);
-        netRadioArtistsMenuItem.setFont(globalFont);
-        netRadioPhotosMenuItem.setFont(globalFont);
-        netRadioPostersMenuItem.setFont(globalFont);
-        netRadioCopyNameMenuItem.setFont(globalFont);
         // 电台列表右键菜单项
         netRadioPopupMenu.add(netRadioOpenMenuItem);
-//        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioPlayAllMenuItem);
-//        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioCollectMenuItem);
-//        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioCommentMenuItem);
         netRadioPopupMenu.add(netRadioDjMenuItem);
         netRadioPopupMenu.add(netRadioSubscriberMenuItem);
@@ -12862,13 +12598,9 @@ public class PlayerFrame extends JFrame {
         netRadioPopupMenu.add(netRadioArtistsMenuItem);
         netRadioPopupMenu.add(netRadioPhotosMenuItem);
         netRadioPopupMenu.add(netRadioPostersMenuItem);
-//        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioCopyNameMenuItem);
-        netRadioList.add(netRadioPopupMenu);
 
         // 搜索历史面板
-        // “搜索历史” 标签
-        netRadioHistorySearchLabel.setFont(globalFont);
         // 清空搜索历史按钮
         netRadioClearHistorySearchButton.addActionListener(e -> {
             netRadioHistorySearchInnerPanel2.removeAll();
@@ -12982,7 +12714,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -13186,12 +12917,6 @@ public class PlayerFrame extends JFrame {
         netMvGoButton.addMouseListener(new ButtonMouseListener(netMvGoButton, THIS));
         netMvNextPageButton.addMouseListener(new ButtonMouseListener(netMvNextPageButton, THIS));
         netMvEndPageButton.addMouseListener(new ButtonMouseListener(netMvEndPageButton, THIS));
-        // 全局字体
-        netMvTitleLabel.setFont(globalFont);
-        netMvSearchTextField.setFont(globalFont);
-        netMvSortTypeComboBox.setFont(globalFont);
-        netMvPageTextField.setFont(globalFont);
-        netMvCountLabel.setFont(globalFont);
         // 不可见
         netMvSortTypeComboBox.setVisible(false);
         // 帮助提示
@@ -13628,33 +13353,17 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netMvPlayMenuItem.setFont(globalFont);
-        netMvCollectMenuItem.setFont(globalFont);
-        netMvDownloadMenuItem.setFont(globalFont);
-        netMvSimilarMvMenuItem.setFont(globalFont);
-        netMvVideoEpisodeMenuItem.setFont(globalFont);
-        netMvCreatorMenuItem.setFont(globalFont);
-        netMvCommentMenuItem.setFont(globalFont);
-        netMvCopyNameMenuItem.setFont(globalFont);
         // MV 列表右键菜单项
         netMvPopupMenu.add(netMvPlayMenuItem);
-//        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvCollectMenuItem);
-//        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvDownloadMenuItem);
         netMvPopupMenu.add(netMvSimilarMvMenuItem);
         netMvPopupMenu.add(netMvVideoEpisodeMenuItem);
         netMvPopupMenu.add(netMvCreatorMenuItem);
-//        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvCommentMenuItem);
-//        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvCopyNameMenuItem);
-        netMvList.add(netMvPopupMenu);
 
         // 搜索历史面板
-        // “搜索历史” 标签
-        netMvHistorySearchLabel.setFont(globalFont);
         // 清空搜索历史按钮
         netMvClearHistorySearchButton.addActionListener(e -> {
             netMvHistorySearchInnerPanel2.removeAll();
@@ -13954,10 +13663,6 @@ public class PlayerFrame extends JFrame {
         netRankingGoButton.addMouseListener(new ButtonMouseListener(netRankingGoButton, THIS));
         netRankingNextPageButton.addMouseListener(new ButtonMouseListener(netRankingNextPageButton, THIS));
         netRankingEndPageButton.addMouseListener(new ButtonMouseListener(netRankingEndPageButton, THIS));
-        // 全局字体
-        netRankingPageTextField.setFont(globalFont);
-        netRankingPlayAllButton.setFont(globalFont);
-        netRankingCountLabel.setFont(globalFont);
         // 帮助提示
         netRankingBackwardButton.setToolTipText(BACKWARD_TIP);
         netRankingPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -14233,19 +13938,12 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netRankingOpenMenuItem.setFont(globalFont);
-        netRankingPlayAllMenuItem.setFont(globalFont);
-        netRankingCollectMenuItem.setFont(globalFont);
-        netRankingCommentMenuItem.setFont(globalFont);
-        netRankingCopyNameMenuItem.setFont(globalFont);
         // 榜单列表右键菜单项
         netRankingPopupMenu.add(netRankingOpenMenuItem);
         netRankingPopupMenu.add(netRankingPlayAllMenuItem);
         netRankingPopupMenu.add(netRankingCollectMenuItem);
         netRankingPopupMenu.add(netRankingCommentMenuItem);
         netRankingPopupMenu.add(netRankingCopyNameMenuItem);
-        netRankingList.add(netRankingPopupMenu);
 
         // 榜单最佳大小
         netRankingScrollPane.setPreferredSize(new Dimension(200, 600));
@@ -14372,7 +14070,6 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                 });
-                b.setFont(globalFont);
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 // 先删除重复的关键词
@@ -14729,13 +14426,6 @@ public class PlayerFrame extends JFrame {
         netUserGoButton.addMouseListener(new ButtonMouseListener(netUserGoButton, THIS));
         netUserNextPageButton.addMouseListener(new ButtonMouseListener(netUserNextPageButton, THIS));
         netUserEndPageButton.addMouseListener(new ButtonMouseListener(netUserEndPageButton, THIS));
-        // 全局字体
-        netUserTitleLabel.setFont(globalFont);
-        netUserRecordTypeComboBox.setFont(globalFont);
-        netUserSearchTextField.setFont(globalFont);
-        netUserPageTextField.setFont(globalFont);
-        netUserPlayAllButton.setFont(globalFont);
-        netUserCountLabel.setFont(globalFont);
         // 帮助提示
         netUserBackwardButton.setToolTipText(BACKWARD_TIP);
         netUserClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -15436,22 +15126,9 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netUserOpenMenuItem.setFont(globalFont);
-        netUserPlayAllMenuItem.setFont(globalFont);
-        netUserCollectMenuItem.setFont(globalFont);
-        netUserPlaylistMenuItem.setFont(globalFont);
-        netUserAlbumMenuItem.setFont(globalFont);
-        netUserRadioMenuItem.setFont(globalFont);
-        netUserVideoMenuItem.setFont(globalFont);
-        netUserFollowMenuItem.setFont(globalFont);
-        netUserFollowedMenuItem.setFont(globalFont);
-        netUserCopyNameMenuItem.setFont(globalFont);
         // 用户列表右键菜单项
         netUserPopupMenu.add(netUserOpenMenuItem);
-//        netUserPopupMenu.addSeparator();
         netUserPopupMenu.add(netUserPlayAllMenuItem);
-//        netUserPopupMenu.addSeparator();
         netUserPopupMenu.add(netUserCollectMenuItem);
         netUserPopupMenu.add(netUserPlaylistMenuItem);
         netUserPopupMenu.add(netUserAlbumMenuItem);
@@ -15459,13 +15136,9 @@ public class PlayerFrame extends JFrame {
         netUserPopupMenu.add(netUserVideoMenuItem);
         netUserPopupMenu.add(netUserFollowMenuItem);
         netUserPopupMenu.add(netUserFollowedMenuItem);
-//        netUserPopupMenu.addSeparator();
         netUserPopupMenu.add(netUserCopyNameMenuItem);
-        netUserList.add(netUserPopupMenu);
 
         // 搜索历史面板
-        // “搜索历史” 标签
-        netUserHistorySearchLabel.setFont(globalFont);
         // 清空搜索历史按钮
         netUserClearHistorySearchButton.addActionListener(e -> {
             netUserHistorySearchInnerPanel2.removeAll();
@@ -15732,11 +15405,6 @@ public class PlayerFrame extends JFrame {
         netCommentGoButton.addMouseListener(new ButtonMouseListener(netCommentGoButton, THIS));
         netCommentNextPageButton.addMouseListener(new ButtonMouseListener(netCommentNextPageButton, THIS));
         netCommentEndPageButton.addMouseListener(new ButtonMouseListener(netCommentEndPageButton, THIS));
-        // 全局字体
-        netCommentTypeComboBox.setFont(globalFont);
-        netCommentPageTextField.setFont(globalFont);
-        netCommentTitleLabel.setFont(globalFont);
-        netCommentCountLabel.setFont(globalFont);
         // 帮助提示
         netCommentBackwardButton.setToolTipText(BACKWARD_TIP);
         netCommentRefreshButton.setToolTipText(REFRESH_TIP);
@@ -16041,19 +15709,12 @@ public class PlayerFrame extends JFrame {
                 }
             });
         });
-        // 字体
-        netCommentCopyMenuItem.setFont(globalFont);
-        netCommentSaveProfileMenuItem.setFont(globalFont);
-        netCommentUserMenuItem.setFont(globalFont);
-        netCommentPlaylistMenuItem.setFont(globalFont);
-        netCommentAlbumMenuItem.setFont(globalFont);
         // 评论列表右键菜单项
         netCommentPopupMenu.add(netCommentCopyMenuItem);
         netCommentPopupMenu.add(netCommentSaveProfileMenuItem);
         netCommentPopupMenu.add(netCommentUserMenuItem);
         netCommentPopupMenu.add(netCommentPlaylistMenuItem);
         netCommentPopupMenu.add(netCommentAlbumMenuItem);
-        netCommentList.add(netCommentPopupMenu);
 
         // 评论最佳大小
         netCommentScrollPane.setPreferredSize(new Dimension(200, 600));
@@ -16150,10 +15811,6 @@ public class PlayerFrame extends JFrame {
         netSheetGoButton.addMouseListener(new ButtonMouseListener(netSheetGoButton, THIS));
         netSheetNextPageButton.addMouseListener(new ButtonMouseListener(netSheetNextPageButton, THIS));
         netSheetEndPageButton.addMouseListener(new ButtonMouseListener(netSheetEndPageButton, THIS));
-        // 全局字体
-        netSheetPageTextField.setFont(globalFont);
-        netSheetTitleLabel.setFont(globalFont);
-        netSheetCountLabel.setFont(globalFont);
         // 帮助提示
         netSheetBackwardButton.setToolTipText(BACKWARD_TIP);
         netSheetRefreshButton.setToolTipText(REFRESH_TIP);
@@ -16285,13 +15942,9 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 字体
-        netSheetBrowseMenuItem.setFont(globalFont);
-        netSheetCopyNameMenuItem.setFont(globalFont);
         // 曲谱列表右键菜单项
         netSheetPopupMenu.add(netSheetBrowseMenuItem);
         netSheetPopupMenu.add(netSheetCopyNameMenuItem);
-        netSheetList.add(netSheetPopupMenu);
 
         // 曲谱最佳大小
         netSheetScrollPane.setPreferredSize(new Dimension(200, 600));
@@ -17626,21 +17279,6 @@ public class PlayerFrame extends JFrame {
         netRecommendGoButton.setPreferredSize(dimension);
         netRecommendNextPageButton.setPreferredSize(dimension);
         netRecommendEndPageButton.setPreferredSize(dimension);
-        // 全局字体
-        playlistRecommendButton.setFont(globalFont);
-        highQualityPlaylistButton.setFont(globalFont);
-        hotMusicButton.setFont(globalFont);
-        netMusicRecommendButton.setFont(globalFont);
-        newAlbumRecommendButton.setFont(globalFont);
-        artistListRecommendButton.setFont(globalFont);
-        newRadioRecommendButton.setFont(globalFont);
-        hotRadioRecommendButton.setFont(globalFont);
-        programRecommendButton.setFont(globalFont);
-        mvRecommendButton.setFont(globalFont);
-        netRecommendTagComboBox.setFont(globalFont);
-        netRecommendPlayAllButton.setFont(globalFont);
-        recommendCountLabel.setFont(globalFont);
-        netRecommendPageTextField.setFont(globalFont);
         // 按钮悬浮与点击效果
         playlistRecommendButton.addMouseListener(new ButtonMouseListener(playlistRecommendButton, THIS));
         highQualityPlaylistButton.addMouseListener(new ButtonMouseListener(highQualityPlaylistButton, THIS));
@@ -18312,8 +17950,6 @@ public class PlayerFrame extends JFrame {
 
         // 标签间距
         taskCountLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        // 字体
-        taskCountLabel.setFont(globalFont);
         // 帮助提示
         restartSelectedTasksButton.setToolTipText(RESTART_SELECTED_TASKS_TIP);
         cancelSelectedTasksButton.setToolTipText(CANCEL_SELECTED_TASKS_TIP);
@@ -18490,14 +18126,6 @@ public class PlayerFrame extends JFrame {
             downloadList.setModel(downloadListModel);
             new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
         });
-        // 字体
-        downloadPlayMenuItem.setFont(globalFont);
-        downloadNextPlayMenuItem.setFont(globalFont);
-        downloadLocateFileMenuItem.setFont(globalFont);
-        downloadEditInfoMenuItem.setFont(globalFont);
-        cancelTaskMenuItem.setFont(globalFont);
-        restartTaskMenuItem.setFont(globalFont);
-        removeTaskMenuItem.setFont(globalFont);
 
         downloadPopupMenu.add(downloadPlayMenuItem);
         downloadPopupMenu.add(downloadNextPlayMenuItem);
@@ -18506,7 +18134,6 @@ public class PlayerFrame extends JFrame {
         downloadPopupMenu.add(cancelTaskMenuItem);
         downloadPopupMenu.add(restartTaskMenuItem);
         downloadPopupMenu.add(removeTaskMenuItem);
-        downloadList.add(downloadPopupMenu);
 
         downloadListScrollPane.setPreferredSize(new Dimension(600, 300));
         downloadLeftBox.add(downloadListScrollPane);
@@ -18886,26 +18513,6 @@ public class PlayerFrame extends JFrame {
         });
         // 标签间距
         playQueueCountLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        // 字体
-        playQueueCountLabel.setFont(globalFont);
-        playQueuePlayMenuItem.setFont(globalFont);
-        playQueueNextPlayMenuItem.setFont(globalFont);
-        playQueuePlayMvMenuItem.setFont(globalFont);
-        playQueueCollectMenuItem.setFont(globalFont);
-        playQueueDownloadMenuItem.setFont(globalFont);
-        playQueueCommentMenuItem.setFont(globalFont);
-        playQueueSheetMenuItem.setFont(globalFont);
-        playQueueSearchSongMenuItem.setFont(globalFont);
-        playQueueSimilarSongMenuItem.setFont(globalFont);
-        playQueueRelatedPlaylistMenuItem.setFont(globalFont);
-        playQueueAuthorMenuItem.setFont(globalFont);
-        playQueueAlbumMenuItem.setFont(globalFont);
-        playQueueRecRadioMenuItem.setFont(globalFont);
-        playQueueRelatedMvMenuItem.setFont(globalFont);
-        playQueueCopyNameMenuItem.setFont(globalFont);
-        playQueueLocateFileMenuItem.setFont(globalFont);
-        playQueueEditInfoMenuItem.setFont(globalFont);
-        playQueueRemoveMenuItem.setFont(globalFont);
 
         playQueuePopupMenu.add(playQueuePlayMenuItem);
         playQueuePopupMenu.add(playQueueNextPlayMenuItem);
@@ -18985,14 +18592,6 @@ public class PlayerFrame extends JFrame {
             downloadLrcTrans(player.getNetMusicInfo());
         });
         currLrcOffsetMenuItem.setEnabled(false);
-        // 字体
-        locateLrcMenuItem.setFont(globalFont);
-        copyMenuItem.setFont(globalFont);
-        browseLrcMenuItem.setFont(globalFont);
-        browseLrcTransMenuItem.setFont(globalFont);
-        downloadLrcMenuItem.setFont(globalFont);
-        downloadLrcTransMenuItem.setFont(globalFont);
-        currLrcOffsetMenuItem.setFont(globalFont);
 
         lrcPopupMenu.add(locateLrcMenuItem);
         lrcPopupMenu.add(copyMenuItem);
@@ -19004,7 +18603,6 @@ public class PlayerFrame extends JFrame {
         lrcPopupMenu.add(currLrcOffsetMenuItem);
 
         for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
-            mi.setFont(globalFont);
             mi.addActionListener(e -> {
                 String text = mi.getText();
                 if ("重置".equals(text)) lrcOffset = 0;
@@ -19017,7 +18615,7 @@ public class PlayerFrame extends JFrame {
             lrcPopupMenu.add(mi);
         }
 
-        // 不可聚焦(防止画焦点框)
+        // 焦点(不画焦点框)
         lrcList.setFocusable(false);
         // 右键弹出菜单
         lrcList.addMouseListener(new MouseAdapter() {
@@ -19210,12 +18808,6 @@ public class PlayerFrame extends JFrame {
 
     // 初始化进度条
     void timeBarInit() {
-        currTimeLabel.setFont(globalFont);
-        durationLabel.setFont(globalFont);
-
-        currTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        durationLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
@@ -19251,7 +18843,6 @@ public class PlayerFrame extends JFrame {
         // changePaneButton 图标遮罩 UI
         ChangePaneButtonUI changePaneButtonUI = new ChangePaneButtonUI();
         changePaneButton.setUI(changePaneButtonUI);
-        changePaneButton.setFont(globalFont);
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         changePaneButton.setIconTextGap(10);
         changePaneButton.setPreferredSize(new Dimension(280, 66));
@@ -19385,11 +18976,6 @@ public class PlayerFrame extends JFrame {
         shuffleMenuItem.addActionListener(e -> {
             if (currPlayMode != PlayMode.SHUFFLE) changeToShuffle(true);
         });
-        // 字体
-        singleMenuItem.setFont(globalFont);
-        sequenceMenuItem.setFont(globalFont);
-        listCycleMenuItem.setFont(globalFont);
-        shuffleMenuItem.setFont(globalFont);
 
         playModePopupMenu.add(singleMenuItem);
         playModePopupMenu.add(sequenceMenuItem);
@@ -19440,7 +19026,6 @@ public class PlayerFrame extends JFrame {
         });
         // 倍速菜单和按钮
 //        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
-//            menuItem.setFont(globalFont);
 //            menuItem.addActionListener(e -> {
 //                getPlayer().setRate(currRate = Double.parseDouble(menuItem.getText().replace("x", "")));
 //                updateRadioButtonMenuItemIcon(ratePopupMenu);
@@ -19472,10 +19057,6 @@ public class PlayerFrame extends JFrame {
             switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
         });
         // 虚化菜单
-        blurOffMenuItem.setFont(globalFont);
-        gsBlurMenuItem.setFont(globalFont);
-        mcBlurMenuItem.setFont(globalFont);
-        lgBlurMenuItem.setFont(globalFont);
         blurPopupMenu.add(blurOffMenuItem);
         blurPopupMenu.add(gsBlurMenuItem);
         blurPopupMenu.add(mcBlurMenuItem);
@@ -20967,26 +20548,7 @@ public class PlayerFrame extends JFrame {
         updateMenuItemStyle(netMvPopupMenu, menuItemColor);
         updateMenuItemStyle(downloadPopupMenu, menuItemColor);
         updateMenuItemStyle(playQueuePopupMenu, menuItemColor);
-//        mainMenu.setForeColor(style.getButtonColor());
-//        lrcPopupMenu.setForeColor(style.getButtonColor());
-//        albumImagePopupMenu.setForeColor(style.getButtonColor());
-//        stylePopupMenu.setForeColor(style.getButtonColor());
-//        addPopupMenu.setForeColor(style.getButtonColor());
-//        musicPopupMenu.setForeColor(style.getButtonColor());
-//        netMusicPopupMenu.setForeColor(style.getButtonColor());
-//        sortPopupMenu.setForeColor(style.getButtonColor());
-        // 所有子菜单
-//        MyPopupMenuUI popupMenuUI = new MyPopupMenuUI(style.getButtonColor());
-//        fileMenu.getPopupMenu().setUI(popupMenuUI);
-//        playMenu.getPopupMenu().setUI(popupMenuUI);
-//        forwardOrBackward.getPopupMenu().setUI(popupMenuUI);
-//        playMode.getPopupMenu().setUI(popupMenuUI);
-//        playRate.getPopupMenu().setUI(popupMenuUI);
-//        balance.getPopupMenu().setUI(popupMenuUI);
-//        styleMenu.getPopupMenu().setUI(popupMenuUI);
-//        viewMenu.getPopupMenu().setUI(popupMenuUI);
-//        individuationMenu.getPopupMenu().setUI(popupMenuUI);
-//        helpMenu.getPopupMenu().setUI(popupMenuUI);
+
         // 工具栏消除边框和透明、选项卡面板透明
         tabbedPane.setUI(new TabbedPaneUI());
         collectionTabbedPane.setUI(new TabbedPaneUI());
@@ -21102,8 +20664,8 @@ public class PlayerFrame extends JFrame {
         }
         searchTextField.setForeground(searchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         searchTextField.setCaretColor(foreColor);
-        netMusicSearchTypeComboBox.setUI(new ComboBoxUI(netMusicSearchTypeComboBox, THIS, globalFont, buttonColor));
-        netMusicSearchSubTypeComboBox.setUI(new ComboBoxUI(netMusicSearchSubTypeComboBox, THIS, globalFont, buttonColor));
+        netMusicSearchTypeComboBox.setUI(new ComboBoxUI(netMusicSearchTypeComboBox, THIS, buttonColor));
+        netMusicSearchSubTypeComboBox.setUI(new ComboBoxUI(netMusicSearchSubTypeComboBox, THIS, buttonColor));
         netMusicPageTextField.setForeground(foreColor);
         netMusicPageTextField.setCaretColor(foreColor);
         // 歌单搜索栏透明
@@ -21184,12 +20746,12 @@ public class PlayerFrame extends JFrame {
         }
         netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? foreColor : ColorUtils.darker(foreColor));
         netUserSearchTextField.setCaretColor(foreColor);
-        netUserRecordTypeComboBox.setUI(new ComboBoxUI(netUserRecordTypeComboBox, THIS, globalFont, buttonColor));
+        netUserRecordTypeComboBox.setUI(new ComboBoxUI(netUserRecordTypeComboBox, THIS, buttonColor));
         netUserPageTextField.setForeground(foreColor);
         netUserPageTextField.setCaretColor(foreColor);
         netUserPlayAllButton.setForeground(buttonColor);
         // 评论栏透明
-        netCommentTypeComboBox.setUI(new ComboBoxUI(netCommentTypeComboBox, THIS, globalFont, buttonColor));
+        netCommentTypeComboBox.setUI(new ComboBoxUI(netCommentTypeComboBox, THIS, buttonColor));
         netCommentPageTextField.setForeground(foreColor);
         netCommentPageTextField.setCaretColor(foreColor);
         // 曲谱栏透明
@@ -21198,10 +20760,10 @@ public class PlayerFrame extends JFrame {
         // 推荐页码文本框
         netRecommendPageTextField.setForeground(foreColor);
         netRecommendPageTextField.setCaretColor(foreColor);
-        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, globalFont, buttonColor, 240));
+        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, buttonColor, 240));
         netRecommendPlayAllButton.setForeground(buttonColor);
         // 收藏页码文本框
-        collectionRecordTypeComboBox.setUI(new ComboBoxUI(collectionRecordTypeComboBox, THIS, globalFont, buttonColor));
+        collectionRecordTypeComboBox.setUI(new ComboBoxUI(collectionRecordTypeComboBox, THIS, buttonColor));
         collectionPageTextField.setForeground(foreColor);
         collectionPageTextField.setCaretColor(foreColor);
         collectionPlayAllButton.setForeground(buttonColor);
@@ -21290,7 +20852,7 @@ public class PlayerFrame extends JFrame {
         netRadioNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioNextPageButton.getIcon(), buttonColor));
         netRadioEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioEndPageButton.getIcon(), buttonColor));
         // MV 搜索栏按钮颜色
-        netMvSortTypeComboBox.setUI(new ComboBoxUI(netMvSortTypeComboBox, THIS, globalFont, buttonColor));
+        netMvSortTypeComboBox.setUI(new ComboBoxUI(netMvSortTypeComboBox, THIS, buttonColor));
         netMvBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netMvBackwardButton.getIcon(), buttonColor));
         netMvClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netMvClearInputButton.getIcon(), buttonColor));
         netMvSearchButton.setIcon(ImageUtils.dye((ImageIcon) netMvSearchButton.getIcon(), buttonColor));
@@ -21406,77 +20968,77 @@ public class PlayerFrame extends JFrame {
         playQueueCountLabel.setForeground(foreColor);
 
         // 播放列表透明
-        TranslucentMusicListRenderer musicListRenderer = new TranslucentMusicListRenderer(globalFont, player);
+        TranslucentMusicListRenderer musicListRenderer = new TranslucentMusicListRenderer(player);
         musicListRenderer.setForeColor(foreColor);
         musicListRenderer.setSelectedColor(selectedColor);
         musicList.setCellRenderer(musicListRenderer);
 
-        TranslucentNetMusicListRenderer netMusicListRenderer = new TranslucentNetMusicListRenderer(globalFont, player);
+        TranslucentNetMusicListRenderer netMusicListRenderer = new TranslucentNetMusicListRenderer(player);
         netMusicListRenderer.setForeColor(foreColor);
         netMusicListRenderer.setSelectedColor(selectedColor);
         netMusicList.setCellRenderer(netMusicListRenderer);
 
-        TranslucentNetPlaylistListRenderer netPlaylistListRenderer = new TranslucentNetPlaylistListRenderer(globalFont);
+        TranslucentNetPlaylistListRenderer netPlaylistListRenderer = new TranslucentNetPlaylistListRenderer();
         netPlaylistListRenderer.setForeColor(foreColor);
         netPlaylistListRenderer.setSelectedColor(selectedColor);
         netPlaylistList.setCellRenderer(netPlaylistListRenderer);
 
-        TranslucentNetAlbumListRenderer netAlbumListRenderer = new TranslucentNetAlbumListRenderer(globalFont);
+        TranslucentNetAlbumListRenderer netAlbumListRenderer = new TranslucentNetAlbumListRenderer();
         netAlbumListRenderer.setForeColor(foreColor);
         netAlbumListRenderer.setSelectedColor(selectedColor);
         netAlbumList.setCellRenderer(netAlbumListRenderer);
 
-        TranslucentNetArtistListRenderer netArtistListRenderer = new TranslucentNetArtistListRenderer(globalFont);
+        TranslucentNetArtistListRenderer netArtistListRenderer = new TranslucentNetArtistListRenderer();
         netArtistListRenderer.setForeColor(foreColor);
         netArtistListRenderer.setSelectedColor(selectedColor);
         netArtistList.setCellRenderer(netArtistListRenderer);
 
-        TranslucentNetRadioListRenderer netRadioListRenderer = new TranslucentNetRadioListRenderer(globalFont);
+        TranslucentNetRadioListRenderer netRadioListRenderer = new TranslucentNetRadioListRenderer();
         netRadioListRenderer.setForeColor(foreColor);
         netRadioListRenderer.setSelectedColor(selectedColor);
         netRadioList.setCellRenderer(netRadioListRenderer);
 
-        TranslucentNetMvListRenderer netMvListRenderer = new TranslucentNetMvListRenderer(globalFont);
+        TranslucentNetMvListRenderer netMvListRenderer = new TranslucentNetMvListRenderer();
         netMvListRenderer.setForeColor(foreColor);
         netMvListRenderer.setSelectedColor(selectedColor);
         netMvList.setCellRenderer(netMvListRenderer);
 
-        TranslucentNetRankingListRenderer netRankingListRenderer = new TranslucentNetRankingListRenderer(globalFont);
+        TranslucentNetRankingListRenderer netRankingListRenderer = new TranslucentNetRankingListRenderer();
         netRankingListRenderer.setForeColor(foreColor);
         netRankingListRenderer.setSelectedColor(selectedColor);
         netRankingList.setCellRenderer(netRankingListRenderer);
 
-        TranslucentNetUserListRenderer netUserListRenderer = new TranslucentNetUserListRenderer(globalFont);
+        TranslucentNetUserListRenderer netUserListRenderer = new TranslucentNetUserListRenderer();
         netUserListRenderer.setForeColor(foreColor);
         netUserListRenderer.setSelectedColor(selectedColor);
         netUserList.setCellRenderer(netUserListRenderer);
 
-        TranslucentNetCommentListRenderer netCommentListRenderer = new TranslucentNetCommentListRenderer(globalFont);
+        TranslucentNetCommentListRenderer netCommentListRenderer = new TranslucentNetCommentListRenderer();
         netCommentListRenderer.setForeColor(foreColor);
         netCommentListRenderer.setSelectedColor(selectedColor);
         netCommentList.setCellRenderer(netCommentListRenderer);
 
-        TranslucentNetSheetListRenderer netSheetListRenderer = new TranslucentNetSheetListRenderer(globalFont);
+        TranslucentNetSheetListRenderer netSheetListRenderer = new TranslucentNetSheetListRenderer();
         netSheetListRenderer.setForeColor(foreColor);
         netSheetListRenderer.setSelectedColor(selectedColor);
         netSheetList.setCellRenderer(netSheetListRenderer);
 
-        TranslucentItemRecommendListRenderer itemRecommendListRenderer = new TranslucentItemRecommendListRenderer(globalFont);
+        TranslucentItemRecommendListRenderer itemRecommendListRenderer = new TranslucentItemRecommendListRenderer();
         itemRecommendListRenderer.setForeColor(foreColor);
         itemRecommendListRenderer.setSelectedColor(selectedColor);
         itemRecommendList.setCellRenderer(itemRecommendListRenderer);
 
-        TranslucentItemRecommendListRenderer collectionListRenderer = new TranslucentItemRecommendListRenderer(globalFont);
+        TranslucentItemRecommendListRenderer collectionListRenderer = new TranslucentItemRecommendListRenderer();
         collectionListRenderer.setForeColor(foreColor);
         collectionListRenderer.setSelectedColor(selectedColor);
         collectionList.setCellRenderer(collectionListRenderer);
 
-        TranslucentDownloadListRenderer downloadListRenderer = new TranslucentDownloadListRenderer(globalFont);
+        TranslucentDownloadListRenderer downloadListRenderer = new TranslucentDownloadListRenderer();
         downloadListRenderer.setForeColor(foreColor);
         downloadListRenderer.setSelectedColor(selectedColor);
         downloadList.setCellRenderer(downloadListRenderer);
 
-        TranslucentMusicListRenderer playQueueRenderer = new TranslucentMusicListRenderer(globalFont, player);
+        TranslucentMusicListRenderer playQueueRenderer = new TranslucentMusicListRenderer(player);
         playQueueRenderer.setForeColor(foreColor);
         playQueueRenderer.setSelectedColor(selectedColor);
 //        playQueue.setCellRenderer(playQueueRenderer);
@@ -21601,8 +21163,6 @@ public class PlayerFrame extends JFrame {
         // 歌词高亮显示
         TranslucentLrcListRenderer lrcListRenderer = new TranslucentLrcListRenderer();
         lrcListRenderer.setRow(row);
-        lrcListRenderer.setDefaultFont(globalFont);
-        lrcListRenderer.setHighlightFont(Fonts.NORMAL_BIG);
         lrcListRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         lrcListRenderer.setBackgroundColor(style.getLrcColor());        // 歌词颜色
         lrcListRenderer.setForegroundColor(style.getHighlightColor());
@@ -21783,7 +21343,6 @@ public class PlayerFrame extends JFrame {
 //                styles.stream()
 //                        .map(style -> {
 //                            CustomRadioButtonMenuItem menuItem = new CustomRadioButtonMenuItem(style.getStyleName() + "     ");
-//                            menuItem.setFont(globalFont);
 //                            return menuItem;
 //                        })
 //                        // 这一步很重要，转为指定类型的数组，不能直接转换！
@@ -21795,7 +21354,6 @@ public class PlayerFrame extends JFrame {
     public void addStyle(UIStyle style, boolean apply) {
         styles.add(style);
 //        CustomRadioButtonMenuItem newStylePopupMenuItem = new CustomRadioButtonMenuItem(style.getStyleName() + "     ");
-//        newStylePopupMenuItem.setFont(globalFont);
 //        newStylePopupMenuItem.setForeground(currUIStyle.getMenuItemColor());
 //        newStylePopupMenuItem.setUI(new RadioButtonMenuItemUI(currUIStyle.getMenuItemColor()));
 //        stylePopupMenuButtonGroup.add(newStylePopupMenuItem);
@@ -22446,7 +22004,6 @@ public class PlayerFrame extends JFrame {
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                     netLeftBox.add(netMusicScrollPane);
                 });
-                b.setFont(globalFont);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMusicSearchSuggestionInnerPanel2.add(b);
             }
@@ -22498,7 +22055,6 @@ public class PlayerFrame extends JFrame {
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                     netLeftBox.add(netMusicScrollPane);
                 });
-                b.setFont(globalFont);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netMusicHotSearchInnerPanel2.add(b);
             }

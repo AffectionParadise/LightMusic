@@ -1,26 +1,23 @@
 package net.doge.ui.renderers;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.AudioFile;
+import net.doge.models.MusicPlayer;
 import net.doge.models.NetMusicInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
-import net.doge.models.MusicPlayer;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.utils.StringUtils;
 import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 /**
  * @Author yzx
@@ -32,7 +29,7 @@ import java.awt.event.MouseMotionListener;
 @NoArgsConstructor
 public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色
@@ -51,8 +48,7 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
     private ImageIcon programSIcon;
     private ImageIcon playingSIcon;
 
-    public TranslucentMusicListRenderer(Font font, MusicPlayer player) {
-        this.customFont = font;
+    public TranslucentMusicListRenderer(MusicPlayer player) {
         this.player = player;
     }
 

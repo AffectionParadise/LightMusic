@@ -3,7 +3,6 @@ package net.doge.ui.components.dialog;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
-import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
@@ -22,9 +21,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.List;
 
 /**
  * @Author yzx
@@ -50,9 +49,6 @@ public class MiniDialog extends JDialog {
     public CustomButton playLastButton = new CustomButton();
     public CustomButton playNextButton = new CustomButton();
     public CustomButton closeButton = new CustomButton();
-
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
 
     private PlayerFrame f;
     private CustomButton changePaneButton;
@@ -220,8 +216,6 @@ public class MiniDialog extends JDialog {
             });
         });
 
-        // 字体
-        infoLabel.setFont(globalFont);
         // 颜色
         infoLabel.setForeground(style.getLabelColor());
         // 正在播放的音乐信息

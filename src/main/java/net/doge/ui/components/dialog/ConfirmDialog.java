@@ -47,7 +47,7 @@ public class ConfirmDialog extends JDialog {
     private PlayerFrame f;
     private String message = "";
     private CustomPanel messagePanel = new CustomPanel();
-    private CustomLabel messageLabel = new CustomLabel(message, CustomLabel.CENTER);
+    private CustomLabel messageLabel = new CustomLabel(message);
     private boolean showCheck;
     private CustomPanel checkPanel = new CustomPanel();
     private CustomCheckBox checkBox = new CustomCheckBox();

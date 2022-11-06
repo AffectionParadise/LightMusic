@@ -1,6 +1,7 @@
 package net.doge.ui.renderers;
 
 import lombok.Data;
+import net.doge.constants.Fonts;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
@@ -19,7 +20,7 @@ import java.awt.image.BufferedImage;
 @Data
 public class DefaultStyleListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色

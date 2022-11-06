@@ -34,8 +34,8 @@ public class DesktopLyricDialog extends JDialog {
     private UIStyle style;
     private Color foreColor;
     private CustomPanel lyricPanel = new CustomPanel();
-    public LyricLabel lyricLabel = new LyricLabel("", CustomLabel.CENTER);
-    private CustomLabel tempLabel = new CustomLabel("", CustomLabel.CENTER);
+    public LyricLabel lyricLabel = new LyricLabel("");
+    private CustomLabel tempLabel = new CustomLabel("");
     private MainPanel mainPanel = new MainPanel();
     private CustomPanel buttonPanel = new CustomPanel();
 
@@ -130,8 +130,6 @@ public class DesktopLyricDialog extends JDialog {
         tempLabel.setForeground(themeColor);
         tempLabel.setFont(font);
         setLyric(" ", 0);
-        lyricLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        lyricLabel.setVerticalAlignment(SwingConstants.CENTER);
         lyricLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         FlowLayout fl = new FlowLayout();
@@ -329,8 +327,8 @@ public class DesktopLyricDialog extends JDialog {
         private final float max = 1f;
         private final float step = 0.1f;
 
-        public LyricLabel(String text, int align) {
-            super(text, align);
+        public LyricLabel(String text) {
+            super(text);
         }
 
         public void decreaseAlpha() {

@@ -26,7 +26,7 @@ import java.awt.*;
 @NoArgsConstructor
 public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色
@@ -36,10 +36,6 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
 
     private ImageIcon taskIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.smallWidth));
     private ImageIcon taskSIcon;
-
-    public TranslucentDownloadListRenderer(Font customFont) {
-        this.customFont = customFont;
-    }
 
     public void setForeColor(Color foreColor) {
         this.foreColor = foreColor;

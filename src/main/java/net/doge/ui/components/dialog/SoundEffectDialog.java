@@ -102,9 +102,6 @@ public class SoundEffectDialog extends JDialog {
     };
     private boolean fitting;
 
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
-
     private PlayerFrame f;
     private UIStyle style;
 
@@ -186,7 +183,6 @@ public class SoundEffectDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -214,9 +210,7 @@ public class SoundEffectDialog extends JDialog {
         centerPanel.setLayout(new BorderLayout());
 
         // 音效选择面板
-        soundEffectLabel.setFont(globalFont);
         soundEffectLabel.setForeground(style.getLabelColor());
-        comboBox.setFont(globalFont);
         comboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -235,7 +229,7 @@ public class SoundEffectDialog extends JDialog {
         });
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
-        comboBox.setUI(new ComboBoxUI(comboBox, f, globalFont, buttonColor, 220));
+        comboBox.setUI(new ComboBoxUI(comboBox, f, buttonColor, 220));
 
         soundEffectPanel.add(soundEffectLabel);
         soundEffectPanel.add(comboBox);
@@ -270,12 +264,8 @@ public class SoundEffectDialog extends JDialog {
             Color labelColor = style.getLabelColor();
             // 值
             vals[i].setForeground(labelColor);
-            vals[i].setFont(globalFont);
-            vals[i].setHorizontalAlignment(SwingConstants.CENTER);
             // 频率
             hzs[i].setForeground(labelColor);
-            hzs[i].setFont(globalFont);
-            hzs[i].setHorizontalAlignment(SwingConstants.CENTER);
 
             panels[i].setLayout(new BorderLayout());
             panels[i].setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));

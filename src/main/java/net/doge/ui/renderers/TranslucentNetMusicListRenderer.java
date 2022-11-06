@@ -3,6 +3,7 @@ package net.doge.ui.renderers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
@@ -27,7 +28,7 @@ import java.awt.*;
 @NoArgsConstructor
 public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色
@@ -46,8 +47,7 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
     private ImageIcon programSIcon;
     private ImageIcon playingSIcon;
 
-    public TranslucentNetMusicListRenderer(Font font, MusicPlayer player) {
-        this.customFont = font;
+    public TranslucentNetMusicListRenderer(MusicPlayer player) {
         this.player = player;
     }
 
@@ -74,7 +74,7 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetMusicInfo musicInfo = (NetMusicInfo) value;
-        
+
         CustomPanel outerPanel = new CustomPanel();
         CustomPanel innerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();

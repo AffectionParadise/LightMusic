@@ -94,9 +94,6 @@ public class EditInfoDialog extends JDialog {
 
     private DialogButton okButton;
 
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
-
     private PlayerFrame f;
     private UIStyle style;
     // 面板展示的文件
@@ -190,7 +187,6 @@ public class EditInfoDialog extends JDialog {
             dispose();
             f.currDialogs.remove(this);
         });
-        okButton.setFont(globalFont);
         buttonPanel.add(okButton);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -230,7 +226,6 @@ public class EditInfoDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -293,29 +288,24 @@ public class EditInfoDialog extends JDialog {
             panel.setBorder(b);
             // 添加标签
             labels[i].setForeground(style.getLabelColor());
-            // 添加标签
-            labels[i].setFont(globalFont);
             panel.add(labels[i]);
             // 组件配置
             if (components[i] instanceof CustomLabel) {
                 CustomLabel component = (CustomLabel) components[i];
                 component.setForeground(style.getLabelColor());
-                component.setFont(globalFont);
                 component.setText(StringUtils.textToHtml((String) results[i]));
             } else if (components[i] instanceof CustomTextField) {
                 CustomTextField component = (CustomTextField) components[i];
                 Color foreColor = style.getForeColor();
                 component.setForeground(foreColor);
                 component.setCaretColor(foreColor);
-                component.setFont(globalFont);
                 component.setText((String) results[i]);
             } else if (components[i] instanceof JComboBox) {
                 JComboBox component = (JComboBox) components[i];
                 // 下拉框 UI
                 Color buttonColor = style.getButtonColor();
-                component.setUI(new ComboBoxUI(component, f, globalFont, buttonColor));
+                component.setUI(new ComboBoxUI(component, f, buttonColor));
 
-                component.setFont(globalFont);
                 int finalI = i;
                 component.addItemListener(e -> {
                     results[finalI] = e.getItem().toString();
@@ -324,7 +314,6 @@ public class EditInfoDialog extends JDialog {
             } else if (components[i] instanceof DialogButton) {
                 DialogButton component = (DialogButton) components[i];
                 component.setForeColor(style.getButtonColor());
-                component.setFont(globalFont);
                 labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载封面图片(显示一个缩略图)
                 if (results[i] != null) {

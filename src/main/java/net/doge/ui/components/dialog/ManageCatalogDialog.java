@@ -5,7 +5,6 @@ import javafx.stage.DirectoryChooser;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
-import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
@@ -70,9 +69,6 @@ public class ManageCatalogDialog extends JDialog {
     private Box bottomBox = new Box(BoxLayout.X_AXIS);
     // 右部按钮盒子
     private Box rightBox = new Box(BoxLayout.Y_AXIS);
-
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
 
     private PlayerFrame f;
     private UIStyle style;
@@ -160,7 +156,6 @@ public class ManageCatalogDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -269,7 +264,6 @@ public class ManageCatalogDialog extends JDialog {
         rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
         DefaultCatalogListRenderer r = new DefaultCatalogListRenderer();
-        r.setCustomFont(globalFont);
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
         catalogList.setCellRenderer(r);
@@ -318,14 +312,6 @@ public class ManageCatalogDialog extends JDialog {
         bottomBox.add(sp);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);
-
-        // 字体
-        tipLabel.setFont(globalFont);
-        allSelectButton.setFont(globalFont);
-        nonSelectButton.setFont(globalFont);
-        locateButton.setFont(globalFont);
-        addButton.setFont(globalFont);
-        removeButton.setFont(globalFont);
     }
 
     // 初始化数据

@@ -21,21 +21,19 @@ import java.awt.*;
 public class ComboBoxUI extends BasicComboBoxUI {
     private JComboBox comboBox;
     private PlayerFrame f;
-    private Font font;
     private Color foreColor;
 
     private ImageIcon arrowIcon = new ImageIcon(SimplePath.ICON_PATH + "arrow.png");
 
-    public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Font font, Color foreColor) {
+    public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Color foreColor) {
         this.comboBox = comboBox;
         this.f = f;
-        this.font = font;
         this.foreColor = foreColor;
 
         arrowIcon = ImageUtils.dye(arrowIcon, foreColor);
 
         // 下拉列表渲染
-        comboBox.setRenderer(new ComboBoxRenderer(font, foreColor));
+        comboBox.setRenderer(new ComboBoxRenderer(foreColor));
         // 设置最大显示项目数量
         comboBox.setMaximumRowCount(15);
         final int width = 170;
@@ -44,8 +42,8 @@ public class ComboBoxUI extends BasicComboBoxUI {
         comboBox.setForeground(foreColor);
     }
 
-    public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Font font, Color foreColor, int width) {
-        this(comboBox, f, font, foreColor);
+    public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Color foreColor, int width) {
+        this(comboBox, f, foreColor);
         comboBox.setPreferredSize(new Dimension(width, 30));
     }
 

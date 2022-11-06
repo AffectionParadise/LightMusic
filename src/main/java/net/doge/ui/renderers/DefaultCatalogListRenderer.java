@@ -3,6 +3,7 @@ package net.doge.ui.renderers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constants.Fonts;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.StringUtils;
@@ -21,17 +22,13 @@ import java.io.File;
 @NoArgsConstructor
 public class DefaultCatalogListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont;
+    private Font customFont = Fonts.NORMAL;
     // 前景色
     private Color foreColor;
     // 选中的颜色
     private Color selectedColor;
     private boolean drawBg;
     private int hoverIndex = -1;
-
-    public DefaultCatalogListRenderer(Font customFont) {
-        this.customFont = customFont;
-    }
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

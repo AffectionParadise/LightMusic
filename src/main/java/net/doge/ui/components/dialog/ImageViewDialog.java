@@ -80,7 +80,7 @@ public abstract class ImageViewDialog extends JDialog {
     private CustomPanel windowCtrlPanel = new CustomPanel();
     private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
-    private CustomLabel imgLabel = new CustomLabel("", CustomLabel.CENTER);
+    private CustomLabel imgLabel = new CustomLabel("");
     public CustomButton lastImgButton = new CustomButton(lastImgIcon);
     private CustomLabel pageLabel = new CustomLabel();
     // 页数框
@@ -94,9 +94,6 @@ public abstract class ImageViewDialog extends JDialog {
 
     // 底部盒子
     private Box bottomBox = new Box(BoxLayout.Y_AXIS);
-
-    // 全局字体
-    private Font globalFont = Fonts.NORMAL;
 
     private PlayerFrame f;
     private UIStyle style;
@@ -185,7 +182,6 @@ public abstract class ImageViewDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
@@ -217,8 +213,6 @@ public abstract class ImageViewDialog extends JDialog {
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
 
         // 标签
-        imgLabel.setFont(globalFont);
-        pageLabel.setFont(globalFont);
         imgLabel.setForeground(style.getLabelColor());
         pageLabel.setForeground(style.getLabelColor());
 
@@ -280,7 +274,6 @@ public abstract class ImageViewDialog extends JDialog {
                 }
             }
         });
-        pageTextField.setFont(globalFont);
         pageTextField.setForeground(style.getForeColor());
         pageTextField.setCaretColor(style.getForeColor());
         // 跳页按钮

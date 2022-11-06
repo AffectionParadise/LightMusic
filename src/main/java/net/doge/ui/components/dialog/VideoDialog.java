@@ -411,7 +411,6 @@ public class VideoDialog extends JDialog {
     // 初始化标题栏
     void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
-        titleLabel.setFont(globalFont);
         titleLabel.setText(StringUtils.textToHtml(title));
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
@@ -448,12 +447,8 @@ public class VideoDialog extends JDialog {
 
     // 进度条
     void initTimeBar() {
-        currTimeLabel.setFont(globalFont);
-        durationLabel.setFont(globalFont);
         currTimeLabel.setForeground(style.getTimeBarColor());
         durationLabel.setForeground(style.getTimeBarColor());
-        currTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        durationLabel.setHorizontalAlignment(SwingConstants.CENTER);
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
@@ -573,7 +568,6 @@ public class VideoDialog extends JDialog {
         // 倍速
 //        ratePopupMenu = new CustomPopupMenu(f);
 //        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
-//            menuItem.setFont(globalFont);
 //            Color menuItemColor = style.getMenuItemColor();
 //            menuItem.setForeground(menuItemColor);
 //            menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
@@ -585,7 +579,6 @@ public class VideoDialog extends JDialog {
 //            rateMenuItemsButtonGroup.add(menuItem);
 //            ratePopupMenu.add(menuItem);
 //        }
-        rateButton.setFont(globalFont);
         rateButton.setForeground(style.getButtonColor());
         rateButton.setToolTipText(RATE_TIP);
         rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getButtonColor()));
@@ -605,7 +598,6 @@ public class VideoDialog extends JDialog {
         // 快进/快退时间
         fobTimePopupMenu = new CustomPopupMenu(f);
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
-            menuItem.setFont(globalFont);
             Color menuItemColor = style.getMenuItemColor();
             menuItem.setForeground(menuItemColor);
             menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
@@ -619,7 +611,6 @@ public class VideoDialog extends JDialog {
             fobTimeMenuItemsButtonGroup.add(menuItem);
             fobTimePopupMenu.add(menuItem);
         }
-        fobTimeButton.setFont(globalFont);
         fobTimeButton.setForeground(style.getButtonColor());
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
         fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), style.getButtonColor()));
@@ -632,7 +623,6 @@ public class VideoDialog extends JDialog {
                 fobTimePopupMenu.show(fobTimeButton, e.getX(), e.getY());
             }
         });
-        fullScreenButton.setFont(globalFont);
         fullScreenButton.setForeground(style.getButtonColor());
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
         fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), style.getButtonColor()));
