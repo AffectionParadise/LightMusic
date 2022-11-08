@@ -195,7 +195,7 @@ public class EditInfoDialog extends JDialog {
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         pack();
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
 
         updateBlur();
 
@@ -344,7 +344,7 @@ public class EditInfoDialog extends JDialog {
                             ));
                             pack();
                             pack();
-                            setLocationRelativeTo(f);
+                            setLocationRelativeTo(null);
                         }
                     });
                 });

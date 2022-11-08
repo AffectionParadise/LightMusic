@@ -4,21 +4,54 @@ import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class CustomToolTip extends JToolTip {
+    // 最大阴影透明度
+    private final int TOP_OPACITY = 30;
+    // 阴影大小像素
+    private final int pixels = 5;
+
+    public CustomToolTip(JComponent comp) {
+        // 阴影边框
+        Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
+        setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+
+        setComponent(comp);
+        setOpaque(false);
+        setFont(Fonts.NORMAL_TINY);
+        setBackground(Colors.TRANSLUCENT);
+    }
+
+    // 使 JToolTip 背景透明
+    @Override
+    public void addNotify() {
+//        super.addNotify();
+        Component parent = getParent();
+        if (parent != null && parent instanceof JComponent) {
+            JComponent jParent = (JComponent) parent;
+            jParent.setOpaque(false);
+        }
+        Window w = SwingUtilities.windowForComponent(this);
+        w.setBackground(Colors.TRANSLUCENT);
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
-        Rectangle rect = getVisibleRect();
         Graphics2D g2d = (Graphics2D) g;
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(Colors.DODGER_BLUE_4);
-        g2d.fillRoundRect(rect.x, rect.y - 20, rect.width, rect.height, 10, 10);
-        g2d.setFont(Fonts.NORMAL);
-        g2d.setColor(Colors.WHITE);
-        g2d.drawString(getTipText(), 0, 0);
+        g2d.setColor(Colors.LIGHT_GRAY);
+        g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 4, 4);
+
+        // 画边框阴影
+        for (int i = 0; i < pixels; i++) {
+            g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
+            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 4, 4);
+        }
+
+        super.paintComponent(g);
     }
 
     @Override

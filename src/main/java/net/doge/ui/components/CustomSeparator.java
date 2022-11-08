@@ -7,7 +7,7 @@ import java.awt.*;
 
 /**
  * @Author yzx
- * @Description 菜单自定义 UI
+ * @Description 菜单分隔符自定义 UI
  * @Date 2020/12/13
  */
 public class CustomSeparator extends JSeparator {
@@ -20,12 +20,11 @@ public class CustomSeparator extends JSeparator {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Rectangle rect = getVisibleRect();
         Graphics2D g2d = (Graphics2D) g;
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
         g2d.setColor(f.getCurrUIStyle().getButtonColor());
-        g2d.drawLine(rect.x, rect.y, rect.x + rect.width, rect.y);
+        g2d.drawLine(0, 0, getWidth(), 0);
     }
 }

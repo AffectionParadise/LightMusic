@@ -14,7 +14,8 @@ import java.util.Locale;
  */
 public class Fonts {
     private static final int FONT_SIZE = 17;
-    private static final int MEDIUM_SIZE = FONT_SIZE + 2;
+    private static final int TINY_SIZE = FONT_SIZE - 3;
+    private static final int MEDIUM_SIZE = FONT_SIZE + 3;
     private static final int BIG_SIZE = FONT_SIZE + 10;
     public static final int HUGE_SIZE = BIG_SIZE + 20;
 
@@ -22,6 +23,7 @@ public class Fonts {
     public static final String NORMAL_BOLD_NAME = "normal.ttf";
 
     // 中英文
+    public static final Font NORMAL_TINY = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, TINY_SIZE);
     public static final Font NORMAL = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, FONT_SIZE);
     public static final Font NORMAL_MEDIUM = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, MEDIUM_SIZE);
     public static final Font NORMAL_BIG = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, BIG_SIZE);

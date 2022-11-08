@@ -177,7 +177,7 @@ public class DonateDialog extends JDialog {
 
         updateBlur();
 
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
 
         f.currDialogs.add(this);
         setVisible(true);

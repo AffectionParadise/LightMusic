@@ -60,14 +60,20 @@ public class DialogButton extends JButton implements MouseListener {
     }
 
     @Override
+    public JToolTip createToolTip() {
+        CustomToolTip tooltip = new CustomToolTip(this);
+        tooltip.setVisible(false);
+        return tooltip;
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
-        Rectangle rect = getVisibleRect();
         Graphics2D g2d = (Graphics2D) g;
         // 画背景
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(foreColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        g2d.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 8, 8);
+        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
@@ -116,6 +122,7 @@ public class DialogButton extends JButton implements MouseListener {
 //            }
 //        }
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 

@@ -184,7 +184,7 @@ public class SettingDialog extends JDialog {
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         pack();
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
 
         updateBlur();
 
@@ -642,6 +642,7 @@ public class SettingDialog extends JDialog {
         f.windowSize = windowSizeComboBox.getSelectedIndex();
         f.windowWidth = WindowSize.dimensions[f.windowSize][0];
         f.windowHeight = WindowSize.dimensions[f.windowSize][1];
+        f.x = f.y = 0x3f3f3f3f;
         if (f.windowState != WindowState.MAXIMIZED) f.setSize(f.windowWidth, f.windowHeight);
 
         f.forwardOrBackwardTime = Integer.parseInt(((String) fobComboBox.getSelectedItem()).replace(" 秒", ""));

@@ -125,7 +125,7 @@ public class ManageCustomStyleDialog extends JDialog {
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
 
         updateBlur();
 

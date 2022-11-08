@@ -182,6 +182,9 @@ public class VideoDialog extends JDialog {
     private boolean fullScreen;
     private String uri;
 
+    private int x = 0x3f3f3f3f;
+    private int y = 0x3f3f3f3f;
+
     private Media media;
     public MediaPlayer mp;
     private MediaView mediaView;
@@ -241,15 +244,16 @@ public class VideoDialog extends JDialog {
                 // mouseDragged 不能正确返回 button 值，需要借助此方法
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
                 Point p = getLocation();
-                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
+                setLocation(x = p.x + e.getX() - origin.x, y = p.y + e.getY() - origin.y);
             }
         });
         // 保持在屏幕正中间
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                setLocationRelativeTo(null);
                 if (fullScreen) return;
+                if (x == 0x3f3f3f3f && y == 0x3f3f3f3f) setLocationRelativeTo(null);
+                else setLocation(x, y);
                 currTimeLabel.setVisible(false);
                 currTimeLabel.setVisible(true);
                 timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 20 * 2, 12));
@@ -480,6 +484,7 @@ public class VideoDialog extends JDialog {
 
     // 控制面板
     void initControlPanel() {
+        playOrPauseButton.setToolTipText(PLAY_TIP);
         playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
         playOrPauseButton.setPreferredSize(new Dimension(pauseIcon.getIconWidth(), pauseIcon.getIconHeight()));
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, f));
@@ -675,13 +680,13 @@ public class VideoDialog extends JDialog {
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
     }
 
-    void toFullScreen() {
+    private void toFullScreen() {
         fullScreen = true;
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
         topPanel.setVisible(false);
         bottomBox.setVisible(false);
         globalPanel.eraseBorder();
-        setSize(ss.width, ss.height);
+        setBounds(0, 0, ss.width, ss.height);
         fitMediaView();
     }
 
@@ -694,11 +699,12 @@ public class VideoDialog extends JDialog {
         fitMediaView();
     }
 
-    void playVideo() {
+    private void playVideo() {
         volumeSlider.setValue(f.getVolumeSlider().getValue());
         mp.setRate(f.currVideoRate);
         mp.play();
         playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
+        playOrPauseButton.setToolTipText(PAUSE_TIP);
     }
 
     public void playOrPause() {
@@ -720,12 +726,12 @@ public class VideoDialog extends JDialog {
     }
 
     // 下载 MV
-    void downloadMv() {
+    private void downloadMv() {
         f.multiDownloadMv(Collections.singletonList(netMvInfo));
     }
 
     // 改变所有单选菜单项图标
-    void updateRadioButtonMenuItemIcon() {
+    private void updateRadioButtonMenuItemIcon() {
 //        Component[] components = ratePopupMenu.getComponents();
 //        for (Component c : components) {
 //            CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
@@ -740,7 +746,7 @@ public class VideoDialog extends JDialog {
         }
     }
 
-    void doBlur(BufferedImage bufferedImage, boolean slight) {
+    private void doBlur(BufferedImage bufferedImage, boolean slight) {
         Dimension size = getSize();
         int dw = size.width, dh = size.height;
         try {

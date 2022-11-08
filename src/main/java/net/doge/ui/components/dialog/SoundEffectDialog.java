@@ -152,7 +152,7 @@ public class SoundEffectDialog extends JDialog {
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         pack();
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
 
         updateBlur();
 

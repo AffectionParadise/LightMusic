@@ -145,7 +145,7 @@ public class ConfirmDialog extends JDialog {
         size = getSize();
         updateBlur();
 
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
 
         f.currDialogs.add(this);
         setVisible(true);

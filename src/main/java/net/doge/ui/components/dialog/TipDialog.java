@@ -104,7 +104,7 @@ public class TipDialog extends JDialog {
         updateSize();
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
         updateBlur();
 
         messageLabel.setForeground(themeColor);

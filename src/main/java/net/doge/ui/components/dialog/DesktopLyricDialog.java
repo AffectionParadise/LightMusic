@@ -274,6 +274,14 @@ public class DesktopLyricDialog extends JDialog {
                 hideUI();
             }
         });
+        // 从任务视图关闭桌面歌词窗口时，触发关闭事件
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (!isShowing()) return;
+                close.doClick();
+            }
+        });
 
         lock.addMouseListener(new ButtonMouseListener(lock, f));
         lock.setPreferredSize(new Dimension(lockIcon.getIconWidth(), lockIcon.getIconHeight()));

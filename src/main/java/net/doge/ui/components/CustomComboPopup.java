@@ -50,14 +50,13 @@ public class CustomComboPopup extends BasicComboPopup {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Rectangle rect = getVisibleRect();
         Graphics2D g2d = (Graphics2D) g;
 
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(ImageUtils.getAvgRGB(f.getGlobalPanel().getBackgroundImage()));
 //                g2d.fillRoundRect(rect.x, rect.y , rect.width, rect.height , 8, 8);
-        g2d.fillRoundRect(rect.x + pixels, rect.y + pixels, rect.width - 2 * pixels, rect.height - 2 * pixels, 8, 8);
+        g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 8, 8);
 
         // 画边框阴影
         for (int i = 0; i < pixels; i++) {
@@ -77,12 +76,9 @@ public class CustomComboPopup extends BasicComboPopup {
         if (b) {
             // 使 JPopupMenu 对应的 Window 透明！
             Window w = SwingUtilities.getWindowAncestor(this);
-            if(!w.getBackground().equals(Color.black)) {
-                w.setVisible(false);
-                w.setBackground(Color.black);
-            }
+            w.setVisible(false);
+            w.setBackground(Colors.BLACK);
             w.setBackground(Colors.TRANSLUCENT);
-//            AWTUtilities.setWindowOpaque(w, false);
             w.setVisible(true);
         }
         f.currPopup = b ? this : null;

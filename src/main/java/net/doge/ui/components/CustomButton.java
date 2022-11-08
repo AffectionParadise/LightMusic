@@ -42,9 +42,8 @@ public class CustomButton extends JButton {
 
     @Override
     public JToolTip createToolTip() {
-        CustomToolTip tooltip = new CustomToolTip();
-        tooltip.setComponent(this);
-        tooltip.setOpaque(false);
+        CustomToolTip tooltip = new CustomToolTip(this);
+        // 存在性能问题，暂时不用
         tooltip.setVisible(false);
         return tooltip;
     }
@@ -52,13 +51,12 @@ public class CustomButton extends JButton {
     @Override
     public void paintComponent(Graphics g) {
         if (drawBg) {
-            Rectangle rect = getVisibleRect();
             Graphics2D g2d = (Graphics2D) g;
             // 画背景
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setColor(getForeground());
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            g2d.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 10, 10);
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 

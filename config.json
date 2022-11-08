@@ -61,7 +61,7 @@
 			"djId":"289680033"
 		}
 	],
-	"currUIStyle":22,
+	"currUIStyle":21,
 	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv\\",
 	"videoRate":1,
 	"playlistHistorySearch":[
@@ -134,6 +134,7 @@
 			"artist":"无边界音乐",
 			"songNum":1,
 			"name":"四月的天空",
+			"artistId":"",
 			"source":2,
 			"id":"002LPVj21TagVF",
 			"coverImgThumbUrl":"https://y.gtimg.cn/music/photo_new/T002R180x180M000002LPVj21TagVF_1.jpg"
@@ -143,6 +144,7 @@
 			"artist":"无边界音乐",
 			"songNum":9,
 			"name":"雨 RAIN RAIN RAIN",
+			"artistId":"",
 			"source":2,
 			"id":"002S9Mtw1wwCAQ",
 			"coverImgThumbUrl":"https://y.gtimg.cn/music/photo_new/T002R180x180M000002S9Mtw1wwCAQ_2.jpg"
@@ -152,6 +154,7 @@
 			"artist":"雷佳&瑞鸣音乐",
 			"songNum":2,
 			"name":"蒲公英的天空（雷佳唱响各地民歌 世界音乐风格十足）",
+			"artistId":"",
 			"source":3,
 			"id":"13431019",
 			"coverImgThumbUrl":"https://img1.kuwo.cn/star/albumcover/300/86/61/4126578516.jpg"
@@ -159,7 +162,9 @@
 		{
 			"publishTime":"",
 			"artist":"无边界音乐",
+			"songNum":-1,
 			"name":"云南来信",
+			"artistId":"",
 			"source":3,
 			"id":"5391935",
 			"coverImgThumbUrl":"https://img1.kuwo.cn/star/albumcover/300/22/73/278878623.jpg"
@@ -167,7 +172,9 @@
 		{
 			"publishTime":"2018-12-19",
 			"artist":"无边界音乐",
+			"songNum":-1,
 			"name":"雨 RAIN RAIN RAIN",
+			"artistId":"",
 			"source":3,
 			"id":"7945836",
 			"coverImgThumbUrl":"https://img1.kuwo.cn/star/albumcover/300/46/59/4015313746.jpg"
@@ -177,6 +184,7 @@
 			"artist":"无边界音乐",
 			"songNum":10,
 			"name":"雨 RAIN RAIN RAIN",
+			"artistId":"",
 			"source":1,
 			"id":"13789414",
 			"coverImgThumbUrl":"http://imge.kugou.com/stdmusic/20200227/20200227224113587101.jpg"
@@ -186,6 +194,7 @@
 			"artist":"无边界音乐",
 			"songNum":1,
 			"name":"四月的天空",
+			"artistId":"",
 			"source":1,
 			"id":"27379186",
 			"coverImgThumbUrl":"http://imge.kugou.com/stdmusic/20190820/20190820033704488628.jpg"
@@ -195,6 +204,7 @@
 			"artist":"无边界音乐",
 			"songNum":9,
 			"name":"雨 RAIN RAIN RAIN",
+			"artistId":"",
 			"source":0,
 			"id":"74752067",
 			"coverImgThumbUrl":"https://p1.music.126.net/2bepi13lhHf8qVDoHGPJUg==/109951163734122907.jpg"
@@ -515,7 +525,8 @@
 			"albumId":"39791361",
 			"artistId":"53283",
 			"source":0,
-			"id":"574926602"
+			"id":"574926602",
+			"programId":""
 		},
 		{
 			"duration":224.262,
@@ -527,7 +538,8 @@
 			"albumId":"3104771",
 			"artistId":"1035020",
 			"source":0,
-			"id":"30854833"
+			"id":"30854833",
+			"programId":""
 		},
 		{
 			"duration":285,
@@ -5080,22 +5092,6 @@
 			"foreColor":"240,240,240",
 			"labelColor":"255,255,255",
 			"highlightColor":"0,191,255",
-			"bgColor":"",
-			"imgPath":"src/main/java/net/doge/icons/customStyle/Maverick.png",
-			"name":"海浪",
-			"timeBarColor":"240,240,240",
-			"scrollBarColor":"240,240,240",
-			"lrcColor":"255,255,255"
-		},
-		{
-			"sliderColor":"240,240,240",
-			"buttonColor":"240,240,240",
-			"spectrumColor":"240,240,240",
-			"menuItemColor":"240,240,240",
-			"selectedColor":"210,210,210",
-			"foreColor":"240,240,240",
-			"labelColor":"255,255,255",
-			"highlightColor":"0,191,255",
 			"bgColor":"3,117,135",
 			"imgPath":"",
 			"name":"墨绿",
@@ -5110,7 +5106,7 @@
 	"miniX":1037,
 	"autoDownloadLyric":true,
 	"miniY":-9,
-	"musicPlaying":0,
+	"musicPlaying":-1,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
@@ -6645,16 +6641,20 @@
 		},
 		{
 			"coverImgUrl":"https://img3.kuwo.cn/star/upload/6/5/1667489018.png",
+			"playCount":-1,
 			"updateFre":"今日更新",
 			"name":"万物DJ榜",
 			"description":"酷我用户每天播放DJ歌曲排行榜，按歌曲热度、发行时间综合排序，每天更新",
+			"updateTime":"",
 			"source":3,
 			"id":"176"
 		},
 		{
 			"coverImgUrl":"https://y.gtimg.cn/music/photo_new/T003R500x500M000000WUwz80hMKBA.jpg",
 			"playCount":7078440,
+			"updateFre":"",
 			"name":"DJ舞曲榜",
+			"description":"",
 			"updateTime":"2022-11-03",
 			"source":2,
 			"id":"63"
@@ -6665,6 +6665,7 @@
 			"updateFre":"周四",
 			"name":"DJ热歌榜",
 			"description":"数据来源：DJ类歌曲\r\n排序方式：按歌曲喜爱用户数的总量排序\r\n更新频率：每周四",
+			"updateTime":"",
 			"source":1,
 			"id":"24971"
 		},

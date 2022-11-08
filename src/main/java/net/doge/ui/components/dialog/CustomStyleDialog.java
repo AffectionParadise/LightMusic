@@ -227,7 +227,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         pack();
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
 
         updateBlur();
 
@@ -359,7 +359,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                             else labels[finalI].setIcon(new ImageIcon(ImageUtils.height(img, imgHeight)));
                             pack();
                             pack();
-                            setLocationRelativeTo(f);
+                            setLocationRelativeTo(null);
                         }
                     });
                     pack();
@@ -402,7 +402,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             labels[1].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, color), imgWidth)));
             results[1] = color;
             pack();
-            setLocationRelativeTo(f);
+            setLocationRelativeTo(null);
         });
         ((CustomPanel) centerPanel.getComponent(1)).add(pureColor);
     }

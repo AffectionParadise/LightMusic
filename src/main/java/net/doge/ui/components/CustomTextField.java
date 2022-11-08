@@ -91,7 +91,7 @@ public class CustomTextField extends JTextField {
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
-        Rectangle rect = getVisibleRect();
+        int w = getWidth(), h = getHeight();
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -99,7 +99,7 @@ public class CustomTextField extends JTextField {
         if (drawBg) {
             g2d.setColor(foregroundColor);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-            g2d.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 25, 25);
+            g2d.fillRoundRect(0, 0, w, h, 25, 25);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
 
@@ -139,7 +139,7 @@ public class CustomTextField extends JTextField {
                     // 只画普通字体显示不出来的文字
                     if (j != 0) {
                         g2d.setFont(Fonts.TYPES.get(j));
-                        g2d.drawString(str, (rect.width - stringWidth) / 2 + widthDrawn, (rect.height - stringHeight) / 2 + 16);
+                        g2d.drawString(str, (w - stringWidth) / 2 + widthDrawn, (h - stringHeight) / 2 + 16);
                     }
                     widthDrawn += metrics[j].stringWidth(str);
                     i += chars.length - 1;

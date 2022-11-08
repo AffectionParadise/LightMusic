@@ -168,7 +168,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
 
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-        setLocationRelativeTo(f);
+        setLocationRelativeTo(null);
         updateBlur();
 
         f.currDialogs.add(this);

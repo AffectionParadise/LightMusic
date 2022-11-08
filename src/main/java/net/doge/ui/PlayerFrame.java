@@ -518,13 +518,13 @@ public class PlayerFrame extends JFrame {
     private final String SOUND_TIP = "声音开启";
     private final String MUTE_TIP = "静音";
     private final String RATE_TIP = "倍速";
-    private final String SWITCH_SPECTRUM_TIP = "频谱开关";
-    private final String SWITCH_BLUR_TIP = "虚化开关";
+    private final String SWITCH_SPECTRUM_TIP = "频谱";
+    private final String SWITCH_BLUR_TIP = "虚化";
     private final String SOUND_EFFECT_TIP = "音效";
     private final String SHEET_TIP = "曲谱";
     private final String MENU_TIP = "主菜单";
     private final String GO_TO_PLAY_QUEUE_TIP = "转到播放队列";
-    private final String DESKTOP_LRC_TIP = "桌面歌词开关";
+    private final String DESKTOP_LRC_TIP = "桌面歌词";
     private final String SWITCH_CHINESE_TIP = "歌词繁简切换";
     private final String SWITCH_JAPANESE_TIP = "日语/罗马音歌词切换";
     private final String SWITCH_LRC_TYPE_TIP = "歌词原文/翻译切换";
@@ -1779,10 +1779,6 @@ public class PlayerFrame extends JFrame {
     private CustomButton programRecommendButton = new CustomButton(programRecommendIcon);
     // 推荐 MV 按钮
     private CustomButton mvRecommendButton = new CustomButton(mvRecommendIcon);
-    //    // 当前推荐歌单/专辑/歌手/电台面板
-//    private CustomPanel currItemRecommendPanel = new CustomPanel();
-//    // 当前推荐歌单/专辑/歌手/电台标签
-//    private CustomLabel currItemRecommendLabel = new CustomLabel("");
     // 推荐数量面板
     private CustomPanel recommendCountPanel = new CustomPanel();
     // 推荐数量标签
@@ -1791,8 +1787,6 @@ public class PlayerFrame extends JFrame {
     private CustomToolBar musicRecommendToolBar = new CustomToolBar();
     // 返回推荐歌单/专辑/歌手/电台按钮
     private CustomButton recommendBackwardButton = new CustomButton(backwardIcon);
-    // 歌单/专辑/歌手/电台音乐加载更多按钮
-//    private CustomButton musicMoreRecommendButton = new CustomButton(MORE_TIP, moreIcon);
     // 推荐歌单标签下拉框
     private CustomComboBox<String> netRecommendTagComboBox = new CustomComboBox();
     // 推荐播放全部按钮
@@ -2251,6 +2245,10 @@ public class PlayerFrame extends JFrame {
     // 当前弹出的对话框
     public List<JDialog> currDialogs = new LinkedList<>();
 
+    // 当前窗口坐标
+    public int x;
+    public int y;
+
     // 更新格言
     void updateMotto() {
         globalExecutor.submit(() -> {
@@ -2302,8 +2300,9 @@ public class PlayerFrame extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
+                if (x == 0x3f3f3f3f && y == 0x3f3f3f3f) setLocationRelativeTo(null);
+                else if (windowState != WindowState.MAXIMIZED) setLocation(x, y);
                 int w = getWidth(), h = getHeight();
-                setLocationRelativeTo(null);
                 // 窗口圆角
                 SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
                         : new RoundRectangle2D.Double(0, 0, w, h, 10, 10)));
@@ -2341,7 +2340,7 @@ public class PlayerFrame extends JFrame {
         topBox.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1) return;
+                if (e.getButton() != MouseEvent.BUTTON1 || windowState == WindowState.MAXIMIZED) return;
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
@@ -2350,15 +2349,15 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseDragged(MouseEvent e) {
                 // mouseDragged 不能正确返回 button 值，需要借助此方法
-                if (!SwingUtilities.isLeftMouseButton(e)) return;
+                if (!SwingUtilities.isLeftMouseButton(e) || windowState == WindowState.MAXIMIZED) return;
                 Point p = getLocation();
-                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
+                setLocation(x = p.x + e.getX() - origin.x, y = p.y + e.getY() - origin.y);
             }
         });
         titleLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1) return;
+                if (e.getButton() != MouseEvent.BUTTON1 || windowState == WindowState.MAXIMIZED) return;
                 origin.x = e.getX();
                 origin.y = e.getY();
             }
@@ -2367,9 +2366,9 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseDragged(MouseEvent e) {
                 // mouseDragged 不能正确返回 button 值，需要借助此方法
-                if (!SwingUtilities.isLeftMouseButton(e)) return;
+                if (!SwingUtilities.isLeftMouseButton(e) || windowState == WindowState.MAXIMIZED) return;
                 Point p = getLocation();
-                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
+                setLocation(x = p.x + e.getX() - origin.x, y = p.y + e.getY() - origin.y);
             }
         });
 
@@ -2800,6 +2799,7 @@ public class PlayerFrame extends JFrame {
         windowSize = config.optInt(ConfigConstants.WINDOW_SIZE, WindowSize.MIDDLE);
         windowWidth = WindowSize.dimensions[windowSize][0];
         windowHeight = WindowSize.dimensions[windowSize][1];
+        x = y = 0x3f3f3f3f;
         setSize(windowWidth, windowHeight);
         // 载入播放视频是否关闭主界面
         videoOnly = config.optBoolean(ConfigConstants.VIDEO_ONLY, true);
@@ -6068,19 +6068,10 @@ public class PlayerFrame extends JFrame {
                 countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
             else countLabel.setText(String.format("共 %s 项", collectionList.getModel().getSize()));
         });
-        // 最大尺寸
-//        Dimension dimension = new Dimension(Integer.MAX_VALUE, 32);
-//        localMusicButton.setMaximumSize(dimension);
-//        historyButton.setMaximumSize(dimension);
-//        collectionButton.setMaximumSize(dimension);
         // 按钮悬浮和点击效果
         localMusicButton.addMouseListener(new ButtonMouseListener(localMusicButton, THIS));
         historyButton.addMouseListener(new ButtonMouseListener(historyButton, THIS));
         collectionButton.addMouseListener(new ButtonMouseListener(collectionButton, THIS));
-        // 提示语
-        localMusicButton.setToolTipText(LOCAL_MUSIC_TIP);
-        historyButton.setToolTipText(HISTORY_TIP);
-        collectionButton.setToolTipText(COLLECTION_TIP);
         // 按钮文字
         localMusicButton.setText(LOCAL_MUSIC_TIP);
         historyButton.setText(HISTORY_TIP);
@@ -17299,16 +17290,6 @@ public class PlayerFrame extends JFrame {
         netRecommendNextPageButton.addMouseListener(new ButtonMouseListener(netRecommendNextPageButton, THIS));
         netRecommendEndPageButton.addMouseListener(new ButtonMouseListener(netRecommendEndPageButton, THIS));
         // 提示语
-        playlistRecommendButton.setToolTipText(RECOMMEND_PLAYLIST_TIP);
-        highQualityPlaylistButton.setToolTipText(HIGH_QUALITY_PLAYLIST_TIP);
-        hotMusicButton.setToolTipText(HOT_MUSIC_TIP);
-        netMusicRecommendButton.setToolTipText(RECOMMEND_NET_MUSIC_TIP);
-        newAlbumRecommendButton.setToolTipText(RECOMMEND_NEW_ALBUM_TIP);
-        artistListRecommendButton.setToolTipText(RECOMMEND_ARTIST_LIST_TIP);
-        newRadioRecommendButton.setToolTipText(RECOMMEND_NEW_RADIO_TIP);
-        hotRadioRecommendButton.setToolTipText(RECOMMEND_HOT_RADIO_TIP);
-        programRecommendButton.setToolTipText(RECOMMEND_PROGRAM_TIP);
-        mvRecommendButton.setToolTipText(RECOMMEND_MV_TIP);
         recommendBackwardButton.setToolTipText(BACKWARD_TIP);
         netRecommendPlayAllButton.setToolTipText(PLAY_ALL_TIP);
         netRecommendRefreshButton.setToolTipText(REFRESH_TIP);
@@ -18934,6 +18915,7 @@ public class PlayerFrame extends JFrame {
         lastButton.addMouseListener(new ButtonMouseListener(lastButton, THIS));
         lastButton.setPreferredSize(new Dimension(lastIcon.getIconWidth(), lastIcon.getIconHeight()));
         lastButton.addActionListener(e -> playLast());
+        playOrPauseButton.setToolTipText(PLAY_TIP);
         playOrPauseButton.setPreferredSize(new Dimension(playIcon.getIconWidth(), playIcon.getIconHeight()));
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, THIS));
         playOrPauseButton.addActionListener(e -> playOrPause());
@@ -21655,14 +21637,14 @@ public class PlayerFrame extends JFrame {
                         if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
                             dialog.setMessage("加载视频文件......");
                             dialog.updateSize();
-                            dialog.setLocationRelativeTo(THIS);
+                            dialog.setLocationRelativeTo(null);
                             Map<String, Object> headers = new HashMap<>();
                             headers.put("referer", "https://www.bilibili.com/");
                             MusicServerUtils.download(null, mvInfo.getUrl(), file.getPath(), headers);
                         }
                         dialog.setMessage("转换视频文件格式......");
                         dialog.updateSize();
-                        dialog.setLocationRelativeTo(THIS);
+                        dialog.setLocationRelativeTo(null);
                         VideoUtils.convert(file, tmpFile);
                         // 转换成功后删除原文件
                         file.delete();
@@ -21979,110 +21961,114 @@ public class PlayerFrame extends JFrame {
 
     // 加载搜索建议
     void updateSearchSuggestion() {
-        try {
-            String part = searchTextField.getText();
-            Set<String> suggestions = MusicServerUtils.getSearchSuggestion(part);
-            if (!suggestions.isEmpty()) {
-                if (!netMusicSearchSuggestionPanel.isShowing()) {
-                    SwingUtilities.updateComponentTreeUI(netMusicRefreshSearchSuggestionButton);
-                    // 显示 “搜索建议” 面板
-                    netMusicKeywordsPanel.add(netMusicSearchSuggestionPanel, 0);
-                }
-            } else {
-                // 没有结果时隐藏 “搜索建议” 面板
-                netMusicKeywordsPanel.remove(netMusicSearchSuggestionPanel);
-            }
-            netMusicSearchSuggestionInnerPanel2.removeAll();
-            DialogButton b = null;
-            for (String keyword : suggestions) {
-                b = new DialogButton(keyword);
-                b.addActionListener(event -> {
-                    searchTextField.requestFocus();
-                    searchTextField.setText(keyword);
-                    netMusicClearInputButton.setVisible(true);
-                    searchButton.doClick();
-                    netLeftBox.remove(netMusicKeywordsPanelScrollPane);
-                    netLeftBox.add(netMusicScrollPane);
-                });
-                b.setForeColor(currUIStyle.getButtonColor());
-                netMusicSearchSuggestionInnerPanel2.add(b);
-            }
-            // 调整面板大小
-            if (b != null) {
-                DialogButton fb = b;
-                b.addComponentListener(new ComponentAdapter() {
-                    @Override
-                    public void componentMoved(ComponentEvent e) {
-                        Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicSearchSuggestionInnerPanel2);
-                        Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + 50);
-                        netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
-                        netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
-                        netMusicSearchSuggestionInnerPanel2.setVisible(false);
-                        netMusicSearchSuggestionInnerPanel2.setVisible(true);
+        synchronized (netMusicSearchSuggestionInnerPanel2) {
+            try {
+                String part = searchTextField.getText();
+                Set<String> suggestions = MusicServerUtils.getSearchSuggestion(part);
+                if (!suggestions.isEmpty()) {
+                    if (!netMusicSearchSuggestionPanel.isShowing()) {
+                        SwingUtilities.updateComponentTreeUI(netMusicRefreshSearchSuggestionButton);
+                        // 显示 “搜索建议” 面板
+                        netMusicKeywordsPanel.add(netMusicSearchSuggestionPanel, 0);
                     }
-                });
+                } else {
+                    // 没有结果时隐藏 “搜索建议” 面板
+                    netMusicKeywordsPanel.remove(netMusicSearchSuggestionPanel);
+                }
+                netMusicSearchSuggestionInnerPanel2.removeAll();
+                DialogButton b = null;
+                for (String keyword : suggestions) {
+                    b = new DialogButton(keyword);
+                    b.addActionListener(event -> {
+                        searchTextField.requestFocus();
+                        searchTextField.setText(keyword);
+                        netMusicClearInputButton.setVisible(true);
+                        searchButton.doClick();
+                        netLeftBox.remove(netMusicKeywordsPanelScrollPane);
+                        netLeftBox.add(netMusicScrollPane);
+                    });
+                    b.setForeColor(currUIStyle.getButtonColor());
+                    netMusicSearchSuggestionInnerPanel2.add(b);
+                }
+                // 调整面板大小
+                if (b != null) {
+                    DialogButton fb = b;
+                    b.addComponentListener(new ComponentAdapter() {
+                        @Override
+                        public void componentMoved(ComponentEvent e) {
+                            Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicSearchSuggestionInnerPanel2);
+                            Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + 50);
+                            netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
+                            netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
+                            netMusicSearchSuggestionInnerPanel2.setVisible(false);
+                            netMusicSearchSuggestionInnerPanel2.setVisible(true);
+                        }
+                    });
+                }
+                netMusicSearchSuggestionPanel.repaint();
+            } catch (IORuntimeException ioRuntimeException) {
+                // 无网络连接
+                new TipDialog(THIS, NO_NET_MSG).showDialog();
+            } catch (HttpException httpException) {
+                // 请求超时
+                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+            } catch (JSONException jsonException) {
+                // 接口异常
+                new TipDialog(THIS, API_ERROR_MSG).showDialog();
             }
-            netMusicSearchSuggestionPanel.repaint();
-        } catch (IORuntimeException ioRuntimeException) {
-            // 无网络连接
-            new TipDialog(THIS, NO_NET_MSG).showDialog();
-        } catch (HttpException httpException) {
-            // 请求超时
-            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-        } catch (JSONException jsonException) {
-            // 接口异常
-            new TipDialog(THIS, API_ERROR_MSG).showDialog();
         }
     }
 
     // 加载热搜词
     void updateHotSearch() {
-        try {
-            Set<String> hotSearch = MusicServerUtils.getHotSearch();
-            // 显示 “热门搜索” 面板
-            if (!hotSearch.isEmpty() && !netMusicHotSearchPanel.isShowing()) {
-                netMusicKeywordsPanel.add(netMusicHotSearchPanel, 0);
+        synchronized (netMusicHotSearchInnerPanel2) {
+            try {
+                Set<String> hotSearch = MusicServerUtils.getHotSearch();
+                // 显示 “热门搜索” 面板
+                if (!hotSearch.isEmpty() && !netMusicHotSearchPanel.isShowing()) {
+                    netMusicKeywordsPanel.add(netMusicHotSearchPanel, 0);
+                }
+                netMusicHotSearchInnerPanel2.removeAll();
+                DialogButton b = null;
+                for (String keyword : hotSearch) {
+                    b = new DialogButton(keyword);
+                    b.addActionListener(event -> {
+                        searchTextField.requestFocus();
+                        searchTextField.setText(keyword);
+                        netMusicClearInputButton.setVisible(true);
+                        searchButton.doClick();
+                        netLeftBox.remove(netMusicKeywordsPanelScrollPane);
+                        netLeftBox.add(netMusicScrollPane);
+                    });
+                    b.setForeColor(currUIStyle.getButtonColor());
+                    netMusicHotSearchInnerPanel2.add(b);
+                }
+                // 调整面板大小
+                if (b != null) {
+                    DialogButton fb = b;
+                    b.addComponentListener(new ComponentAdapter() {
+                        @Override
+                        public void componentMoved(ComponentEvent e) {
+                            Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicHotSearchInnerPanel2);
+                            Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + 50);
+                            netMusicHotSearchInnerPanel2.setMinimumSize(d);
+                            netMusicHotSearchInnerPanel2.setPreferredSize(d);
+                            netMusicHotSearchInnerPanel2.setVisible(false);
+                            netMusicHotSearchInnerPanel2.setVisible(true);
+                        }
+                    });
+                }
+                netLeftBox.repaint();
+            } catch (IORuntimeException ioRuntimeException) {
+                // 无网络连接
+                new TipDialog(THIS, NO_NET_MSG).showDialog();
+            } catch (HttpException httpException) {
+                // 请求超时
+                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+            } catch (JSONException jsonException) {
+                // 接口异常
+                new TipDialog(THIS, API_ERROR_MSG).showDialog();
             }
-            netMusicHotSearchInnerPanel2.removeAll();
-            DialogButton b = null;
-            for (String keyword : hotSearch) {
-                b = new DialogButton(keyword);
-                b.addActionListener(event -> {
-                    searchTextField.requestFocus();
-                    searchTextField.setText(keyword);
-                    netMusicClearInputButton.setVisible(true);
-                    searchButton.doClick();
-                    netLeftBox.remove(netMusicKeywordsPanelScrollPane);
-                    netLeftBox.add(netMusicScrollPane);
-                });
-                b.setForeColor(currUIStyle.getButtonColor());
-                netMusicHotSearchInnerPanel2.add(b);
-            }
-            // 调整面板大小
-            if (b != null) {
-                DialogButton fb = b;
-                b.addComponentListener(new ComponentAdapter() {
-                    @Override
-                    public void componentMoved(ComponentEvent e) {
-                        Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicHotSearchInnerPanel2);
-                        Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + 50);
-                        netMusicHotSearchInnerPanel2.setMinimumSize(d);
-                        netMusicHotSearchInnerPanel2.setPreferredSize(d);
-                        netMusicHotSearchInnerPanel2.setVisible(false);
-                        netMusicHotSearchInnerPanel2.setVisible(true);
-                    }
-                });
-            }
-            netLeftBox.repaint();
-        } catch (IORuntimeException ioRuntimeException) {
-            // 无网络连接
-            new TipDialog(THIS, NO_NET_MSG).showDialog();
-        } catch (HttpException httpException) {
-            // 请求超时
-            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-        } catch (JSONException jsonException) {
-            // 接口异常
-            new TipDialog(THIS, API_ERROR_MSG).showDialog();
         }
     }
 
