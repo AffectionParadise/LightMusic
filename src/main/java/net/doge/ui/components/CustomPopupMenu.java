@@ -30,7 +30,6 @@ public class CustomPopupMenu extends JPopupMenu {
         setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
 
         setOpaque(false);
-        setDefaultLightWeightPopupEnabled(false);
         setLightWeightPopupEnabled(false);
     }
 

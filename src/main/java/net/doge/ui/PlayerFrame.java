@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.*;
@@ -207,6 +208,10 @@ public class PlayerFrame extends JFrame {
 
     // 托盘图标
     private ImageIcon trayIcon = new ImageIcon(SimplePath.ICON_PATH + "tray.png");
+    // 打开主界面图标
+    private ImageIcon openMainFrameIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "openMainFrame.png");
+    // 退出图标
+    private ImageIcon exitIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "exit.png");
     // 主界面标题图标
     private ImageIcon titleIcon = new ImageIcon(SimplePath.ICON_PATH + "title.png");
     // 隐藏歌曲详情图标
@@ -237,6 +242,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon settingsIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "settings.png");
     // 捐赠图标
     private ImageIcon donateIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "donate.png");
+    // 发布页图标
+    private ImageIcon releaseIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "release.png");
     // 指南图标
     private ImageIcon helpIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "help.png");
     // 列表为空提示图标
@@ -745,13 +752,14 @@ public class PlayerFrame extends JFrame {
     // 主菜单
     private CustomButton mainMenuButton = new CustomButton(menuIcon);
     private CustomPopupMenu mainMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem settingMenuItem = new CustomMenuItem("设置      ");
-    private CustomMenuItem closeSong = new CustomMenuItem("关闭当前歌曲      ");
-    private CustomMenuItem clearCache = new CustomMenuItem("清空播放缓存      ");
-    private CustomMenuItem manageStyleMenuItem = new CustomMenuItem("更换主题      ");
-    private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义主题      ");
-    private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠 & 感谢      ");
-    private CustomMenuItem helpMenuItem = new CustomMenuItem("指南      ");
+    private CustomMenuItem settingMenuItem = new CustomMenuItem("设置");
+    private CustomMenuItem closeSong = new CustomMenuItem("关闭当前歌曲");
+    private CustomMenuItem clearCache = new CustomMenuItem("清空播放缓存");
+    private CustomMenuItem manageStyleMenuItem = new CustomMenuItem("更换主题");
+    private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义主题");
+    private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠 & 感谢");
+    private CustomMenuItem releaseMenuItem = new CustomMenuItem("发布页");
+    private CustomMenuItem helpMenuItem = new CustomMenuItem("指南");
 
     // 歌名
     private CustomLabel songNameLabel = new CustomLabel();
@@ -2203,6 +2211,11 @@ public class PlayerFrame extends JFrame {
     // loading 面板
     private LoadingPanel loading = new LoadingPanel(THIS);
 
+    // 托盘
+    private CustomPopupMenu trayPopupMenu = new CustomPopupMenu(THIS);
+    private CustomMenuItem openMainFrameMenuItem = new CustomMenuItem("打开主界面");
+    private CustomMenuItem exitMenuItem = new CustomMenuItem("退出" + TITLE);
+
     // 频谱/歌词/背景图切换/滚动条流畅动画 Timer
     private Timer spectrumTimer;
     private Timer lrcTimer;
@@ -2502,6 +2515,12 @@ public class PlayerFrame extends JFrame {
         // 初始化控制面板
         controlPanelInit();
 
+        // 格言
+        updateMotto();
+
+        // 初始化托盘
+        trayInit();
+
         // 更新 LAF
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.updateComponentTreeUI(THIS);
@@ -2512,12 +2531,6 @@ public class PlayerFrame extends JFrame {
 
         add(globalPanel);
         setVisible(true);
-
-        // 格言
-        updateMotto();
-
-        // 初始化托盘
-        trayInit();
 
         // 加载全局快捷键监听器
         loadHotKeyListener();
@@ -4039,14 +4052,10 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化托盘
-    void trayInit() throws AWTException {
+    private void trayInit() throws AWTException {
         SystemTray systemTray = SystemTray.getSystemTray();
         // 显示图片必须设置
         trayIconImg.setImageAutoSize(true);
-        // 注意托盘菜单必须使用 awt 的
-        PopupMenu trayPopupMenu = new PopupMenu();
-        MenuItem openMainFrameMenuItem = new MenuItem("打开主界面");
-        MenuItem exitMenuItem = new MenuItem("退出");
         openMainFrameMenuItem.addActionListener(e -> {
             if (videoDialog != null || miniDialog != null) return;
             // 从托盘还原窗口
@@ -4058,29 +4067,42 @@ public class PlayerFrame extends JFrame {
             // 移除托盘图标、保存数据并退出
             exit();
         });
-        // 字体
-        openMainFrameMenuItem.setFont(globalFont);
-        exitMenuItem.setFont(globalFont);
-
         trayPopupMenu.add(openMainFrameMenuItem);
         trayPopupMenu.addSeparator();
         trayPopupMenu.add(exitMenuItem);
+        searchButton.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                trayPopupMenu.setVisible(false);
+            }
+        });
         trayIconImg.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (videoDialog != null || miniDialog != null) return;
-                // 从托盘还原窗口
-                setExtendedState(NORMAL);
-                if (showSpectrum) openSpectrum();
-                setVisible(true);
+                int btn = e.getButton();
+                if (btn == MouseEvent.BUTTON1) {
+                    if (videoDialog != null || miniDialog != null) return;
+                    // 从托盘还原窗口
+                    setExtendedState(NORMAL);
+                    if (showSpectrum) openSpectrum();
+                    setVisible(true);
+                }
+                // 右键弹出菜单
+                else if (btn == MouseEvent.BUTTON3) {
+                    if (!e.isPopupTrigger()) return;
+                    int h = trayPopupMenu.getHeight();
+                    trayPopupMenu.setLocation(e.getX(), e.getY() - (h == 0 ? 89 : h));
+                    trayPopupMenu.setInvoker(trayPopupMenu);
+                    trayPopupMenu.setVisible(true);
+                    searchButton.requestFocus();
+                }
             }
         });
-        trayIconImg.setPopupMenu(trayPopupMenu);
         systemTray.add(trayIconImg);
     }
 
     // 初始主化菜单
-    void mainMenuInit() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException {
+    private void mainMenuInit() {
         openFileInit();
         openDirInit();
         closeSongInit();
@@ -4089,6 +4111,17 @@ public class PlayerFrame extends JFrame {
 
         settingMenuItem.addActionListener(e -> new SettingDialog(THIS).showDialog());
         donateMenuItem.addActionListener(e -> new DonateDialog(THIS).showDialog());
+        releaseMenuItem.addActionListener(e -> {
+            Desktop desktop = Desktop.getDesktop();
+            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    URI uri = new URI("https://github.com/AffectionParadise/LightMusic_release");
+                    desktop.browse(uri);
+                } catch (IOException | URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         helpMenuItem.addActionListener(e -> new ConfirmDialog(THIS, HELP_MSG, "确定").showDialog());
 
         mainMenu.add(closeSong);
@@ -4097,6 +4130,7 @@ public class PlayerFrame extends JFrame {
         mainMenu.add(settingMenuItem);
         mainMenu.addSeparator();
         mainMenu.add(donateMenuItem);
+        mainMenu.add(releaseMenuItem);
         mainMenu.add(helpMenuItem);
     }
 
@@ -20279,6 +20313,9 @@ public class PlayerFrame extends JFrame {
         copyMottoMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
         nextMottoMenuItem.setIcon(ImageUtils.dye(nextMottoIcon, menuItemColor));
 
+        openMainFrameMenuItem.setIcon(ImageUtils.dye(openMainFrameIcon, menuItemColor));
+        exitMenuItem.setIcon(ImageUtils.dye(exitIcon, menuItemColor));
+
         manageStyleMenuItem.setIcon(ImageUtils.dye(changeStyleIcon, menuItemColor));
         styleCustomMenuItem.setIcon(ImageUtils.dye(addCustomStyleIcon, menuItemColor));
 
@@ -20287,6 +20324,7 @@ public class PlayerFrame extends JFrame {
         clearCache.setIcon(ImageUtils.dye(clearCacheIcon, menuItemColor));
         settingMenuItem.setIcon(ImageUtils.dye(settingsIcon, menuItemColor));
         donateMenuItem.setIcon(ImageUtils.dye(donateIcon, menuItemColor));
+        releaseMenuItem.setIcon(ImageUtils.dye(releaseIcon, menuItemColor));
         helpMenuItem.setIcon(ImageUtils.dye(helpIcon, menuItemColor));
 
         addFileMenuItem.setIcon(ImageUtils.dye(fileIcon, menuItemColor));
@@ -20504,6 +20542,7 @@ public class PlayerFrame extends JFrame {
 
         // 菜单项文字颜色
         updateMenuItemStyle(mottoPopupMenu, menuItemColor);
+        updateMenuItemStyle(trayPopupMenu, menuItemColor);
         updateMenuItemStyle(stylePopupMenu, menuItemColor);
         updateMenuItemStyle(addPopupMenu, menuItemColor);
         updateMenuItemStyle(sortPopupMenu, menuItemColor);
@@ -22191,7 +22230,7 @@ public class PlayerFrame extends JFrame {
         System.setProperty("swing.aatext", "true");
     }
 
-    static boolean validateHash() {
+    private static boolean validateHash() {
         File f1 = new File(SimplePath.ICON_PATH + "weixin.png");
         File f2 = new File(SimplePath.ICON_PATH + "alipay.png");
         if (!f1.exists() || !"254dd3cda4ac3b7f56505b097029afd6a9f2f450e91ee3a476b0c451391ab891".equals(FileUtils.getHash(f1)))
