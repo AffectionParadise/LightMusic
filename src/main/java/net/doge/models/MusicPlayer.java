@@ -214,7 +214,7 @@ public class MusicPlayer {
         // 加载文件(在线音乐直接播放 url)
         Media media = new Media(source == null ? netMusicInfo.getUrl() : source.toURI().toString());
 
-        if (netMusicInfo.getSource() == NetMusicSource.BI) {
+        if (netMusicInfo != null && netMusicInfo.getSource() == NetMusicSource.BI) {
             try {
                 // 由于 Media 类不能重写，只能通过反射机制设置请求头
                 Field field = Media.class.getDeclaredField("jfxLocator");

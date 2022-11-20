@@ -27,7 +27,7 @@ public class CustomPanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        if(drawBg) {
+        if (drawBg) {
             Graphics2D g2d = (Graphics2D) g;
             // 画背景
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -38,5 +38,14 @@ public class CustomPanel extends JPanel {
         }
 
         super.paintComponent(g);
+    }
+
+    // 返回组件索引，找不到返回 -1
+    public int getComponentIndex(Component comp) {
+        Component[] components = getComponents();
+        for (int i = 0, len = components.length; i < len; i++) {
+            if (components[i] == comp) return i;
+        }
+        return -1;
     }
 }

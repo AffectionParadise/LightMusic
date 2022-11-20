@@ -601,6 +601,8 @@ public class MusicServerUtils {
 
     // 推荐歌单 API
     private static final String RECOMMEND_PLAYLIST_API = prefix + "/personalized?limit=100";
+    // 发现歌单 API
+    private static final String DISCOVER_PLAYLIST_API = "https://music.163.com/discover/playlist/?order=hot&offset=%s&limit=%s";
     // 曲风歌单 API
     private static final String STYLE_PLAYLIST_API = prefix + "/style/playlist?tagId=%s&cursor=%s&size=%s";
     // 推荐歌单 API (每页固定 30 条)(酷狗)
@@ -4301,7 +4303,7 @@ public class MusicServerUtils {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                     String playlistId = playlistJson.getString("id");
-                    String playlistName = playlistJson.getString("name");
+                    String playlistName = StringUtils.removeHTMLLabel(playlistJson.getString("name"));
                     String creator = playlistJson.getString("uname");
                     Long playCount = playlistJson.getLong("listencnt");
                     Integer trackCount = playlistJson.getInt("total");
@@ -7609,6 +7611,49 @@ public class MusicServerUtils {
         String[] s = Tags.recPlaylistTag.get(tag);
 
         // 网易云(程序分页)
+        // 发现歌单
+        Callable<CommonResult<NetPlaylistInfo>> getDiscoverPlaylists = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String playlistInfoBody = HttpRequest.get(String.format(DISCOVER_PLAYLIST_API, (page - 1) * limit, limit))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(playlistInfoBody);
+            Elements playlists = doc.select("ul.m-cvrlst.f-cb li");
+            Elements a = doc.select(".u-page a");
+            t = Integer.parseInt(a.get(a.size() - 2).text()) * limit;
+            for (int i = 0, len = playlists.size(); i < len; i++) {
+                Element playlist = playlists.get(i);
+                Element pa = playlist.select("p.dec a.tit.f-thide.s-fc0").first();
+                Element nb = playlist.select(".bottom span.nb").first();
+                Element fc = playlist.select("a.nm.nm-icn.f-thide.s-fc3").first();
+                Element img = playlist.select(".u-cover.u-cover-1 img").first();
+
+                String playlistId = ReUtil.get("id=(\\d+)", pa.attr("href"), 1);
+                String playlistName = pa.text();
+                String creator = fc.text();
+                String creatorId = ReUtil.get("id=(\\d+)", fc.attr("href"), 1);
+                Long playCount = StringUtils.antiFormatNumber(nb.text());
+                String coverImgThumbUrl = img.attr("src");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(playlistName);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setCreatorId(creatorId);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                playlistInfo.setPlayCount(playCount);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 个人推荐
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylists = () -> {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
@@ -7744,8 +7789,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long pc = playlistJson.optLong("total_play_count");
-                    Long playCount = pc != 0 ? pc : (long) (Double.parseDouble(playlistJson.getString("total_play_count").replace("万", "")) * 10000);
+                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -7783,8 +7827,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long pc = playlistJson.optLong("total_play_count");
-                    Long playCount = pc != 0 ? pc : (long) (Double.parseDouble(playlistJson.getString("total_play_count").replace("万", "")) * 10000);
+                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8075,8 +8118,8 @@ public class MusicServerUtils {
                 String playlistId = ReUtil.get("id=(\\d+)", playlistJson.getString("actionUrl"), 1);
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("subTitle");
-                String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title").replaceFirst("万", "");
-                Long playCount = (long) (Double.parseDouble(fs) * 10000);
+                String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title");
+                Long playCount = StringUtils.antiFormatNumber(fs);
                 String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8347,6 +8390,7 @@ public class MusicServerUtils {
         boolean dt = defaultTag.equals(tag);
 
         if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getDiscoverPlaylists));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylists));
             if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStylePlaylists));
         }
@@ -8558,8 +8602,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long pc = playlistJson.optLong("total_play_count");
-                    Long playCount = pc != 0 ? pc : (long) (Double.parseDouble(playlistJson.getString("total_play_count").replace("万", "")) * 10000);
+                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8597,8 +8640,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long pc = playlistJson.optLong("total_play_count");
-                    Long playCount = pc != 0 ? pc : (long) (Double.parseDouble(playlistJson.getString("total_play_count").replace("万", "")) * 10000);
+                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8636,8 +8678,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long pc = playlistJson.optLong("total_play_count");
-                    Long playCount = pc != 0 ? pc : (long) (Double.parseDouble(playlistJson.getString("total_play_count").replace("万", "")) * 10000);
+                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8970,8 +9011,8 @@ public class MusicServerUtils {
                 String playlistId = ReUtil.get("id=(\\d+)", playlistJson.getString("actionUrl"), 1);
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("subTitle");
-                String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title").replaceFirst("万", "");
-                Long playCount = (long) (Double.parseDouble(fs) * 10000);
+                String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title");
+                Long playCount = StringUtils.antiFormatNumber(fs);
                 String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8991,46 +9032,46 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
         // 推荐歌单(每页固定 10 条)
-        Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsMg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
-            Integer t = 0;
-
-            String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_MG_API, (page - 1) * 10))
-                    .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
-                    .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .execute()
-                    .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-            JSONObject data = playlistInfoJson.getJSONObject("retMsg");
-            t = data.getInt("countSize");
-            JSONArray playlistArray = data.getJSONArray("playlist");
-            for (int i = 0, len = playlistArray.size(); i < len; i++) {
-                JSONObject playlistJson = playlistArray.getJSONObject(i);
-
-                String playlistId = playlistJson.getString("playListId");
-                String playlistName = playlistJson.getString("playListName");
-                String creator = playlistJson.getString("createName");
-                Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getInt("contentCount");
-                String coverImgThumbUrl = playlistJson.getString("image");
-
-                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.MG);
-                playlistInfo.setId(playlistId);
-                playlistInfo.setName(playlistName);
-                playlistInfo.setCreator("null".equals(creator) ? "" : creator);
-                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                playlistInfo.setPlayCount(playCount);
-                playlistInfo.setTrackCount(trackCount);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                    playlistInfo.setCoverImgThumb(coverImgThumb);
-                });
-
-                res.add(playlistInfo);
-            }
-            return new CommonResult<>(res, t);
-        };
+//        Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsMg = () -> {
+//            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_MG_API, (page - 1) * 10))
+//                    .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
+//                    .header(Header.REFERER, "https://m.music.migu.cn/")
+//                    .execute()
+//                    .body();
+//            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+//            JSONObject data = playlistInfoJson.getJSONObject("retMsg");
+//            t = data.getInt("countSize");
+//            JSONArray playlistArray = data.getJSONArray("playlist");
+//            for (int i = 0, len = playlistArray.size(); i < len; i++) {
+//                JSONObject playlistJson = playlistArray.getJSONObject(i);
+//
+//                String playlistId = playlistJson.getString("playListId");
+//                String playlistName = playlistJson.getString("playListName");
+//                String creator = playlistJson.getString("createName");
+//                Long playCount = playlistJson.getLong("playCount");
+//                Integer trackCount = playlistJson.getInt("contentCount");
+//                String coverImgThumbUrl = playlistJson.getString("image");
+//
+//                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+//                playlistInfo.setSource(NetMusicSource.MG);
+//                playlistInfo.setId(playlistId);
+//                playlistInfo.setName(playlistName);
+//                playlistInfo.setCreator("null".equals(creator) ? "" : creator);
+//                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                playlistInfo.setPlayCount(playCount);
+//                playlistInfo.setTrackCount(trackCount);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                    playlistInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//
+//                res.add(playlistInfo);
+//            }
+//            return new CommonResult<>(res, t);
+//        };
         // 分类歌单(每页 10 条)
         Callable<CommonResult<NetPlaylistInfo>> getCatPlaylistsMg = () -> {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
@@ -9050,8 +9091,8 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getJSONObject("logEvent").getString("contentId");
                     String playlistName = playlistJson.getString("title");
                     String creator = playlistJson.getString("subTitle");
-                    String fs = playlistJson.getString("playNum").replaceFirst("万", "");
-                    Long playCount = (long) (Double.parseDouble(fs) * 10000);
+                    String fs = playlistJson.getString("playNum");
+                    Long playCount = StringUtils.antiFormatNumber(fs);
                     String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -9224,7 +9265,7 @@ public class MusicServerUtils {
 
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecHotPlaylistsMg));
-            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
+//            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsMg));
         }
 

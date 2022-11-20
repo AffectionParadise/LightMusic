@@ -3,7 +3,7 @@ package net.doge.ui.components;
 import lombok.Data;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
-import net.doge.ui.listeners.JTextFieldHintListener;
+import net.doge.ui.listeners.TextFieldHintListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +57,7 @@ public class CustomTextField extends JTextField {
     @Override
     public void requestFocus() {
         setFocusable(true);
+        setOccupied(true);
         super.requestFocus();
     }
 
@@ -72,7 +73,7 @@ public class CustomTextField extends JTextField {
     private boolean needRefresh() {
         FocusListener[] fls = getFocusListeners();
         for (FocusListener fl : fls) {
-            if (fl instanceof JTextFieldHintListener) return false;
+            if (fl instanceof TextFieldHintListener) return false;
         }
         return true;
     }

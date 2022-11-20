@@ -244,8 +244,8 @@ public class StringUtils {
      * @return
      */
     public static long antiFormatNumber(String s) {
-        if (s.endsWith("万")) return (long) (Double.parseDouble(s.replace("万", "").trim()) * 10000);
-        else if (s.endsWith("亿")) return (long) (Double.parseDouble(s.replace("亿", "").trim()) * 100000000);
+        if (s.contains("万")) return (long) (Double.parseDouble(s.replace("万", "").trim()) * 10000);
+        else if (s.contains("亿")) return (long) (Double.parseDouble(s.replace("亿", "").trim()) * 100000000);
         return Long.parseLong(s.trim());
     }
 
