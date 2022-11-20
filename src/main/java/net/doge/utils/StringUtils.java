@@ -1,5 +1,6 @@
 package net.doge.utils;
 
+import cn.hutool.core.codec.Base64Decoder;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
@@ -19,9 +20,6 @@ import javax.swing.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -131,6 +129,16 @@ public class StringUtils {
     public static String shorten(String s, int maxLen) {
         if (maxLen <= 3 || s == null || s.length() <= maxLen) return s;
         return s.substring(0, maxLen - 3) + "...";
+    }
+
+    /**
+     * Base 64 解码
+     *
+     * @param s
+     * @return
+     */
+    public static String base64Decode(String s) {
+        return Base64Decoder.decodeStr(s);
     }
 
     /**

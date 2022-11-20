@@ -78,7 +78,7 @@ public class Task {
 
     private Map<String, Object> getHeaders() {
         Map<String, Object> headers = null;
-        if (isMv() && netMvInfo.getSource() == NetMusicSource.BI) {
+        if (isMv() && netMvInfo.getSource() == NetMusicSource.BI || isMusic() && netMusicInfo.getSource() == NetMusicSource.BI) {
             headers = new HashMap<>();
             headers.put("referer", "https://www.bilibili.com/");
         }

@@ -1,6 +1,7 @@
 package net.doge.models;
 
 import com.mpatric.mp3agic.*;
+import com.sun.media.jfxmedia.locator.Locator;
 import it.sauronsoftware.jave.EncoderException;
 import javafx.collections.ObservableList;
 import javafx.scene.media.AudioEqualizer;
@@ -17,6 +18,7 @@ import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 
 /**
@@ -211,6 +213,19 @@ public class MusicPlayer {
     public void initialMp(AudioFile source, NetMusicInfo netMusicInfo) {
         // 加载文件(在线音乐直接播放 url)
         Media media = new Media(source == null ? netMusicInfo.getUrl() : source.toURI().toString());
+
+        if (netMusicInfo.getSource() == NetMusicSource.BI) {
+            try {
+                // 由于 Media 类不能重写，只能通过反射机制设置请求头
+                Field field = Media.class.getDeclaredField("jfxLocator");
+                field.setAccessible(true);
+                Locator locator = (Locator) field.get(media);
+                locator.setConnectionProperty("referer", "http://www.bilibili.com/");
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         if (mp != null) {
             mp.dispose();
             mp = null;

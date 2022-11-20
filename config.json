@@ -37,31 +37,29 @@
 			"djId":"48536908"
 		},
 		{
-			"coverImgUrl":"",
-			"playCount":55990,
+			"playCount":56044,
 			"trackCount":69,
 			"dj":"时间代码",
 			"name":"随身听英语-BBC",
 			"source":0,
 			"id":"791886614",
 			"category":"知识、外语世界",
-			"coverImgThumbUrl":"http://p1.music.126.net/ZFDFxYiA0VBk6RWI48gtzw==/109951163594727703.jpg",
+			"coverImgThumbUrl":"http://p2.music.126.net/ZFDFxYiA0VBk6RWI48gtzw==/109951163594727703.jpg",
 			"djId":"285059948"
 		},
 		{
-			"coverImgUrl":"",
-			"playCount":441760,
+			"playCount":442087,
 			"trackCount":36,
 			"dj":"代码时间",
 			"name":"代码时间",
 			"source":0,
 			"id":"336355127",
 			"category":"知识、行业观察",
-			"coverImgThumbUrl":"http://p1.music.126.net/BBK9kY31geOOdnkaxiwCdw==/3442570909917251.jpg",
+			"coverImgThumbUrl":"http://p2.music.126.net/BBK9kY31geOOdnkaxiwCdw==/3442570909917251.jpg",
 			"djId":"289680033"
 		}
 	],
-	"currUIStyle":2,
+	"currUIStyle":21,
 	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv\\",
 	"videoRate":1,
 	"playlistHistorySearch":[
@@ -500,8 +498,45 @@
 	"spectrumStyle":0,
 	"lyricType":0,
 	"chineseType":0,
-	"blurType":3,
+	"blurType":1,
 	"history":[
+		{
+			"duration":613.04,
+			"albumName":"【温柔男友】南君在你枕边说晚安",
+			"artist":"南君学长_觉醒",
+			"mvId":"",
+			"format":"m4a",
+			"name":"【声恋】超暖心！和青梅竹马多年后的深夜长谈",
+			"albumId":"45863",
+			"artistId":"5864988",
+			"source":7,
+			"id":"6469472",
+			"programId":""
+		},
+		{
+			"duration":362,
+			"albumName":"代码时间",
+			"artist":"真业余西",
+			"format":"m4a",
+			"name":"再见！",
+			"albumId":"4867505",
+			"artistId":"51547393",
+			"source":5,
+			"id":"188230380"
+		},
+		{
+			"duration":232,
+			"albumName":"",
+			"artist":"黄麒Eros",
+			"mvId":"",
+			"format":"m4a",
+			"name":"寄明月",
+			"albumId":"",
+			"artistId":"29709885",
+			"source":11,
+			"id":"281947",
+			"programId":""
+		},
 		{
 			"duration":272.04,
 			"albumName":"",
@@ -634,19 +669,6 @@
 			"artistId":"51547393",
 			"source":5,
 			"id":"49046547",
-			"programId":""
-		},
-		{
-			"duration":362,
-			"albumName":"代码时间",
-			"artist":"真业余西",
-			"mvId":"",
-			"format":"m4a",
-			"name":"再见！",
-			"albumId":"4867505",
-			"artistId":"51547393",
-			"source":5,
-			"id":"188230380",
 			"programId":""
 		},
 		{
@@ -974,19 +996,6 @@
 			"artistId":"19534481",
 			"source":7,
 			"id":"5146242",
-			"programId":""
-		},
-		{
-			"duration":613.04,
-			"albumName":"",
-			"artist":"南君学长_觉醒",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声恋】超暖心！和青梅竹马多年后的深夜长谈",
-			"albumId":"",
-			"artistId":"5864988",
-			"source":7,
-			"id":"6469472",
 			"programId":""
 		},
 		{
@@ -4022,19 +4031,6 @@
 			"source":7,
 			"id":"6419760",
 			"programId":""
-		},
-		{
-			"duration":823,
-			"albumName":"",
-			"artist":"葵影乱",
-			"mvId":"",
-			"format":"m4a",
-			"name":"【声音恋人】你不希望你喜欢别人老公的事情被人知道吧？",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6467703",
-			"programId":""
 		}
 	],
 	"collection":[
@@ -4079,12 +4075,12 @@
 		},
 		{
 			"duration":613.04,
-			"albumName":"",
+			"albumName":"【温柔男友】南君在你枕边说晚安",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
 			"name":"【声恋】超暖心！和青梅竹马多年后的深夜长谈",
-			"albumId":"",
+			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
 			"id":"6469472",
@@ -4652,27 +4648,23 @@
 			"duration":2759,
 			"albumName":"代码时间",
 			"artist":"真业余西",
-			"mvId":"",
 			"format":"mp3",
 			"name":"开源和写作 - justjavac",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"49046547",
-			"programId":""
+			"id":"49046547"
 		},
 		{
 			"duration":362,
 			"albumName":"代码时间",
 			"artist":"真业余西",
-			"mvId":"",
 			"format":"mp3",
 			"name":"再见！",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"188230380",
-			"programId":""
+			"id":"188230380"
 		},
 		{
 			"duration":213,
@@ -5106,7 +5098,7 @@
 	"miniX":1037,
 	"autoDownloadLyric":true,
 	"miniY":-9,
-	"musicPlaying":-1,
+	"musicPlaying":3,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
@@ -5934,12 +5926,12 @@
 		},
 		{
 			"duration":613.04,
-			"albumName":"",
+			"albumName":"【温柔男友】南君在你枕边说晚安",
 			"artist":"南君学长_觉醒",
 			"mvId":"",
 			"format":"m4a",
 			"name":"【声恋】超暖心！和青梅竹马多年后的深夜长谈",
-			"albumId":"",
+			"albumId":"45863",
 			"artistId":"5864988",
 			"source":7,
 			"id":"6469472",
@@ -6507,27 +6499,23 @@
 			"duration":2759,
 			"albumName":"代码时间",
 			"artist":"真业余西",
-			"mvId":"",
 			"format":"mp3",
 			"name":"开源和写作 - justjavac",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"49046547",
-			"programId":""
+			"id":"49046547"
 		},
 		{
 			"duration":362,
 			"albumName":"代码时间",
 			"artist":"真业余西",
-			"mvId":"",
 			"format":"mp3",
 			"name":"再见！",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"188230380",
-			"programId":""
+			"id":"188230380"
 		},
 		{
 			"duration":213,

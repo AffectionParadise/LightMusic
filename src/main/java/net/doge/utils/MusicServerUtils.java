@@ -85,15 +85,14 @@ public class MusicServerUtils {
     private static final String BI_COOKIE = "buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7";
 
     // 域名
-//    private static final String prefix = "http://musicapi.leanapp.cn";
-//    private static final String prefix = "https://netease-cloud-music-api-phi-hazel.vercel.app";
-    private static final String prefix = "http://localhost:3000";
-    //    private static final String prefixQQ32 = "http://localhost:3200";
-    private static final String prefixQQ33 = "http://localhost:3300";
+    private static final String host = "47.108.230.98";
+
+    private static final String prefix = String.format("http://%s:3000", host);
+    private static final String prefixQQ33 = String.format("http://%s:3300", host);
     private static final String qqSearchApi = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     private static final String qqSearchJson = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
     //    private static final String prefixKw = "http://localhost:7002";
-    private static final String prefixMg = "http://localhost:3400";
+    private static final String prefixMg = String.format("http://%s:3400", host);
 
     // 构造酷我音乐请求
     private static HttpRequest kwRequest(String url) {
@@ -438,6 +437,9 @@ public class MusicServerUtils {
     // 获取视频评论 API (哔哩哔哩)
     private static final String GET_VIDEO_COMMENTS_BI_API
             = "http://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
+    // 获取音频评论 API (哔哩哔哩)
+    private static final String GET_SONG_COMMENTS_BI_API
+            = "http://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
 
     // 获取曲谱 API
     private static final String GET_SHEETS_API
@@ -624,7 +626,10 @@ public class MusicServerUtils {
     private static final String RECOMMEND_PLAYLIST_KW_API = "https://kuwo.cn/api/www/rcm/index/playlist?loginUid=0&httpsStatus=1";
     // 推荐歌单(最新) API (酷我)
     private static final String NEW_PLAYLIST_KW_API
-            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?loginUid=0&loginSid=0&appUid=76039576&pn=%s&rn=%s&order=new";
+            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=new";
+    // 推荐歌单 API(最新) (咪咕)
+    private static final String REC_NEW_PLAYLIST_MG_API
+            = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=2";
     // 最新歌单 API (咪咕)
     private static final String NEW_PLAYLIST_MG_API
             = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127272&startIndex=%s";
@@ -637,6 +642,9 @@ public class MusicServerUtils {
     // 分类歌单(最新) API (猫耳)
     private static final String NEW_PLAYLIST_ME_API
             = "https://www.missevan.com/explore/tagalbum?order=1&tid=%s&p=%s&pagesize=%s";
+    // 推荐歌单 API (哔哩哔哩)
+    private static final String NEW_PLAYLIST_BI_API
+            = "https://www.bilibili.com/audio/music-service-c/web/menu/hit?pn=%s&ps=%s";
 
     // 精品歌单标签 API
     private static final String HIGH_QUALITY_PLAYLIST_TAG_API
@@ -657,8 +665,7 @@ public class MusicServerUtils {
             = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagList?cmd=rcm_keyword_playlist&user=0" +
             "&prod=kwplayer_pc_9.0.5.0&vipver=9.0.5.0&source=kwplayer_pc_9.0.5.0&loginUid=0&loginSid=0&appUid=76039576";
     // 歌单标签 API (咪咕)
-    private static final String PLAYLIST_TAG_MG_API
-            = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-taglist/release";
+    private static final String PLAYLIST_TAG_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-taglist/release";
     // 歌单标签 API (千千)
     private static final String PLAYLIST_TAG_QI_API
             = "https://music.91q.com/v1/tracklist/category?appid=16073360&timestamp=%s";
@@ -906,21 +913,27 @@ public class MusicServerUtils {
     // 分类歌单 API (QQ)
     private static final String CAT_PLAYLIST_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
+    // 热门歌单 API (酷我)
+    private static final String HOT_PLAYLIST_KW_API
+            = "https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot&httpsStatus=1";
     // 默认歌单(热门) API (酷我)
     private static final String DEFAULT_PLAYLIST_KW_API
-            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?loginUid=0&loginSid=0&appUid=76039576&&pn=%s&rn=%s&order=hot";
+            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot";
     // 分类歌单 API (酷我)
     private static final String CAT_PLAYLIST_KW_API
             = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagPlayList?loginUid=0&loginSid=0&appUid=76039576&id=%s&pn=%s&rn=%s";
     // 分类歌单 API 2 (酷我)
     private static final String CAT_PLAYLIST_KW_API_2
             = "http://mobileinterfaces.kuwo.cn/er.s?type=get_pc_qz_data&f=web&id=%s&prod=pc";
+    // 推荐歌单 API(最热) (咪咕)
+    private static final String REC_HOT_PLAYLIST_MG_API
+            = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=1";
     // 推荐歌单(最热) API (咪咕)
     private static final String RECOMMEND_PLAYLIST_MG_API
             = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&startIndex=%s";
     // 分类歌单 API (咪咕)
     private static final String CAT_PLAYLIST_MG_API
-            = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&tagId=%s&startIndex=%s";
+            = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?tagId=%s&pageNumber=%s&templateVersion=1";
     // 分类歌单 API (千千)
     private static final String CAT_PLAYLIST_QI_API
             = "https://music.91q.com/v1/tracklist/list?appid=16073360&pageNo=%s&pageSize=%s&subCateId=%s&timestamp=%s";
@@ -1027,6 +1040,7 @@ public class MusicServerUtils {
      * @return
      */
     public static void initNewSongTag() {
+        // 网易云 网易云 酷狗 QQ
         Tags.newSongTag.put("默认", new String[]{"0", "", "1", "0"});
 
         Tags.newSongTag.put("华语", new String[]{"7", "", "1", "0"});
@@ -1130,6 +1144,7 @@ public class MusicServerUtils {
      * @return
      */
     public static void initNewAlbumTag() {
+        // 网易云 网易云 网易云 QQ 豆瓣 堆糖
         Tags.newAlbumTag.put("默认", new String[]{"ALL", "", "", "1", "", ""});
 
         Tags.newAlbumTag.put("华语", new String[]{"ZH", "Z_H", "", "", "", ""});
@@ -1610,6 +1625,7 @@ public class MusicServerUtils {
      * @return
      */
     public static void initArtistTag() {
+        // 网易云 网易云 网易云 酷狗 QQ 酷我 酷我 千千 猫耳
         Tags.artistTag.put("默认", new String[]{"1", "", "", "0 0", "-100 -100 -100 -100", "11", "0 ", "  ", " "});
 
         Tags.artistTag.put("男", new String[]{"", "1 -1 -1", "", "1 0", "0 -100 -100 -100", "", "", "  男", ""});
@@ -1842,6 +1858,7 @@ public class MusicServerUtils {
      * @return
      */
     public static void initRadioTag() {
+        // 网易云 网易云 喜马拉雅 喜马拉雅 喜马拉雅 猫耳 豆瓣 豆瓣
         Tags.radioTag.put("默认", new String[]{"", "", "", "", "", "0 0 0", "", " "});
 
         // 喜马拉雅频道
@@ -2130,6 +2147,7 @@ public class MusicServerUtils {
      * @return
      */
     public static void initProgramTag() {
+        // 猫耳 猫耳
         Tags.programTag.put("默认", new String[]{"", ""});
 
         final int c = 2;
@@ -2242,6 +2260,7 @@ public class MusicServerUtils {
      * @return
      */
     public static void initMvTag() {
+        // 网易云 网易云 酷狗 QQ QQ QQ 好看 哔哩哔哩
         Tags.mvTag.put("默认", new String[]{"全部", "全部", "0", "15", "7", "0", "", ""});
 
         Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "0", "", ""});
@@ -2561,28 +2580,37 @@ public class MusicServerUtils {
     private static final String SINGLE_SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
     // 歌曲专辑信息 API (猫耳)
     private static final String SONG_ALBUM_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdramabysound?sound_id=%s";
+    // 歌曲信息 API (哔哩哔哩)
+    private static final String SINGLE_SONG_DETAIL_BI_API = "http://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
+
     // 歌曲 URL 获取 API
     private static final String GET_SONG_URL_API_NEW = prefix + "/song/url/v1?id=%s&level=hires";
     private static final String GET_SONG_URL_API = prefix + "/song/url?id=%s";
     // 歌曲 URL 获取 API (QQ)
-    private static final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
+//    private static final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
     // 歌曲 URL 获取 API (酷我)
 //    private static final String GET_SONG_URL_KW_API = prefixKw + "/kuwo/url?mid=%s";
-    private static final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&httpsStatus=1";
+//    private static final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&httpsStatus=1";
+    private static final String GET_SONG_URL_KW_API = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=%s";
     // 歌曲 URL 获取 API (千千)
     private static final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
     private static final String GET_SONG_URL_XM_API = "https://www.ximalaya.com/revision/play/v1/audio?id=%s&ptype=1";
+    // 歌曲 URL 获取 API (哔哩哔哩)
+    private static final String GET_SONG_URL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/url?sid=%s";
 
     // 歌词 API
     private static final String LYRIC_API = prefix + "/lyric?id=%s";
-    // 歌词 API 获取 (QQ)
-    private static final String LYRIC_QQ_API = prefixQQ33 + "/lyric?songmid=%s";
-    // 歌词 API 获取 (酷我)
+    // 歌词 API (QQ)
+//    private static final String LYRIC_QQ_API = prefixQQ33 + "/lyric?songmid=%s";
+    private static final String LYRIC_QQ_API = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=%s&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8¬ice=0&platform=yqq&needNewCode=0";
+    // 歌词 API (酷我)
 //    private static final String LYRIC_KW_API = prefixKw + "/kuwo/lrc?musicId=%s";
     private static final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
-    // 弹幕 API 获取 (猫耳)
+    // 弹幕 API (猫耳)
     private static final String DM_ME_API = "https://www.missevan.com/sound/getdm?soundid=%s";
+    // 歌词 API (哔哩哔哩)
+    private static final String LYRIC_BI_API = "http://www.bilibili.com/audio/music-service-c/web/song/lyric?sid=%s";
 
     // 歌单信息 API
     private static final String PLAYLIST_DETAIL_API = prefix + "/playlist/detail?id=%s";
@@ -2598,14 +2626,18 @@ public class MusicServerUtils {
 //    private static final String PLAYLIST_DETAIL_KW_API = prefixKw + "/kuwo/musicList?pid=%s";
     private static final String PLAYLIST_DETAIL_KW_API = "http://www.kuwo.cn/api/www/playlist/playListInfo?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌单信息 API (咪咕)
-    private static final String PLAYLIST_DETAIL_MG_API = prefixMg + "/playlist?id=%s";
+//    private static final String PLAYLIST_DETAIL_MG_API = prefixMg + "/playlist?id=%s";
+    private static final String PLAYLIST_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2021&resourceId=%s";
     // 歌单歌曲 API (咪咕)
-    private static final String PLAYLIST_SONGS_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/user/queryMusicListSongs.do?" +
-            "musicListId=%s&pageNo=%s&pageSize=%s";
+    private static final String PLAYLIST_SONGS_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/user/queryMusicListSongs.do?musicListId=%s&pageNo=%s&pageSize=%s";
     // 歌单信息 API (千千)
     private static final String PLAYLIST_DETAIL_QI_API = "https://music.91q.com/v1/tracklist/info?appid=16073360&id=%s&pageNo=%s&pageSize=%s&timestamp=%s";
     // 歌单信息 API (猫耳)
     private static final String PLAYLIST_DETAIL_ME_API = "https://www.missevan.com/sound/soundAllList?albumid=%s";
+    // 歌单信息 API (哔哩哔哩)
+    private static final String PLAYLIST_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=%s";
+    // 歌单歌曲 API (哔哩哔哩)
+    private static final String PLAYLIST_SONGS_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/of-menu?sid=%s&pn=%s&ps=%s";
 
     // 专辑信息 API
     private static final String ALBUM_DETAIL_API = prefix + "/album?id=%s";
@@ -3202,7 +3234,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取歌曲
      */
-    public static CommonResult<NetMusicInfo> searchMusic(int type, String subType, String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int limit, int page) throws IOException {
         AtomicReference<Integer> total = new AtomicReference<>(0);
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -3716,24 +3748,36 @@ public class MusicServerUtils {
 
         switch (type) {
             case 1:
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyric));
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyricKg));
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyricQq));
+                if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyric));
+                if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyricKg));
+                if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyricQq));
                 break;
             case 2:
                 if (dt) {
-                    taskList.add(GlobalExecutors.requestExecutor.submit(searchVoice));
-                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicXm));
+                    if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+                        taskList.add(GlobalExecutors.requestExecutor.submit(searchVoice));
+                    if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
+                        taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicXm));
                 }
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchProgramMe));
+                if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchProgramMe));
                 break;
             default:
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusic));
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicKg));
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicQq));
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicKw));
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicMg));
-                taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicQi));
+                if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusic));
+                if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicKg));
+                if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicQq));
+                if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicKw));
+                if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicMg));
+                if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicQi));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
@@ -3995,29 +4039,33 @@ public class MusicServerUtils {
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_XM_API, songId))
-                    .execute()
-                    .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-            JSONObject trackInfo = data.getJSONObject("trackInfo");
-            JSONObject albumInfo = data.getJSONObject("albumInfo");
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_XM_API, songId))
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                JSONObject trackInfo = data.getJSONObject("trackInfo");
+                JSONObject albumInfo = data.getJSONObject("albumInfo");
 
-            if (!musicInfo.hasArtistId()) musicInfo.setArtistId(trackInfo.getString("anchorUid"));
-            if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(albumInfo.getString("title"));
-            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumInfo.getString("albumId"));
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(trackInfo.getDouble("duration"));
-            if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
-                    BufferedImage albumImage = getImageFromUrl("https:" + trackInfo.getString("coverPath"));
-                    ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
-                    musicInfo.callback();
-                });
-            }
-            if (!musicInfo.hasUrl()) {
-                String url = fetchMusicUrl(songId, NetMusicSource.XM);
-                musicInfo.setUrl(url);
-                if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-            }
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(trackInfo.getString("anchorUid"));
+                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(albumInfo.getString("title"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumInfo.getString("albumId"));
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(trackInfo.getDouble("duration"));
+                if (!musicInfo.hasAlbumImage()) {
+                    GlobalExecutors.imageExecutor.submit(() -> {
+                        BufferedImage albumImage = getImageFromUrl("https:" + trackInfo.getString("coverPath"));
+                        ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                        musicInfo.callback();
+                    });
+                }
+            }));
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                if (!musicInfo.hasUrl()) {
+                    String url = fetchMusicUrl(songId, NetMusicSource.XM);
+                    if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+                    musicInfo.setUrl(url);
+                }
+            }));
             musicInfo.setLrc("");
         }
 
@@ -4062,6 +4110,38 @@ public class MusicServerUtils {
             }));
         }
 
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_BI_API, songId))
+                        .setFollowRedirects(true)
+                        .cookie(BI_COOKIE)
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                // 时长是毫秒，转为秒
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("uname"));
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(data.getString("uid"));
+                if (!musicInfo.hasAlbumImage()) {
+                    GlobalExecutors.imageExecutor.submit(() -> {
+                        BufferedImage albumImage = getImageFromUrl(data.getString("cover"));
+                        ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                        musicInfo.callback();
+                    });
+                }
+            }));
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                String url = fetchMusicUrl(songId, NetMusicSource.BI);
+                if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+                musicInfo.setUrl(url);
+            }));
+            // 填充歌词、翻译、罗马音
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
+            }));
+        }
+
         // 阻塞等待所有请求完成
         taskList.forEach(task -> {
             try {
@@ -4077,7 +4157,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取歌单
      */
-    public static CommonResult<NetPlaylistInfo> searchPlaylists(String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int limit, int page) throws IOException {
         AtomicInteger total = new AtomicInteger();
         List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
 
@@ -4288,11 +4368,16 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylists));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsMg));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylists));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsKg));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsQq));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsKw));
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsMg));
 
         List<List<NetPlaylistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -4314,7 +4399,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取专辑
      */
-    public static CommonResult<NetAlbumInfo> searchAlbums(String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int limit, int page) throws IOException {
         AtomicInteger total = new AtomicInteger();
         List<NetAlbumInfo> albumInfos = new LinkedList<>();
 
@@ -4694,15 +4779,24 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetAlbumInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbums));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsMg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsQi));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDb));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDt));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDt2));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbums));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsKg));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsQq));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsKw));
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsMg));
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsQi));
+        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDb));
+        if (src == NetMusicSource.DT || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDt));
+        if (src == NetMusicSource.DT || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDt2));
 
         List<List<NetAlbumInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -4724,7 +4818,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取歌手
      */
-    public static CommonResult<NetArtistInfo> searchArtists(String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int limit, int page) throws IOException {
         AtomicInteger total = new AtomicInteger();
         List<NetArtistInfo> artistInfos = new LinkedList<>();
 
@@ -4995,13 +5089,20 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetArtistInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchArtists));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsMg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsQi));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchCVsMe));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsDb));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtists));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsQq));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsKw));
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsMg));
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsQi));
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchCVsMe));
+        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsDb));
 
         List<List<NetArtistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -5023,7 +5124,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取电台
      */
-    public static CommonResult<NetRadioInfo> searchRadios(String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int limit, int page) throws IOException {
         AtomicInteger total = new AtomicInteger();
         List<NetRadioInfo> radioInfos = new LinkedList<>();
 
@@ -5291,12 +5392,18 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchRadios));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosXm));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosMe));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosDb));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchBookRadiosDb));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchGameRadiosDb));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchRadios));
+        if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosXm));
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosMe));
+        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosDb));
+        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchBookRadiosDb));
+        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchGameRadiosDb));
 
         List<List<NetRadioInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -5318,7 +5425,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取 MV
      */
-    public static CommonResult<NetMvInfo> searchMvs(String keyword, int limit, int page) {
+    public static CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMvInfo> mvInfos = new LinkedList<>();
 //        Set<NetMvInfo> set = Collections.synchronizedSet(new HashSet<>());
@@ -5643,13 +5750,20 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchMvs));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchVideos));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsHk));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsBi));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchMvs));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchVideos));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsKg));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsQq));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsKw));
+        if (src == NetMusicSource.HK || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsHk));
+        if (src == NetMusicSource.BI || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsBi));
 
         List<List<NetMvInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -5671,7 +5785,7 @@ public class MusicServerUtils {
     /**
      * 获取所有榜单
      */
-    public static CommonResult<NetRankingInfo> getRankings() {
+    public static CommonResult<NetRankingInfo> getRankings(int src) {
         AtomicInteger total = new AtomicInteger();
         List<NetRankingInfo> rankingInfos = new LinkedList<>();
 
@@ -6053,16 +6167,25 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetRankingInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankings));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq2));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw2));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankings));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKg));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq2));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw2));
 //        taskList.add(GlobalExecutors.requestExecutor.submit(getRecRankingsKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsMg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQi));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsMe));
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsMg));
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQi));
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsMe));
 
         List<List<NetRankingInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -6084,7 +6207,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取用户
      */
-    public static CommonResult<NetUserInfo> searchUsers(String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetUserInfo> searchUsers(int src, String keyword, int limit, int page) throws IOException {
         AtomicInteger total = new AtomicInteger();
         List<NetUserInfo> userInfos = new LinkedList<>();
 
@@ -6347,8 +6470,8 @@ public class MusicServerUtils {
                     String userId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
                     String userName = a.text().trim();
                     String gender = "保密";
-                    String src = img.attr("src");
-                    String avatarThumbUrl = src.contains("/user") ? src.replaceFirst("normal", "large") : src.replaceFirst("/up", "/ul");
+                    String sr = img.attr("src");
+                    String avatarThumbUrl = sr.contains("/user") ? sr.replaceFirst("normal", "large") : sr.replaceFirst("/up", "/ul");
                     String avatarUrl = avatarThumbUrl;
                     Integer followed = Integer.parseInt(ReUtil.get("(\\d+)人关注", info.text(), 1));
 
@@ -6467,14 +6590,22 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetUserInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsers));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersXm));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersMe));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersHk));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDb));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDt));
-        taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersBi));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsers));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersQq));
+        if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersXm));
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersMe));
+        if (src == NetMusicSource.HK || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersHk));
+        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDb));
+        if (src == NetMusicSource.DT || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersDt));
+        if (src == NetMusicSource.BI || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersBi));
 
         List<List<NetUserInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -7153,12 +7284,15 @@ public class MusicServerUtils {
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, limit))
+            String url = info instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, limit)
+                    : String.format(GET_SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, limit);
+            String commentInfoBody = HttpRequest.get(url)
                     .cookie(BI_COOKIE)
                     .execute()
                     .body()
                     // 貌似解析不了，触及到什么特殊字符了？
-                    .replace("2233娘_", "");
+                    .replace("2233娘_", "")
+                    .replace("[2020]", "");
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             total = data.getJSONObject("page").getInt("count");
@@ -7467,7 +7601,7 @@ public class MusicServerUtils {
     /**
      * 获取推荐歌单
      */
-    public static CommonResult<NetPlaylistInfo> getRecommendPlaylists(String tag, int limit, int page) {
+    public static CommonResult<NetPlaylistInfo> getRecommendPlaylists(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
 
@@ -7923,6 +8057,44 @@ public class MusicServerUtils {
         };
 
         // 咪咕(接口分页)
+        // 推荐歌单(最新)
+        Callable<CommonResult<NetPlaylistInfo>> getRecNewPlaylistsMg = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String playlistInfoBody = HttpRequest.get(String.format(REC_NEW_PLAYLIST_MG_API, page, limit))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject data = playlistInfoJson.getJSONObject("data").getJSONArray("contentItemList").getJSONObject(0);
+            t = 1000;
+            JSONArray playlistArray = data.getJSONArray("itemList");
+            for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+                String playlistId = ReUtil.get("id=(\\d+)", playlistJson.getString("actionUrl"), 1);
+                String playlistName = playlistJson.getString("title");
+                String creator = playlistJson.getString("subTitle");
+                String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title").replaceFirst("万", "");
+                Long playCount = (long) (Double.parseDouble(fs) * 10000);
+                String coverImgThumbUrl = playlistJson.getString("imageUrl");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.MG);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(playlistName);
+                playlistInfo.setCreator("null".equals(creator) ? "" : creator);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                playlistInfo.setPlayCount(playCount);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
         // 推荐歌单(每页固定 10 条)
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsMg = () -> {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
@@ -8126,31 +8298,94 @@ public class MusicServerUtils {
             return new CommonResult<>(res, t);
         };
 
+        // 哔哩哔哩
+        // 推荐歌单
+        Callable<CommonResult<NetPlaylistInfo>> getRecPlaylistsBi = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_BI_API, page, limit))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject data = playlistInfoJson.getJSONObject("data");
+            t = data.getInt("totalSize");
+            JSONArray playlistArray = data.getJSONArray("data");
+            for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                JSONObject playlistJson = playlistArray.getJSONObject(i);
+                JSONObject statistic = playlistJson.getJSONObject("statistic");
+
+                String playlistId = statistic.getString("sid");
+                String playlistName = playlistJson.getString("title");
+                String creator = playlistJson.getString("uname");
+                String creatorId = playlistJson.getString("uid");
+                Integer trackCount = playlistJson.getInt("snum");
+                Long playCount = statistic.getLong("play");
+                String coverImgThumbUrl = playlistJson.getString("cover");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.BI);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(playlistName);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setCreatorId(creatorId);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setPlayCount(playCount);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
 
         boolean dt = defaultTag.equals(tag);
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylists));
-        if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStylePlaylists));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylists));
+            if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStylePlaylists));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendTagPlaylistsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getNewTagPlaylistsKg));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendTagPlaylistsKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewTagPlaylistsKg));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsQqDaily));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsQqDaily));
 //        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsQq));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsQq));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKw));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsKw));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKw));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsKw));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsMg));
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecNewPlaylistsMg));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsMg));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsQi));
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsQi));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsMe));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsMe));
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsMe));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsMe));
+        }
+
+        if (src == NetMusicSource.BI || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsBi));
+        }
 
         List<List<NetPlaylistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -8172,7 +8407,7 @@ public class MusicServerUtils {
     /**
      * 获取精品歌单 + 网友精选碟，分页
      */
-    public static CommonResult<NetPlaylistInfo> getHighQualityPlaylists(String tag, int limit, int page) {
+    public static CommonResult<NetPlaylistInfo> getHighQualityPlaylists(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
 
@@ -8557,6 +8792,48 @@ public class MusicServerUtils {
         };
 
         // 酷我
+        // 热门歌单
+        Callable<CommonResult<NetPlaylistInfo>> getHotPlaylistsKw = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            HttpResponse resp = HttpRequest.get(String.format(HOT_PLAYLIST_KW_API, page, limit))
+                    .setFollowRedirects(true)
+                    .execute();
+            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                String playlistInfoBody = resp.body();
+                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject data = playlistInfoJson.getJSONObject("data");
+                t = data.getInt("total");
+                JSONArray playlistArray = data.getJSONArray("data");
+                for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+                    String playlistId = playlistJson.getString("id");
+                    String playlistName = playlistJson.getString("name");
+                    String creator = playlistJson.getString("uname");
+                    Long playCount = playlistJson.getLong("listencnt");
+                    Integer trackCount = playlistJson.getInt("total");
+                    String coverImgThumbUrl = playlistJson.getString("img");
+
+                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                    playlistInfo.setSource(NetMusicSource.KW);
+                    playlistInfo.setId(playlistId);
+                    playlistInfo.setName(playlistName);
+                    playlistInfo.setCreator(creator);
+                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    playlistInfo.setPlayCount(playCount);
+                    playlistInfo.setTrackCount(trackCount);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        playlistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(playlistInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
         // 默认歌单(热门)(接口分页)
         Callable<CommonResult<NetPlaylistInfo>> getDefaultPlaylistsKw = () -> {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
@@ -8675,6 +8952,44 @@ public class MusicServerUtils {
         };
 
         // 咪咕
+        // 推荐歌单(最热)
+        Callable<CommonResult<NetPlaylistInfo>> getRecHotPlaylistsMg = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String playlistInfoBody = HttpRequest.get(String.format(REC_HOT_PLAYLIST_MG_API, page, limit))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject data = playlistInfoJson.getJSONObject("data").getJSONArray("contentItemList").getJSONObject(0);
+            t = 1000;
+            JSONArray playlistArray = data.getJSONArray("itemList");
+            for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+                String playlistId = ReUtil.get("id=(\\d+)", playlistJson.getString("actionUrl"), 1);
+                String playlistName = playlistJson.getString("title");
+                String creator = playlistJson.getString("subTitle");
+                String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title").replaceFirst("万", "");
+                Long playCount = (long) (Double.parseDouble(fs) * 10000);
+                String coverImgThumbUrl = playlistJson.getString("imageUrl");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.MG);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(playlistName);
+                playlistInfo.setCreator("null".equals(creator) ? "" : creator);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                playlistInfo.setPlayCount(playCount);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
         // 推荐歌单(每页固定 10 条)
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsMg = () -> {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
@@ -8722,24 +9037,22 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[5])) {
-                String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, s[5], (page - 1) * 10))
-                        .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
-                        .header(Header.REFERER, "https://m.music.migu.cn/")
+                String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, s[5], page))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-                JSONObject data = playlistInfoJson.getJSONObject("retMsg");
-                t = data.getInt("countSize");
-                JSONArray playlistArray = data.getJSONArray("playlist");
+                JSONObject data = playlistInfoJson.getJSONObject("data").getJSONObject("contentItemList");
+                t = 300;
+                JSONArray playlistArray = data.getJSONArray("itemList");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                    String playlistId = playlistJson.getString("playListId");
-                    String playlistName = playlistJson.getString("playListName");
-                    String creator = playlistJson.getString("createName");
-                    Long playCount = playlistJson.getLong("playCount");
-                    Integer trackCount = playlistJson.getInt("contentCount");
-                    String coverImgThumbUrl = playlistJson.getString("image");
+                    String playlistId = playlistJson.getJSONObject("logEvent").getString("contentId");
+                    String playlistName = playlistJson.getString("title");
+                    String creator = playlistJson.getString("subTitle");
+                    String fs = playlistJson.getString("playNum").replaceFirst("万", "");
+                    Long playCount = (long) (Double.parseDouble(fs) * 10000);
+                    String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                     playlistInfo.setSource(NetMusicSource.MG);
@@ -8748,7 +9061,6 @@ public class MusicServerUtils {
                     playlistInfo.setCreator("null".equals(creator) ? "" : creator);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
-                    playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
@@ -8886,27 +9198,44 @@ public class MusicServerUtils {
 
         boolean dt = defaultTag.equals(tag);
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHighQualityPlaylists));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHotPickedPlaylists));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getNewPickedPlaylists));
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getTagPlaylistsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHotCollectedTagPlaylistsKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getUpTagPlaylistsKg));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotPlaylistsKg));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHighQualityPlaylists));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotPickedPlaylists));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewPickedPlaylists));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsQq));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getTagPlaylistsKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotCollectedTagPlaylistsKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getUpTagPlaylistsKg));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotPlaylistsKg));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getDefaultPlaylistsKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsKw));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsQq));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsMg));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotPlaylistsKw));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getDefaultPlaylistsKw));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsKw));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsQi));
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecHotPlaylistsMg));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsMg));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsMe));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getExpPlaylistsMe));
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsQi));
+        }
+
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsMe));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getExpPlaylistsMe));
+        }
 
         List<List<NetPlaylistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -8928,7 +9257,7 @@ public class MusicServerUtils {
     /**
      * 获取歌手排行
      */
-    public static CommonResult<NetArtistInfo> getArtistLists(String tag, int limit, int page) {
+    public static CommonResult<NetArtistInfo> getArtistLists(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetArtistInfo> artistInfos = new LinkedList<>();
 //        Set<NetArtistInfo> set = Collections.synchronizedSet(new HashSet<>());
@@ -9375,39 +9704,37 @@ public class MusicServerUtils {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[7])) {
-                HttpResponse resp = HttpRequest.get(buildQianUrl(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis())))
-                        .execute();
-                String artistInfoBody = resp.body();
-                JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
-                JSONObject data = artistInfoJson.getJSONArray("data").getJSONObject(6);
-                t = data.getInt("module_nums");
-                JSONArray artistArray = data.getJSONArray("result");
-                for (int i = (page - 1) * limit, len = Math.min(artistArray.size(), page * limit); i < len; i++) {
-                    JSONObject artistJson = artistArray.getJSONObject(i);
+            HttpResponse resp = HttpRequest.get(buildQianUrl(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis())))
+                    .execute();
+            String artistInfoBody = resp.body();
+            JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
+            JSONObject data = artistInfoJson.getJSONArray("data").getJSONObject(6);
+            t = data.getInt("module_nums");
+            JSONArray artistArray = data.getJSONArray("result");
+            for (int i = (page - 1) * limit, len = Math.min(artistArray.size(), page * limit); i < len; i++) {
+                JSONObject artistJson = artistArray.getJSONObject(i);
 
-                    String artistId = artistJson.getString("artistCode");
-                    String artistName = artistJson.getString("name");
-                    String coverImgUrl = artistJson.getString("pic");
-                    Integer songNum = artistJson.getInt("trackTotal");
-                    Integer albumNum = artistJson.getInt("albumTotal");
-                    String coverImgThumbUrl = coverImgUrl;
+                String artistId = artistJson.getString("artistCode");
+                String artistName = artistJson.getString("name");
+                String coverImgUrl = artistJson.getString("pic");
+                Integer songNum = artistJson.getInt("trackTotal");
+                Integer albumNum = artistJson.getInt("albumTotal");
+                String coverImgThumbUrl = coverImgUrl;
 
-                    NetArtistInfo artistInfo = new NetArtistInfo();
-                    artistInfo.setSource(NetMusicSource.QI);
-                    artistInfo.setId(artistId);
-                    artistInfo.setName(artistName);
-                    artistInfo.setSongNum(songNum);
-                    artistInfo.setAlbumNum(albumNum);
-                    artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
-                        if (coverImgThumb == null) coverImgThumb = extractProfile(coverImgThumbUrl);
-                        artistInfo.setCoverImgThumb(coverImgThumb);
-                    });
+                NetArtistInfo artistInfo = new NetArtistInfo();
+                artistInfo.setSource(NetMusicSource.QI);
+                artistInfo.setId(artistId);
+                artistInfo.setName(artistName);
+                artistInfo.setSongNum(songNum);
+                artistInfo.setAlbumNum(albumNum);
+                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                    if (coverImgThumb == null) coverImgThumb = extractProfile(coverImgThumbUrl);
+                    artistInfo.setCoverImgThumb(coverImgThumb);
+                });
 
-                    res.add(artistInfo);
-                }
+                res.add(artistInfo);
             }
             return new CommonResult<>(res, t);
         };
@@ -9531,27 +9858,41 @@ public class MusicServerUtils {
 
         boolean dt = defaultTag.equals(tag);
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRanking));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtist));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtist));
-        if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleArtist));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRanking));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtist));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtist));
+            if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleArtist));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtistKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getUpArtistKg));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtistKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getUpArtistKg));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingQq));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingQq));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingKw));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getAllArtistsKw));
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingKw));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getAllArtistsKw));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingMg));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingMg2));
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingMg));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingMg2));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecArtistsQi));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtistsQi));
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecArtistsQi));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtistsQi));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatCVsMe));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatOrganizationsMe));
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatCVsMe));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatOrganizationsMe));
+        }
 
         List<List<NetArtistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -9573,7 +9914,7 @@ public class MusicServerUtils {
     /**
      * 获取新晋电台
      */
-    public static CommonResult<NetRadioInfo> getNewRadios(int limit, int page) {
+    public static CommonResult<NetRadioInfo> getNewRadios(int src, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetRadioInfo> radioInfos = new LinkedList<>();
 
@@ -9948,16 +10289,22 @@ public class MusicServerUtils {
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getNewRadios));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getPersonalizedRadios));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendRadios));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getPayRadios));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getPayGiftRadios));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewRadios));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getPersonalizedRadios));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendRadios));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getPayRadios));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getPayGiftRadios));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendRadiosQq));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendRadiosQq));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecRadiosMe));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getSummerRadiosMe));
+        if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecRadiosMe));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getSummerRadiosMe));
+        }
 
         List<List<NetRadioInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -9979,7 +10326,7 @@ public class MusicServerUtils {
     /**
      * 获取个性电台 + 今日优选 + 热门电台 + 热门电台榜
      */
-    public static CommonResult<NetRadioInfo> getHotRadios(String tag, int limit, int page) {
+    public static CommonResult<NetRadioInfo> getHotRadios(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetRadioInfo> radioInfos = new LinkedList<>();
 
@@ -10679,30 +11026,44 @@ public class MusicServerUtils {
         boolean dt = defaultTag.equals(tag);
 
         if (dt) {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getDailyRadios));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getHotRadios));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getRadiosRanking));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getRecRadios));
+            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getDailyRadios));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getHotRadios));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getRadiosRanking));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getRecRadios));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getWeekRadiosMe));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getMonthRadiosMe));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getAllTimeRadiosMe));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosMe));
+            if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getWeekRadiosMe));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getMonthRadiosMe));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getAllTimeRadiosMe));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosMe));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getTopRadiosDb));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatGameRadiosDb));
+            if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getTopRadiosDb));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatGameRadiosDb));
+            }
         } else {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatHotRadios));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatRecRadios));
+            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatHotRadios));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatRecRadios));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosXm));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getChannelRadiosXm));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadioRankingXm));
+            if (src == NetMusicSource.XM || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosXm));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getChannelRadiosXm));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadioRankingXm));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosMe));
+            if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosMe));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosDb));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatGameRadiosDb));
+            if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatRadiosDb));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatGameRadiosDb));
+            }
         }
 
         List<List<NetRadioInfo>> rl = new LinkedList<>();
@@ -10725,7 +11086,7 @@ public class MusicServerUtils {
     /**
      * 获取推荐节目
      */
-    public static CommonResult<NetMusicInfo> getRecommendPrograms(String tag, int limit, int page) {
+    public static CommonResult<NetMusicInfo> getRecommendPrograms(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -11056,17 +11417,23 @@ public class MusicServerUtils {
         boolean dt = tag.equals(defaultTag);
 
         if (dt) {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPrograms));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getPersonalizedPrograms));
-            taskList.add(GlobalExecutors.requestExecutor.submit(get24HoursPrograms));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getProgramsRanking));
+            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPrograms));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getPersonalizedPrograms));
+                taskList.add(GlobalExecutors.requestExecutor.submit(get24HoursPrograms));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getProgramsRanking));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getRecProgramsMe));
+            if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getRecProgramsMe));
+            }
         } else {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getExpProgramsMe));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getIndexCatProgramsMe));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getIndexCatNewProgramsMe));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getIndexCatProgramsRankingMe));
+            if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getExpProgramsMe));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getIndexCatProgramsMe));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getIndexCatNewProgramsMe));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getIndexCatProgramsRankingMe));
+            }
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
@@ -11089,7 +11456,7 @@ public class MusicServerUtils {
     /**
      * 获取飙升歌曲
      */
-    public static CommonResult<NetMusicInfo> getHotMusicRecommend(String tag, int limit, int page) {
+    public static CommonResult<NetMusicInfo> getHotMusicRecommend(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -11434,21 +11801,32 @@ public class MusicServerUtils {
         boolean dt = defaultTag.equals(tag);
 
         if (dt) {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusic));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusic));
+            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusic));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusic));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKg));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getTop500Kg));
+            if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKg));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getTop500Kg));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getPopularMusicQq));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicQq));
+            if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getPopularMusicQq));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicQq));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKw));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicKw));
+            if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKw));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicKw));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicMg));
+            if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicMg));
+            }
         } else {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getStyleHotSong));
+            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+                taskList.add(GlobalExecutors.requestExecutor.submit(getStyleHotSong));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
@@ -11471,7 +11849,7 @@ public class MusicServerUtils {
     /**
      * 获取推荐歌曲 + 新歌速递
      */
-    public static CommonResult<NetMusicInfo> getNewMusic(String tag, int limit, int page) {
+    public static CommonResult<NetMusicInfo> getNewMusic(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -11799,14 +12177,31 @@ public class MusicServerUtils {
 
         boolean dt = defaultTag.equals(tag);
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSong));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getFastNewSong));
-        if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleNewSong));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongQq));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKw));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongMg));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongQi));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSong));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getFastNewSong));
+            if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleNewSong));
+        }
+
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKg));
+        }
+
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongQq));
+        }
+
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKw));
+        }
+
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongMg));
+        }
+
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongQi));
+        }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -11828,7 +12223,7 @@ public class MusicServerUtils {
     /**
      * 获取新碟上架
      */
-    public static CommonResult<NetAlbumInfo> getNewAlbums(String tag, int limit, int page) {
+    public static CommonResult<NetAlbumInfo> getNewAlbums(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetAlbumInfo> albumInfos = new LinkedList<>();
 
@@ -12547,34 +12942,54 @@ public class MusicServerUtils {
         boolean dt = defaultTag.equals(tag);
 
         if (dt) {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbums));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewestAlbums));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewestDiAlbums));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getAllNewAlbums));
+            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbums));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewestAlbums));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewestDiAlbums));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getAllNewAlbums));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQq));
+            if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQq));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsMg));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsRankingMg));
+            if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsMg));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsRankingMg));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getIndexNewAlbumsQi));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQi));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getXDAlbumsQi));
+            if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getIndexNewAlbumsQi));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQi));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getXDAlbumsQi));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getRecAlbumsDt));
+            if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getRecAlbumsDt));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getTopAlbumsDb));
+            if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getTopAlbumsDb));
+            }
         } else {
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbums));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getAllNewAlbums));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getLangDiAlbums));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getStyleAlbums));
+            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbums));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getAllNewAlbums));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getLangDiAlbums));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getStyleAlbums));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQq));
+            if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQq));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatAlbumsDt));
+            if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatAlbumsDt));
+            }
 
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCatAlbumsDb));
+            if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCatAlbumsDb));
+            }
         }
 //        taskList.add(GlobalExecutors.requestExecutor.submit(getHotAlbums));
 
@@ -12598,7 +13013,7 @@ public class MusicServerUtils {
     /**
      * 获取 MV 排行 + 最新 MV + 推荐 MV
      */
-    public static CommonResult<NetMvInfo> getRecommendMvs(String tag, int limit, int page) {
+    public static CommonResult<NetMvInfo> getRecommendMvs(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMvInfo> mvInfos = new LinkedList<>();
 
@@ -13265,26 +13680,38 @@ public class MusicServerUtils {
 
         boolean dt = defaultTag.equals(tag);
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMv));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getMvRanking));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getNewMv));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getAllMv));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getExclusiveMv));
+        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMv));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getMvRanking));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewMv));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getAllMv));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getExclusiveMv));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvKg));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvKg));
+        }
 
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getNewMvQq));
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQq));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewMvQq));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQi));
+        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQi));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getGuessVideoHk));
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getTopVideoHk));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendVideoHk));
+        if (src == NetMusicSource.HK || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getGuessVideoHk));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getTopVideoHk));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendVideoHk));
+        }
 
-        if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotVideoBi));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatRankVideoBi));
-        taskList.add(GlobalExecutors.requestExecutor.submit(getCatNewVideoBi));
+        if (src == NetMusicSource.BI || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotVideoBi));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatRankVideoBi));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getCatNewVideoBi));
+        }
 
         List<List<NetMvInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -13405,10 +13832,10 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-            JSONObject data = playlistInfoJson.getJSONObject("data");
+            JSONObject data = playlistInfoJson.getJSONArray("resource").getJSONObject(0);
 
-            String coverImgUrl = data.getString("picUrl");
-            String description = data.getString("desc");
+            String coverImgUrl = data.getJSONObject("imgItem").getString("img");
+            String description = data.getString("summary");
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(parseTags(data, NetMusicSource.MG));
@@ -13446,6 +13873,21 @@ public class MusicServerUtils {
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(parseTags(info, NetMusicSource.ME));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(album.getInt("music_count"));
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_BI_API, id))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject data = playlistInfoJson.getJSONObject("data");
+
+            String coverImgUrl = data.getString("cover");
+            String description = data.getString("intro");
+            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
+            playlistInfo.setDescription(description);
+            playlistInfo.setTag("");
         }
     }
 
@@ -15169,6 +15611,36 @@ public class MusicServerUtils {
                 netMusicInfo.setSource(NetMusicSource.ME);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
+                netMusicInfo.setDuration(duration);
+
+                netMusicInfos.add(netMusicInfo);
+            }
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_BI_API, playlistId, page, limit))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject data = playlistInfoJson.getJSONObject("data");
+            total.set(data.getInt("totalSize"));
+            JSONArray songArray = data.getJSONArray("data");
+            for (int i = 0, len = songArray.size(); i < len; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
+
+                String songId = songJson.getString("id");
+                String name = songJson.getString("title");
+                String artist = songJson.getString("uname");
+                String artistId = songJson.getString("uid");
+                Double duration = songJson.getDouble("duration");
+
+                NetMusicInfo netMusicInfo = new NetMusicInfo();
+                netMusicInfo.setSource(NetMusicSource.BI);
+                netMusicInfo.setId(songId);
+                netMusicInfo.setName(name);
+                netMusicInfo.setArtist(artist);
+                netMusicInfo.setArtistId(artistId);
                 netMusicInfo.setDuration(duration);
 
                 netMusicInfos.add(netMusicInfo);
@@ -18342,30 +18814,32 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
-            JSONArray artistArray = artistInfoJson.getJSONArray("artists");
-            t = artistArray.size();
-            for (int i = 0, len = artistArray.size(); i < len; i++) {
-                JSONObject artistJson = artistArray.getJSONObject(i);
+            JSONArray artistArray = artistInfoJson.optJSONArray("artists");
+            if (artistArray != null) {
+                t = artistArray.size();
+                for (int i = 0, len = artistArray.size(); i < len; i++) {
+                    JSONObject artistJson = artistArray.getJSONObject(i);
 
-                String artistId = artistJson.getString("id");
-                String artistName = artistJson.getString("name");
-                Integer songNum = artistJson.getInt("musicSize");
-                Integer albumNum = artistJson.getInt("albumSize");
+                    String artistId = artistJson.getString("id");
+                    String artistName = artistJson.getString("name");
+                    Integer songNum = artistJson.getInt("musicSize");
+                    Integer albumNum = artistJson.getInt("albumSize");
 //                Integer mvNum = artistJson.optInt("mvSize");
-                String coverImgThumbUrl = artistJson.getString("img1v1Url");
+                    String coverImgThumbUrl = artistJson.getString("img1v1Url");
 
-                NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setId(artistId);
-                artistInfo.setName(artistName);
-                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                artistInfo.setSongNum(songNum);
-                artistInfo.setAlbumNum(albumNum);
+                    NetArtistInfo artistInfo = new NetArtistInfo();
+                    artistInfo.setId(artistId);
+                    artistInfo.setName(artistName);
+                    artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    artistInfo.setSongNum(songNum);
+                    artistInfo.setAlbumNum(albumNum);
 //                artistInfo.setMvNum(mvNum);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
-                    artistInfo.setCoverImgThumb(coverImgThumb);
-                });
-                res.add(artistInfo);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        artistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+                    res.add(artistInfo);
+                }
             }
         }
 
@@ -19800,7 +20274,7 @@ public class MusicServerUtils {
             }
             return sb.toString();
         } else if (source == NetMusicSource.MG) {
-            tagArray = json.getJSONArray("tagLists");
+            tagArray = json.getJSONArray("tags");
             StringBuffer sb = new StringBuffer();
             for (int i = 0, len = tagArray.size(); i < len; i++) {
                 JSONObject tagJson = tagArray.getJSONObject(i);
@@ -19888,21 +20362,27 @@ public class MusicServerUtils {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_QQ_API, songId))
+            String playUrlBody = HttpRequest.get(qqSearchApi + "?format=json&data=" +
+                            StringUtils.encode(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
+                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
+                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
+                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", songId, songId, songId)))
                     .execute()
                     .body();
             JSONObject urlJson = JSONObject.fromObject(playUrlBody);
-            String url = urlJson.optString("data");
-            if (!"null".equals(url)) return url;
+            JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
+            String sip = data.getJSONArray("sip").getString(0);
+            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
+            return url.isEmpty() ? "" : sip + url;
         }
 
-        // 酷我
+        // 酷我(解锁付费音乐)
         else if (source == NetMusicSource.KW) {
-            String playUrlBody = kwRequest(String.format(GET_SONG_URL_KW_API, songId))
+            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
+                    .header(Header.REFERER, "https://www.kuwo.cn/")
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
-            return urlJson.getJSONObject("data").getString("url");
+            return urlBody;
         }
 
         // 千千
@@ -19922,7 +20402,19 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject urlJson = JSONObject.fromObject(playUrlBody);
-            return urlJson.getJSONObject("data").getString("src");
+            String url = urlJson.getJSONObject("data").getString("src");
+            return url;
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_BI_API, songId))
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
+            String url = urlJson.getJSONObject("data").getJSONArray("cdns").getString(0);
+            return url;
         }
 
         return "";
@@ -20122,11 +20614,14 @@ public class MusicServerUtils {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String lrcBody = HttpRequest.get(String.format(LYRIC_QQ_API, id))
+                    .header(Header.REFERER, "https://y.qq.com/portal/player.html")
                     .execute()
                     .body();
-            JSONObject lrcJson = JSONObject.fromObject(lrcBody).getJSONObject("data");
-            netMusicInfo.setLrc(StringUtils.removeHTMLLabel(lrcJson.getString("lyric")));
-            netMusicInfo.setTrans(StringUtils.removeHTMLLabel(lrcJson.getString("trans")));
+            JSONObject lrcJson = JSONObject.fromObject(lrcBody);
+            String lyric = lrcJson.optString("lyric");
+            String trans = lrcJson.optString("trans");
+            netMusicInfo.setLrc(StringUtils.removeHTMLLabel(StringUtils.base64Decode(lyric)));
+            netMusicInfo.setTrans(StringUtils.removeHTMLLabel(StringUtils.base64Decode(trans)));
         }
 
         // 酷我
@@ -20223,6 +20718,19 @@ public class MusicServerUtils {
                 sb.append("\n");
             }
             netMusicInfo.setLrc(sb.toString());
+            netMusicInfo.setTrans("");
+            netMusicInfo.setRoma("");
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String playUrlBody = HttpRequest.get(String.format(LYRIC_BI_API, id))
+                    .setFollowRedirects(true)
+                    .cookie(BI_COOKIE)
+                    .execute()
+                    .body();
+            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
+            netMusicInfo.setLrc(urlJson.getString("data"));
             netMusicInfo.setTrans("");
             netMusicInfo.setRoma("");
         } else {

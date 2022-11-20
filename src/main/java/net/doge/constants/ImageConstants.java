@@ -13,5 +13,5 @@ public class ImageConstants {
     // MV 封面图标
     public static final int mvCoverWidth = 116;
     // MV 封面最大高度
-    public static final int mvCoverMaxHeight = 150;
+    public static final int mvCoverMaxHeight = 120;
 }
