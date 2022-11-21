@@ -66,7 +66,7 @@ import java.util.concurrent.*;
 
 public class PlayerFrame extends JFrame {
     private final PlayerFrame THIS = this;
-    private final String TITLE = "轻音";
+    public final String TITLE = "轻音";
     // 窗口宽高
     public int windowWidth;
     public int windowHeight;
@@ -184,7 +184,7 @@ public class PlayerFrame extends JFrame {
     private final String ALBUM_ARTIST_MENU_ITEM_TEXT = "查看歌手/作者";
     private final String SIMILAR_ALBUM_MENU_ITEM_TEXT = "查看相似专辑";
     private final String ALBUM_PHOTOS_MENU_ITEM_TEXT = "查看专辑照片";
-    private final String SHEET_MENU_ITEM_TEXT = "查看曲谱";
+    private final String SHEET_MENU_ITEM_TEXT = "查看乐谱";
     private final String SEARCH_SONG_MENU_ITEM_TEXT = "搜索这首歌曲";
     private final String SIMILAR_SONG_MENU_ITEM_TEXT = "查看相似歌曲";
     private final String RELATED_PLAYLIST_MENU_ITEM_TEXT = "查看相关歌单";
@@ -246,6 +246,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon releaseIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "release.png");
     // 指南图标
     private ImageIcon helpIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "help.png");
+    // 关于图标
+    private ImageIcon aboutIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "about.png");
     // 列表为空提示图标
     private ImageIcon emptyHintIcon = new ImageIcon(SimplePath.ICON_PATH + "emptyHint.png");
     // 选定点图标(单选时)
@@ -304,7 +306,7 @@ public class PlayerFrame extends JFrame {
     private ImageIcon blurOffIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOff.png");
     // 音效图标
     private ImageIcon soundEffectIcon = new ImageIcon(SimplePath.ICON_PATH + "soundEffect.png");
-    // 曲谱图标
+    // 乐谱图标
     private ImageIcon sheetIcon = new ImageIcon(SimplePath.ICON_PATH + "sheet.png");
     // 转到播放队列图标
     private ImageIcon goToPlayQueueIcon = new ImageIcon(SimplePath.ICON_PATH + "goToPlayQueue.png");
@@ -447,7 +449,7 @@ public class PlayerFrame extends JFrame {
     private ImageIcon downloadMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "download.png");
     // 查看评论菜单项图标
     private ImageIcon commentMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "comment.png");
-    // 查看曲谱菜单项图标
+    // 查看乐谱菜单项图标
     private ImageIcon sheetMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "sheet.png");
     // 搜索这首歌曲菜单项图标
     private ImageIcon searchSongItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "searchSong.png");
@@ -473,7 +475,7 @@ public class PlayerFrame extends JFrame {
     private ImageIcon userFollowedMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "followed.png");
     // 复制名称菜单项图标
     private ImageIcon copyNameMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "copy.png");
-    // 查看曲谱菜单项图标
+    // 查看乐谱菜单项图标
     private ImageIcon browseSheetMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "browseSheet.png");
     // 删除菜单项图标
     private ImageIcon removeMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "remove.png");
@@ -528,7 +530,7 @@ public class PlayerFrame extends JFrame {
     private final String SWITCH_SPECTRUM_TIP = "频谱";
     private final String SWITCH_BLUR_TIP = "虚化";
     private final String SOUND_EFFECT_TIP = "音效";
-    private final String SHEET_TIP = "曲谱";
+    private final String SHEET_TIP = "乐谱";
     private final String MENU_TIP = "主菜单";
     private final String GO_TO_PLAY_QUEUE_TIP = "转到播放队列";
     private final String DESKTOP_LRC_TIP = "桌面歌词";
@@ -760,6 +762,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠 & 感谢");
     private CustomMenuItem releaseMenuItem = new CustomMenuItem("发布页");
     private CustomMenuItem helpMenuItem = new CustomMenuItem("指南");
+    private CustomMenuItem aboutMenuItem = new CustomMenuItem("关于");
 
     // 歌名
     private CustomLabel songNameLabel = new CustomLabel();
@@ -1051,7 +1054,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem downloadMenuItem = new CustomMenuItem(DOWNLOAD_MENU_ITEM_TEXT);
     // 右键菜单：查看评论
     private CustomMenuItem commentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
-    // 右键菜单：查看曲谱
+    // 右键菜单：查看乐谱
     private CustomMenuItem sheetMenuItem = new CustomMenuItem(SHEET_MENU_ITEM_TEXT);
     // 右键菜单：搜索这首歌曲
     private CustomMenuItem searchSongMenuItem = new CustomMenuItem(SEARCH_SONG_MENU_ITEM_TEXT);
@@ -1151,7 +1154,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem netMusicDownloadMenuItem = new CustomMenuItem(DOWNLOAD_MENU_ITEM_TEXT);
     // 在线音乐右键菜单：查看评论
     private CustomMenuItem netMusicCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
-    // 在线音乐右键菜单：查看曲谱
+    // 在线音乐右键菜单：查看乐谱
     private CustomMenuItem netMusicSheetMenuItem = new CustomMenuItem(SHEET_MENU_ITEM_TEXT);
     // 在线音乐右键菜单：搜索这首歌曲
     private CustomMenuItem netMusicSearchSongMenuItem = new CustomMenuItem(SEARCH_SONG_MENU_ITEM_TEXT);
@@ -1889,7 +1892,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem playQueueDownloadMenuItem = new CustomMenuItem(DOWNLOAD_MENU_ITEM_TEXT);
     // 播放队列右键菜单：查看评论
     private CustomMenuItem playQueueCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
-    // 播放队列右键菜单：查看曲谱
+    // 播放队列右键菜单：查看乐谱
     private CustomMenuItem playQueueSheetMenuItem = new CustomMenuItem(SHEET_MENU_ITEM_TEXT);
     // 播放队列右键菜单：搜索这首歌曲
     private CustomMenuItem playQueueSearchSongMenuItem = new CustomMenuItem(SEARCH_SONG_MENU_ITEM_TEXT);
@@ -2096,45 +2099,45 @@ public class PlayerFrame extends JFrame {
     // 当前显示评论的对象信息
     private Object currCommentObjectInfo;
 
-    // 曲谱盒子
+    // 乐谱盒子
     private Box netSheetBox = new Box(BoxLayout.Y_AXIS);
-    // 曲谱列表
+    // 乐谱列表
     private CustomList<NetSheetInfo> netSheetList = new CustomList<>();
     private CustomScrollPane netSheetScrollPane = new CustomScrollPane(netSheetList);
     private DefaultListModel<NetSheetInfo> netSheetListModel = new DefaultListModel<>();
-    // 曲谱右键弹出菜单
+    // 乐谱右键弹出菜单
     private CustomPopupMenu netSheetPopupMenu = new CustomPopupMenu(THIS);
-    // 曲谱右键菜单：查看曲谱
-    private CustomMenuItem netSheetBrowseMenuItem = new CustomMenuItem("查看曲谱");
-    // 曲谱右键菜单：复制名称
+    // 乐谱右键菜单：查看乐谱
+    private CustomMenuItem netSheetBrowseMenuItem = new CustomMenuItem("查看乐谱");
+    // 乐谱右键菜单：复制名称
     private CustomMenuItem netSheetCopyNameMenuItem = new CustomMenuItem("复制名称");
-    // 曲谱工具栏
+    // 乐谱工具栏
     private CustomToolBar netSheetToolBar = new CustomToolBar();
-    // 曲谱返回按钮
+    // 乐谱返回按钮
     private CustomButton netSheetBackwardButton = new CustomButton(backwardIcon);
-    // 曲谱标题标签
+    // 乐谱标题标签
     private CustomLabel netSheetTitleLabel = new CustomLabel("");
-    //    // 曲谱类型下拉框
+    //    // 乐谱类型下拉框
 //    private CustomComboBox<String> netSheetTypeComboBox = new CustomComboBox();
-    // 曲谱刷新按钮
+    // 乐谱刷新按钮
     private CustomButton netSheetRefreshButton = new CustomButton(refreshIcon);
-    // 曲谱页数框
+    // 乐谱页数框
     private CustomTextField netSheetPageTextField = new CustomTextField(3);
-    // 曲谱跳页按钮
+    // 乐谱跳页按钮
     private CustomButton netSheetGoButton = new CustomButton(goIcon);
-    // 曲谱第一页按钮
+    // 乐谱第一页按钮
     private CustomButton netSheetStartPageButton = new CustomButton(startPageIcon);
-    // 曲谱上一页按钮
+    // 乐谱上一页按钮
     private CustomButton netSheetLastPageButton = new CustomButton(lastPageIcon);
-    // 曲谱下一页按钮
+    // 乐谱下一页按钮
     private CustomButton netSheetNextPageButton = new CustomButton(nextPageIcon);
-    // 曲谱最后一页按钮
+    // 乐谱最后一页按钮
     private CustomButton netSheetEndPageButton = new CustomButton(endPageIcon);
-    // 曲谱数量面板
+    // 乐谱数量面板
     private CustomPanel netSheetCountPanel = new CustomPanel();
-    // 曲谱数量标签
+    // 乐谱数量标签
     private CustomLabel netSheetCountLabel = new CustomLabel("");
-    // 当前显示曲谱的歌曲信息
+    // 当前显示乐谱的歌曲信息
     private NetMusicInfo currSheetMusicInfo;
 
     // 收藏打开事件
@@ -2496,10 +2499,10 @@ public class PlayerFrame extends JFrame {
         // 初始化评论列表
         netCommentListInit();
 
-        // 初始化曲谱工具条
+        // 初始化乐谱工具条
         netSheetToolBarInit();
 
-        // 初始化曲谱列表
+        // 初始化乐谱列表
         netSheetListInit();
 
         // 初始化推荐工具条
@@ -4132,7 +4135,7 @@ public class PlayerFrame extends JFrame {
             Desktop desktop = Desktop.getDesktop();
             if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
                 try {
-                    URI uri = new URI("https://github.com/AffectionParadise/LightMusic_release");
+                    URI uri = new URI(SoftInfo.WEBSITE);
                     desktop.browse(uri);
                 } catch (IOException | URISyntaxException ex) {
                     throw new RuntimeException(ex);
@@ -4140,6 +4143,7 @@ public class PlayerFrame extends JFrame {
             }
         });
         helpMenuItem.addActionListener(e -> new ConfirmDialog(THIS, HELP_MSG, "确定").showDialog());
+        aboutMenuItem.addActionListener(e -> new AboutDialog(THIS).showDialog());
 
         mainMenu.add(closeSong);
         mainMenu.add(clearCache);
@@ -4149,6 +4153,7 @@ public class PlayerFrame extends JFrame {
         mainMenu.add(donateMenuItem);
         mainMenu.add(releaseMenuItem);
         mainMenu.add(helpMenuItem);
+        mainMenu.add(aboutMenuItem);
     }
 
     // 打开文件
@@ -6896,7 +6901,7 @@ public class PlayerFrame extends JFrame {
                 getComments(o, true);
             }
         });
-        // 右键菜单查看曲谱
+        // 右键菜单查看乐谱
         sheetMenuItem.addActionListener(e -> {
             Object o = musicList.getSelectedValue();
             if (o instanceof NetMusicInfo) {
@@ -7425,7 +7430,7 @@ public class PlayerFrame extends JFrame {
         netMusicCommentMenuItem.addActionListener(e -> {
             getComments(netMusicList.getSelectedValue(), true);
         });
-        // 查看曲谱
+        // 查看乐谱
         netMusicSheetMenuItem.addActionListener(e -> {
             getSheets(netMusicList.getSelectedValue(), true);
         });
@@ -15319,15 +15324,20 @@ public class PlayerFrame extends JFrame {
         netUserLeftBox.add(netUserScrollPane);
     }
 
+    // 评论 cursor 用于请求下一页数据
+    private String commentCursor;
+
     // 获取评论
     void getComments(Object info, boolean first) {
         loadingAndRun(() -> {
             try {
                 // 获取评论并显示评论列表
                 CommonResult<NetCommentInfo> result = MusicServerUtils.getComments(
-                        currCommentObjectInfo = info, (String) netCommentTypeComboBox.getSelectedItem(), commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage);
+                        currCommentObjectInfo = info, (String) netCommentTypeComboBox.getSelectedItem(),
+                        commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage, first ? commentCursor = "" : commentCursor);
                 List<NetCommentInfo> netCommentInfos = result.data;
                 Integer total = result.total;
+                commentCursor = result.cursor;
                 netCommentMaxPage = Math.max(total % commentLimit == 0 ? total / commentLimit : total / commentLimit + 1, 1);
                 // 更新标题和数量显示
                 String s = null;
@@ -15365,7 +15375,7 @@ public class PlayerFrame extends JFrame {
                     javax.swing.plaf.ComboBoxUI ui = netCommentTypeComboBox.getUI();
                     SwingUtilities.updateComponentTreeUI(netCommentCountPanel);
                     netCommentTypeComboBox.setUI(ui);
-                    // 删除 Tab 面板、歌词面板、曲谱面板，加入评论面板
+                    // 删除 Tab 面板、歌词面板、乐谱面板，加入评论面板
                     globalPanel.remove(infoAndLrcBox);
                     globalPanel.remove(tabbedPane);
                     globalPanel.remove(netSheetBox);
@@ -15389,16 +15399,16 @@ public class PlayerFrame extends JFrame {
         });
     }
 
-    // 获取曲谱
+    // 获取乐谱
     void getSheets(NetMusicInfo info, boolean first) {
         loadingAndRun(() -> {
             try {
-                // 获取曲谱并显示曲谱列表
+                // 获取乐谱并显示乐谱列表
                 CommonResult<NetSheetInfo> result = MusicServerUtils.getSheets(currSheetMusicInfo = info);
                 List<NetSheetInfo> netSheetInfos = result.data;
                 netSheetCurrPage = netSheetMaxPage = 1;
                 // 更新标题和数量显示
-                netSheetTitleLabel.setText(info.toSimpleString() + " 的曲谱");
+                netSheetTitleLabel.setText(info.toSimpleString() + " 的乐谱");
                 netSheetCountLabel.setText(String.format(PAGINATION_MSG, netSheetCurrPage, netSheetMaxPage));
                 netSheetCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -15425,7 +15435,7 @@ public class PlayerFrame extends JFrame {
                 if (first) {
                     SwingUtilities.updateComponentTreeUI(netSheetToolBar);
                     SwingUtilities.updateComponentTreeUI(netSheetCountPanel);
-                    // 删除 Tab 面板、歌词面板、评论面板，加入曲谱面板
+                    // 删除 Tab 面板、歌词面板、评论面板，加入乐谱面板
                     globalPanel.remove(infoAndLrcBox);
                     globalPanel.remove(tabbedPane);
                     globalPanel.remove(netCommentBox);
@@ -15870,7 +15880,7 @@ public class PlayerFrame extends JFrame {
         netCommentBox.add(netCommentScrollPane);
     }
 
-    // 初始化曲谱工具栏
+    // 初始化乐谱工具栏
     void netSheetToolBarInit() {
         // 只能输入数字
         netSheetPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
@@ -15973,7 +15983,7 @@ public class PlayerFrame extends JFrame {
         netSheetToolBar.add(Box.createHorizontalGlue());
         netSheetBox.add(netSheetToolBar);
 
-        // 曲谱数量和当前歌曲标签
+        // 乐谱数量和当前歌曲标签
         netSheetCountPanel.add(netSheetCountLabel);
         netSheetCountPanel.add(netSheetRefreshButton);
         netSheetCountPanel.add(netSheetPageTextField);
@@ -15987,7 +15997,7 @@ public class PlayerFrame extends JFrame {
         netSheetBox.add(netSheetCountPanel);
     }
 
-    // 初始化在线曲谱列表
+    // 初始化在线乐谱列表
     void netSheetListInit() {
         netSheetList.setModel(netSheetListModel);
         netSheetList.addKeyListener(new KeyAdapter() {
@@ -16028,7 +16038,7 @@ public class PlayerFrame extends JFrame {
         netSheetList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                // 鼠标左键双击打开曲谱
+                // 鼠标左键双击打开乐谱
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     netSheetBrowseMenuItem.doClick();
                 }
@@ -16046,7 +16056,7 @@ public class PlayerFrame extends JFrame {
                 }
             }
         });
-        // 查看曲谱
+        // 查看乐谱
         netSheetBrowseMenuItem.addActionListener(e -> {
             try {
                 NetSheetInfo netSheetInfo = netSheetList.getSelectedValue();
@@ -16081,20 +16091,20 @@ public class PlayerFrame extends JFrame {
                 new TipDialog(THIS, API_ERROR_MSG).showDialog();
             }
         });
-        // 复制曲谱名称
+        // 复制乐谱名称
         netSheetCopyNameMenuItem.addActionListener(e -> {
             NetSheetInfo netSheetInfo = netSheetList.getSelectedValue();
             StringSelection stringSelection = new StringSelection(netSheetInfo.toString());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
-        // 曲谱列表右键菜单项
+        // 乐谱列表右键菜单项
         netSheetPopupMenu.add(netSheetBrowseMenuItem);
         netSheetPopupMenu.add(netSheetCopyNameMenuItem);
 
-        // 曲谱最佳大小
+        // 乐谱最佳大小
         netSheetScrollPane.setPreferredSize(new Dimension(200, 600));
-        // 曲谱滚动速度
+        // 乐谱滚动速度
         netSheetScrollPane.getVerticalScrollBar().setUnitIncrement(20);
         netSheetBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         netSheetBox.add(netSheetScrollPane);
@@ -18685,7 +18695,7 @@ public class PlayerFrame extends JFrame {
                 getComments(o, true);
             }
         });
-        // 查看曲谱菜单项
+        // 查看乐谱菜单项
         playQueueSheetMenuItem.addActionListener(e -> {
             Object o = playQueue.getSelectedValue();
             if (o instanceof NetMusicInfo) {
@@ -19156,7 +19166,7 @@ public class PlayerFrame extends JFrame {
             if (currPane != MusicPane.COMMENT || currCommentObjectInfo != netMusicInfo)
                 getComments(netMusicInfo, currPane != MusicPane.COMMENT);
         });
-        // 曲谱
+        // 乐谱
         sheetButton.setToolTipText(SHEET_TIP);
         sheetButton.setEnabled(false);
         sheetButton.addMouseListener(new ButtonMouseListener(sheetButton, THIS));
@@ -19551,7 +19561,7 @@ public class PlayerFrame extends JFrame {
         changePaneButton.setVisible(false);
         changePaneButton.setVisible(true);
         if (miniDialog != null) miniDialog.infoLabel.setText(changePaneButton.getText());
-        // 设置 MV、收藏、下载、评论、曲谱按钮
+        // 设置 MV、收藏、下载、评论、乐谱按钮
         mvButton.setEnabled(netMusicInfo != null && netMusicInfo.hasMv());
         collectButton.setEnabled(true);
         downloadButton.setEnabled(netMusicInfo != null);
@@ -19612,7 +19622,7 @@ public class PlayerFrame extends JFrame {
         }
         // 恢复背景
         if (blurType != BlurType.OFF) doStyleBlur(currUIStyle);
-        // 禁止 MV、收藏、下载、评论、曲谱
+        // 禁止 MV、收藏、下载、评论、乐谱
         mvButton.setEnabled(false);
         collectButton.setEnabled(false);
         downloadButton.setEnabled(false);
@@ -20547,6 +20557,7 @@ public class PlayerFrame extends JFrame {
         donateMenuItem.setIcon(ImageUtils.dye(donateIcon, menuItemColor));
         releaseMenuItem.setIcon(ImageUtils.dye(releaseIcon, menuItemColor));
         helpMenuItem.setIcon(ImageUtils.dye(helpIcon, menuItemColor));
+        aboutMenuItem.setIcon(ImageUtils.dye(aboutIcon, menuItemColor));
 
         addFileMenuItem.setIcon(ImageUtils.dye(fileIcon, menuItemColor));
         addDirMenuItem.setIcon(ImageUtils.dye(folderIcon, menuItemColor));
@@ -21005,7 +21016,7 @@ public class PlayerFrame extends JFrame {
         netCommentTypeComboBox.setUI(new ComboBoxUI(netCommentTypeComboBox, THIS, buttonColor));
         netCommentPageTextField.setForeground(foreColor);
         netCommentPageTextField.setCaretColor(foreColor);
-        // 曲谱栏透明
+        // 乐谱栏透明
         netSheetPageTextField.setForeground(foreColor);
         netSheetPageTextField.setCaretColor(foreColor);
         // 推荐页码文本框
@@ -21142,7 +21153,7 @@ public class PlayerFrame extends JFrame {
         netCommentGoButton.setIcon(ImageUtils.dye((ImageIcon) netCommentGoButton.getIcon(), buttonColor));
         netCommentNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentNextPageButton.getIcon(), buttonColor));
         netCommentEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentEndPageButton.getIcon(), buttonColor));
-        // 曲谱栏按钮颜色
+        // 乐谱栏按钮颜色
         netSheetBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netSheetBackwardButton.getIcon(), buttonColor));
         netSheetRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netSheetRefreshButton.getIcon(), buttonColor));
         netSheetStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetStartPageButton.getIcon(), buttonColor));
@@ -21396,7 +21407,7 @@ public class PlayerFrame extends JFrame {
         // 评论滚动面板消除边框、自定义样式
         netCommentScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netCommentScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        // 曲谱滚动面板消除边框、自定义样式
+        // 乐谱滚动面板消除边框、自定义样式
         netSheetScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         netSheetScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
         // 推荐滚动面板消除边框、自定义样式
@@ -22051,6 +22062,7 @@ public class PlayerFrame extends JFrame {
             else if (d instanceof RateDialog) ((RateDialog) d).updateBlur();
             else if (d instanceof ColorChooserDialog) ((ColorChooserDialog) d).updateBlur();
             else if (d instanceof DonateDialog) ((DonateDialog) d).updateBlur();
+            else if (d instanceof AboutDialog) ((AboutDialog) d).updateBlur();
         }
     }
 

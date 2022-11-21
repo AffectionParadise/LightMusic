@@ -238,12 +238,12 @@ public class StringUtils {
     }
 
     /**
-     * 反格式化数字 例如 7.6万 -> 76000
+     * 解析数字 例如 7.6万 -> 76000
      *
      * @param s
      * @return
      */
-    public static long antiFormatNumber(String s) {
+    public static long parseNumber(String s) {
         if (s.contains("万")) return (long) (Double.parseDouble(s.replace("万", "").trim()) * 10000);
         else if (s.contains("亿")) return (long) (Double.parseDouble(s.replace("亿", "").trim()) * 100000000);
         return Long.parseLong(s.trim());

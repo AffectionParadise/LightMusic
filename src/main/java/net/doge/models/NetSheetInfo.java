@@ -14,9 +14,9 @@ import java.awt.image.BufferedImage;
 public class NetSheetInfo {
     // 来源
     private int source;
-    // 曲谱 id
+    // 乐谱 id
     private String id;
-    // 曲谱名
+    // 乐谱名
     private String name;
     // 封面
     private BufferedImage coverImg;

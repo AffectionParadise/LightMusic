@@ -387,11 +387,7 @@ public class MusicServerUtils {
             = "http://api.bilibili.com/x/web-interface/search/type?search_type=bili_user&keyword=%s&page=%s";
 
     // 获取评论 API
-    private static final String NEW_GET_COMMENTS_API = prefix + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=3";
-    private static final String OLD_GET_COMMENTS_API = prefix + "/comment/%s?id=%s&offset=%s&limit=%s";
-    // 获取热门评论 API
-    private static final String GET_HOT_COMMENTS_API
-            = prefix + "/comment/hot?type=%s&id=%s&offset=%s&limit=%s";
+    private static final String GET_COMMENTS_API = prefix + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=%s&cursor=%s";
     // 获取评论 API (酷狗)
     private static final String GET_COMMENTS_KG_API
             = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike" +
@@ -441,12 +437,10 @@ public class MusicServerUtils {
     private static final String GET_SONG_COMMENTS_BI_API
             = "http://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
 
-    // 获取曲谱 API
-    private static final String GET_SHEETS_API
-            = prefix + "/sheet/list?id=%s";
-    // 获取曲谱图片 API
-    private static final String GET_SHEETS_IMG_API
-            = prefix + "/sheet/preview?id=%s";
+    // 获取乐谱 API
+    private static final String GET_SHEETS_API = prefix + "/sheet/list?id=%s";
+    // 获取乐谱图片 API
+    private static final String GET_SHEETS_IMG_API = prefix + "/sheet/preview?id=%s";
 
     // 获取专辑照片 API (堆糖)
     private static final String GET_ALBUMS_IMG_DT_API
@@ -2603,6 +2597,8 @@ public class MusicServerUtils {
 
     // 歌词 API
     private static final String LYRIC_API = prefix + "/lyric?id=%s";
+    // 歌词 API (酷狗)
+//    private static final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=lrc&charset=utf8";
     // 歌词 API (QQ)
 //    private static final String LYRIC_QQ_API = prefixQQ33 + "/lyric?songmid=%s";
     private static final String LYRIC_QQ_API = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=%s&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8¬ice=0&platform=yqq&needNewCode=0";
@@ -3310,11 +3306,18 @@ public class MusicServerUtils {
                         String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                         String albumName = songJson.getJSONObject("al").getString("name");
                         String albumId = songJson.getJSONObject("al").getString("id");
-                        Double duration = songJson.getDouble("duration") / 1000;
-                        String mvId = songJson.getString("mvid");
-                        JSONObject lyrics = songJson.optJSONObject("lyrics");
+                        Double duration = songJson.getDouble("dt") / 1000;
+                        String mvId = songJson.getString("mv");
+                        JSONArray lyrics = songJson.optJSONArray("lyrics");
                         String lrcMatch = null;
-                        if (lyrics != null) lrcMatch = lyrics.getString("txt").replace("\n", " / ");
+                        if (lyrics != null) {
+                            StringBuffer sb = new StringBuffer();
+                            for (int j = 0, size = lyrics.size(); j < size; j++) {
+                                sb.append(lyrics.get(j));
+                                if (j != size - 1) sb.append(" / ");
+                            }
+                            lrcMatch = StringUtils.removeHTMLLabel(sb.toString());
+                        }
 
                         NetMusicInfo musicInfo = new NetMusicInfo();
                         musicInfo.setId(songId);
@@ -3571,7 +3574,7 @@ public class MusicServerUtils {
                             String albumName = StringUtils.removeHTMLLabel(songJson.getString("album"));
                             String albumId = songJson.getString("albumid");
                             Double duration = songJson.getDouble("duration");
-                            String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                            String mvId = songJson.getInt("hasmv") == 0 ? "" : songId;
 
                             NetMusicInfo musicInfo = new NetMusicInfo();
                             musicInfo.setSource(NetMusicSource.KW);
@@ -3880,28 +3883,34 @@ public class MusicServerUtils {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            // 酷狗接口请求需要带上 cookie ！
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
-                    .header(Header.COOKIE, COOKIE)
-                    .execute()
-                    .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-            // 时长是毫秒，转为秒
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("timelength") / 1000);
-            if (!musicInfo.hasArtist()) musicInfo.setArtist(parseArtists(data, NetMusicSource.KG));
-            if (!musicInfo.hasArtistId())
-                musicInfo.setArtistId(data.getJSONArray("authors").getJSONObject(0).getString("author_id"));
-            if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
-            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
-            if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
-                    BufferedImage albumImage = getImageFromUrl(data.getString("img"));
-                    ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
-                    musicInfo.callback();
-                });
-            }
-            if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("play_url"));
-            if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                // 酷狗接口请求需要带上 cookie ！
+                String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
+                        .header(Header.COOKIE, COOKIE)
+                        .execute()
+                        .body();
+                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                // 时长是毫秒，转为秒
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("timelength") / 1000);
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(parseArtists(data, NetMusicSource.KG));
+                if (!musicInfo.hasArtistId())
+                    musicInfo.setArtistId(data.getJSONArray("authors").getJSONObject(0).getString("author_id"));
+                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
+                if (!musicInfo.hasAlbumImage()) {
+                    GlobalExecutors.imageExecutor.submit(() -> {
+                        BufferedImage albumImage = getImageFromUrl(data.getString("img"));
+                        ImageUtils.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                        musicInfo.callback();
+                    });
+                }
+                if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("play_url"));
+                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
+            }));
+//            // 填充歌词、翻译、罗马音
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
+//            }));
         }
 
         // QQ
@@ -5680,7 +5689,7 @@ public class MusicServerUtils {
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
                 String creatorId = mvJson.getString("author_id");
-                Long playCount = StringUtils.antiFormatNumber(mvJson.getString("read_num").replaceFirst("次播放", ""));
+                Long playCount = StringUtils.parseNumber(mvJson.getString("read_num").replaceFirst("次播放", ""));
                 Double duration = TimeUtils.toSeconds(mvJson.getString("duration"));
                 String pubTime = mvJson.getString("publishTimeText");
                 String coverImgUrl = mvJson.getString("cover_src");
@@ -6629,7 +6638,7 @@ public class MusicServerUtils {
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
      */
-    public static CommonResult<NetCommentInfo> getComments(Object info, String type, int limit, int page) throws IOException {
+    public static CommonResult<NetCommentInfo> getComments(Object info, String type, int limit, int page, String cursor) throws IOException {
         int total = 0;
         List<NetCommentInfo> commentInfos = new LinkedList<>();
 
@@ -6648,7 +6657,7 @@ public class MusicServerUtils {
             id = hasProgramId ? netMusicInfo.getProgramId() : hasHash ? netMusicInfo.getHash() : netMusicInfo.getId();
             source = netMusicInfo.getSource();
             // 网易 QQ 酷我 猫耳
-            typeStr = new String[]{hotOnly ? (hasProgramId ? "4" : "0") : (hasProgramId ? "dj" : "music"), "1", "15", "1"};
+            typeStr = new String[]{hasProgramId ? "4" : "0", "1", "15", "1"};
 
             if (source == NetMusicSource.QQ) {
                 // QQ 需要先通过 mid 获取 id
@@ -6663,12 +6672,12 @@ public class MusicServerUtils {
             id = netPlaylistInfo.getId();
             source = netPlaylistInfo.getSource();
             // 网易 QQ 酷我 猫耳
-            typeStr = new String[]{hotOnly ? "2" : "playlist", "3", "8", "2"};
+            typeStr = new String[]{"2", "3", "8", "2"};
         } else if (info instanceof NetAlbumInfo) {
             NetAlbumInfo netAlbumInfo = (NetAlbumInfo) info;
             id = netAlbumInfo.getId();
             source = netAlbumInfo.getSource();
-            typeStr = new String[]{hotOnly ? "3" : "album", "2", ""};
+            typeStr = new String[]{"3", "2", ""};
 
             if (source == NetMusicSource.QQ) {
                 // QQ 需要先通过 mid 获取 id
@@ -6705,24 +6714,24 @@ public class MusicServerUtils {
                 netMvInfo.setType(MvInfoType.VIDEO);
             }
 
-            typeStr = new String[]{hotOnly ? (isVideo || isMlog ? "5" : "1") : (isVideo || isMlog ? "video" : "mv"), "5", "7"};
+            typeStr = new String[]{isVideo || isMlog ? "5" : "1", "5", "7"};
         } else if (info instanceof NetRankingInfo) {
             NetRankingInfo netRankingInfo = (NetRankingInfo) info;
             id = netRankingInfo.getId();
             source = netRankingInfo.getSource();
-            typeStr = new String[]{hotOnly ? "2" : "playlist", "4", "2"};
+            typeStr = new String[]{"2", "4", "2"};
         }
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD && StringUtils.isNotEmpty(typeStr[0])) {
-            boolean newInterface = !hotOnly && isRadio;
-            String url = hotOnly ? GET_HOT_COMMENTS_API : isRadio ? NEW_GET_COMMENTS_API : OLD_GET_COMMENTS_API;
-            String commentInfoBody = HttpRequest.get(String.format(url, typeStr[0], id, isRadio ? page : (page - 1) * limit, limit))
+            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_API, typeStr[0], id, page, limit, hotOnly ? 2 : 3, cursor))
                     .execute()
                     .body();
-            JSONObject commentInfoJson = newInterface ? JSONObject.fromObject(commentInfoBody).getJSONObject("data") : JSONObject.fromObject(commentInfoBody);
-            total = commentInfoJson.getInt(newInterface ? "totalCount" : "total");
-            JSONArray commentArray = hotOnly ? commentInfoJson.getJSONArray("hotComments") : commentInfoJson.getJSONArray("comments");
+            JSONObject data = JSONObject.fromObject(commentInfoBody).getJSONObject("data");
+            total = data.getInt("totalCount");
+            // 按时间排序时才需要 cursor ！
+            if (!hotOnly) cursor = data.getString("cursor");
+            JSONArray commentArray = data.getJSONArray("comments");
             for (int i = 0, len = commentArray.size(); i < len; i++) {
                 JSONObject commentJson = commentArray.getJSONObject(i);
                 JSONObject user = commentJson.getJSONObject("user");
@@ -7362,11 +7371,11 @@ public class MusicServerUtils {
             }
         }
 
-        return new CommonResult<>(commentInfos, total);
+        return new CommonResult<>(commentInfos, total, cursor);
     }
 
     /**
-     * 获取歌曲曲谱
+     * 获取歌曲乐谱
      */
     public static CommonResult<NetSheetInfo> getSheets(NetMusicInfo musicInfo) throws IOException {
         int source = musicInfo.getSource();
@@ -7420,7 +7429,7 @@ public class MusicServerUtils {
     }
 
     /**
-     * 获取曲谱图片链接
+     * 获取乐谱图片链接
      */
     public static CommonResult<String> getSheetImgUrls(NetSheetInfo sheetInfo) {
         int source = sheetInfo.getSource();
@@ -7634,7 +7643,7 @@ public class MusicServerUtils {
                 String playlistName = pa.text();
                 String creator = fc.text();
                 String creatorId = ReUtil.get("id=(\\d+)", fc.attr("href"), 1);
-                Long playCount = StringUtils.antiFormatNumber(nb.text());
+                Long playCount = StringUtils.parseNumber(nb.text());
                 String coverImgThumbUrl = img.attr("src");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -7789,7 +7798,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = StringUtils.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -7827,7 +7836,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = StringUtils.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8119,7 +8128,7 @@ public class MusicServerUtils {
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("subTitle");
                 String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title");
-                Long playCount = StringUtils.antiFormatNumber(fs);
+                Long playCount = StringUtils.parseNumber(fs);
                 String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8602,7 +8611,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = StringUtils.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8640,7 +8649,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = StringUtils.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -8678,7 +8687,7 @@ public class MusicServerUtils {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtils.antiFormatNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = StringUtils.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -9012,7 +9021,7 @@ public class MusicServerUtils {
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("subTitle");
                 String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title");
-                Long playCount = StringUtils.antiFormatNumber(fs);
+                Long playCount = StringUtils.parseNumber(fs);
                 String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -9092,7 +9101,7 @@ public class MusicServerUtils {
                     String playlistName = playlistJson.getString("title");
                     String creator = playlistJson.getString("subTitle");
                     String fs = playlistJson.getString("playNum");
-                    Long playCount = StringUtils.antiFormatNumber(fs);
+                    Long playCount = StringUtils.parseNumber(fs);
                     String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -11739,7 +11748,7 @@ public class MusicServerUtils {
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
-                    String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                    String mvId = songJson.getInt("hasmv") == 0 ? "" : id;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.KW);
@@ -11779,7 +11788,7 @@ public class MusicServerUtils {
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
-                    String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                    String mvId = songJson.getInt("hasmv") == 0 ? "" : id;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.KW);
@@ -12124,7 +12133,7 @@ public class MusicServerUtils {
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
-                    String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                    String mvId = songJson.getInt("hasmv") == 0 ? "" : id;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.KW);
@@ -13461,7 +13470,7 @@ public class MusicServerUtils {
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
 //                String creatorId = mvJson.getString("author_id");
-                Long playCount = StringUtils.antiFormatNumber(mvJson.getString("fmplaycnt"));
+                Long playCount = StringUtils.parseNumber(mvJson.getString("fmplaycnt"));
                 String coverImgUrl = "https:" + mvJson.getString("poster");
                 Double duration = TimeUtils.toSeconds(mvJson.getString("time_length"));
                 String pubTime = TimeUtils.msToDate(mvJson.getLong("publish_time") * 1000);
@@ -15542,7 +15551,7 @@ public class MusicServerUtils {
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
-                String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                String mvId = songJson.getInt("hasmv") == 0 ? "" : songId;
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
                 netMusicInfo.setSource(NetMusicSource.KW);
@@ -15824,7 +15833,7 @@ public class MusicServerUtils {
                 String albumName = songJson.getString("album");
                 String alId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
-                String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                String mvId = songJson.getInt("hasmv") == 0 ? "" : songId;
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
                 netMusicInfo.setSource(NetMusicSource.KW);
@@ -15913,18 +15922,6 @@ public class MusicServerUtils {
 
         return new CommonResult<>(netMusicInfos, total);
     }
-
-//    /**
-//     * 根据歌手 id 获取歌手歌曲总数
-//     */
-//    public static Integer findMusicCountInArtist(long artistId) {
-//        String artistInfoBody = HttpRequest.get(String.format(ARTIST_SONGS_API, artistId, 0, 0))
-//                .execute()
-//                .body();
-//        JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
-//        int total = artistInfoJson.getInt("total");
-//        return total;
-//    }
 
     /**
      * 根据歌手 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
@@ -16062,7 +16059,7 @@ public class MusicServerUtils {
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
-                String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                String mvId = songJson.getInt("hasmv") == 0 ? "" : songId;
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
                 netMusicInfo.setSource(NetMusicSource.KW);
@@ -16894,7 +16891,7 @@ public class MusicServerUtils {
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
-                String mvId = songJson.getJSONObject("mvpayinfo").getString("vid");
+                String mvId = songJson.getInt("hasmv") == 0 ? "" : songId;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KW);
@@ -20626,6 +20623,7 @@ public class MusicServerUtils {
     public static void fillLrc(NetMusicInfo netMusicInfo) {
         int source = netMusicInfo.getSource();
         String id = netMusicInfo.getId();
+//        String hash = netMusicInfo.getHash();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
@@ -20643,13 +20641,12 @@ public class MusicServerUtils {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            // 酷狗接口请求需要带上 cookie ！
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, id))
-                    .header(Header.COOKIE, COOKIE)
-                    .execute()
-                    .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-            netMusicInfo.setLrc(data.getString("lyrics"));
+//            String songBody = HttpRequest.get(String.format(LYRIC_KG_API, id, hash))
+//                    .execute()
+//                    .body();
+//            JSONObject data = JSONObject.fromObject(songBody);
+//            String lyric = StringUtils.base64Decode(data.getString("content"));
+//            netMusicInfo.setLrc(lyric);
         }
 
         // QQ

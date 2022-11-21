@@ -1,7 +1,10 @@
 package net.doge.ui.components.dialog;
 
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.*;
+import net.doge.constants.BlurType;
+import net.doge.constants.Colors;
+import net.doge.constants.SimplePath;
+import net.doge.constants.SoftInfo;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
@@ -11,7 +14,6 @@ import net.doge.ui.components.DialogButton;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -25,10 +27,10 @@ import java.util.List;
 
 /**
  * @Author yzx
- * @Description 捐赠对话框
+ * @Description 关于对话框
  * @Date 2021/1/5
  */
-public class DonateDialog extends JDialog {
+public class AboutDialog extends JDialog {
     // 最大阴影透明度
     private final int TOP_OPACITY = 30;
     // 阴影大小像素
@@ -40,38 +42,33 @@ public class DonateDialog extends JDialog {
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
     // 标题
-    private String title = "捐赠 & 感谢";
-    private String thankMsg = "同时感谢以下本项目使用到的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
-            "https://github.com/Binaryify/NeteaseCloudMusicApi\n" +
-            "https://github.com/jsososo/QQMusicApi\n" +
-            "https://github.com/jsososo/MiguMusicApi";
+    private final String title = "关于";
 
     // 标题面板
     private CustomPanel topPanel = new CustomPanel();
     private CustomLabel titleLabel = new CustomLabel();
     private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton(closeWindowIcon);
+    private CustomButton closeButton = new CustomButton();
 
-    // 收款码
-    private ImageIcon weixinIcon = new ImageIcon(SimplePath.ICON_PATH + "weixin.png");
-    private ImageIcon alipayIcon = new ImageIcon(SimplePath.ICON_PATH + "alipay.png");
+    private ImageIcon appIcon = new ImageIcon(SimplePath.ICON_PATH + "title.png");
 
     private PlayerFrame f;
     private UIStyle style;
-    private CustomPanel messagePanel = new CustomPanel();
-    private CustomLabel messageLabel = new CustomLabel("如果您觉得这款软件还不错，可以请作者喝杯咖啡~~");
     private CustomPanel centerPanel = new CustomPanel();
-    private CustomPanel cPanel = new CustomPanel();
-    private CustomPanel leftPanel = new CustomPanel();
-    private CustomLabel weixinLabel = new CustomLabel("微信");
-    private CustomPanel rightPanel = new CustomPanel();
-    private CustomLabel alipayLabel = new CustomLabel("支付宝");
-    private CustomPanel thankPanel = new CustomPanel();
-    private CustomLabel thankLabel = new CustomLabel(StringUtils.textToHtml(thankMsg));
+    private CustomPanel appPanel = new CustomPanel();
+    private CustomLabel appLabel = new CustomLabel();
+    private CustomPanel editionPanel = new CustomPanel();
+    private CustomLabel editionLabel = new CustomLabel("版本：" + SoftInfo.EDITION);
+    private CustomPanel technoPanel = new CustomPanel();
+    private CustomLabel technoLabel = new CustomLabel("基于 Swing 与 JavaFX (Java 8) 构建");
+    private CustomPanel websitePanel = new CustomPanel();
+    private CustomLabel websiteLabel = new CustomLabel("网址：" + SoftInfo.WEBSITE);
+    private CustomPanel mailPanel = new CustomPanel();
+    private CustomLabel mailLabel = new CustomLabel("邮箱：" + SoftInfo.MAIL);
     private CustomPanel buttonPanel = new CustomPanel();
     private ConfirmDialogPanel mainPanel = new ConfirmDialogPanel();
 
-    public DonateDialog(PlayerFrame f) {
+    public AboutDialog(PlayerFrame f) {
         // 一定要是模态对话框才能接收值！！！
         super(f, true);
         this.f = f;
@@ -130,36 +127,35 @@ public class DonateDialog extends JDialog {
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
 
-        messageLabel.setForeground(labelColor);
-        weixinLabel.setForeground(labelColor);
-        alipayLabel.setForeground(labelColor);
-        thankLabel.setForeground(labelColor);
+        appLabel.setText(f.TITLE);
+        appLabel.setIcon(ImageUtils.dye(appIcon, labelColor));
+        appLabel.setIconTextGap(15);
 
-        messagePanel.add(messageLabel);
-        messagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        appLabel.setForeground(labelColor);
+        editionLabel.setForeground(labelColor);
+        technoLabel.setForeground(labelColor);
+        websiteLabel.setForeground(labelColor);
+        mailLabel.setForeground(labelColor);
 
-        weixinLabel.setVerticalTextPosition(SwingConstants.TOP);
-        alipayLabel.setVerticalTextPosition(SwingConstants.TOP);
-        weixinLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        alipayLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        final int gap = 15;
-        weixinLabel.setIconTextGap(gap);
-        alipayLabel.setIconTextGap(gap);
-        weixinLabel.setIcon(weixinIcon);
-        alipayLabel.setIcon(alipayIcon);
-        leftPanel.add(weixinLabel);
-        rightPanel.add(alipayLabel);
-        cPanel.setLayout(new BoxLayout(cPanel, BoxLayout.X_AXIS));
-        cPanel.add(leftPanel);
-        cPanel.add(rightPanel);
+        appPanel.add(appLabel);
+        editionPanel.add(editionLabel);
+        technoPanel.add(technoLabel);
+        websitePanel.add(websiteLabel);
+        mailPanel.add(mailLabel);
 
-        thankPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
-        thankPanel.add(thankLabel);
+        Border eb = BorderFactory.createEmptyBorder(0, 0, 10, 0);
+        appPanel.setBorder(eb);
+        editionPanel.setBorder(eb);
+        technoPanel.setBorder(eb);
+        websitePanel.setBorder(eb);
+        mailPanel.setBorder(eb);
 
-        centerPanel.setLayout(new BorderLayout());
-        centerPanel.add(messagePanel, BorderLayout.NORTH);
-        centerPanel.add(cPanel, BorderLayout.CENTER);
-        centerPanel.add(thankPanel, BorderLayout.SOUTH);
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.add(appPanel);
+        centerPanel.add(editionPanel);
+        centerPanel.add(technoPanel);
+        centerPanel.add(websitePanel);
+        centerPanel.add(mailPanel);
 
         FlowLayout fl = new FlowLayout();
         fl.setHgap(20);
