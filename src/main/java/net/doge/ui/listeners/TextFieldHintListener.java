@@ -35,8 +35,8 @@ public class TextFieldHintListener implements FocusListener {
         // 获取焦点时，清空提示内容
         String temp = tf.getText();
         if (temp.equals(hintText)) {
-            tf.setText("");
             tf.setOccupied(true);
+            tf.setText("");
         }
         tf.setForeground(inputColor);
     }
@@ -46,9 +46,9 @@ public class TextFieldHintListener implements FocusListener {
         // 失去焦点时，没有输入内容，显示提示内容
         String temp = tf.getText();
         if (temp.isEmpty()) {
+            tf.setOccupied(false);
             tf.setForeground(placeholderColor);
             tf.setText(hintText);
-            tf.setOccupied(false);
         }
     }
 }

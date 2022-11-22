@@ -2141,11 +2141,11 @@ public class PlayerFrame extends JFrame {
     private NetMusicInfo currSheetMusicInfo;
 
     // 收藏打开事件
-    Runnable openCollectionItemAction = null;
+    Runnable openCollectionItemAction;
     // 推荐打开事件
-    Runnable openRecommendItemAction = null;
+    Runnable openRecommendItemAction;
     // 获取榜单事件
-    Runnable getRankingAction = null;
+    Runnable getRankingAction;
 
     // 当前音效名称
     public String currSoundEffectName = EqualizerData.names[0];
@@ -4932,7 +4932,7 @@ public class PlayerFrame extends JFrame {
                 }
             }
             // 切换收藏标签页后筛选
-            if (filterTextField.getForeground().equals(currUIStyle.getForeColor())) filterPersonalMusic();
+            if (filterTextField.isOccupied()) filterPersonalMusic();
         });
     }
 
@@ -6038,7 +6038,7 @@ public class PlayerFrame extends JFrame {
             musicToolBar.add(reimportToolButton, 1);
             leftBox.repaint();
             // 筛选框活跃状态时进行筛选
-            if (filterTextField.getForeground().equals(currUIStyle.getForeColor())) filterPersonalMusic();
+            if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(musicListModel);
             musicScrollPane.getVerticalScrollBar().setValue(0);
             countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
@@ -6059,7 +6059,7 @@ public class PlayerFrame extends JFrame {
             musicToolBar.remove(reimportToolButton);
             leftBox.repaint();
             // 筛选框活跃状态时进行筛选
-            if (filterTextField.getForeground().equals(currUIStyle.getForeColor())) filterPersonalMusic();
+            if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(historyModel);
             musicScrollPane.getVerticalScrollBar().setValue(0);
             countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
@@ -6116,7 +6116,7 @@ public class PlayerFrame extends JFrame {
 
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
             // 筛选框活跃状态时进行筛选
-            if (filterTextField.getForeground().equals(currUIStyle.getForeColor())) filterPersonalMusic();
+            if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(collectionModel);
             musicScrollPane.getVerticalScrollBar().setValue(0);
 
@@ -6571,7 +6571,7 @@ public class PlayerFrame extends JFrame {
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (filterTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (filterTextField.isOccupied()) {
                     clearInputToolButton.setVisible(true);
                     filterPersonalMusic();
                 }
@@ -6643,7 +6643,9 @@ public class PlayerFrame extends JFrame {
                     musicCollectionLeftBox.repaint();
                 } else {
                     ListModel model = collectionList.getModel();
-                    if (selectedIndex == CollectionTabIndex.PLAYLIST && model != playlistCollectionModel)
+                    if (model == filterModel)
+                        collectionList.setModel(filterModel);
+                    else if (selectedIndex == CollectionTabIndex.PLAYLIST && model != playlistCollectionModel)
                         collectionList.setModel(playlistCollectionModel);
                     else if (selectedIndex == CollectionTabIndex.ALBUM && model != albumCollectionModel)
                         collectionList.setModel(albumCollectionModel);
@@ -6973,7 +6975,7 @@ public class PlayerFrame extends JFrame {
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (searchTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (searchTextField.isOccupied()) {
                     netMusicClearInputButton.setVisible(true);
                 }
                 globalExecutor.submit(() -> updateSearchSuggestion());
@@ -8342,7 +8344,7 @@ public class PlayerFrame extends JFrame {
         netPlaylistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netPlaylistSearchTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (netPlaylistSearchTextField.isOccupied()) {
                     netPlaylistClearInputButton.setVisible(true);
                 }
             }
@@ -9337,7 +9339,7 @@ public class PlayerFrame extends JFrame {
         netAlbumSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netAlbumSearchTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (netAlbumSearchTextField.isOccupied()) {
                     netAlbumClearInputButton.setVisible(true);
                 }
             }
@@ -10354,7 +10356,7 @@ public class PlayerFrame extends JFrame {
         netArtistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netArtistSearchTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (netArtistSearchTextField.isOccupied()) {
                     netArtistClearInputButton.setVisible(true);
                 }
             }
@@ -11608,7 +11610,7 @@ public class PlayerFrame extends JFrame {
         netRadioSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netRadioSearchTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (netRadioSearchTextField.isOccupied()) {
                     netRadioClearInputButton.setVisible(true);
                 }
             }
@@ -12773,7 +12775,7 @@ public class PlayerFrame extends JFrame {
         netMvSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netMvSearchTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (netMvSearchTextField.isOccupied()) {
                     netMvClearInputButton.setVisible(true);
                 }
             }
@@ -14090,7 +14092,7 @@ public class PlayerFrame extends JFrame {
         netUserSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netUserSearchTextField.getForeground().equals(currUIStyle.getForeColor())) {
+                if (netUserSearchTextField.isOccupied()) {
                     netUserClearInputButton.setVisible(true);
                 }
             }
@@ -19085,7 +19087,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化控制面板
-    void controlPanelInit() {
+    private void controlPanelInit() {
         // changePaneButton 图标遮罩 UI
         ChangePaneButtonUI changePaneButtonUI = new ChangePaneButtonUI();
         changePaneButton.setUI(changePaneButtonUI);
@@ -19501,7 +19503,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 准备播放，初始化播放器和 UI
-    void prepareToPlay(AudioFile file, NetMusicInfo netMusicInfo) throws IOException, UnsupportedAudioFileException, InterruptedException, EncoderException, InvalidDataException, UnsupportedTagException, URISyntaxException {
+    private void prepareToPlay(AudioFile file, NetMusicInfo netMusicInfo) throws IOException, UnsupportedAudioFileException, InterruptedException, EncoderException, InvalidDataException, UnsupportedTagException, URISyntaxException {
         player.load(file, netMusicInfo);
         clearLrc();
         loadLrc(file, netMusicInfo, false, currLrcType == LyricType.TRANSLATION);
@@ -19509,7 +19511,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 卸载当前文件
-    void unload() {
+    private void unload() {
         player.unload();
         try {
             unloadUI();
@@ -19520,7 +19522,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 界面加载新文件
-    void loadUI(AudioFile file, NetMusicInfo netMusicInfo) {
+    private void loadUI(AudioFile file, NetMusicInfo netMusicInfo) {
         // 重置标题
         String title = TITLE + "（正在播放：" + (netMusicInfo != null ? netMusicInfo.toSimpleString() : file) + "）";
         titleLabel.setText(StringUtils.textToHtml(title));
@@ -19588,7 +19590,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 界面关闭文件
-    void unloadUI() throws IOException {
+    private void unloadUI() throws IOException {
         // 重置标题
         updateMotto();
         setTitle(TITLE);
@@ -19637,7 +19639,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 加载专辑图片
-    void loadAlbumImage() {
+    private void loadAlbumImage() {
         // 设置为默认专辑图片
         saveAlbumImageMenuItem.setEnabled(false);
         BufferedImage img = ImageUtils.width(ImageUtils.cropCenter(defaultAlbumImage), albumImageWidth);
@@ -19656,7 +19658,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 显示专辑图片
-    void showAlbumImage() {
+    private void showAlbumImage() {
         SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
         BufferedImage albumImage = simpleMusicInfo.getAlbumImage();
         if (albumImage != defaultAlbumImage) {
@@ -19673,7 +19675,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 清空歌词
-    void clearLrc() {
+    private void clearLrc() {
         // 解决 CustomList 选中第一行更新缓慢的 BUG
 //        lrcList.setModel(emptyListModel);
         lrcListModel.clear();
@@ -19682,7 +19684,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 加载歌词(如果有)
-    void loadLrc(AudioFile file, NetMusicInfo netMusicInfo, boolean reload, boolean loadTrans) {
+    private void loadLrc(AudioFile file, NetMusicInfo netMusicInfo, boolean reload, boolean loadTrans) {
         LrcData lrcData, transData = null, romaData = null;
         String lrcPath = null, lrc = null;
         boolean isFile = netMusicInfo == null;
@@ -19954,7 +19956,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放载入的歌曲
-    void playLoaded(boolean isReplay) {
+    private void playLoaded(boolean isReplay) {
         if (isReplay) player.replay();
         else {
             playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getButtonColor()));
@@ -19976,7 +19978,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 添加到下一首播放
-    void nextPlay(CustomList list) {
+    private void nextPlay(CustomList list) {
         DefaultListModel model = (DefaultListModel) list.getModel();
 
         Object obj = list.getSelectedValue();
@@ -20018,7 +20020,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放选中歌曲，返回是否播放成功
-    boolean playSelected(CustomList list, boolean allowRetry) {
+    private boolean playSelected(CustomList list, boolean allowRetry) {
         AudioFile file = null;
         NetMusicInfo musicInfo = null;
 
@@ -20207,7 +20209,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放上一曲
-    void playLast() {
+    private void playLast() {
         int size = playQueueModel.getSize();
         // 当前播放列表非空
         if (size != 0) {
@@ -20219,7 +20221,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放下一曲 / 顺序播放
-    void playNext() {
+    private void playNext() {
         int size = playQueueModel.getSize();
         // 当前播放列表非空
         if (size != 0) {
@@ -20231,7 +20233,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 生成随机播放序列
-    void generateShuffleList() {
+    private void generateShuffleList() {
         // 随机列表为空或者歌曲数量发生变化
         if (shuffleList.isEmpty() || shuffleList.size() != playQueueModel.getSize()) {
             shuffleList.clear();
@@ -20242,7 +20244,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放随机列表的下一首
-    void playNextShuffle() {
+    private void playNextShuffle() {
         // 随机列表播放完了，或者播放队列发生变化，就生成一个
         if (shuffleIndex >= shuffleList.size() || shuffleList.size() != playQueueModel.size()) {
             generateShuffleList();
@@ -20257,7 +20259,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 更新 currSong 的值，在播放队列歌曲发生变化后调用
-    void updateCurrSong() {
+    private void updateCurrSong() {
         currSong = -1;
         for (int i = 0, size = playQueueModel.size(); i < size; i++) {
             if (player.isPlayingObject(playQueueModel.get(i))) {
@@ -20268,7 +20270,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 改变到单曲循环
-    void changeToSingle(boolean showDialog) {
+    private void changeToSingle(boolean showDialog) {
         playModeButton.setIcon(ImageUtils.dye(singleIcon, currUIStyle.getButtonColor()));
         playModeButton.setToolTipText(SINGLE_TIP);
         currPlayMode = PlayMode.SINGLE;
@@ -20276,7 +20278,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 改变到顺序播放
-    void changeToSequence(boolean showDialog) {
+    private void changeToSequence(boolean showDialog) {
         playModeButton.setIcon(ImageUtils.dye(sequenceIcon, currUIStyle.getButtonColor()));
         playModeButton.setToolTipText(SEQUENCE_TIP);
         currPlayMode = PlayMode.SEQUENCE;
@@ -20284,7 +20286,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 改变到列表循环
-    void changeToListCycle(boolean showDialog) {
+    private void changeToListCycle(boolean showDialog) {
         playModeButton.setIcon(ImageUtils.dye(listCycleIcon, currUIStyle.getButtonColor()));
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
         currPlayMode = PlayMode.LIST_CYCLE;
@@ -20300,7 +20302,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 列表排序
-    void sortFiles(int method, int order) {
+    private void sortFiles(int method, int order) {
         DefaultListModel model = (DefaultListModel) musicList.getModel();
         List<Object> list = Collections.list(model.elements());
         if (method == SortMethod.BY_SONG_AND_FILE_NAME) {
@@ -22149,9 +22151,10 @@ public class PlayerFrame extends JFrame {
     // 筛选个人音乐
     void filterPersonalMusic() {
         filterModel.clear();
-        String keyword = filterTextField.getText().toLowerCase();
+        String keyword = filterTextField.getText().toLowerCase().trim();
         int selectedIndex = collectionTabbedPane.getSelectedIndex();
-        if ("".equals(keyword)) {
+        boolean useMusicList = currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC;
+        if (keyword.isEmpty()) {
             if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) musicList.setModel(musicListModel);
             else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) musicList.setModel(historyModel);
             else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
@@ -22164,7 +22167,7 @@ public class PlayerFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.RANKING) collectionList.setModel(rankingCollectionModel);
                 else if (selectedIndex == CollectionTabIndex.USER) collectionList.setModel(userCollectionModel);
             }
-            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC) {
+            if (useMusicList) {
                 int size = musicList.getModel().getSize();
                 countLabel.setText(String.format("共 %s 首", size));
                 if (size != 0) {
@@ -22208,14 +22211,13 @@ public class PlayerFrame extends JFrame {
             else if (selectedIndex == CollectionTabIndex.USER) listModel = userCollectionModel;
         }
         // 解决选中第一项重新筛选的性能问题
-        if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC)
-            musicList.setModel(emptyListModel);
+        if (useMusicList) musicList.setModel(emptyListModel);
         else collectionList.setModel(emptyListModel);
         for (int i = 0, size = listModel.size(); i < size; i++) {
             Object o = listModel.get(i);
             if (o.toString().toLowerCase().contains(keyword)) filterModel.addElement(o);
         }
-        if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC) {
+        if (useMusicList) {
             musicList.setModel(filterModel);
             countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
         } else {
