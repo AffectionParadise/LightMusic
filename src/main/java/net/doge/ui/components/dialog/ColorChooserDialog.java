@@ -182,10 +182,8 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) {
-                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
-                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
-            }
+            else if (f.blurType == BlurType.LG) 
+                bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

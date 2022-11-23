@@ -4,12 +4,15 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.*;
+import net.doge.constants.BlurType;
+import net.doge.constants.Colors;
+import net.doge.constants.Format;
+import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ColorThiefUtils;
+import net.doge.utils.FileUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 
@@ -189,9 +192,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                     try {
                         // 文件夹不存在就创建
                         File dir = new File(SimplePath.CUSTOM_STYLE_IMG_PATH);
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
+                        FileUtils.makeSureDir(dir);
                         String newPath = SimplePath.CUSTOM_STYLE_IMG_PATH + imgFile.getName();
                         Files.copy(
                                 Paths.get(imgFile.getPath()),
@@ -242,10 +243,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) {
-                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
-                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
-            }
+            else if (f.blurType == BlurType.LG) 
+                bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

@@ -1,18 +1,17 @@
 package net.doge.ui.components.dialog;
 
+import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
+import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomCheckBox;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.DialogButton;
-import net.doge.ui.PlayerFrame;
-import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
-import net.coobird.thumbnailator.Thumbnails;
 import net.doge.utils.StringUtils;
 
 import javax.swing.*;
@@ -20,7 +19,6 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @Author yzx
@@ -77,6 +75,12 @@ public class ConfirmDialog extends JDialog {
         this(f, message, yesText, noText);
         Color buttonColor = f.getCurrUIStyle().getButtonColor();
         cancel = new DialogButton(cancelText, buttonColor);
+    }
+
+    public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText, String cancelText, boolean showCheck, String checkText) {
+        this(f, message, yesText, noText, cancelText);
+        this.showCheck = showCheck;
+        checkBox.setText(checkText);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText, boolean showCheck, String checkText) {
@@ -158,10 +162,8 @@ public class ConfirmDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) {
-                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
-                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
-            }
+            else if (f.blurType == BlurType.LG)
+                bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

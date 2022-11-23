@@ -106,6 +106,7 @@ public class PlayerFrame extends JFrame {
     private final String LOADING_MSG = "加载中，客官请稍等......";
     private final String LOAD_FAILED = "数据加载失败";
     private final String ASK_DISPOSE_MSG = "你希望隐藏到托盘还是退出程序？";
+    private final String REMEMBER_CHOICE_MSG = "记住我的选择";
     private final String[] EXIT_OPTIONS = {"隐藏到托盘", "退出程序", "取消"};
     private final String ASK_REIMPORT_MSG = "将重新从所有歌曲目录导入歌曲，是否继续？";
     private final String ASK_RETAIN_MUSIC_LIST_MSG = "播放列表已存在歌曲，您希望保留播放列表的歌曲吗？(选择“否”将清空原有的歌曲列表)";
@@ -2644,14 +2645,17 @@ public class PlayerFrame extends JFrame {
         closeButton.addActionListener(e -> {
             // 询问隐藏到托盘还是退出程序
             if (currCloseWindowOption == CloseWindowOptions.ASK) {
-                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_DISPOSE_MSG, EXIT_OPTIONS[0], EXIT_OPTIONS[1], EXIT_OPTIONS[2]);
+                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_DISPOSE_MSG, EXIT_OPTIONS[0], EXIT_OPTIONS[1], EXIT_OPTIONS[2], true, REMEMBER_CHOICE_MSG);
                 confirmDialog.showDialog();
                 int response = confirmDialog.getResponse();
+                boolean checked = confirmDialog.isChecked();
                 if (response == JOptionPane.YES_OPTION) {
+                    if (checked) currCloseWindowOption = CloseWindowOptions.DISPOSE;
                     // 关闭频谱
                     closeSpectrum();
                     dispose();
                 } else if (response == JOptionPane.NO_OPTION) {
+                    if (checked) currCloseWindowOption = CloseWindowOptions.EXIT;
                     // 移除托盘图标、保存配置并退出
                     exit();
                 }
@@ -2839,18 +2843,18 @@ public class PlayerFrame extends JFrame {
         // 载入歌曲下载路径
         String musicDownPath = config.optString(ConfigConstants.MUSIC_DOWN_PATH);
         if (!musicDownPath.isEmpty()) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
+        FileUtils.makeSureDir(musicDownPath);
         // 载入 MV 下载路径
         String mvDownPath = config.optString(ConfigConstants.MV_DOWN_PATH);
         if (!mvDownPath.isEmpty()) SimplePath.DOWNLOAD_MV_PATH = mvDownPath;
+        FileUtils.makeSureDir(mvDownPath);
         // 载入缓存路径
         String cachePath = config.optString(ConfigConstants.CACHE_PATH);
         if (!cachePath.isEmpty()) {
             SimplePath.CACHE_PATH = cachePath;
             SimplePath.IMG_CACHE_PATH = cachePath + (cachePath.endsWith("/") ? "" : "/") + "img/";
         }
-        // 创建缓存文件夹
-        File cacheDir = new File(SimplePath.IMG_CACHE_PATH);
-        if (!cacheDir.exists()) cacheDir.mkdirs();
+        FileUtils.makeSureDir(cachePath);
         // 载入最大缓存大小
         maxCacheSize = config.optLong(ConfigConstants.MAX_CACHE_SIZE, 1024);
         // 载入最大播放历史数量
@@ -21733,8 +21737,7 @@ public class PlayerFrame extends JFrame {
     void downloadLrc(NetMusicInfo musicInfo) {
         globalExecutor.submit(() -> {
             try {
-                File dir = new File(SimplePath.DOWNLOAD_MUSIC_PATH);
-                if (!dir.exists()) dir.mkdirs();
+                FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
                 FileUtils.writeStr(lrcStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName(), false);
                 new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
             } catch (Exception e) {
@@ -21752,8 +21755,7 @@ public class PlayerFrame extends JFrame {
     // 下载歌词翻译
     void downloadLrcTrans(NetMusicInfo musicInfo) {
         globalExecutor.submit(() -> {
-            File dir = new File(SimplePath.DOWNLOAD_MUSIC_PATH);
-            if (!dir.exists()) dir.mkdirs();
+            FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
             FileUtils.writeStr(transStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcTransFileName(), false);
             new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
         });
@@ -22069,17 +22071,15 @@ public class PlayerFrame extends JFrame {
     }
 
     // 虚化碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化
-    void doBlur() {
+    private void doBlur() {
         blurExecutor.submit(() -> {
             if (!player.loadedMusic()) return;
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
             if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurType.MC)
                 albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
-            else if (blurType == BlurType.LG) {
-                List<Color> colors = ColorThiefUtils.getPalette(albumImage, 3);
-                albumImage = ImageUtils.horizontalGradient(albumImage.getWidth(), albumImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
-            }
+            else if (blurType == BlurType.LG)
+                albumImage = ImageUtils.toGradient(albumImage);
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
                 gw = windowWidth;

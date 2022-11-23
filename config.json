@@ -37,6 +37,7 @@
 			"djId":"48536908"
 		},
 		{
+			"coverImgUrl":"",
 			"playCount":56044,
 			"trackCount":69,
 			"dj":"时间代码",
@@ -48,6 +49,7 @@
 			"djId":"285059948"
 		},
 		{
+			"coverImgUrl":"",
 			"playCount":442087,
 			"trackCount":36,
 			"dj":"代码时间",
@@ -517,12 +519,14 @@
 			"duration":362,
 			"albumName":"代码时间",
 			"artist":"真业余西",
+			"mvId":"",
 			"format":"m4a",
 			"name":"再见！",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"188230380"
+			"id":"188230380",
+			"programId":""
 		},
 		{
 			"duration":232,
@@ -4648,23 +4652,27 @@
 			"duration":2759,
 			"albumName":"代码时间",
 			"artist":"真业余西",
+			"mvId":"",
 			"format":"mp3",
 			"name":"开源和写作 - justjavac",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"49046547"
+			"id":"49046547",
+			"programId":""
 		},
 		{
 			"duration":362,
 			"albumName":"代码时间",
 			"artist":"真业余西",
+			"mvId":"",
 			"format":"mp3",
 			"name":"再见！",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"188230380"
+			"id":"188230380",
+			"programId":""
 		},
 		{
 			"duration":213,
@@ -5098,7 +5106,7 @@
 	"miniX":1037,
 	"autoDownloadLyric":true,
 	"miniY":-9,
-	"musicPlaying":3,
+	"musicPlaying":-1,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
@@ -6499,23 +6507,27 @@
 			"duration":2759,
 			"albumName":"代码时间",
 			"artist":"真业余西",
+			"mvId":"",
 			"format":"mp3",
 			"name":"开源和写作 - justjavac",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"49046547"
+			"id":"49046547",
+			"programId":""
 		},
 		{
 			"duration":362,
 			"albumName":"代码时间",
 			"artist":"真业余西",
+			"mvId":"",
 			"format":"mp3",
 			"name":"再见！",
 			"albumId":"4867505",
 			"artistId":"51547393",
 			"source":5,
-			"id":"188230380"
+			"id":"188230380",
+			"programId":""
 		},
 		{
 			"duration":213,

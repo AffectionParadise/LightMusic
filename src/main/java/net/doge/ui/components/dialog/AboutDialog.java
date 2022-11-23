@@ -12,7 +12,6 @@ import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.DialogButton;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
@@ -23,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @Author yzx
@@ -189,10 +187,8 @@ public class AboutDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) {
-                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
-                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
-            }
+            else if (f.blurType == BlurType.LG)
+                bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();

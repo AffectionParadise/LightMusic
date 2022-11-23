@@ -10,7 +10,6 @@ import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.JsonUtils;
 import net.sf.json.JSONObject;
@@ -26,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.List;
 
 /**
  * @Author yzx
@@ -79,17 +77,21 @@ public class SettingDialog extends JDialog {
     private CustomTextField cachePathTextField = new CustomTextField(20);
     private DialogButton changeCachePathButton;
     private DialogButton openCachePathButton;
+    private final int maxCacheSizeLimit = 4096;
     private CustomPanel maxCacheSizePanel = new CustomPanel();
-    private CustomLabel maxCacheSizeLabel = new CustomLabel("最大缓存大小(MB)：");
+    private CustomLabel maxCacheSizeLabel = new CustomLabel(String.format("最大缓存大小(≤%sMB)：", maxCacheSizeLimit));
     private CustomTextField maxCacheSizeTextField = new CustomTextField(10);
+    private final int maxHistoryCountLimit = 500;
     private CustomPanel maxHistoryCountPanel = new CustomPanel();
-    private CustomLabel maxHistoryCountLabel = new CustomLabel("最大播放历史数量：");
+    private CustomLabel maxHistoryCountLabel = new CustomLabel(String.format("最大播放历史数量(≤%s)：", maxHistoryCountLimit));
     private CustomTextField maxHistoryCountTextField = new CustomTextField(10);
+    private final int maxSearchHistoryLimit = 100;
     private CustomPanel maxSearchHistoryCountPanel = new CustomPanel();
-    private CustomLabel maxSearchHistoryCountLabel = new CustomLabel("最大搜索历史数量：");
+    private CustomLabel maxSearchHistoryCountLabel = new CustomLabel(String.format("最大搜索历史数量(≤%s)：", maxSearchHistoryLimit));
     private CustomTextField maxSearchHistoryCountTextField = new CustomTextField(10);
+    private final int maxConcurrentTaskCountLimit = 5;
     private CustomPanel maxConcurrentTaskCountPanel = new CustomPanel();
-    private CustomLabel maxConcurrentTaskCountLabel = new CustomLabel("同时下载的最大任务数：");
+    private CustomLabel maxConcurrentTaskCountLabel = new CustomLabel(String.format("同时下载的最大任务数(≤%s)：", maxConcurrentTaskCountLimit));
     private CustomTextField maxConcurrentTaskCountTextField = new CustomTextField(10);
     private CustomPanel closeOptionPanel = new CustomPanel();
     private CustomLabel closeOptionLabel = new CustomLabel("关闭主界面时：");
@@ -199,10 +201,8 @@ public class SettingDialog extends JDialog {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) {
-                List<Color> colors = ColorThiefUtils.getPalette(bufferedImage, 2);
-                bufferedImage = ImageUtils.horizontalGradient(bufferedImage.getWidth(), bufferedImage.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
-            }
+            else if (f.blurType == BlurType.LG)
+                bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();
@@ -306,19 +306,19 @@ public class SettingDialog extends JDialog {
         cachePathTextField.setCaretColor(foreColor);
         maxCacheSizeTextField.setForeground(foreColor);
         maxCacheSizeTextField.setCaretColor(foreColor);
-        SafeDocument doc = new SafeDocument(0, 4096);
+        SafeDocument doc = new SafeDocument(0, maxCacheSizeLimit);
         maxCacheSizeTextField.setDocument(doc);
         maxHistoryCountTextField.setForeground(foreColor);
         maxHistoryCountTextField.setCaretColor(foreColor);
-        doc = new SafeDocument(0, 1000);
+        doc = new SafeDocument(0, maxHistoryCountLimit);
         maxHistoryCountTextField.setDocument(doc);
         maxSearchHistoryCountTextField.setForeground(foreColor);
         maxSearchHistoryCountTextField.setCaretColor(foreColor);
-        doc = new SafeDocument(0, 100);
+        doc = new SafeDocument(0, maxSearchHistoryLimit);
         maxSearchHistoryCountTextField.setDocument(doc);
         maxConcurrentTaskCountTextField.setForeground(foreColor);
         maxConcurrentTaskCountTextField.setCaretColor(foreColor);
-        doc = new SafeDocument(1, 5);
+        doc = new SafeDocument(1, maxConcurrentTaskCountLimit);
         maxConcurrentTaskCountTextField.setDocument(doc);
 
         // 下拉框 UI

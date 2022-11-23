@@ -1,11 +1,11 @@
 package net.doge.models;
 
-import net.doge.constants.*;
-import net.doge.utils.MusicServerUtils;
 import lombok.Data;
+import net.doge.constants.*;
+import net.doge.utils.FileUtils;
+import net.doge.utils.MusicServerUtils;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -144,10 +144,8 @@ public class Task {
     }
 
     private void dirCheck() {
-        File dir = new File(SimplePath.DOWNLOAD_MUSIC_PATH);
-        if (!dir.exists()) dir.mkdirs();
-        dir = new File(SimplePath.DOWNLOAD_MV_PATH);
-        if (!dir.exists()) dir.mkdirs();
+        FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+        FileUtils.makeSureDir(SimplePath.DOWNLOAD_MV_PATH);
     }
 
     @Override

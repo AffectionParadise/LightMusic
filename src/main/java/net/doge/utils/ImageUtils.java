@@ -1,12 +1,9 @@
 package net.doge.utils;
 
-import cn.hutool.core.img.ColorUtil;
 import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
-import com.jhlabs.image.GradientFilter;
 import com.jhlabs.image.ShadowFilter;
-import com.sun.imageio.plugins.common.PaletteBuilder;
 import net.coobird.thumbnailator.Thumbnails;
 
 import javax.swing.*;
@@ -701,15 +698,25 @@ public class ImageUtils {
     }
 
     /**
-     * 生成两种颜色的水平渐变图像
+     * 图像转为线性渐变
      *
      * @return
      */
-    public static BufferedImage horizontalGradient(int w, int h, Color c1, Color c2) {
+    public static BufferedImage toGradient(BufferedImage img) {
+        List<Color> colors = ColorThiefUtils.getPalette(img, 5);
+        return linearGradient(img.getWidth(), img.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+    }
+
+    /**
+     * 生成两种颜色的渐变图像
+     *
+     * @return
+     */
+    public static BufferedImage linearGradient(int w, int h, Color c1, Color c2) {
         BufferedImage img = createTranslucentImage(w, h);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2);
+        GradientPaint gp = new GradientPaint(0, 0, c1, 0, h, c2);
         g.setPaint(gp);
         g.fillRect(0, 0, w, h);
         g.dispose();

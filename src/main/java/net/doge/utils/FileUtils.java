@@ -1,6 +1,5 @@
 package net.doge.utils;
 
-import cn.hutool.core.io.FileUtil;
 import net.doge.models.Statement;
 
 import java.io.*;
@@ -42,6 +41,20 @@ public class FileUtils {
     public static String getSuffix(File file) {
         String name = file.getName();
         return name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+    }
+
+    /**
+     * 确保文件夹存在，若不存在则创建
+     */
+    public static void makeSureDir(String dirPath) {
+        makeSureDir(new File(dirPath));
+    }
+
+    /**
+     * 确保文件夹存在，若不存在则创建
+     */
+    public static void makeSureDir(File dir) {
+        if (!dir.exists()) dir.mkdirs();
     }
 
     /**
@@ -304,7 +317,7 @@ public class FileUtils {
     public static void writeStr(String str, String dest, boolean append) {
         if (str == null) return;
         File file = new File(dest);
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))) {
             writer.write(str);
         } catch (IOException e) {
             e.printStackTrace();
