@@ -180,6 +180,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         boolean slight = false;
         if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
+            if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG) 

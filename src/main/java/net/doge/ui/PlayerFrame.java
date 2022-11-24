@@ -728,7 +728,7 @@ public class PlayerFrame extends JFrame {
     private BufferedImage loadingImage;
 
     {
-        defaultAlbumImage = ImageUtils.eraseTranslucency(ImageUtils.read(SimplePath.ICON_PATH + "album.png"));
+        defaultAlbumImage = ImageUtils.read(SimplePath.ICON_PATH + "album.png");
         loadingImage = ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
     }
 
@@ -22075,6 +22075,7 @@ public class PlayerFrame extends JFrame {
         blurExecutor.submit(() -> {
             if (!player.loadedMusic()) return;
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
+            if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurType.MC)
                 albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
             else if (blurType == BlurType.LG)
