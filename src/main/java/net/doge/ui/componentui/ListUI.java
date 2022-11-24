@@ -28,7 +28,7 @@ public class ListUI extends BasicListUI {
             try {
                 super.updateLayoutState();
                 cont = false;
-            } catch (ArrayIndexOutOfBoundsException e) {
+            } catch (Exception e) {
 
             }
         }

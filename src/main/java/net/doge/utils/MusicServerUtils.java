@@ -9836,7 +9836,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[8])) {
-                String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[7].trim(), page, limit))
+                String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[8].trim(), page, limit))
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
@@ -9872,7 +9872,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[8])) {
-                String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[7].trim(), page, limit))
+                String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[8].trim(), page, limit))
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);

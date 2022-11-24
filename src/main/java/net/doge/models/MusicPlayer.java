@@ -29,7 +29,7 @@ import java.net.URISyntaxException;
 @Data
 public class MusicPlayer {
     // 播放界面
-    private PlayerFrame playerFrame;
+    private PlayerFrame f;
     // 当前载入的文件的信息
     private SimpleMusicInfo musicInfo = new SimpleMusicInfo();
     // 载入的在线音乐信息，如果是离线音乐则为 null
@@ -44,8 +44,8 @@ public class MusicPlayer {
     private double[] specsOrigin = new double[SpectrumConstants.NUM_BANDS];
     private double[] specsGap = new double[SpectrumConstants.NUM_BANDS];
 
-    public MusicPlayer(PlayerFrame playerFrame) {
-        this.playerFrame = playerFrame;
+    public MusicPlayer(PlayerFrame f) {
+        this.f = f;
         status = PlayerStatus.EMPTY;
     }
 
@@ -177,7 +177,7 @@ public class MusicPlayer {
                 if (!netMusicInfo.hasAlbumImage()) {
                     netMusicInfo.setInvokeLater(() -> {
                         BufferedImage albumImage = netMusicInfo.getAlbumImage();
-                        musicInfo.setAlbumImage(albumImage == null ? playerFrame.getDefaultAlbumImage() : albumImage);
+                        musicInfo.setAlbumImage(albumImage == null ? f.getDefaultAlbumImage() : albumImage);
                     });
                 } else musicInfo.setAlbumImage(netMusicInfo.getAlbumImage());
             });
@@ -197,7 +197,7 @@ public class MusicPlayer {
             // 获取 MP3 专辑图片
             GlobalExecutors.imageExecutor.submit(() -> {
                 BufferedImage albumImage = MusicUtils.getAlbumImage(source);
-                musicInfo.setAlbumImage(albumImage == null ? playerFrame.getDefaultAlbumImage() : albumImage);
+                musicInfo.setAlbumImage(albumImage == null ? f.getDefaultAlbumImage() : albumImage);
             });
         }
         // 其他类型的文件信息
@@ -205,7 +205,7 @@ public class MusicPlayer {
             musicInfo.setName(source.getNameWithoutSuffix());
             musicInfo.setArtist("未知");
             musicInfo.setAlbumName("未知");
-            musicInfo.setAlbumImage(playerFrame.getDefaultAlbumImage());
+            musicInfo.setAlbumImage(f.getDefaultAlbumImage());
         }
     }
 
@@ -233,7 +233,7 @@ public class MusicPlayer {
         mp = new MediaPlayer(media);
         play();
         // 播放器状态监听器
-        playerFrame.loadMonitor(mp);
+        f.loadMonitor(mp);
         // 设置频谱更新间隔
         mp.setAudioSpectrumInterval(SpectrumConstants.PLAYER_INTERVAL);
         // 设置频谱更新数量

@@ -1,7 +1,9 @@
 package net.doge.ui.components.dialog;
 
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.*;
+import net.doge.constants.BlurType;
+import net.doge.constants.Colors;
+import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
@@ -9,7 +11,6 @@ import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.DialogButton;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ColorThiefUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 
@@ -21,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @Author yzx
@@ -209,7 +209,7 @@ public class DonateDialog extends JDialog {
         dispose();
     }
 
-    void doBlur(BufferedImage bufferedImage, boolean slight) {
+    private void doBlur(BufferedImage bufferedImage, boolean slight) {
         int dw = getWidth(), dh = getHeight();
         try {
             // 截取中间的一部分(有的图片是长方形)
@@ -219,16 +219,25 @@ public class DonateDialog extends JDialog {
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            bufferedImage = slight ? ImageUtils.slightDarker(bufferedImage) : ImageUtils.darker(ImageUtils.doBlur(bufferedImage));
+            if (slight) {
+                bufferedImage = ImageUtils.slightDarker(bufferedImage);
+            } else {
+                if (f.blurType == BlurType.GS) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                bufferedImage = ImageUtils.darker(bufferedImage);
+            }
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
-            int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
             // 裁剪中间的一部分
-            bufferedImage = Thumbnails.of(bufferedImage)
-                    .scale(1f)
-                    .sourceRegion(dw > dh ? 0 : (iw - dw) / 2, dw > dh ? (ih - dh) / 2 : 0, dw, dh)
-                    .outputQuality(0.1)
-                    .asBufferedImage();
+            if (f.blurType == BlurType.GS) {
+                int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
+                bufferedImage = Thumbnails.of(bufferedImage)
+                        .scale(1f)
+                        .sourceRegion(dw > dh ? 0 : (iw - dw) / 2, dw > dh ? (ih - dh) / 2 : 0, dw, dh)
+                        .outputQuality(0.1)
+                        .asBufferedImage();
+            } else {
+                bufferedImage = ImageUtils.forceSize(bufferedImage, dw, dh);
+            }
             // 设置圆角
             bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
             mainPanel.setBackgroundImage(bufferedImage);

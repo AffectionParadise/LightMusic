@@ -433,21 +433,6 @@ public class ImageUtils {
     }
 
     /**
-     * 获取指定区域屏幕截图
-     *
-     * @param rect
-     * @return
-     */
-    public static BufferedImage getScreenCapture(Rectangle rect) {
-        try {
-            Robot robot = new Robot();
-            return robot.createScreenCapture(rect);
-        } catch (AWTException e) {
-            return null;
-        }
-    }
-
-    /**
      * 对 BufferedImage 进行毛玻璃化(高斯模糊)处理，用于专辑背景
      *
      * @param bufferedImage
@@ -466,17 +451,6 @@ public class ImageUtils {
      */
     public static BufferedImage doSlightBlur(BufferedImage bufferedImage) {
         gaussianFilter.setRadius(bufferedImage.getWidth() / 25);
-        return gaussianFilter.filter(bufferedImage, null);
-    }
-
-    /**
-     * 对 BufferedImage 进行精细毛玻璃化(高斯模糊)处理，用于迷你背景
-     *
-     * @param bufferedImage
-     * @return
-     */
-    public static BufferedImage doDelicateBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(bufferedImage.getWidth() / 128);
         return gaussianFilter.filter(bufferedImage, null);
     }
 
@@ -643,6 +617,23 @@ public class ImageUtils {
     }
 
     /**
+     * 设置图片宽度和高度，返回新的 BufferedImage
+     *
+     * @param image
+     * @param width
+     * @param height
+     * @return
+     * @throws IOException
+     */
+    public static BufferedImage forceSize(BufferedImage image, int width, int height) {
+        try {
+            return Thumbnails.of(image).forceSize(width, height).asBufferedImage();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
      * 将宽高不相等的图片剪成正方形，保留中间部分
      *
      * @param image
@@ -703,7 +694,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage toGradient(BufferedImage img) {
-        List<Color> colors = ColorThiefUtils.getPalette(img, 5);
+        List<Color> colors = ColorThiefUtils.getPalette(img, 3);
         return linearGradient(img.getWidth(), img.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
     }
 

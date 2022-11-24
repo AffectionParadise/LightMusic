@@ -1,23 +1,24 @@
 package net.doge.ui.components.dialog;
 
 import com.sun.media.jfxmedia.locator.Locator;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.media.MediaException;
-import net.doge.constants.*;
-import net.doge.models.*;
-import net.doge.ui.components.*;
-import net.doge.ui.PlayerFrame;
-import net.doge.ui.componentui.RadioButtonMenuItemUI;
-import net.doge.ui.componentui.SliderUI;
-import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.*;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.*;
+import net.doge.models.NetMvInfo;
+import net.doge.models.UIStyle;
+import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.*;
+import net.doge.ui.componentui.RadioButtonMenuItemUI;
+import net.doge.ui.componentui.SliderUI;
+import net.doge.ui.listeners.ButtonMouseListener;
+import net.doge.utils.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,7 +31,6 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.List;
 
 /**
  * @Author yzx
@@ -744,7 +744,7 @@ public class VideoDialog extends JDialog {
         }
     }
 
-    private void doBlur(BufferedImage bufferedImage, boolean slight) {
+    void doBlur(BufferedImage bufferedImage, boolean slight) {
         Dimension size = getSize();
         int dw = size.width, dh = size.height;
         try {
@@ -759,13 +759,17 @@ public class VideoDialog extends JDialog {
             if (!slight) bufferedImage = ImageUtils.darker(bufferedImage);
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
-            int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
             // 裁剪中间的一部分
-            bufferedImage = Thumbnails.of(bufferedImage)
-                    .scale(1f)
-                    .sourceRegion(dw > dh ? 0 : (iw - dw) / 2, dw > dh ? (ih - dh) / 2 : 0, dw, dh)
-                    .outputQuality(0.1)
-                    .asBufferedImage();
+            if (f.blurType == BlurType.GS) {
+                int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
+                bufferedImage = Thumbnails.of(bufferedImage)
+                        .scale(1f)
+                        .sourceRegion(dw > dh ? 0 : (iw - dw) / 2, dw > dh ? (ih - dh) / 2 : 0, dw, dh)
+                        .outputQuality(0.1)
+                        .asBufferedImage();
+            } else {
+                bufferedImage = ImageUtils.forceSize(bufferedImage, dw, dh);
+            }
             // 设置圆角
             bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
             globalPanel.setBackgroundImage(bufferedImage);

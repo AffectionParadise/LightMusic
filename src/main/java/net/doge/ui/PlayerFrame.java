@@ -728,7 +728,7 @@ public class PlayerFrame extends JFrame {
     private BufferedImage loadingImage;
 
     {
-        defaultAlbumImage = ImageUtils.read(SimplePath.ICON_PATH + "album.png");
+        defaultAlbumImage = ImageUtils.eraseTranslucency(ImageUtils.read(SimplePath.ICON_PATH + "album.png"));
         loadingImage = ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
     }
 
@@ -18879,14 +18879,14 @@ public class PlayerFrame extends JFrame {
                     if (index == -1) return;
                     lrcList.setSelectedIndex(index);
                     String lyric = lrcListModel.get(index).getLyric();
-                    if ("".equals(lyric.trim())) return;
+                    if (lyric.trim().isEmpty()) return;
                     // 歌曲有歌词时才能查看
                     locateLrcMenuItem.setEnabled(nextLrc >= 0);
                     browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS);
                     // 在线音乐歌词有翻译才能查看翻译
                     browseLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
                     // 只允许下载在线音乐的歌词
-                    downloadLrcMenuItem.setEnabled(player.isPlayingNetMusic() && nextLrc != NextLrc.NOT_EXISTS);
+                    downloadLrcMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasLrc());
                     // 在线音乐歌词有翻译才能下载翻译
                     downloadLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
 
@@ -18895,7 +18895,7 @@ public class PlayerFrame extends JFrame {
                 // 双击定位歌词时间
                 else if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     String lyric = lrcList.getSelectedValue().getLyric();
-                    if ("".equals(lyric.trim())) return;
+                    if (lyric.trim().isEmpty()) return;
                     if (nextLrc >= 0) locateLrcMenuItem.doClick();
                 }
             }
@@ -22075,7 +22075,6 @@ public class PlayerFrame extends JFrame {
         blurExecutor.submit(() -> {
             if (!player.loadedMusic()) return;
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
-            if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurType.MC)
                 albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
             else if (blurType == BlurType.LG)
@@ -22097,17 +22096,19 @@ public class PlayerFrame extends JFrame {
                 // 处理成 100 * 100 大小
                 bufferedImage = ImageUtils.width(bufferedImage, 100);
                 // 高斯模糊并暗化
-                bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (blurType == BlurType.GS) bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
                 // 放大至窗口大小
                 bufferedImage = ImageUtils.width(bufferedImage, gw);
-                int ih = bufferedImage.getHeight();
                 // 裁剪中间的一部分
-                bufferedImage = Thumbnails.of(bufferedImage)
-                        .scale(1f)
-                        .sourceRegion(0, (ih - gh) / 2, gw, gh)
-                        .outputQuality(0.1)
-                        .asBufferedImage();
+                if (blurType == BlurType.GS) {
+                    int ih = bufferedImage.getHeight();
+                    bufferedImage = Thumbnails.of(bufferedImage)
+                            .scale(1f)
+                            .sourceRegion(0, (ih - gh) / 2, gw, gh)
+                            .outputQuality(0.1)
+                            .asBufferedImage();
+                }
                 // 设置圆角
 //                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
                 globalPanel.setBackgroundImage(bufferedImage);
