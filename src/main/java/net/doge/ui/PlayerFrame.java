@@ -729,7 +729,7 @@ public class PlayerFrame extends JFrame {
 
     {
         defaultAlbumImage = ImageUtils.read(SimplePath.ICON_PATH + "album.png");
-        loadingImage = ImageUtils.borderShadow(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth));
+        loadingImage = ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
     }
 
     // 全局字体
@@ -2284,7 +2284,7 @@ public class PlayerFrame extends JFrame {
     public int y;
 
     // 更新格言
-    void updateMotto() {
+    private void updateMotto() {
         globalExecutor.submit(() -> {
             try {
                 motto = MusicServerUtils.getMotto();
@@ -2558,7 +2558,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化标题栏
-    void titleBarInit() {
+    private void titleBarInit() {
         titleLabel.setText(TITLE);
         titleLabel.setIcon(titleIcon);
         titleLabel.setIconTextGap(15);
@@ -2724,7 +2724,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 加载全局快捷键监听器，AWTEventListener
-    void loadHotKeyListener() {
+    private void loadHotKeyListener() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.addAWTEventListener(event -> {
             if (event instanceof KeyEvent) {
@@ -2803,7 +2803,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 加载配置
-    void loadConfig() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, AWTException {
+    private void loadConfig() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, IOException, AWTException {
         JSONObject config = JsonUtils.readJson(ConfigConstants.fileName);
         // 载入已保存的自定义风格(逆序加载，这样才能保持顺序一致)
         JSONArray styleArray = config.optJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
@@ -4301,7 +4301,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化标签页
-    void tabbedPaneInit() {
+    private void tabbedPaneInit() {
         // 组装标签面板
         int gap = 10;
         personalMusicLabel.setIconTextGap(gap);
@@ -4712,7 +4712,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化收藏标签页
-    void collectionTabbedPaneInit() {
+    private void collectionTabbedPaneInit() {
         // 组装标签面板
         int gap = 10;
         musicCollectionLabel.setIconTextGap(gap);
@@ -4941,7 +4941,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化收藏工具条
-    void collectionToolBarInit() {
+    private void collectionToolBarInit() {
 //        collectionPageTextField.addFocusListener(
 //                new JTextFieldHintListener(collectionPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
@@ -5236,7 +5236,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化收藏列表
-    void collectionListInit() {
+    private void collectionListInit() {
         collectionList.setModel(playlistCollectionModel);
         collectionList.addKeyListener(new KeyAdapter() {
             @Override
@@ -5251,27 +5251,26 @@ public class PlayerFrame extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 int index = collectionList.locationToIndex(e.getPoint());
                 Rectangle bounds = collectionList.getCellBounds(index, index);
-                if (bounds != null) setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) collectionList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    collectionList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                collectionList.repaint();
             }
         });
         collectionList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) collectionList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    collectionList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                collectionList.repaint();
             }
         });
         openCollectionItemAction = () -> {
@@ -5288,7 +5287,8 @@ public class PlayerFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        collectionItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setVisible(true);
@@ -5385,7 +5385,8 @@ public class PlayerFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        collectionItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
                         collectionItemTagLabel.setVisible(false);
@@ -5479,7 +5480,8 @@ public class PlayerFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        collectionItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setVisible(true);
@@ -5576,7 +5578,8 @@ public class PlayerFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        collectionItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setVisible(true);
@@ -5672,7 +5675,8 @@ public class PlayerFrame extends JFrame {
                     NetRankingInfo rankingInfo = (NetRankingInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        collectionItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
                         collectionItemTagLabel.setVisible(false);
@@ -5765,13 +5769,14 @@ public class PlayerFrame extends JFrame {
                     NetUserInfo userInfo = (NetUserInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        ImageIcon img = ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor());
-                        collectionItemCoverAndNameLabel.setIcon(img);
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        ImageIcon icon = new ImageIcon(coverImg);
+                        collectionItemCoverAndNameLabel.setIcon(icon);
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
                         collectionItemTagLabel.setVisible(true);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
-                        collectionItemDescriptionLabel.setIcon(img);
+                        collectionItemDescriptionLabel.setIcon(icon);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtils.fillUserInfo(userInfo);
@@ -5816,7 +5821,7 @@ public class PlayerFrame extends JFrame {
                             // 网易云/猫耳用户才显示下拉框
                             if (userInfo.fromNetCloud())
                                 collectionRecordTypeComboBox.setModel(collectionRecordTypeComboBoxModel);
-                            else if (userInfo.fromME()||userInfo.fromBI())
+                            else if (userInfo.fromME() || userInfo.fromBI())
                                 collectionRecordTypeComboBox.setModel(collectionOrderComboBoxModel);
 
                             CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
@@ -5838,7 +5843,7 @@ public class PlayerFrame extends JFrame {
                             collectionLeftBox.add(musicCollectionToolBar, 0);
                             SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
                             collectionRecordTypeComboBox.setUI(ui);
-                            collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME()||userInfo.fromBI());
+                            collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromBI());
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForUserCollectionModel.clear();
@@ -5957,7 +5962,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化标签
-    void labelInit() {
+    private void labelInit() {
         // 设置 HTML 标签并居中图片
         albumImageLabel.setText("<html></html>");
         // 导出专辑图片事件
@@ -6025,7 +6030,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化个人音乐工具栏
-    void personalMusicToolBarInit() {
+    private void personalMusicToolBarInit() {
         // 离线音乐事件
         localMusicButton.addActionListener(e -> {
             currPersonalMusicTab = PersonalMusicTabIndex.LOCAL_MUSIC;
@@ -6154,7 +6159,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化离线音乐工具栏
-    void musicToolBarInit() {
+    private void musicToolBarInit() {
         // 按钮悬浮和点击效果
         addToolButton.addMouseListener(new ButtonMouseListener(addToolButton, THIS));
         reimportToolButton.addMouseListener(new ButtonMouseListener(reimportToolButton, THIS));
@@ -6628,7 +6633,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化个人音乐列表
-    void musicListInit() {
+    private void musicListInit() {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -6748,11 +6753,13 @@ public class PlayerFrame extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 int index = musicList.locationToIndex(e.getPoint());
                 Rectangle bounds = musicList.getCellBounds(index, index);
-                if (bounds != null) setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) musicList.getCellRenderer();
+                if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
                 renderer.setHoverIndex(index);
@@ -6763,6 +6770,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) musicList.getCellRenderer();
+                if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 musicList.repaint();
             }
@@ -6974,7 +6982,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线音乐工具栏
-    void netMusicToolBarInit() {
+    private void netMusicToolBarInit() {
         searchTextField.addFocusListener(new TextFieldHintListener(searchTextField, "单曲/歌手/专辑/歌词/节目", currUIStyle.getForeColor()));
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -7321,7 +7329,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线音乐列表
-    void netMusicListInit() {
+    private void netMusicListInit() {
         netMusicList.setModel(netMusicListModel);
         netMusicList.addKeyListener(new KeyAdapter() {
             @Override
@@ -7335,12 +7343,14 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netMusicList.locationToIndex(e.getPoint());
-                Rectangle rect = netMusicList.getCellBounds(index, index);
-                setHoverIndex(rect != null && rect.contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netMusicList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetMusicListRenderer renderer = (TranslucentNetMusicListRenderer) netMusicList.getCellRenderer();
+                if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
                 renderer.setHoverIndex(index);
@@ -7351,6 +7361,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetMusicListRenderer renderer = (TranslucentNetMusicListRenderer) netMusicList.getCellRenderer();
+                if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netMusicList.repaint();
             }
@@ -8082,7 +8093,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化描述盒子
-    void descriptionPanelInit() {
+    private void descriptionPanelInit() {
         // 描述标签垂直对齐方式
         playlistTagLabel.setVerticalAlignment(SwingConstants.TOP);
         playlistDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -8343,7 +8354,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线歌单工具栏
-    void netPlaylistToolBarInit() {
+    private void netPlaylistToolBarInit() {
         netPlaylistSearchTextField.addFocusListener(new TextFieldHintListener(netPlaylistSearchTextField, "歌单", currUIStyle.getForeColor()));
         netPlaylistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -8826,17 +8837,20 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线歌单
-    void netPlaylistListInit() {
+    private void netPlaylistListInit() {
         netPlaylistList.setModel(netPlaylistListModel);
         netPlaylistList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netPlaylistList.locationToIndex(e.getPoint());
-                setHoverIndex(netPlaylistList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netPlaylistList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetPlaylistListRenderer renderer = (TranslucentNetPlaylistListRenderer) netPlaylistList.getCellRenderer();
+                if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
                 renderer.setHoverIndex(index);
@@ -8847,6 +8861,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetPlaylistListRenderer renderer = (TranslucentNetPlaylistListRenderer) netPlaylistList.getCellRenderer();
+                if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netPlaylistList.repaint();
             }
@@ -8858,7 +8873,8 @@ public class PlayerFrame extends JFrame {
                 NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    playlistCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                    playlistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     playlistCoverAndNameLabel.setText(LOADING_MSG);
                     playlistTagLabel.setText(LOADING_MSG);
                     playlistDescriptionLabel.setText(LOADING_MSG);
@@ -9338,7 +9354,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线专辑工具栏
-    void netAlbumToolBarInit() {
+    private void netAlbumToolBarInit() {
         netAlbumSearchTextField.addFocusListener(new TextFieldHintListener(netAlbumSearchTextField, "专辑", currUIStyle.getForeColor()));
         netAlbumSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -9826,33 +9842,33 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线专辑列表
-    void netAlbumListInit() {
+    private void netAlbumListInit() {
         netAlbumList.setModel(netAlbumListModel);
         netAlbumList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netAlbumList.locationToIndex(e.getPoint());
-                setHoverIndex(netAlbumList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netAlbumList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetAlbumListRenderer renderer = (TranslucentNetAlbumListRenderer) netAlbumList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    netAlbumList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                netAlbumList.repaint();
             }
         });
         netAlbumList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetAlbumListRenderer renderer = (TranslucentNetAlbumListRenderer) netAlbumList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    netAlbumList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                netAlbumList.repaint();
             }
         });
         // 打开专辑
@@ -9862,7 +9878,8 @@ public class PlayerFrame extends JFrame {
                 NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    albumCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                    albumCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     albumCoverAndNameLabel.setText(LOADING_MSG);
                     albumDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
@@ -10355,7 +10372,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化歌手工具栏
-    void netArtistToolBarInit() {
+    private void netArtistToolBarInit() {
         netArtistSearchTextField.addFocusListener(new TextFieldHintListener(netArtistSearchTextField, "歌手", currUIStyle.getForeColor()));
         netArtistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -10854,33 +10871,33 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线歌手列表
-    void netArtistListInit() {
+    private void netArtistListInit() {
         netArtistList.setModel(netArtistListModel);
         netArtistList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netArtistList.locationToIndex(e.getPoint());
-                setHoverIndex(netArtistList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netArtistList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetArtistListRenderer renderer = (TranslucentNetArtistListRenderer) netArtistList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    netArtistList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                netArtistList.repaint();
             }
         });
         netArtistList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetArtistListRenderer renderer = (TranslucentNetArtistListRenderer) netArtistList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    netArtistList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                netArtistList.repaint();
             }
         });
         // 打开歌手
@@ -10890,7 +10907,8 @@ public class PlayerFrame extends JFrame {
                 NetArtistInfo artistInfo = netArtistList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    artistCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                    artistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     artistCoverAndNameLabel.setText(LOADING_MSG);
                     artistTagLabel.setText(LOADING_MSG);
                     artistDescriptionLabel.setText(LOADING_MSG);
@@ -11609,7 +11627,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化电台工具栏
-    void netRadioToolBarInit() {
+    private void netRadioToolBarInit() {
         netRadioSearchTextField.addFocusListener(new TextFieldHintListener(netRadioSearchTextField, "电台", currUIStyle.getForeColor()));
         netRadioSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -12100,33 +12118,33 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线电台列表
-    void netRadioListInit() {
+    private void netRadioListInit() {
         netRadioList.setModel(netRadioListModel);
         netRadioList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netRadioList.locationToIndex(e.getPoint());
-                setHoverIndex(netRadioList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netRadioList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetRadioListRenderer renderer = (TranslucentNetRadioListRenderer) netRadioList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    netRadioList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                netRadioList.repaint();
             }
         });
         netRadioList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetRadioListRenderer renderer = (TranslucentNetRadioListRenderer) netRadioList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    netRadioList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                netRadioList.repaint();
             }
         });
         // 打开电台
@@ -12136,7 +12154,8 @@ public class PlayerFrame extends JFrame {
                 NetRadioInfo radioInfo = netRadioList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    radioCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                    radioCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     radioCoverAndNameLabel.setText(LOADING_MSG);
                     radioTagLabel.setText(LOADING_MSG);
                     radioDescriptionLabel.setText(LOADING_MSG);
@@ -12756,7 +12775,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化 MV 工具栏
-    void netMvToolBarInit() {
+    private void netMvToolBarInit() {
         // 返回关键词面板事件
         netMvBackwardButton.addActionListener(e -> {
             // 删除标题标签
@@ -13083,34 +13102,33 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线 MV 列表
-    void netMvListInit() {
+    private void netMvListInit() {
         netMvList.setModel(netMvListModel);
         netMvList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netMvList.locationToIndex(e.getPoint());
                 Rectangle bounds = netMvList.getCellBounds(index, index);
-                if (bounds != null) setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetMvListRenderer renderer = (TranslucentNetMvListRenderer) netMvList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    netMvList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                netMvList.repaint();
             }
         });
         netMvList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetMvListRenderer renderer = (TranslucentNetMvListRenderer) netMvList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    netMvList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                netMvList.repaint();
             }
         });
         // 打开 MV
@@ -13531,7 +13549,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化榜单工具栏
-    void netRankingToolBarInit() {
+    private void netRankingToolBarInit() {
         // 只能输入数字
         netRankingPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
@@ -13832,17 +13850,20 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线榜单列表
-    void netRankingListInit() {
+    private void netRankingListInit() {
         netRankingList.setModel(netRankingListModel);
         netRankingList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netRankingList.locationToIndex(e.getPoint());
-                setHoverIndex(netRankingList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netRankingList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetRankingListRenderer renderer = (TranslucentNetRankingListRenderer) netRankingList.getCellRenderer();
+                if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
                 renderer.setHoverIndex(index);
@@ -13853,6 +13874,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetRankingListRenderer renderer = (TranslucentNetRankingListRenderer) netRankingList.getCellRenderer();
+                if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netRankingList.repaint();
             }
@@ -13864,7 +13886,8 @@ public class PlayerFrame extends JFrame {
                 NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    rankingCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                    rankingCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     rankingCoverAndNameLabel.setText(LOADING_MSG);
                     rankingDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
@@ -14091,7 +14114,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化用户工具栏
-    void netUserToolBarInit() {
+    private void netUserToolBarInit() {
         netUserSearchTextField.addFocusListener(new TextFieldHintListener(netUserSearchTextField, "用户", currUIStyle.getForeColor()));
         netUserSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -14610,23 +14633,24 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线用户列表
-    void netUserListInit() {
+    private void netUserListInit() {
         netUserList.setModel(netUserListModel);
         netUserList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netUserList.locationToIndex(e.getPoint());
-                setHoverIndex(netUserList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netUserList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetUserListRenderer renderer = (TranslucentNetUserListRenderer) netUserList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    netUserList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                netUserList.repaint();
             }
         });
         netUserList.addMouseListener(new MouseAdapter() {
@@ -14645,12 +14669,13 @@ public class PlayerFrame extends JFrame {
                 NetUserInfo userInfo = netUserList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    ImageIcon img = ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor());
-                    userCoverAndNameLabel.setIcon(img);
+                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                    ImageIcon icon = new ImageIcon(coverImg);
+                    userCoverAndNameLabel.setIcon(icon);
                     userCoverAndNameLabel.setText(LOADING_MSG);
                     userTagLabel.setText(LOADING_MSG);
                     userDescriptionLabel.setText(LOADING_MSG);
-                    userDescriptionLabel.setIcon(img);
+                    userDescriptionLabel.setIcon(icon);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtils.fillUserInfo(userInfo);
@@ -14694,7 +14719,7 @@ public class PlayerFrame extends JFrame {
                     try {
                         // 网易云/猫耳/哔哩用户才显示下拉框
                         if (userInfo.fromNetCloud()) netUserRecordTypeComboBox.setModel(recordTypeComboBoxModel);
-                        else if (userInfo.fromME()||userInfo.fromBI())
+                        else if (userInfo.fromME() || userInfo.fromBI())
                             netUserRecordTypeComboBox.setModel(orderComboBoxModel);
 
                         // 得到用户的音乐信息
@@ -14703,7 +14728,7 @@ public class PlayerFrame extends JFrame {
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME()||userInfo.fromBI());
+                        netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromBI());
                         // 更新用户歌曲数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netMusicInUserCurrPage, netMusicInUserMaxPage));
                         userListCountBox.add(netUserCountPanel);
@@ -15466,7 +15491,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化评论工具栏
-    void netCommentToolBarInit() {
+    private void netCommentToolBarInit() {
         // 只能输入数字
         netCommentPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
@@ -15596,33 +15621,33 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线评论列表
-    void netCommentListInit() {
+    private void netCommentListInit() {
         netCommentList.setModel(netCommentListModel);
         netCommentList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netCommentList.locationToIndex(e.getPoint());
-                setHoverIndex(netCommentList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netCommentList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetCommentListRenderer renderer = (TranslucentNetCommentListRenderer) netCommentList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    netCommentList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                netCommentList.repaint();
             }
         });
         netCommentList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetCommentListRenderer renderer = (TranslucentNetCommentListRenderer) netCommentList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    netCommentList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                netCommentList.repaint();
             }
         });
         netCommentList.addMouseListener(new MouseAdapter() {
@@ -15887,7 +15912,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化乐谱工具栏
-    void netSheetToolBarInit() {
+    private void netSheetToolBarInit() {
         // 只能输入数字
         netSheetPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
@@ -16004,7 +16029,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化在线乐谱列表
-    void netSheetListInit() {
+    private void netSheetListInit() {
         netSheetList.setModel(netSheetListModel);
         netSheetList.addKeyListener(new KeyAdapter() {
             @Override
@@ -16018,27 +16043,27 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = netSheetList.locationToIndex(e.getPoint());
-                setHoverIndex(netSheetList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = netSheetList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentNetSheetListRenderer renderer = (TranslucentNetSheetListRenderer) netSheetList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    netSheetList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                netSheetList.repaint();
             }
         });
         netSheetList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentNetSheetListRenderer renderer = (TranslucentNetSheetListRenderer) netSheetList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    netSheetList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                netSheetList.repaint();
             }
         });
         netSheetList.addMouseListener(new MouseAdapter() {
@@ -16117,7 +16142,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化推荐工具条
-    void recommendToolBarInit() {
+    private void recommendToolBarInit() {
         // 只能输入数字
         netRecommendPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 推荐后退按钮事件
@@ -17623,34 +17648,33 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化推荐歌单/专辑/歌手/电台列表
-    void itemRecommendListInit() {
+    private void itemRecommendListInit() {
         itemRecommendList.setModel(playlistRecommendListModel);
         itemRecommendList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = itemRecommendList.locationToIndex(e.getPoint());
-                Rectangle rect = itemRecommendList.getCellBounds(index, index);
-                setHoverIndex(rect != null && rect.contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = itemRecommendList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) itemRecommendList.getCellRenderer();
-                if (renderer != null) {
-                    int hoverIndex = renderer.getHoverIndex();
-                    if (hoverIndex == index) return;
-                    renderer.setHoverIndex(index);
-                    itemRecommendList.repaint();
-                }
+                if (renderer == null) return;
+                int hoverIndex = renderer.getHoverIndex();
+                if (hoverIndex == index) return;
+                renderer.setHoverIndex(index);
+                itemRecommendList.repaint();
             }
         });
         itemRecommendList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) itemRecommendList.getCellRenderer();
-                if (renderer != null) {
-                    renderer.setHoverIndex(-1);
-                    itemRecommendList.repaint();
-                }
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                itemRecommendList.repaint();
             }
         });
         openRecommendItemAction = () -> {
@@ -17667,7 +17691,8 @@ public class PlayerFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        recommendItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setVisible(true);
@@ -17763,7 +17788,8 @@ public class PlayerFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        recommendItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText("");
                         recommendItemTagLabel.setVisible(false);
@@ -17856,7 +17882,8 @@ public class PlayerFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        recommendItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setVisible(true);
@@ -17952,7 +17979,8 @@ public class PlayerFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        recommendItemCoverAndNameLabel.setIcon(ImageUtils.dye(new ImageIcon(loadingImage), currUIStyle.getForeColor()));
+                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getLabelColor()));
+                        recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setVisible(true);
@@ -18145,7 +18173,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化下载工具条
-    void downloadToolBarInit() {
+    private void downloadToolBarInit() {
         // 按钮悬浮和点击效果
         restartSelectedTasksButton.addMouseListener(new ButtonMouseListener(restartSelectedTasksButton, THIS));
         cancelSelectedTasksButton.addMouseListener(new ButtonMouseListener(cancelSelectedTasksButton, THIS));
@@ -18223,7 +18251,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化下载列表
-    void downloadListInit() {
+    private void downloadListInit() {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -18256,11 +18284,14 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = downloadList.locationToIndex(e.getPoint());
-                setHoverIndex(downloadList.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = downloadList.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentDownloadListRenderer renderer = (TranslucentDownloadListRenderer) downloadList.getCellRenderer();
+                if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
                 renderer.setHoverIndex(index);
@@ -18271,6 +18302,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentDownloadListRenderer renderer = (TranslucentDownloadListRenderer) downloadList.getCellRenderer();
+                if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 downloadList.repaint();
             }
@@ -18392,7 +18424,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化播放队列工具条
-    void playQueueToolBarInit() {
+    private void playQueueToolBarInit() {
         // 按钮悬浮和点击效果
         playQueueRemoveToolButton.addMouseListener(new ButtonMouseListener(playQueueRemoveToolButton, THIS));
         playQueueClearToolButton.addMouseListener(new ButtonMouseListener(playQueueClearToolButton, THIS));
@@ -18521,7 +18553,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化播放队列列表
-    void playQueueInit() {
+    private void playQueueInit() {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -18555,11 +18587,14 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = playQueue.locationToIndex(e.getPoint());
-                setHoverIndex(playQueue.getCellBounds(index, index).contains(e.getPoint()) ? index : -1);
+                Rectangle bounds = playQueue.getCellBounds(index, index);
+                if (bounds == null) return;
+                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
                 TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) playQueue.getCellRenderer();
+                if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
                 renderer.setHoverIndex(index);
@@ -18570,6 +18605,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
                 TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) playQueue.getCellRenderer();
+                if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 playQueue.repaint();
             }
@@ -18790,7 +18826,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化歌词列表
-    void lrcListInit() {
+    private void lrcListInit() {
         // 复制歌词
         copyMenuItem.addActionListener(e -> {
             Statement stmt = lrcList.getSelectedValue();
@@ -18886,7 +18922,7 @@ public class PlayerFrame extends JFrame {
                     // 在线音乐歌词有翻译才能查看翻译
                     browseLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
                     // 只允许下载在线音乐的歌词
-                    downloadLrcMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasLrc());
+                    downloadLrcMenuItem.setEnabled(player.isPlayingNetMusic() && nextLrc != NextLrc.NOT_EXISTS);
                     // 在线音乐歌词有翻译才能下载翻译
                     downloadLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
 
@@ -18965,7 +19001,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化动画 Timer
-    void timerInit() {
+    private void timerInit() {
         spectrumTimer = new Timer(SpectrumConstants.TIMER_INTERVAL, e -> {
             spectrumExecutor.submit(() -> {
                 double[] specs = player.getSpecs();
@@ -19059,7 +19095,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化进度条
-    void timeBarInit() {
+    private void timeBarInit() {
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
@@ -19589,8 +19625,6 @@ public class PlayerFrame extends JFrame {
         albumLabel.setText(StringUtils.textToHtml(ALBUM_NAME_LABEL + player.getMusicInfo().getAlbumName()));
         albumLabel.setVisible(false);
         albumLabel.setVisible(true);
-        // 加载专辑图片
-        loadAlbumImage();
     }
 
     // 界面关闭文件
@@ -19643,37 +19677,38 @@ public class PlayerFrame extends JFrame {
     }
 
     // 加载专辑图片
-    private void loadAlbumImage() {
-        // 设置为默认专辑图片
-        saveAlbumImageMenuItem.setEnabled(false);
-        BufferedImage img = ImageUtils.width(ImageUtils.cropCenter(defaultAlbumImage), albumImageWidth);
-        albumImageLabel.setIcon(
-                ImageUtils.dye(new ImageIcon(ImageUtils.borderShadow(ImageUtils.setRadius(img, LARGE_ARC))), currUIStyle.getLabelColor())
-        );
-        changePaneButton.setIcon(
-                ImageUtils.dye(new ImageIcon(ImageUtils.setRadius(ImageUtils.width(img, changePaneImageWidth), TINY_ARC)), currUIStyle.getLabelColor())
-        );
-        if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
-
-        SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
-
-        if (!simpleMusicInfo.hasAlbumImage()) simpleMusicInfo.setInvokeLater(() -> showAlbumImage());
-        else showAlbumImage();
-    }
+//    private void loadAlbumImage() {
+//        // 设置为默认专辑图片
+//        saveAlbumImageMenuItem.setEnabled(false);
+//        BufferedImage img = ImageUtils.width(ImageUtils.cropCenter(defaultAlbumImage), albumImageWidth);
+//        albumImageLabel.setIcon(
+//                ImageUtils.dye(new ImageIcon(ImageUtils.borderShadow(ImageUtils.setRadius(img, LARGE_ARC))), currUIStyle.getLabelColor())
+//        );
+//        changePaneButton.setIcon(
+//                ImageUtils.dye(new ImageIcon(ImageUtils.setRadius(ImageUtils.width(img, changePaneImageWidth), TINY_ARC)), currUIStyle.getLabelColor())
+//        );
+//        if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
+//
+//        SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
+//
+//        if (!simpleMusicInfo.hasAlbumImage())
+//            simpleMusicInfo.setInvokeLater(() -> showAlbumImage());
+//        else showAlbumImage();
+//    }
 
     // 显示专辑图片
-    private void showAlbumImage() {
+    public void showAlbumImage() {
         SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
         BufferedImage albumImage = simpleMusicInfo.getAlbumImage();
-        if (albumImage != defaultAlbumImage) {
-            saveAlbumImageMenuItem.setEnabled(true);
-            // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
-            BufferedImage image = ImageUtils.width(ImageUtils.cropCenter(albumImage), albumImageWidth);
-            albumImageLabel.setIcon(new ImageIcon(ImageUtils.borderShadow(ImageUtils.setRadius(image, LARGE_ARC))));
-            // 切换面板专辑图片
-            changePaneButton.setIcon(new ImageIcon(ImageUtils.setRadius(ImageUtils.width(image, changePaneImageWidth), TINY_ARC)));
-            if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
-        }
+        boolean isDefault = albumImage == defaultAlbumImage;
+        saveAlbumImageMenuItem.setEnabled(!isDefault);
+        // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
+        BufferedImage image = ImageUtils.width(ImageUtils.cropCenter(albumImage), albumImageWidth);
+        if (isDefault) image = ImageUtils.dye(image, currUIStyle.getLabelColor());
+        albumImageLabel.setIcon(new ImageIcon(ImageUtils.borderShadow(ImageUtils.setRadius(image, LARGE_ARC))));
+        // 切换面板专辑图片
+        changePaneButton.setIcon(new ImageIcon(ImageUtils.setRadius(ImageUtils.width(image, changePaneImageWidth), TINY_ARC)));
+        if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
         // 背景虚化
         if (blurType != BlurType.OFF) doBlur();
     }
@@ -21452,13 +21487,6 @@ public class PlayerFrame extends JFrame {
 
         changePaneButton.setForeground(style.getButtonColor());
 
-        // 按钮图标颜色
-        if (!player.loadedMusic() || player.loadedMusic() && !player.getMusicInfo().hasAlbumImage()) {
-            changePaneButton.setIcon(ImageUtils.dye(new ImageIcon(
-                    ImageUtils.setRadius(
-                            ImageUtils.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), buttonColor));
-//            if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
-        }
         mvButton.setIcon(ImageUtils.dye((ImageIcon) mvButton.getIcon(), buttonColor));
         collectButton.setIcon(ImageUtils.dye((ImageIcon) collectButton.getIcon(), buttonColor));
         downloadButton.setIcon(ImageUtils.dye((ImageIcon) downloadButton.getIcon(), buttonColor));
@@ -21490,11 +21518,16 @@ public class PlayerFrame extends JFrame {
         switchLrcTypeButton.setIcon(ImageUtils.dye((ImageIcon) switchLrcTypeButton.getIcon(), buttonColor));
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
+        // 按钮图标颜色
+        if (!player.loadedMusic() || player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
+            changePaneButton.setIcon(ImageUtils.dye(new ImageIcon(
+                    ImageUtils.setRadius(
+                            ImageUtils.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), buttonColor));
+        }
         // 默认专辑图颜色
-        if (!player.isEmpty() && !player.getMusicInfo().hasAlbumImage()) {
-            albumImageLabel.setIcon(
-                    ImageUtils.dye(new ImageIcon(ImageUtils.setRadius(defaultAlbumImage, LARGE_ARC)), style.getLabelColor())
-            );
+        if (player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
+            BufferedImage albumImage = ImageUtils.borderShadow(ImageUtils.dye(ImageUtils.setRadius(ImageUtils.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), labelColor));
+            albumImageLabel.setIcon(new ImageIcon(albumImage));
         }
         // 其他标签颜色
         songNameLabel.setForeground(labelColor);

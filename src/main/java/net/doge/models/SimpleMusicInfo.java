@@ -4,7 +4,6 @@ import lombok.Data;
 import net.doge.constants.Format;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 /**
  * @Author yzx

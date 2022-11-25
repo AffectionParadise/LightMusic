@@ -1,25 +1,22 @@
 package net.doge.models;
 
-import com.mpatric.mp3agic.*;
 import com.sun.media.jfxmedia.locator.Locator;
-import it.sauronsoftware.jave.EncoderException;
 import javafx.collections.ObservableList;
 import javafx.scene.media.AudioEqualizer;
 import javafx.scene.media.EqualizerBand;
-import javafx.scene.media.MediaPlayer;
-import net.doge.constants.*;
-import net.doge.ui.PlayerFrame;
-import net.doge.utils.*;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Data;
+import net.doge.constants.*;
+import net.doge.ui.PlayerFrame;
+import net.doge.utils.MusicUtils;
+import net.doge.utils.StringUtils;
+import net.doge.utils.TimeUtils;
 
-import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.URISyntaxException;
 
 /**
  * @author yzx
@@ -60,11 +57,11 @@ public class MusicPlayer {
     }
 
     // 载入文件
-    public void load(String source, NetMusicInfo netMusicInfo) throws IOException, UnsupportedAudioFileException, EncoderException, InvalidDataException, UnsupportedTagException, URISyntaxException {
+    public void load(String source, NetMusicInfo netMusicInfo) {
         load(new AudioFile(source), netMusicInfo);
     }
 
-    public void load(AudioFile source, NetMusicInfo netMusicInfo) throws IOException, UnsupportedAudioFileException, EncoderException, InvalidDataException, UnsupportedTagException, URISyntaxException {
+    public void load(AudioFile source, NetMusicInfo netMusicInfo) {
         // 先清除上一次播放数据
         clearMetadata();
         // 初始化 MediaPlayer 对象
@@ -81,9 +78,9 @@ public class MusicPlayer {
         musicInfo.setName(null);
         musicInfo.setArtist(null);
         musicInfo.setAlbumName(null);
+        musicInfo.setDuration(0);
         musicInfo.setInvokeLater(null);
         musicInfo.setAlbumImage(null);
-        musicInfo.setDuration(0);
         netMusicInfo = null;
     }
 
@@ -148,7 +145,7 @@ public class MusicPlayer {
     }
 
     // 初始化音频信息(pcm wav)
-    private void initialMusicInfo(AudioFile source, NetMusicInfo netMusicInfo) throws IOException, EncoderException, InvalidDataException, UnsupportedTagException, UnsupportedAudioFileException {
+    private void initialMusicInfo(AudioFile source, NetMusicInfo netMusicInfo) {
         this.netMusicInfo = netMusicInfo;
 
         // 音频格式(以 source 文件为准)
@@ -171,15 +168,17 @@ public class MusicPlayer {
             // 专辑名称
             musicInfo.setAlbumName(StringUtils.isEmpty(albumName) ? "未知" : albumName);
             // 专辑图片
-//            if (netMusicInfo.hasAlbumImage()) musicInfo.setAlbumImage(netMusicInfo.getAlbumImage());
-//            else netMusicInfo.setInvokeLater(() -> musicInfo.setAlbumImage(netMusicInfo.getAlbumImage()));
             GlobalExecutors.imageExecutor.submit(() -> {
                 if (!netMusicInfo.hasAlbumImage()) {
                     netMusicInfo.setInvokeLater(() -> {
                         BufferedImage albumImage = netMusicInfo.getAlbumImage();
-                        musicInfo.setAlbumImage(albumImage == null ? f.getDefaultAlbumImage() : albumImage);
+                        musicInfo.setAlbumImage(albumImage != null ? albumImage : f.getDefaultAlbumImage());
+                        f.showAlbumImage();
                     });
-                } else musicInfo.setAlbumImage(netMusicInfo.getAlbumImage());
+                } else {
+                    musicInfo.setAlbumImage(netMusicInfo.getAlbumImage());
+                    f.showAlbumImage();
+                }
             });
             return;
         }
@@ -197,7 +196,8 @@ public class MusicPlayer {
             // 获取 MP3 专辑图片
             GlobalExecutors.imageExecutor.submit(() -> {
                 BufferedImage albumImage = MusicUtils.getAlbumImage(source);
-                musicInfo.setAlbumImage(albumImage == null ? f.getDefaultAlbumImage() : albumImage);
+                musicInfo.setAlbumImage(albumImage != null ? albumImage : f.getDefaultAlbumImage());
+                f.showAlbumImage();
             });
         }
         // 其他类型的文件信息

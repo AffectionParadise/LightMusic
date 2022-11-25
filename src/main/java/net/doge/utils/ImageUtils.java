@@ -358,6 +358,24 @@ public class ImageUtils {
         return new ImageIcon(dyed);
     }
 
+    /**
+     * 给 BufferedImage 着色，保留透明部分
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage dye(BufferedImage img, Color color) {
+        int w = img.getWidth(), h = img.getHeight();
+        BufferedImage dyed = createTranslucentImage(w, h);
+        Graphics2D g = dyed.createGraphics();
+        g.drawImage(img, 0, 0, null);
+        g.setComposite(AlphaComposite.SrcAtop);
+        g.setColor(color);
+        g.fillRect(0, 0, w, h);
+        g.dispose();
+        return dyed;
+    }
+
 //    /**
 //     * 生成关于某个颜色的调色板 ImageIcon
 //     *
