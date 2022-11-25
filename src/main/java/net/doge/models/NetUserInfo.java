@@ -85,6 +85,10 @@ public class NetUserInfo {
         return source == NetMusicSource.ME;
     }
 
+    public boolean fromBI() {
+        return source == NetMusicSource.BI;
+    }
+
     public boolean hasAvatar() {
         return avatar != null;
     }

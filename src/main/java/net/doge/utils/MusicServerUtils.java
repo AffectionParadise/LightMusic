@@ -2809,6 +2809,8 @@ public class MusicServerUtils {
     private static final String USER_DETAIL_DT_API = "https://www.duitang.com/people/?id=%s";
     // 用户信息 API (哔哩哔哩)
     private static final String USER_DETAIL_BI_API = "http://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
+    // 用户音频 API (猫耳)
+    private static final String USER_AUDIO_BI_API = "https://api.bilibili.com/audio/music-service/web/song/upper?order=%s&uid=%s&pn=%s&ps=%s";
 
     // 相似歌曲 API
     private static final String SIMILAR_SONG_API = prefix + "/simi/song?id=%s";
@@ -7307,66 +7309,68 @@ public class MusicServerUtils {
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             total = data.getJSONObject("page").getInt("count");
-            JSONArray commentArray = data.getJSONArray("replies");
-            for (int i = 0, len = commentArray.size(); i < len; i++) {
-                JSONObject commentJson = commentArray.getJSONObject(i);
-                JSONObject member = commentJson.getJSONObject("member");
+            JSONArray commentArray = data.optJSONArray("replies");
+            if (commentArray != null) {
+                for (int i = 0, len = commentArray.size(); i < len; i++) {
+                    JSONObject commentJson = commentArray.getJSONObject(i);
+                    JSONObject member = commentJson.getJSONObject("member");
 
-                String userId = commentJson.getString("mid");
-                String username = member.getString("uname");
-                String profileUrl = member.getString("avatar");
-                String content = commentJson.getJSONObject("content").getString("message");
-                String time = TimeUtils.msToPhrase(commentJson.getLong("ctime") * 1000);
-                Integer likedCount = commentJson.getInt("like");
+                    String userId = commentJson.getString("mid");
+                    String username = member.getString("uname");
+                    String profileUrl = member.getString("avatar");
+                    String content = commentJson.getJSONObject("content").getString("message");
+                    String time = TimeUtils.msToPhrase(commentJson.getLong("ctime") * 1000);
+                    Integer likedCount = commentJson.getInt("like");
 
-                NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.BI);
-                commentInfo.setUserId(userId);
-                commentInfo.setUsername(username);
-                commentInfo.setProfileUrl(profileUrl);
-                commentInfo.setContent(content);
-                commentInfo.setTime(time);
-                commentInfo.setLikedCount(likedCount);
+                    NetCommentInfo commentInfo = new NetCommentInfo();
+                    commentInfo.setSource(NetMusicSource.BI);
+                    commentInfo.setUserId(userId);
+                    commentInfo.setUsername(username);
+                    commentInfo.setProfileUrl(profileUrl);
+                    commentInfo.setContent(content);
+                    commentInfo.setTime(time);
+                    commentInfo.setLikedCount(likedCount);
 
-                String finalProfileUrl1 = profileUrl;
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage profile = extractProfile(finalProfileUrl1);
-                    commentInfo.setProfile(profile);
-                });
-
-                commentInfos.add(commentInfo);
-
-                // 回复
-                JSONArray replies = commentJson.optJSONArray("replies");
-                if (replies == null) continue;
-                for (int j = 0, s = replies.size(); j < s; j++) {
-                    JSONObject cj = replies.getJSONObject(j);
-                    JSONObject mem = cj.getJSONObject("member");
-
-                    userId = cj.getString("mid");
-                    username = mem.getString("uname");
-                    profileUrl = mem.getString("avatar");
-                    content = cj.getJSONObject("content").getString("message");
-                    time = TimeUtils.msToPhrase(cj.getLong("ctime") * 1000);
-                    likedCount = cj.getInt("like");
-
-                    NetCommentInfo ci = new NetCommentInfo();
-                    ci.setSource(NetMusicSource.BI);
-                    ci.setSub(true);
-                    ci.setUserId(userId);
-                    ci.setUsername(username);
-                    ci.setProfileUrl(profileUrl);
-                    ci.setContent(content);
-                    ci.setTime(time);
-                    ci.setLikedCount(likedCount);
-
-                    String finalProfileUrl = profileUrl;
+                    String finalProfileUrl1 = profileUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage profile = extractProfile(finalProfileUrl);
-                        ci.setProfile(profile);
+                        BufferedImage profile = extractProfile(finalProfileUrl1);
+                        commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(ci);
+                    commentInfos.add(commentInfo);
+
+                    // 回复
+                    JSONArray replies = commentJson.optJSONArray("replies");
+                    if (replies == null) continue;
+                    for (int j = 0, s = replies.size(); j < s; j++) {
+                        JSONObject cj = replies.getJSONObject(j);
+                        JSONObject mem = cj.getJSONObject("member");
+
+                        userId = cj.getString("mid");
+                        username = mem.getString("uname");
+                        profileUrl = mem.getString("avatar");
+                        content = cj.getJSONObject("content").getString("message");
+                        time = TimeUtils.msToPhrase(cj.getLong("ctime") * 1000);
+                        likedCount = cj.getInt("like");
+
+                        NetCommentInfo ci = new NetCommentInfo();
+                        ci.setSource(NetMusicSource.BI);
+                        ci.setSub(true);
+                        ci.setUserId(userId);
+                        ci.setUsername(username);
+                        ci.setProfileUrl(profileUrl);
+                        ci.setContent(content);
+                        ci.setTime(time);
+                        ci.setLikedCount(likedCount);
+
+                        String finalProfileUrl = profileUrl;
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage profile = extractProfile(finalProfileUrl);
+                            ci.setProfile(profile);
+                        });
+
+                        commentInfos.add(ci);
+                    }
                 }
             }
         }
@@ -17114,6 +17118,37 @@ public class MusicServerUtils {
                 musicInfo.setArtistId(artistId);
                 musicInfo.setDuration(duration);
                 musicInfos.add(musicInfo);
+            }
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String userInfoBody = HttpRequest.get(String.format(USER_AUDIO_BI_API, recordType + 1, userId, page, limit))
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            total.set(data.getInt("totalSize"));
+            JSONArray songArray = data.optJSONArray("data");
+            if (songArray != null) {
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
+
+                    String songId = songJson.getString("id");
+                    String name = songJson.getString("title");
+                    String artist = songJson.getString("uname");
+                    String artistId = songJson.getString("uid");
+                    Double duration = songJson.getDouble("duration");
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.BI);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setDuration(duration);
+                    musicInfos.add(musicInfo);
+                }
             }
         }
 

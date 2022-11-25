@@ -1,17 +1,15 @@
 package net.doge.models;
 
+import lombok.Data;
 import net.doge.constants.Format;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.utils.FileUtils;
-import lombok.Data;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -93,7 +91,7 @@ public class NetMusicInfo {
      * @return
      */
     public boolean isProgram() {
-        return source == NetMusicSource.XM || source == NetMusicSource.ME || hasProgramId();
+        return source == NetMusicSource.XM || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
     }
 
     /**
