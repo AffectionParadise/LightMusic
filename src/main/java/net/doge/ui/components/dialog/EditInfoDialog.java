@@ -8,7 +8,10 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.*;
+import net.doge.constants.BlurType;
+import net.doge.constants.Colors;
+import net.doge.constants.Format;
+import net.doge.constants.SimplePath;
 import net.doge.models.AudioFile;
 import net.doge.models.MediaInfo;
 import net.doge.models.UIStyle;
@@ -28,7 +31,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 /**
  * @Author yzx
@@ -211,7 +213,7 @@ public class EditInfoDialog extends JDialog {
             if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) 
+            else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
@@ -299,8 +301,8 @@ public class EditInfoDialog extends JDialog {
                 component.setForeground(foreColor);
                 component.setCaretColor(foreColor);
                 component.setText((String) results[i]);
-            } else if (components[i] instanceof JComboBox) {
-                JComboBox component = (JComboBox) components[i];
+            } else if (components[i] instanceof CustomComboBox) {
+                CustomComboBox component = (CustomComboBox) components[i];
                 // 下拉框 UI
                 Color buttonColor = style.getButtonColor();
                 component.setUI(new ComboBoxUI(component, f, buttonColor));
@@ -349,7 +351,14 @@ public class EditInfoDialog extends JDialog {
                 });
             }
             panel.add(components[i]);
-            centerPanel.add(panel);
+
+            CustomPanel outer = new CustomPanel();
+            outer.setLayout(new BoxLayout(outer, BoxLayout.Y_AXIS));
+            outer.add(Box.createVerticalGlue());
+            outer.add(panel);
+            outer.add(Box.createVerticalGlue());
+
+            centerPanel.add(outer);
         }
     }
 
@@ -371,13 +380,14 @@ public class EditInfoDialog extends JDialog {
             if (slight) {
                 bufferedImage = ImageUtils.slightDarker(bufferedImage);
             } else {
-                if (f.blurType == BlurType.GS) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF)
+                    bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
             }
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (f.blurType == BlurType.GS) {
+            if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)

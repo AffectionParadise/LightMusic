@@ -19,7 +19,7 @@ public class CustomComboPopup extends BasicComboPopup {
     // 阴影大小像素
     private final int pixels = 10;
 
-    public CustomComboPopup(JComboBox comboBox, PlayerFrame f, Color foreColor) {
+    public CustomComboPopup(CustomComboBox comboBox, PlayerFrame f, Color foreColor) {
         super(comboBox);
 
         this.f = f;

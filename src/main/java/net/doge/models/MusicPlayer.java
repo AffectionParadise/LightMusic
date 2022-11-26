@@ -206,6 +206,7 @@ public class MusicPlayer {
             musicInfo.setArtist("未知");
             musicInfo.setAlbumName("未知");
             musicInfo.setAlbumImage(f.getDefaultAlbumImage());
+            f.showAlbumImage();
         }
     }
 

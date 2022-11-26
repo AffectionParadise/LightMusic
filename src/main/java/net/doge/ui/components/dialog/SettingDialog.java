@@ -58,6 +58,8 @@ public class SettingDialog extends JDialog {
     private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
     // 设置项
+    private CustomPanel autoUpdatePanel = new CustomPanel();
+    private CustomCheckBox autoUpdateCheckBox = new CustomCheckBox("启动时自动检查更新");
     private CustomPanel autoDownloadLrcPanel = new CustomPanel();
     private CustomCheckBox autoDownloadLrcCheckBox = new CustomCheckBox("下载歌曲时自动下载歌词");
     private CustomPanel videoOnlyPanel = new CustomPanel();
@@ -245,6 +247,7 @@ public class SettingDialog extends JDialog {
         // 对齐
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
         fl.setVgap(7);
+        autoUpdatePanel.setLayout(fl);
         autoDownloadLrcPanel.setLayout(fl);
         videoOnlyPanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
@@ -263,6 +266,7 @@ public class SettingDialog extends JDialog {
 
         // 边框
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+        autoUpdatePanel.setBorder(b);
         autoDownloadLrcPanel.setBorder(b);
         videoOnlyPanel.setBorder(b);
         musicDownPanel.setBorder(b);
@@ -281,6 +285,7 @@ public class SettingDialog extends JDialog {
 
         // 字体颜色
         Color labelColor = style.getLabelColor();
+        autoUpdateCheckBox.setForeground(labelColor);
         autoDownloadLrcCheckBox.setForeground(labelColor);
         videoOnlyCheckBox.setForeground(labelColor);
         musicDownLabel.setForeground(labelColor);
@@ -455,12 +460,17 @@ public class SettingDialog extends JDialog {
         int gap = 10;
         ImageIcon icon = ImageUtils.dye(uncheckedIcon, labelColor);
         ImageIcon selectedIcon = ImageUtils.dye(checkedIcon, labelColor);
+        autoUpdateCheckBox.setIconTextGap(gap);
+        autoUpdateCheckBox.setIcon(icon);
+        autoUpdateCheckBox.setSelectedIcon(selectedIcon);
         autoDownloadLrcCheckBox.setIconTextGap(gap);
         autoDownloadLrcCheckBox.setIcon(icon);
         autoDownloadLrcCheckBox.setSelectedIcon(selectedIcon);
         videoOnlyCheckBox.setIconTextGap(gap);
         videoOnlyCheckBox.setIcon(icon);
         videoOnlyCheckBox.setSelectedIcon(selectedIcon);
+
+        autoUpdatePanel.add(autoUpdateCheckBox);
 
         autoDownloadLrcPanel.add(autoDownloadLrcCheckBox);
 
@@ -531,6 +541,7 @@ public class SettingDialog extends JDialog {
         backupPanel.add(importListButton);
         backupPanel.add(exportListButton);
 
+        centerPanel.add(autoUpdatePanel);
         centerPanel.add(autoDownloadLrcPanel);
         centerPanel.add(videoOnlyPanel);
         centerPanel.add(musicDownPanel);
@@ -551,6 +562,7 @@ public class SettingDialog extends JDialog {
 
     // 加载设置
     void initSettings() {
+        autoUpdateCheckBox.setSelected(f.autoUpdate);
         autoDownloadLrcCheckBox.setSelected(f.isAutoDownloadLrc);
         videoOnlyCheckBox.setSelected(f.videoOnly);
         musicDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath());
@@ -585,6 +597,7 @@ public class SettingDialog extends JDialog {
             return false;
         }
 
+        f.autoUpdate = autoUpdateCheckBox.isSelected();
         f.isAutoDownloadLrc = autoDownloadLrcCheckBox.isSelected();
         f.videoOnly = videoOnlyCheckBox.isSelected();
         SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
@@ -670,13 +683,13 @@ public class SettingDialog extends JDialog {
             if (slight) {
                 bufferedImage = ImageUtils.slightDarker(bufferedImage);
             } else {
-                if (f.blurType == BlurType.GS) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
             }
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (f.blurType == BlurType.GS) {
+            if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)

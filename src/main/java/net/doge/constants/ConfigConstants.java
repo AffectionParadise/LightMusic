@@ -13,6 +13,8 @@ public class ConfigConstants {
     public final static String CUSTOM_UI_STYLES = "customUIStyles";
     // 当前 UI 风格索引
     public final static String CURR_UI_STYLE = "currUIStyle";
+    // 是否自动更新
+    public final static String AUTO_UPDATE = "autoUpdate";
     // 关闭窗口操作
     public final static String CLOSE_WINDOW_OPTION = "closeWindowOption";
     // 窗口大小

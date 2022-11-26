@@ -3,6 +3,7 @@ package net.doge.ui.componentui;
 import net.doge.constants.SimplePath;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.CustomComboBox;
 import net.doge.ui.components.CustomComboPopup;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.ComboBoxRenderer;
@@ -12,6 +13,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @Author yzx
@@ -19,13 +22,13 @@ import java.awt.*;
  * @Date 2020/12/13
  */
 public class ComboBoxUI extends BasicComboBoxUI {
-    private JComboBox comboBox;
+    private CustomComboBox comboBox;
     private PlayerFrame f;
     private Color foreColor;
 
     private ImageIcon arrowIcon = new ImageIcon(SimplePath.ICON_PATH + "arrow.png");
 
-    public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Color foreColor) {
+    public ComboBoxUI(CustomComboBox comboBox, PlayerFrame f, Color foreColor) {
         this.comboBox = comboBox;
         this.f = f;
         this.foreColor = foreColor;
@@ -42,7 +45,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
         comboBox.setForeground(foreColor);
     }
 
-    public ComboBoxUI(JComboBox comboBox, PlayerFrame f, Color foreColor, int width) {
+    public ComboBoxUI(CustomComboBox comboBox, PlayerFrame f, Color foreColor, int width) {
         this(comboBox, f, foreColor);
         comboBox.setPreferredSize(new Dimension(width, 30));
     }
@@ -66,7 +69,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(foreColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.15f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, comboBox.isEntered() ? 0.3f : 0.15f));
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 10, 10);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
@@ -76,6 +79,17 @@ public class ComboBoxUI extends BasicComboBoxUI {
         CustomButton btn = new CustomButton();
         btn.setIcon(arrowIcon);
         btn.addMouseListener(new ButtonMouseListener(btn, f));
+        btn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                comboBox.setEntered(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if(!comboBox.getBounds().contains(e.getPoint())) comboBox.setEntered(false);
+            }
+        });
         return btn;
     }
 

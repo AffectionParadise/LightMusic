@@ -10,6 +10,8 @@ public class SoftInfo {
     public static final String EDITION = "1.0.3";
     // 网址
     public static final String WEBSITE = "https://github.com/AffectionParadise/LightMusic_release";
+    // 更新
+    public static final String UPDATE = "https://github.com/AffectionParadise/LightMusic_release/releases/tag/application";
     // 邮箱
     public static final String MAIL = "239937115@qq.com";
 }

@@ -61,13 +61,6 @@ public class TipDialog extends JDialog {
         this.ms = ms;
     }
 
-    public TipDialog(PlayerFrame f, String message, int ms, boolean modal) {
-        this(f);
-        setModal(modal);
-        setMessage(message);
-        this.ms = ms;
-    }
-
     public TipDialog(PlayerFrame f, int ms) {
         this(f);
         this.ms = ms;
@@ -89,7 +82,6 @@ public class TipDialog extends JDialog {
 
     public void updateSize() {
         FontMetrics metrics = messageLabel.getFontMetrics(font);
-//        FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
         int sWidth = metrics.stringWidth(StringUtils.removeHTMLLabel(message));
         int sHeight = metrics.getHeight();
         size = new Dimension(sWidth + 60 + 2 * pixels, sHeight + 40 + 2 * pixels);
@@ -121,7 +113,7 @@ public class TipDialog extends JDialog {
             if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) 
+            else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
@@ -151,14 +143,14 @@ public class TipDialog extends JDialog {
                     e.printStackTrace();
                 }
             }
-            if (ms > 0) {
-                // 停留时间
-                try {
+            try {
+                if (ms > 0) {
+                    // 停留时间
                     Thread.sleep(ms);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    close();
                 }
-                close();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
     }
@@ -195,13 +187,13 @@ public class TipDialog extends JDialog {
             if (slight) {
                 bufferedImage = ImageUtils.slightDarker(bufferedImage);
             } else {
-                if (f.blurType == BlurType.GS) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
             }
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (f.blurType == BlurType.GS) {
+            if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)

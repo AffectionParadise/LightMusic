@@ -14,40 +14,12 @@
     </properties>
 
     <dependencies>
-        <!-- JMF 框架 -->
-        <!--        <dependency>-->
-        <!--            <groupId>javax.media</groupId>-->
-        <!--            <artifactId>jmf</artifactId>-->
-        <!--            <version>2.1.1e</version>-->
-        <!--        </dependency>-->
-
-        <!-- Jave -->
-        <!--        <dependency>-->
-        <!--            <groupId>ws.schild</groupId>-->
-        <!--            <artifactId>jave-all-deps</artifactId>-->
-        <!--            <version>2.4.6</version>-->
-        <!--        </dependency>-->
-
-        <!-- vlc -->
-        <!--        <dependency>-->
-        <!--            <groupId>uk.co.caprica</groupId>-->
-        <!--            <artifactId>vlcj</artifactId>-->
-        <!--            <version>4.7.0</version>-->
-        <!--        </dependency>-->
-
         <!-- 为 MP3 写入信息 -->
         <dependency>
             <groupId>com.mpatric</groupId>
             <artifactId>mp3agic</artifactId>
             <version>0.9.1</version>
         </dependency>
-
-        <!-- jaudiotagger 读取媒体信息 -->
-<!--        <dependency>-->
-<!--            <groupId>org</groupId>-->
-<!--            <artifactId>jaudiotagger</artifactId>-->
-<!--            <version>2.0.3</version>-->
-<!--        </dependency>-->
 
         <!-- jave 读取媒体文件时长 -->
         <dependency>
@@ -58,17 +30,11 @@
             <systemPath>${basedir}/libs/jave-1.0.2.jar</systemPath>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.googlecode.soundlibs</groupId>-->
-        <!--            <artifactId>mp3spi</artifactId>-->
-        <!--            <version>1.9.5.4</version>-->
-        <!--        </dependency>-->
-
         <!-- thumbnailator 图像处理 -->
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.17</version>
+            <version>0.4.18</version>
         </dependency>
 
         <!-- jhlabs 图像处理 -->
@@ -89,14 +55,21 @@
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-jpeg</artifactId>
-            <version>3.8.3</version>
+            <version>3.9.3</version>
         </dependency>
 
-        <!-- HuTool -->
+        <!-- HuTool HTTP 请求 -->
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.8.7</version>
+            <artifactId>hutool-http</artifactId>
+            <version>5.8.10</version>
+        </dependency>
+
+        <!-- HuTool 加密解密 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-crypto</artifactId>
+            <version>5.8.10</version>
         </dependency>
 
         <!-- Json 解析 -->
@@ -111,7 +84,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>2.0.14</version>
+            <version>2.0.19</version>
         </dependency>
 
         <!-- Jsoup -->
@@ -174,14 +147,6 @@
             <artifactId>moji4j</artifactId>
             <version>1.2.0</version>
         </dependency>
-
-<!--        &lt;!&ndash; emoji 处理 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.vdurmont</groupId>-->
-<!--            <artifactId>emoji-java</artifactId>-->
-<!--            <version>5.1.1</version>-->
-<!--        </dependency>-->
-
     </dependencies>
 
     <build>

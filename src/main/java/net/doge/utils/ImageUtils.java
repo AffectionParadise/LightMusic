@@ -23,11 +23,13 @@ import java.util.List;
  */
 public class ImageUtils {
     // 毛玻璃(高斯模糊)过滤器
-    private static GaussianFilter gaussianFilter = new GaussianFilter();
+    private static final GaussianFilter gaussianFilter = new GaussianFilter();
     // 对比度过滤器
-    private static ContrastFilter contrastFilter = new ContrastFilter();
+    private static final ContrastFilter contrastFilter = new ContrastFilter();
     // 阴影过滤器
-    private static ShadowFilter shadowFilter = new ShadowFilter();
+    private static final ShadowFilter shadowFilter = new ShadowFilter();
+    // 边框阴影过滤器
+    private static final ShadowFilter borderShadowFilter = new ShadowFilter();
 
     /**
      * 从文件路径读取图片
@@ -252,26 +254,6 @@ public class ImageUtils {
 //        return new Rectangle(new Dimension(des_width, des_height));
 //    }
 
-//    /**
-//     * 将 ImageIcon 转为 BufferedImage (保留透明度)
-//     */
-//    public static BufferedImage castImageIconToBuffedImageTranslucent(ImageIcon imageIcon) {
-//        int width = imageIcon.getIconWidth();
-//        int height = imageIcon.getIconHeight();
-//        Image img = imageIcon.getImage();
-//        BufferedImage bufferedImage = new BufferedImage(
-//                width, height, BufferedImage.TYPE_INT_RGB);
-//        Graphics2D g = bufferedImage.createGraphics();
-//        // 获取透明的 BufferedImage
-//        BufferedImage bImageTranslucent
-//                = g.getDeviceConfiguration().createCompatibleImage(
-//                width, height, Transparency.TRANSLUCENT);
-//        g.dispose();
-//        g = bImageTranslucent.createGraphics();
-//        g.drawImage(img, 0, 0, null);
-//        return bImageTranslucent;
-//    }
-
     /**
      * 创建透明图片
      */
@@ -291,19 +273,14 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage imageToBufferedImage(Image image) {
-        if (image instanceof BufferedImage) {
-            return (BufferedImage) image;
-        }
+        if (image instanceof BufferedImage) return (BufferedImage) image;
         image = new ImageIcon(image).getImage();
         boolean hasAlpha = false;
         BufferedImage bufferedImage = null;
-        GraphicsEnvironment ge = GraphicsEnvironment
-                .getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
             int transparency = Transparency.OPAQUE;
-            if (hasAlpha) {
-                transparency = Transparency.BITMASK;
-            }
+            if (hasAlpha) transparency = Transparency.BITMASK;
             GraphicsDevice gs = ge.getDefaultScreenDevice();
             GraphicsConfiguration gc = gs.getDefaultConfiguration();
             bufferedImage = gc.createCompatibleImage(image.getWidth(null), image
@@ -312,11 +289,8 @@ public class ImageUtils {
         }
         if (bufferedImage == null) {
             int type = BufferedImage.TYPE_INT_RGB;
-            if (hasAlpha) {
-                type = BufferedImage.TYPE_INT_ARGB;
-            }
-            bufferedImage = new BufferedImage(image.getWidth(null), image
-                    .getHeight(null), type);
+            if (hasAlpha) type = BufferedImage.TYPE_INT_ARGB;
+            bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
         }
         Graphics g = bufferedImage.createGraphics();
         g.drawImage(image, 0, 0, null);
@@ -514,23 +488,14 @@ public class ImageUtils {
      */
     public static BufferedImage setRadius(BufferedImage image, double arc) {
         if (image == null) return null;
-
         int width = image.getWidth(), height = image.getHeight(), cornerRadius = (int) (width * arc);
-
-        BufferedImage tmpImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = tmpImage.createGraphics();
-        // 获取透明的 BufferedImage
-        BufferedImage outputImage
-                = g.getDeviceConfiguration().createCompatibleImage(
-                width, height, Transparency.TRANSLUCENT);
+        BufferedImage outputImage = createTranslucentImage(width, height);
+        Graphics2D g = outputImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.fillRoundRect(0, 0, width, height, cornerRadius, cornerRadius);
+        g.setComposite(AlphaComposite.SrcIn);
+        g.drawImage(image, 0, 0, width, height, null);
         g.dispose();
-        Graphics2D g2 = outputImage.createGraphics();
-
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.fillRoundRect(0, 0, width, height, cornerRadius, cornerRadius);
-        g2.setComposite(AlphaComposite.SrcIn);
-        g2.drawImage(image, 0, 0, width, height, null);
-        g2.dispose();
         return outputImage;
     }
 
@@ -543,23 +508,14 @@ public class ImageUtils {
      */
     public static BufferedImage setRadius(BufferedImage image, int radius) {
         if (image == null) return null;
-
         int width = image.getWidth(), height = image.getHeight(), cornerRadius = radius;
-
-        BufferedImage tmpImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = tmpImage.createGraphics();
-        // 获取透明的 BufferedImage
-        BufferedImage outputImage
-                = g.getDeviceConfiguration().createCompatibleImage(
-                width, height, Transparency.TRANSLUCENT);
+        BufferedImage outputImage = createTranslucentImage(width, height);
+        Graphics2D g = outputImage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.fillRoundRect(0, 0, width, height, cornerRadius, cornerRadius);
+        g.setComposite(AlphaComposite.SrcIn);
+        g.drawImage(image, 0, 0, width, height, null);
         g.dispose();
-        Graphics2D g2 = outputImage.createGraphics();
-
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.fillRoundRect(0, 0, width, height, cornerRadius, cornerRadius);
-        g2.setComposite(AlphaComposite.SrcIn);
-        g2.drawImage(image, 0, 0, width, height, null);
-        g2.dispose();
         return outputImage;
     }
 
@@ -758,11 +714,12 @@ public class ImageUtils {
         Graphics2D g = newImg.createGraphics();
         g.drawImage(img, thickness, thickness, null);
         g.dispose();
-        shadowFilter.setRadius(thickness);
-        shadowFilter.setDistance(-0.5f);
-        shadowFilter.setOpacity(0.65f);
-        newImg = shadowFilter.filter(newImg, null);
-        return width(newImg, ow);
+        borderShadowFilter.setRadius(thickness);
+        borderShadowFilter.setDistance(-0.5f);
+        borderShadowFilter.setOpacity(0.65f);
+        newImg = borderShadowFilter.filter(newImg, null);
+        newImg = width(newImg, ow);
+        return newImg;
     }
 
     /**

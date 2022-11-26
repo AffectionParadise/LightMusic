@@ -5,7 +5,6 @@ import net.doge.constants.Fonts;
 import javax.swing.*;
 
 public class CustomCheckBox extends JCheckBox {
-
     public CustomCheckBox() {
         super();
         init();

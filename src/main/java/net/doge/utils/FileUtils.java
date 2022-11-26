@@ -146,23 +146,23 @@ public class FileUtils {
         f.delete();
     }
 
-    /**
-     * 删除文件夹
-     *
-     * @param dirPath 文件夹路径
-     */
-    public static void deleteDir(String dirPath) {
-        File file = new File(dirPath);
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (int i = 0, len = files.length; i < len; i++) {
-                    deleteDir(files[i].getAbsolutePath());
-                }
-            }
-        }
-        file.delete();
-    }
+//    /**
+//     * 删除文件夹
+//     *
+//     * @param dirPath 文件夹路径
+//     */
+//    public static void deleteDir(String dirPath) {
+//        File file = new File(dirPath);
+//        if (file.isDirectory()) {
+//            File[] files = file.listFiles();
+//            if (files != null) {
+//                for (int i = 0, len = files.length; i < len; i++) {
+//                    deleteDir(files[i].getAbsolutePath());
+//                }
+//            }
+//        }
+//        file.delete();
+//    }
 
     /**
      * 判断文件开头是不是 {

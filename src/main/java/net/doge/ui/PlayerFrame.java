@@ -2,6 +2,7 @@ package net.doge.ui;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
+import cn.hutool.http.HttpRequest;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import it.sauronsoftware.jave.EncoderException;
@@ -38,6 +39,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Timer;
@@ -116,6 +119,10 @@ public class PlayerFrame extends JFrame {
     private final String ASK_CLEAR_LIST_MSG = "是否要清空列表？";
     private final String ASK_DUPLICATE_MSG = "是否要删除列表中重复的项目？";
     private final String ASK_REVERSE_MSG = "是否要倒置列表顺序？";
+    private final String UPDATE_CHECKING_MSG = "检查更新中......";
+    private final String UPDATE_CHECK_FAIL_MSG = "检查更新失败，请稍后再试";
+    private final String UPDATE_MSG = "已有新版本 %s，当前版本 %s，是否前往发布页更新？";
+    private final String LATEST_MSG = "当前已是最新版本";
     private final String HELP_MSG = "这里没有指南，让音乐作为你的北极星吧。戴上耳机，闭上眼睛，沉醉在美妙的旋律里感受生活......";
     private final String FIRST_PAGE_MSG = "已经是第一页了";
     private final String LAST_PAGE_MSG = "已经是最后一页了";
@@ -130,7 +137,7 @@ public class PlayerFrame extends JFrame {
     private final String GET_RESOURCE_FAILED_MSG = "获取资源失败";
     private final String NO_NET_MSG = "无法连接到服务器";
     private final String TIME_OUT_MSG = "请求超时";
-    private final String API_ERROR_MSG = "接口异常，请稍候再试";
+    private final String API_ERROR_MSG = "接口异常，请稍后再试";
     private final String CLEAR_CACHE_SUCCESS_MSG = "清除缓存成功";
     private final String NEXT_PLAY_SUCCESS_MSG = "已添加到下一首";
     private final String COLLECT_SUCCESS_MSG = "收藏成功";
@@ -245,6 +252,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon donateIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "donate.png");
     // 发布页图标
     private ImageIcon releaseIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "release.png");
+    // 检查更新图标
+    private ImageIcon updateIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "update.png");
     // 指南图标
     private ImageIcon helpIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "help.png");
     // 关于图标
@@ -595,6 +604,7 @@ public class PlayerFrame extends JFrame {
         for (UIStyle style : PreDefinedUIStyle.styles) styles.add(style);
     }
 
+    public boolean autoUpdate;
     public int windowState = WindowState.NORMAL;
     // 关闭窗口操作
     public int currCloseWindowOption;
@@ -762,6 +772,7 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义主题");
     private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠 & 感谢");
     private CustomMenuItem releaseMenuItem = new CustomMenuItem("发布页");
+    private CustomMenuItem updateMenuItem = new CustomMenuItem("检查更新");
     private CustomMenuItem helpMenuItem = new CustomMenuItem("指南");
     private CustomMenuItem aboutMenuItem = new CustomMenuItem("关于");
 
@@ -2365,8 +2376,7 @@ public class PlayerFrame extends JFrame {
                     infoAndLrcBox.add(lrcAndSpecBox);
                 }
                 // 背景
-                if (blurType != BlurType.OFF) doBlur();
-                else doStyleBlur(currUIStyle);
+                if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
             }
         });
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
@@ -2830,6 +2840,9 @@ public class PlayerFrame extends JFrame {
                 addStyle(style, false);
             }
         }
+        // 载入是否自动更新
+        autoUpdate = config.optBoolean(ConfigConstants.AUTO_UPDATE, true);
+        if (autoUpdate) checkUpdate(true);
         // 载入关闭窗口操作
         currCloseWindowOption = config.optInt(ConfigConstants.CLOSE_WINDOW_OPTION, CloseWindowOptions.ASK);
         // 载入窗口大小
@@ -3646,6 +3659,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
         // 当前 UI 风格索引
         config.put(ConfigConstants.CURR_UI_STYLE, ListUtils.search(styles, currUIStyle));
+        // 存入是否自动更新
+        config.put(ConfigConstants.AUTO_UPDATE, autoUpdate);
         // 存入关闭窗口操作
         config.put(ConfigConstants.CLOSE_WINDOW_OPTION, currCloseWindowOption);
         // 存入窗口大小
@@ -4075,6 +4090,36 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.USER_COLLECTION, userCollectionJsonArray);
     }
 
+    // 检查更新
+    private void checkUpdate(boolean mute) {
+        globalExecutor.submit(() -> {
+            TipDialog td = null;
+            if (!mute) td = new TipDialog(THIS, UPDATE_CHECKING_MSG, 0);
+            try {
+                if (!mute) td.showDialog();
+                String body = HttpRequest.get(SoftInfo.UPDATE).execute().body();
+                if (!mute) td.close();
+                Document doc = Jsoup.parse(body);
+                String latest = doc.select("h1.d-inline.mr-3").first().text().split(" ")[1];
+                String now = SoftInfo.EDITION;
+                if (latest.compareTo(now) > 0) {
+                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(UPDATE_MSG, latest, now), "是", "否");
+                    d.showDialog();
+                    int response = d.getResponse();
+                    if (response == JOptionPane.YES_OPTION) {
+                        releaseMenuItem.doClick();
+                    }
+                } else {
+                    if (!mute) new TipDialog(THIS, LATEST_MSG).showDialog();
+                }
+            } catch (Exception ex) {
+                if (!mute) new TipDialog(THIS, UPDATE_CHECK_FAIL_MSG).showDialog();
+            } finally {
+                if (!mute) td.close();
+            }
+        });
+    }
+
     // 初始化托盘
     private void trayInit() throws AWTException {
         SystemTray systemTray = SystemTray.getSystemTray();
@@ -4146,6 +4191,7 @@ public class PlayerFrame extends JFrame {
                 }
             }
         });
+        updateMenuItem.addActionListener(e -> checkUpdate(false));
         helpMenuItem.addActionListener(e -> new ConfirmDialog(THIS, HELP_MSG, "确定").showDialog());
         aboutMenuItem.addActionListener(e -> new AboutDialog(THIS).showDialog());
 
@@ -4156,12 +4202,13 @@ public class PlayerFrame extends JFrame {
         mainMenu.addSeparator();
         mainMenu.add(donateMenuItem);
         mainMenu.add(releaseMenuItem);
+        mainMenu.add(updateMenuItem);
         mainMenu.add(helpMenuItem);
         mainMenu.add(aboutMenuItem);
     }
 
     // 打开文件
-    void openFileInit() {
+    private void openFileInit() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("选择歌曲文件");
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
@@ -4384,28 +4431,28 @@ public class PlayerFrame extends JFrame {
 
         // 添加标签对应的内容
         tabbedPane.addTab(null, null, leftBox);
+        tabbedPane.addTab(null, null, recommendLeftBox);
+        tabbedPane.addTab(null, null, netRankingLeftBox);
         tabbedPane.addTab(null, null, netLeftBox);
         tabbedPane.addTab(null, null, netPlaylistLeftBox);
         tabbedPane.addTab(null, null, netAlbumLeftBox);
         tabbedPane.addTab(null, null, netArtistLeftBox);
         tabbedPane.addTab(null, null, netRadioLeftBox);
         tabbedPane.addTab(null, null, netMvLeftBox);
-        tabbedPane.addTab(null, null, netRankingLeftBox);
         tabbedPane.addTab(null, null, netUserLeftBox);
-        tabbedPane.addTab(null, null, recommendLeftBox);
         tabbedPane.addTab(null, null, downloadLeftBox);
         tabbedPane.addTab(null, null, playQueueLeftBox);
         // 自定义标签面板
         tabbedPane.setTabComponentAt(TabIndex.PERSONAL, personalMusicPanel);
+        tabbedPane.setTabComponentAt(TabIndex.RECOMMEND, recommendPanel);
+        tabbedPane.setTabComponentAt(TabIndex.NET_RANKING, netRankingPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_MUSIC, netMusicPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_PLAYLIST, netPlaylistPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_ALBUM, netAlbumPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_ARTIST, netArtistPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_RADIO, netRadioPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_MV, netMvPanel);
-        tabbedPane.setTabComponentAt(TabIndex.NET_RANKING, netRankingPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_USER, netUserPanel);
-        tabbedPane.setTabComponentAt(TabIndex.RECOMMEND, recommendPanel);
         tabbedPane.setTabComponentAt(TabIndex.DOWNLOAD_MANAGEMENT, downloadManagementPanel);
         tabbedPane.setTabComponentAt(TabIndex.PLAY_QUEUE, playQueuePanel);
 
@@ -4742,21 +4789,21 @@ public class PlayerFrame extends JFrame {
         // 添加标签对应的内容
         collectionTabbedPane.addTab(null, null, musicCollectionLeftBox);
         collectionTabbedPane.addTab(null, null, playlistCollectionLeftBox);
+        collectionTabbedPane.addTab(null, null, rankingCollectionLeftBox);
         collectionTabbedPane.addTab(null, null, albumCollectionLeftBox);
         collectionTabbedPane.addTab(null, null, artistCollectionLeftBox);
         collectionTabbedPane.addTab(null, null, radioCollectionLeftBox);
         collectionTabbedPane.addTab(null, null, mvCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, rankingCollectionLeftBox);
         collectionTabbedPane.addTab(null, null, userCollectionLeftBox);
 
         // 自定义标签面板
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.MUSIC, musicCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.PLAYLIST, playlistCollectionPanel);
+        collectionTabbedPane.setTabComponentAt(CollectionTabIndex.RANKING, rankingCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.ALBUM, albumCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.ARTIST, artistCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.RADIO, radioCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.MV, mvCollectionPanel);
-        collectionTabbedPane.setTabComponentAt(CollectionTabIndex.RANKING, rankingCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.USER, userCollectionPanel);
 
         collectionTabbedPane.addMouseMotionListener(new MouseAdapter() {
@@ -5963,8 +6010,8 @@ public class PlayerFrame extends JFrame {
 
     // 初始化标签
     private void labelInit() {
-        // 设置 HTML 标签并居中图片
-        albumImageLabel.setText("<html></html>");
+        // 居中图片
+        albumImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         // 导出专辑图片事件
         saveAlbumImageMenuItem.addActionListener(e -> {
             saveImg(player.getMusicInfo().getAlbumImage());
@@ -17555,7 +17602,7 @@ public class PlayerFrame extends JFrame {
         mvRecommendButton.setIconTextGap(gap);
 
         // 推荐工具栏网格布局
-        recommendToolBar.setLayout(new GridLayout(2, 4));
+        recommendToolBar.setLayout(new GridLayout(2, 5));
         recommendToolBar.add(playlistRecommendButton);
         recommendToolBar.add(highQualityPlaylistButton);
         recommendToolBar.add(hotMusicButton);
@@ -20597,6 +20644,7 @@ public class PlayerFrame extends JFrame {
         settingMenuItem.setIcon(ImageUtils.dye(settingsIcon, menuItemColor));
         donateMenuItem.setIcon(ImageUtils.dye(donateIcon, menuItemColor));
         releaseMenuItem.setIcon(ImageUtils.dye(releaseIcon, menuItemColor));
+        updateMenuItem.setIcon(ImageUtils.dye(updateIcon, menuItemColor));
         helpMenuItem.setIcon(ImageUtils.dye(helpIcon, menuItemColor));
         aboutMenuItem.setIcon(ImageUtils.dye(aboutIcon, menuItemColor));
 
@@ -21880,7 +21928,7 @@ public class PlayerFrame extends JFrame {
             return;
         }
 
-        TipDialog dialog = new TipDialog(THIS, LOADING_MV_MSG, 0, false);
+        TipDialog dialog = new TipDialog(THIS, LOADING_MV_MSG, 0);
         dialog.showDialog();
 
         // 右键歌曲播放其 MV
@@ -22184,7 +22232,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 筛选个人音乐
-    void filterPersonalMusic() {
+    private void filterPersonalMusic() {
         filterModel.clear();
         String keyword = filterTextField.getText().toLowerCase().trim();
         int selectedIndex = collectionTabbedPane.getSelectedIndex();

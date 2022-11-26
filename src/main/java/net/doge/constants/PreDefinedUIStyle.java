@@ -10,10 +10,10 @@ import net.doge.models.UIStyle;
 public class PreDefinedUIStyle {
     public static final UIStyle[] styles = {
             new UIStyle(UIStyleConstants.PRE, "默认", SimplePath.STYLE_IMG_PATH + "default.jpg",
-                    Colors.LIGHT_GRAY, Colors.GRAY, Colors.WHITE, Colors.DEEP_SKY_BLUE_1, Colors.WHITE,
+                    Colors.LIGHT_GRAY, Colors.GRAY, Colors.LIGHT_GRAY, Colors.DEEP_SKY_BLUE_1, Colors.LIGHT_GRAY,
                     Colors.LIGHT_GRAY, Colors.LIGHT_GRAY, Colors.LIGHT_GRAY, Colors.LIGHT_GRAY, Colors.LIGHT_GRAY, Colors.LIGHT_GRAY),
             new UIStyle(UIStyleConstants.PRE, "白天", SimplePath.STYLE_IMG_PATH + "day.jpg",
-                    Colors.WHITE_SMOKE, Colors.DAY2, Colors.WHITE, Colors.DAY3, Colors.WHITE_SMOKE,
+                    Colors.WHITE_SMOKE, Colors.DAY2, Colors.WHITE_SMOKE, Colors.DAY3, Colors.WHITE_SMOKE,
                     Colors.WHITE_SMOKE, Colors.WHITE_SMOKE, Colors.WHITE_SMOKE, Colors.WHITE_SMOKE, Colors.WHITE_SMOKE, Colors.WHITE_SMOKE),
             new UIStyle(UIStyleConstants.PRE, "夜晚", SimplePath.STYLE_IMG_PATH + "night.jpg",
                     Colors.LEMON_CHIFFON, Colors.GOLD, Colors.LEMON_CHIFFON, Colors.GOLD3, Colors.LEMON_CHIFFON,

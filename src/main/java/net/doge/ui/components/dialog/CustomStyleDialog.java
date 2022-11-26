@@ -100,7 +100,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             new CustomLabel(),
             new CustomLabel()
     };
-    private DialogButton pureColor = new DialogButton("纯色");
+    private DialogButton pureColor;
 
     private DialogButton okButton;
 
@@ -121,6 +121,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
 
         Color buttonColor = style.getButtonColor();
         okButton = new DialogButton(okButtonText, buttonColor);
+        pureColor = new DialogButton("纯色", buttonColor);
     }
 
     public void showDialog() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -388,11 +389,17 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 });
             }
             panel.add(components[i]);
-            centerPanel.add(panel);
+
+            CustomPanel outer = new CustomPanel();
+            outer.setLayout(new BoxLayout(outer, BoxLayout.Y_AXIS));
+            outer.add(Box.createVerticalGlue());
+            outer.add(panel);
+            outer.add(Box.createVerticalGlue());
+
+            centerPanel.add(outer);
         }
 
         // 纯色按钮
-        pureColor.setForeColor(style.getButtonColor());
         pureColor.addActionListener(e -> {
             ColorChooserDialog d = new ColorChooserDialog(f, results[1] instanceof Color ? (Color) results[1] : Colors.THEME);
             d.showDialog();
@@ -404,7 +411,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             pack();
             setLocationRelativeTo(null);
         });
-        ((CustomPanel) centerPanel.getComponent(1)).add(pureColor);
+        ((CustomPanel) ((CustomPanel) centerPanel.getComponent(1)).getComponent(1)).add(pureColor);
     }
 
     @Override
@@ -444,13 +451,13 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             if (slight) {
                 bufferedImage = ImageUtils.slightDarker(bufferedImage);
             } else {
-                if (f.blurType == BlurType.GS) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
             }
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (f.blurType == BlurType.GS) {
+            if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)
