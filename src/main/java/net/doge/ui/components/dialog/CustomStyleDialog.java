@@ -45,12 +45,10 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     private final int imgHeight = 100;
     private final int rectWidth = 170;
     private final int rectHeight = 30;
-    // 风格名称必填提示
     private final String STYLE_NAME_NOT_NULL_MSG = "emmm~~主题名称不能为无名氏哦";
-    // 风格名称重复提示
     private final String STYLE_NAME_DUPLICATE_MSG = "emmm~该主题名称已存在，换一个吧";
-    // 图片文件不存在提示
     private final String IMG_FILE_NOT_EXIST_MSG = "选定的图片路径无效";
+    private final String IMG_NOT_VALID_MSG = "不是有效的图片文件";
     private CustomStyleDialogPanel globalPanel = new CustomStyleDialogPanel();
 
     // 最大阴影透明度
@@ -77,7 +75,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             new CustomLabel("歌词文字颜色："),
             new CustomLabel("歌词高亮颜色："),
             new CustomLabel("文字标签颜色："),
-            new CustomLabel("进度条颜色："),
+            new CustomLabel("时间条颜色："),
             new CustomLabel("按钮颜色："),
             new CustomLabel("滚动条颜色："),
             new CustomLabel("音量滑动条颜色："),
@@ -245,7 +243,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) 
+            else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
@@ -328,11 +326,10 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 if (results[i] != null) {
                     if (results[i] instanceof String) {
                         BufferedImage image = ImageUtils.read((String) results[i]);
-                        if (image != null) {
-                            if (image.getWidth() >= image.getHeight())
-                                labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
-                            else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
-                        }
+                        if (image == null) return;
+                        if (image.getWidth() >= image.getHeight())
+                            labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
+                        else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
                     } else {
                         labels[i].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, (Color) results[i]), imgWidth)));
                     }
@@ -355,6 +352,10 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                         if (file != null) {
                             results[finalI] = file.getPath();
                             BufferedImage img = ImageUtils.read((String) results[finalI]);
+                            if (img == null) {
+                                new TipDialog(f, IMG_NOT_VALID_MSG).showDialog();
+                                return;
+                            }
                             if (img.getWidth() >= img.getHeight())
                                 labels[finalI].setIcon(new ImageIcon(ImageUtils.width(img, imgWidth)));
                             else labels[finalI].setIcon(new ImageIcon(ImageUtils.height(img, imgHeight)));
@@ -451,7 +452,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             if (slight) {
                 bufferedImage = ImageUtils.slightDarker(bufferedImage);
             } else {
-                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF)
+                    bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
             }
             // 放大至窗口大小

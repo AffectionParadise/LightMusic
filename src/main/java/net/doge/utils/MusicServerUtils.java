@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * @date 2020/12/19
  */
 public class MusicServerUtils {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         String body = HttpRequest.get("http://api.bilibili.com/x/web-interface/search/type?keyword=%E2%91%A8%E2%91%A8%E2%91%A8%EF%BC%8C%E5%A4%A9%E9%95%BF%E5%9C%B0%E4%B9%85%E8%88%AC%E7%9A%84%E5%85%B1%E8%8D%A3&search_type=video")
                 .cookie("buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7")
                 .execute()
@@ -2846,7 +2846,7 @@ public class MusicServerUtils {
     private static final String USER_BOOK_RADIO_DB_API = "https://book.douban.com/people/%s/collect?start=%s&sort=time&rating=all&filter=all&mode=grid";
 
     // 用户视频 API (好看)
-    private static final String USER_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20";
+    private static final String USER_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20&ctime=%s";
     // 用户小视频 API (好看)
     private static final String USER_SMALL_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20&video_type=haokan|tabhubVideo";
     // 用户视频 API (哔哩哔哩)
@@ -3234,7 +3234,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取歌曲
      */
-    public static CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int limit, int page) {
         AtomicReference<Integer> total = new AtomicReference<>(0);
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -3343,7 +3343,8 @@ public class MusicServerUtils {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_VOICE_API, encodedKeyword, limit, (page - 1) * limit))
+            final int lim = Math.min(20, limit);
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_VOICE_API, encodedKeyword, lim, (page - 1) * lim))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
@@ -3808,7 +3809,7 @@ public class MusicServerUtils {
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、url、歌词)
      */
-    public static void fillNetMusicInfo(NetMusicInfo musicInfo) throws IOException {
+    public static void fillNetMusicInfo(NetMusicInfo musicInfo) {
         // 歌曲信息是完整的
         if (musicInfo.isIntegrated()) return;
 
@@ -3872,7 +3873,9 @@ public class MusicServerUtils {
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 if (!musicInfo.hasUrl()) {
                     String url = fetchMusicUrl(songId, NetMusicSource.NET_CLOUD);
-                    musicInfo.setUrl(url);
+                    // 排除试听部分，直接换源
+                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
                     // 网易云音乐里面有的电台节目是 flac 格式！
                     if (url.endsWith(Format.FLAC)) musicInfo.setFormat(Format.FLAC);
                 }
@@ -3906,7 +3909,12 @@ public class MusicServerUtils {
                         musicInfo.callback();
                     });
                 }
-                if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("play_url"));
+                if (!musicInfo.hasUrl()) {
+                    // 排除试听部分，直接换源
+                    String url = data.getString("play_url");
+                    if (StringUtils.isNotEmpty(url) && data.getInt("is_free_part") == 0) musicInfo.setUrl(url);
+                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+                }
                 if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
             }));
 //            // 填充歌词、翻译、罗马音
@@ -3948,7 +3956,12 @@ public class MusicServerUtils {
                 }
             }));
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.hasUrl()) musicInfo.setUrl(fetchMusicUrl(songId, NetMusicSource.QQ));
+                if (!musicInfo.hasUrl()) {
+                    // 排除试听部分，直接换源
+                    String url = fetchMusicUrl(songId, NetMusicSource.QQ);
+                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+                }
             }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
@@ -3978,7 +3991,12 @@ public class MusicServerUtils {
                 }
             }));
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.hasUrl()) musicInfo.setUrl(fetchMusicUrl(songId, NetMusicSource.KW));
+                if (!musicInfo.hasUrl()) {
+                    // 无链接，直接换源
+                    String url = fetchMusicUrl(songId, NetMusicSource.KW);
+                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+                }
             }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
@@ -4014,7 +4032,12 @@ public class MusicServerUtils {
                     musicInfo.callback();
                 });
             }
-            if (!musicInfo.hasUrl()) musicInfo.setUrl(data.getString("320"));
+            if (!musicInfo.hasUrl()) {
+                // 无链接，直接换源
+                String url = data.getString("320");
+                if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+                else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+            }
             if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyric"));
         }
 
@@ -4170,7 +4193,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取歌单
      */
-    public static CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
 
@@ -4412,7 +4435,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取专辑
      */
-    public static CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetAlbumInfo> albumInfos = new LinkedList<>();
 
@@ -4677,7 +4700,8 @@ public class MusicServerUtils {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_DB_API, encodedKeyword, (page - 1) * limit))
+            final int lim = Math.min(20, limit);
+            String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
@@ -4831,7 +4855,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取歌手
      */
-    public static CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetArtistInfo> artistInfos = new LinkedList<>();
 
@@ -5137,7 +5161,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取电台
      */
-    public static CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetRadioInfo> radioInfos = new LinkedList<>();
 
@@ -5282,7 +5306,8 @@ public class MusicServerUtils {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_DB_API, encodedKeyword, (page - 1) * limit))
+            final int lim = Math.min(20, limit);
+            String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
@@ -5323,7 +5348,8 @@ public class MusicServerUtils {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(SEARCH_BOOK_RADIO_DB_API, encodedKeyword, (page - 1) * limit))
+            final int lim = Math.min(20, limit);
+            String radioInfoBody = HttpRequest.get(String.format(SEARCH_BOOK_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
@@ -5365,7 +5391,8 @@ public class MusicServerUtils {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(SEARCH_GAME_RADIO_DB_API, encodedKeyword, (page - 1) * limit))
+            final int lim = Math.min(20, limit);
+            String radioInfoBody = HttpRequest.get(String.format(SEARCH_GAME_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
@@ -6220,7 +6247,7 @@ public class MusicServerUtils {
     /**
      * 根据关键词获取用户
      */
-    public static CommonResult<NetUserInfo> searchUsers(int src, String keyword, int limit, int page) throws IOException {
+    public static CommonResult<NetUserInfo> searchUsers(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetUserInfo> userInfos = new LinkedList<>();
 
@@ -6429,7 +6456,7 @@ public class MusicServerUtils {
                     .body();
             JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = 20;
+            t = data.getInt("has_more") == 1 ? (page + 1) * limit : page * limit;
             JSONArray userArray = data.getJSONArray("list");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
@@ -6466,7 +6493,8 @@ public class MusicServerUtils {
             LinkedList<NetUserInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DB_API, encodedKeyword, (page - 1) * limit))
+            final int lim = Math.min(20, limit);
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
@@ -6640,7 +6668,7 @@ public class MusicServerUtils {
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
      */
-    public static CommonResult<NetCommentInfo> getComments(Object info, String type, int limit, int page, String cursor) throws IOException {
+    public static CommonResult<NetCommentInfo> getComments(Object info, String type, int limit, int page, String cursor) {
         int total = 0;
         List<NetCommentInfo> commentInfos = new LinkedList<>();
 
@@ -7381,7 +7409,7 @@ public class MusicServerUtils {
     /**
      * 获取歌曲乐谱
      */
-    public static CommonResult<NetSheetInfo> getSheets(NetMusicInfo musicInfo) throws IOException {
+    public static CommonResult<NetSheetInfo> getSheets(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         String id = musicInfo.getId();
         LinkedList<NetSheetInfo> sheetInfos = new LinkedList<>();
@@ -7629,7 +7657,8 @@ public class MusicServerUtils {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(DISCOVER_PLAYLIST_API, (page - 1) * limit, limit))
+            final int lim = Math.min(35, limit);
+            String playlistInfoBody = HttpRequest.get(String.format(DISCOVER_PLAYLIST_API, (page - 1) * lim, lim))
                     .execute()
                     .body();
             Document doc = Jsoup.parse(playlistInfoBody);
@@ -7794,7 +7823,7 @@ public class MusicServerUtils {
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-                t = 20 * 100;
+                t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -7832,7 +7861,7 @@ public class MusicServerUtils {
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-                t = 20 * 100;
+                t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -8607,7 +8636,7 @@ public class MusicServerUtils {
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-                t = 20 * 100;
+                t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -8645,7 +8674,7 @@ public class MusicServerUtils {
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-                t = 20 * 100;
+                t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -8683,7 +8712,7 @@ public class MusicServerUtils {
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-                t = 20 * 100;
+                t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -11344,7 +11373,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[0])) {
-                String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, s[0], page, limit))
+                String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, s[0], page, Math.min(limit, 20)))
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(programInfoBody);
@@ -11380,7 +11409,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[1])) {
-                String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, limit))
+                String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(programInfoBody);
@@ -11411,7 +11440,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             if (StringUtils.isNotEmpty(s[1])) {
-                String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, s[1], page, limit))
+                String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(programInfoBody);
@@ -13599,7 +13628,7 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
-            t = 20;
+            t = data.getBoolean("no_more") ? page * limit : page * limit + 1;
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -13797,7 +13826,7 @@ public class MusicServerUtils {
     /**
      * 根据歌单 id 补全歌单信息(包括封面图、描述)
      */
-    public static void fillPlaylistInfo(NetPlaylistInfo playlistInfo) throws IOException {
+    public static void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         // 信息完整直接跳过
         if (playlistInfo.isIntegrated()) return;
 
@@ -14168,7 +14197,7 @@ public class MusicServerUtils {
     /**
      * 根据专辑 id 补全专辑信息(包括封面图、描述)
      */
-    public static void fillAlbumInfo(NetAlbumInfo albumInfo) throws IOException {
+    public static void fillAlbumInfo(NetAlbumInfo albumInfo) {
         // 信息完整直接跳过
         if (albumInfo.isIntegrated()) return;
 
@@ -14538,7 +14567,7 @@ public class MusicServerUtils {
     /**
      * 根据歌手 id 补全歌手信息(包括封面图、描述)
      */
-    public static void fillArtistInfo(NetArtistInfo artistInfo) throws IOException {
+    public static void fillArtistInfo(NetArtistInfo artistInfo) {
         // 信息完整直接跳过
         if (artistInfo.isIntegrated()) return;
 
@@ -14848,7 +14877,7 @@ public class MusicServerUtils {
     /**
      * 根据电台 id 补全电台信息(包括封面图、描述)
      */
-    public static void fillRadioInfo(NetRadioInfo radioInfo) throws IOException {
+    public static void fillRadioInfo(NetRadioInfo radioInfo) {
         // 信息完整直接跳过
         if (radioInfo.isIntegrated()) return;
 
@@ -15121,7 +15150,7 @@ public class MusicServerUtils {
     /**
      * 根据榜单 id 补全榜单信息(包括封面图)
      */
-    public static void fillRankingInfo(NetRankingInfo rankingInfo) throws IOException {
+    public static void fillRankingInfo(NetRankingInfo rankingInfo) {
         // 信息完整直接跳过
         if (rankingInfo.isIntegrated()) return;
 
@@ -15395,7 +15424,7 @@ public class MusicServerUtils {
     /**
      * 根据歌单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInPlaylist(String playlistId, int source, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> getMusicInfoInPlaylist(String playlistId, int source, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> netMusicInfos = new LinkedList<>();
 
@@ -15707,7 +15736,7 @@ public class MusicServerUtils {
     /**
      * 根据专辑 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInAlbum(String albumId, int source, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> getMusicInfoInAlbum(String albumId, int source, int limit, int page) {
         int total = 0;
         List<NetMusicInfo> netMusicInfos = new LinkedList<>();
 
@@ -15930,7 +15959,7 @@ public class MusicServerUtils {
     /**
      * 根据歌手 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInArtist(String artistId, int source, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> getMusicInfoInArtist(String artistId, int source, int limit, int page) {
         int total = 0;
         List<NetMusicInfo> netMusicInfos = new LinkedList<>();
 
@@ -16089,7 +16118,7 @@ public class MusicServerUtils {
             JSONObject data = artistInfoJson.optJSONObject("data");
             // 咪咕可能接口异常，需要判空！
             if (data != null) {
-                total = data.optInt("totalPage") * 20;
+                total = data.optInt("totalPage") * limit;
                 JSONArray songArray = data.getJSONArray("list");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
@@ -16187,7 +16216,7 @@ public class MusicServerUtils {
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
      */
-    public static CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo netArtistInfo, int limit, int page) throws IOException {
+    public static CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo netArtistInfo, int limit, int page) {
         int total = 0;
         List<NetAlbumInfo> albumInfos = new LinkedList<>();
 
@@ -16636,7 +16665,7 @@ public class MusicServerUtils {
     /**
      * 根据电台 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -16792,7 +16821,7 @@ public class MusicServerUtils {
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInRanking(String rankingId, int source, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> getMusicInfoInRanking(String rankingId, int source, int limit, int page) {
         int total = 0;
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -17017,7 +17046,7 @@ public class MusicServerUtils {
     /**
      * 根据用户 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int limit, int page) throws IOException {
+    public static CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> musicInfos = new LinkedList<>();
         boolean isAll = recordType == 1;
@@ -18178,12 +18207,13 @@ public class MusicServerUtils {
      *
      * @return
      */
-    public static CommonResult<NetMvInfo> getUserVideos(NetUserInfo netUserInfo, int sortType, int page, int limit) {
+    public static CommonResult<NetMvInfo> getUserVideos(NetUserInfo netUserInfo, int sortType, int page, int limit, String cursor) {
         int source = netUserInfo.getSource();
         String uid = netUserInfo.getId();
 
         LinkedList<NetMvInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
+        AtomicReference<String> cur = new AtomicReference<>();
 
         String[] orders = {"pubdate", "click", "stow"};
 
@@ -18194,12 +18224,13 @@ public class MusicServerUtils {
                 LinkedList<NetMvInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, uid))
+                String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, uid, cursor))
                         .header(Header.COOKIE, HK_COOKIE)
                         .execute()
                         .body();
                 JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
-                t = 20;
+                String cs = data.getString("ctime");
+                t = data.getInt("has_more") == 0 ? page * limit : (page + 1) * limit;
                 JSONArray mvArray = data.getJSONArray("results");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i).getJSONObject("content");
@@ -18231,7 +18262,7 @@ public class MusicServerUtils {
                     res.add(mvInfo);
                 }
 
-                return new CommonResult<>(r, t);
+                return new CommonResult<>(r, t, cs);
             };
             // 小视频
             Callable<CommonResult<NetMvInfo>> getSmallVideos = () -> {
@@ -18243,7 +18274,8 @@ public class MusicServerUtils {
                         .execute()
                         .body();
                 JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
-                t = 20;
+                String cs = data.getString("ctime");
+                t = data.getBoolean("has_more") ? (page + 1) * limit : page * limit;
                 JSONArray mvArray = data.getJSONArray("results");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i).getJSONObject("content");
@@ -18275,7 +18307,7 @@ public class MusicServerUtils {
                     res.add(mvInfo);
                 }
 
-                return new CommonResult<>(r, t);
+                return new CommonResult<>(r, t, cs);
             };
             List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
 
@@ -18288,6 +18320,8 @@ public class MusicServerUtils {
                     CommonResult<NetMvInfo> result = task.get();
                     rl.add(result.data);
                     total.set(Math.max(total.get(), result.total));
+                    // 用普通视频的 cursor
+                    if (ListUtils.search(taskList, task) == 0) cur.set(result.cursor);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -18337,7 +18371,7 @@ public class MusicServerUtils {
             }
         }
 
-        return new CommonResult<>(res, total.get());
+        return new CommonResult<>(res, total.get(), cur.get());
     }
 
     /**
@@ -20257,25 +20291,9 @@ public class MusicServerUtils {
     /**
      * 根据链接获取图片
      */
-    public static BufferedImage getImageFromUrl(String urlPath) {
-        return ImageUtils.read(HttpRequest.get(urlPath).execute().bodyStream());
+    public static BufferedImage getImageFromUrl(String url) {
+        return ImageUtils.read(HttpRequest.get(url).execute().bodyStream());
     }
-
-//    /**
-//     * 根据歌曲 id 获取专辑图片
-//     */
-//    public static BufferedImage getMusicAlbumImage(int albumId) throws IOException {
-//        String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_API, albumId))
-//                .execute()
-//                .body();
-//        JSONObject albumJson = JSONObject.fromObject(albumBody);
-//        String albumUrlPath = albumJson.getJSONObject("album").getString("blurPicUrl");
-//        URL url = new URL(albumUrlPath);
-//        URLConnection connection = url.openConnection();
-//        connection.setRequestProperty("User-Agent", USER_AGENT);
-//        connection.connect();
-//        return ImageIO.read(connection.getInputStream());
-//    }
 
     /**
      * 解析歌曲艺术家
@@ -20398,6 +20416,29 @@ public class MusicServerUtils {
     }
 
     /**
+     * 歌曲换源
+     *
+     * @param musicInfo
+     * @return
+     */
+    public static void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
+        int source = musicInfo.getSource();
+
+        for (int src : NetMusicSource.available) {
+            if (src == source) continue;
+            CommonResult<NetMusicInfo> result = searchMusic(src, 0, "", musicInfo.toAvailableString(), 1, 1);
+            List<NetMusicInfo> data = result.data;
+            if (data.isEmpty()) continue;
+            NetMusicInfo info = data.get(0);
+            String url = fetchMusicUrl(info.getId(), info.getSource());
+            if (StringUtils.isNotEmpty(url)) {
+                musicInfo.setUrl(url);
+                return;
+            }
+        }
+    }
+
+    /**
      * 根据歌曲 id 获取歌曲地址
      */
     public static String fetchMusicUrl(String songId, int source) {
@@ -20417,8 +20458,11 @@ public class MusicServerUtils {
             }
             if (data != null) {
                 JSONObject urlJson = data.getJSONObject(0);
-                String url = urlJson.getString("url");
-                if (!"null".equals(url)) return url;
+                // 排除试听部分，直接换源
+                if (urlJson.getInt("fee") == 0) {
+                    String url = urlJson.getString("url");
+                    if (!"null".equals(url)) return url;
+                }
             }
         }
 

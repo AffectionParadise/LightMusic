@@ -42,10 +42,9 @@ public class CustomButton extends JButton {
 
     @Override
     public JToolTip createToolTip() {
-        CustomToolTip tooltip = new CustomToolTip(this);
-        // 存在性能问题，暂时不用
-        tooltip.setVisible(false);
-        return tooltip;
+        CustomToolTip toolTip = new CustomToolTip(this);
+        toolTip.setVisible(false);
+        return toolTip;
     }
 
     @Override
@@ -59,7 +58,6 @@ public class CustomButton extends JButton {
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
-
         super.paintComponent(g);
     }
 

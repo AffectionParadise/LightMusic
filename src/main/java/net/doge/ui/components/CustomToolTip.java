@@ -18,10 +18,10 @@ public class CustomToolTip extends JToolTip {
         Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
         setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
 
+        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
         setComponent(comp);
         setOpaque(false);
         setFont(Fonts.NORMAL_TINY);
-        setBackground(Colors.TRANSLUCENT);
     }
 
     // 使 JToolTip 背景透明
@@ -33,7 +33,7 @@ public class CustomToolTip extends JToolTip {
             JComponent jParent = (JComponent) parent;
             jParent.setOpaque(false);
         }
-        Window w = SwingUtilities.windowForComponent(this);
+        Window w = SwingUtilities.getWindowAncestor(this);
         w.setBackground(Colors.TRANSLUCENT);
     }
 

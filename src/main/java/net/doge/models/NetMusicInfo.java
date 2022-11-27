@@ -216,4 +216,9 @@ public class NetMusicInfo {
         return name
                 + (StringUtils.isNotEmpty(artist) ? separator + artist.replace("/", "、") : "");
     }
+
+    public String toAvailableString() {
+        return name
+                + (StringUtils.isNotEmpty(artist) ? artist.replace("/", "、") : "");
+    }
 }

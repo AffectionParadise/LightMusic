@@ -2,7 +2,7 @@ package net.doge.constants;
 
 /**
  * @Author yzx
- * @Description 虚化类型
+ * @Description 模糊类型
  * @Date 2020/12/7
  */
 public class BlurType {
