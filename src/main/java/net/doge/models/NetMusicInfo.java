@@ -219,6 +219,6 @@ public class NetMusicInfo {
 
     public String toAvailableString() {
         return name
-                + (StringUtils.isNotEmpty(artist) ? artist.replace("/", "、") : "");
+                + (StringUtils.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
     }
 }

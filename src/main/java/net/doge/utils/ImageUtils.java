@@ -431,7 +431,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage doBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(bufferedImage.getWidth() / 12);
+        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / 8));
         return gaussianFilter.filter(bufferedImage, null);
     }
 
@@ -442,7 +442,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage doSlightBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(bufferedImage.getWidth() / 25);
+        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / 20));
         return gaussianFilter.filter(bufferedImage, null);
     }
 

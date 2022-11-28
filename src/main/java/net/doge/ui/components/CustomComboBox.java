@@ -23,6 +23,8 @@ public class CustomComboBox<T> extends JComboBox<T> {
             @Override
             public void mouseEntered(MouseEvent e) {
                 setEntered(true);
+                // 自动弹出菜单
+//                if (!isPopupVisible()) showPopup();
             }
 
             @Override

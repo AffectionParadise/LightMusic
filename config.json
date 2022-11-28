@@ -61,6 +61,7 @@
 			"djId":"289680033"
 		}
 	],
+	"autoUpdate":true,
 	"currUIStyle":21,
 	"mvDownPath":"D:\\编程之路\\Java\\我的项目\\MusicPlayer\\src\\main\\java\\net\\doge\\downloads\\mv\\",
 	"videoRate":1,
@@ -502,6 +503,46 @@
 	"chineseType":0,
 	"blurType":1,
 	"history":[
+		{
+			"duration":195,
+			"albumName":"哪里都是你 (DJR7版)",
+			"artist":"R7",
+			"mvId":"",
+			"format":"mp3",
+			"name":"哪里都是你 (DJR7版)",
+			"albumId":"55631828",
+			"artistId":"724764",
+			"source":1,
+			"id":"388217815",
+			"hash":"996badce80f4559d2fe553c8555eb763",
+			"programId":""
+		},
+		{
+			"duration":183,
+			"albumName":"春泥",
+			"artist":"旺仔小乔",
+			"mvId":"",
+			"format":"mp3",
+			"name":"春泥 (女版)",
+			"albumId":"003ULNjm31qxM3",
+			"artistId":"0045G50v35VUMG",
+			"source":2,
+			"id":"0003J8Se2C95ky",
+			"programId":""
+		},
+		{
+			"duration":210,
+			"albumName":"春泥",
+			"artist":"池鱼",
+			"mvId":"",
+			"format":"mp3",
+			"name":"春泥",
+			"albumId":"000vfZqx3OSlSP",
+			"artistId":"002snFbb2KG6wB",
+			"source":2,
+			"id":"001lkPYj3T9TWP",
+			"programId":""
+		},
 		{
 			"duration":613.04,
 			"albumName":"【温柔男友】南君在你枕边说晚安",
@@ -4009,32 +4050,6 @@
 			"source":0,
 			"id":"1991219510",
 			"programId":"2512829803"
-		},
-		{
-			"duration":149.574,
-			"albumName":"Fast Lane",
-			"artist":"Palm Trees、MdL、Abi F Jones",
-			"mvId":"0",
-			"format":"mp3",
-			"name":"Fast Lane",
-			"albumId":"",
-			"artistId":"",
-			"source":0,
-			"id":"1406099861",
-			"programId":""
-		},
-		{
-			"duration":462.315,
-			"albumName":"",
-			"artist":"葵影乱",
-			"mvId":"",
-			"format":"m4a",
-			"name":"在床上被你弄哭的男朋友【声音恋人】",
-			"albumId":"",
-			"artistId":"",
-			"source":7,
-			"id":"6419760",
-			"programId":""
 		}
 	],
 	"collection":[
@@ -4297,8 +4312,8 @@
 			"mvId":"",
 			"format":"mp3",
 			"name":"哪里都是你 (DJR7版)",
-			"albumId":"",
-			"artistId":"",
+			"albumId":"55631828",
+			"artistId":"724764",
 			"source":1,
 			"id":"388217815",
 			"hash":"996badce80f4559d2fe553c8555eb763",
@@ -4421,19 +4436,6 @@
 			"artistId":"",
 			"source":2,
 			"id":"000cVZzL3XubHi",
-			"programId":""
-		},
-		{
-			"duration":183,
-			"albumName":"春泥",
-			"artist":"旺仔小乔",
-			"mvId":"",
-			"format":"mp3",
-			"name":"春泥 (女版)",
-			"albumId":"",
-			"artistId":"",
-			"source":2,
-			"id":"0003J8Se2C95ky",
 			"programId":""
 		},
 		{
@@ -5106,7 +5108,7 @@
 	"miniX":1037,
 	"autoDownloadLyric":true,
 	"miniY":-9,
-	"musicPlaying":-1,
+	"musicPlaying":19,
 	"desktopLyricAlpha":1,
 	"rate":1,
 	"japaneseType":0,
@@ -5687,6 +5689,7 @@
 	],
 	"showDesktopLyric":true,
 	"historySearch":[
+		"春泥",
 		"飞鸟以天空为巢",
 		"京腔-飞鸟以天空为巢",
 		"月老掉线",
@@ -6152,8 +6155,8 @@
 			"mvId":"",
 			"format":"mp3",
 			"name":"哪里都是你 (DJR7版)",
-			"albumId":"",
-			"artistId":"",
+			"albumId":"55631828",
+			"artistId":"724764",
 			"source":1,
 			"id":"388217815",
 			"hash":"996badce80f4559d2fe553c8555eb763",
@@ -6276,19 +6279,6 @@
 			"artistId":"",
 			"source":2,
 			"id":"000cVZzL3XubHi",
-			"programId":""
-		},
-		{
-			"duration":183,
-			"albumName":"春泥",
-			"artist":"旺仔小乔",
-			"mvId":"",
-			"format":"mp3",
-			"name":"春泥 (女版)",
-			"albumId":"",
-			"artistId":"",
-			"source":2,
-			"id":"0003J8Se2C95ky",
 			"programId":""
 		},
 		{

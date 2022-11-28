@@ -22,6 +22,4 @@ public class NetMusicSource {
     public static final int BI = 11;
 
     public static final int ALL = 12;
-
-    public static final int[] available = new int[]{KW, KG, QQ, NET_CLOUD, MG};
 }

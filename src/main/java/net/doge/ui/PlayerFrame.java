@@ -31,8 +31,8 @@ import net.doge.ui.components.dialog.*;
 import net.doge.ui.componentui.*;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.ChangePaneButtonMouseListener;
-import net.doge.ui.listeners.TextFieldHintListener;
 import net.doge.ui.listeners.ScrollPaneListener;
+import net.doge.ui.listeners.TextFieldHintListener;
 import net.doge.ui.renderers.*;
 import net.doge.utils.*;
 import net.sf.json.JSONArray;
@@ -60,7 +60,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -4477,15 +4476,41 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == TabIndex.PERSONAL) {
                 int index = collectionTabbedPane.getSelectedIndex();
 
-                if (musicList.getModel().getSize() == 0) {
+                DefaultListModel model = null;
+                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) model = musicListModel;
+                else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) model = historyModel;
+                else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                    if (index == CollectionTabIndex.MUSIC) model = collectionModel;
+                    else if (index == CollectionTabIndex.PLAYLIST) model = playlistCollectionModel;
+                    else if (index == CollectionTabIndex.ALBUM) model = albumCollectionModel;
+                    else if (index == CollectionTabIndex.ARTIST) model = artistCollectionModel;
+                    else if (index == CollectionTabIndex.RADIO) model = radioCollectionModel;
+                    else if (index == CollectionTabIndex.MV) model = mvCollectionModel;
+                    else if (index == CollectionTabIndex.RANKING) model = rankingCollectionModel;
+                    else if (index == CollectionTabIndex.USER) model = userCollectionModel;
+                }
+                boolean modelEmpty = model.isEmpty();
+
+                if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || index == CollectionTabIndex.MUSIC) {
                     if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION) {
-                        leftBox.remove(musicScrollPane);
-                        leftBox.add(emptyHintPanel);
+                        if (modelEmpty) {
+                            leftBox.remove(musicScrollPane);
+                            leftBox.add(emptyHintPanel);
+                        } else {
+                            musicList.setModel(model);
+                            leftBox.remove(emptyHintPanel);
+                            leftBox.add(musicScrollPane);
+                        }
                     } else {
-                        musicCollectionLeftBox.remove(musicScrollPane);
-                        musicCollectionLeftBox.add(emptyHintPanel);
+                        if (modelEmpty) {
+                            musicCollectionLeftBox.remove(musicScrollPane);
+                            musicCollectionLeftBox.add(emptyHintPanel);
+                        } else {
+                            musicCollectionLeftBox.remove(emptyHintPanel);
+                            musicCollectionLeftBox.add(musicScrollPane);
+                        }
                     }
-                } else if (collectionList.getModel().getSize() == 0) {
+                } else {
                     Box box = null;
                     if (index == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
                     else if (index == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
@@ -4494,9 +4519,17 @@ public class PlayerFrame extends JFrame {
                     else if (index == CollectionTabIndex.MV) box = mvCollectionLeftBox;
                     else if (index == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
                     else if (index == CollectionTabIndex.USER) box = userCollectionLeftBox;
-                    box.remove(collectionScrollPane);
-                    box.add(emptyHintPanel);
+                    if (modelEmpty) {
+                        box.remove(collectionScrollPane);
+                        box.add(emptyHintPanel);
+                    } else {
+                        collectionList.setModel(model);
+                        box.remove(emptyHintPanel);
+                        box.add(collectionScrollPane);
+                    }
                 }
+
+                if(filterTextField.isOccupied()) filterPersonalMusic();
 
                 if (collectionBackwardButton.isShowing()) {
                     if (index == CollectionTabIndex.PLAYLIST) {
@@ -6669,42 +6702,49 @@ public class PlayerFrame extends JFrame {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
+                DefaultListModel model = (DefaultListModel) e.getSource();
+                int size = model.getSize();
                 int selectedIndex = collectionTabbedPane.getSelectedIndex();
-                if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION) {
-                    int size = musicList.getModel().getSize();
+                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
+                        || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
                     countLabel.setText(String.format("共 %s 首", size));
                     leftBox.remove(emptyHintPanel);
                     leftBox.add(musicScrollPane);
                     leftBox.repaint();
-                } else if (selectedIndex == CollectionTabIndex.MUSIC) {
-                    int size = musicList.getModel().getSize();
+                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
+                        && (model == collectionModel || model == filterModel)) {
                     countLabel.setText(String.format("共 %s 首", size));
+                    musicList.setModel(model);
                     musicCollectionLeftBox.remove(emptyHintPanel);
                     musicCollectionLeftBox.add(musicScrollPane);
                     musicCollectionLeftBox.repaint();
-                } else {
-                    ListModel model = collectionList.getModel();
-                    if (model == filterModel)
-                        collectionList.setModel(filterModel);
-                    else if (selectedIndex == CollectionTabIndex.PLAYLIST && model != playlistCollectionModel)
-                        collectionList.setModel(playlistCollectionModel);
-                    else if (selectedIndex == CollectionTabIndex.ALBUM && model != albumCollectionModel)
-                        collectionList.setModel(albumCollectionModel);
-                    else if (selectedIndex == CollectionTabIndex.ARTIST && model != artistCollectionModel)
-                        collectionList.setModel(artistCollectionModel);
-                    else if (selectedIndex == CollectionTabIndex.RADIO && model != radioCollectionModel)
-                        collectionList.setModel(radioCollectionModel);
-                    else if (selectedIndex == CollectionTabIndex.MV && model != mvCollectionModel)
-                        collectionList.setModel(mvCollectionModel);
-                    else if (selectedIndex == CollectionTabIndex.RANKING && model != rankingCollectionModel)
-                        collectionList.setModel(rankingCollectionModel);
-                    else if (selectedIndex == CollectionTabIndex.USER && model != userCollectionModel)
-                        collectionList.setModel(userCollectionModel);
+                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                    if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
+                        collectionList.setModel(model);
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
+                        collectionList.setModel(model);
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
+                        collectionList.setModel(model);
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
+                        collectionList.setModel(model);
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
+                        collectionList.setModel(model);
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
+                        collectionList.setModel(model);
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
+                        collectionList.setModel(model);
+                        countLabel.setText(String.format("共 %s 项", size));
+                    }
 
-                    int size = collectionList.getModel().getSize();
-                    countLabel.setText(String.format("共 %s 项", size));
                     Box box = null;
                     if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
@@ -6719,26 +6759,41 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void intervalRemoved(ListDataEvent e) {
+                DefaultListModel model = (DefaultListModel) e.getSource();
+                int size = model.getSize();
                 int selectedIndex = collectionTabbedPane.getSelectedIndex();
-                if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION) {
-                    int size = musicList.getModel().getSize();
+                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
+                        || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
                     countLabel.setText(String.format("共 %s 首", size));
                     if (size == 0) {
                         leftBox.add(emptyHintPanel);
                         leftBox.remove(musicScrollPane);
                         leftBox.repaint();
                     }
-                } else if (selectedIndex == CollectionTabIndex.MUSIC) {
-                    int size = musicList.getModel().getSize();
+                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
+                        && (model == collectionModel || model == filterModel)) {
                     countLabel.setText(String.format("共 %s 首", size));
                     if (size == 0) {
                         musicCollectionLeftBox.remove(musicScrollPane);
                         musicCollectionLeftBox.add(emptyHintPanel);
                         musicCollectionLeftBox.repaint();
                     }
-                } else {
-                    int size = collectionList.getModel().getSize();
-                    countLabel.setText(String.format("共 %s 项", size));
+                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                    if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
+                        countLabel.setText(String.format("共 %s 项", size));
+                    } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
+                        countLabel.setText(String.format("共 %s 项", size));
+                    }
                     if (size == 0) {
                         Box box = null;
                         if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
@@ -6961,7 +7016,7 @@ public class PlayerFrame extends JFrame {
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
             if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toSimpleString());
+                searchTextField.setText(((NetMusicInfo) o).toAvailableString());
             } else searchTextField.setText(o.toString());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
@@ -7482,7 +7537,7 @@ public class PlayerFrame extends JFrame {
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
             if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toSimpleString());
+                searchTextField.setText(((NetMusicInfo) o).toAvailableString());
             } else searchTextField.setText(o.toString());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
@@ -18674,7 +18729,7 @@ public class PlayerFrame extends JFrame {
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
             if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toSimpleString());
+                searchTextField.setText(((NetMusicInfo) o).toAvailableString());
             } else searchTextField.setText(o.toString());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
@@ -18915,6 +18970,8 @@ public class PlayerFrame extends JFrame {
         // 歌词面板最佳大小(CustomList 需要加到 CustomScrollPane 中才能调整大小！)
         Dimension d = new Dimension(1, SpectrumConstants.BAR_MAX_HEIGHT);
         spectrumPanel.setMinimumSize(d);
+        // 初始不可见
+        spectrumPanel.setVisible(false);
 //        lrcScrollPane.setMinimumSize(dimension);
 //        lrcScrollPane.setMaximumSize(new Dimension((int)(WINDOW_WIDTH * 0.6), (int)(WINDOW_HEIGHT * 1)));
         lrcAndSpecBox.add(lrcScrollPane);
@@ -20403,7 +20460,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 关闭频谱
-    void closeSpectrum() {
+    private void closeSpectrum() {
         spectrumTimer.stop();
         spectrumPanel.setDrawSpectrum(false);
         spectrumPanel.setVisible(false);
@@ -21935,7 +21992,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 更新收藏
-    void updateCollection(Object o) {
+    private void updateCollection(Object o) {
         if (o == null) return;
         DefaultListModel model = null;
         if (o instanceof AudioFile || o instanceof NetMusicInfo) model = collectionModel;
@@ -21955,7 +22012,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 更新 renderer ，避免 CustomList 各个元素大小不变
-    void updateRenderer(CustomList list) {
+    private void updateRenderer(CustomList list) {
         ListCellRenderer renderer = list.getCellRenderer();
         if (renderer == null) return;
         synchronized (renderer) {
@@ -21965,7 +22022,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 移动歌词
-    void seekLrc(double t) {
+    private void seekLrc(double t) {
         if (nextLrc < 0) return;
         for (int i = 0, size = statements.size(); i < size; i++) {
             if (t < statements.get(i).getTime() + lrcOffset) {
@@ -22004,7 +22061,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 更新上层组件
-    void updateUpperComp() {
+    private void updateUpperComp() {
         // 更新弹出菜单
         if (currPopup != null) currPopup.repaint();
         // 更新对话框
@@ -22077,7 +22134,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 风格背景模糊
-    void doStyleBlur(UIStyle style) {
+    private void doStyleBlur(UIStyle style) {
         globalExecutor.submit(() -> {
             String styleImgPath = style.getStyleImgPath();
             // 纯色背景
@@ -22085,10 +22142,12 @@ public class PlayerFrame extends JFrame {
                 globalPanel.setBackgroundImage(style.getImg());
             } else {
                 BufferedImage styleImage = style.getImg();
-                // 处理大小
-                styleImage = ImageUtils.width(styleImage, getWidth());
+                // 缩小
+                styleImage = ImageUtils.width(styleImage, 300);
                 // 高斯模糊
                 styleImage = ImageUtils.doSlightBlur(styleImage);
+                // 放大至窗口大小
+                styleImage = ImageUtils.width(styleImage, getWidth());
                 // 圆角
 //                    styleImage = ImageUtils.setRadius(styleImage, WIN_ARC);
                 // 亮度

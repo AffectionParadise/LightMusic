@@ -83,6 +83,8 @@ public class ComboBoxUI extends BasicComboBoxUI {
             @Override
             public void mouseEntered(MouseEvent e) {
                 comboBox.setEntered(true);
+                // 自动弹出菜单
+//                if (!comboBox.isPopupVisible()) comboBox.showPopup();
             }
 
             @Override
@@ -95,6 +97,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
     @Override
     protected ComboPopup createPopup() {
-        return new CustomComboPopup(comboBox, f, foreColor);
+        CustomComboPopup popup = new CustomComboPopup(comboBox, f, foreColor);
+        return popup;
     }
 }
