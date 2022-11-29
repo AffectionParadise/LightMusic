@@ -13,6 +13,14 @@ public class ConfigConstants {
     public final static String CUSTOM_UI_STYLES = "customUIStyles";
     // 当前 UI 风格索引
     public final static String CURR_UI_STYLE = "currUIStyle";
+    // 是否启用快捷键
+    public final static String KEY_ENABLED = "keyEnabled";
+    public final static String PLAY_OR_PAUSE_KEYS = "playOrPauseKeys";
+    public final static String PLAY_LAST_KEYS = "playLastKeys";
+    public final static String PLAY_NEXT_KEYS = "playNextKeys";
+    public final static String BACKWARD_KEYS = "backwardKeys";
+    public final static String FORWARD_KEYS = "forwardKeys";
+    public final static String VIDEO_FULL_SCREEN_KEYS = "videoFullScreenKeys";
     // 是否自动更新
     public final static String AUTO_UPDATE = "autoUpdate";
     // 关闭窗口操作

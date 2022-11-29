@@ -29,6 +29,8 @@ public class CustomTextField extends JTextField {
         setMaximumSize(new Dimension(3000, 30));
         setSelectionColor(Colors.THEME);
         setFont(Fonts.NORMAL);
+        Insets insets = getMargin();
+        insets.left = insets.right = 5;
         drawBg = true;
         init();
     }

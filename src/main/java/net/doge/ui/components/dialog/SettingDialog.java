@@ -9,20 +9,22 @@ import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.componentui.ComboBoxUI;
+import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.JsonUtils;
+import net.doge.utils.KeyUtils;
+import net.doge.utils.ListUtils;
 import net.sf.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -50,6 +52,7 @@ public class SettingDialog extends JDialog {
 
     private SettingDialogPanel globalPanel = new SettingDialogPanel();
     private CustomPanel centerPanel = new CustomPanel();
+    private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
     private CustomPanel buttonPanel = new CustomPanel();
 
     private CustomPanel topPanel = new CustomPanel();
@@ -119,12 +122,45 @@ public class SettingDialog extends JDialog {
     private DialogButton importListButton;
     private DialogButton exportListButton;
 
+    public LinkedList<Integer> playOrPauseKeys = new LinkedList<>();
+    public LinkedList<Integer> playLastKeys = new LinkedList<>();
+    public LinkedList<Integer> playNextKeys = new LinkedList<>();
+    public LinkedList<Integer> backwardKeys = new LinkedList<>();
+    public LinkedList<Integer> forwardKeys = new LinkedList<>();
+    public LinkedList<Integer> videoFullScreenKeys = new LinkedList<>();
+    public LinkedList<Integer> currKeys = new LinkedList<>();
+    private CustomPanel keyPanel = new CustomPanel();
+    private CustomLabel keyLabel = new CustomLabel("全局快捷键：");
+    private CustomCheckBox enableKeyCheckBox = new CustomCheckBox("是否启用");
+    private CustomPanel playOrPausePanel = new CustomPanel();
+    private CustomLabel playOrPauseLabel = new CustomLabel("播放/暂停控制：");
+    private CustomTextField playOrPauseTextField = new CustomTextField(10);
+    private CustomPanel playLastPanel = new CustomPanel();
+    private CustomLabel playLastLabel = new CustomLabel("上一首：");
+    private CustomTextField playLastTextField = new CustomTextField(10);
+    private CustomPanel playNextPanel = new CustomPanel();
+    private CustomLabel playNextLabel = new CustomLabel("下一首：");
+    private CustomTextField playNextTextField = new CustomTextField(10);
+    private CustomPanel backwardPanel = new CustomPanel();
+    private CustomLabel backwardLabel = new CustomLabel("快退：");
+    private CustomTextField backwardTextField = new CustomTextField(10);
+    private CustomPanel forwardPanel = new CustomPanel();
+    private CustomLabel forwardLabel = new CustomLabel("快进：");
+    private CustomTextField forwardTextField = new CustomTextField(10);
+    private CustomPanel videoFullScreenPanel = new CustomPanel();
+    private CustomLabel videoFullScreenLabel = new CustomLabel("视频全屏切换：");
+    private CustomTextField videoFullScreenTextField = new CustomTextField(10);
+
     private DialogButton okButton;
     private DialogButton applyButton;
     private DialogButton cancelButton;
 
     private PlayerFrame f;
     private UIStyle style;
+
+    private Object comp;
+    AWTEventListener keyBindListener;
+    AWTEventListener mouseListener;
 
     // 父窗口和是否是模态，传入 OK 按钮文字
     public SettingDialog(PlayerFrame f) {
@@ -162,7 +198,7 @@ public class SettingDialog extends JDialog {
         setTitle(TITLE);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
-        setLocation(400, 200);
+        setSize(700, 750);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -170,13 +206,20 @@ public class SettingDialog extends JDialog {
         initView();
         initSettings();
 
-        globalPanel.add(centerPanel, BorderLayout.CENTER);
+        globalPanel.add(centerScrollPane, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
             if (!applySettings()) return;
             f.currDialogs.remove(this);
+            // 移除监听器
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            toolkit.removeAWTEventListener(keyBindListener);
+            toolkit.removeAWTEventListener(mouseListener);
             dispose();
         });
-        applyButton.addActionListener(e -> applySettings());
+        applyButton.addActionListener(e -> {
+            applySettings();
+            new TipDialog(f, "应用成功").showDialog();
+        });
         cancelButton.addActionListener(e -> closeButton.doClick());
         buttonPanel.add(okButton);
         buttonPanel.add(applyButton);
@@ -187,7 +230,6 @@ public class SettingDialog extends JDialog {
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-        pack();
         setLocationRelativeTo(null);
 
         updateBlur();
@@ -263,6 +305,13 @@ public class SettingDialog extends JDialog {
         specStylePanel.setLayout(fl);
         balancePanel.setLayout(fl);
         backupPanel.setLayout(fl);
+        keyPanel.setLayout(fl);
+        playOrPausePanel.setLayout(fl);
+        playLastPanel.setLayout(fl);
+        playNextPanel.setLayout(fl);
+        backwardPanel.setLayout(fl);
+        forwardPanel.setLayout(fl);
+        videoFullScreenPanel.setLayout(fl);
 
         // 边框
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
@@ -282,6 +331,13 @@ public class SettingDialog extends JDialog {
         specStylePanel.setBorder(b);
         balancePanel.setBorder(b);
         backupPanel.setBorder(b);
+        keyPanel.setBorder(b);
+        playOrPausePanel.setBorder(b);
+        playLastPanel.setBorder(b);
+        playNextPanel.setBorder(b);
+        backwardPanel.setBorder(b);
+        forwardPanel.setBorder(b);
+        videoFullScreenPanel.setBorder(b);
 
         // 字体颜色
         Color labelColor = style.getLabelColor();
@@ -301,6 +357,14 @@ public class SettingDialog extends JDialog {
         specStyleLabel.setForeground(labelColor);
         balanceLabel.setForeground(labelColor);
         backupLabel.setForeground(labelColor);
+        keyLabel.setForeground(labelColor);
+        enableKeyCheckBox.setForeground(labelColor);
+        playOrPauseLabel.setForeground(labelColor);
+        playLastLabel.setForeground(labelColor);
+        playNextLabel.setForeground(labelColor);
+        backwardLabel.setForeground(labelColor);
+        forwardLabel.setForeground(labelColor);
+        videoFullScreenLabel.setForeground(labelColor);
 
         // 文本框
         Color foreColor = style.getForeColor();
@@ -326,6 +390,118 @@ public class SettingDialog extends JDialog {
         maxConcurrentTaskCountTextField.setCaretColor(foreColor);
         doc = new SafeDocument(1, maxConcurrentTaskCountLimit);
         maxConcurrentTaskCountTextField.setDocument(doc);
+        keyBindListener = new AWTEventListener() {
+            @Override
+            public void eventDispatched(AWTEvent event) {
+                if (!(event instanceof KeyEvent) || comp == null) return;
+                KeyEvent e = (KeyEvent) event;
+                int code = e.getKeyCode();
+                boolean released = e.getID() == KeyEvent.KEY_RELEASED, pressed = e.getID() == KeyEvent.KEY_PRESSED;
+                if (!released && !pressed) return;
+
+                if (released && !currKeys.isEmpty()) currKeys.removeLast();
+
+                if (pressed) {
+                    CustomTextField tf = (CustomTextField) comp;
+                    if (currKeys.contains(code)) return;
+                    currKeys.add(code);
+                    // 检查重复按键
+                    Object o = checkKeyDuplicated();
+                    if (o != null) {
+                        if (o == playOrPauseKeys) {
+                            playOrPauseKeys.clear();
+                            playOrPauseTextField.setText("");
+                        } else if (o == playLastKeys) {
+                            playLastKeys.clear();
+                            playLastTextField.setText("");
+                        } else if (o == playNextKeys) {
+                            playNextKeys.clear();
+                            playNextTextField.setText("");
+                        } else if (o == backwardKeys) {
+                            backwardKeys.clear();
+                            backwardTextField.setText("");
+                        } else if (o == forwardKeys) {
+                            forwardKeys.clear();
+                            forwardTextField.setText("");
+                        } else if (o == videoFullScreenKeys) {
+                            videoFullScreenKeys.clear();
+                            videoFullScreenTextField.setText("");
+                        }
+                    }
+                    tf.setText(KeyUtils.join(currKeys));
+                    if (tf == playOrPauseTextField) {
+                        playOrPauseKeys.clear();
+                        playOrPauseKeys.addAll(currKeys);
+                    } else if (tf == playLastTextField) {
+                        playLastKeys.clear();
+                        playLastKeys.addAll(currKeys);
+                    } else if (tf == playNextTextField) {
+                        playNextKeys.clear();
+                        playNextKeys.addAll(currKeys);
+                    } else if (tf == backwardTextField) {
+                        backwardKeys.clear();
+                        backwardKeys.addAll(currKeys);
+                    } else if (tf == forwardTextField) {
+                        forwardKeys.clear();
+                        forwardKeys.addAll(currKeys);
+                    } else if (tf == videoFullScreenTextField) {
+                        videoFullScreenKeys.clear();
+                        videoFullScreenKeys.addAll(currKeys);
+                    }
+                }
+            }
+
+            // 检查是否有重复按键
+            private Object checkKeyDuplicated() {
+                if (ListUtils.equals(currKeys, playOrPauseKeys)) return playOrPauseKeys;
+                if (ListUtils.equals(currKeys, playLastKeys)) return playLastKeys;
+                if (ListUtils.equals(currKeys, playNextKeys)) return playNextKeys;
+                if (ListUtils.equals(currKeys, backwardKeys)) return backwardKeys;
+                if (ListUtils.equals(currKeys, forwardKeys)) return forwardKeys;
+                if (ListUtils.equals(currKeys, videoFullScreenKeys)) return videoFullScreenKeys;
+                return null;
+            }
+        };
+        mouseListener = event -> {
+            if (event instanceof MouseEvent) {
+                MouseEvent me = (MouseEvent) event;
+                if (me.getID() == MouseEvent.MOUSE_PRESSED) comp = null;
+            }
+        };
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        toolkit.addAWTEventListener(keyBindListener, AWTEvent.KEY_EVENT_MASK);
+        toolkit.addAWTEventListener(mouseListener, AWTEvent.MOUSE_EVENT_MASK);
+        FocusAdapter focusAdapter = new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                comp = e.getSource();
+                currKeys.clear();
+            }
+        };
+        playOrPauseTextField.setForeground(foreColor);
+        playOrPauseTextField.setCaretColor(foreColor);
+        playOrPauseTextField.setEditable(false);
+        playOrPauseTextField.addFocusListener(focusAdapter);
+        playLastTextField.setForeground(foreColor);
+        playLastTextField.setCaretColor(foreColor);
+        playLastTextField.setEditable(false);
+        playLastTextField.addFocusListener(focusAdapter);
+        playNextTextField.setForeground(foreColor);
+        playNextTextField.setCaretColor(foreColor);
+        playNextTextField.setEditable(false);
+        playNextTextField.addFocusListener(focusAdapter);
+        backwardTextField.setForeground(foreColor);
+        backwardTextField.setCaretColor(foreColor);
+        backwardTextField.setEditable(false);
+        backwardTextField.addFocusListener(focusAdapter);
+        forwardTextField.setForeground(foreColor);
+        forwardTextField.setCaretColor(foreColor);
+        forwardTextField.setEditable(false);
+        forwardTextField.addFocusListener(focusAdapter);
+        videoFullScreenTextField.setForeground(foreColor);
+        videoFullScreenTextField.setCaretColor(foreColor);
+        videoFullScreenTextField.setEditable(false);
+        videoFullScreenTextField.addFocusListener(focusAdapter);
 
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
@@ -336,7 +512,7 @@ public class SettingDialog extends JDialog {
         balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, buttonColor));
 
         DirectoryChooser dirChooser = new DirectoryChooser();
-        dirChooser.setTitle("选择歌曲文件夹");
+        dirChooser.setTitle("选择文件夹");
 
         // 按钮
         changeMusicDownPathButton = new DialogButton("更改", buttonColor);
@@ -421,26 +597,25 @@ public class SettingDialog extends JDialog {
         });
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("导入列表");
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("json 文件", "*.json");
         fileChooser.getExtensionFilters().add(filter);
-        importListButton = new DialogButton("导入", buttonColor);
+        importListButton = new DialogButton("恢复", buttonColor);
         importListButton.addActionListener(e -> {
-            fileChooser.setTitle("导入列表");
             Platform.runLater(() -> {
+                fileChooser.setTitle("选择文件");
                 File input = fileChooser.showOpenDialog(null);
                 if (input != null) {
                     JSONObject config = JsonUtils.readJson(input);
                     f.loadLocalMusicList(config);
                     f.loadCollectedMusicList(config);
-                    new TipDialog(f, "导入成功").showDialog();
+                    new TipDialog(f, "恢复成功").showDialog();
                 }
             });
         });
-        exportListButton = new DialogButton("导出", buttonColor);
+        exportListButton = new DialogButton("备份", buttonColor);
         exportListButton.addActionListener(e -> {
-            fileChooser.setTitle("导出列表");
             Platform.runLater(() -> {
+                fileChooser.setTitle("保存文件");
                 File output = fileChooser.showSaveDialog(null);
                 if (output != null) {
                     JSONObject config = new JSONObject();
@@ -448,27 +623,25 @@ public class SettingDialog extends JDialog {
                     f.saveCollectedMusicList(config);
                     try {
                         JsonUtils.saveJson(config, output);
-                        new TipDialog(f, "导出成功").showDialog();
+                        new TipDialog(f, "备份成功").showDialog();
                     } catch (IOException ex) {
-                        new TipDialog(f, "导出失败").showDialog();
+                        new TipDialog(f, "备份失败").showDialog();
                     }
                 }
             });
         });
 
         // 复选框图标
-        int gap = 10;
         ImageIcon icon = ImageUtils.dye(uncheckedIcon, labelColor);
         ImageIcon selectedIcon = ImageUtils.dye(checkedIcon, labelColor);
-        autoUpdateCheckBox.setIconTextGap(gap);
         autoUpdateCheckBox.setIcon(icon);
         autoUpdateCheckBox.setSelectedIcon(selectedIcon);
-        autoDownloadLrcCheckBox.setIconTextGap(gap);
         autoDownloadLrcCheckBox.setIcon(icon);
         autoDownloadLrcCheckBox.setSelectedIcon(selectedIcon);
-        videoOnlyCheckBox.setIconTextGap(gap);
         videoOnlyCheckBox.setIcon(icon);
         videoOnlyCheckBox.setSelectedIcon(selectedIcon);
+        enableKeyCheckBox.setIcon(icon);
+        enableKeyCheckBox.setSelectedIcon(selectedIcon);
 
         autoUpdatePanel.add(autoUpdateCheckBox);
 
@@ -541,6 +714,21 @@ public class SettingDialog extends JDialog {
         backupPanel.add(importListButton);
         backupPanel.add(exportListButton);
 
+        keyPanel.add(keyLabel);
+        keyPanel.add(enableKeyCheckBox);
+        playOrPausePanel.add(playOrPauseLabel);
+        playOrPausePanel.add(playOrPauseTextField);
+        playLastPanel.add(playLastLabel);
+        playLastPanel.add(playLastTextField);
+        playNextPanel.add(playNextLabel);
+        playNextPanel.add(playNextTextField);
+        backwardPanel.add(backwardLabel);
+        backwardPanel.add(backwardTextField);
+        forwardPanel.add(forwardLabel);
+        forwardPanel.add(forwardTextField);
+        videoFullScreenPanel.add(videoFullScreenLabel);
+        videoFullScreenPanel.add(videoFullScreenTextField);
+
         centerPanel.add(autoUpdatePanel);
         centerPanel.add(autoDownloadLrcPanel);
         centerPanel.add(videoOnlyPanel);
@@ -558,10 +746,21 @@ public class SettingDialog extends JDialog {
         centerPanel.add(specStylePanel);
         centerPanel.add(balancePanel);
         centerPanel.add(backupPanel);
+        centerPanel.add(keyPanel);
+        centerPanel.add(playOrPausePanel);
+        centerPanel.add(playLastPanel);
+        centerPanel.add(playNextPanel);
+        centerPanel.add(backwardPanel);
+        centerPanel.add(forwardPanel);
+        centerPanel.add(videoFullScreenPanel);
+
+        centerScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     }
 
     // 加载设置
-    void initSettings() {
+    private void initSettings() {
         autoUpdateCheckBox.setSelected(f.autoUpdate);
         autoDownloadLrcCheckBox.setSelected(f.isAutoDownloadLrc);
         videoOnlyCheckBox.setSelected(f.videoOnly);
@@ -576,10 +775,24 @@ public class SettingDialog extends JDialog {
         windowSizeComboBox.setSelectedIndex(f.windowSize);
         specStyleComboBox.setSelectedIndex(f.currSpecStyle);
         balanceComboBox.setSelectedIndex(Double.valueOf(f.currBalance).intValue() + 1);
+
+        enableKeyCheckBox.setSelected(f.keyEnabled);
+        playOrPauseKeys.addAll(f.playOrPauseKeys);
+        playOrPauseTextField.setText(KeyUtils.join(f.playOrPauseKeys));
+        playLastKeys.addAll(f.playLastKeys);
+        playLastTextField.setText(KeyUtils.join(f.playLastKeys));
+        playNextKeys.addAll(f.playNextKeys);
+        playNextTextField.setText(KeyUtils.join(f.playNextKeys));
+        backwardKeys.addAll(f.backwardKeys);
+        backwardTextField.setText(KeyUtils.join(f.backwardKeys));
+        forwardKeys.addAll(f.forwardKeys);
+        forwardTextField.setText(KeyUtils.join(f.forwardKeys));
+        videoFullScreenKeys.addAll(f.videoFullScreenKeys);
+        videoFullScreenTextField.setText(KeyUtils.join(f.videoFullScreenKeys));
     }
 
     // 应用设置
-    boolean applySettings() {
+    private boolean applySettings() {
         // 验证
         File musicDir = new File(musicDownPathTextField.getText());
         if (!musicDir.exists()) {
@@ -666,6 +879,20 @@ public class SettingDialog extends JDialog {
         f.currBalance = balanceComboBox.getSelectedIndex() - 1;
         f.getPlayer().setBalance(f.currBalance);
 
+        f.keyEnabled = enableKeyCheckBox.isSelected();
+        f.playOrPauseKeys.clear();
+        f.playOrPauseKeys.addAll(playOrPauseKeys);
+        f.playLastKeys.clear();
+        f.playLastKeys.addAll(playLastKeys);
+        f.playNextKeys.clear();
+        f.playNextKeys.addAll(playNextKeys);
+        f.backwardKeys.clear();
+        f.backwardKeys.addAll(backwardKeys);
+        f.forwardKeys.clear();
+        f.forwardKeys.addAll(forwardKeys);
+        f.videoFullScreenKeys.clear();
+        f.videoFullScreenKeys.addAll(videoFullScreenKeys);
+
         return true;
     }
 
@@ -683,7 +910,8 @@ public class SettingDialog extends JDialog {
             if (slight) {
                 bufferedImage = ImageUtils.slightDarker(bufferedImage);
             } else {
-                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF)
+                    bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
             }
             // 放大至窗口大小

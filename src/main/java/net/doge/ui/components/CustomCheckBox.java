@@ -19,5 +19,6 @@ public class CustomCheckBox extends JCheckBox {
         setOpaque(false);
         setFocusPainted(false);
         setFont(Fonts.NORMAL);
+        setIconTextGap(10);
     }
 }

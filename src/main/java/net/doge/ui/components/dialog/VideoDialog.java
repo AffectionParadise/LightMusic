@@ -122,8 +122,8 @@ public class VideoDialog extends JDialog {
     private CustomPanel controlPanel = new CustomPanel();
     private CustomPanel volumePanel = new CustomPanel();
     private CustomButton playOrPauseButton = new CustomButton(playIcon);
-    private CustomButton backwardButton = new CustomButton(backwIcon);
-    private CustomButton forwardButton = new CustomButton(forwIcon);
+    public CustomButton backwardButton = new CustomButton(backwIcon);
+    public CustomButton forwardButton = new CustomButton(forwIcon);
     public CustomButton muteButton = new CustomButton(soundIcon);
     private CustomSlider volumeSlider = new CustomSlider();
     private CustomButton collectButton = new CustomButton(collectIcon);
@@ -639,17 +639,7 @@ public class VideoDialog extends JDialog {
                 // 右键或者左键双击切换全屏
                 if (fullScreen && e.getButton() == MouseEvent.BUTTON3
                         || e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    if (fullScreen) restoreWindow();
-                    else toFullScreen();
-                }
-            }
-        });
-        jfxPanel.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                // 空格播放暂停
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    playOrPause();
+                    switchWindow();
                 }
             }
         });
@@ -679,6 +669,11 @@ public class VideoDialog extends JDialog {
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
     }
 
+    public void switchWindow() {
+        if (fullScreen) restoreWindow();
+        else toFullScreen();
+    }
+
     private void toFullScreen() {
         fullScreen = true;
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
@@ -689,7 +684,7 @@ public class VideoDialog extends JDialog {
         fitMediaView();
     }
 
-    public void restoreWindow() {
+    private void restoreWindow() {
         setSize(mediaWidth + 2 * pixels, mediaHeight + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
         fullScreen = false;
         topPanel.setVisible(true);

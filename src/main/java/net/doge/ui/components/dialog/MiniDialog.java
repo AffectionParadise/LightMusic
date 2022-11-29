@@ -70,10 +70,10 @@ public class MiniDialog extends JDialog {
         super();
         this.f = f;
         style = f.getCurrUIStyle();
-        changePaneButton = f.getChangePaneButton();
-        popButton = f.getPlayOrPauseButton();
-        lastButton = f.getLastButton();
-        nextButton = f.getNextButton();
+        changePaneButton = f.changePaneButton;
+        popButton = f.playOrPauseButton;
+        lastButton = f.lastButton;
+        nextButton = f.nextButton;
         initUI();
     }
 

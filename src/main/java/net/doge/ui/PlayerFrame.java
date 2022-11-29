@@ -837,14 +837,14 @@ public class PlayerFrame extends JFrame {
     private String transStr;
     private int nextLrc = NextLrc.NOT_EXISTS;
 
-    private CustomButton changePaneButton = new CustomButton();
+    public CustomButton changePaneButton = new CustomButton();
     private CustomButton mvButton = new CustomButton(mvIcon);
     private CustomButton collectButton = new CustomButton(collectIcon);
     private CustomButton downloadButton = new CustomButton(downloadIcon);
     private CustomButton commentButton = new CustomButton(commentIcon);
-    private CustomButton playOrPauseButton = new CustomButton(playIcon);
-    private CustomButton lastButton = new CustomButton(lastIcon);
-    private CustomButton nextButton = new CustomButton(nextIcon);
+    public CustomButton playOrPauseButton = new CustomButton(playIcon);
+    public CustomButton lastButton = new CustomButton(lastIcon);
+    public CustomButton nextButton = new CustomButton(nextIcon);
     // 播放模式切换按钮
     private CustomButton playModeButton = new CustomButton(listCycleIcon);
     private CustomButton forwardButton = new CustomButton(forwIcon);
@@ -2732,78 +2732,108 @@ public class PlayerFrame extends JFrame {
         globalPanel.add(topBox, BorderLayout.NORTH);
     }
 
+    public boolean keyEnabled;
+    public LinkedList<Integer> playOrPauseKeys;
+    public LinkedList<Integer> playLastKeys;
+    public LinkedList<Integer> playNextKeys;
+    public LinkedList<Integer> backwardKeys;
+    public LinkedList<Integer> forwardKeys;
+    public LinkedList<Integer> videoFullScreenKeys;
+    public final LinkedList<Integer> currKeys = new LinkedList<>();
+
     // 加载全局快捷键监听器，AWTEventListener
     private void loadHotKeyListener() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.addAWTEventListener(event -> {
-            if (event instanceof KeyEvent) {
-                KeyEvent kE = (KeyEvent) event;
-                // 图片浏览窗口的监听事件
-                if (imageViewDialog != null && kE.getID() == KeyEvent.KEY_RELEASED && !imageViewDialog.pageTextField.hasFocus()) {
-                    if (kE.getKeyCode() == KeyEvent.VK_LEFT) {
-                        imageViewDialog.lastImgButton.doClick();
-                    } else if (kE.getKeyCode() == KeyEvent.VK_RIGHT) {
-                        imageViewDialog.nextImgButton.doClick();
+            if (!(event instanceof KeyEvent)) return;
+            KeyEvent kE = (KeyEvent) event;
+            boolean released = kE.getID() == KeyEvent.KEY_RELEASED, pressed = kE.getID() == KeyEvent.KEY_PRESSED;
+            if (!released && !pressed) return;
+            int code = kE.getKeyCode();
+
+            // 图片浏览窗口的监听事件
+            if (imageViewDialog != null && released && !imageViewDialog.pageTextField.hasFocus()) {
+                if (code == KeyEvent.VK_LEFT) {
+                    imageViewDialog.lastImgButton.doClick();
+                } else if (code == KeyEvent.VK_RIGHT) {
+                    imageViewDialog.nextImgButton.doClick();
+                }
+            }
+            // 视频界面恢复窗口事件
+            else if (videoDialog != null) {
+                if (keyEnabled) {
+                    // 记录所有按键
+                    if (released && !currKeys.isEmpty()) currKeys.removeLast();
+                    else if (!currKeys.contains(code)) currKeys.add(code);
+                    else return;
+                    if (ListUtils.equals(playOrPauseKeys, currKeys)) {
+                        videoDialog.playOrPause();
+                    } else if (ListUtils.equals(backwardKeys, currKeys)) {
+                        videoDialog.backwardButton.doClick();
+                    } else if (ListUtils.equals(forwardKeys, currKeys)) {
+                        videoDialog.forwardButton.doClick();
+                    } else if (ListUtils.equals(videoFullScreenKeys, currKeys)) {
+                        videoDialog.switchWindow();
                     }
                 }
-                // 视频界面恢复窗口事件
-                else if (videoDialog != null && videoDialog.isFullScreen() && kE.getID() == KeyEvent.KEY_RELEASED) {
-                    if (kE.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                        videoDialog.restoreWindow();
-                    }
-                } else if (kE.getID() == KeyEvent.KEY_RELEASED) {
-                    // 搜索框输入时不受影响
-                    if (!collectionPageTextField.hasFocus()
-                            && !searchTextField.hasFocus() && !netMusicPageTextField.hasFocus()
-                            && !netPlaylistSearchTextField.hasFocus() && !netPlaylistPageTextField.hasFocus()
-                            && !netAlbumSearchTextField.hasFocus() && !netAlbumPageTextField.hasFocus()
-                            && !netArtistSearchTextField.hasFocus() && !netArtistPageTextField.hasFocus()
-                            && !netRadioSearchTextField.hasFocus() && !netRadioPageTextField.hasFocus()
-                            && !netMvSearchTextField.hasFocus() && !netMvPageTextField.hasFocus()
-                            && !netRankingPageTextField.hasFocus()
-                            && !netUserSearchTextField.hasFocus() && !netUserPageTextField.hasFocus()
-                            && !netCommentPageTextField.hasFocus()
-                            && !netSheetPageTextField.hasFocus()
-                            && !netRecommendPageTextField.hasFocus()
-                            && !filterTextField.hasFocus() && currDialogs.isEmpty()) {
-                        // 空格播放或暂停
-                        if (kE.getKeyCode() == KeyEvent.VK_SPACE) {
+            } else {
+                // 搜索框输入时不受影响
+                if (!collectionPageTextField.hasFocus()
+                        && !searchTextField.hasFocus() && !netMusicPageTextField.hasFocus()
+                        && !netPlaylistSearchTextField.hasFocus() && !netPlaylistPageTextField.hasFocus()
+                        && !netAlbumSearchTextField.hasFocus() && !netAlbumPageTextField.hasFocus()
+                        && !netArtistSearchTextField.hasFocus() && !netArtistPageTextField.hasFocus()
+                        && !netRadioSearchTextField.hasFocus() && !netRadioPageTextField.hasFocus()
+                        && !netMvSearchTextField.hasFocus() && !netMvPageTextField.hasFocus()
+                        && !netRankingPageTextField.hasFocus()
+                        && !netUserSearchTextField.hasFocus() && !netUserPageTextField.hasFocus()
+                        && !netCommentPageTextField.hasFocus()
+                        && !netSheetPageTextField.hasFocus()
+                        && !netRecommendPageTextField.hasFocus()
+                        && !filterTextField.hasFocus() && currDialogs.isEmpty()) {
+                    // 播放或暂停、上下一首
+                    if (keyEnabled) {
+                        // 记录所有按键
+                        if (released && !currKeys.isEmpty()) currKeys.removeLast();
+                        else if (!currKeys.contains(code)) currKeys.add(code);
+                        else return;
+                        if (ListUtils.equals(playOrPauseKeys, currKeys)) {
                             if (videoDialog == null) playOrPause();
+                        } else if (ListUtils.equals(playLastKeys, currKeys)) {
+                            if (videoDialog == null) playLast();
+                        } else if (ListUtils.equals(playNextKeys, currKeys)) {
+                            if (videoDialog == null) playNext();
+                        } else if (ListUtils.equals(backwardKeys, currKeys)) {
+                            if (videoDialog == null) backwardButton.doClick();
+                        } else if (ListUtils.equals(forwardKeys, currKeys)) {
+                            if (videoDialog == null) forwardButton.doClick();
                         }
-                        // 上下一曲
-                        else if (kE.getKeyCode() == KeyEvent.VK_LEFT) {
-                            if (imageViewDialog != null) imageViewDialog.lastImgButton.doClick();
-                            else if (videoDialog == null) playLast();
-                        } else if (kE.getKeyCode() == KeyEvent.VK_RIGHT) {
-                            if (imageViewDialog != null) imageViewDialog.nextImgButton.doClick();
-                            else if (videoDialog == null) playNext();
-                        }
-                    } else if (currDialogs.isEmpty()) {
-                        if (kE.getKeyCode() == KeyEvent.VK_ENTER) {
-                            // 回车跳页
-                            if (collectionPageTextField.hasFocus()) collectionGoButton.doClick();
-                            else if (netMusicPageTextField.hasFocus()) netMusicGoButton.doClick();
-                            else if (netPlaylistPageTextField.hasFocus()) netPlaylistGoButton.doClick();
-                            else if (netAlbumPageTextField.hasFocus()) netAlbumGoButton.doClick();
-                            else if (netArtistPageTextField.hasFocus()) netArtistGoButton.doClick();
-                            else if (netRadioPageTextField.hasFocus()) netRadioGoButton.doClick();
-                            else if (netMvPageTextField.hasFocus()) netMvGoButton.doClick();
-                            else if (netRankingPageTextField.hasFocus()) netRankingGoButton.doClick();
-                            else if (netUserPageTextField.hasFocus()) netUserGoButton.doClick();
-                            else if (netCommentPageTextField.hasFocus()) netCommentGoButton.doClick();
-                            else if (netSheetPageTextField.hasFocus()) netSheetGoButton.doClick();
-                            else if (netRecommendPageTextField.hasFocus()) netRecommendGoButton.doClick();
-                            else {
-                                // 回车搜索
-                                int selectedIndex = tabbedPane.getSelectedIndex();
-                                if (selectedIndex == TabIndex.NET_MUSIC) searchButton.doClick();
-                                else if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistSearchButton.doClick();
-                                else if (selectedIndex == TabIndex.NET_ALBUM) netAlbumSearchButton.doClick();
-                                else if (selectedIndex == TabIndex.NET_ARTIST) netArtistSearchButton.doClick();
-                                else if (selectedIndex == TabIndex.NET_RADIO) netRadioSearchButton.doClick();
-                                else if (selectedIndex == TabIndex.NET_MV) netMvSearchButton.doClick();
-                                else if (selectedIndex == TabIndex.NET_USER) netUserSearchButton.doClick();
-                            }
+                    }
+                } else if (currDialogs.isEmpty()) {
+                    if (code == KeyEvent.VK_ENTER) {
+                        // 回车跳页
+                        if (collectionPageTextField.hasFocus()) collectionGoButton.doClick();
+                        else if (netMusicPageTextField.hasFocus()) netMusicGoButton.doClick();
+                        else if (netPlaylistPageTextField.hasFocus()) netPlaylistGoButton.doClick();
+                        else if (netAlbumPageTextField.hasFocus()) netAlbumGoButton.doClick();
+                        else if (netArtistPageTextField.hasFocus()) netArtistGoButton.doClick();
+                        else if (netRadioPageTextField.hasFocus()) netRadioGoButton.doClick();
+                        else if (netMvPageTextField.hasFocus()) netMvGoButton.doClick();
+                        else if (netRankingPageTextField.hasFocus()) netRankingGoButton.doClick();
+                        else if (netUserPageTextField.hasFocus()) netUserGoButton.doClick();
+                        else if (netCommentPageTextField.hasFocus()) netCommentGoButton.doClick();
+                        else if (netSheetPageTextField.hasFocus()) netSheetGoButton.doClick();
+                        else if (netRecommendPageTextField.hasFocus()) netRecommendGoButton.doClick();
+                        else {
+                            // 回车搜索
+                            int selectedIndex = tabbedPane.getSelectedIndex();
+                            if (selectedIndex == TabIndex.NET_MUSIC) searchButton.doClick();
+                            else if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistSearchButton.doClick();
+                            else if (selectedIndex == TabIndex.NET_ALBUM) netAlbumSearchButton.doClick();
+                            else if (selectedIndex == TabIndex.NET_ARTIST) netArtistSearchButton.doClick();
+                            else if (selectedIndex == TabIndex.NET_RADIO) netRadioSearchButton.doClick();
+                            else if (selectedIndex == TabIndex.NET_MV) netMvSearchButton.doClick();
+                            else if (selectedIndex == TabIndex.NET_USER) netUserSearchButton.doClick();
                         }
                     }
                 }
@@ -2838,6 +2868,39 @@ public class PlayerFrame extends JFrame {
                 );
                 addStyle(style, false);
             }
+        }
+        // 载入是否启用快捷键
+        keyEnabled = config.optBoolean(ConfigConstants.KEY_ENABLED, true);
+        playOrPauseKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.PLAY_OR_PAUSE_KEYS));
+        if (playOrPauseKeys.isEmpty()) {
+            playOrPauseKeys.add(KeyEvent.VK_CONTROL);
+            playOrPauseKeys.add(KeyEvent.VK_F5);
+        }
+        playLastKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.PLAY_LAST_KEYS));
+        if (playLastKeys.isEmpty()) {
+            playLastKeys.add(KeyEvent.VK_CONTROL);
+            playLastKeys.add(KeyEvent.VK_LEFT);
+        }
+        playNextKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.PLAY_NEXT_KEYS));
+        if (playNextKeys.isEmpty()) {
+            playNextKeys.add(KeyEvent.VK_CONTROL);
+            playNextKeys.add(KeyEvent.VK_RIGHT);
+        }
+        backwardKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.BACKWARD_KEYS));
+        if (backwardKeys.isEmpty()) {
+            backwardKeys.add(KeyEvent.VK_CONTROL);
+            backwardKeys.add(KeyEvent.VK_ALT);
+            backwardKeys.add(KeyEvent.VK_LEFT);
+        }
+        forwardKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.FORWARD_KEYS));
+        if (forwardKeys.isEmpty()) {
+            forwardKeys.add(KeyEvent.VK_CONTROL);
+            forwardKeys.add(KeyEvent.VK_ALT);
+            forwardKeys.add(KeyEvent.VK_RIGHT);
+        }
+        videoFullScreenKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.VIDEO_FULL_SCREEN_KEYS));
+        if (videoFullScreenKeys.isEmpty()) {
+            videoFullScreenKeys.add(KeyEvent.VK_F11);
         }
         // 载入是否自动更新
         autoUpdate = config.optBoolean(ConfigConstants.AUTO_UPDATE, true);
@@ -3658,6 +3721,14 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
         // 当前 UI 风格索引
         config.put(ConfigConstants.CURR_UI_STYLE, ListUtils.search(styles, currUIStyle));
+        // 存入快捷键
+        config.put(ConfigConstants.KEY_ENABLED, keyEnabled);
+        config.put(ConfigConstants.PLAY_OR_PAUSE_KEYS, KeyUtils.codesToStr(playOrPauseKeys));
+        config.put(ConfigConstants.PLAY_LAST_KEYS, KeyUtils.codesToStr(playLastKeys));
+        config.put(ConfigConstants.PLAY_NEXT_KEYS, KeyUtils.codesToStr(playNextKeys));
+        config.put(ConfigConstants.BACKWARD_KEYS, KeyUtils.codesToStr(backwardKeys));
+        config.put(ConfigConstants.FORWARD_KEYS, KeyUtils.codesToStr(forwardKeys));
+        config.put(ConfigConstants.VIDEO_FULL_SCREEN_KEYS, KeyUtils.codesToStr(videoFullScreenKeys));
         // 存入是否自动更新
         config.put(ConfigConstants.AUTO_UPDATE, autoUpdate);
         // 存入关闭窗口操作
@@ -4529,7 +4600,7 @@ public class PlayerFrame extends JFrame {
                     }
                 }
 
-                if(filterTextField.isOccupied()) filterPersonalMusic();
+                if (filterTextField.isOccupied()) filterPersonalMusic();
 
                 if (collectionBackwardButton.isShowing()) {
                     if (index == CollectionTabIndex.PLAYLIST) {
@@ -22555,22 +22626,6 @@ public class PlayerFrame extends JFrame {
 
     public DefaultListModel getMvCollectionModel() {
         return mvCollectionModel;
-    }
-
-    public CustomButton getChangePaneButton() {
-        return changePaneButton;
-    }
-
-    public CustomButton getPlayOrPauseButton() {
-        return playOrPauseButton;
-    }
-
-    public CustomButton getLastButton() {
-        return lastButton;
-    }
-
-    public CustomButton getNextButton() {
-        return nextButton;
     }
 
     public boolean isShowSpectrum() {
