@@ -6,7 +6,6 @@ import net.doge.utils.FileUtils;
 import net.doge.utils.MusicServerUtils;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -87,10 +86,12 @@ public class Task {
 
     public void start() {
         percent = 0;
+        setStatus(TaskStatus.WAITING);
         future = GlobalExecutors.downloadExecutor.submit(() -> {
             try {
                 dirCheck();
                 prepareInfo();
+                setStatus(TaskStatus.RUNNING);
                 MusicServerUtils.download(this, getHeaders());
                 if (isInterrupted()) return;
                 if (invokeLater != null) invokeLater.run();
@@ -99,7 +100,6 @@ public class Task {
                 setStatus(TaskStatus.FAILED);
             }
         });
-        setStatus(TaskStatus.RUNNING);
     }
 
     public void stop() {
@@ -107,6 +107,14 @@ public class Task {
             future.cancel(true);
             setStatus(TaskStatus.INTERRUPTED);
         }
+    }
+
+    public boolean isProcessing() {
+        return isRunning() || isWaiting();
+    }
+
+    public boolean isWaiting() {
+        return status == TaskStatus.WAITING;
     }
 
     public boolean isRunning() {
@@ -130,7 +138,7 @@ public class Task {
     }
 
     // 任务开始之前先请求所需信息
-    private void prepareInfo() throws IOException {
+    private void prepareInfo() {
         if (type == TaskType.MUSIC) {
             // 先补全音乐信息
             MusicServerUtils.fillNetMusicInfo(netMusicInfo);
@@ -150,7 +158,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return TaskStatus.s[status] + SEPARATOR + (isRunning() ? String.format("%.2f %%", percent) + SEPARATOR : "")
+        return TaskStatus.s[status] + SEPARATOR + (isProcessing() ? String.format("%.2f %%", percent) + SEPARATOR : "")
                 + TaskType.s[type] + SEPARATOR + name;
     }
 }

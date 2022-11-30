@@ -112,7 +112,7 @@ public class ConfirmDialog extends JDialog {
         Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);
         checkPanel.setBorder(eb);
 
-        messageLabel.setText(message);
+        messageLabel.setText(StringUtils.textToHtml(message));
         messageLabel.setForeground(labelColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);

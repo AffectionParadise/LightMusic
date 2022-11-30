@@ -4,7 +4,6 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
-import net.doge.constants.GlobalExecutors;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
@@ -88,7 +87,7 @@ public class TipDialog extends JDialog {
         setSize(size);
     }
 
-    public void update() {
+    public void updateView() {
         // 设置主题色
         themeColor = f.getCurrUIStyle().getLabelColor();
         updateSize();
@@ -124,54 +123,47 @@ public class TipDialog extends JDialog {
         doBlur(bufferedImage, slight);
     }
 
-    public void showDialog() {
-        f.currDialogs.add(this);
-        setOpacity(0);
-        setVisible(true);
-        GlobalExecutors.requestExecutor.submit(() -> {
-            closing = false;
-            update();
-            // 渐隐效果显示
-            float translucent = 0.0f;
-            setOpacity(translucent);
-            while (translucent < 1 && !closing) {
-                setOpacity(translucent);
-                translucent += 0.02f;
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+    private Timer timer;
+    private Timer closeWait;
+
+    private void initTimer() {
+        if (timer != null) return;
+        timer = new Timer(2, e -> {
+            // 渐隐效果
+            float opacity = getOpacity();
+            if (closing) opacity = Math.max(0, opacity - 0.02f);
+            else opacity = Math.min(1, opacity + 0.02f);
+            setOpacity(opacity);
+            if (closing && opacity <= 0 || !closing && opacity >= 1) {
+                timer.stop();
+                if (closing) {
+                    f.currDialogs.remove(THIS);
+                    dispose();
+                } else if (ms > 0) {
+                    closeWait.start();
                 }
             }
-            try {
-                if (ms > 0) {
-                    // 停留时间
-                    Thread.sleep(ms);
-                    close();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        });
+        // 停留时间
+        closeWait = new Timer(ms, ev -> {
+            close();
+            closeWait.stop();
         });
     }
 
+    public void showDialog() {
+        initTimer();
+        updateView();
+        f.currDialogs.add(this);
+        setOpacity(0);
+        setVisible(true);
+        closing = false;
+        timer.start();
+    }
+
     public void close() {
-        GlobalExecutors.requestExecutor.submit(() -> {
-            closing = true;
-            // 渐隐效果
-            float translucent = getOpacity();
-            while (translucent > 0) {
-                setOpacity(translucent);
-                translucent -= 0.02f;
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            f.currDialogs.remove(THIS);
-            dispose();
-        });
+        closing = true;
+        timer.start();
     }
 
     private void doBlur(BufferedImage bufferedImage, boolean slight) {
@@ -187,7 +179,8 @@ public class TipDialog extends JDialog {
             if (slight) {
                 bufferedImage = ImageUtils.slightDarker(bufferedImage);
             } else {
-                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) bufferedImage = ImageUtils.doBlur(bufferedImage);
+                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF)
+                    bufferedImage = ImageUtils.doBlur(bufferedImage);
                 bufferedImage = ImageUtils.darker(bufferedImage);
             }
             // 放大至窗口大小

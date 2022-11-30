@@ -94,7 +94,7 @@ public class SettingDialog extends JDialog {
     private CustomPanel maxSearchHistoryCountPanel = new CustomPanel();
     private CustomLabel maxSearchHistoryCountLabel = new CustomLabel(String.format("最大搜索历史数量(≤%s)：", maxSearchHistoryLimit));
     private CustomTextField maxSearchHistoryCountTextField = new CustomTextField(10);
-    private final int maxConcurrentTaskCountLimit = 5;
+    private final int maxConcurrentTaskCountLimit = 3;
     private CustomPanel maxConcurrentTaskCountPanel = new CustomPanel();
     private CustomLabel maxConcurrentTaskCountLabel = new CustomLabel(String.format("同时下载的最大任务数(≤%s)：", maxConcurrentTaskCountLimit));
     private CustomTextField maxConcurrentTaskCountTextField = new CustomTextField(10);

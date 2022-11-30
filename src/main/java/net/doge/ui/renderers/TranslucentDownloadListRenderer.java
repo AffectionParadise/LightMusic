@@ -96,7 +96,7 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(task.getName(), maxWidth));
         String type = StringUtils.textToHtml(TaskType.s[task.getType()]);
-        double percent = task.isRunning() ? task.getPercent() : task.isFinished() ? 100 : 0;
+        double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
         String percentStr = StringUtils.textToHtml(String.format("%.2f %%", percent));
         String size = StringUtils.textToHtml(StringUtils.wrapLineByWidth(
                 String.format("%s / %s", FileUtils.getUnitString(task.getFinished()), FileUtils.getUnitString(task.getTotal())), maxWidth));
