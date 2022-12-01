@@ -47,6 +47,10 @@ public class ConfigConstants {
     public final static String MAX_CONCURRENT_TASK_COUNT = "maxConcurrentTaskCount";
     // 是否显示频谱
     public final static String SHOW_SPECTRUM = "showSpectrum";
+    // 是否高斯模糊
+    public final static String GS_ON = "gsOn";
+    // 是否暗化
+    public final static String DARKER_ON = "darkerOn";
     // 模糊类型
     public final static String BLUR_TYPE = "blurType";
     // 是否自动下载歌词

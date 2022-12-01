@@ -18,6 +18,7 @@ import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.componentui.ComboBoxUI;
+import net.doge.ui.componentui.ScrollBarUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.*;
 
@@ -39,6 +40,8 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class EditInfoDialog extends JDialog {
     private final String TITLE = "歌曲信息";
+    private final int imgWidth = 120;
+    private final int imgHeight = 120;
 
     // 文件正在使用提示
     private final String FILE_BEING_USED_MSG = "文件正在被占用，无法修改";
@@ -53,6 +56,7 @@ public class EditInfoDialog extends JDialog {
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
     private CustomPanel centerPanel = new CustomPanel();
+    private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
     private CustomPanel buttonPanel = new CustomPanel();
 
     private CustomPanel topPanel = new CustomPanel();
@@ -144,14 +148,14 @@ public class EditInfoDialog extends JDialog {
         setTitle(TITLE);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
-        setLocation(400, 200);
+        setSize(960, 750);
 
         globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         initView();
 
-        globalPanel.add(centerPanel, BorderLayout.CENTER);
+        globalPanel.add(centerScrollPane, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
             if (f.getPlayer().isPlayingFile(file)) {
                 new TipDialog(f, FILE_BEING_USED_MSG).showDialog();
@@ -196,7 +200,6 @@ public class EditInfoDialog extends JDialog {
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-        pack();
         setLocationRelativeTo(null);
 
         updateBlur();
@@ -207,7 +210,6 @@ public class EditInfoDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        boolean slight = false;
         if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
@@ -218,10 +220,8 @@ public class EditInfoDialog extends JDialog {
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();
-            slight = style.isPureColor();
         }
-        if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
-        doBlur(bufferedImage, slight);
+        doBlur(bufferedImage);
     }
 
     // 初始化标题栏
@@ -320,8 +320,8 @@ public class EditInfoDialog extends JDialog {
                 if (results[i] != null) {
                     BufferedImage image = (BufferedImage) results[i];
                     if (image.getWidth() >= image.getHeight())
-                        labels[i].setIcon(new ImageIcon(ImageUtils.width(image, 100)));
-                    else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, 100)));
+                        labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
+                    else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
                 }
                 int finalI = i;
                 // 图片文件选择
@@ -339,12 +339,11 @@ public class EditInfoDialog extends JDialog {
                     Platform.runLater(() -> {
                         File file = fileChooser.showOpenDialog(null);
                         if (file != null) {
-                            results[finalI] = ImageUtils.read(file);
-                            labels[finalI].setIcon(new ImageIcon(
-                                    ImageUtils.width((BufferedImage) results[finalI], 100)
-                            ));
-                            pack();
-                            pack();
+                            BufferedImage image = ImageUtils.read(file);
+                            results[finalI] = image;
+                            if (image.getWidth() >= image.getHeight())
+                                labels[finalI].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
+                            else labels[finalI].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
                             setLocationRelativeTo(null);
                         }
                     });
@@ -360,34 +359,32 @@ public class EditInfoDialog extends JDialog {
 
             centerPanel.add(outer);
         }
+
+        centerScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     }
 
     public boolean getConfirmed() {
         return confirmed;
     }
 
-    private void doBlur(BufferedImage bufferedImage, boolean slight) {
-        Dimension size = getSize();
-        int dw = size.width, dh = size.height;
+    private void doBlur(BufferedImage bufferedImage) {
+        int dw = getWidth(), dh = getHeight();
         try {
             // 截取中间的一部分(有的图片是长方形)
-            bufferedImage = ImageUtils.cropCenter(bufferedImage);
+            if (f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小
-            bufferedImage = ImageUtils.width(bufferedImage, 100);
+            if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            if (slight) {
-                bufferedImage = ImageUtils.slightDarker(bufferedImage);
-            } else {
-                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF)
-                    bufferedImage = ImageUtils.doBlur(bufferedImage);
-                bufferedImage = ImageUtils.darker(bufferedImage);
-            }
+            if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
+            if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) {
+            if (f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)

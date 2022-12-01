@@ -160,21 +160,18 @@ public abstract class ImageViewDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        boolean slight = false;
         if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
             bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
             if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG) 
+            else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
             UIStyle style = f.getCurrUIStyle();
             bufferedImage = style.getImg();
-            slight = style.isPureColor();
         }
-        if (bufferedImage == null) bufferedImage = f.getDefaultAlbumImage();
-        doBlur(bufferedImage, slight);
+        doBlur(bufferedImage);
     }
 
     // 初始化标题栏
@@ -389,27 +386,22 @@ public abstract class ImageViewDialog extends JDialog {
         });
     }
 
-    private void doBlur(BufferedImage bufferedImage, boolean slight) {
-        Dimension size = getSize();
-        int dw = size.width, dh = size.height;
+    private void doBlur(BufferedImage bufferedImage) {
+        int dw = getWidth(), dh = getHeight();
         try {
             // 截取中间的一部分(有的图片是长方形)
-            bufferedImage = ImageUtils.cropCenter(bufferedImage);
+            if (f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小
-            bufferedImage = ImageUtils.width(bufferedImage, 100);
+            if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
             // 消除透明度
             bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            if (slight) {
-                bufferedImage = ImageUtils.slightDarker(bufferedImage);
-            } else {
-                if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) bufferedImage = ImageUtils.doBlur(bufferedImage);
-                bufferedImage = ImageUtils.darker(bufferedImage);
-            }
+            if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
+            if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
             // 放大至窗口大小
             bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (f.blurType == BlurType.GS || f.blurType == BlurType.OFF) {
+            if (f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)

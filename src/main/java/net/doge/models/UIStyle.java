@@ -81,6 +81,9 @@ public class UIStyle {
         GlobalExecutors.imageExecutor.execute(() -> {
             img = ImageUtils.read(styleImgPath);
             imgThumb = ImageUtils.setRadius(ImageUtils.width(img, ImageConstants.mvCoverWidth), 10);
+            // 控制高度不超过阈值
+            if (imgThumb != null && imgThumb.getHeight() > ImageConstants.mvCoverMaxHeight)
+                imgThumb = ImageUtils.height(imgThumb, ImageConstants.mvCoverMaxHeight);
             callback();
         });
     }

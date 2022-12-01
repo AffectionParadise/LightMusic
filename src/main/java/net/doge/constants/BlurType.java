@@ -8,8 +8,8 @@ package net.doge.constants;
 public class BlurType {
     // 关闭
     public static final int OFF = 0;
-    // 高斯模糊
-    public static final int GS = 1;
+    // 歌曲封面
+    public static final int CV = 1;
     // 纯主色调
     public static final int MC = 2;
     // 线性渐变

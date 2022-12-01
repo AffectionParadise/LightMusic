@@ -453,18 +453,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage darker(BufferedImage bufferedImage) {
-        contrastFilter.setBrightness(0.6f);
-        return contrastFilter.filter(bufferedImage, null);
-    }
-
-    /**
-     * 对 BufferedImage 进行轻度暗化处理
-     *
-     * @param bufferedImage
-     * @return
-     */
-    public static BufferedImage slightDarker(BufferedImage bufferedImage) {
-        contrastFilter.setBrightness(0.8f);
+        contrastFilter.setBrightness(0.7f);
         return contrastFilter.filter(bufferedImage, null);
     }
 

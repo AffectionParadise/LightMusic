@@ -125,8 +125,9 @@ public class PlayerFrame extends JFrame {
     private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n下面是一些常见问题解答，祝你使用愉快~\n\nQ1：如何批量操作？\nA1：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
             "Q2：如何导入我的歌单？\nA2：在“用户”选项卡搜索自己的用户名，右键即可“查看用户歌单”，无需登录\n\n" +
             "Q3：如何进行收藏等其他操作？\nA3：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
-            "Q4：为什么有些歌曲名字和音源不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
+            "Q4：为什么有些歌曲名字和音频不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
             "Q5：资源是如何获取的？\nA5：调用各大平台的 API 获取，免费使用，不可商用！\n\n" +
+            "Q6：软件更新后原来的数据如何继承？\nA6：建议覆盖更新，数据 JSON 文件保存在程序所在目录，保证与程序在同一目录即可\n\n" +
             "如果还有其他的问题，欢迎在我的 Github 主页发布 issue ~", TITLE);
     private final String FIRST_PAGE_MSG = "已经是第一页了";
     private final String LAST_PAGE_MSG = "已经是最后一页了";
@@ -265,7 +266,9 @@ public class PlayerFrame extends JFrame {
     // 列表为空提示图标
     private ImageIcon emptyHintIcon = new ImageIcon(SimplePath.ICON_PATH + "emptyHint.png");
     // 选定点图标(单选时)
-    private ImageIcon dotIcon = new ImageIcon(SimplePath.ICON_PATH + "dot.png");
+    private ImageIcon dotIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "dot.png");
+    // 选定勾图标
+    private ImageIcon tickIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "tick.png");
     // 添加歌曲文件图标
     private ImageIcon fileIcon = new ImageIcon(SimplePath.ICON_PATH + "file.png");
     // 添加文件夹图标
@@ -310,8 +313,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon spectrumOnIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumOn.png");
     // 频谱关闭图标
     private ImageIcon spectrumOffIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumoff.png");
-    // 高斯模糊图标
-    private ImageIcon gsBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOn.png");
+    // 歌曲封面图标
+    private ImageIcon cvBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOn.png");
     // 纯主色调图标
     private ImageIcon mcBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "pureColorBlur.png");
     // 线性渐变图标
@@ -709,6 +712,10 @@ public class PlayerFrame extends JFrame {
 //    private int step = 3;
     // 是否静音
     public boolean isMute;
+    // 是否高斯模糊
+    public boolean gsOn;
+    // 是否暗化
+    public boolean darkerOn;
     // 模糊类型
     public int blurType;
     // 是否显示频谱
@@ -888,7 +895,7 @@ public class PlayerFrame extends JFrame {
 //    };
 //    private CustomPopupMenu ratePopupMenu = new CustomPopupMenu(THIS);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
-    private CustomButton blurButton = new CustomButton(gsBlurIcon);
+    private CustomButton blurButton = new CustomButton(cvBlurIcon);
     private CustomButton soundEffectButton = new CustomButton(soundEffectIcon);
     private CustomButton sheetButton = new CustomButton(sheetIcon);
     private CustomButton goToPlayQueueButton = new CustomButton(goToPlayQueueIcon);
@@ -906,8 +913,10 @@ public class PlayerFrame extends JFrame {
 
     // 模糊模式右键菜单
     private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
+    private CustomMenuItem gsMenuItem = new CustomMenuItem("高斯模糊");
+    private CustomMenuItem darkerMenuItem = new CustomMenuItem("暗化");
     private CustomMenuItem blurOffMenuItem = new CustomMenuItem("跟随主题");
-    private CustomMenuItem gsBlurMenuItem = new CustomMenuItem("高斯模糊");
+    private CustomMenuItem cvBlurMenuItem = new CustomMenuItem("歌曲封面");
     private CustomMenuItem mcBlurMenuItem = new CustomMenuItem("纯主色调");
     private CustomMenuItem lgBlurMenuItem = new CustomMenuItem("线性渐变");
 
@@ -2938,6 +2947,7 @@ public class PlayerFrame extends JFrame {
             SimplePath.IMG_CACHE_PATH = cachePath + (cachePath.endsWith("/") ? "" : "/") + "img/";
         }
         FileUtils.makeSureDir(cachePath);
+        FileUtils.makeSureDir(SimplePath.IMG_CACHE_PATH);
         // 载入最大缓存大小
         maxCacheSize = config.optLong(ConfigConstants.MAX_CACHE_SIZE, 1024);
         // 载入最大播放历史数量
@@ -2950,9 +2960,13 @@ public class PlayerFrame extends JFrame {
         // 载入是否显示频谱
         showSpectrum = config.optBoolean(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
+        // 载入是否高斯模糊
+        gsOn = config.optBoolean(ConfigConstants.GS_ON, false);
+        // 载入是否暗化
+        darkerOn = config.optBoolean(ConfigConstants.DARKER_ON, true);
         // 载入模糊类型
-        blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurType.GS);
-        blurButton.setIcon(ImageUtils.dye(blurType == BlurType.GS ? gsBlurIcon : blurType == BlurType.MC ? mcBlurIcon :
+        blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurType.OFF);
+        blurButton.setIcon(ImageUtils.dye(blurType == BlurType.CV ? cvBlurIcon : blurType == BlurType.MC ? mcBlurIcon :
                 blurType == BlurType.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getButtonColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
@@ -2980,7 +2994,7 @@ public class PlayerFrame extends JFrame {
         desktopLyricAlpha = config.optDouble(ConfigConstants.DESKTOP_LYRIC_ALPHA, 1);
         desktopLyricDialog.setAlpha((float) desktopLyricAlpha);
 //        stylePopupMenuItems.get(styleIndex).setSelected(true);
-//        updateRadioButtonMenuItemIcon(stylePopupMenu);
+//        updateMenuItemIcon(stylePopupMenu);
         // 载入播放模式
         switch (config.optInt(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
             case PlayMode.SEQUENCE:
@@ -3008,7 +3022,7 @@ public class PlayerFrame extends JFrame {
 //        for (CustomRadioButtonMenuItem mi : rateMenuItems) {
 //            if (rateStr.equals(mi.getText().replaceFirst("x", ""))) {
 //                mi.setSelected(true);
-//                updateRadioButtonMenuItemIcon(ratePopupMenu);
+//                updateMenuItemIcon(ratePopupMenu);
 //                break;
 //            }
 //        }
@@ -3054,7 +3068,7 @@ public class PlayerFrame extends JFrame {
         currSortOrder = config.optInt(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
         ascendingMenuItem.setSelected(currSortOrder == SortMethod.ASCENDING);
         descendingMenuItem.setSelected(currSortOrder == SortMethod.DESCENDING);
-        updateRadioButtonMenuItemIcon(sortPopupMenu);
+        updateMenuItemIcon(sortPopupMenu);
 
         // 载入歌曲目录
         JSONArray catalogJsonArray = config.optJSONArray(ConfigConstants.CATALOGS);
@@ -3766,7 +3780,11 @@ public class PlayerFrame extends JFrame {
 //        config.put(ConfigConstants.FOB_TIME, )
         // 存入是否显示频谱
         config.put(ConfigConstants.SHOW_SPECTRUM, showSpectrum);
-        // 存入是否模糊类型
+        // 存入是否高斯模糊
+        config.put(ConfigConstants.GS_ON, gsOn);
+        // 存入是否暗化
+        config.put(ConfigConstants.DARKER_ON, darkerOn);
+        // 存入模糊类型
         config.put(ConfigConstants.BLUR_TYPE, blurType);
         // 存入是否自动下载歌词
         config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, isAutoDownloadLrc);
@@ -6555,62 +6573,62 @@ public class PlayerFrame extends JFrame {
         });
         // 升序
         ascendingMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod, currSortOrder = SortMethod.ASCENDING);
         });
         // 降序
         descendingMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod, currSortOrder = SortMethod.DESCENDING);
         });
         // 按曲名/文件名混合排序
         sortBySongNameAndFileNameMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SONG_AND_FILE_NAME, currSortOrder);
         });
         // 按曲名排序
         sortBySongNameMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SONG_NAME, currSortOrder);
         });
         // 按艺术家排序
         sortByArtistNameMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_ARTIST_NAME, currSortOrder);
         });
         // 按专辑排序
         sortByAlbumNameMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_ALBUM_NAME, currSortOrder);
         });
         // 按文件名排序
         sortByFileNameMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_FILE_NAME, currSortOrder);
         });
         // 按时长排序
         sortByTimeMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_TIME, currSortOrder);
         });
         // 按创建时间排序
         sortByCreationTimeMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_CREATION_TIME, currSortOrder);
         });
         // 按修改时间排序
         sortByLastModifiedTimeMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_LAST_MODIFIED_TIME, currSortOrder);
         });
         // 按访问时间排序
         sortByLastAccessTimeMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_LAST_ACCESS_TIME, currSortOrder);
         });
         // 按大小排序
         sortBySizeMenuItem.addActionListener(e -> {
-            updateRadioButtonMenuItemIcon(sortPopupMenu);
+            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SIZE, currSortOrder);
         });
         sortOrderButtonGroup.add(ascendingMenuItem);
@@ -6996,17 +7014,17 @@ public class PlayerFrame extends JFrame {
                             recRadioMenuItem.setEnabled(ins);
                             relatedMvMenuItem.setEnabled(ins);
                             playMvMenuItem.setEnabled(ins);
-                            collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                            collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
+                            if (hasBeenCollected(first)) {
+                                collectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                                collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            } else {
+                                collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
+                                collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
+                            }
                             locateFileMenuItem.setEnabled(!ins);
                             editInfoMenuItem.setEnabled(!ins);
                         }
-//                        downloadMenuItem.setForeground(downloadMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        commentMenuItem.setForeground(commentMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        playMvMenuItem.setForeground(playMvMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        locateFileMenuItem.setForeground(locateFileMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        editInfoMenuItem.setForeground(editInfoMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        SwingUtilities.updateComponentTreeUI(musicPopupMenu);
+
                         musicPopupMenu.show(musicList, e.getX(), e.getY());
                     }
                 }
@@ -7044,9 +7062,10 @@ public class PlayerFrame extends JFrame {
         // 右键菜单收藏/取消收藏
         collectMenuItem.addActionListener(e -> {
             ListModel model = musicList.getModel();
+            boolean needRefresh = model == collectionModel;
             if (collectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = musicList.getSelectedValuesList();
-                musicList.setModel(emptyListModel);
+                if (needRefresh) musicList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
@@ -7054,11 +7073,11 @@ public class PlayerFrame extends JFrame {
                     if (player.isPlayingObject(o))
                         collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getButtonColor()));
                 }
-                musicList.setModel(model);
+                if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = musicList.getSelectedValuesList();
-                musicList.setModel(emptyListModel);
+                if (needRefresh) musicList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
@@ -7066,7 +7085,7 @@ public class PlayerFrame extends JFrame {
                             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
                     }
                 });
-                musicList.setModel(model);
+                if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -7542,25 +7561,18 @@ public class PlayerFrame extends JFrame {
                     if (netMusicList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netMusicList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netMusicList.isSelectedIndex(index)
-                                || netMusicList.isSelectedIndex(index) && netMusicList.getSelectedIndices().length == 1) {
-                            netMusicList.setSelectedIndex(index);
-                            NetMusicInfo musicInfo = netMusicList.getSelectedValue();
-                            netMusicPlayMvMenuItem.setEnabled(musicInfo.hasMv());
-                            if (hasBeenCollected(musicInfo)) {
-                                netMusicCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netMusicCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netMusicCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netMusicList.isSelectedIndex(index)) netMusicList.setSelectedIndex(index);
+                        NetMusicInfo musicInfo = netMusicList.getSelectedValue();
+                        netMusicPlayMvMenuItem.setEnabled(musicInfo.hasMv());
+                        if (hasBeenCollected(musicInfo)) {
+                            netMusicCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netMusicCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netMusicPlayMvMenuItem.setEnabled(false);
                             netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netMusicCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        netMusicPlayMvMenuItem.setForeground(netMusicPlayMvMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        SwingUtilities.updateComponentTreeUI(netMusicPopupMenu);
+
                         netMusicPopupMenu.show(netMusicList, e.getX(), e.getY());
                     }
                 }
@@ -7576,9 +7588,10 @@ public class PlayerFrame extends JFrame {
         // 收藏在线音乐
         netMusicCollectMenuItem.addActionListener(e -> {
             ListModel model = musicList.getModel();
+            boolean needRefresh = model == collectionModel;
             if (netMusicCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = netMusicList.getSelectedValuesList();
-                musicList.setModel(emptyListModel);
+                if (needRefresh) musicList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
@@ -7586,11 +7599,11 @@ public class PlayerFrame extends JFrame {
                     if (player.isPlayingObject(o))
                         collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getButtonColor()));
                 }
-                musicList.setModel(model);
+                if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = netMusicList.getSelectedValuesList();
-                musicList.setModel(emptyListModel);
+                if (needRefresh) musicList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
@@ -7598,7 +7611,7 @@ public class PlayerFrame extends JFrame {
                             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
                     }
                 });
-                musicList.setModel(model);
+                if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -9154,21 +9167,16 @@ public class PlayerFrame extends JFrame {
                     if (netPlaylistList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netPlaylistList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netPlaylistList.isSelectedIndex(index)
-                                || netPlaylistList.isSelectedIndex(index) && netPlaylistList.getSelectedIndices().length == 1) {
-                            netPlaylistList.setSelectedIndex(index);
-                            if (hasBeenCollected(netPlaylistList.getSelectedValue())) {
-                                netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netPlaylistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netPlaylistList.isSelectedIndex(index)) netPlaylistList.setSelectedIndex(index);
+                        if (hasBeenCollected(netPlaylistList.getSelectedValue())) {
+                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
                             netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netPlaylistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        SwingUtilities.updateComponentTreeUI(netPlaylistPopupMenu);
+
                         netPlaylistPopupMenu.show(netPlaylistList, e.getX(), e.getY());
                     }
                 }
@@ -9216,25 +9224,26 @@ public class PlayerFrame extends JFrame {
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
+            boolean needRefresh = model == playlistCollectionModel;
             if (netPlaylistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     playlistCollectionModel.add(0, o);
                 }
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected(o)) {
                         playlistCollectionModel.removeElement(o);
                     }
                 });
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -10144,21 +10153,16 @@ public class PlayerFrame extends JFrame {
                     if (netAlbumList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netAlbumList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netAlbumList.isSelectedIndex(index)
-                                || netAlbumList.isSelectedIndex(index) && netAlbumList.getSelectedIndices().length == 1) {
-                            netAlbumList.setSelectedIndex(index);
-                            if (hasBeenCollected(netAlbumList.getSelectedValue())) {
-                                netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netAlbumCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netAlbumList.isSelectedIndex(index)) netAlbumList.setSelectedIndex(index);
+                        if (hasBeenCollected(netAlbumList.getSelectedValue())) {
+                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
                             netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netAlbumCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        SwingUtilities.updateComponentTreeUI(netAlbumPopupMenu);
+
                         netAlbumPopupMenu.show(netAlbumList, e.getX(), e.getY());
                     }
                 }
@@ -10206,25 +10210,26 @@ public class PlayerFrame extends JFrame {
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
+            boolean needRefresh = model == albumCollectionModel;
             if (netAlbumCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     albumCollectionModel.add(0, o);
                 }
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected(o)) {
                         albumCollectionModel.removeElement(o);
                     }
                 });
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -11166,21 +11171,16 @@ public class PlayerFrame extends JFrame {
                     if (netArtistList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netArtistList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netArtistList.isSelectedIndex(index)
-                                || netArtistList.isSelectedIndex(index) && netArtistList.getSelectedIndices().length == 1) {
-                            netArtistList.setSelectedIndex(index);
-                            if (hasBeenCollected(netArtistList.getSelectedValue())) {
-                                netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netArtistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netArtistList.isSelectedIndex(index)) netArtistList.setSelectedIndex(index);
+                        if (hasBeenCollected(netArtistList.getSelectedValue())) {
+                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
                             netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netArtistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        SwingUtilities.updateComponentTreeUI(netArtistPopupMenu);
+
                         netArtistPopupMenu.show(netArtistList, e.getX(), e.getY());
                     }
                 }
@@ -11232,25 +11232,26 @@ public class PlayerFrame extends JFrame {
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
+            boolean needRefresh = model == artistCollectionModel;
             if (netArtistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     artistCollectionModel.add(0, o);
                 }
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected(o)) {
                         artistCollectionModel.removeElement(o);
                     }
                 });
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -12400,21 +12401,16 @@ public class PlayerFrame extends JFrame {
                     if (netRadioList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netRadioList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netRadioList.isSelectedIndex(index)
-                                || netRadioList.isSelectedIndex(index) && netRadioList.getSelectedIndices().length == 1) {
-                            netRadioList.setSelectedIndex(index);
-                            if (hasBeenCollected(netRadioList.getSelectedValue())) {
-                                netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netRadioCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netRadioList.isSelectedIndex(index)) netRadioList.setSelectedIndex(index);
+                        if (hasBeenCollected(netRadioList.getSelectedValue())) {
+                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
                             netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netRadioCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        SwingUtilities.updateComponentTreeUI(netRadioPopupMenu);
+
                         netRadioPopupMenu.show(netRadioList, e.getX(), e.getY());
                     }
                 }
@@ -12462,25 +12458,26 @@ public class PlayerFrame extends JFrame {
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
+            boolean needRefresh = model == radioCollectionModel;
             if (netRadioCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     radioCollectionModel.add(0, o);
                 }
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected(o)) {
                         radioCollectionModel.removeElement(o);
                     }
                 });
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -13291,21 +13288,16 @@ public class PlayerFrame extends JFrame {
                     if (netMvList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netMvList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netMvList.isSelectedIndex(index)
-                                || netMvList.isSelectedIndex(index) && netMvList.getSelectedIndices().length == 1) {
-                            netMvList.setSelectedIndex(index);
-                            if (hasBeenCollected(netMvList.getSelectedValue())) {
-                                netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netMvCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netMvList.isSelectedIndex(index)) netMvList.setSelectedIndex(index);
+                        if (hasBeenCollected(netMvList.getSelectedValue())) {
+                            netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
                             netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netMvCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        SwingUtilities.updateComponentTreeUI(netMvPopupMenu);
+
                         netMvPopupMenu.show(netMvList, e.getX(), e.getY());
                     }
                 }
@@ -13326,25 +13318,26 @@ public class PlayerFrame extends JFrame {
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
+            boolean needRefresh = model == mvCollectionModel;
             if (netMvCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     mvCollectionModel.add(0, o);
                 }
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected(o)) {
                         mvCollectionModel.removeElement(o);
                     }
                 });
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -14125,21 +14118,16 @@ public class PlayerFrame extends JFrame {
                     if (netRankingList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netRankingList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netRankingList.isSelectedIndex(index)
-                                || netRankingList.isSelectedIndex(index) && netRankingList.getSelectedIndices().length == 1) {
-                            netRankingList.setSelectedIndex(index);
-                            if (hasBeenCollected(netRankingList.getSelectedValue())) {
-                                netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netRankingCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netRankingList.isSelectedIndex(index)) netRankingList.setSelectedIndex(index);
+                        if (hasBeenCollected(netRankingList.getSelectedValue())) {
+                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
                             netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netRankingCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        SwingUtilities.updateComponentTreeUI(netRankingPopupMenu);
+
                         netRankingPopupMenu.show(netRankingList, e.getX(), e.getY());
                     }
                 }
@@ -14187,25 +14175,26 @@ public class PlayerFrame extends JFrame {
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
+            boolean needRefresh = model == rankingCollectionModel;
             if (netRankingCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     rankingCollectionModel.add(0, o);
                 }
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected(o)) {
                         rankingCollectionModel.removeElement(o);
                     }
                 });
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -14925,21 +14914,16 @@ public class PlayerFrame extends JFrame {
                     if (netUserList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
                         int index = netUserList.locationToIndex(e.getPoint());
-                        if (index != -1 && !netUserList.isSelectedIndex(index)
-                                || netUserList.isSelectedIndex(index) && netUserList.getSelectedIndices().length == 1) {
-                            netUserList.setSelectedIndex(index);
-                            if (hasBeenCollected(netUserList.getSelectedValue())) {
-                                netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                netUserCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!netUserList.isSelectedIndex(index)) netUserList.setSelectedIndex(index);
+                        if (hasBeenCollected(netUserList.getSelectedValue())) {
+                            netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
                             netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             netUserCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
-//                        SwingUtilities.updateComponentTreeUI(netUserPopupMenu);
+
                         netUserPopupMenu.show(netUserList, e.getX(), e.getY());
                     }
                 }
@@ -14987,25 +14971,26 @@ public class PlayerFrame extends JFrame {
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
+            boolean needRefresh = model == userCollectionModel;
             if (netUserCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     userCollectionModel.add(0, o);
                 }
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
-                collectionList.setModel(emptyListModel);
+                if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected(o)) {
                         userCollectionModel.removeElement(o);
                     }
                 });
-                collectionList.setModel(model);
+                if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -18204,54 +18189,36 @@ public class PlayerFrame extends JFrame {
                 // 右键推荐列表
                 else if (e.getButton() == MouseEvent.BUTTON3) {
                     if (itemRecommendList.getModel().getSize() != 0) {
-                        Object o = itemRecommendList.getSelectedValue();
-                        CustomMenuItem menuItem = null;
                         // 得到鼠标光标所在的选项并选中
                         int index = itemRecommendList.locationToIndex(e.getPoint());
-                        if (index != -1 && !itemRecommendList.isSelectedIndex(index)
-                                || itemRecommendList.isSelectedIndex(index) && itemRecommendList.getSelectedIndices().length == 1) {
-                            itemRecommendList.setSelectedIndex(index);
-                            o = itemRecommendList.getSelectedValue();
-                            if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
-                            else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
-                            else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
-                            else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
-                            else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
-                            else if (o instanceof NetRankingInfo) menuItem = netRankingCollectMenuItem;
-                            if (hasBeenCollected(o)) {
-                                menuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
-                                menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                            } else {
-                                menuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                                menuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                            }
+                        if (index == -1) return;
+                        if (!itemRecommendList.isSelectedIndex(index)) itemRecommendList.setSelectedIndex(index);
+                        Object o = itemRecommendList.getSelectedValue();
+                        CustomMenuItem menuItem = null;
+                        if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
+                        else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
+                        else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
+                        else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
+                        else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
+                        if (hasBeenCollected(o)) {
+                            menuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                            menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
-                            else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
-                            else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
-                            else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
-                            else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
-                            else if (o instanceof NetRankingInfo) menuItem = netRankingCollectMenuItem;
                             menuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
                             menuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
                         if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND
                                 || currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
-//                            SwingUtilities.updateComponentTreeUI(netPlaylistPopupMenu);
                             netPlaylistPopupMenu.show(itemRecommendList, e.getX(), e.getY());
                         } else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
-//                            SwingUtilities.updateComponentTreeUI(netAlbumPopupMenu);
                             netAlbumPopupMenu.show(itemRecommendList, e.getX(), e.getY());
                         } else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
-//                            SwingUtilities.updateComponentTreeUI(netArtistPopupMenu);
                             netArtistPopupMenu.show(itemRecommendList, e.getX(), e.getY());
                         } else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND
                                 || currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) {
-//                            SwingUtilities.updateComponentTreeUI(netRadioPopupMenu);
                             netRadioPopupMenu.show(itemRecommendList, e.getX(), e.getY());
                         } else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
-//                            SwingUtilities.updateComponentTreeUI(netMvPopupMenu);
                             netMvPopupMenu.show(itemRecommendList, e.getX(), e.getY());
                         }
                     }
@@ -18776,17 +18743,17 @@ public class PlayerFrame extends JFrame {
                             playQueueRecRadioMenuItem.setEnabled(ins);
                             playQueueRelatedMvMenuItem.setEnabled(ins);
                             playQueuePlayMvMenuItem.setEnabled(ins);
-                            playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
-                            playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
+                            if (hasBeenCollected(first)) {
+                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getButtonColor()));
+                                playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            } else {
+                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getButtonColor()));
+                                playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
+                            }
                             playQueueLocateFileMenuItem.setEnabled(!ins);
                             playQueueEditInfoMenuItem.setEnabled(!ins);
                         }
-//                        playQueueDownloadMenuItem.setForeground(playQueueDownloadMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        playQueueCommentMenuItem.setForeground(playQueueCommentMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        playQueuePlayMvMenuItem.setForeground(playQueuePlayMvMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        playQueueLocateFileMenuItem.setForeground(playQueueLocateFileMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        playQueueEditInfoMenuItem.setForeground(playQueueEditInfoMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
-//                        SwingUtilities.updateComponentTreeUI(playQueuePopupMenu);
+
                         playQueuePopupMenu.show(playQueue, e.getX(), e.getY());
                     }
                 }
@@ -18807,9 +18774,10 @@ public class PlayerFrame extends JFrame {
         // 收藏/取消收藏菜单项
         playQueueCollectMenuItem.addActionListener(e -> {
             ListModel model = musicList.getModel();
+            boolean needRefresh = model == collectionModel;
             if (playQueueCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
                 List values = playQueue.getSelectedValuesList();
-                musicList.setModel(emptyListModel);
+                if (needRefresh) musicList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
@@ -18817,11 +18785,11 @@ public class PlayerFrame extends JFrame {
                     if (player.isPlayingObject(o))
                         collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getButtonColor()));
                 }
-                musicList.setModel(model);
+                if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = playQueue.getSelectedValuesList();
-                musicList.setModel(emptyListModel);
+                if (needRefresh) musicList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
@@ -18829,7 +18797,7 @@ public class PlayerFrame extends JFrame {
                             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
                     }
                 });
-                musicList.setModel(model);
+                if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -19391,7 +19359,7 @@ public class PlayerFrame extends JFrame {
 //        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
 //            menuItem.addActionListener(e -> {
 //                getPlayer().setRate(currRate = Double.parseDouble(menuItem.getText().replace("x", "")));
-//                updateRadioButtonMenuItemIcon(ratePopupMenu);
+//                updateMenuItemIcon(ratePopupMenu);
 //            });
 //            rateMenuItemsButtonGroup.add(menuItem);
 //            ratePopupMenu.add(menuItem);
@@ -19420,19 +19388,34 @@ public class PlayerFrame extends JFrame {
             switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getButtonColor()));
         });
         // 模糊菜单
+        blurPopupMenu.add(gsMenuItem);
+        blurPopupMenu.add(darkerMenuItem);
+        blurPopupMenu.addSeparator();
         blurPopupMenu.add(blurOffMenuItem);
-        blurPopupMenu.add(gsBlurMenuItem);
+        blurPopupMenu.add(cvBlurMenuItem);
         blurPopupMenu.add(mcBlurMenuItem);
         blurPopupMenu.add(lgBlurMenuItem);
+        gsMenuItem.addActionListener(e -> {
+            gsOn = !gsOn;
+            gsMenuItem.setIcon(gsOn ? ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()) : null);
+            if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
+            else doBlur();
+        });
+        darkerMenuItem.addActionListener(e -> {
+            darkerOn = !darkerOn;
+            darkerMenuItem.setIcon(darkerOn ? ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()) : null);
+            if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
+            else doBlur();
+        });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurType.OFF;
             doStyleBlur(currUIStyle);
             blurButton.setIcon(ImageUtils.dye(blurOffIcon, currUIStyle.getButtonColor()));
         });
-        gsBlurMenuItem.addActionListener(e -> {
-            blurType = BlurType.GS;
+        cvBlurMenuItem.addActionListener(e -> {
+            blurType = BlurType.CV;
             doBlur();
-            blurButton.setIcon(ImageUtils.dye(gsBlurIcon, currUIStyle.getButtonColor()));
+            blurButton.setIcon(ImageUtils.dye(cvBlurIcon, currUIStyle.getButtonColor()));
         });
         mcBlurMenuItem.addActionListener(e -> {
             blurType = BlurType.MC;
@@ -19447,12 +19430,12 @@ public class PlayerFrame extends JFrame {
         // 模糊按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
         blurButton.addMouseListener(new ButtonMouseListener(blurButton, THIS));
-        blurButton.setPreferredSize(new Dimension(gsBlurIcon.getIconWidth(), gsBlurIcon.getIconHeight()));
+        blurButton.setPreferredSize(new Dimension(cvBlurIcon.getIconWidth(), cvBlurIcon.getIconHeight()));
         blurButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = blurPopupMenu.getHeight();
-                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 169 : h));
+                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 239 : h));
             }
         });
         // 音效按钮
@@ -20077,7 +20060,7 @@ public class PlayerFrame extends JFrame {
                 miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
             }
             player.setMute(isMute);
-            player.setVolume((double) volumeSlider.getValue() / MAX_VOLUME);
+            player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
             player.setRate(currRate);
             player.setBalance(currBalance);
             player.adjustEqualizerBands(ed);
@@ -20561,12 +20544,16 @@ public class PlayerFrame extends JFrame {
     }
 
     // 改变所有单选菜单项图标
-    public void updateRadioButtonMenuItemIcon(CustomPopupMenu popupMenu) {
+    public void updateMenuItemIcon(CustomPopupMenu popupMenu) {
         Component[] components = popupMenu.getComponents();
         for (Component c : components) {
             if (c instanceof CustomRadioButtonMenuItem) {
                 CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
                 if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, currUIStyle.getMenuItemColor()));
+                else mi.setIcon(null);
+            } else if (c instanceof CustomCheckMenuItem) {
+                CustomCheckMenuItem mi = (CustomCheckMenuItem) c;
+                if (mi.isSelected()) mi.setIcon(ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()));
                 else mi.setIcon(null);
             }
         }
@@ -20587,7 +20574,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 更新菜单项样式
-    void updateMenuItemStyle(CustomPopupMenu popupMenu, Color menuItemColor) {
+    private void updateMenuItemStyle(CustomPopupMenu popupMenu, Color menuItemColor) {
         Component[] components = popupMenu.getComponents();
         for (Component c : components) {
             c.setForeground(menuItemColor);
@@ -20597,6 +20584,9 @@ public class PlayerFrame extends JFrame {
             } else if (c instanceof CustomRadioButtonMenuItem) {
                 CustomRadioButtonMenuItem menuItem = (CustomRadioButtonMenuItem) c;
                 menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
+            } else if (c instanceof CustomCheckMenuItem) {
+                CustomCheckMenuItem menuItem = (CustomCheckMenuItem) c;
+                menuItem.setUI(new CheckMenuItemUI(menuItemColor));
             } else if (c instanceof CustomMenu) {
                 CustomMenu menu = (CustomMenu) c;
                 menu.setUI(new MenuUI(menuItemColor));
@@ -20681,8 +20671,10 @@ public class PlayerFrame extends JFrame {
         listCycleMenuItem.setIcon(ImageUtils.dye(listCycleIcon, menuItemColor));
         shuffleMenuItem.setIcon(ImageUtils.dye(shuffleIcon, menuItemColor));
 
+        if (gsOn) gsMenuItem.setIcon(ImageUtils.dye(tickIcon, menuItemColor));
+        if (darkerOn) darkerMenuItem.setIcon(ImageUtils.dye(tickIcon, menuItemColor));
         blurOffMenuItem.setIcon(ImageUtils.dye(blurOffIcon, menuItemColor));
-        gsBlurMenuItem.setIcon(ImageUtils.dye(gsBlurIcon, menuItemColor));
+        cvBlurMenuItem.setIcon(ImageUtils.dye(cvBlurIcon, menuItemColor));
         mcBlurMenuItem.setIcon(ImageUtils.dye(mcBlurIcon, menuItemColor));
         lgBlurMenuItem.setIcon(ImageUtils.dye(lgBlurIcon, menuItemColor));
 
@@ -21614,9 +21606,9 @@ public class PlayerFrame extends JFrame {
         setIconImage(ImageUtils.dye(titleIcon, labelColor).getImage());
 
         // 更新单选菜单项和标签按钮样式
-        updateRadioButtonMenuItemIcon(sortPopupMenu);
-//        updateRadioButtonMenuItemIcon(stylePopupMenu);
-//        updateRadioButtonMenuItemIcon(ratePopupMenu);
+        updateMenuItemIcon(sortPopupMenu);
+//        updateMenuItemIcon(stylePopupMenu);
+//        updateMenuItemIcon(ratePopupMenu);
         updateTabButtonStyle();
 
         // 根据选项卡选择的情况设置选项卡文字 + 图标颜色
@@ -21735,7 +21727,7 @@ public class PlayerFrame extends JFrame {
 //        stylePopupMenuItems.add(newStylePopupMenuItem);
 //        if (apply) {
 //            newStylePopupMenuItem.setSelected(true);
-//            updateRadioButtonMenuItemIcon(stylePopupMenu);
+//            updateMenuItemIcon(stylePopupMenu);
 //        }
 //        newStylePopupMenuItem.addActionListener(l -> {
 //            try {
@@ -21803,7 +21795,7 @@ public class PlayerFrame extends JFrame {
                 Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.25), new KeyValue(player.getMp().volumeProperty(), 0)));
                 timeline.setOnFinished(event -> {
                     player.pause();
-                    player.setVolume(volumeSlider.getValue() / MAX_VOLUME);
+                    player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
                 });
                 timeline.play();
                 playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getButtonColor()));
@@ -22191,7 +22183,11 @@ public class PlayerFrame extends JFrame {
     // 模糊碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化
     private void doBlur() {
         blurExecutor.submit(() -> {
-            if (!player.loadedMusic()) return;
+            // 未加载歌曲，转为主题模糊
+            if (!player.loadedMusic()) {
+                doStyleBlur(currUIStyle);
+                return;
+            }
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
             if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurType.MC)
@@ -22207,20 +22203,22 @@ public class PlayerFrame extends JFrame {
                 // 改变迷你窗口背景
                 if (miniDialog != null) {
                     BufferedImage finalAlbumImage = albumImage;
-                    miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalAlbumImage, false));
+                    miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalAlbumImage));
                 }
                 BufferedImage bufferedImage = albumImage;
                 // 截取中间的一部分(有的图片是长方形)
                 bufferedImage = ImageUtils.cropCenter(bufferedImage);
-                // 处理成 100 * 100 大小
-                bufferedImage = ImageUtils.width(bufferedImage, 100);
-                // 高斯模糊并暗化
-                if (blurType == BlurType.GS) bufferedImage = ImageUtils.doBlur(bufferedImage);
-                bufferedImage = ImageUtils.darker(bufferedImage);
+                if (gsOn) {
+                    // 处理成 100 * 100 大小
+                    bufferedImage = ImageUtils.width(bufferedImage, 100);
+                    // 高斯模糊
+                    bufferedImage = ImageUtils.doBlur(bufferedImage);
+                }
+                if (darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
                 // 放大至窗口大小
                 bufferedImage = ImageUtils.width(bufferedImage, gw);
                 // 裁剪中间的一部分
-                if (blurType == BlurType.GS) {
+                if (blurType == BlurType.CV) {
                     int ih = bufferedImage.getHeight();
                     bufferedImage = Thumbnails.of(bufferedImage)
                             .scale(1f)
@@ -22242,27 +22240,23 @@ public class PlayerFrame extends JFrame {
     // 风格背景模糊
     private void doStyleBlur(UIStyle style) {
         globalExecutor.submit(() -> {
-            String styleImgPath = style.getStyleImgPath();
-            // 纯色背景
-            if (StringUtils.isEmpty(styleImgPath)) {
-                globalPanel.setBackgroundImage(style.getImg());
-            } else {
-                BufferedImage styleImage = style.getImg();
+            BufferedImage styleImage = style.getImg();
+            if (gsOn) {
                 // 缩小
                 styleImage = ImageUtils.width(styleImage, 100);
                 // 高斯模糊
                 styleImage = ImageUtils.doSlightBlur(styleImage);
-                // 放大至窗口大小
-                styleImage = ImageUtils.width(styleImage, getWidth());
-                // 圆角
-//                    styleImage = ImageUtils.setRadius(styleImage, WIN_ARC);
-                // 亮度
-                styleImage = ImageUtils.bright(styleImage, 0.7f);
-                // 质量
-                styleImage = ImageUtils.quality(styleImage, 0.1f);
-                // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
-                globalPanel.setBackgroundImage(styleImage);
             }
+            // 放大至窗口大小
+            styleImage = ImageUtils.width(styleImage, getWidth());
+            if (darkerOn) {
+                // 亮度
+                styleImage = ImageUtils.darker(styleImage);
+            }
+            // 质量
+            styleImage = ImageUtils.quality(styleImage, 0.1f);
+            // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
+            globalPanel.setBackgroundImage(styleImage);
             updateUpperComp();
             // 改变迷你窗口背景
 //                if (miniDialog != null) miniDialog.doBlur(styleImage);
