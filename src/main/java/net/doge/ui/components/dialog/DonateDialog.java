@@ -208,10 +208,11 @@ public class DonateDialog extends JDialog {
     }
 
     private void doBlur(BufferedImage bufferedImage) {
-        int dw = getWidth(), dh = getHeight();
+        int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
+            boolean loadedMusic = f.getPlayer().loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
-            if (f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
+            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小
             if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
             // 消除透明度
@@ -220,13 +221,15 @@ public class DonateDialog extends JDialog {
             if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
             if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
             // 放大至窗口大小
-            bufferedImage = dw > dh ? ImageUtils.width(bufferedImage, dw) : ImageUtils.height(bufferedImage, dh);
+            bufferedImage = ImageUtils.width(bufferedImage, dw);
+            if (dh > bufferedImage.getHeight())
+                bufferedImage = ImageUtils.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
+            if (!loadedMusic || f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)
-                        .sourceRegion(dw > dh ? 0 : (iw - dw) / 2, dw > dh ? (ih - dh) / 2 : 0, dw, dh)
+                        .sourceRegion(iw > dw ? (iw - dw) / 2 : 0, iw > dw ? 0 : (ih - dh) / 2, dw, dh)
                         .outputQuality(0.1)
                         .asBufferedImage();
             } else {

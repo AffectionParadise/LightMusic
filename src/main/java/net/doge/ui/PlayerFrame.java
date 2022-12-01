@@ -20530,6 +20530,7 @@ public class PlayerFrame extends JFrame {
 
     // 开启频谱
     public void openSpectrum() {
+        if (!player.loadedMusic()) return;
         if (!spectrumPanel.isDrawSpectrum()) spectrumPanel.setDrawSpectrum(true);
         // 开始动画之前先判断在不在运行，防止重复运行动画造成卡顿！
         if (!spectrumTimer.isRunning()) spectrumTimer.start();
@@ -22217,6 +22218,8 @@ public class PlayerFrame extends JFrame {
                 if (darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
                 // 放大至窗口大小
                 bufferedImage = ImageUtils.width(bufferedImage, gw);
+                if (gh > bufferedImage.getHeight())
+                    bufferedImage = ImageUtils.height(bufferedImage, gh);
                 // 裁剪中间的一部分
                 if (blurType == BlurType.CV) {
                     int ih = bufferedImage.getHeight();
