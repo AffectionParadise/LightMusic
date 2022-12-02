@@ -360,8 +360,8 @@ public class EditInfoDialog extends JDialog {
             centerPanel.add(outer);
         }
 
-        centerScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        centerScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor()));
         centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     }
 

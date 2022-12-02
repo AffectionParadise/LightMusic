@@ -15,5 +15,5 @@ public class GlobalExecutors {
     // 请求
     public static ExecutorService requestExecutor = Executors.newFixedThreadPool(12);
     // 图片加载
-    public static ExecutorService imageExecutor = Executors.newFixedThreadPool(8);
+    public static ExecutorService imageExecutor = Executors.newFixedThreadPool(5);
 }

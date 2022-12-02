@@ -96,9 +96,9 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     private CustomLabel hexLabel = new CustomLabel("Hex：");
     private CustomTextField hexTextField = new CustomTextField(7);
 
-    private DialogButton ok = new DialogButton("确定");
-    private DialogButton cancel = new DialogButton("取消");
-    private DialogButton reset = new DialogButton("重置");
+    private DialogButton ok;
+    private DialogButton cancel;
+    private DialogButton reset;
 
     private final Color[] preColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.PINK, Color.MAGENTA,
             Colors.BRICK_RED, Colors.DEEP_ORANGE, Colors.GOLD3, Colors.SPRING_GREEN, Colors.SKY, Colors.DEEP_BLUE, Colors.PINK3, Colors.ORCHID_3,
@@ -133,6 +133,11 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         this.v = hsv.v;
         this.source = color;
         this.style = f.getCurrUIStyle();
+
+        Color buttonColor = style.getButtonColor();
+        ok = new DialogButton("确定", buttonColor);
+        cancel = new DialogButton("取消", buttonColor);
+        reset = new DialogButton("重置", buttonColor);
     }
 
     public void showDialog() {
@@ -374,19 +379,16 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         });
 
         // 按钮
-        ok.setForeColor(buttonColor);
         ok.addMouseListener(new ButtonMouseListener(ok, f));
         ok.addActionListener(e -> {
             confirmed = true;
             result = makeColor();
             closeButton.doClick();
         });
-        cancel.setForeColor(buttonColor);
         cancel.addMouseListener(new ButtonMouseListener(ok, f));
         cancel.addActionListener(e -> {
             closeButton.doClick();
         });
-        reset.setForeColor(buttonColor);
         reset.addMouseListener(new ButtonMouseListener(ok, f));
         reset.addActionListener(e -> {
             updateColor(source);

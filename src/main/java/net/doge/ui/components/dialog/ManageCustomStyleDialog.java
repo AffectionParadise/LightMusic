@@ -202,15 +202,6 @@ public class ManageCustomStyleDialog extends JDialog {
                 if (style == null) return;
                 f.changeUIStyle(style);
                 updateStyle();
-                // 选中应用的风格
-//                List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
-//                for (int i = 0; i < stylePopupMenuItems.size(); i++) {
-//                    if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
-//                        stylePopupMenuItems.get(i).setSelected(true);
-//                        break;
-//                    }
-//                }
-//                f.updateRadioButtonMenuItemIcon(f.getStylePopupMenu());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (ClassNotFoundException ex) {
@@ -300,13 +291,6 @@ public class ManageCustomStyleDialog extends JDialog {
                             awtException.printStackTrace();
                         }
                     }
-                    // 从已添加到界面上的菜单项中删除
-//                        for (int i = 0; i < stylePopupMenuItems.size(); i++) {
-//                            if (stylePopupMenuItems.get(i).getText().trim().equals(style.getStyleName())) {
-//                                stylePopupMenu.remove(stylePopupMenuItems.get(i));
-//                                stylePopupMenuItems.remove(stylePopupMenuItems.get(i--));
-//                            }
-//                        }
                     styles.remove(style);
                     // 删除图片文件
                     File file = new File(style.getStyleImgPath());
@@ -446,8 +430,8 @@ public class ManageCustomStyleDialog extends JDialog {
                 }
             }
         });
-        styleListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        styleListScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor()));
+        styleListScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor()));
         styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
@@ -488,8 +472,8 @@ public class ManageCustomStyleDialog extends JDialog {
         r.setSelectedColor(st.getSelectedColor());
         styleList.repaint();
 
-        styleListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(st.getScrollBarColor()));
-        styleListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(st.getScrollBarColor()));
+        styleListScrollPane.setHUI(new ScrollBarUI(st.getScrollBarColor()));
+        styleListScrollPane.setVUI(new ScrollBarUI(st.getScrollBarColor()));
     }
 
     private void doBlur(BufferedImage bufferedImage) {

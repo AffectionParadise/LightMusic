@@ -32,7 +32,7 @@ public class LoadingPanel extends JComponent implements MouseListener {
 
     private PlayerFrame f;
 
-    protected RenderingHints hints = null;
+    protected RenderingHints hints;
 
     public LoadingPanel(PlayerFrame f) {
         this("");

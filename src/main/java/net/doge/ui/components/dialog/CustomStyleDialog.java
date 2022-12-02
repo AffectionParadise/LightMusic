@@ -167,23 +167,11 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             for (UIStyle style : styles) {
                 // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
                 if (style.getStyleName().equals(results[0])
-                        && (style != showedStyle || okButton.getText().contains("添加"))) {
+                        && (style != showedStyle || okButton.getPlainText().contains("添加"))) {
                     new TipDialog(f, STYLE_NAME_DUPLICATE_MSG).showDialog();
                     return;
                 }
             }
-            // 更新菜单项文字显示
-//            if (okButton.getText().contains("更新")) {
-//                List<CustomRadioButtonMenuItem> mis = f.getStylePopupMenuItems();
-//                String oriName = showedStyle.getStyleName();
-//                for (int i = mis.size() - 1; i >= 0; i--) {
-//                    CustomRadioButtonMenuItem mi = mis.get(i);
-//                    if (mi.getText().trim().equals(oriName)) {
-//                        mi.setText(results[0] + "     ");
-//                        break;
-//                    }
-//                }
-//            }
             // 图片路径
             if (results[1] instanceof String) {
                 // 复制图片(如果有)
@@ -408,8 +396,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         });
         ((CustomPanel) ((CustomPanel) centerPanel.getComponent(1)).getComponent(1)).add(pureColor);
 
-        centerScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        centerScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor()));
+        centerScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor()));
         centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     }
 

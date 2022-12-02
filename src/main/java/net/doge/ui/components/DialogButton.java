@@ -35,14 +35,16 @@ public class DialogButton extends JButton implements MouseListener {
         init();
     }
 
+    // 关键词按钮，需显示多种字符
     public DialogButton(String text) {
         super(StringUtils.textToHtml(text));
         setForeColor(Colors.WHITE);
         init();
     }
 
+    // 常规按钮
     public DialogButton(String text, Color foreColor) {
-        super(StringUtils.textToHtml(text));
+        super(text);
         setForeColor(foreColor);
         init();
     }
@@ -54,8 +56,7 @@ public class DialogButton extends JButton implements MouseListener {
         repaint();
     }
 
-    @Override
-    public String getText() {
+    public String getPlainText() {
         return StringUtils.removeHTMLLabel(super.getText());
     }
 
@@ -74,21 +75,20 @@ public class DialogButton extends JButton implements MouseListener {
         g2d.setColor(foreColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
 
         super.paintComponent(g);
-        // 画文字
+
+//        // 画文字
 //        String text = getText();
 //        FontMetrics fontMetrics = getFontMetrics(getFont());
 //        int stringHeight = fontMetrics.getHeight();
 //        g2d.setColor(foreColor);
 //        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 //
-//        FontMetrics[] metrics = new FontMetrics[Fonts.TYPES.length];
+//        FontMetrics[] metrics = new FontMetrics[Fonts.TYPES.size()];
 //        for (int i = 0, len = metrics.length; i < len; i++) {
-//            metrics[i] = getFontMetrics(Fonts.TYPES[i]);
+//            metrics[i] = getFontMetrics(Fonts.TYPES.get(i));
 //        }
 //
 //        // 计算宽度
@@ -98,7 +98,7 @@ public class DialogButton extends JButton implements MouseListener {
 //            char[] chars = Character.toChars(codePoint);
 //            String str = new String(chars);
 //            for (int j = 0, l = metrics.length; j < l; j++) {
-//                if (Fonts.TYPES[j].canDisplay(codePoint)) {
+//                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
 //                    stringWidth += metrics[j].stringWidth(str);
 //                    i += chars.length - 1;
 //                    break;
@@ -106,15 +106,17 @@ public class DialogButton extends JButton implements MouseListener {
 //            }
 //        }
 //
-//        int widthDrawn = 0;
+//        int widthDrawn = 0, width = getWidth(), height = getHeight();
 //        for (int i = 0, len = text.length(); i < len; i++) {
 //            int codePoint = text.codePointAt(i);
 //            char[] chars = Character.toChars(codePoint);
 //            String str = new String(chars);
 //            for (int j = 0, l = metrics.length; j < l; j++) {
-//                if (Fonts.TYPES[j].canDisplay(codePoint)) {
-//                    g2d.setFont(Fonts.TYPES[j]);
-//                    g2d.drawString(str, (rect.width - stringWidth) / 2 + widthDrawn, (rect.height - stringHeight) / 2 + 16);
+//                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
+//                    // 只画显示不出的文字
+//                    if (j == 0) continue;
+//                    g2d.setFont(Fonts.TYPES.get(j));
+//                    g2d.drawString(str, (width - stringWidth) / 2 + widthDrawn, (height - stringHeight) / 2 + 16);
 //                    widthDrawn += metrics[j].stringWidth(str);
 //                    i += chars.length - 1;
 //                    break;

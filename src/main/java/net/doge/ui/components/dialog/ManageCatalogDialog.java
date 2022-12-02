@@ -111,7 +111,7 @@ public class ManageCatalogDialog extends JDialog {
 
         setTitle(TITLE);
         setResizable(false);
-        setSize(500, 400);
+        setSize(600, 500);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -301,8 +301,8 @@ public class ManageCatalogDialog extends JDialog {
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         CustomScrollPane sp = new CustomScrollPane(catalogList);
-        sp.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        sp.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        sp.setHUI(new ScrollBarUI(style.getScrollBarColor()));
+        sp.setVUI(new ScrollBarUI(style.getScrollBarColor()));
         sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);

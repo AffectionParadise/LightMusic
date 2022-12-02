@@ -312,15 +312,15 @@ public class PlayerFrame extends JFrame {
     // 频谱开启图标
     private ImageIcon spectrumOnIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumOn.png");
     // 频谱关闭图标
-    private ImageIcon spectrumOffIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumoff.png");
+    private ImageIcon spectrumOffIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumOff.png");
     // 歌曲封面图标
-    private ImageIcon cvBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOn.png");
+    private ImageIcon cvBlurIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "cvBlur.png");
     // 纯主色调图标
-    private ImageIcon mcBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "pureColorBlur.png");
+    private ImageIcon mcBlurIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "pureColorBlur.png");
     // 线性渐变图标
-    private ImageIcon lgBlurIcon = new ImageIcon(SimplePath.ICON_PATH + "linearGradient.png");
+    private ImageIcon lgBlurIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "linearGradient.png");
     // 模糊关闭图标
-    private ImageIcon blurOffIcon = new ImageIcon(SimplePath.ICON_PATH + "blurOff.png");
+    private ImageIcon blurOffIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "blurOff.png");
     // 音效图标
     private ImageIcon soundEffectIcon = new ImageIcon(SimplePath.ICON_PATH + "soundEffect.png");
     // 乐谱图标
@@ -2266,11 +2266,9 @@ public class PlayerFrame extends JFrame {
     private Timer lrcTimer;
     public boolean lrcScrollAnimation;
     private boolean lrcScrollWait;
-    //    private Timer lrcScrollTimer;
-    //    private Timeline spectrumTimeline;
-//    private Timeline lrcTimeline;
     private Timer globalPanelTimer;
-//    private Timer gcTimer;
+    private Timer searchSuggestionTimer;
+    private boolean searchSuggestionProcessing;
 
     private int row;
     private int currScrollVal;
@@ -2360,36 +2358,38 @@ public class PlayerFrame extends JFrame {
             public void componentResized(ComponentEvent e) {
                 if (x == 0x3f3f3f3f && y == 0x3f3f3f3f) setLocationRelativeTo(null);
                 else if (windowState != WindowState.MAXIMIZED) setLocation(x, y);
-                int w = getWidth(), h = getHeight();
-                // 窗口圆角
-                SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
-                        : new RoundRectangle2D.Double(0, 0, w, h, 10, 10)));
-                // 避免标签字太多超宽！！！
-                Dimension ld = new Dimension((int) (w * 0.3), (int) (h * 0.077));
-                songNameLabel.setPreferredSize(ld);
-                artistLabel.setPreferredSize(ld);
-                albumLabel.setPreferredSize(ld);
-                // 歌词面板
-                Dimension d = new Dimension((int) (w * 0.6), h);
-                Dimension d2 = new Dimension((int) (w * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
-                lrcScrollPane.setPreferredSize(d);
-                spectrumPanel.setPreferredSize(d2);
-                // 时间条
-                currTimeLabel.setVisible(false);
-                currTimeLabel.setVisible(true);
-                timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
-                // 专辑图片
-                albumImageWidth = (int) (w * 0.33);
-                Dimension ad = new Dimension((int) (w * 0.4), Integer.MAX_VALUE);
-                albumImageLabel.setMaximumSize(ad);
-                if (player.loadedMusic()) {
-                    showAlbumImage();
-                    // 防止歌词面板错位
-                    infoAndLrcBox.add(leftInfoBox);
-                    infoAndLrcBox.add(lrcAndSpecBox);
-                }
-                // 背景
-                if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
+                globalExecutor.submit(() -> {
+                    int w = getWidth(), h = getHeight();
+                    // 窗口圆角
+                    SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
+                            : new RoundRectangle2D.Double(0, 0, w, h, 10, 10)));
+                    // 避免标签字太多超宽！！！
+                    Dimension ld = new Dimension((int) (w * 0.3), (int) (h * 0.077));
+                    songNameLabel.setPreferredSize(ld);
+                    artistLabel.setPreferredSize(ld);
+                    albumLabel.setPreferredSize(ld);
+                    // 歌词面板
+                    Dimension d = new Dimension((int) (w * 0.6), h);
+                    Dimension d2 = new Dimension((int) (w * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
+                    lrcScrollPane.setPreferredSize(d);
+                    spectrumPanel.setPreferredSize(d2);
+                    // 时间条
+                    currTimeLabel.setVisible(false);
+                    currTimeLabel.setVisible(true);
+                    timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
+                    // 专辑图片
+                    albumImageWidth = (int) (w * 0.33);
+                    Dimension ad = new Dimension((int) (w * 0.4), Integer.MAX_VALUE);
+                    albumImageLabel.setMaximumSize(ad);
+                    if (player.loadedMusic()) {
+                        showAlbumImage();
+                        // 防止歌词面板错位
+                        infoAndLrcBox.add(leftInfoBox);
+                        infoAndLrcBox.add(lrcAndSpecBox);
+                    }
+                    // 背景
+                    if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
+                });
             }
         });
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
@@ -3232,7 +3232,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(keyword);
                 b.addActionListener(event -> {
                     searchTextField.requestFocus();
-                    searchTextField.setText(b.getText());
+                    searchTextField.setText(keyword);
                     netMusicClearInputButton.setVisible(true);
                     searchButton.doClick();
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
@@ -3272,7 +3272,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(keyword);
                 b.addActionListener(event -> {
                     netPlaylistSearchTextField.requestFocus();
-                    netPlaylistSearchTextField.setText(b.getText());
+                    netPlaylistSearchTextField.setText(keyword);
                     netPlaylistClearInputButton.setVisible(true);
                     netPlaylistLeftBox.remove(netPlaylistKeywordsPanelScrollPane);
                     netPlaylistLeftBox.add(netPlaylistScrollPane);
@@ -3313,7 +3313,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(keyword);
                 b.addActionListener(event -> {
                     netAlbumSearchTextField.requestFocus();
-                    netAlbumSearchTextField.setText(b.getText());
+                    netAlbumSearchTextField.setText(keyword);
                     netAlbumClearInputButton.setVisible(true);
                     netAlbumLeftBox.remove(netAlbumKeywordsPanelScrollPane);
                     netAlbumLeftBox.add(netAlbumScrollPane);
@@ -3354,7 +3354,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(keyword);
                 b.addActionListener(event -> {
                     netArtistSearchTextField.requestFocus();
-                    netArtistSearchTextField.setText(b.getText());
+                    netArtistSearchTextField.setText(keyword);
                     netArtistClearInputButton.setVisible(true);
                     netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
                     netArtistLeftBox.add(netArtistScrollPane);
@@ -3395,7 +3395,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(keyword);
                 b.addActionListener(event -> {
                     netRadioSearchTextField.requestFocus();
-                    netRadioSearchTextField.setText(b.getText());
+                    netRadioSearchTextField.setText(keyword);
                     netRadioClearInputButton.setVisible(true);
                     netRadioLeftBox.remove(netRadioKeywordsPanelScrollPane);
                     netRadioLeftBox.add(netRadioScrollPane);
@@ -3436,7 +3436,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(keyword);
                 b.addActionListener(event -> {
                     netMvSearchTextField.requestFocus();
-                    netMvSearchTextField.setText(b.getText());
+                    netMvSearchTextField.setText(keyword);
                     netMvClearInputButton.setVisible(true);
                     netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
                     netMvLeftBox.add(netMvScrollPane);
@@ -3477,7 +3477,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(keyword);
                 b.addActionListener(event -> {
                     netUserSearchTextField.requestFocus();
-                    netUserSearchTextField.setText(b.getText());
+                    netUserSearchTextField.setText(keyword);
                     netUserClearInputButton.setVisible(true);
                     netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
                     netUserLeftBox.add(netUserScrollPane);
@@ -3510,7 +3510,6 @@ public class PlayerFrame extends JFrame {
             leftBox.add(emptyHintPanel);
         }
 
-        System.gc();
         return !config.isEmpty();
     }
 
@@ -3949,7 +3948,7 @@ public class PlayerFrame extends JFrame {
         Component[] components = netMusicHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getText());
+            historySearchJsonArray.add(b.getPlainText());
         }
         config.put(ConfigConstants.NET_MUSIC_HISTORY_SEARCH, historySearchJsonArray);
 
@@ -3958,7 +3957,7 @@ public class PlayerFrame extends JFrame {
         components = netPlaylistHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getText());
+            historySearchJsonArray.add(b.getPlainText());
         }
         config.put(ConfigConstants.NET_PLAYLIST_HISTORY_SEARCH, historySearchJsonArray);
 
@@ -3967,7 +3966,7 @@ public class PlayerFrame extends JFrame {
         components = netAlbumHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getText());
+            historySearchJsonArray.add(b.getPlainText());
         }
         config.put(ConfigConstants.NET_ALBUM_HISTORY_SEARCH, historySearchJsonArray);
 
@@ -3976,7 +3975,7 @@ public class PlayerFrame extends JFrame {
         components = netArtistHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getText());
+            historySearchJsonArray.add(b.getPlainText());
         }
         config.put(ConfigConstants.NET_ARTIST_HISTORY_SEARCH, historySearchJsonArray);
 
@@ -3985,7 +3984,7 @@ public class PlayerFrame extends JFrame {
         components = netRadioHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getText());
+            historySearchJsonArray.add(b.getPlainText());
         }
         config.put(ConfigConstants.NET_RADIO_HISTORY_SEARCH, historySearchJsonArray);
 
@@ -3994,7 +3993,7 @@ public class PlayerFrame extends JFrame {
         components = netMvHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getText());
+            historySearchJsonArray.add(b.getPlainText());
         }
         config.put(ConfigConstants.NET_MV_HISTORY_SEARCH, historySearchJsonArray);
 
@@ -4003,7 +4002,7 @@ public class PlayerFrame extends JFrame {
         components = netUserHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getText());
+            historySearchJsonArray.add(b.getPlainText());
         }
         config.put(ConfigConstants.NET_USER_HISTORY_SEARCH, historySearchJsonArray);
 
@@ -4589,24 +4588,22 @@ public class PlayerFrame extends JFrame {
                 }
                 boolean modelEmpty = model.isEmpty();
 
-                if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || index == CollectionTabIndex.MUSIC) {
-                    if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION) {
-                        if (modelEmpty) {
-                            leftBox.remove(musicScrollPane);
-                            leftBox.add(emptyHintPanel);
-                        } else {
-                            musicList.setModel(model);
-                            leftBox.remove(emptyHintPanel);
-                            leftBox.add(musicScrollPane);
-                        }
+                if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION) {
+                    if (modelEmpty) {
+                        leftBox.remove(musicScrollPane);
+                        leftBox.add(emptyHintPanel);
                     } else {
-                        if (modelEmpty) {
-                            musicCollectionLeftBox.remove(musicScrollPane);
-                            musicCollectionLeftBox.add(emptyHintPanel);
-                        } else {
-                            musicCollectionLeftBox.remove(emptyHintPanel);
-                            musicCollectionLeftBox.add(musicScrollPane);
-                        }
+                        if (musicList.getModel() != model) musicList.setModel(model);
+                        leftBox.remove(emptyHintPanel);
+                        leftBox.add(musicScrollPane);
+                    }
+                } else if (index == CollectionTabIndex.MUSIC) {
+                    if (modelEmpty) {
+                        musicCollectionLeftBox.remove(musicScrollPane);
+                        musicCollectionLeftBox.add(emptyHintPanel);
+                    } else {
+                        musicCollectionLeftBox.remove(emptyHintPanel);
+                        musicCollectionLeftBox.add(musicScrollPane);
                     }
                 } else {
                     Box box = null;
@@ -4621,7 +4618,7 @@ public class PlayerFrame extends JFrame {
                         box.remove(collectionScrollPane);
                         box.add(emptyHintPanel);
                     } else {
-                        collectionList.setModel(model);
+                        if (collectionList.getModel() != model) collectionList.setModel(model);
                         box.remove(emptyHintPanel);
                         box.add(collectionScrollPane);
                     }
@@ -5273,7 +5270,7 @@ public class PlayerFrame extends JFrame {
                             }
                             collectionLeftBox.repaint();
                         }
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -5335,7 +5332,7 @@ public class PlayerFrame extends JFrame {
         });
         // 下一页按钮事件
         collectionNextPageButton.addActionListener(e -> {
-            if (netMusicInCollectionCurrPage == netMusicInCollectionMaxPage) {
+            if (netMusicInCollectionCurrPage >= netMusicInCollectionMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -5344,7 +5341,7 @@ public class PlayerFrame extends JFrame {
         });
         // 最后一页按钮事件
         collectionEndPageButton.addActionListener(e -> {
-            if (netMusicInCollectionCurrPage == netMusicInCollectionMaxPage) {
+            if (netMusicInCollectionCurrPage >= netMusicInCollectionMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -5529,8 +5526,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForPlaylistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistCollectionModel);
-                            collectionItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            collectionItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             if (netMusicListForPlaylistCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -5622,8 +5619,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForAlbumCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumCollectionModel);
-                            collectionItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            collectionItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             if (netMusicListForAlbumCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -5718,8 +5715,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForArtistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistCollectionModel);
-                            collectionItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            collectionItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             if (netMusicListForArtistCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -5813,8 +5810,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForRadioCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioCollectionModel);
-                            collectionItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            collectionItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             if (netMusicListForRadioCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -5905,8 +5902,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForRankingCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRankingCollectionModel);
-                            collectionItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            collectionItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             if (netMusicListForRankingCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -6018,8 +6015,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForUserCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForUserCollectionModel);
-                            collectionItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            collectionItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             if (netMusicListForUserCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -6212,7 +6209,7 @@ public class PlayerFrame extends JFrame {
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(musicListModel);
-            musicScrollPane.getVerticalScrollBar().setValue(0);
+            musicScrollPane.setVValue(0);
             countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
         });
         // 播放历史事件
@@ -6233,7 +6230,7 @@ public class PlayerFrame extends JFrame {
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(historyModel);
-            musicScrollPane.getVerticalScrollBar().setValue(0);
+            musicScrollPane.setVValue(0);
             countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
         });
         // 收藏事件
@@ -6290,7 +6287,7 @@ public class PlayerFrame extends JFrame {
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(collectionModel);
-            musicScrollPane.getVerticalScrollBar().setValue(0);
+            musicScrollPane.setVValue(0);
 
             if (selectedIndex == CollectionTabIndex.MUSIC)
                 countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
@@ -6751,7 +6748,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (filterTextField.getText().equals("")) clearInputToolButton.setVisible(false);
+                if (filterTextField.getText().isEmpty()) clearInputToolButton.setVisible(false);
                 filterPersonalMusic();
             }
 
@@ -7177,21 +7174,25 @@ public class PlayerFrame extends JFrame {
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (searchTextField.isOccupied()) {
-                    netMusicClearInputButton.setVisible(true);
-                }
-                globalExecutor.submit(() -> updateSearchSuggestion());
+                if (searchTextField.isOccupied()) netMusicClearInputButton.setVisible(true);
+                updateSearchSug();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (searchTextField.getText().equals("")) netMusicClearInputButton.setVisible(false);
-                globalExecutor.submit(() -> updateSearchSuggestion());
+                if (searchTextField.getText().isEmpty()) netMusicClearInputButton.setVisible(false);
+                updateSearchSug();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
 
+            }
+
+            private void updateSearchSug() {
+                if (!searchTextField.getText().isEmpty() && searchSuggestionProcessing) return;
+                searchSuggestionProcessing = true;
+                searchSuggestionTimer.start();
             }
         });
         // 只能输入数字
@@ -7215,7 +7216,6 @@ public class PlayerFrame extends JFrame {
             currMusicMusicInfo = null;
 
             netLeftBox.repaint();
-            System.gc();
         });
         // 清除输入事件
         netMusicClearInputButton.addActionListener(e -> {
@@ -7231,7 +7231,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(netMusicCurrKeyword);
                 b.addActionListener(event -> {
                     searchTextField.requestFocus();
-                    searchTextField.setText(b.getText());
+                    searchTextField.setText(b.getPlainText());
                     netMusicClearInputButton.setVisible(true);
                     searchButton.doClick();
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
@@ -7303,7 +7303,7 @@ public class PlayerFrame extends JFrame {
                             netLeftBox.remove(emptyHintPanel);
                             netLeftBox.add(netMusicScrollPane);
                         }
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -7353,7 +7353,7 @@ public class PlayerFrame extends JFrame {
                             netMusicListModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicListModel.isEmpty()) {
                             netLeftBox.remove(netMusicScrollPane);
                             netLeftBox.add(emptyHintPanel);
@@ -7424,7 +7424,7 @@ public class PlayerFrame extends JFrame {
         });
         // 下一页按钮事件
         netMusicNextPageButton.addActionListener(e -> {
-            if (netMusicCurrPage == netMusicMaxPage) {
+            if (netMusicCurrPage >= netMusicMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -7433,7 +7433,7 @@ public class PlayerFrame extends JFrame {
         });
         // 最后一页按钮
         netMusicEndPageButton.addActionListener(e -> {
-            if (netMusicCurrPage == netMusicMaxPage) {
+            if (netMusicCurrPage >= netMusicMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -7697,7 +7697,7 @@ public class PlayerFrame extends JFrame {
                         netLeftBox.remove(emptyHintPanel);
                         netLeftBox.add(netMusicScrollPane);
                     }
-                    netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                    netMusicScrollPane.setVValue(0);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
                     new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -7749,6 +7749,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
                         playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(netPlaylistList);
+                            updateRenderer(collectionList);
                             netPlaylistList.repaint();
                             collectionList.repaint();
                         });
@@ -7765,7 +7767,7 @@ public class PlayerFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.getVerticalScrollBar().setValue(0);
+                    netPlaylistScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -7839,7 +7841,7 @@ public class PlayerFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.getVerticalScrollBar().setValue(0);
+                        netUserScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     } else {
                         clearRequestForArtist();
@@ -7869,6 +7871,8 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
                             artistInfo.setInvokeLater(() -> {
+                                updateRenderer(netArtistList);
+                                updateRenderer(collectionList);
                                 netArtistList.repaint();
                                 collectionList.repaint();
                             });
@@ -7885,7 +7889,7 @@ public class PlayerFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                        netArtistScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -7960,7 +7964,7 @@ public class PlayerFrame extends JFrame {
                             netRadioLeftBox.remove(emptyHintPanel);
                             netRadioLeftBox.add(netRadioScrollPane);
                         }
-                        netRadioScrollPane.getVerticalScrollBar().setValue(0);
+                        netRadioScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                     } else {
                         clearRequestForAlbum();
@@ -7991,6 +7995,8 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(albumInfo));
                             // 设置图片加载后重绘的事件
                             albumInfo.setInvokeLater(() -> {
+                                updateRenderer(netAlbumList);
+                                updateRenderer(collectionList);
                                 netAlbumList.repaint();
                                 collectionList.repaint();
                             });
@@ -8007,7 +8013,7 @@ public class PlayerFrame extends JFrame {
                             netAlbumLeftBox.remove(emptyHintPanel);
                             netAlbumLeftBox.add(netAlbumScrollPane);
                         }
-                        netAlbumScrollPane.getVerticalScrollBar().setValue(0);
+                        netAlbumScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -8081,7 +8087,7 @@ public class PlayerFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.getVerticalScrollBar().setValue(0);
+                    netRadioScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -8151,7 +8157,7 @@ public class PlayerFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.getVerticalScrollBar().setValue(0);
+                    netMvScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -8253,21 +8259,19 @@ public class PlayerFrame extends JFrame {
         netMusicHistorySearchPanel.add(netMusicHistorySearchInnerPanel2);
         // 关键词面板
         netMusicKeywordsPanel.setLayout(new BoxLayout(netMusicKeywordsPanel, BoxLayout.Y_AXIS));
-//        // 滚动条监听器
-//        netMusicKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netMusicKeywordsPanelScrollPane, THIS));
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        d = new Dimension(900, 1000);
+        d = new Dimension(1000, 1000);
         netMusicKeywordsPanel.setPreferredSize(d);
         netMusicKeywordsPanelScrollPane.setPreferredSize(d);
         // 滚动条
-        netMusicScrollPane.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                // 重新设置 renderer 可以避免 netMusicList 宽度不刷新！
-                updateRenderer(netMusicList);
-            }
-        });
+//        netMusicScrollPane.addComponentListener(new ComponentAdapter() {
+//            @Override
+//            public void componentResized(ComponentEvent e) {
+//                // 重新设置 renderer 可以避免 netMusicList 宽度不刷新！
+//                updateRenderer(netMusicList);
+//            }
+//        });
         // 在线歌单最佳大小
         netMusicScrollPane.setPreferredSize(new Dimension(200, 600));
         netLeftBox.add(netMusicScrollPane);
@@ -8548,7 +8552,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netPlaylistSearchTextField.getText().equals("")) netPlaylistClearInputButton.setVisible(false);
+                if (netPlaylistSearchTextField.getText().isEmpty()) netPlaylistClearInputButton.setVisible(false);
             }
 
             @Override
@@ -8628,7 +8632,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(netPlaylistCurrKeyword);
                 b.addActionListener(event -> {
                     netPlaylistSearchTextField.requestFocus();
-                    netPlaylistSearchTextField.setText(b.getText());
+                    netPlaylistSearchTextField.setText(b.getPlainText());
                     netPlaylistClearInputButton.setVisible(true);
                     netPlaylistLeftBox.remove(netPlaylistKeywordsPanelScrollPane);
                     netPlaylistLeftBox.add(netPlaylistScrollPane);
@@ -8683,6 +8687,8 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(playlistInfo));
                             // 设置图片加载后重绘的事件
                             playlistInfo.setInvokeLater(() -> {
+                                updateRenderer(netPlaylistList);
+                                updateRenderer(collectionList);
                                 netPlaylistList.repaint();
                                 collectionList.repaint();
                             });
@@ -8698,7 +8704,7 @@ public class PlayerFrame extends JFrame {
                             netPlaylistLeftBox.remove(emptyHintPanel);
                             netPlaylistLeftBox.add(netPlaylistScrollPane);
                         }
-                        netPlaylistScrollPane.getVerticalScrollBar().setValue(0);
+                        netPlaylistScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -8739,13 +8745,15 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(playlistInfo));
                             // 设置图片加载后重绘的事件
                             playlistInfo.setInvokeLater(() -> {
+                                updateRenderer(netPlaylistList);
+                                updateRenderer(collectionList);
                                 netPlaylistList.repaint();
                                 collectionList.repaint();
                             });
                             netPlaylistListModel.addElement(playlistInfo);
                         });
                         netPlaylistList.setModel(netPlaylistListModel);
-                        netPlaylistScrollPane.getVerticalScrollBar().setValue(0);
+                        netPlaylistScrollPane.setVValue(0);
                         if (netPlaylistListModel.isEmpty()) {
                             netPlaylistLeftBox.remove(netPlaylistScrollPane);
                             netPlaylistLeftBox.add(emptyHintPanel);
@@ -8788,7 +8796,7 @@ public class PlayerFrame extends JFrame {
                             netMusicListForPlaylistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForPlaylistModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicListForPlaylistModel.isEmpty()) {
                             playlistListCountBox.remove(netMusicScrollPane);
                             playlistListCountBox.add(emptyHintPanel);
@@ -8872,7 +8880,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1);
             // 当前显示的是歌单列表，跳到下一页歌单
             if (lc == netPlaylistScrollPane || lc == emptyHintPanel) {
-                if (netPlaylistCurrPage == netPlaylistMaxPage) {
+                if (netPlaylistCurrPage >= netPlaylistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -8881,7 +8889,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某歌单的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInPlaylistCurrPage == netMusicInPlaylistMaxPage) {
+                if (netMusicInPlaylistCurrPage >= netMusicInPlaylistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -8894,7 +8902,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1);
             // 当前显示的是歌单列表，跳到最后一页歌单
             if (lc == netPlaylistScrollPane || lc == emptyHintPanel) {
-                if (netPlaylistCurrPage == netPlaylistMaxPage) {
+                if (netPlaylistCurrPage >= netPlaylistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -8903,7 +8911,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某歌单的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInPlaylistCurrPage == netMusicInPlaylistMaxPage) {
+                if (netMusicInPlaylistCurrPage >= netMusicInPlaylistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -9110,8 +9118,8 @@ public class PlayerFrame extends JFrame {
                             netMusicListForPlaylistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForPlaylistModel);
-                        playlistDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        playlistDescriptionScrollPane.setVValue(0);
+                        netMusicScrollPane.setVValue(0);
                         netPlaylistBackwardButton.setEnabled(true);
                         netPlaylistSourceComboBox.setVisible(false);
                         netPlaylistPlayAllButton.setVisible(true);
@@ -9293,6 +9301,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
                         playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(netPlaylistList);
+                            updateRenderer(collectionList);
                             netPlaylistList.repaint();
                             collectionList.repaint();
                         });
@@ -9308,7 +9318,7 @@ public class PlayerFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.getVerticalScrollBar().setValue(0);
+                    netPlaylistScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -9378,7 +9388,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -9448,7 +9458,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -9533,7 +9543,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netAlbumSearchTextField.getText().equals("")) netAlbumClearInputButton.setVisible(false);
+                if (netAlbumSearchTextField.getText().isEmpty()) netAlbumClearInputButton.setVisible(false);
             }
 
             @Override
@@ -9611,7 +9621,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(netAlbumCurrKeyword);
                 b.addActionListener(event -> {
                     netAlbumSearchTextField.requestFocus();
-                    netAlbumSearchTextField.setText(b.getText());
+                    netAlbumSearchTextField.setText(b.getPlainText());
                     netAlbumClearInputButton.setVisible(true);
                     netAlbumLeftBox.remove(netAlbumKeywordsPanelScrollPane);
                     netAlbumLeftBox.add(netAlbumScrollPane);
@@ -9683,7 +9693,7 @@ public class PlayerFrame extends JFrame {
                             netAlbumLeftBox.remove(emptyHintPanel);
                             netAlbumLeftBox.add(netAlbumScrollPane);
                         }
-                        netAlbumScrollPane.getVerticalScrollBar().setValue(0);
+                        netAlbumScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -9734,7 +9744,7 @@ public class PlayerFrame extends JFrame {
                             netAlbumListModel.addElement(albumInfo);
                         });
                         netAlbumList.setModel(netAlbumListModel);
-                        netAlbumScrollPane.getVerticalScrollBar().setValue(0);
+                        netAlbumScrollPane.setVValue(0);
                         if (netAlbumListModel.isEmpty()) {
                             netAlbumLeftBox.remove(netAlbumScrollPane);
                             netAlbumLeftBox.add(emptyHintPanel);
@@ -9778,7 +9788,7 @@ public class PlayerFrame extends JFrame {
                             netMusicListForAlbumModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForAlbumModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicListForAlbumModel.isEmpty()) {
                             albumListCountBox.remove(netMusicScrollPane);
                             albumListCountBox.add(emptyHintPanel);
@@ -9862,7 +9872,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1);
             // 当前显示的是专辑列表，跳到下一页专辑
             if (lc == netAlbumScrollPane || lc == emptyHintPanel) {
-                if (netAlbumCurrPage == netAlbumMaxPage) {
+                if (netAlbumCurrPage >= netAlbumMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -9871,7 +9881,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某专辑的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInAlbumCurrPage == netMusicInAlbumMaxPage) {
+                if (netMusicInAlbumCurrPage >= netMusicInAlbumMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -9884,7 +9894,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1);
             // 当前显示的是专辑列表，跳到最后一页专辑
             if (lc == netAlbumScrollPane || lc == emptyHintPanel) {
-                if (netAlbumCurrPage == netAlbumMaxPage) {
+                if (netAlbumCurrPage >= netAlbumMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -9893,7 +9903,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某专辑的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInAlbumCurrPage == netMusicInAlbumMaxPage) {
+                if (netMusicInAlbumCurrPage >= netMusicInAlbumMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -10096,8 +10106,8 @@ public class PlayerFrame extends JFrame {
                             netMusicListForAlbumModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForAlbumModel);
-                        albumDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        albumDescriptionScrollPane.setVValue(0);
+                        netMusicScrollPane.setVValue(0);
                         netAlbumBackwardButton.setEnabled(true);
                         netAlbumSourceComboBox.setVisible(false);
                         netAlbumPlayAllButton.setVisible(true);
@@ -10300,7 +10310,7 @@ public class PlayerFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.getVerticalScrollBar().setValue(0);
+                        netUserScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     } else {
                         clearRequestForArtist();
@@ -10330,6 +10340,8 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
                             artistInfo.setInvokeLater(() -> {
+                                updateRenderer(netArtistList);
+                                updateRenderer(collectionList);
                                 netArtistList.repaint();
                                 collectionList.repaint();
                             });
@@ -10346,7 +10358,7 @@ public class PlayerFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                        netArtistScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -10415,7 +10427,7 @@ public class PlayerFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.getVerticalScrollBar().setValue(0);
+                    netAlbumScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -10536,7 +10548,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netArtistSearchTextField.getText().equals("")) netArtistClearInputButton.setVisible(false);
+                if (netArtistSearchTextField.getText().isEmpty()) netArtistClearInputButton.setVisible(false);
             }
 
             @Override
@@ -10621,7 +10633,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(netArtistCurrKeyword);
                 b.addActionListener(event -> {
                     netArtistSearchTextField.requestFocus();
-                    netArtistSearchTextField.setText(b.getText());
+                    netArtistSearchTextField.setText(b.getPlainText());
                     netArtistClearInputButton.setVisible(true);
                     netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
                     netArtistLeftBox.add(netArtistScrollPane);
@@ -10693,7 +10705,7 @@ public class PlayerFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                        netArtistScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -10748,7 +10760,7 @@ public class PlayerFrame extends JFrame {
                             netArtistListModel.addElement(artistInfo);
                         });
                         netArtistList.setModel(netArtistListModel);
-                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                        netArtistScrollPane.setVValue(0);
                         if (netArtistListModel.isEmpty()) {
                             netArtistLeftBox.remove(netArtistScrollPane);
                             netArtistLeftBox.add(emptyHintPanel);
@@ -10792,7 +10804,7 @@ public class PlayerFrame extends JFrame {
                             netMusicListForArtistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForArtistModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicListForArtistModel.isEmpty()) {
                             artistListCountBox.remove(netMusicScrollPane);
                             artistListCountBox.add(emptyHintPanel);
@@ -10876,7 +10888,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1);
             // 当前显示的是歌手列表，跳到下一页歌手
             if (lc == netArtistScrollPane || lc == emptyHintPanel) {
-                if (netArtistCurrPage == netArtistMaxPage) {
+                if (netArtistCurrPage >= netArtistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -10885,7 +10897,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某歌手的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInArtistCurrPage == netMusicInArtistMaxPage) {
+                if (netMusicInArtistCurrPage >= netMusicInArtistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -10898,7 +10910,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1);
             // 当前显示的是歌手列表，跳到最后一页歌手
             if (lc == netArtistScrollPane || lc == emptyHintPanel) {
-                if (netArtistCurrPage == netArtistMaxPage) {
+                if (netArtistCurrPage >= netArtistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -10907,7 +10919,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某歌手的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInArtistCurrPage == netMusicInArtistMaxPage) {
+                if (netMusicInArtistCurrPage >= netMusicInArtistMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -11114,8 +11126,8 @@ public class PlayerFrame extends JFrame {
                             netMusicListForArtistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForArtistModel);
-                        artistDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        artistDescriptionScrollPane.setVValue(0);
+                        netMusicScrollPane.setVValue(0);
                         netArtistBackwardButton.setEnabled(true);
                         netArtistSourceComboBox.setVisible(false);
                         netArtistPlayAllButton.setVisible(true);
@@ -11292,6 +11304,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(albumInfo));
                         // 设置图片加载后重绘的事件
                         albumInfo.setInvokeLater(() -> {
+                            updateRenderer(netAlbumList);
+                            updateRenderer(collectionList);
                             netAlbumList.repaint();
                             collectionList.repaint();
                         });
@@ -11307,7 +11321,7 @@ public class PlayerFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.getVerticalScrollBar().setValue(0);
+                    netAlbumScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -11375,7 +11389,7 @@ public class PlayerFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.getVerticalScrollBar().setValue(0);
+                    netMvScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -11426,6 +11440,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(artistInfo));
                         // 设置图片加载后重绘的事件
                         artistInfo.setInvokeLater(() -> {
+                            updateRenderer(netArtistList);
+                            updateRenderer(collectionList);
                             netArtistList.repaint();
                             collectionList.repaint();
                         });
@@ -11441,7 +11457,7 @@ public class PlayerFrame extends JFrame {
                         netArtistLeftBox.remove(emptyHintPanel);
                         netArtistLeftBox.add(netArtistScrollPane);
                     }
-                    netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                    netArtistScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -11512,7 +11528,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -11581,7 +11597,7 @@ public class PlayerFrame extends JFrame {
                         netArtistLeftBox.remove(emptyHintPanel);
                         netArtistLeftBox.add(netArtistScrollPane);
                     }
-                    netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                    netArtistScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -11650,7 +11666,7 @@ public class PlayerFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.getVerticalScrollBar().setValue(0);
+                    netRadioScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -11774,7 +11790,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netRadioSearchTextField.getText().equals("")) netRadioClearInputButton.setVisible(false);
+                if (netRadioSearchTextField.getText().isEmpty()) netRadioClearInputButton.setVisible(false);
             }
 
             @Override
@@ -11857,7 +11873,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(netRadioCurrKeyword);
                 b.addActionListener(event -> {
                     netRadioSearchTextField.requestFocus();
-                    netRadioSearchTextField.setText(b.getText());
+                    netRadioSearchTextField.setText(b.getPlainText());
                     netRadioClearInputButton.setVisible(true);
                     netRadioLeftBox.remove(netRadioKeywordsPanelScrollPane);
                     netRadioLeftBox.add(netRadioScrollPane);
@@ -11929,7 +11945,7 @@ public class PlayerFrame extends JFrame {
                             netRadioLeftBox.remove(emptyHintPanel);
                             netRadioLeftBox.add(netRadioScrollPane);
                         }
-                        netRadioScrollPane.getVerticalScrollBar().setValue(0);
+                        netRadioScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -11975,12 +11991,11 @@ public class PlayerFrame extends JFrame {
                                 updateRenderer(collectionList);
                                 netRadioList.repaint();
                                 collectionList.repaint();
-                                netRadioScrollPane.getViewport().add(netRadioList);
                             });
                             netRadioListModel.addElement(radioInfo);
                         });
                         netRadioList.setModel(netRadioListModel);
-                        netRadioScrollPane.getVerticalScrollBar().setValue(0);
+                        netRadioScrollPane.setVValue(0);
                         if (netRadioListModel.isEmpty()) {
                             netRadioLeftBox.remove(netRadioScrollPane);
                             netRadioLeftBox.add(emptyHintPanel);
@@ -12022,7 +12037,7 @@ public class PlayerFrame extends JFrame {
                             netMusicListForRadioModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRadioModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicListForRadioModel.isEmpty()) {
                             radioListCountBox.remove(netMusicScrollPane);
                             radioListCountBox.add(emptyHintPanel);
@@ -12106,7 +12121,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1);
             // 当前显示的是电台列表，跳到下一页电台
             if (lc == netRadioScrollPane || lc == emptyHintPanel) {
-                if (netRadioCurrPage == netRadioMaxPage) {
+                if (netRadioCurrPage >= netRadioMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -12115,7 +12130,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某电台的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInRadioCurrPage == netMusicInRadioMaxPage) {
+                if (netMusicInRadioCurrPage >= netMusicInRadioMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -12128,7 +12143,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1);
             // 当前显示的是电台列表，跳到最后一页电台
             if (lc == netRadioScrollPane || lc == emptyHintPanel) {
-                if (netRadioCurrPage == netRadioMaxPage) {
+                if (netRadioCurrPage >= netRadioMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -12137,7 +12152,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某电台的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInRadioCurrPage == netMusicInRadioMaxPage) {
+                if (netMusicInRadioCurrPage >= netMusicInRadioMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -12344,8 +12359,8 @@ public class PlayerFrame extends JFrame {
                             netMusicListForRadioModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRadioModel);
-                        radioDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        radioDescriptionScrollPane.setVValue(0);
+                        netMusicScrollPane.setVValue(0);
                         netRadioBackwardButton.setEnabled(true);
                         netRadioSourceComboBox.setVisible(false);
                         netRadioPlayAllButton.setVisible(true);
@@ -12546,7 +12561,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12616,7 +12631,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12685,7 +12700,7 @@ public class PlayerFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.getVerticalScrollBar().setValue(0);
+                    netRadioScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12753,7 +12768,7 @@ public class PlayerFrame extends JFrame {
                         netArtistLeftBox.remove(emptyHintPanel);
                         netArtistLeftBox.add(netArtistScrollPane);
                     }
-                    netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                    netArtistScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12925,7 +12940,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netMvSearchTextField.getText().equals("")) netMvClearInputButton.setVisible(false);
+                if (netMvSearchTextField.getText().isEmpty()) netMvClearInputButton.setVisible(false);
             }
 
             @Override
@@ -12949,7 +12964,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(netMvCurrKeyword);
                 b.addActionListener(event -> {
                     netMvSearchTextField.requestFocus();
-                    netMvSearchTextField.setText(b.getText());
+                    netMvSearchTextField.setText(b.getPlainText());
                     netMvClearInputButton.setVisible(true);
                     netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
                     netMvLeftBox.add(netMvScrollPane);
@@ -13021,7 +13036,7 @@ public class PlayerFrame extends JFrame {
                             netMvLeftBox.remove(emptyHintPanel);
                             netMvLeftBox.add(netMvScrollPane);
                         }
-                        netMvScrollPane.getVerticalScrollBar().setValue(0);
+                        netMvScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -13072,7 +13087,7 @@ public class PlayerFrame extends JFrame {
                             netMvListModel.addElement(mvInfo);
                         });
                         netMvList.setModel(netMvListModel);
-                        netMvScrollPane.getVerticalScrollBar().setValue(0);
+                        netMvScrollPane.setVValue(0);
                         if (netMvListModel.isEmpty()) {
                             netMvLeftBox.remove(netMvScrollPane);
                             netMvLeftBox.add(emptyHintPanel);
@@ -13127,7 +13142,7 @@ public class PlayerFrame extends JFrame {
         });
         // 下一页按钮事件
         netMvNextPageButton.addActionListener(e -> {
-            if (netMvCurrPage == netMvMaxPage) {
+            if (netMvCurrPage >= netMvMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -13136,7 +13151,7 @@ public class PlayerFrame extends JFrame {
         });
         // 最后一页按钮事件
         netMvEndPageButton.addActionListener(e -> {
-            if (netMvCurrPage == netMvMaxPage) {
+            if (netMvCurrPage >= netMvMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -13401,7 +13416,7 @@ public class PlayerFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.getVerticalScrollBar().setValue(0);
+                    netMvScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -13470,7 +13485,7 @@ public class PlayerFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.getVerticalScrollBar().setValue(0);
+                    netMvScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -13540,7 +13555,7 @@ public class PlayerFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.getVerticalScrollBar().setValue(0);
+                        netArtistScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     } else {
                         clearRequestForUser();
@@ -13588,7 +13603,7 @@ public class PlayerFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.getVerticalScrollBar().setValue(0);
+                        netUserScrollPane.setVValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -13710,6 +13725,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(rankingInfo));
                         // 设置图片加载后重绘的事件
                         rankingInfo.setInvokeLater(() -> {
+                            updateRenderer(netRankingList);
+                            updateRenderer(collectionList);
                             netRankingList.repaint();
                             collectionList.repaint();
                         });
@@ -13723,7 +13740,7 @@ public class PlayerFrame extends JFrame {
                         netRankingLeftBox.remove(emptyHintPanel);
                         netRankingLeftBox.add(netRankingScrollPane);
                     }
-                    netRankingScrollPane.getVerticalScrollBar().setValue(0);
+                    netRankingScrollPane.setVValue(0);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
                     new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -13758,7 +13775,7 @@ public class PlayerFrame extends JFrame {
                             netMusicListForRankingModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRankingModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicListForRankingModel.isEmpty()) {
                             rankingListCountBox.remove(netMusicScrollPane);
                             rankingListCountBox.add(emptyHintPanel);
@@ -13842,7 +13859,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳到下一页榜单
             if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                if (netRankingCurrPage == netRankingMaxPage) {
+                if (netRankingCurrPage >= netRankingMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -13851,7 +13868,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某榜单的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInRankingCurrPage == netMusicInRankingMaxPage) {
+                if (netMusicInRankingCurrPage >= netMusicInRankingMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -13864,7 +13881,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳到最后一页榜单
             if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                if (netRankingCurrPage == netRankingMaxPage) {
+                if (netRankingCurrPage >= netRankingMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -13873,7 +13890,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某榜单的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInRankingCurrPage == netMusicInRankingMaxPage) {
+                if (netMusicInRankingCurrPage >= netMusicInRankingMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -14061,8 +14078,8 @@ public class PlayerFrame extends JFrame {
                             netMusicListForRankingModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRankingModel);
-                        rankingDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        rankingDescriptionScrollPane.setVValue(0);
+                        netMusicScrollPane.setVValue(0);
                         netRankingBackwardButton.setEnabled(true);
                         netRankingSourceComboBox.setVisible(false);
                         netRankingPlayAllButton.setVisible(true);
@@ -14241,7 +14258,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netUserSearchTextField.getText().equals("")) netUserClearInputButton.setVisible(false);
+                if (netUserSearchTextField.getText().isEmpty()) netUserClearInputButton.setVisible(false);
             }
 
             @Override
@@ -14326,7 +14343,7 @@ public class PlayerFrame extends JFrame {
                 DialogButton b = new DialogButton(netUserCurrKeyword);
                 b.addActionListener(event -> {
                     netUserSearchTextField.requestFocus();
-                    netUserSearchTextField.setText(b.getText());
+                    netUserSearchTextField.setText(b.getPlainText());
                     netUserClearInputButton.setVisible(true);
                     netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
                     netUserLeftBox.add(netUserScrollPane);
@@ -14398,7 +14415,7 @@ public class PlayerFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.getVerticalScrollBar().setValue(0);
+                        netUserScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -14458,7 +14475,7 @@ public class PlayerFrame extends JFrame {
                             netUserListModel.addElement(userInfo);
                         });
                         netUserList.setModel(netUserListModel);
-                        netUserScrollPane.getVerticalScrollBar().setValue(0);
+                        netUserScrollPane.setVValue(0);
                         if (netUserListModel.isEmpty()) {
                             netUserLeftBox.remove(netUserScrollPane);
                             netUserLeftBox.add(emptyHintPanel);
@@ -14501,7 +14518,7 @@ public class PlayerFrame extends JFrame {
                         netMusicListForUserModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListForUserModel);
-                    netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                    netMusicScrollPane.setVValue(0);
                     if (netMusicListForUserModel.isEmpty()) {
                         userListCountBox.remove(netMusicScrollPane);
                         userListCountBox.add(emptyHintPanel);
@@ -14599,7 +14616,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1);
             // 当前显示的是用户列表，跳到下一页用户
             if (lc == netUserScrollPane || lc == emptyHintPanel) {
-                if (netUserCurrPage == netUserMaxPage) {
+                if (netUserCurrPage >= netUserMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -14608,7 +14625,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某用户的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInUserCurrPage == netMusicInUserMaxPage) {
+                if (netMusicInUserCurrPage >= netMusicInUserMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -14621,7 +14638,7 @@ public class PlayerFrame extends JFrame {
             Component lc = netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1);
             // 当前显示的是用户列表，跳到最后一页用户
             if (lc == netUserScrollPane || lc == emptyHintPanel) {
-                if (netUserCurrPage == netUserMaxPage) {
+                if (netUserCurrPage >= netUserMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -14630,7 +14647,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某用户的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInUserCurrPage == netMusicInUserMaxPage) {
+                if (netMusicInUserCurrPage >= netMusicInUserMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -14857,8 +14874,8 @@ public class PlayerFrame extends JFrame {
                             netMusicListForUserModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForUserModel);
-                        userDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        userDescriptionScrollPane.setVValue(0);
+                        netMusicScrollPane.setVValue(0);
                         netUserBackwardButton.setEnabled(true);
                         netUserSourceComboBox.setVisible(false);
                         netUserPlayAllButton.setVisible(true);
@@ -15029,6 +15046,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
                         playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(netPlaylistList);
+                            updateRenderer(collectionList);
                             netPlaylistList.repaint();
                             collectionList.repaint();
                         });
@@ -15044,7 +15063,7 @@ public class PlayerFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.getVerticalScrollBar().setValue(0);
+                    netPlaylistScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -15111,7 +15130,7 @@ public class PlayerFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.getVerticalScrollBar().setValue(0);
+                    netAlbumScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -15177,7 +15196,7 @@ public class PlayerFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.getVerticalScrollBar().setValue(0);
+                    netRadioScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -15246,7 +15265,7 @@ public class PlayerFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.getVerticalScrollBar().setValue(0);
+                    netMvScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -15314,7 +15333,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -15382,7 +15401,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -15501,7 +15520,7 @@ public class PlayerFrame extends JFrame {
                     netCommentBox.remove(emptyHintPanel);
                     netCommentBox.add(netCommentScrollPane);
                 }
-                netCommentScrollPane.getVerticalScrollBar().setValue(0);
+                netCommentScrollPane.setVValue(0);
                 if (first) {
                     SwingUtilities.updateComponentTreeUI(netCommentToolBar);
                     javax.swing.plaf.ComboBoxUI ui = netCommentTypeComboBox.getUI();
@@ -15549,7 +15568,6 @@ public class PlayerFrame extends JFrame {
                     SheetInfo.setInvokeLater(() -> {
                         updateRenderer(netSheetList);
                         netSheetList.repaint();
-                        netSheetScrollPane.getViewport().add(netSheetList);
                     });
                     netSheetListModel.addElement(SheetInfo);
                 });
@@ -15561,7 +15579,7 @@ public class PlayerFrame extends JFrame {
                     netSheetBox.remove(emptyHintPanel);
                     netSheetBox.add(netSheetScrollPane);
                 }
-                netSheetScrollPane.getVerticalScrollBar().setValue(0);
+                netSheetScrollPane.setVValue(0);
                 if (first) {
                     SwingUtilities.updateComponentTreeUI(netSheetToolBar);
                     SwingUtilities.updateComponentTreeUI(netSheetCountPanel);
@@ -15641,7 +15659,7 @@ public class PlayerFrame extends JFrame {
         });
         // 下一页按钮事件
         netCommentNextPageButton.addActionListener(e -> {
-            if (netCommentCurrPage == netCommentMaxPage) {
+            if (netCommentCurrPage >= netCommentMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -15650,7 +15668,7 @@ public class PlayerFrame extends JFrame {
         });
         // 最后一页按钮事件
         netCommentEndPageButton.addActionListener(e -> {
-            if (netCommentCurrPage == netCommentMaxPage) {
+            if (netCommentCurrPage >= netCommentMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -15843,7 +15861,7 @@ public class PlayerFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.getVerticalScrollBar().setValue(0);
+                    netUserScrollPane.setVValue(0);
                     netUserLeftBox.remove(userListBox);
                     netCommentBackwardButton.doClick();
                     if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
@@ -15893,6 +15911,8 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
                         playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(netPlaylistList);
+                            updateRenderer(collectionList);
                             netPlaylistList.repaint();
                             collectionList.repaint();
                         });
@@ -15908,7 +15928,7 @@ public class PlayerFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.getVerticalScrollBar().setValue(0);
+                    netPlaylistScrollPane.setVValue(0);
                     netPlaylistLeftBox.remove(playlistListBox);
                     netCommentBackwardButton.doClick();
                     if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
@@ -15975,7 +15995,7 @@ public class PlayerFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.getVerticalScrollBar().setValue(0);
+                    netAlbumScrollPane.setVValue(0);
                     netAlbumLeftBox.remove(albumListBox);
                     netCommentBackwardButton.doClick();
                     if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
@@ -16003,7 +16023,7 @@ public class PlayerFrame extends JFrame {
         // 评论最佳大小
         netCommentScrollPane.setPreferredSize(new Dimension(200, 600));
         // 评论滚动速度
-        netCommentScrollPane.getVerticalScrollBar().setUnitIncrement(20);
+//        netCommentScrollPane.setVUnitIncrement(20);
         netCommentBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         netCommentBox.add(netCommentScrollPane);
     }
@@ -16050,7 +16070,7 @@ public class PlayerFrame extends JFrame {
         });
         // 下一页按钮事件
         netSheetNextPageButton.addActionListener(e -> {
-            if (netSheetCurrPage == netSheetMaxPage) {
+            if (netSheetCurrPage >= netSheetMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -16059,7 +16079,7 @@ public class PlayerFrame extends JFrame {
         });
         // 最后一页按钮事件
         netSheetEndPageButton.addActionListener(e -> {
-            if (netSheetCurrPage == netSheetMaxPage) {
+            if (netSheetCurrPage >= netSheetMaxPage) {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
@@ -16233,7 +16253,7 @@ public class PlayerFrame extends JFrame {
         // 乐谱最佳大小
         netSheetScrollPane.setPreferredSize(new Dimension(200, 600));
         // 乐谱滚动速度
-        netSheetScrollPane.getVerticalScrollBar().setUnitIncrement(20);
+//        netSheetScrollPane.setVUnitIncrement(20);
         netSheetBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         netSheetBox.add(netSheetScrollPane);
     }
@@ -16388,7 +16408,7 @@ public class PlayerFrame extends JFrame {
                             }
                             recommendLeftBox.repaint();
                         }
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -16421,13 +16441,15 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
                             // 设置图片加载后重绘的事件
                             netPlaylistInfo.setInvokeLater(() -> {
+                                updateRenderer(itemRecommendList);
+                                updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
                             playlistRecommendListModel.addElement(netPlaylistInfo);
                         });
                         itemRecommendList.setModel(playlistRecommendListModel);
-                        itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                        itemRecommendScrollPane.setVValue(0);
                         if (playlistRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(itemRecommendScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16468,13 +16490,15 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
                             // 设置图片加载后重绘的事件
                             netPlaylistInfo.setInvokeLater(() -> {
+                                updateRenderer(itemRecommendList);
+                                updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
                             playlistRecommendListModel.addElement(netPlaylistInfo);
                         });
                         itemRecommendList.setModel(playlistRecommendListModel);
-                        itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                        itemRecommendScrollPane.setVValue(0);
                         if (playlistRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(itemRecommendScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16513,7 +16537,7 @@ public class PlayerFrame extends JFrame {
                         netMusicRecommendListModel.clear();
                         netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
                         netMusicList.setModel(netMusicRecommendListModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(netMusicScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16552,7 +16576,7 @@ public class PlayerFrame extends JFrame {
                         netMusicRecommendListModel.clear();
                         netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
                         netMusicList.setModel(netMusicRecommendListModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(netMusicScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16602,7 +16626,7 @@ public class PlayerFrame extends JFrame {
                             albumRecommendListModel.addElement(netAlbumInfo);
                         });
                         itemRecommendList.setModel(albumRecommendListModel);
-                        itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                        itemRecommendScrollPane.setVValue(0);
                         if (albumRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(itemRecommendScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16644,13 +16668,15 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(netArtistInfo));
                             // 设置图片加载后重绘的事件
                             netArtistInfo.setInvokeLater(() -> {
+                                updateRenderer(itemRecommendList);
+                                updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
                             artistRecommendListModel.addElement(netArtistInfo);
                         });
                         itemRecommendList.setModel(artistRecommendListModel);
-                        itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                        itemRecommendScrollPane.setVValue(0);
                         if (artistRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(itemRecommendScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16692,13 +16718,15 @@ public class PlayerFrame extends JFrame {
                             globalExecutor.submit(() -> updateCollection(netRadioInfo));
                             // 设置图片加载后重绘的事件
                             netRadioInfo.setInvokeLater(() -> {
+                                updateRenderer(itemRecommendList);
+                                updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
                             radioRecommendListModel.addElement(netRadioInfo);
                         });
                         itemRecommendList.setModel(radioRecommendListModel);
-                        itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                        itemRecommendScrollPane.setVValue(0);
                         if (radioRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(itemRecommendScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16748,7 +16776,7 @@ public class PlayerFrame extends JFrame {
                             radioRecommendListModel.addElement(netRadioInfo);
                         });
                         itemRecommendList.setModel(radioRecommendListModel);
-                        itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                        itemRecommendScrollPane.setVValue(0);
                         if (radioRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(itemRecommendScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16787,7 +16815,7 @@ public class PlayerFrame extends JFrame {
                         netMusicRecommendListModel.clear();
                         netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
                         netMusicList.setModel(netMusicRecommendListModel);
-                        netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                        netMusicScrollPane.setVValue(0);
                         if (netMusicRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(netMusicScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16837,7 +16865,7 @@ public class PlayerFrame extends JFrame {
                             mvRecommendListModel.addElement(netMvInfo);
                         });
                         itemRecommendList.setModel(mvRecommendListModel);
-                        itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                        itemRecommendScrollPane.setVValue(0);
                         if (mvRecommendListModel.isEmpty()) {
                             recommendLeftBox.remove(itemRecommendScrollPane);
                             recommendLeftBox.add(emptyHintPanel);
@@ -16934,7 +16962,7 @@ public class PlayerFrame extends JFrame {
             // 当前显示的是推荐列表，跳到下一页推荐
             if (!recommendBackwardButton.isEnabled()) {
                 // netRecommendMaxPage 为 -1 时，页数未知
-                if (netRecommendCurrPage == netRecommendMaxPage && netRecommendMaxPage > 0) {
+                if (netRecommendCurrPage >= netRecommendMaxPage && netRecommendMaxPage > 0) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -16943,7 +16971,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某推荐里的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInRecommendCurrPage == netMusicInRecommendMaxPage) {
+                if (netMusicInRecommendCurrPage >= netMusicInRecommendMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -16956,7 +16984,7 @@ public class PlayerFrame extends JFrame {
             // 当前显示的是推荐列表，跳到最后一页推荐
             if (!recommendBackwardButton.isEnabled()) {
                 // netRecommendMaxPage 为 -1 时，页数未知
-                if (netRecommendCurrPage == netRecommendMaxPage && netRecommendMaxPage > 0) {
+                if (netRecommendCurrPage >= netRecommendMaxPage && netRecommendMaxPage > 0) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -16965,7 +16993,7 @@ public class PlayerFrame extends JFrame {
             }
             // 当前显示的是某推荐里的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInRecommendCurrPage == netMusicInRecommendMaxPage) {
+                if (netMusicInRecommendCurrPage >= netMusicInRecommendMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
@@ -17033,13 +17061,15 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
                         // 设置图片加载后重绘的事件
                         netPlaylistInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
                         playlistRecommendListModel.addElement(netPlaylistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
-                    itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                    itemRecommendScrollPane.setVValue(0);
                     // 删掉推荐单曲列表，加载歌单 Model
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (playlistRecommendListModel.isEmpty()) {
@@ -17094,13 +17124,15 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
                         // 设置图片加载后重绘的事件
                         netPlaylistInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
                         playlistRecommendListModel.addElement(netPlaylistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
-                    itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                    itemRecommendScrollPane.setVValue(0);
                     // 删掉推荐单曲列表，加载歌单 Model
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (playlistRecommendListModel.isEmpty()) {
@@ -17152,7 +17184,7 @@ public class PlayerFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                    netMusicScrollPane.setVValue(0);
                     // 删掉歌单列表/专辑列表
                     recommendLeftBox.remove(itemRecommendScrollPane);
                     if (netMusicRecommendListModel.isEmpty()) {
@@ -17204,7 +17236,7 @@ public class PlayerFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                    netMusicScrollPane.setVValue(0);
                     // 删掉歌单列表/专辑列表
                     recommendLeftBox.remove(itemRecommendScrollPane);
                     if (netMusicRecommendListModel.isEmpty()) {
@@ -17266,7 +17298,7 @@ public class PlayerFrame extends JFrame {
                         albumRecommendListModel.addElement(netAlbumInfo);
                     });
                     itemRecommendList.setModel(albumRecommendListModel);
-                    itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                    itemRecommendScrollPane.setVValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (albumRecommendListModel.isEmpty()) {
@@ -17319,13 +17351,15 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(netArtistInfo));
                         // 设置图片加载后重绘的事件
                         netArtistInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
                         artistRecommendListModel.addElement(netArtistInfo);
                     });
                     itemRecommendList.setModel(artistRecommendListModel);
-                    itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                    itemRecommendScrollPane.setVValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (artistRecommendListModel.isEmpty()) {
@@ -17370,13 +17404,15 @@ public class PlayerFrame extends JFrame {
                         globalExecutor.submit(() -> updateCollection(netRadioInfo));
                         // 设置图片加载后重绘的事件
                         netRadioInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
                         radioRecommendListModel.addElement(netRadioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
-                    itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                    itemRecommendScrollPane.setVValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (radioRecommendListModel.isEmpty()) {
@@ -17437,7 +17473,7 @@ public class PlayerFrame extends JFrame {
                         radioRecommendListModel.addElement(netRadioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
-                    itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                    itemRecommendScrollPane.setVValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (radioRecommendListModel.isEmpty()) {
@@ -17488,7 +17524,7 @@ public class PlayerFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                    netMusicScrollPane.setVValue(0);
                     // 删掉歌单列表/专辑列表
                     recommendLeftBox.remove(itemRecommendScrollPane);
                     if (netMusicRecommendListModel.isEmpty()) {
@@ -17551,7 +17587,7 @@ public class PlayerFrame extends JFrame {
                         mvRecommendListModel.addElement(netMvInfo);
                     });
                     itemRecommendList.setModel(mvRecommendListModel);
-                    itemRecommendScrollPane.getVerticalScrollBar().setValue(0);
+                    itemRecommendScrollPane.setVValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (mvRecommendListModel.isEmpty()) {
@@ -17848,8 +17884,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForPlaylistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistRecommendModel);
-                            recommendItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            recommendItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -17940,8 +17976,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForAlbumRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumRecommendModel);
-                            recommendItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            recommendItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -18035,8 +18071,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForArtistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistRecommendModel);
-                            recommendItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            recommendItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -18130,8 +18166,8 @@ public class PlayerFrame extends JFrame {
                                 netMusicListForRadioRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioRecommendModel);
-                            recommendItemDescriptionScrollPane.getVerticalScrollBar().setValue(0);
-                            netMusicScrollPane.getVerticalScrollBar().setValue(0);
+                            recommendItemDescriptionScrollPane.setVValue(0);
+                            netMusicScrollPane.setVValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -19111,29 +19147,27 @@ public class PlayerFrame extends JFrame {
             if (lrcScrollAnimation) {
                 // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
 //                lrcScrollExecutor.submit(() -> {
-                JScrollBar vs = lrcScrollPane.getVerticalScrollBar();
                 Rectangle bounds = lrcList.getCellBounds(row, row);
                 if (bounds == null) return;
                 Insets insets = lrcScrollPane.getInsets();
-                int val = vs.getValue(), dVal = bounds.y - (lrcScrollPane.getHeight() - insets.top - insets.bottom) / 2
+                int val = lrcScrollPane.getVValue(), dVal = bounds.y - (lrcScrollPane.getHeight() - insets.top - insets.bottom) / 2
                         + bounds.height / 2, step = Math.max(1, Math.abs(dVal - currScrollVal) / 20);
                 int nv = val < dVal ? Math.min(dVal, val + step) : Math.max(dVal, val - step);
-                vs.setValue(nv);
-                if (nv == dVal || vs.getValue() == val) lrcScrollAnimation = false;
+                lrcScrollPane.setVValue(nv);
+                if (nv == dVal || lrcScrollPane.getVValue() == val) lrcScrollAnimation = false;
 //                });
             }
         });
-//        lrcScrollTimer = new Timer(1, e -> {
-//
-//        });
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.submit(() -> {
                 globalPanel.setOpacity((float) Math.min(1, globalPanel.getOpacity() + 0.05));
                 if (globalPanel.getOpacity() >= 1) globalPanelTimer.stop();
             });
         });
-//        gcTimer = new Timer(60000, e -> globalExecutor.submit(() -> System.gc()));
-//        gcTimer.start();
+        searchSuggestionTimer = new Timer(100, e -> {
+            globalExecutor.submit(() -> updateSearchSuggestion());
+            searchSuggestionTimer.stop();
+        });
     }
 
     // 初始化进度条
@@ -19862,7 +19896,7 @@ public class PlayerFrame extends JFrame {
             row = LRC_INDEX;
         } finally {
             originalRatio.set(0);
-            lrcScrollPane.getVerticalScrollBar().setValue(currScrollVal = 0);
+            lrcScrollPane.setVValue(currScrollVal = 0);
             if (!reload) {
                 // 更新歌词面板渲染
                 TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
@@ -19945,7 +19979,7 @@ public class PlayerFrame extends JFrame {
 //                        lrcListModel.set(LRC_INDEX - 1, statements.get(nextLrc++));
                         row = LRC_INDEX + 1 + nextLrc * 2;
                         if (!lrcScrollAnimation && !lrcScrollWait) {
-                            currScrollVal = lrcScrollPane.getVerticalScrollBar().getValue();
+                            currScrollVal = lrcScrollPane.getVValue();
                             lrcScrollAnimation = true;
                         }
                         TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
@@ -20296,8 +20330,6 @@ public class PlayerFrame extends JFrame {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } finally {
-            System.gc();
         }
         return false;
     }
@@ -20603,6 +20635,7 @@ public class PlayerFrame extends JFrame {
         Color labelColor = style.getLabelColor();
         Color selectedColor = style.getSelectedColor();
         Color foreColor = style.getForeColor();
+        Color scrollBarColor = style.getScrollBarColor();
         Color menuItemColor = style.getMenuItemColor();
 
         // 托盘
@@ -21415,29 +21448,29 @@ public class PlayerFrame extends JFrame {
         this.playQueueRenderer = playQueueRenderer;
 
         // 歌单/专辑/歌手/电台/榜单描述
-        playlistDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        playlistDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        playlistDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        playlistDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
-        albumDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        albumDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        albumDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        albumDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
-        artistDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        artistDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        artistDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        artistDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
-        radioDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        radioDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        radioDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        radioDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
-        rankingDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        rankingDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        rankingDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        rankingDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
-        userDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        userDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        userDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        userDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
-        recommendItemDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        recommendItemDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        recommendItemDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        recommendItemDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
-        collectionItemDescriptionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        collectionItemDescriptionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        collectionItemDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        collectionItemDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
 
         playlistCoverAndNameLabel.setForeground(labelColor);
         albumCoverAndNameLabel.setForeground(labelColor);
@@ -21464,71 +21497,71 @@ public class PlayerFrame extends JFrame {
         collectionItemDescriptionLabel.setForeground(labelColor);
 
         // 滚动面板消除边框、自定义样式
-        musicScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        musicScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        musicScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        musicScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 关键词面板列表滚动面板消除边框、自定义样式
-        netMusicKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMusicKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netMusicKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netMusicKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 在线音乐列表滚动面板消除边框、自定义样式
-        netMusicScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMusicScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netMusicScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netMusicScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 歌单关键词面板列表滚动面板消除边框、自定义样式
-        netPlaylistKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netPlaylistKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netPlaylistKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netPlaylistKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 在线歌单滚动面板消除边框、自定义样式
-        netPlaylistScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netPlaylistScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netPlaylistScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netPlaylistScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 专辑关键词面板列表滚动面板消除边框、自定义样式
-        netAlbumKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netAlbumKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netAlbumKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netAlbumKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 在线专辑滚动面板消除边框、自定义样式
-        netAlbumScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netAlbumScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netAlbumScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netAlbumScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 歌手关键词面板列表滚动面板消除边框、自定义样式
-        netArtistKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netArtistKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netArtistKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netArtistKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 在线歌手滚动面板消除边框、自定义样式
-        netArtistScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netArtistScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netArtistScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netArtistScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 电台关键词面板列表滚动面板消除边框、自定义样式
-        netRadioKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netRadioKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netRadioKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netRadioKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 在线电台滚动面板消除边框、自定义样式
-        netRadioScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netRadioScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netRadioScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netRadioScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // MV 关键词面板列表滚动面板消除边框、自定义样式
-        netMvKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMvKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netMvKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netMvKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 在线 MV 滚动面板消除边框、自定义样式
-        netMvScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netMvScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netMvScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netMvScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 榜单滚动面板消除边框、自定义样式
-        netRankingScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netRankingScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netRankingScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netRankingScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 用户关键词面板列表滚动面板消除边框、自定义样式
-        netUserKeywordsPanelScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netUserKeywordsPanelScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netUserKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netUserKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 在线用户滚动面板消除边框、自定义样式
-        netUserScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netUserScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netUserScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netUserScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 评论滚动面板消除边框、自定义样式
-        netCommentScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netCommentScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netCommentScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netCommentScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 乐谱滚动面板消除边框、自定义样式
-        netSheetScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        netSheetScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        netSheetScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        netSheetScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 推荐滚动面板消除边框、自定义样式
-        itemRecommendScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        itemRecommendScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        itemRecommendScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        itemRecommendScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 收藏滚动面板消除边框、自定义样式
-        collectionScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        collectionScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        collectionScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        collectionScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 下载滚动面板消除边框、自定义样式
-        downloadListScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        downloadListScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        downloadListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        downloadListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         // 播放队列滚动面板消除边框、自定义样式
-        playQueueScrollPane.getHorizontalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
-        playQueueScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor()));
+        playQueueScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        playQueueScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
 
         // 歌词高亮显示
         TranslucentLrcListRenderer lrcListRenderer = new TranslucentLrcListRenderer();
@@ -21539,7 +21572,7 @@ public class PlayerFrame extends JFrame {
         lrcList.setCellRenderer(lrcListRenderer);
         lrcList.setUI(new ListUI(LRC_INDEX - 1));  // 歌词禁用字体透明，需要用到自定义 List
 
-        lrcScrollPane.getVerticalScrollBar().setUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        lrcScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
         // 进度条和控制面板透明
         timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), THIS, player, true));      // 自定义进度条 UI
@@ -21617,7 +21650,6 @@ public class PlayerFrame extends JFrame {
         updateTabUI(collectionTabbedPane, style);
 
         globalPanel.repaint();
-        System.gc();
     }
 
     // 打开编辑歌曲信息弹窗
@@ -21937,8 +21969,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放 MV
-    void playMv(int mvType) {
-        System.gc();
+    private void playMv(int mvType) {
         // 播放下载列表的 MV
         if (mvType == MvType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
@@ -22131,7 +22162,7 @@ public class PlayerFrame extends JFrame {
             } else continue;
             row = LRC_INDEX + 1 + (nextLrc - 1) * 2;
             if (!lrcScrollAnimation) {
-                currScrollVal = lrcScrollPane.getVerticalScrollBar().getValue();
+                currScrollVal = lrcScrollPane.getVValue();
                 lrcScrollAnimation = true;
             }
             TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
@@ -22358,7 +22389,7 @@ public class PlayerFrame extends JFrame {
         Component[] components = p.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            if (b.getText().equals(keyword)) {
+            if (b.getPlainText().equals(keyword)) {
                 p.remove(b);
                 return;
             }
@@ -22423,6 +22454,7 @@ public class PlayerFrame extends JFrame {
                 new TipDialog(THIS, API_ERROR_MSG).showDialog();
             }
         }
+        searchSuggestionProcessing = false;
     }
 
     // 加载热搜词

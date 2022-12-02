@@ -71,7 +71,7 @@ public class VideoDialog extends JDialog {
     private final String ERROR_MSG = "播放视频时发生异常";
 
     // 选定点图标
-    private ImageIcon dotIcon = new ImageIcon(SimplePath.ICON_PATH + "dot.png");
+    private ImageIcon dotIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "dot.png");
     // 播放图标
     private ImageIcon playIcon = new ImageIcon(SimplePath.ICON_PATH + "play.png");
     // 暂停图标

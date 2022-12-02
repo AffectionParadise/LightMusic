@@ -1,9 +1,9 @@
 package net.doge.ui.listeners;
 
 import net.doge.ui.PlayerFrame;
+import net.doge.ui.components.CustomScrollPane;
 import net.doge.ui.componentui.ScrollBarUI;
 
-import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -13,29 +13,27 @@ import java.awt.event.MouseEvent;
  * @Date 2021/1/10
  */
 public class ScrollPaneListener extends MouseAdapter {
-    private JScrollPane js;
+    private CustomScrollPane sp;
     private PlayerFrame f;
 
-    public ScrollPaneListener(JScrollPane js, PlayerFrame f) {
-        this.js = js;
+    public ScrollPaneListener(CustomScrollPane sp, PlayerFrame f) {
+        this.sp = sp;
         this.f = f;
-        js.getVerticalScrollBar().addMouseListener(this);
-        js.getViewport().getView().addMouseListener(this);
+        sp.getVerticalScrollBar().addMouseListener(this);
+        sp.getViewport().getView().addMouseListener(this);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        JScrollBar vs = js.getVerticalScrollBar();
-        ScrollBarUI ui = (ScrollBarUI) vs.getUI();
+        ScrollBarUI ui = (ScrollBarUI) sp.getVUI();
         ui.setActive(true);
-        vs.repaint();
+        sp.repaint();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        JScrollBar vs = js.getVerticalScrollBar();
-        ScrollBarUI ui = (ScrollBarUI) vs.getUI();
+        ScrollBarUI ui = (ScrollBarUI) sp.getVUI();
         ui.setActive(false);
-        vs.repaint();
+        sp.repaint();
     }
 }

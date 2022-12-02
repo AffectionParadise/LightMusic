@@ -31,7 +31,6 @@ public class ConfirmDialog extends JDialog {
     // 阴影大小像素
     private final int pixels = 10;
 
-    private Dimension size;
     private Font font = Fonts.NORMAL;
     private DialogButton yes = new DialogButton("");
     private DialogButton no = new DialogButton("");
@@ -120,9 +119,9 @@ public class ConfirmDialog extends JDialog {
         fl.setHgap(20);
         buttonPanel.setLayout(fl);
 
-        if (StringUtils.isNotEmpty(yes.getText())) buttonPanel.add(yes);
-        if (StringUtils.isNotEmpty(no.getText())) buttonPanel.add(no);
-        if (StringUtils.isNotEmpty(cancel.getText())) buttonPanel.add(cancel);
+        if (StringUtils.isNotEmpty(yes.getPlainText())) buttonPanel.add(yes);
+        if (StringUtils.isNotEmpty(no.getPlainText())) buttonPanel.add(no);
+        if (StringUtils.isNotEmpty(cancel.getPlainText())) buttonPanel.add(cancel);
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(messagePanel, BorderLayout.NORTH);
         mainPanel.add(checkPanel, BorderLayout.CENTER);
@@ -146,7 +145,6 @@ public class ConfirmDialog extends JDialog {
         add(mainPanel, BorderLayout.CENTER);
         pack();
 
-        size = getSize();
         updateBlur();
 
         setLocationRelativeTo(null);
