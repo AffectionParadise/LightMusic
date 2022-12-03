@@ -49,6 +49,9 @@ public class ManageCustomStyleDialog extends JDialog {
 
     // 关闭窗口图标
     private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
+    // 复选框图标
+    private ImageIcon uncheckedIcon = new ImageIcon(SimplePath.ICON_PATH + "unchecked.png");
+    private ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
 
     private CustomPanel centerPanel = new CustomPanel();
 
@@ -57,10 +60,15 @@ public class ManageCustomStyleDialog extends JDialog {
     private CustomPanel windowCtrlPanel = new CustomPanel();
     private CustomButton closeButton = new CustomButton(closeWindowIcon);
 
+    private CustomPanel northPanel = new CustomPanel();
+    private CustomPanel tipPanel = new CustomPanel();
     private CustomLabel tipLabel = new CustomLabel("应用、添加、编辑或删除主题（预设主题不能修改），主界面右下角可设置主题背景附加效果");
+    private CustomPanel customOnlyPanel = new CustomPanel();
+    private CustomCheckBox customOnlyCheckBox = new CustomCheckBox("仅显示自定义主题");
     private CustomList<UIStyle> styleList = new CustomList<>();
     private CustomScrollPane styleListScrollPane = new CustomScrollPane(styleList);
     private DefaultListModel<UIStyle> styleListModel = new DefaultListModel<>();
+    private DefaultListModel<UIStyle> emptyListModel = new DefaultListModel<>();
     private DialogButton allSelectButton;
     private DialogButton nonSelectButton;
     private DialogButton applyButton;
@@ -114,7 +122,7 @@ public class ManageCustomStyleDialog extends JDialog {
 
         setTitle(TITLE);
         setResizable(false);
-        setSize(800, 640);
+        setSize(800, 700);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -184,8 +192,24 @@ public class ManageCustomStyleDialog extends JDialog {
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         // 添加标签
         tipLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        tipLabel.setForeground(style.getLabelColor());
-        centerPanel.add(tipLabel, BorderLayout.NORTH);
+        Color labelColor = style.getLabelColor();
+        tipLabel.setForeground(labelColor);
+        tipPanel.add(tipLabel);
+        customOnlyCheckBox.setSelected(f.customOnly);
+        customOnlyCheckBox.setForeground(labelColor);
+        customOnlyCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
+        customOnlyCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
+        customOnlyCheckBox.addActionListener(e -> {
+            f.customOnly = customOnlyCheckBox.isSelected();
+            initStyles();
+        });
+        customOnlyPanel.add(customOnlyCheckBox);
+
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+        northPanel.add(tipPanel);
+        northPanel.add(customOnlyPanel);
+        centerPanel.add(northPanel, BorderLayout.NORTH);
         // 全选事件
         allSelectButton.addActionListener(e -> {
             // 选择开始到结束(包含)的节点！
@@ -237,7 +261,7 @@ public class ManageCustomStyleDialog extends JDialog {
                     if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
                     else customStyle.setStyleImgPath((String) results[1]);
                     // 添加风格菜单项、按钮组，但不切换风格
-                    f.addStyle(customStyle, false);
+                    f.addStyle(customStyle);
                     // 最后别忘了到列表中添加
                     styleListModel.addElement(customStyle);
                 }
@@ -441,9 +465,16 @@ public class ManageCustomStyleDialog extends JDialog {
     // 初始化数据
     void initStyles() {
         List<UIStyle> styles = f.getStyles();
-        for (UIStyle style : styles) {
-            styleListModel.addElement(style);
+        styleList.setModel(emptyListModel);
+        styleListModel.clear();
+        if (f.customOnly) {
+            styles.forEach(style -> {
+                if (style.isCustom()) styleListModel.addElement(style);
+            });
+        } else {
+            styles.forEach(style -> styleListModel.addElement(style));
         }
+        styleList.setModel(styleListModel);
     }
 
     void updateRenderer(JList list) {
@@ -461,6 +492,9 @@ public class ManageCustomStyleDialog extends JDialog {
         titleLabel.setForeground(labelColor);
         closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), buttonColor));
         tipLabel.setForeground(labelColor);
+        customOnlyCheckBox.setForeground(labelColor);
+        customOnlyCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
         allSelectButton.setForeColor(buttonColor);
         nonSelectButton.setForeColor(buttonColor);
         applyButton.setForeColor(buttonColor);

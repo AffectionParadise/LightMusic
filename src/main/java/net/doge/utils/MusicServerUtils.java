@@ -2256,202 +2256,212 @@ public class MusicServerUtils {
      * @return
      */
     public static void initMvTag() {
-        // 网易云 网易云 酷狗 QQ QQ QQ 好看 哔哩哔哩
-        Tags.mvTag.put("默认", new String[]{"全部", "全部", "0", "15", "7", "0", "", ""});
+        // 网易云 网易云 酷狗 QQ QQ QQ 酷我 好看 哔哩哔哩
+        Tags.mvTag.put("默认", new String[]{"全部", "全部", "0", "15", "7", "0", "236682871", "", ""});
 
-        Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "0", "", ""});
-        Tags.mvTag.put("内地", new String[]{"内地", "全部", "", "16", "7", "1", "", ""});
-        Tags.mvTag.put("港台", new String[]{"港台", "全部", "", "17", "7", "2", "", ""});
-        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "18", "7", "3", "", ""});
-        Tags.mvTag.put("韩国", new String[]{"韩国", "全部", "", "19", "7", "4", "", ""});
-        Tags.mvTag.put("日本", new String[]{"日本", "全部", "", "20", "7", "5", "", ""});
-        Tags.mvTag.put("官方版", new String[]{"", "官方版", "", "", "", "", "", ""});
-//        Tags.mvTag.put("原生", new String[]{"", "原生", "", "", "", "", "", ""});
-        Tags.mvTag.put("现场版", new String[]{"", "现场版", "", "", "", "", "", ""});
-        Tags.mvTag.put("网易出品", new String[]{"", "网易出品", "", "", "", "", "", ""});
+        Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "0", "", "", ""});
+        Tags.mvTag.put("内地", new String[]{"内地", "全部", "", "16", "7", "1", "", "", ""});
+        Tags.mvTag.put("港台", new String[]{"港台", "全部", "", "17", "7", "2", "", "", ""});
+        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "18", "7", "3", "", "", ""});
+        Tags.mvTag.put("韩国", new String[]{"韩国", "全部", "", "19", "7", "4", "", "", ""});
+        Tags.mvTag.put("日本", new String[]{"日本", "全部", "", "20", "7", "5", "", "", ""});
+        Tags.mvTag.put("官方版", new String[]{"", "官方版", "", "", "", "", "", "", ""});
+//        Tags.mvTag.put("原生", new String[]{"", "原生", "", "", "", "","", "", ""});
+        Tags.mvTag.put("现场版", new String[]{"", "现场版", "", "", "", "", "", "", ""});
+        Tags.mvTag.put("网易出品", new String[]{"", "网易出品", "", "", "", "", "", "", ""});
+
+        // 酷我
+        Tags.mvTag.put("华语", new String[]{"", "", "", "", "", "", "236682731", "", ""});
+        Tags.mvTag.put("日韩", new String[]{"", "", "", "", "", "", "236742444", "", ""});
+        Tags.mvTag.put("网络", new String[]{"", "", "", "", "", "", "236682773", "", ""});
+        Tags.mvTag.put("欧美", new String[]{"", "", "", "", "", "", "236682735", "", ""});
+        Tags.mvTag.put("现场", new String[]{"", "", "", "", "", "", "236742576", "", ""});
+        Tags.mvTag.put("热舞", new String[]{"", "", "", "", "", "", "236682777", "", ""});
+        Tags.mvTag.put("伤感", new String[]{"", "", "", "", "", "", "236742508", "", ""});
+        Tags.mvTag.put("剧情", new String[]{"", "", "", "", "", "", "236742578", "", ""});
 
         // 好看(部分标签与 b 站合并)
-        Tags.mvTag.put("影视", new String[]{"", "", "", "", "", "", "yingshi_new", "181"});
-        Tags.mvTag.put("音乐", new String[]{"", "", "", "", "", "", "yinyue_new", "3"});
-        Tags.mvTag.put("VLOG", new String[]{"", "", "", "", "", "", "yunying_vlog", ""});
-        Tags.mvTag.put("游戏", new String[]{"", "", "", "", "", "", "youxi_new", "4"});
-        Tags.mvTag.put("搞笑", new String[]{"", "", "", "", "", "", "gaoxiao_new", "138"});
-        Tags.mvTag.put("综艺", new String[]{"", "", "", "", "", "", "zongyi_new", "71"});
-        Tags.mvTag.put("娱乐", new String[]{"", "", "", "", "", "", "yule_new", "5"});
-        Tags.mvTag.put("动漫", new String[]{"", "", "", "", "", "", "dongman_new", ""});
-        Tags.mvTag.put("生活", new String[]{"", "", "", "", "", "", "shenghuo_new", "160"});
-        Tags.mvTag.put("广场舞", new String[]{"", "", "", "", "", "", "guangchuangwu_new", ""});
-        Tags.mvTag.put("美食", new String[]{"", "", "", "", "", "", "meishi_new", "211"});
-        Tags.mvTag.put("宠物", new String[]{"", "", "", "", "", "", "chongwu_new", ""});
-        Tags.mvTag.put("三农", new String[]{"", "", "", "", "", "", "sannong_new", "251"});
-        Tags.mvTag.put("军事", new String[]{"", "", "", "", "", "", "junshi_new", "179"});
-        Tags.mvTag.put("社会", new String[]{"", "", "", "", "", "", "shehui_new", "205"});
-        Tags.mvTag.put("体育", new String[]{"", "", "", "", "", "", "tiyu_new", ""});
-        Tags.mvTag.put("科技", new String[]{"", "", "", "", "", "", "keji_new", "188"});
-        Tags.mvTag.put("时尚", new String[]{"", "", "", "", "", "", "shishang_new", "155"});
-        Tags.mvTag.put("汽车", new String[]{"", "", "", "", "", "", "qiche_new", "223"});
-        Tags.mvTag.put("亲子", new String[]{"", "", "", "", "", "", "qinzi_new", ""});
-        Tags.mvTag.put("文化", new String[]{"", "", "", "", "", "", "wenhua_new", ""});
-        Tags.mvTag.put("旅游", new String[]{"", "", "", "", "", "", "lvyou_new", ""});
-        Tags.mvTag.put("秒懂", new String[]{"", "", "", "", "", "", "yunying_miaodong", ""});
+        Tags.mvTag.put("影视", new String[]{"", "", "", "", "", "", "", "yingshi_new", "181"});
+        Tags.mvTag.put("音乐", new String[]{"", "", "", "", "", "", "", "yinyue_new", "3"});
+        Tags.mvTag.put("VLOG", new String[]{"", "", "", "", "", "", "", "yunying_vlog", ""});
+        Tags.mvTag.put("游戏", new String[]{"", "", "", "", "", "", "", "youxi_new", "4"});
+        Tags.mvTag.put("搞笑", new String[]{"", "", "", "", "", "", "", "gaoxiao_new", "138"});
+        Tags.mvTag.put("综艺", new String[]{"", "", "", "", "", "", "", "zongyi_new", "71"});
+        Tags.mvTag.put("娱乐", new String[]{"", "", "", "", "", "", "", "yule_new", "5"});
+        Tags.mvTag.put("动漫", new String[]{"", "", "", "", "", "", "", "dongman_new", ""});
+        Tags.mvTag.put("生活", new String[]{"", "", "", "", "", "", "", "shenghuo_new", "160"});
+        Tags.mvTag.put("广场舞", new String[]{"", "", "", "", "", "", "", "guangchuangwu_new", ""});
+        Tags.mvTag.put("美食", new String[]{"", "", "", "", "", "", "", "meishi_new", "211"});
+        Tags.mvTag.put("宠物", new String[]{"", "", "", "", "", "", "", "chongwu_new", ""});
+        Tags.mvTag.put("三农", new String[]{"", "", "", "", "", "", "", "sannong_new", "251"});
+        Tags.mvTag.put("军事", new String[]{"", "", "", "", "", "", "", "junshi_new", "179"});
+        Tags.mvTag.put("社会", new String[]{"", "", "", "", "", "", "", "shehui_new", "205"});
+        Tags.mvTag.put("体育", new String[]{"", "", "", "", "", "", "", "tiyu_new", ""});
+        Tags.mvTag.put("科技", new String[]{"", "", "", "", "", "", "", "keji_new", "188"});
+        Tags.mvTag.put("时尚", new String[]{"", "", "", "", "", "", "", "shishang_new", "155"});
+        Tags.mvTag.put("汽车", new String[]{"", "", "", "", "", "", "", "qiche_new", "223"});
+        Tags.mvTag.put("亲子", new String[]{"", "", "", "", "", "", "", "qinzi_new", ""});
+        Tags.mvTag.put("文化", new String[]{"", "", "", "", "", "", "", "wenhua_new", ""});
+        Tags.mvTag.put("旅游", new String[]{"", "", "", "", "", "", "", "lvyou_new", ""});
+        Tags.mvTag.put("秒懂", new String[]{"", "", "", "", "", "", "", "yunying_miaodong", ""});
 
         // 哔哩哔哩
-        Tags.mvTag.put("动画", new String[]{"", "", "", "", "", "", "", "1"});
-        Tags.mvTag.put("MAD·AMV", new String[]{"", "", "", "", "", "", "", "24"});
-        Tags.mvTag.put("MMD·3D", new String[]{"", "", "", "", "", "", "", "25"});
-        Tags.mvTag.put("短片·手书·配音", new String[]{"", "", "", "", "", "", "", "47"});
-        Tags.mvTag.put("手办·模玩", new String[]{"", "", "", "", "", "", "", "210"});
-        Tags.mvTag.put("特摄", new String[]{"", "", "", "", "", "", "", "86"});
-        Tags.mvTag.put("综合", new String[]{"", "", "", "", "", "", "", "27"});
-        Tags.mvTag.put("番剧", new String[]{"", "", "", "", "", "", "", "13"});
-        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "51"});
-        Tags.mvTag.put("官方延伸", new String[]{"", "", "", "", "", "", "", "152"});
-        Tags.mvTag.put("完结动画", new String[]{"", "", "", "", "", "", "", "32"});
-        Tags.mvTag.put("连载动画", new String[]{"", "", "", "", "", "", "", "33"});
-        Tags.mvTag.put("国创", new String[]{"", "", "", "", "", "", "", "167"});
-        Tags.mvTag.put("国产动画", new String[]{"", "", "", "", "", "", "", "153"});
-        Tags.mvTag.put("国产原创相关", new String[]{"", "", "", "", "", "", "", "168"});
-        Tags.mvTag.put("布袋戏", new String[]{"", "", "", "", "", "", "", "169"});
-        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "170"});
-        Tags.mvTag.put("动态漫·广播剧", new String[]{"", "", "", "", "", "", "", "195"});
-//        Tags.mvTag.put("音乐", new String[]{"", "", "", "", "", "", "", "3"});
-        Tags.mvTag.put("原创音乐", new String[]{"", "", "", "", "", "", "", "28"});
-        Tags.mvTag.put("翻唱", new String[]{"", "", "", "", "", "", "", "31"});
-        Tags.mvTag.put("VOCALOID·UTAU", new String[]{"", "", "", "", "", "", "", "30"});
-//        Tags.mvTag.put("电音 (已下线)", new String[]{"", "", "", "", "", "", "", "194"});
-        Tags.mvTag.put("演奏", new String[]{"", "", "", "", "", "", "", "59"});
-        Tags.mvTag.put("MV", new String[]{"", "", "", "", "", "", "", "193"});
-        Tags.mvTag.put("音乐现场", new String[]{"", "", "", "", "", "", "", "29"});
-        Tags.mvTag.put("音乐综合", new String[]{"", "", "", "", "", "", "", "130"});
-        Tags.mvTag.put("乐评盘点", new String[]{"", "", "", "", "", "", "", "243"});
-        Tags.mvTag.put("音乐教学", new String[]{"", "", "", "", "", "", "", "244"});
-        Tags.mvTag.put("舞蹈", new String[]{"", "", "", "", "", "", "", "129"});
-        Tags.mvTag.put("宅舞", new String[]{"", "", "", "", "", "", "", "20"});
-        Tags.mvTag.put("舞蹈综合", new String[]{"", "", "", "", "", "", "", "154"});
-        Tags.mvTag.put("舞蹈教程", new String[]{"", "", "", "", "", "", "", "156"});
-        Tags.mvTag.put("街舞", new String[]{"", "", "", "", "", "", "", "198"});
-        Tags.mvTag.put("明星舞蹈", new String[]{"", "", "", "", "", "", "", "199"});
-        Tags.mvTag.put("中国舞", new String[]{"", "", "", "", "", "", "", "200"});
-//        Tags.mvTag.put("游戏", new String[]{"", "", "", "", "", "", "", "4"});
-        Tags.mvTag.put("单机游戏", new String[]{"", "", "", "", "", "", "", "17"});
-        Tags.mvTag.put("电子竞技", new String[]{"", "", "", "", "", "", "", "171"});
-        Tags.mvTag.put("手机游戏", new String[]{"", "", "", "", "", "", "", "172"});
-        Tags.mvTag.put("网络游戏", new String[]{"", "", "", "", "", "", "", "65"});
-        Tags.mvTag.put("桌游棋牌", new String[]{"", "", "", "", "", "", "", "173"});
-        Tags.mvTag.put("GMV", new String[]{"", "", "", "", "", "", "", "121"});
-        Tags.mvTag.put("音游", new String[]{"", "", "", "", "", "", "", "136"});
-        Tags.mvTag.put("Mugen", new String[]{"", "", "", "", "", "", "", "19"});
-        Tags.mvTag.put("知识", new String[]{"", "", "", "", "", "", "", "36"});
-        Tags.mvTag.put("科学科普", new String[]{"", "", "", "", "", "", "", "201"});
-        Tags.mvTag.put("社科·法律·心理", new String[]{"", "", "", "", "", "", "", "124"});
-        Tags.mvTag.put("人文历史", new String[]{"", "", "", "", "", "", "", "228"});
-        Tags.mvTag.put("财经商业", new String[]{"", "", "", "", "", "", "", "207"});
-        Tags.mvTag.put("校园学习", new String[]{"", "", "", "", "", "", "", "208"});
-        Tags.mvTag.put("职业职场", new String[]{"", "", "", "", "", "", "", "209"});
-        Tags.mvTag.put("设计·创意", new String[]{"", "", "", "", "", "", "", "229"});
-        Tags.mvTag.put("野生技术协会", new String[]{"", "", "", "", "", "", "", "122"});
-//        Tags.mvTag.put("演讲·公开课 (已下线)", new String[]{"", "", "", "", "", "", "", "39"});
-//        Tags.mvTag.put("星海 (已下线)", new String[]{"", "", "", "", "", "", "", "96"});
-//        Tags.mvTag.put("机械 (已下线)", new String[]{"", "", "", "", "", "", "", "98"});
-//        Tags.mvTag.put("科技", new String[]{"", "", "", "", "", "", "", "188"});
-        Tags.mvTag.put("数码", new String[]{"", "", "", "", "", "", "", "95"});
-        Tags.mvTag.put("软件应用", new String[]{"", "", "", "", "", "", "", "230"});
-        Tags.mvTag.put("计算机技术", new String[]{"", "", "", "", "", "", "", "231"});
-        Tags.mvTag.put("工业·工程·机械", new String[]{"", "", "", "", "", "", "", "232"});
-        Tags.mvTag.put("极客DIY", new String[]{"", "", "", "", "", "", "", "233"});
-//        Tags.mvTag.put("电脑装机 (已下线)", new String[]{"", "", "", "", "", "", "", "189"});
-//        Tags.mvTag.put("摄影摄像 (已下线)", new String[]{"", "", "", "", "", "", "", "190"});
-//        Tags.mvTag.put("影音智能 (已下线)", new String[]{"", "", "", "", "", "", "", "191"});
-        Tags.mvTag.put("运动", new String[]{"", "", "", "", "", "", "", "234"});
-        Tags.mvTag.put("篮球", new String[]{"", "", "", "", "", "", "", "235"});
-        Tags.mvTag.put("足球", new String[]{"", "", "", "", "", "", "", "249"});
-        Tags.mvTag.put("健身", new String[]{"", "", "", "", "", "", "", "164"});
-        Tags.mvTag.put("竞技体育", new String[]{"", "", "", "", "", "", "", "236"});
-        Tags.mvTag.put("运动文化", new String[]{"", "", "", "", "", "", "", "237"});
-        Tags.mvTag.put("运动综合", new String[]{"", "", "", "", "", "", "", "238"});
-//        Tags.mvTag.put("汽车", new String[]{"", "", "", "", "", "", "", "223"});
-        Tags.mvTag.put("赛车", new String[]{"", "", "", "", "", "", "", "245"});
-        Tags.mvTag.put("改装玩车", new String[]{"", "", "", "", "", "", "", "246"});
-        Tags.mvTag.put("新能源车", new String[]{"", "", "", "", "", "", "", "247"});
-        Tags.mvTag.put("房车", new String[]{"", "", "", "", "", "", "", "248"});
-        Tags.mvTag.put("摩托车", new String[]{"", "", "", "", "", "", "", "240"});
-        Tags.mvTag.put("购车攻略", new String[]{"", "", "", "", "", "", "", "227"});
-        Tags.mvTag.put("汽车生活", new String[]{"", "", "", "", "", "", "", "176"});
-//        Tags.mvTag.put("汽车文化 (已下线)", new String[]{"", "", "", "", "", "", "", "224"});
-//        Tags.mvTag.put("汽车极客 (已下线)", new String[]{"", "", "", "", "", "", "", "225"});
-//        Tags.mvTag.put("智能出行 (已下线)", new String[]{"", "", "", "", "", "", "", "226"});
-//        Tags.mvTag.put("生活", new String[]{"", "", "", "", "", "", "", "160"});
-//        Tags.mvTag.put("搞笑", new String[]{"", "", "", "", "", "", "", "138"});
-        Tags.mvTag.put("出行", new String[]{"", "", "", "", "", "", "", "250"});
-//        Tags.mvTag.put("三农", new String[]{"", "", "", "", "", "", "", "251"});
-        Tags.mvTag.put("家居房产", new String[]{"", "", "", "", "", "", "", "239"});
-        Tags.mvTag.put("手工", new String[]{"", "", "", "", "", "", "", "161"});
-        Tags.mvTag.put("绘画", new String[]{"", "", "", "", "", "", "", "162"});
-        Tags.mvTag.put("日常", new String[]{"", "", "", "", "", "", "", "21"});
-//        Tags.mvTag.put("美食圈 (重定向)", new String[]{"", "", "", "", "", "", "", "76"});
-//        Tags.mvTag.put("动物圈 (重定向)", new String[]{"", "", "", "", "", "", "", "75"});
-//        Tags.mvTag.put("运动 (重定向)", new String[]{"", "", "", "", "", "", "", "163"});
-//        Tags.mvTag.put("汽车 (重定向)", new String[]{"", "", "", "", "", "", "", "176"});
-//        Tags.mvTag.put("其他 (已下线)", new String[]{"", "", "", "", "", "", "", "174"});
-//        Tags.mvTag.put("美食", new String[]{"", "", "", "", "", "", "", "211"});
-        Tags.mvTag.put("美食制作", new String[]{"", "", "", "", "", "", "", "76"});
-        Tags.mvTag.put("美食侦探", new String[]{"", "", "", "", "", "", "", "212"});
-        Tags.mvTag.put("美食测评", new String[]{"", "", "", "", "", "", "", "213"});
-        Tags.mvTag.put("田园美食", new String[]{"", "", "", "", "", "", "", "214"});
-        Tags.mvTag.put("美食记录", new String[]{"", "", "", "", "", "", "", "215"});
-        Tags.mvTag.put("动物圈", new String[]{"", "", "", "", "", "", "", "217"});
-        Tags.mvTag.put("喵星人", new String[]{"", "", "", "", "", "", "", "218"});
-        Tags.mvTag.put("汪星人", new String[]{"", "", "", "", "", "", "", "219"});
-        Tags.mvTag.put("野生动物", new String[]{"", "", "", "", "", "", "", "221"});
-        Tags.mvTag.put("爬宠", new String[]{"", "", "", "", "", "", "", "222"});
-        Tags.mvTag.put("大熊猫", new String[]{"", "", "", "", "", "", "", "220"});
-        Tags.mvTag.put("动物综合", new String[]{"", "", "", "", "", "", "", "75"});
-        Tags.mvTag.put("鬼畜", new String[]{"", "", "", "", "", "", "", "119"});
-        Tags.mvTag.put("鬼畜调教", new String[]{"", "", "", "", "", "", "", "22"});
-        Tags.mvTag.put("音MAD", new String[]{"", "", "", "", "", "", "", "26"});
-        Tags.mvTag.put("人力VOCALOID", new String[]{"", "", "", "", "", "", "", "126"});
-        Tags.mvTag.put("鬼畜剧场", new String[]{"", "", "", "", "", "", "", "216"});
-        Tags.mvTag.put("教程演示", new String[]{"", "", "", "", "", "", "", "127"});
-//        Tags.mvTag.put("时尚", new String[]{"", "", "", "", "", "", "", "155"});
-        Tags.mvTag.put("美妆护肤", new String[]{"", "", "", "", "", "", "", "157"});
-        Tags.mvTag.put("仿妆cos", new String[]{"", "", "", "", "", "", "", "252"});
-        Tags.mvTag.put("穿搭", new String[]{"", "", "", "", "", "", "", "158"});
-//        Tags.mvTag.put("健身 (重定向)", new String[]{"", "", "", "", "", "", "", "164"});
-        Tags.mvTag.put("时尚潮流", new String[]{"", "", "", "", "", "", "", "159"});
-//        Tags.mvTag.put("风尚标 (已下线)", new String[]{"", "", "", "", "", "", "", "192"});
-        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "202"});
-        Tags.mvTag.put("热点", new String[]{"", "", "", "", "", "", "", "203"});
-        Tags.mvTag.put("环球", new String[]{"", "", "", "", "", "", "", "204"});
-//        Tags.mvTag.put("社会", new String[]{"", "", "", "", "", "", "", "205"});
-        Tags.mvTag.put("综合", new String[]{"", "", "", "", "", "", "", "206"});
-//        Tags.mvTag.put("广告", new String[]{"", "", "", "", "", "", "", "165"});
-//        Tags.mvTag.put("广告 (已下线)", new String[]{"", "", "", "", "", "", "", "166"});
-//        Tags.mvTag.put("娱乐", new String[]{"", "", "", "", "", "", "", "5"});
-//        Tags.mvTag.put("综艺", new String[]{"", "", "", "", "", "", "", "71"});
-        Tags.mvTag.put("娱乐杂谈", new String[]{"", "", "", "", "", "", "", "241"});
-        Tags.mvTag.put("粉丝创作", new String[]{"", "", "", "", "", "", "", "242"});
-        Tags.mvTag.put("明星综合", new String[]{"", "", "", "", "", "", "", "137"});
-//        Tags.mvTag.put("Korea相关 (已下线)", new String[]{"", "", "", "", "", "", "", "131"});
-//        Tags.mvTag.put("影视", new String[]{"", "", "", "", "", "", "", "181"});
-        Tags.mvTag.put("影视杂谈", new String[]{"", "", "", "", "", "", "", "182"});
-        Tags.mvTag.put("影视剪辑", new String[]{"", "", "", "", "", "", "", "183"});
-        Tags.mvTag.put("小剧场", new String[]{"", "", "", "", "", "", "", "85"});
-        Tags.mvTag.put("预告·资讯", new String[]{"", "", "", "", "", "", "", "184"});
-        Tags.mvTag.put("纪录片", new String[]{"", "", "", "", "", "", "", "177"});
-        Tags.mvTag.put("人文·历史", new String[]{"", "", "", "", "", "", "", "37"});
-        Tags.mvTag.put("科学·探索·自然", new String[]{"", "", "", "", "", "", "", "178"});
-//        Tags.mvTag.put("军事", new String[]{"", "", "", "", "", "", "", "179"});
-        Tags.mvTag.put("社会·美食·旅行", new String[]{"", "", "", "", "", "", "", "180"});
-        Tags.mvTag.put("电影", new String[]{"", "", "", "", "", "", "", "23"});
-        Tags.mvTag.put("华语电影", new String[]{"", "", "", "", "", "", "", "147"});
-        Tags.mvTag.put("欧美电影", new String[]{"", "", "", "", "", "", "", "145"});
-        Tags.mvTag.put("日本电影", new String[]{"", "", "", "", "", "", "", "146"});
-        Tags.mvTag.put("其他国家", new String[]{"", "", "", "", "", "", "", "83"});
-        Tags.mvTag.put("电视剧", new String[]{"", "", "", "", "", "", "", "11"});
-        Tags.mvTag.put("国产剧", new String[]{"", "", "", "", "", "", "", "185"});
-        Tags.mvTag.put("海外剧", new String[]{"", "", "", "", "", "", "", "187"});
+        Tags.mvTag.put("动画", new String[]{"", "", "", "", "", "", "", "", "1"});
+        Tags.mvTag.put("MAD·AMV", new String[]{"", "", "", "", "", "", "", "", "24"});
+        Tags.mvTag.put("MMD·3D", new String[]{"", "", "", "", "", "", "", "", "25"});
+        Tags.mvTag.put("短片·手书·配音", new String[]{"", "", "", "", "", "", "", "", "47"});
+        Tags.mvTag.put("手办·模玩", new String[]{"", "", "", "", "", "", "", "", "210"});
+        Tags.mvTag.put("特摄", new String[]{"", "", "", "", "", "", "", "", "86"});
+        Tags.mvTag.put("综合", new String[]{"", "", "", "", "", "", "", "", "27"});
+        Tags.mvTag.put("番剧", new String[]{"", "", "", "", "", "", "", "", "13"});
+        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "", "51"});
+        Tags.mvTag.put("官方延伸", new String[]{"", "", "", "", "", "", "", "", "152"});
+        Tags.mvTag.put("完结动画", new String[]{"", "", "", "", "", "", "", "", "32"});
+        Tags.mvTag.put("连载动画", new String[]{"", "", "", "", "", "", "", "", "33"});
+        Tags.mvTag.put("国创", new String[]{"", "", "", "", "", "", "", "", "167"});
+        Tags.mvTag.put("国产动画", new String[]{"", "", "", "", "", "", "", "", "153"});
+        Tags.mvTag.put("国产原创相关", new String[]{"", "", "", "", "", "", "", "", "168"});
+        Tags.mvTag.put("布袋戏", new String[]{"", "", "", "", "", "", "", "", "169"});
+        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "", "170"});
+        Tags.mvTag.put("动态漫·广播剧", new String[]{"", "", "", "", "", "", "", "", "195"});
+//        Tags.mvTag.put("音乐", new String[]{"", "", "", "", "", "","", "", "3"});
+        Tags.mvTag.put("原创音乐", new String[]{"", "", "", "", "", "", "", "", "28"});
+        Tags.mvTag.put("翻唱", new String[]{"", "", "", "", "", "", "", "", "31"});
+        Tags.mvTag.put("VOCALOID·UTAU", new String[]{"", "", "", "", "", "", "", "", "30"});
+//        Tags.mvTag.put("电音 (已下线)", new String[]{"", "", "", "", "", "","", "", "194"});
+        Tags.mvTag.put("演奏", new String[]{"", "", "", "", "", "", "", "", "59"});
+        Tags.mvTag.put("MV", new String[]{"", "", "", "", "", "", "", "", "193"});
+        Tags.mvTag.put("音乐现场", new String[]{"", "", "", "", "", "", "", "", "29"});
+        Tags.mvTag.put("音乐综合", new String[]{"", "", "", "", "", "", "", "", "130"});
+        Tags.mvTag.put("乐评盘点", new String[]{"", "", "", "", "", "", "", "", "243"});
+        Tags.mvTag.put("音乐教学", new String[]{"", "", "", "", "", "", "", "", "244"});
+        Tags.mvTag.put("舞蹈", new String[]{"", "", "", "", "", "", "", "", "129"});
+        Tags.mvTag.put("宅舞", new String[]{"", "", "", "", "", "", "", "", "20"});
+        Tags.mvTag.put("舞蹈综合", new String[]{"", "", "", "", "", "", "", "", "154"});
+        Tags.mvTag.put("舞蹈教程", new String[]{"", "", "", "", "", "", "", "", "156"});
+        Tags.mvTag.put("街舞", new String[]{"", "", "", "", "", "", "", "", "198"});
+        Tags.mvTag.put("明星舞蹈", new String[]{"", "", "", "", "", "", "", "", "199"});
+        Tags.mvTag.put("中国舞", new String[]{"", "", "", "", "", "", "", "", "200"});
+//        Tags.mvTag.put("游戏", new String[]{"", "", "", "", "", "","", "", "4"});
+        Tags.mvTag.put("单机游戏", new String[]{"", "", "", "", "", "", "", "", "17"});
+        Tags.mvTag.put("电子竞技", new String[]{"", "", "", "", "", "", "", "", "171"});
+        Tags.mvTag.put("手机游戏", new String[]{"", "", "", "", "", "", "", "", "172"});
+        Tags.mvTag.put("网络游戏", new String[]{"", "", "", "", "", "", "", "", "65"});
+        Tags.mvTag.put("桌游棋牌", new String[]{"", "", "", "", "", "", "", "", "173"});
+        Tags.mvTag.put("GMV", new String[]{"", "", "", "", "", "", "", "", "121"});
+        Tags.mvTag.put("音游", new String[]{"", "", "", "", "", "", "", "", "136"});
+        Tags.mvTag.put("Mugen", new String[]{"", "", "", "", "", "", "", "", "19"});
+        Tags.mvTag.put("知识", new String[]{"", "", "", "", "", "", "", "", "36"});
+        Tags.mvTag.put("科学科普", new String[]{"", "", "", "", "", "", "", "", "201"});
+        Tags.mvTag.put("社科·法律·心理", new String[]{"", "", "", "", "", "", "", "", "124"});
+        Tags.mvTag.put("人文历史", new String[]{"", "", "", "", "", "", "", "", "228"});
+        Tags.mvTag.put("财经商业", new String[]{"", "", "", "", "", "", "", "", "207"});
+        Tags.mvTag.put("校园学习", new String[]{"", "", "", "", "", "", "", "", "208"});
+        Tags.mvTag.put("职业职场", new String[]{"", "", "", "", "", "", "", "", "209"});
+        Tags.mvTag.put("设计·创意", new String[]{"", "", "", "", "", "", "", "", "229"});
+        Tags.mvTag.put("野生技术协会", new String[]{"", "", "", "", "", "", "", "", "122"});
+//        Tags.mvTag.put("演讲·公开课 (已下线)", new String[]{"", "", "", "", "", "","", "", "39"});
+//        Tags.mvTag.put("星海 (已下线)", new String[]{"", "", "", "", "", "","", "", "96"});
+//        Tags.mvTag.put("机械 (已下线)", new String[]{"", "", "", "", "", "","", "", "98"});
+//        Tags.mvTag.put("科技", new String[]{"", "", "", "", "", "","", "", "188"});
+        Tags.mvTag.put("数码", new String[]{"", "", "", "", "", "", "", "", "95"});
+        Tags.mvTag.put("软件应用", new String[]{"", "", "", "", "", "", "", "", "230"});
+        Tags.mvTag.put("计算机技术", new String[]{"", "", "", "", "", "", "", "", "231"});
+        Tags.mvTag.put("工业·工程·机械", new String[]{"", "", "", "", "", "", "", "", "232"});
+        Tags.mvTag.put("极客DIY", new String[]{"", "", "", "", "", "", "", "", "233"});
+//        Tags.mvTag.put("电脑装机 (已下线)", new String[]{"", "", "", "", "", "","", "", "189"});
+//        Tags.mvTag.put("摄影摄像 (已下线)", new String[]{"", "", "", "", "", "","", "", "190"});
+//        Tags.mvTag.put("影音智能 (已下线)", new String[]{"", "", "", "", "", "","", "", "191"});
+        Tags.mvTag.put("运动", new String[]{"", "", "", "", "", "", "", "", "234"});
+        Tags.mvTag.put("篮球", new String[]{"", "", "", "", "", "", "", "", "235"});
+        Tags.mvTag.put("足球", new String[]{"", "", "", "", "", "", "", "", "249"});
+        Tags.mvTag.put("健身", new String[]{"", "", "", "", "", "", "", "", "164"});
+        Tags.mvTag.put("竞技体育", new String[]{"", "", "", "", "", "", "", "", "236"});
+        Tags.mvTag.put("运动文化", new String[]{"", "", "", "", "", "", "", "", "237"});
+        Tags.mvTag.put("运动综合", new String[]{"", "", "", "", "", "", "", "", "238"});
+//        Tags.mvTag.put("汽车", new String[]{"", "", "", "", "", "","", "", "223"});
+        Tags.mvTag.put("赛车", new String[]{"", "", "", "", "", "", "", "", "245"});
+        Tags.mvTag.put("改装玩车", new String[]{"", "", "", "", "", "", "", "", "246"});
+        Tags.mvTag.put("新能源车", new String[]{"", "", "", "", "", "", "", "", "247"});
+        Tags.mvTag.put("房车", new String[]{"", "", "", "", "", "", "", "", "248"});
+        Tags.mvTag.put("摩托车", new String[]{"", "", "", "", "", "", "", "", "240"});
+        Tags.mvTag.put("购车攻略", new String[]{"", "", "", "", "", "", "", "", "227"});
+        Tags.mvTag.put("汽车生活", new String[]{"", "", "", "", "", "", "", "", "176"});
+//        Tags.mvTag.put("汽车文化 (已下线)", new String[]{"", "", "", "", "", "","", "", "224"});
+//        Tags.mvTag.put("汽车极客 (已下线)", new String[]{"", "", "", "", "", "","", "", "225"});
+//        Tags.mvTag.put("智能出行 (已下线)", new String[]{"", "", "", "", "", "","", "", "226"});
+//        Tags.mvTag.put("生活", new String[]{"", "", "", "", "", "","", "", "160"});
+//        Tags.mvTag.put("搞笑", new String[]{"", "", "", "", "", "","", "", "138"});
+        Tags.mvTag.put("出行", new String[]{"", "", "", "", "", "", "", "", "250"});
+//        Tags.mvTag.put("三农", new String[]{"", "", "", "", "", "","", "", "251"});
+        Tags.mvTag.put("家居房产", new String[]{"", "", "", "", "", "", "", "", "239"});
+        Tags.mvTag.put("手工", new String[]{"", "", "", "", "", "", "", "", "161"});
+        Tags.mvTag.put("绘画", new String[]{"", "", "", "", "", "", "", "", "162"});
+        Tags.mvTag.put("日常", new String[]{"", "", "", "", "", "", "", "", "21"});
+//        Tags.mvTag.put("美食圈 (重定向)", new String[]{"", "", "", "", "", "","", "", "76"});
+//        Tags.mvTag.put("动物圈 (重定向)", new String[]{"", "", "", "", "", "","", "", "75"});
+//        Tags.mvTag.put("运动 (重定向)", new String[]{"", "", "", "", "", "","", "", "163"});
+//        Tags.mvTag.put("汽车 (重定向)", new String[]{"", "", "", "", "", "","", "", "176"});
+//        Tags.mvTag.put("其他 (已下线)", new String[]{"", "", "", "", "", "","", "", "174"});
+//        Tags.mvTag.put("美食", new String[]{"", "", "", "", "", "","", "", "211"});
+        Tags.mvTag.put("美食制作", new String[]{"", "", "", "", "", "", "", "", "76"});
+        Tags.mvTag.put("美食侦探", new String[]{"", "", "", "", "", "", "", "", "212"});
+        Tags.mvTag.put("美食测评", new String[]{"", "", "", "", "", "", "", "", "213"});
+        Tags.mvTag.put("田园美食", new String[]{"", "", "", "", "", "", "", "", "214"});
+        Tags.mvTag.put("美食记录", new String[]{"", "", "", "", "", "", "", "", "215"});
+        Tags.mvTag.put("动物圈", new String[]{"", "", "", "", "", "", "", "", "217"});
+        Tags.mvTag.put("喵星人", new String[]{"", "", "", "", "", "", "", "", "218"});
+        Tags.mvTag.put("汪星人", new String[]{"", "", "", "", "", "", "", "", "219"});
+        Tags.mvTag.put("野生动物", new String[]{"", "", "", "", "", "", "", "", "221"});
+        Tags.mvTag.put("爬宠", new String[]{"", "", "", "", "", "", "", "", "222"});
+        Tags.mvTag.put("大熊猫", new String[]{"", "", "", "", "", "", "", "", "220"});
+        Tags.mvTag.put("动物综合", new String[]{"", "", "", "", "", "", "", "", "75"});
+        Tags.mvTag.put("鬼畜", new String[]{"", "", "", "", "", "", "", "", "119"});
+        Tags.mvTag.put("鬼畜调教", new String[]{"", "", "", "", "", "", "", "", "22"});
+        Tags.mvTag.put("音MAD", new String[]{"", "", "", "", "", "", "", "", "26"});
+        Tags.mvTag.put("人力VOCALOID", new String[]{"", "", "", "", "", "", "", "", "126"});
+        Tags.mvTag.put("鬼畜剧场", new String[]{"", "", "", "", "", "", "", "", "216"});
+        Tags.mvTag.put("教程演示", new String[]{"", "", "", "", "", "", "", "", "127"});
+//        Tags.mvTag.put("时尚", new String[]{"", "", "", "", "", "","", "", "155"});
+        Tags.mvTag.put("美妆护肤", new String[]{"", "", "", "", "", "", "", "", "157"});
+        Tags.mvTag.put("仿妆cos", new String[]{"", "", "", "", "", "", "", "", "252"});
+        Tags.mvTag.put("穿搭", new String[]{"", "", "", "", "", "", "", "", "158"});
+//        Tags.mvTag.put("健身 (重定向)", new String[]{"", "", "", "", "", "","", "", "164"});
+        Tags.mvTag.put("时尚潮流", new String[]{"", "", "", "", "", "", "", "", "159"});
+//        Tags.mvTag.put("风尚标 (已下线)", new String[]{"", "", "", "", "", "","", "", "192"});
+        Tags.mvTag.put("资讯", new String[]{"", "", "", "", "", "", "", "", "202"});
+        Tags.mvTag.put("热点", new String[]{"", "", "", "", "", "", "", "", "203"});
+        Tags.mvTag.put("环球", new String[]{"", "", "", "", "", "", "", "", "204"});
+//        Tags.mvTag.put("社会", new String[]{"", "", "", "", "", "","", "", "205"});
+        Tags.mvTag.put("综合", new String[]{"", "", "", "", "", "", "", "", "206"});
+//        Tags.mvTag.put("广告", new String[]{"", "", "", "", "", "","", "", "165"});
+//        Tags.mvTag.put("广告 (已下线)", new String[]{"", "", "", "", "", "","", "", "166"});
+//        Tags.mvTag.put("娱乐", new String[]{"", "", "", "", "", "","", "", "5"});
+//        Tags.mvTag.put("综艺", new String[]{"", "", "", "", "", "","", "", "71"});
+        Tags.mvTag.put("娱乐杂谈", new String[]{"", "", "", "", "", "", "", "", "241"});
+        Tags.mvTag.put("粉丝创作", new String[]{"", "", "", "", "", "", "", "", "242"});
+        Tags.mvTag.put("明星综合", new String[]{"", "", "", "", "", "", "", "", "137"});
+//        Tags.mvTag.put("Korea相关 (已下线)", new String[]{"", "", "", "", "", "","", "", "131"});
+//        Tags.mvTag.put("影视", new String[]{"", "", "", "", "", "","", "", "181"});
+        Tags.mvTag.put("影视杂谈", new String[]{"", "", "", "", "", "", "", "", "182"});
+        Tags.mvTag.put("影视剪辑", new String[]{"", "", "", "", "", "", "", "", "183"});
+        Tags.mvTag.put("小剧场", new String[]{"", "", "", "", "", "", "", "", "85"});
+        Tags.mvTag.put("预告·资讯", new String[]{"", "", "", "", "", "", "", "", "184"});
+        Tags.mvTag.put("纪录片", new String[]{"", "", "", "", "", "", "", "", "177"});
+        Tags.mvTag.put("人文·历史", new String[]{"", "", "", "", "", "", "", "", "37"});
+        Tags.mvTag.put("科学·探索·自然", new String[]{"", "", "", "", "", "", "", "", "178"});
+//        Tags.mvTag.put("军事", new String[]{"", "", "", "", "", "","", "", "179"});
+        Tags.mvTag.put("社会·美食·旅行", new String[]{"", "", "", "", "", "", "", "", "180"});
+        Tags.mvTag.put("电影", new String[]{"", "", "", "", "", "", "", "", "23"});
+        Tags.mvTag.put("华语电影", new String[]{"", "", "", "", "", "", "", "", "147"});
+        Tags.mvTag.put("欧美电影", new String[]{"", "", "", "", "", "", "", "", "145"});
+        Tags.mvTag.put("日本电影", new String[]{"", "", "", "", "", "", "", "", "146"});
+        Tags.mvTag.put("其他国家", new String[]{"", "", "", "", "", "", "", "", "83"});
+        Tags.mvTag.put("电视剧", new String[]{"", "", "", "", "", "", "", "", "11"});
+        Tags.mvTag.put("国产剧", new String[]{"", "", "", "", "", "", "", "", "185"});
+        Tags.mvTag.put("海外剧", new String[]{"", "", "", "", "", "", "", "", "187"});
 
-        final int c = 8;
+        final int c = 9;
         // 酷狗
         // MV 标签
         Runnable initMvTagKg = () -> {
@@ -2523,14 +2533,13 @@ public class MusicServerUtils {
     private static final String EXCLUSIVE_MV_API
             = prefix + "/mv/exclusive/rcmd?offset=%s&limit=%s";
     // 推荐 MV API (酷狗)
-    private static final String RECOMMEND_MV_KG_API
-            = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
+    private static final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
     // 推荐 MV API (QQ)
-    private static final String RECOMMEND_MV_QQ_API
-            = prefixQQ33 + "/mv/list?area=%s&version=%s&pageNo=%s&pageSize=%s";
+    private static final String RECOMMEND_MV_QQ_API = prefixQQ33 + "/mv/list?area=%s&version=%s&pageNo=%s&pageSize=%s";
     // 最新 MV API (QQ)
-    private static final String NEW_MV_QQ_API
-            = prefixQQ33 + "/new/mv?type=%s";
+    private static final String NEW_MV_QQ_API = prefixQQ33 + "/new/mv?type=%s";
+    // 推荐 MV API (酷我)
+    private static final String RECOMMEND_MV_KW_API = "http://www.kuwo.cn/api/www/music/mvList?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 推荐 MV API (千千)
     private static final String RECOMMEND_MV_QI_API
             = "https://music.91q.com/v1/video/list?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s";
@@ -2742,6 +2751,8 @@ public class MusicServerUtils {
     private static final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash=%s";
     // MV 信息 API (QQ)
     private static final String MV_DETAIL_QQ_API = prefixQQ33 + "/mv?id=%s";
+    // MV 信息 API (酷我)
+    private static final String MV_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
 
     // MV 视频链接 API
     private static final String MV_URL_API = prefix + "/mv/url?id=%s";
@@ -2868,6 +2879,8 @@ public class MusicServerUtils {
     private static final String MLOG_TO_VIDEO_API = prefix + "/mlog/to/video?id=%s";
     // 相关 MV API (QQ)
     private static final String RELATED_MV_QQ_API = prefixQQ33 + "/song/mv?id=%s";
+    // 相似 MV API (QQ)
+    private static final String SIMILAR_MV_QQ_API = prefixQQ33 + "/mv?id=%s";
     // 相似歌手 API
     private static final String SIMILAR_ARTIST_API = prefix + "/simi/artist?id=%s";
     // 相似歌手 API (酷狗)(POST)
@@ -11637,7 +11650,8 @@ public class MusicServerUtils {
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
                 String artists = parseArtists(songJson, NetMusicSource.KG);
-                String artistId = songJson.getJSONArray("authors").getJSONObject(0).getString("author_id");
+                JSONArray artistArray = songJson.optJSONArray("authors");
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
@@ -11679,7 +11693,8 @@ public class MusicServerUtils {
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
                 String artists = parseArtists(songJson, NetMusicSource.KG);
-                String artistId = songJson.getJSONArray("authors").getJSONObject(0).getString("author_id");
+                JSONArray artistArray = songJson.optJSONArray("authors");
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
@@ -12105,7 +12120,8 @@ public class MusicServerUtils {
                     String songId = songJson.getString("album_audio_id");
                     String name = songJson.getString("songname");
                     String artists = parseArtists(songJson, NetMusicSource.KG);
-                    String artistId = songJson.getJSONArray("authors").getJSONObject(0).getString("author_id");
+                    JSONArray artistArray = songJson.optJSONArray("authors");
+                    String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
                     String albumId = songJson.getString("album_id");
                     Double duration = songJson.getDouble("duration");
                     String mvId = songJson.getString("mvhash");
@@ -13346,7 +13362,7 @@ public class MusicServerUtils {
                     String mvId = mvJson.getString("mvhash");
                     String mvName = mvJson.getString("videoname");
                     String artistName = mvJson.getString("singername");
-                    JSONArray artistArray = mvJson.getJSONArray("authors");
+                    JSONArray artistArray = mvJson.optJSONArray("authors");
                     String creatorId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("singerid") : "";
                     Long playCount = mvJson.getLong("playcount");
                     Double duration = mvJson.getDouble("duration") / 1000;
@@ -13458,6 +13474,51 @@ public class MusicServerUtils {
                     });
 
                     res.add(mvInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+
+        // 酷我
+        Callable<CommonResult<NetMvInfo>> getRecommendMvKw = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtils.isNotEmpty(s[6])) {
+                HttpResponse resp = kwRequest(String.format(RECOMMEND_MV_KW_API, s[6], page, limit)).execute();
+                if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                    String mvInfoBody = resp.body();
+                    JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+                    JSONObject data = mvInfoJson.getJSONObject("data");
+                    t = data.getInt("total");
+                    JSONArray mvArray = data.getJSONArray("mvlist");
+                    for (int i = 0, len = mvArray.size(); i < len; i++) {
+                        JSONObject mvJson = mvArray.getJSONObject(i);
+
+                        String mvId = mvJson.getString("id");
+                        String mvName = mvJson.getString("name");
+                        String artistName = mvJson.getString("artist");
+                        String creatorId = mvJson.getString("artistid");
+                        Long playCount = mvJson.getLong("mvPlayCnt");
+                        Double duration = mvJson.getDouble("duration");
+                        String coverImgUrl = mvJson.getString("pic");
+
+                        NetMvInfo mvInfo = new NetMvInfo();
+                        mvInfo.setSource(NetMusicSource.KW);
+                        mvInfo.setId(mvId);
+                        mvInfo.setName(mvName);
+                        mvInfo.setArtist(artistName);
+                        mvInfo.setCreatorId(creatorId);
+                        mvInfo.setPlayCount(playCount);
+                        mvInfo.setDuration(duration);
+                        mvInfo.setCoverImgUrl(coverImgUrl);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                            mvInfo.setCoverImgThumb(coverImgThumb);
+                        });
+
+                        res.add(mvInfo);
+                    }
                 }
             }
             return new CommonResult<>(res, t);
@@ -13600,8 +13661,8 @@ public class MusicServerUtils {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[6])) {
-                String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[6], limit))
+            if (StringUtils.isNotEmpty(s[7])) {
+                String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[7], limit))
                         .header(Header.COOKIE, HK_COOKIE)
                         .execute()
                         .body();
@@ -13693,8 +13754,8 @@ public class MusicServerUtils {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[7])) {
-                String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[7]))
+            if (StringUtils.isNotEmpty(s[8])) {
+                String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[8]))
                         .cookie(BI_COOKIE)
                         .execute()
                         .body();
@@ -13740,8 +13801,8 @@ public class MusicServerUtils {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtils.isNotEmpty(s[7])) {
-                String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[7], page, limit))
+            if (StringUtils.isNotEmpty(s[8])) {
+                String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[8], page, limit))
                         .cookie(BI_COOKIE)
                         .execute()
                         .body();
@@ -13803,6 +13864,10 @@ public class MusicServerUtils {
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQq));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewMvQq));
+        }
+
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvKw));
         }
 
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
@@ -15088,6 +15153,7 @@ public class MusicServerUtils {
             JSONObject data = mvJson.getJSONObject("data");
             String name = data.getString("name").trim();
             String artists = parseArtists(data, NetMusicSource.NET_CLOUD);
+            String creatorId = data.getJSONArray("artists").getJSONObject(0).getString("id");
             Long playCount = data.getLong("playCount");
             Double duration = data.getDouble("duration") / 1000;
             String pubTime = data.getString("publishTime");
@@ -15095,6 +15161,7 @@ public class MusicServerUtils {
 
             netMvInfo.setName(name);
             netMvInfo.setArtist(artists);
+            netMvInfo.setCreatorId(creatorId);
             netMvInfo.setPlayCount(playCount);
             netMvInfo.setDuration(duration);
             netMvInfo.setPubTime(pubTime);
@@ -15116,6 +15183,8 @@ public class MusicServerUtils {
             String[] s = data.getString("filename").split(" - ");
             String name = s[1];
             String artists = s[0];
+            JSONArray artistArray = mvJson.optJSONArray("authors");
+            String creatorId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("singerid") : "";
             Long playCount = data.getLong("history_heat");
             Double duration = data.getDouble("mv_timelength") / 1000;
             String pubTime = data.getString("update");
@@ -15123,6 +15192,7 @@ public class MusicServerUtils {
 
             netMvInfo.setName(name);
             netMvInfo.setArtist(artists);
+            netMvInfo.setCreatorId(creatorId);
             netMvInfo.setPlayCount(playCount);
             netMvInfo.setDuration(duration);
             netMvInfo.setPubTime(pubTime);
@@ -15143,6 +15213,7 @@ public class MusicServerUtils {
             JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
             String name = data.getString("name");
             String artists = parseArtists(data, NetMusicSource.QQ);
+            String creatorId = data.getJSONArray("singers").getJSONObject(0).getString("mid");
             Long playCount = data.getLong("playcnt");
             Double duration = data.getDouble("duration");
             String pubTime = TimeUtils.msToDate(data.getLong("pubdate") * 1000);
@@ -15150,6 +15221,37 @@ public class MusicServerUtils {
 
             netMvInfo.setName(name);
             netMvInfo.setArtist(artists);
+            netMvInfo.setCreatorId(creatorId);
+            netMvInfo.setPlayCount(playCount);
+            netMvInfo.setDuration(duration);
+            netMvInfo.setPubTime(pubTime);
+            netMvInfo.setCoverImgUrl(coverImgUrl);
+
+            GlobalExecutors.imageExecutor.submit(() -> {
+                BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                netMvInfo.setCoverImgThumb(coverImgThumb);
+            });
+        }
+
+        // 酷我
+        else if (source == NetMusicSource.KW) {
+            String mvBody = kwRequest(String.format(MV_DETAIL_KW_API, mvId))
+                    .execute()
+                    .body();
+            JSONObject mvJson = JSONObject.fromObject(mvBody);
+            JSONObject data = mvJson.getJSONObject("data");
+
+            String name = data.getString("name");
+            String artist = data.getString("artist");
+            String creatorId = data.getString("artistid");
+            Long playCount = data.getLong("mvPlayCnt");
+            Double duration = data.getDouble("duration");
+            String pubTime = data.getString("releaseDate");
+            String coverImgUrl = data.getString("pic");
+
+            netMvInfo.setName(name);
+            netMvInfo.setArtist(artist);
+            netMvInfo.setCreatorId(creatorId);
             netMvInfo.setPlayCount(playCount);
             netMvInfo.setDuration(duration);
             netMvInfo.setPubTime(pubTime);
@@ -16871,7 +16973,8 @@ public class MusicServerUtils {
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
                 String artists = parseArtists(songJson, NetMusicSource.KG);
-                String artistId = songJson.getJSONArray("authors").getJSONObject(0).getString("author_id");
+                JSONArray artistArray = songJson.optJSONArray("authors");
+                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
@@ -18739,6 +18842,45 @@ public class MusicServerUtils {
 
                     res.add(mvInfo);
                 }
+            }
+        }
+
+        // QQ
+        else if (source == NetMusicSource.QQ) {
+            String mvInfoBody = HttpRequest.get(String.format(SIMILAR_MV_QQ_API, id))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+            JSONArray mvArray = data.getJSONArray("recommend");
+            t = mvArray.size();
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String mvId = mvJson.getString("vid");
+                String mvName = mvJson.getString("name");
+                String artistName = mvJson.getString("uploader_nick");
+                String creatorId = mvJson.getString("uploader_uin");
+                String coverImgUrl = mvJson.getString("cover_pic");
+                Long playCount = mvJson.getLong("playcnt");
+                Double duration = mvJson.getDouble("duration");
+                String pubTime = TimeUtils.msToDate(mvJson.getLong("pubdate") * 1000);
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setSource(NetMusicSource.QQ);
+                mvInfo.setId(mvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
             }
         }
 

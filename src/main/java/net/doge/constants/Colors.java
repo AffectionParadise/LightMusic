@@ -54,7 +54,7 @@ public class Colors {
     public static final Color LIGHT_BLUE_1 = new Color(191, 239, 255);
 
     public static final Color DAY2 = new Color(255, 219, 235);
-    public static final Color DAY3 = new Color(110, 144, 229);
+    public static final Color DAY3 = new Color(170, 186, 255);
 
     public static final Color SPRING1 = new Color(217, 250, 211);
     public static final Color SPRING2 = new Color(172, 243, 162);
@@ -62,7 +62,7 @@ public class Colors {
 
     public static final Color SUMMER1 = new Color(211, 233, 255);
     public static final Color SUMMER2 = new Color(152, 196, 229);
-    public static final Color SUMMER3 = new Color(48, 162, 229);
+    public static final Color SUMMER3 = new Color(102, 194, 255);
 
     public static final Color CLOUD1 = new Color(240, 244, 246);
     public static final Color CLOUD2 = new Color(186, 222, 238);

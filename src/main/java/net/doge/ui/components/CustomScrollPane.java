@@ -3,8 +3,6 @@ package net.doge.ui.components;
 import javax.swing.*;
 import javax.swing.plaf.ScrollBarUI;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 public class CustomScrollPane extends JScrollPane {
 
@@ -20,7 +18,7 @@ public class CustomScrollPane extends JScrollPane {
 
     private void init() {
         setOpaque(false);
-        getViewport().setOpaque(false);
+        viewport.setOpaque(false);
 
         final int thickness = 10;
         horizontalScrollBar.setOpaque(false);
@@ -34,16 +32,6 @@ public class CustomScrollPane extends JScrollPane {
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
 
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentShown(ComponentEvent e) {
-                JViewport vp = getViewport();
-                if (vp.getComponentCount() == 0) return;
-                vp.add(vp.getComponent(0));
-                vp.add(vp.getComponent(0));
-            }
-        });
     }
 
     public void setVValue(int value) {

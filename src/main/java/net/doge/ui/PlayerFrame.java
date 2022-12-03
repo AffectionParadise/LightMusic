@@ -122,9 +122,11 @@ public class PlayerFrame extends JFrame {
     private final String UPDATE_CHECK_FAIL_MSG = "检查更新失败，请稍后再试";
     private final String UPDATE_MSG = "已有新版本 %s，当前版本 %s，是否前往发布页更新？";
     private final String LATEST_MSG = "当前已是最新版本";
-    private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n下面是一些常见问题解答，祝你使用愉快~\n\nQ1：如何批量操作？\nA1：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
-            "Q2：如何导入我的歌单？\nA2：在“用户”选项卡搜索自己的用户名，右键即可“查看用户歌单”，无需登录\n\n" +
-            "Q3：如何进行收藏等其他操作？\nA3：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
+    private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n" +
+            "下面是一些常见问题解答，请仔细阅读。祝你使用愉快~\n\n" +
+            "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n\n" +
+            "Q2：如何进行收藏等其他操作？\nA2：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
+            "Q3：如何批量操作？\nA3：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
             "Q4：为什么有些歌曲名字和音频不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
             "Q5：资源是如何获取的？\nA5：调用各大平台的 API 获取，免费使用，不可商用！\n\n" +
             "Q6：软件更新后原来的数据如何继承？\nA6：建议覆盖更新，数据 JSON 文件保存在程序所在目录，保证与程序在同一目录即可\n\n" +
@@ -1004,7 +1006,7 @@ public class PlayerFrame extends JFrame {
     public DefaultListModel historyModel = new DefaultListModel<>();
 
     // 收藏列表
-    private CustomList collectionList = new CustomList<>();
+    public CustomList collectionList = new CustomList<>();
     private CustomScrollPane collectionScrollPane = new CustomScrollPane(collectionList);
     // 歌曲收藏 ListModel
     private DefaultListModel collectionModel = new DefaultListModel<>();
@@ -1025,7 +1027,7 @@ public class PlayerFrame extends JFrame {
     // 作为收藏电台单独的 ListModel，切换
     private DefaultListModel netMusicListForRadioCollectionModel = new DefaultListModel<>();
     // MV 收藏 ListModel
-    private DefaultListModel mvCollectionModel = new DefaultListModel<>();
+    public DefaultListModel mvCollectionModel = new DefaultListModel<>();
     // 榜单收藏 ListModel
     private DefaultListModel rankingCollectionModel = new DefaultListModel<>();
     // 作为收藏榜单单独的 ListModel，切换
@@ -2265,7 +2267,8 @@ public class PlayerFrame extends JFrame {
     private Timer spectrumTimer;
     private Timer lrcTimer;
     public boolean lrcScrollAnimation;
-    private boolean lrcScrollWait;
+    public Timer swActionTimer;
+    private boolean lrcScrollWaiting;
     private Timer globalPanelTimer;
     private Timer searchSuggestionTimer;
     private boolean searchSuggestionProcessing;
@@ -2279,7 +2282,6 @@ public class PlayerFrame extends JFrame {
     private ExecutorService playExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService lrcExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
-//    private ExecutorService lrcScrollExecutor = Executors.newSingleThreadExecutor();
 
     // 其他需要多线程的操作提交给该线程池
     private ExecutorService globalExecutor = Executors.newFixedThreadPool(5);
@@ -2295,6 +2297,8 @@ public class PlayerFrame extends JFrame {
     public int miniY;
     // 图片预览对话框
     private ImageViewDialog imageViewDialog;
+    // 是否仅显示自定义主题
+    public boolean customOnly;
 
     // 当前弹出的菜单
     public JPopupMenu currPopup;
@@ -2883,7 +2887,7 @@ public class PlayerFrame extends JFrame {
                         ColorUtils.RGBStringToColor((String) styleObject.get("spectrumColor")),
                         ColorUtils.RGBStringToColor((String) styleObject.get("menuItemColor"))
                 );
-                addStyle(style, false);
+                addStyle(style);
             }
         }
         // 载入是否启用快捷键
@@ -6709,30 +6713,6 @@ public class PlayerFrame extends JFrame {
             filterTextField.setText("");
             removeToolButton.requestFocus();
         });
-        // 添加换肤弹出菜单项
-//        for (int i = 0, length = stylePopupMenuItems.size(); i < length; i++) {
-//            int finalI = i;
-//            stylePopupMenuItems.get(i).addActionListener(e -> {
-//                try {
-//                    changeUIStyle(styles.get(finalI));
-//                } catch (IOException ioException) {
-//                    ioException.printStackTrace();
-//                } catch (IllegalAccessException illegalAccessException) {
-//                    illegalAccessException.printStackTrace();
-//                } catch (InstantiationException instantiationException) {
-//                    instantiationException.printStackTrace();
-//                } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-//                    unsupportedLookAndFeelException.printStackTrace();
-//                } catch (ClassNotFoundException classNotFoundException) {
-//                    classNotFoundException.printStackTrace();
-//                } catch (AWTException awtException) {
-//                    awtException.printStackTrace();
-//                }
-//            });
-//            stylePopupMenuButtonGroup.add(stylePopupMenuItems.get(i));
-//            stylePopupMenu.add(stylePopupMenuItems.get(i));
-//        }
-//        stylePopupMenu.addSeparator();
         stylePopupMenu.add(manageStyleMenuItem);
         stylePopupMenu.add(styleCustomMenuItem);
         // 个人音乐筛选框
@@ -6962,8 +6942,6 @@ public class PlayerFrame extends JFrame {
                 // 鼠标左键双击播放
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     playExecutor.submit(() -> playSelected(musicList, false));
-//                    if (musicList.getSelectedValue() instanceof File) playSelected(musicList, false);
-//                    else loadingAndRun(() -> playSelected(musicList, false));
                 }
                 // 鼠标右键弹出菜单
                 else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -7030,8 +7008,6 @@ public class PlayerFrame extends JFrame {
         // 右键菜单播放
         playMenuItem.addActionListener(e -> {
             playExecutor.submit(() -> playSelected(musicList, false));
-//            if (musicList.getSelectedValue() instanceof File) playSelected(musicList, false);
-//            else loadingAndRun(() -> playSelected(musicList, false));
         });
         // 下一首播放
         nextPlayMenuItem.addActionListener(e -> nextPlay(musicList));
@@ -7554,7 +7530,6 @@ public class PlayerFrame extends JFrame {
                 // 鼠标左键双击播放
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     playExecutor.submit(() -> playSelected(netMusicList, false));
-//                    loadingAndRun(() -> playSelected(netMusicList, false));
                 }
                 // 右键弹出菜单
                 else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -7581,7 +7556,6 @@ public class PlayerFrame extends JFrame {
         // 播放在线音乐
         netMusicPlayMenuItem.addActionListener(e -> {
             playExecutor.submit(() -> playSelected(netMusicList, false));
-//            loadingAndRun(() -> playSelected(netMusicList, false));
         });
         // 下一首播放
         netMusicNextPlayMenuItem.addActionListener(e -> nextPlay(netMusicList));
@@ -8265,13 +8239,15 @@ public class PlayerFrame extends JFrame {
         netMusicKeywordsPanel.setPreferredSize(d);
         netMusicKeywordsPanelScrollPane.setPreferredSize(d);
         // 滚动条
-//        netMusicScrollPane.addComponentListener(new ComponentAdapter() {
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-//                // 重新设置 renderer 可以避免 netMusicList 宽度不刷新！
+        netMusicScrollPane.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // 重新设置 renderer 可以避免 netMusicList 宽度不刷新！
 //                updateRenderer(netMusicList);
-//            }
-//        });
+                netMusicScrollPane.setVisible(false);
+                netMusicScrollPane.setVisible(true);
+            }
+        });
         // 在线歌单最佳大小
         netMusicScrollPane.setPreferredSize(new Dimension(200, 600));
         netLeftBox.add(netMusicScrollPane);
@@ -18730,8 +18706,6 @@ public class PlayerFrame extends JFrame {
                 // 鼠标左键双击播放
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     playExecutor.submit(() -> playSelected(playQueue, false));
-//                    if (playQueue.getSelectedValue() instanceof File) playSelected(playQueue, false);
-//                    else loadingAndRun(() -> playSelected(playQueue, false));
                 }
                 // 鼠标右键弹出菜单
                 else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -18798,8 +18772,6 @@ public class PlayerFrame extends JFrame {
         // 播放菜单项
         playQueuePlayMenuItem.addActionListener(e -> {
             playExecutor.submit(() -> playSelected(playQueue, false));
-//            if (playQueue.getSelectedValue() instanceof File) playSelected(playQueue, false);
-//            else loadingAndRun(() -> playSelected(playQueue, false));
         });
         // 下一首播放
         playQueueNextPlayMenuItem.addActionListener(e -> nextPlay(playQueue));
@@ -19050,24 +19022,23 @@ public class PlayerFrame extends JFrame {
         });
         // 绑定数据 Model
         lrcList.setModel(lrcListModel);
+
         // 滚动条调整事件（鼠标滚轮滑动、滚动条拖动）
         JScrollBar vs = lrcScrollPane.getVerticalScrollBar();
+        swActionTimer = new Timer(3000, e -> {
+            if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
+            ((ScrollBarUI) vs.getUI()).setActive(false);
+            swActionTimer.stop();
+            lrcScrollWaiting = false;
+        });
         Runnable swAction = () -> {
+            swActionTimer.stop();
             currScrollVal = vs.getValue();
-            if (!lrcScrollWait)
-                globalExecutor.submit(() -> {
-                    lrcScrollWait = true;
-                    ((ScrollBarUI) vs.getUI()).setActive(true);
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException ex) {
-
-                    }
-                    if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
-                    ((ScrollBarUI) vs.getUI()).setActive(false);
-                    lrcScrollWait = false;
-                });
+            ((ScrollBarUI) vs.getUI()).setActive(true);
+            lrcScrollWaiting = true;
+            swActionTimer.start();
         };
+        // 歌词面板大小变化后对齐高亮歌词
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -19075,15 +19046,24 @@ public class PlayerFrame extends JFrame {
                 lrcScrollAnimation = true;
             }
         });
-        lrcScrollPane.addMouseWheelListener(e -> {
-            swAction.run();
+        // 歌词列表左键上下拖拽触发延时动画
+        lrcList.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
+                swAction.run();
+            }
         });
+        // 歌词面板滚轮滚动触发延时动画
+        lrcScrollPane.addMouseWheelListener(e -> swAction.run());
+        // 滚动条拖拽触发延时动画
         vs.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 swAction.run();
             }
         });
+        // 滚动条显示/隐藏，松开时触发延时动画
         vs.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -19978,7 +19958,7 @@ public class PlayerFrame extends JFrame {
 //                        lrcListModel.set(LRC_INDEX + 5, nextLrc + 3 < statements.size() ? statements.get(nextLrc + 3) : new Statement(0, " "));
 //                        lrcListModel.set(LRC_INDEX - 1, statements.get(nextLrc++));
                         row = LRC_INDEX + 1 + nextLrc * 2;
-                        if (!lrcScrollAnimation && !lrcScrollWait) {
+                        if (!lrcScrollAnimation && !lrcScrollWaiting) {
                             currScrollVal = lrcScrollPane.getVValue();
                             lrcScrollAnimation = true;
                         }
@@ -20378,10 +20358,6 @@ public class PlayerFrame extends JFrame {
         // 选择随机列表下一首
         playQueue.setSelectedIndex(shuffleList.get(shuffleIndex++));
         playExecutor.submit(() -> playSelected(playQueue, true));
-//        // 在线音乐才需要加载界面
-//        Object o = playQueue.getSelectedValue();
-//        if (o instanceof File || loading.isShowing()) playSelected(playQueue, true);
-//        else if (o instanceof NetMusicInfo) loadingAndRun(() -> playSelected(playQueue, true));
     }
 
     // 更新 currSong 的值，在播放队列歌曲发生变化后调用
@@ -20629,6 +20605,11 @@ public class PlayerFrame extends JFrame {
 
     // 改变 UI 风格
     public void changeUIStyle(UIStyle style) throws IOException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, AWTException {
+        if (!style.hasImg()) {
+            changeUIStyle(styles.get(0));
+            return;
+        }
+
         currUIStyle = style;
 
         Color buttonColor = style.getButtonColor();
@@ -21689,7 +21670,7 @@ public class PlayerFrame extends JFrame {
                 if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
                 else customStyle.setStyleImgPath((String) results[1]);
                 // 添加风格菜单项、按钮组，并切换风格
-                addStyle(customStyle, true);
+                addStyle(customStyle);
                 changeUIStyle(customStyle);
             }
         } catch (ClassNotFoundException classNotFoundException) {
@@ -21751,35 +21732,8 @@ public class PlayerFrame extends JFrame {
 //    }
 
     // 添加新风格，加到 List 最前面，apply 表示添加后是否应用
-    public void addStyle(UIStyle style, boolean apply) {
+    public void addStyle(UIStyle style) {
         styles.add(style);
-//        CustomRadioButtonMenuItem newStylePopupMenuItem = new CustomRadioButtonMenuItem(style.getStyleName() + "     ");
-//        newStylePopupMenuItem.setForeground(currUIStyle.getMenuItemColor());
-//        newStylePopupMenuItem.setUI(new RadioButtonMenuItemUI(currUIStyle.getMenuItemColor()));
-//        stylePopupMenuButtonGroup.add(newStylePopupMenuItem);
-//        stylePopupMenuItems.add(newStylePopupMenuItem);
-//        if (apply) {
-//            newStylePopupMenuItem.setSelected(true);
-//            updateMenuItemIcon(stylePopupMenu);
-//        }
-//        newStylePopupMenuItem.addActionListener(l -> {
-//            try {
-//                changeUIStyle(style);
-//            } catch (IOException ioException) {
-//                ioException.printStackTrace();
-//            } catch (ClassNotFoundException classNotFoundException) {
-//                classNotFoundException.printStackTrace();
-//            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-//                unsupportedLookAndFeelException.printStackTrace();
-//            } catch (InstantiationException instantiationException) {
-//                instantiationException.printStackTrace();
-//            } catch (IllegalAccessException illegalAccessException) {
-//                illegalAccessException.printStackTrace();
-//            } catch (AWTException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//        stylePopupMenu.add(newStylePopupMenuItem, stylePopupMenu.getComponentCount() - 3);
     }
 
     // 播放/暂停按钮执行
@@ -21791,10 +21745,6 @@ public class PlayerFrame extends JFrame {
                 // 播放队列没有选中并且有歌曲在队列时自动选中第一首播放
                 if (playQueue.getSelectedIndex() == -1 && !playQueueModel.isEmpty()) playQueue.setSelectedIndex(0);
                 playExecutor.submit(() -> playSelected(playQueue, false));
-//                // 在线音乐才需要加载界面
-//                Object o = playQueue.getSelectedValue();
-//                if (o instanceof File) playSelected(playQueue, false);
-//                else if (o instanceof NetMusicInfo) loadingAndRun(() -> playSelected(playQueue, false));
                 break;
             // 就绪状态
             case PlayerStatus.LOADED:
@@ -21808,7 +21758,6 @@ public class PlayerFrame extends JFrame {
                 break;
             // 暂停状态
             case PlayerStatus.PAUSING:
-//                if (currPane == MusicPane.LYRIC) openSpectrum();
                 player.continuePlay();
                 playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getButtonColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
@@ -22142,7 +22091,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 更新 renderer ，避免 CustomList 各个元素大小不变
-    private void updateRenderer(CustomList list) {
+    public void updateRenderer(CustomList list) {
         ListCellRenderer renderer = list.getCellRenderer();
         if (renderer == null) return;
         synchronized (renderer) {
@@ -22279,7 +22228,7 @@ public class PlayerFrame extends JFrame {
                 // 缩小
                 styleImage = ImageUtils.width(styleImage, 100);
                 // 高斯模糊
-                styleImage = ImageUtils.doSlightBlur(styleImage);
+                styleImage = ImageUtils.doBlur(styleImage);
             }
             // 放大至窗口大小
             styleImage = ImageUtils.width(styleImage, getWidth());
@@ -22607,24 +22556,8 @@ public class PlayerFrame extends JFrame {
         });
     }
 
-//    // 异步执行
-//    void async(Runnable runnable) {
-//        globalExecutor.submit(() -> runnable.run());
-//    }
-
-//    // 判断歌曲文件是否已在当前列表中
-//    boolean isDuplicate(File file) {
-//        Object[] files = musicListModel.toArray();
-//        for (Object f : files) {
-//            if (((File) f).getPath().equals(file.getPath())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
     // 全局字体抗锯齿，必须在初始化 JFrame 之前调用！
-    static void enableAntiAliasing() {
+    private static void enableAntiAliasing() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         System.setProperty("swing.aatext", "true");
     }
@@ -22660,14 +22593,6 @@ public class PlayerFrame extends JFrame {
         return catalogs;
     }
 
-//    public List<CustomRadioButtonMenuItem> getStylePopupMenuItems() {
-//        return stylePopupMenuItems;
-//    }
-
-//    public CustomPopupMenu getStylePopupMenu() {
-//        return stylePopupMenu;
-//    }
-
     public CustomSlider getVolumeSlider() {
         return volumeSlider;
     }
@@ -22686,10 +22611,6 @@ public class PlayerFrame extends JFrame {
 
     public DesktopLyricDialog getDesktopLyricDialog() {
         return desktopLyricDialog;
-    }
-
-    public DefaultListModel getMvCollectionModel() {
-        return mvCollectionModel;
     }
 
     public boolean isShowSpectrum() {

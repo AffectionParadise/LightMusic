@@ -312,10 +312,11 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 if (results[i] != null) {
                     if (results[i] instanceof String) {
                         BufferedImage image = ImageUtils.read((String) results[i]);
-                        if (image == null) return;
-                        if (image.getWidth() >= image.getHeight())
-                            labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
-                        else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
+                        if (image != null) {
+                            if (image.getWidth() >= image.getHeight())
+                                labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
+                            else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
+                        }
                     } else {
                         labels[i].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, (Color) results[i]), imgWidth)));
                     }

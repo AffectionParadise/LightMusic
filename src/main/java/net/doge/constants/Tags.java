@@ -42,5 +42,5 @@ public class Tags {
 
     public static Map<String, String[]> mvTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static int[] mvMap = {NetMusicSource.NET_CLOUD, NetMusicSource.NET_CLOUD, NetMusicSource.KG, NetMusicSource.QQ,
-            NetMusicSource.QQ, NetMusicSource.QQ, NetMusicSource.HK, NetMusicSource.BI};
+            NetMusicSource.QQ, NetMusicSource.QQ, NetMusicSource.KW, NetMusicSource.HK, NetMusicSource.BI};
 }

@@ -431,18 +431,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage doBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / 12));
-        return gaussianFilter.filter(bufferedImage, null);
-    }
-
-    /**
-     * 对 BufferedImage 进行轻度毛玻璃化(高斯模糊)处理，用于主题背景
-     *
-     * @param bufferedImage
-     * @return
-     */
-    public static BufferedImage doSlightBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / 20));
+        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / 16));
         return gaussianFilter.filter(bufferedImage, null);
     }
 
@@ -453,18 +442,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage darker(BufferedImage bufferedImage) {
-        contrastFilter.setBrightness(0.7f);
-        return contrastFilter.filter(bufferedImage, null);
-    }
-
-    /**
-     * 对 BufferedImage 自定义对比度
-     *
-     * @param bufferedImage
-     * @return
-     */
-    public static BufferedImage bright(BufferedImage bufferedImage, float brightness) {
-        contrastFilter.setBrightness(brightness);
+        contrastFilter.setBrightness(0.65f);
         return contrastFilter.filter(bufferedImage, null);
     }
 

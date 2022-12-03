@@ -63,8 +63,8 @@ public class UIStyle {
         return styleType == UIStyleConstants.CUSTOM;
     }
 
-    public boolean isPureColor() {
-        return bgColor != null;
+    public boolean hasImg() {
+        return img != null;
     }
 
     private void callback() {
@@ -80,6 +80,7 @@ public class UIStyle {
         if (StringUtils.isEmpty(styleImgPath)) return;
         GlobalExecutors.imageExecutor.execute(() -> {
             img = ImageUtils.read(styleImgPath);
+            if (img == null) return;
             imgThumb = ImageUtils.setRadius(ImageUtils.width(img, ImageConstants.mvCoverWidth), 10);
             // 控制高度不超过阈值
             if (imgThumb != null && imgThumb.getHeight() > ImageConstants.mvCoverMaxHeight)

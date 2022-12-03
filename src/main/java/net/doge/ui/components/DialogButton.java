@@ -57,7 +57,7 @@ public class DialogButton extends JButton implements MouseListener {
     }
 
     public String getPlainText() {
-        return StringUtils.removeHTMLLabel(super.getText());
+        return StringUtils.removeHTMLLabel(getText());
     }
 
     @Override

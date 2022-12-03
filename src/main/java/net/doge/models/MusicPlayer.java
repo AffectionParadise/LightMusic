@@ -82,6 +82,11 @@ public class MusicPlayer {
         musicInfo.setInvokeLater(null);
         musicInfo.setAlbumImage(null);
         netMusicInfo = null;
+
+        for (int i = 0, len = specsOrigin.length; i < len; i++) {
+            specsOrigin[i] = 0;
+            specsGap[i] = specs[i];
+        }
     }
 
     // 卸载当前文件

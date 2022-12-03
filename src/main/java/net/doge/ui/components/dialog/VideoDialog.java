@@ -544,13 +544,14 @@ public class VideoDialog extends JDialog {
         collectButton.addActionListener(e -> {
             if (!f.hasBeenCollected(netMvInfo)) {
                 // 加载 MV 基本信息
+                netMvInfo.setInvokeLater(() -> f.updateRenderer(f.collectionList));
                 GlobalExecutors.requestExecutor.submit(() -> MusicServerUtils.fillMvDetail(netMvInfo));
-                f.getMvCollectionModel().add(0, netMvInfo);
+                f.mvCollectionModel.add(0, netMvInfo);
                 collectButton.setToolTipText(CANCEL_COLLECTION_TIP);
                 collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, style.getButtonColor()));
                 new TipDialog(f, COLLECT_SUCCESS_MSG).showDialog();
             } else {
-                f.getMvCollectionModel().removeElement(netMvInfo);
+                f.mvCollectionModel.removeElement(netMvInfo);
                 collectButton.setToolTipText(COLLECT_TIP);
                 collectButton.setIcon(ImageUtils.dye(collectIcon, style.getButtonColor()));
                 new TipDialog(f, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
