@@ -504,6 +504,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon locateLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "locateLrc.png");
     // 查看歌词文件菜单项图标
     private ImageIcon browseLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "browseLrc.png");
+    // 频谱透明度菜单项图标
+    private ImageIcon spectrumOpacityMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "spectrumOpacity.png");
     // 歌词偏移菜单项图标
     private ImageIcon lrcOffsetMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "lrcOffset.png");
     // 导出专辑图片菜单项图标
@@ -626,7 +628,7 @@ public class PlayerFrame extends JFrame {
     public double currRate;
     public double currVideoRate;
     // 当前频谱样式
-    public int currSpecStyle = SpectrumConstants.GROUND;
+    public int currSpecStyle;
     // 当前均衡
     public double currBalance = DEFAULT_BALANCE;
     // 最大缓存大小(MB，超出后自动清理)
@@ -826,6 +828,17 @@ public class PlayerFrame extends JFrame {
     private DefaultListModel<Statement> lrcListModel = new DefaultListModel<>();
     // 频谱面板
     private SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
+    private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
+    private final String SPEC_OPACITY_MSG = "当前频谱透明度：%d%%";
+    public float specOpacity;
+    private CustomMenuItem spectrumOpacityMenuItem = new CustomMenuItem("");
+    private CustomMenuItem[] calcSpectrumOpacityMenuItems = {
+            new CustomMenuItem("+10%"),
+            new CustomMenuItem("+20%"),
+            new CustomMenuItem("-10%"),
+            new CustomMenuItem("-20%")
+    };
+    private ButtonGroup spectrumStyleGroup = new ButtonGroup();
     // 歌词右键弹出菜单
     private CustomPopupMenu lrcPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem copyMenuItem = new CustomMenuItem("复制这句歌词");
@@ -2974,12 +2987,12 @@ public class PlayerFrame extends JFrame {
                 blurType == BlurType.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getButtonColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
-        // 载入上次选的风格
-        int styleIndex = config.optInt(ConfigConstants.CURR_UI_STYLE, 0);
-        changeUIStyle(styles.get(styleIndex));
         // 载入歌词偏移
         lrcOffset = config.optDouble(ConfigConstants.LYRIC_OFFSET, 0);
         currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset));
+        // 载入频谱透明度
+        specOpacity = (float) config.optDouble(ConfigConstants.SPEC_OPACITY, 0.3);
+        spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
         // 载入是否显示桌面歌词
         desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
         if (showDesktopLyric = config.optBoolean(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
@@ -2997,8 +3010,6 @@ public class PlayerFrame extends JFrame {
         // 载入桌面歌词透明度
         desktopLyricAlpha = config.optDouble(ConfigConstants.DESKTOP_LYRIC_ALPHA, 1);
         desktopLyricDialog.setAlpha((float) desktopLyricAlpha);
-//        stylePopupMenuItems.get(styleIndex).setSelected(true);
-//        updateMenuItemIcon(stylePopupMenu);
         // 载入播放模式
         switch (config.optInt(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
             case PlayMode.SEQUENCE:
@@ -3022,16 +3033,15 @@ public class PlayerFrame extends JFrame {
         currRate = config.optDouble(ConfigConstants.RATE, DEFAULT_RATE);
         // 载入视频速率
         currVideoRate = config.optDouble(ConfigConstants.VIDEO_RATE, DEFAULT_RATE);
-//        String rateStr = String.valueOf(currRate).replace(".0", "");
-//        for (CustomRadioButtonMenuItem mi : rateMenuItems) {
-//            if (rateStr.equals(mi.getText().replaceFirst("x", ""))) {
-//                mi.setSelected(true);
-//                updateMenuItemIcon(ratePopupMenu);
-//                break;
-//            }
-//        }
         // 载入频谱样式
         currSpecStyle = config.optInt(ConfigConstants.SPECTRUM_STYLE, SpectrumConstants.GROUND);
+        Enumeration<AbstractButton> mis = spectrumStyleGroup.getElements();
+        int ei = 0;
+        while (mis.hasMoreElements()) {
+            CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) mis.nextElement();
+            mi.setSelected(currSpecStyle == ei);
+            ei++;
+        }
         // 载入均衡
         currBalance = config.optDouble(ConfigConstants.BALANCE, DEFAULT_BALANCE);
         // 载入音量
@@ -3072,7 +3082,9 @@ public class PlayerFrame extends JFrame {
         currSortOrder = config.optInt(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
         ascendingMenuItem.setSelected(currSortOrder == SortMethod.ASCENDING);
         descendingMenuItem.setSelected(currSortOrder == SortMethod.DESCENDING);
-        updateMenuItemIcon(sortPopupMenu);
+        // 载入上次选的风格
+        int styleIndex = config.optInt(ConfigConstants.CURR_UI_STYLE, 0);
+        changeUIStyle(styles.get(styleIndex));
 
         // 载入歌曲目录
         JSONArray catalogJsonArray = config.optJSONArray(ConfigConstants.CATALOGS);
@@ -3793,6 +3805,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, isAutoDownloadLrc);
         // 存入歌词偏移
         config.put(ConfigConstants.LYRIC_OFFSET, lrcOffset);
+        // 存入频谱透明度
+        config.put(ConfigConstants.SPEC_OPACITY, specOpacity);
         // 存入是否显示桌面歌词
         config.put(ConfigConstants.SHOW_DESKTOP_LYRIC, showDesktopLyric);
         // 存入是否锁定桌面歌词
@@ -19081,6 +19095,39 @@ public class PlayerFrame extends JFrame {
                 swAction.run();
             }
         });
+        // 频谱右键菜单
+        spectrumOpacityMenuItem.setEnabled(false);
+        spectrumPopupMenu.add(spectrumOpacityMenuItem);
+        for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
+            mi.addActionListener(e -> {
+                String text = mi.getText();
+                float so = specOpacity + Float.parseFloat(text.replaceFirst("%", "")) / 100;
+                specOpacity = Math.min(1, Math.max(0.1f, so));
+                spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
+            });
+            spectrumPopupMenu.add(mi);
+        }
+        spectrumPopupMenu.addSeparator();
+        String[] names = SpectrumConstants.names;
+        for (int i = 0, len = names.length; i < len; i++) {
+            CustomRadioButtonMenuItem mi = new CustomRadioButtonMenuItem(names[i]);
+            int finalI = i;
+            mi.addActionListener(e -> {
+                updateMenuItemIcon(spectrumPopupMenu);
+                currSpecStyle = finalI;
+            });
+            mi.setSelected(currSpecStyle == i);
+            spectrumStyleGroup.add(mi);
+            spectrumPopupMenu.add(mi);
+        }
+        spectrumPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON3) return;
+                spectrumPopupMenu.show(spectrumPanel, e.getX(), e.getY());
+            }
+        });
+
         // 歌词面板最佳大小(CustomList 需要加到 CustomScrollPane 中才能调整大小！)
         Dimension d = new Dimension(1, SpectrumConstants.BAR_MAX_HEIGHT);
         spectrumPanel.setMinimumSize(d);
@@ -19369,25 +19416,9 @@ public class PlayerFrame extends JFrame {
                 player.setMute(isMute = false);
             }
         });
-        // 倍速菜单和按钮
-//        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
-//            menuItem.addActionListener(e -> {
-//                getPlayer().setRate(currRate = Double.parseDouble(menuItem.getText().replace("x", "")));
-//                updateMenuItemIcon(ratePopupMenu);
-//            });
-//            rateMenuItemsButtonGroup.add(menuItem);
-//            ratePopupMenu.add(menuItem);
-//        }
         rateButton.setToolTipText(RATE_TIP);
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, THIS));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
-//        rateButton.setComponentPopupMenu(ratePopupMenu);
-//        rateButton.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseReleased(MouseEvent e) {
-//                ratePopupMenu.show(rateButton, e.getX(), e.getY());
-//            }
-//        });
         rateButton.addActionListener(e -> {
             RateDialog rd = new RateDialog(THIS, null, rateButton);
             rd.showDialog();
@@ -20604,7 +20635,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 改变 UI 风格
-    public void changeUIStyle(UIStyle style) throws IOException, ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, AWTException {
+    public void changeUIStyle(UIStyle style) {
         if (!style.hasImg()) {
             changeUIStyle(styles.get(0));
             return;
@@ -20617,6 +20648,9 @@ public class PlayerFrame extends JFrame {
         Color selectedColor = style.getSelectedColor();
         Color foreColor = style.getForeColor();
         Color scrollBarColor = style.getScrollBarColor();
+        Color timeBarColor = style.getTimeBarColor();
+        Color lrcColor = style.getLrcColor();
+        Color highlightColor = style.getHighlightColor();
         Color menuItemColor = style.getMenuItemColor();
 
         // 托盘
@@ -20839,6 +20873,10 @@ public class PlayerFrame extends JFrame {
         downloadLrcMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
         downloadLrcTransMenuItem.setIcon(ImageUtils.dye(downloadIcon, menuItemColor));
         downloadLrcTransMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
+        spectrumOpacityMenuItem.setDisabledIcon(ImageUtils.dye(spectrumOpacityMenuItemIcon, disabledColor));
+        for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
+            mi.setIcon(ImageUtils.dye(spectrumOpacityMenuItemIcon, menuItemColor));
+        }
         currLrcOffsetMenuItem.setDisabledIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, disabledColor));
         for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
             mi.setIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, menuItemColor));
@@ -20905,6 +20943,7 @@ public class PlayerFrame extends JFrame {
         updateMenuItemStyle(artistPopupMenu, menuItemColor);
         updateMenuItemStyle(albumPopupMenu, menuItemColor);
         updateMenuItemStyle(lrcPopupMenu, menuItemColor);
+        updateMenuItemStyle(spectrumPopupMenu, menuItemColor);
 //        updateMenuItemStyle(ratePopupMenu, menuItemColor);
         updateMenuItemStyle(playModePopupMenu, menuItemColor);
         updateMenuItemStyle(blurPopupMenu, menuItemColor);
@@ -21429,29 +21468,29 @@ public class PlayerFrame extends JFrame {
         this.playQueueRenderer = playQueueRenderer;
 
         // 歌单/专辑/歌手/电台/榜单描述
-        playlistDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        playlistDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        playlistDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        playlistDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
-        albumDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        albumDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        albumDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        albumDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
-        artistDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        artistDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        artistDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        artistDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
-        radioDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        radioDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        radioDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        radioDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
-        rankingDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        rankingDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        rankingDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        rankingDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
-        userDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        userDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        userDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        userDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
-        recommendItemDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        recommendItemDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        recommendItemDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        recommendItemDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
-        collectionItemDescriptionScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor(), false));
-        collectionItemDescriptionScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor(), false));
+        collectionItemDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
+        collectionItemDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
         playlistCoverAndNameLabel.setForeground(labelColor);
         albumCoverAndNameLabel.setForeground(labelColor);
@@ -21548,24 +21587,24 @@ public class PlayerFrame extends JFrame {
         TranslucentLrcListRenderer lrcListRenderer = new TranslucentLrcListRenderer();
         lrcListRenderer.setRow(row);
         lrcListRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        lrcListRenderer.setBackgroundColor(style.getLrcColor());        // 歌词颜色
-        lrcListRenderer.setForegroundColor(style.getHighlightColor());
+        lrcListRenderer.setBackgroundColor(lrcColor);        // 歌词颜色
+        lrcListRenderer.setForegroundColor(highlightColor);
         lrcList.setCellRenderer(lrcListRenderer);
         lrcList.setUI(new ListUI(LRC_INDEX - 1));  // 歌词禁用字体透明，需要用到自定义 List
 
         lrcScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
         // 进度条和控制面板透明
-        timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), THIS, player, true));      // 自定义进度条 UI
+        timeBar.setUI(new SliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI
         // 桌面歌词更新颜色
-        desktopLyricDialog.setThemeColor(style.getLrcColor());
-        desktopLyricDialog.setForeColor(style.getHighlightColor());
+        desktopLyricDialog.setThemeColor(lrcColor);
+        desktopLyricDialog.setForeColor(highlightColor);
         desktopLyricDialog.updateStyle();
         // 时间标签用进度条的颜色
-        currTimeLabel.setForeground(style.getTimeBarColor());
-        durationLabel.setForeground(style.getTimeBarColor());
+        currTimeLabel.setForeground(timeBarColor);
+        durationLabel.setForeground(timeBarColor);
 
-        changePaneButton.setForeground(style.getButtonColor());
+        changePaneButton.setForeground(buttonColor);
 
         mvButton.setIcon(ImageUtils.dye((ImageIcon) mvButton.getIcon(), buttonColor));
         collectButton.setIcon(ImageUtils.dye((ImageIcon) collectButton.getIcon(), buttonColor));
@@ -21622,8 +21661,7 @@ public class PlayerFrame extends JFrame {
 
         // 更新单选菜单项和标签按钮样式
         updateMenuItemIcon(sortPopupMenu);
-//        updateMenuItemIcon(stylePopupMenu);
-//        updateMenuItemIcon(ratePopupMenu);
+        updateMenuItemIcon(spectrumPopupMenu);
         updateTabButtonStyle();
 
         // 根据选项卡选择的情况设置选项卡文字 + 图标颜色
@@ -21654,39 +21692,23 @@ public class PlayerFrame extends JFrame {
     // 打开自定义风格弹窗
     private void customStyle() {
         CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, true, "添加并应用", currUIStyle);
-        try {
-            customStyleDialog.showDialog();
-            if (customStyleDialog.getConfirmed()) {
-                // 创建自定义样式并更换
-                Object[] results = customStyleDialog.getResults();
-                UIStyle customStyle = new UIStyle(
-                        UIStyleConstants.CUSTOM,
-                        ((String) results[0]),
-                        "", ((Color) results[2]), ((Color) results[3]),
-                        ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
-                        ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
-                        ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
-                );
-                if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
-                else customStyle.setStyleImgPath((String) results[1]);
-                // 添加风格菜单项、按钮组，并切换风格
-                addStyle(customStyle);
-                changeUIStyle(customStyle);
-            }
-        } catch (ClassNotFoundException classNotFoundException) {
-            classNotFoundException.printStackTrace();
-        } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-            unsupportedLookAndFeelException.printStackTrace();
-        } catch (InstantiationException instantiationException) {
-            instantiationException.printStackTrace();
-        } catch (IllegalAccessException illegalAccessException) {
-            illegalAccessException.printStackTrace();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } catch (InvocationTargetException invocationTargetException) {
-            invocationTargetException.printStackTrace();
-        } catch (AWTException awtException) {
-            awtException.printStackTrace();
+        customStyleDialog.showDialog();
+        if (customStyleDialog.getConfirmed()) {
+            // 创建自定义样式并更换
+            Object[] results = customStyleDialog.getResults();
+            UIStyle customStyle = new UIStyle(
+                    UIStyleConstants.CUSTOM,
+                    ((String) results[0]),
+                    "", ((Color) results[2]), ((Color) results[3]),
+                    ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
+                    ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
+                    ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
+            );
+            if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
+            else customStyle.setStyleImgPath((String) results[1]);
+            // 添加风格菜单项、按钮组，并切换风格
+            addStyle(customStyle);
+            changeUIStyle(customStyle);
         }
     }
 

@@ -32,13 +32,10 @@ import java.util.List;
  */
 public class ManageCustomStyleDialog extends JDialog {
     private final String TITLE = "管理主题";
-    // 预设主题不能编辑提示
+    private final String IMG_LOST_MSG = "主题背景图片丢失，请重新编辑主题";
     private final String EDIT_DENIED_MSG = "不能编辑预设的主题";
-    // 预设主题不能删除提示
     private final String REMOVE_DENIED_MSG = "不能删除预设的主题";
-    // 删除确认提示
     private final String ASK_REMOVE_MSG = "确定删除选中的主题？";
-    // 编辑时单选提示
     private final String SINGLE_SELECT_MSG = "需要编辑的主题一次只能选择一个";
     private ManageCustomStyleDialogPanel globalPanel = new ManageCustomStyleDialogPanel();
 
@@ -221,60 +218,38 @@ public class ManageCustomStyleDialog extends JDialog {
         });
         // 应用事件
         applyButton.addActionListener(e -> {
-            try {
-                UIStyle style = styleList.getSelectedValue();
-                if (style == null) return;
-                f.changeUIStyle(style);
-                updateStyle();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } catch (ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                throw new RuntimeException(ex);
-            } catch (InstantiationException ex) {
-                throw new RuntimeException(ex);
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            } catch (AWTException ex) {
-                throw new RuntimeException(ex);
+            UIStyle style = styleList.getSelectedValue();
+            if (style == null) return;
+            if(!style.hasImg()) {
+                new TipDialog(f, IMG_LOST_MSG).showDialog();
+                return;
             }
+            f.changeUIStyle(style);
+            updateStyle();
         });
         // 添加事件
         addButton.addActionListener(e -> {
             UIStyle value = styleList.getSelectedValue();
             CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, true, "添加", value != null ? value : f.getCurrUIStyle());
-            try {
-                customStyleDialog.showDialog();
-                if (customStyleDialog.getConfirmed()) {
-                    // 创建自定义样式并更换
-                    Object[] results = customStyleDialog.getResults();
-                    UIStyle customStyle = new UIStyle(
-                            UIStyleConstants.CUSTOM,
-                            ((String) results[0]),
-                            "", ((Color) results[2]), ((Color) results[3]),
-                            ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
-                            ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
-                            ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
-                    );
-                    customStyle.setInvokeLater(() -> updateRenderer(styleList));
-                    if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
-                    else customStyle.setStyleImgPath((String) results[1]);
-                    // 添加风格菜单项、按钮组，但不切换风格
-                    f.addStyle(customStyle);
-                    // 最后别忘了到列表中添加
-                    styleListModel.addElement(customStyle);
-                }
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                unsupportedLookAndFeelException.printStackTrace();
-            } catch (InstantiationException instantiationException) {
-                instantiationException.printStackTrace();
-            } catch (IllegalAccessException illegalAccessException) {
-                illegalAccessException.printStackTrace();
-            } catch (InvocationTargetException invocationTargetException) {
-                invocationTargetException.printStackTrace();
+            customStyleDialog.showDialog();
+            if (customStyleDialog.getConfirmed()) {
+                // 创建自定义样式并更换
+                Object[] results = customStyleDialog.getResults();
+                UIStyle customStyle = new UIStyle(
+                        UIStyleConstants.CUSTOM,
+                        ((String) results[0]),
+                        "", ((Color) results[2]), ((Color) results[3]),
+                        ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
+                        ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
+                        ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
+                );
+                customStyle.setInvokeLater(() -> updateRenderer(styleList));
+                if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
+                else customStyle.setStyleImgPath((String) results[1]);
+                // 添加风格菜单项、按钮组，但不切换风格
+                f.addStyle(customStyle);
+                // 最后别忘了到列表中添加
+                styleListModel.addElement(customStyle);
             }
         });
         // 删除事件
@@ -289,32 +264,11 @@ public class ManageCustomStyleDialog extends JDialog {
             d.showDialog();
             if (d.getResponse() == JOptionPane.YES_OPTION) {
                 List<UIStyle> selectedStyles = styleList.getSelectedValuesList();
-                // 获取应处理的集合
-//                    List<CustomRadioButtonMenuItem> stylePopupMenuItems = f.getStylePopupMenuItems();
-//                    CustomPopupMenu stylePopupMenu = f.getStylePopupMenu();
                 List<UIStyle> styles = f.getStyles();
                 UIStyle currUIStyle = f.getCurrUIStyle();
                 selectedStyles.forEach(style -> {
                     // 删除正在使用的样式，先换回默认样式，再删除
-                    if (style == currUIStyle) {
-                        try {
-                            f.changeUIStyle(styles.get(0));
-//                                stylePopupMenuItems.get(0).setSelected(true);
-//                                f.updateRadioButtonMenuItemIcon(stylePopupMenu);
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        } catch (ClassNotFoundException classNotFoundException) {
-                            classNotFoundException.printStackTrace();
-                        } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                            unsupportedLookAndFeelException.printStackTrace();
-                        } catch (InstantiationException instantiationException) {
-                            instantiationException.printStackTrace();
-                        } catch (IllegalAccessException illegalAccessException) {
-                            illegalAccessException.printStackTrace();
-                        } catch (AWTException awtException) {
-                            awtException.printStackTrace();
-                        }
-                    }
+                    if (style == currUIStyle) f.changeUIStyle(styles.get(0));
                     styles.remove(style);
                     // 删除图片文件
                     File file = new File(style.getStyleImgPath());
@@ -341,58 +295,42 @@ public class ManageCustomStyleDialog extends JDialog {
                 return;
             }
             CustomStyleDialog dialog = new CustomStyleDialog(f, true, "更新", value);
-            try {
-                int length = styleList.getSelectedIndices().length;
-                if (length == 0) return;
-                // 只能单选
-                if (length > 1) {
-                    new TipDialog(f, SINGLE_SELECT_MSG).showDialog();
-                    return;
+            int length = styleList.getSelectedIndices().length;
+            if (length == 0) return;
+            // 只能单选
+            if (length > 1) {
+                new TipDialog(f, SINGLE_SELECT_MSG).showDialog();
+                return;
+            }
+            dialog.showDialog();
+            if (dialog.getConfirmed()) {
+                Object[] results = dialog.getResults();
+                UIStyle selectedStyle = styleList.getSelectedValue();
+                selectedStyle.setStyleName((String) results[0]);
+                selectedStyle.setInvokeLater(() -> updateRenderer(styleList));
+                if (results[1] instanceof Color) {
+                    selectedStyle.setStyleImgPath("");
+                    selectedStyle.setBgColor((Color) results[1]);
+                } else {
+                    selectedStyle.setStyleImgPath((String) results[1]);
+                    selectedStyle.setBgColor(null);
                 }
-                dialog.showDialog();
-                if (dialog.getConfirmed()) {
-                    Object[] results = dialog.getResults();
-                    UIStyle selectedStyle = styleList.getSelectedValue();
-                    selectedStyle.setStyleName((String) results[0]);
-                    selectedStyle.setInvokeLater(() -> updateRenderer(styleList));
-                    if (results[1] instanceof Color) {
-                        selectedStyle.setStyleImgPath("");
-                        selectedStyle.setBgColor((Color) results[1]);
-                    } else {
-                        selectedStyle.setStyleImgPath((String) results[1]);
-                        selectedStyle.setBgColor(null);
-                    }
-                    selectedStyle.setForeColor((Color) results[2]);
-                    selectedStyle.setSelectedColor((Color) results[3]);
-                    selectedStyle.setLrcColor((Color) results[4]);
-                    selectedStyle.setHighlightColor((Color) results[5]);
-                    selectedStyle.setLabelColor((Color) results[6]);
-                    selectedStyle.setTimeBarColor((Color) results[7]);
-                    selectedStyle.setButtonColor((Color) results[8]);
-                    selectedStyle.setScrollBarColor((Color) results[9]);
-                    selectedStyle.setSliderColor((Color) results[10]);
-                    selectedStyle.setSpectrumColor((Color) results[11]);
-                    selectedStyle.setMenuItemColor((Color) results[12]);
-                    // 若编辑的样式正在使用，则更换
-                    if (f.getCurrUIStyle() == selectedStyle) {
-                        f.changeUIStyle(selectedStyle);
-                        updateStyle();
-                    }
+                selectedStyle.setForeColor((Color) results[2]);
+                selectedStyle.setSelectedColor((Color) results[3]);
+                selectedStyle.setLrcColor((Color) results[4]);
+                selectedStyle.setHighlightColor((Color) results[5]);
+                selectedStyle.setLabelColor((Color) results[6]);
+                selectedStyle.setTimeBarColor((Color) results[7]);
+                selectedStyle.setButtonColor((Color) results[8]);
+                selectedStyle.setScrollBarColor((Color) results[9]);
+                selectedStyle.setSliderColor((Color) results[10]);
+                selectedStyle.setSpectrumColor((Color) results[11]);
+                selectedStyle.setMenuItemColor((Color) results[12]);
+                // 若编辑的样式正在使用，则更换
+                if (f.getCurrUIStyle() == selectedStyle) {
+                    f.changeUIStyle(selectedStyle);
+                    updateStyle();
                 }
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                unsupportedLookAndFeelException.printStackTrace();
-            } catch (InstantiationException instantiationException) {
-                instantiationException.printStackTrace();
-            } catch (IllegalAccessException illegalAccessException) {
-                illegalAccessException.printStackTrace();
-            } catch (InvocationTargetException invocationTargetException) {
-                invocationTargetException.printStackTrace();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } catch (AWTException awtException) {
-                awtException.printStackTrace();
             }
         });
         // 添加右部按钮

@@ -29,7 +29,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -124,7 +123,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         pureColor = new DialogButton("纯色", buttonColor);
     }
 
-    public void showDialog() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public void showDialog() {
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
         topPanel.addMouseListener(new MouseAdapter() {

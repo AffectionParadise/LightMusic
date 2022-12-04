@@ -3832,7 +3832,7 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.optDouble("duration", 0));
         }
     }
 
@@ -3933,7 +3933,7 @@ public class MusicServerUtils {
                     if (artistArray != null && !artistArray.isEmpty())
                         musicInfo.setArtistId(artistArray.getJSONObject(0).getString("author_id"));
                 }
-                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
+                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.optString("album_name"));
                 if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
@@ -7370,8 +7370,7 @@ public class MusicServerUtils {
                     .execute()
                     .body()
                     // 貌似解析不了，触及到什么特殊字符了？
-                    .replace("2233娘_", "")
-                    .replace("[2020]", "");
+                    .replaceAll("\"\\[\\d+.*?\\]\"", "\"\"");
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             total = data.getJSONObject("page").getInt("count");
@@ -20594,7 +20593,7 @@ public class MusicServerUtils {
         for (NetMusicInfo info : data) {
             // 部分歌曲没有时长，先填充时长，准备判断
             if (!info.hasDuration()) fillDuration(info);
-            if (info.equals(musicInfo) || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 5)
+            if (info.equals(musicInfo) || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
                 continue;
             String url = fetchMusicUrl(info.getId(), info.getSource());
             if (StringUtils.isNotEmpty(url)) {

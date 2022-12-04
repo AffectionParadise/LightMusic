@@ -23,7 +23,6 @@ import java.io.IOException;
  */
 public class TipDialog extends JDialog {
     private TipDialog THIS = this;
-    private Dimension size;
     private Font font = Fonts.NORMAL_MEDIUM;
     private Color themeColor;
     private int ms;
@@ -39,6 +38,9 @@ public class TipDialog extends JDialog {
     // 阴影大小像素
     private final int pixels = 10;
 
+    private Timer showtimer;
+    private Timer closeTimer;
+
     public boolean isNotEmpty() {
         return StringUtils.isNotEmpty(StringUtils.removeHTMLLabel(message));
     }
@@ -53,22 +55,24 @@ public class TipDialog extends JDialog {
         this.ms = ms;
     }
 
-    // the auto closing option window constructor
     public TipDialog(PlayerFrame f, String message, int ms) {
         this(f);
         setMessage(message);
         this.ms = ms;
+        initView();
     }
 
     public TipDialog(PlayerFrame f, int ms) {
         this(f);
         this.ms = ms;
+        initView();
     }
 
     public TipDialog(PlayerFrame f, String message) {
         this(f);
         setMessage(message);
         this.ms = 1000;
+        initView();
         // 视频播放界面的对话框需要置顶
         setAlwaysOnTop(true);
     }
@@ -76,32 +80,12 @@ public class TipDialog extends JDialog {
     public TipDialog(PlayerFrame f) {
         super(f);
         this.f = f;
-        setUndecorated(true);
     }
 
     public void updateSize() {
         FontMetrics metrics = messageLabel.getFontMetrics(font);
-        int sWidth = metrics.stringWidth(StringUtils.removeHTMLLabel(message));
-        int sHeight = metrics.getHeight();
-        size = new Dimension(sWidth + 60 + 2 * pixels, sHeight + 40 + 2 * pixels);
-        setSize(size);
-    }
-
-    public void updateView() {
-        // 设置主题色
-        themeColor = f.getCurrUIStyle().getLabelColor();
-        updateSize();
-        // Dialog 背景透明
-        setBackground(Colors.TRANSLUCENT);
-        setLocationRelativeTo(null);
-        updateBlur();
-
-        messageLabel.setForeground(themeColor);
-        messageLabel.setFont(font);
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(messageLabel, BorderLayout.CENTER);
-
-        add(mainPanel, BorderLayout.CENTER);
+        int sw = metrics.stringWidth(StringUtils.removeHTMLLabel(message)), sh = metrics.getHeight();
+        setSize(new Dimension(sw + 60 + 2 * pixels, sh + 40 + 2 * pixels));
     }
 
     public void updateBlur() {
@@ -120,47 +104,69 @@ public class TipDialog extends JDialog {
         doBlur(bufferedImage);
     }
 
-    private Timer timer;
-    private Timer closeWait;
+    public void updateView(boolean resetLocation) {
+        updateSize();
+        updateBlur();
+        if (resetLocation) setLocationRelativeTo(null);
+    }
+
+    private void initView() {
+        // 设置主题色
+        themeColor = f.getCurrUIStyle().getLabelColor();
+        setUndecorated(true);
+        // Dialog 背景透明
+        setBackground(Colors.TRANSLUCENT);
+
+        messageLabel.setForeground(themeColor);
+        messageLabel.setFont(font);
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(messageLabel, BorderLayout.CENTER);
+
+        add(mainPanel, BorderLayout.CENTER);
+
+        initTimer();
+    }
 
     private void initTimer() {
-        if (timer != null) return;
-        timer = new Timer(2, e -> {
+        showtimer = new Timer(2, e -> {
             // 渐隐效果
             float opacity = getOpacity();
             if (closing) opacity = Math.max(0, opacity - 0.02f);
             else opacity = Math.min(1, opacity + 0.02f);
             setOpacity(opacity);
             if (closing && opacity <= 0 || !closing && opacity >= 1) {
-                timer.stop();
+                showtimer.stop();
                 if (closing) {
                     f.currDialogs.remove(THIS);
                     dispose();
                 } else if (ms > 0) {
-                    closeWait.start();
+                    closeTimer.start();
                 }
             }
         });
         // 停留时间
-        closeWait = new Timer(ms, ev -> {
+        closeTimer = new Timer(ms, ev -> {
             close();
-            closeWait.stop();
+            closeTimer.stop();
         });
     }
 
     public void showDialog() {
-        initTimer();
-        updateView();
+        showDialog(true);
+    }
+
+    public void showDialog(boolean resetLocation) {
+        updateView(resetLocation);
         f.currDialogs.add(this);
         setOpacity(0);
         setVisible(true);
         closing = false;
-        timer.start();
+        showtimer.start();
     }
 
     public void close() {
         closing = true;
-        timer.start();
+        showtimer.start();
     }
 
     private void doBlur(BufferedImage bufferedImage) {

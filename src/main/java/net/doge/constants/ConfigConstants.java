@@ -57,6 +57,8 @@ public class ConfigConstants {
     public final static String AUTO_DOWNLOAD_LYRIC = "autoDownloadLyric";
     // 歌词偏移
     public final static String LYRIC_OFFSET = "lyricOffset";
+    // 频谱透明度
+    public final static String SPEC_OPACITY = "spectrumOpacity";
     // 是否显示桌面歌词
     public final static String SHOW_DESKTOP_LYRIC = "showDesktopLyric";
     // 是否锁定桌面歌词

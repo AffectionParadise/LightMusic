@@ -1,13 +1,12 @@
 package net.doge.ui.componentui;
 
+import javafx.scene.media.MediaPlayer;
 import net.doge.models.MusicPlayer;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.dialog.TipDialog;
-import net.doge.ui.components.dialog.VideoDialog;
 import net.doge.utils.ColorUtils;
 import net.doge.utils.StringUtils;
 import net.doge.utils.TimeUtils;
-import javafx.scene.media.MediaPlayer;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -127,26 +126,26 @@ public class SliderUI extends BasicSliderUI {
             private void update(MouseEvent e, boolean showDialog) {
                 slider.setValueIsAdjusting(true);
                 slider.setValue((int) ((double) (e.getX() - trackRect.x) / trackRect.width * slider.getMaximum()));
-                if (showDialog) {
-                    if (isTimeBar) {
-                        String dStr = mp == null ? player.getDurationString() : TimeUtils.format(mp.getMedia().getDuration().toSeconds());
-                        double dSec = mp == null ? player.getDurationSeconds() : mp.getMedia().getDuration().toSeconds();
-                        double cSec = (double) slider.getValue() / slider.getMaximum() * dSec;
-                        String lrc = mp == null ? f.getTimeLrc(cSec) : "";
-                        dialog.setMessage(String.format("%s / %s", TimeUtils.format(cSec), dStr));
-                        if (lrcDialog != null) {
-                            lrcDialog.setMessage(StringUtils.textToHtml(lrc));
-                            lrcDialog.updateSize();
-                            // 将把手坐标转为屏幕上的坐标，确定歌词对话框位置
-                            Point p = new Point(thumbRect.x, thumbRect.y);
-                            SwingUtilities.convertPointToScreen(p, slider);
-                            lrcDialog.setLocation(p.x - lrcDialog.getWidth() / 2 + thumbRect.width / 2, p.y - lrcDialog.getHeight() - 5);
-                        }
-                    } else
-                        dialog.setMessage("音量：" + slider.getValue());
-                    if (!dialog.isShowing()) dialog.showDialog();
-                    if (lrcDialog != null && lrcDialog.isNotEmpty() && !lrcDialog.isShowing()) lrcDialog.showDialog();
-                }
+                if (!showDialog) return;
+                if (isTimeBar) {
+                    boolean isMusic = mp == null;
+                    String dStr = isMusic ? player.getDurationString() : TimeUtils.format(mp.getMedia().getDuration().toSeconds());
+                    double dSec = isMusic ? player.getDurationSeconds() : mp.getMedia().getDuration().toSeconds();
+                    double cSec = (double) slider.getValue() / slider.getMaximum() * dSec;
+                    String lrc = isMusic ? f.getTimeLrc(cSec) : "";
+                    dialog.setMessage(String.format("%s / %s", TimeUtils.format(cSec), dStr));
+                    if (lrcDialog != null) {
+                        lrcDialog.setMessage(StringUtils.textToHtml(lrc));
+                        lrcDialog.updateSize();
+                        // 将把手坐标转为屏幕上的坐标，确定歌词对话框位置
+                        Point p = new Point(thumbRect.x, thumbRect.y);
+                        SwingUtilities.convertPointToScreen(p, slider);
+                        lrcDialog.setLocation(p.x - lrcDialog.getWidth() / 2 + thumbRect.width / 2, p.y - lrcDialog.getHeight() - 5);
+                    }
+                } else
+                    dialog.setMessage("音量：" + slider.getValue());
+                if (!dialog.isShowing()) dialog.showDialog();
+                if (lrcDialog != null && lrcDialog.isNotEmpty() && !lrcDialog.isShowing()) lrcDialog.showDialog(false);
             }
 
             @Override

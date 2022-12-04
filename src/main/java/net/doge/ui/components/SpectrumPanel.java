@@ -52,7 +52,7 @@ public class SpectrumPanel extends JFXPanel {
         if (pw == 0 || ph == 0) return;
         int barNum = SpectrumConstants.BAR_NUM, imgX = (pw - SpectrumConstants.BAR_WIDTH * barNum - SpectrumConstants.BAR_GAP * (barNum - 1)) / 2;
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) f.specOpacity));
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(f.getCurrUIStyle().getSpectrumColor());
         g2d.setStroke(stroke);
