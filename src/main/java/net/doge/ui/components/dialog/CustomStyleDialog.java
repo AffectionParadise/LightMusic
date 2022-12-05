@@ -56,9 +56,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     // 阴影大小像素
     private final int pixels = 10;
 
-    // 关闭窗口图标
-    private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
-
     private CustomPanel centerPanel = new CustomPanel();
     private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
     private CustomPanel buttonPanel = new CustomPanel();
@@ -66,7 +63,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     private CustomPanel topPanel = new CustomPanel();
     private CustomLabel titleLabel = new CustomLabel();
     private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton(closeWindowIcon);
+    private CustomButton closeButton = new CustomButton();
 
     private final CustomLabel[] labels = {
             new CustomLabel("主题名称："),
@@ -244,8 +241,8 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
-        closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
             dispose();

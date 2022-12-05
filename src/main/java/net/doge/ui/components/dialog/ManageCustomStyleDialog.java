@@ -3,7 +3,6 @@ package net.doge.ui.components.dialog;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
-import net.doge.constants.SimplePath;
 import net.doge.constants.UIStyleConstants;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
@@ -44,18 +43,12 @@ public class ManageCustomStyleDialog extends JDialog {
     // 阴影大小像素
     private final int pixels = 10;
 
-    // 关闭窗口图标
-    private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
-    // 复选框图标
-    private ImageIcon uncheckedIcon = new ImageIcon(SimplePath.ICON_PATH + "unchecked.png");
-    private ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
-
     private CustomPanel centerPanel = new CustomPanel();
 
     private CustomPanel topPanel = new CustomPanel();
     private CustomLabel titleLabel = new CustomLabel();
     private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton(closeWindowIcon);
+    private CustomButton closeButton = new CustomButton();
 
     private CustomPanel northPanel = new CustomPanel();
     private CustomPanel tipPanel = new CustomPanel();
@@ -161,8 +154,8 @@ public class ManageCustomStyleDialog extends JDialog {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
-        closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
             dispose();
@@ -195,8 +188,8 @@ public class ManageCustomStyleDialog extends JDialog {
         customOnlyCheckBox.setSelected(f.customOnly);
         customOnlyCheckBox.setForeground(labelColor);
         customOnlyCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
+        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, labelColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, labelColor));
         customOnlyCheckBox.addActionListener(e -> {
             f.customOnly = customOnlyCheckBox.isSelected();
             initStyles();
@@ -431,8 +424,8 @@ public class ManageCustomStyleDialog extends JDialog {
         closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), buttonColor));
         tipLabel.setForeground(labelColor);
         customOnlyCheckBox.setForeground(labelColor);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
+        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, labelColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, labelColor));
         allSelectButton.setForeColor(buttonColor);
         nonSelectButton.setForeColor(buttonColor);
         applyButton.setForeColor(buttonColor);

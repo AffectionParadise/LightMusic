@@ -3,7 +3,6 @@ package net.doge.ui.components.dialog;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
-import net.doge.constants.SimplePath;
 import net.doge.models.HSV;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
@@ -43,9 +42,6 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     // 阴影大小像素
     private final int pixels = 10;
 
-    // 关闭窗口图标
-    private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
-
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel cPanel = new CustomPanel();
     private CustomPanel leftPanel = new CustomPanel();
@@ -56,7 +52,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     private CustomPanel topPanel = new CustomPanel();
     private CustomLabel titleLabel = new CustomLabel();
     private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton(closeWindowIcon);
+    private CustomButton closeButton = new CustomButton();
 
     // 预定义颜色面板
     private Box preBox = Box.createVerticalBox();
@@ -204,8 +200,8 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
-        closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
             f.currDialogs.remove(this);

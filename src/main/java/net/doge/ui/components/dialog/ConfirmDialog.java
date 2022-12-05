@@ -3,8 +3,6 @@ package net.doge.ui.components.dialog;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
-import net.doge.constants.Fonts;
-import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomCheckBox;
@@ -31,15 +29,10 @@ public class ConfirmDialog extends JDialog {
     // 阴影大小像素
     private final int pixels = 10;
 
-    private Font font = Fonts.NORMAL;
     private DialogButton yes = new DialogButton("");
     private DialogButton no = new DialogButton("");
     private DialogButton cancel = new DialogButton("");
     private int response;
-
-    // 复选框图标
-    private ImageIcon uncheckedIcon = new ImageIcon(SimplePath.ICON_PATH + "unchecked.png");
-    private ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
 
     private PlayerFrame f;
     private String message = "";
@@ -97,15 +90,9 @@ public class ConfirmDialog extends JDialog {
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-        messageLabel.setFont(font);
-        yes.setFont(font);
-        no.setFont(font);
-        cancel.setFont(font);
-        checkBox.setFont(font);
         checkBox.setForeground(labelColor);
-        checkBox.setIconTextGap(10);
-        checkBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
-        checkBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
+        checkBox.setIcon(ImageUtils.dye(f.uncheckedIcon, labelColor));
+        checkBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, labelColor));
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
         Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);

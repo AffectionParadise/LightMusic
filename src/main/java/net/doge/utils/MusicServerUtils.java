@@ -4253,18 +4253,19 @@ public class MusicServerUtils {
                 JSONArray playlistArray = result.getJSONArray("playlists");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
+                    JSONObject ct = playlistJson.optJSONObject("creator");
 
                     String playlistId = playlistJson.getString("id");
-                    String playlistName = playlistJson.getString("name");
-                    String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                    String creatorId = playlistJson.getJSONObject("creator").getString("userId");
+                    String name = playlistJson.getString("name");
+                    String creator = ct != null ? ct.getString("nickname") : "";
+                    String creatorId = ct != null ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getInt("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                     playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
+                    playlistInfo.setName(name);
                     playlistInfo.setCreator(creator);
                     playlistInfo.setCreatorId(creatorId);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -8552,18 +8553,19 @@ public class MusicServerUtils {
                 t = playlistArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
+                    JSONObject ct = playlistJson.optJSONObject("creator");
 
                     String playlistId = playlistJson.getString("id");
-                    String playlistName = playlistJson.getString("name");
-                    String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                    String creatorId = playlistJson.getJSONObject("creator").getString("userId");
+                    String name = playlistJson.getString("name");
+                    String creator = ct != null ? ct.getString("nickname") : "";
+                    String creatorId = ct != null ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getInt("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                     playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
+                    playlistInfo.setName(name);
                     playlistInfo.setCreator(creator);
                     playlistInfo.setCreatorId(creatorId);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -8593,18 +8595,19 @@ public class MusicServerUtils {
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
+                    JSONObject ct = playlistJson.optJSONObject("creator");
 
                     String playlistId = playlistJson.getString("id");
-                    String playlistName = playlistJson.getString("name");
-                    String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                    String creatorId = playlistJson.getJSONObject("creator").getString("userId");
+                    String name = playlistJson.getString("name");
+                    String creator = ct != null ? ct.getString("nickname") : "";
+                    String creatorId = ct != null ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getInt("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                     playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
+                    playlistInfo.setName(name);
                     playlistInfo.setCreator(creator);
                     playlistInfo.setCreatorId(creatorId);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -8634,18 +8637,19 @@ public class MusicServerUtils {
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
+                    JSONObject ct = playlistJson.optJSONObject("creator");
 
                     String playlistId = playlistJson.getString("id");
-                    String playlistName = playlistJson.getString("name");
-                    String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                    String creatorId = playlistJson.getJSONObject("creator").getString("userId");
+                    String name = playlistJson.getString("name");
+                    String creator = ct != null ? ct.getString("nickname") : "";
+                    String creatorId = ct != null ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getInt("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                     playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
+                    playlistInfo.setName(name);
                     playlistInfo.setCreator(creator);
                     playlistInfo.setCreatorId(creatorId);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -13913,6 +13917,292 @@ public class MusicServerUtils {
     }
 
     /**
+     * 根据歌单 id 获取歌单
+     */
+    public static CommonResult<NetPlaylistInfo> getPlaylistInfo(int source, String id) {
+        List<NetPlaylistInfo> res = new LinkedList<>();
+        Integer t = 1;
+
+        // 网易云
+        if (source == NetMusicSource.NET_CLOUD) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_API, id))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistJson = playlistInfoJson.optJSONObject("playlist");
+            if (playlistJson != null && !playlistJson.isEmpty()) {
+                JSONObject ct = playlistJson.optJSONObject("creator");
+
+                String playlistId = playlistJson.getString("id");
+                String name = playlistJson.getString("name");
+                String creator = ct != null ? ct.getString("nickname") : "";
+                String creatorId = ct != null ? ct.getString("userId") : "";
+                Integer trackCount = playlistJson.getInt("trackCount");
+                Long playCount = playlistJson.getLong("playCount");
+                String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(name);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setCreatorId(creatorId);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setPlayCount(playCount);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+        }
+
+        // 酷狗
+        else if (source == NetMusicSource.KG) {
+            HttpResponse resp = HttpRequest.get(String.format(PLAYLIST_DETAIL_KG_API, id,
+                            StringUtils.toMD5("NVPh5oo715z5DIWAeQlhMDsWXXQV4hwtappid=1058clienttime=1586163242519clientver=20000dfid=-format=jsonpglobal_specialid="
+                                    + id + "mid=1586163242519specialid=0srcappid=2919uuid=1586163242519NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt")))
+                    .header("mid", "1586163242519")
+                    .header("Referer", "https://m3ws.kugou.com/share/index.php")
+                    .header("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1")
+                    .header("dfid", "-")
+                    .header("clienttime", "1586163242519")
+                    .execute();
+            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                String playlistInfoBody = resp.body();
+                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistJson = playlistInfoJson.optJSONObject("data");
+                if (playlistJson != null && !playlistJson.isEmpty()) {
+                    String playlistId = playlistJson.getString("specialid");
+                    String name = playlistJson.getString("specialname");
+                    String creator = playlistJson.getString("nickname");
+                    Integer trackCount = playlistJson.getInt("songcount");
+                    Long playCount = playlistJson.getLong("playcount");
+                    String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
+
+                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                    playlistInfo.setSource(NetMusicSource.KG);
+                    playlistInfo.setId(playlistId);
+                    playlistInfo.setName(name);
+                    playlistInfo.setCreator(creator);
+                    playlistInfo.setTrackCount(trackCount);
+                    playlistInfo.setPlayCount(playCount);
+                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        playlistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(playlistInfo);
+                }
+            }
+        }
+
+        // QQ
+        else if (source == NetMusicSource.QQ) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistJson = playlistInfoJson.optJSONObject("data");
+            if (playlistJson != null && !playlistJson.isEmpty()) {
+                String playlistId = playlistJson.getString("disstid");
+                String name = playlistJson.getString("dissname");
+                String creator = playlistJson.getString("nickname");
+                Long playCount = playlistJson.getLong("visitnum");
+                Integer trackCount = playlistJson.getInt("songnum");
+                String coverImgThumbUrl = playlistJson.getString("logo");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.QQ);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(name);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setPlayCount(playCount);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+        }
+
+        // 酷我
+        else if (source == NetMusicSource.KW) {
+            String playlistInfoBody = kwRequest(String.format(PLAYLIST_DETAIL_KW_API, id, 1, 1))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistJson = playlistInfoJson.optJSONObject("data");
+            if (playlistJson != null && !playlistJson.isEmpty()) {
+                String playlistId = playlistJson.getString("id");
+                String name = playlistJson.getString("name");
+                String creator = playlistJson.getString("userName");
+                Long playCount = playlistJson.getLong("listencnt");
+                Integer trackCount = playlistJson.getInt("total");
+                String coverImgThumbUrl = playlistJson.getString("img");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.KW);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(name);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setPlayCount(playCount);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+        }
+
+        // 咪咕
+        else if (source == NetMusicSource.MG) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_MG_API, id))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONArray resource = playlistInfoJson.optJSONArray("resource");
+            if (resource != null) {
+                JSONObject playlistJson = resource.getJSONObject(0);
+
+                String playlistId = playlistJson.getString("musicListId");
+                String name = playlistJson.getString("title");
+                String creator = playlistJson.getString("ownerName");
+                String creatorId = playlistJson.getString("ownerId");
+                Long playCount = playlistJson.getJSONObject("opNumItem").getLong("playNum");
+                Integer trackCount = playlistJson.getInt("musicNum");
+                String coverImgThumbUrl = playlistJson.getJSONObject("imgItem").getString("img");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.MG);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(name);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setCreatorId(creatorId);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setPlayCount(playCount);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+        }
+
+        // 千千
+        else if (source == NetMusicSource.QI) {
+            String playlistInfoBody = HttpRequest.get(buildQianUrl(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis())))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistJson = playlistInfoJson.optJSONObject("data");
+            if (playlistJson != null && !playlistJson.isEmpty()) {
+                String playlistId = playlistJson.getString("id");
+                String name = playlistJson.getString("title");
+                Integer trackCount = playlistJson.getInt("trackCount");
+                String coverImgThumbUrl = playlistJson.getString("pic");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.QI);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(name);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+        }
+
+        // 猫耳
+        else if (source == NetMusicSource.ME) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistJson = playlistInfoJson.optJSONObject("info");
+            if (playlistJson != null && !playlistJson.isEmpty()) {
+                JSONObject album = playlistJson.getJSONObject("album");
+
+                String playlistId = album.getString("id");
+                String name = album.getString("title");
+                String creator = album.getString("username");
+                String creatorId = album.getString("user_id");
+                Integer trackCount = album.getInt("music_count");
+                Long playCount = album.getLong("view_count");
+                String coverImgThumbUrl = album.getString("front_cover");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.ME);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(name);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setCreatorId(creatorId);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setPlayCount(playCount);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_BI_API, id))
+                    .execute()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistJson = playlistInfoJson.optJSONObject("data");
+            if (playlistJson != null && !playlistJson.isEmpty()) {
+                JSONObject stat = playlistJson.getJSONObject("statistic");
+
+                String playlistId = playlistJson.getString("menuId");
+                String name = playlistJson.getString("title");
+                String creator = playlistJson.getString("uname");
+                String creatorId = playlistJson.getString("uid");
+                Integer trackCount = playlistJson.optInt("snum", -1);
+                Long playCount = stat.getLong("play");
+                String coverImgThumbUrl = playlistJson.getString("cover");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.BI);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(name);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setCreatorId(creatorId);
+                playlistInfo.setTrackCount(trackCount);
+                playlistInfo.setPlayCount(playCount);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(playlistInfo);
+            }
+        }
+
+        return new CommonResult<>(res, t);
+    }
+
+    /**
      * 根据歌单 id 补全歌单信息(包括封面图、描述)
      */
     public static void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
@@ -13929,15 +14219,16 @@ public class MusicServerUtils {
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
+            JSONObject ct = playlistJson.optJSONObject("creator");
 
             String coverImgUrl = playlistJson.getString("coverImgUrl");
             String description = playlistJson.getString("description");
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description.equals("null") ? "" : description);
             if (!playlistInfo.hasCreator())
-                playlistInfo.setCreator(playlistJson.getJSONObject("creator").getString("nickname"));
+                playlistInfo.setCreator(ct != null ? ct.getString("nickname") : "");
             if (!playlistInfo.hasCreatorId())
-                playlistInfo.setCreatorId(playlistJson.getJSONObject("creator").getString("userId"));
+                playlistInfo.setCreatorId(ct != null ? ct.getString("userId") : "");
             if (!playlistInfo.hasTag())
                 playlistInfo.setTag(parseTags(playlistJson, NetMusicSource.NET_CLOUD));
             if (!playlistInfo.hasTrackCount())

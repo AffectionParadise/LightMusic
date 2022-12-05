@@ -124,7 +124,9 @@ public class PlayerFrame extends JFrame {
     private final String LATEST_MSG = "当前已是最新版本";
     private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n" +
             "下面是一些常见问题解答，请仔细阅读。祝你使用愉快~\n\n" +
-            "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n\n" +
+            "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n" +
+            "注：\n1. 此操作要求你的歌单权限是公开的，不能是私密，否则查看不到\n" +
+            "2. 如果你确实不想公开你的歌单，也可以在“歌单广场”选项卡勾上“歌单 ID”，搜索你的歌单 ID）\n\n" +
             "Q2：如何进行收藏等其他操作？\nA2：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
             "Q3：如何批量操作？\nA3：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
             "Q4：为什么有些歌曲名字和音频不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
@@ -242,7 +244,7 @@ public class PlayerFrame extends JFrame {
     // 恢复图标
     private ImageIcon restoreIcon = new ImageIcon(SimplePath.ICON_PATH + "restoreWindow.png");
     // 关闭窗口图标
-    private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
+    public ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
     // 菜单图标
     private ImageIcon menuIcon = new ImageIcon(SimplePath.ICON_PATH + "menu.png");
     // 更换主题图标
@@ -271,6 +273,9 @@ public class PlayerFrame extends JFrame {
     private ImageIcon dotIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "dot.png");
     // 选定勾图标
     private ImageIcon tickIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "tick.png");
+    // 复选框图标
+    public ImageIcon uncheckedIcon = new ImageIcon(SimplePath.ICON_PATH + "unchecked.png");
+    public ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
     // 添加歌曲文件图标
     private ImageIcon fileIcon = new ImageIcon(SimplePath.ICON_PATH + "file.png");
     // 添加文件夹图标
@@ -371,8 +376,6 @@ public class PlayerFrame extends JFrame {
     private ImageIcon searchIcon = new ImageIcon(SimplePath.ICON_PATH + "search.png");
     // 清空搜索历史图标
     private ImageIcon clearHistorySearchIcon = new ImageIcon(SimplePath.ICON_PATH + "clearHistorySearch.png");
-    // 更多图标
-//    private ImageIcon moreIcon = new ImageIcon(SimplePath.ICON_PATH + "more.png");
     // 返回图标
     private ImageIcon backwardIcon = new ImageIcon(SimplePath.ICON_PATH + "backward.png");
     // 刷新图标
@@ -880,35 +883,6 @@ public class PlayerFrame extends JFrame {
     public CustomButton muteButton = new CustomButton(soundIcon);
     private CustomSlider volumeSlider = new CustomSlider();
     private CustomButton rateButton = new CustomButton(rateIcon);
-    //    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
-//    private CustomRadioButtonMenuItem[] rateMenuItems = {
-//            new CustomRadioButtonMenuItem("0.2x"),
-//            new CustomRadioButtonMenuItem("0.3x"),
-//            new CustomRadioButtonMenuItem("0.4x"),
-//            new CustomRadioButtonMenuItem("0.5x"),
-//            new CustomRadioButtonMenuItem("0.6x"),
-//            new CustomRadioButtonMenuItem("0.7x"),
-//            new CustomRadioButtonMenuItem("0.8x"),
-//            new CustomRadioButtonMenuItem("0.9x"),
-//            new CustomRadioButtonMenuItem("1x"),
-//            new CustomRadioButtonMenuItem("1.1x"),
-//            new CustomRadioButtonMenuItem("1.2x"),
-//            new CustomRadioButtonMenuItem("1.3x"),
-//            new CustomRadioButtonMenuItem("1.4x"),
-//            new CustomRadioButtonMenuItem("1.5x"),
-//            new CustomRadioButtonMenuItem("1.6x"),
-//            new CustomRadioButtonMenuItem("1.7x"),
-//            new CustomRadioButtonMenuItem("1.8x"),
-//            new CustomRadioButtonMenuItem("1.9x"),
-//            new CustomRadioButtonMenuItem("2x"),
-//            new CustomRadioButtonMenuItem("3x"),
-//            new CustomRadioButtonMenuItem("4x"),
-//            new CustomRadioButtonMenuItem("5x"),
-//            new CustomRadioButtonMenuItem("6x"),
-//            new CustomRadioButtonMenuItem("7x"),
-//            new CustomRadioButtonMenuItem("8x")
-//    };
-//    private CustomPopupMenu ratePopupMenu = new CustomPopupMenu(THIS);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
     private CustomButton blurButton = new CustomButton(cvBlurIcon);
     private CustomButton soundEffectButton = new CustomButton(soundEffectIcon);
@@ -1220,8 +1194,6 @@ public class PlayerFrame extends JFrame {
     private CustomButton netMusicClearInputButton = new CustomButton(clearInputIcon);
     // 在线音乐搜索按钮
     private CustomButton searchButton = new CustomButton(searchIcon);
-    // 在线音乐加载更多按钮
-//    private CustomButton moreButton = new CustomButton(MORE_TIP, moreIcon);
     // 在线音乐标题标签
     private CustomLabel netMusicTitleLabel = new CustomLabel();
     // 歌曲数量面板
@@ -1229,7 +1201,7 @@ public class PlayerFrame extends JFrame {
     // 歌曲数量标签
     private CustomLabel netMusicCountLabel = new CustomLabel("");
     // 在线音乐关键词面板
-    private CustomPanel netMusicKeywordsPanel = new CustomPanel();
+    public CustomPanel netMusicKeywordsPanel = new CustomPanel();
     private CustomScrollPane netMusicKeywordsPanelScrollPane = new CustomScrollPane(netMusicKeywordsPanel);
     // 在线音乐搜索建议面板
     private CustomPanel netMusicSearchSuggestionPanel = new CustomPanel();
@@ -1252,7 +1224,7 @@ public class PlayerFrame extends JFrame {
     // 在线音乐热搜面板 内部面板2
     private CustomPanel netMusicHotSearchInnerPanel2 = new CustomPanel();
     // 在线音乐搜索历史面板
-    private CustomPanel netMusicHistorySearchPanel = new CustomPanel();
+    public CustomPanel netMusicHistorySearchPanel = new CustomPanel();
     // 在线音乐搜索历史面板 内部面板1
     private CustomPanel netMusicHistorySearchInnerPanel1 = new CustomPanel();
     // 在线音乐搜索历史标签
@@ -1312,14 +1284,14 @@ public class PlayerFrame extends JFrame {
     private CustomLabel netPlaylistTitleLabel = new CustomLabel();
     // 返回歌单按钮
     private CustomButton netPlaylistBackwardButton = new CustomButton(backwardIcon);
+    // 歌单 id
+    private CustomCheckBox netPlaylistIdCheckBox = new CustomCheckBox("歌单 ID");
     // 歌单搜索框
     private CustomTextField netPlaylistSearchTextField = new CustomTextField(8);
     // 歌单清除输入按钮
     private CustomButton netPlaylistClearInputButton = new CustomButton(clearInputIcon);
     // 歌单搜索按钮
     private CustomButton netPlaylistSearchButton = new CustomButton(searchIcon);
-    // 歌单加载更多按钮
-//    private CustomButton netPlaylistMoreButton = new CustomButton(MORE_TIP, moreIcon);
     // 歌单播放全部按钮
     private CustomButton netPlaylistPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 歌单刷新按钮
@@ -1343,10 +1315,10 @@ public class PlayerFrame extends JFrame {
     // 歌单数量标签
     private CustomLabel netPlaylistCountLabel = new CustomLabel("");
     // 歌单关键词面板
-    private CustomPanel netPlaylistKeywordsPanel = new CustomPanel();
+    public CustomPanel netPlaylistKeywordsPanel = new CustomPanel();
     private CustomScrollPane netPlaylistKeywordsPanelScrollPane = new CustomScrollPane(netPlaylistKeywordsPanel);
     // 歌单搜索历史面板
-    private CustomPanel netPlaylistHistorySearchPanel = new CustomPanel();
+    public CustomPanel netPlaylistHistorySearchPanel = new CustomPanel();
     // 歌单搜索历史面板 内部面板1
     private CustomPanel netPlaylistHistorySearchInnerPanel1 = new CustomPanel();
     // 歌单搜索历史标签
@@ -1393,8 +1365,6 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netAlbumSearchTextField = new CustomTextField(8);
     // 专辑搜索按钮
     private CustomButton netAlbumSearchButton = new CustomButton(searchIcon);
-    // 专辑加载更多按钮
-//    private CustomButton netAlbumMoreButton = new CustomButton(MORE_TIP, moreIcon);
     // 专辑播放全部按钮
     private CustomButton netAlbumPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 专辑刷新按钮
@@ -1418,10 +1388,10 @@ public class PlayerFrame extends JFrame {
     // 专辑数量标签
     private CustomLabel netAlbumCountLabel = new CustomLabel("");
     // 专辑关键词面板
-    private CustomPanel netAlbumKeywordsPanel = new CustomPanel();
+    public CustomPanel netAlbumKeywordsPanel = new CustomPanel();
     private CustomScrollPane netAlbumKeywordsPanelScrollPane = new CustomScrollPane(netAlbumKeywordsPanel);
     // 专辑搜索历史面板
-    private CustomPanel netAlbumHistorySearchPanel = new CustomPanel();
+    public CustomPanel netAlbumHistorySearchPanel = new CustomPanel();
     // 专辑搜索历史面板 内部面板1
     private CustomPanel netAlbumHistorySearchInnerPanel1 = new CustomPanel();
     // 专辑搜索历史标签
@@ -1481,8 +1451,6 @@ public class PlayerFrame extends JFrame {
     private CustomTextField netArtistSearchTextField = new CustomTextField(8);
     // 歌手搜索按钮
     private CustomButton netArtistSearchButton = new CustomButton(searchIcon);
-    // 歌手加载更多按钮
-//    private CustomButton netArtistMoreButton = new CustomButton(MORE_TIP, moreIcon);
     // 歌手播放全部按钮
     private CustomButton netArtistPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 歌手刷新按钮
@@ -1506,10 +1474,10 @@ public class PlayerFrame extends JFrame {
     // 歌手数量标签
     private CustomLabel netArtistCountLabel = new CustomLabel("");
     // 歌手关键词面板
-    private CustomPanel netArtistKeywordsPanel = new CustomPanel();
+    public CustomPanel netArtistKeywordsPanel = new CustomPanel();
     private CustomScrollPane netArtistKeywordsPanelScrollPane = new CustomScrollPane(netArtistKeywordsPanel);
     // 歌手搜索历史面板
-    private CustomPanel netArtistHistorySearchPanel = new CustomPanel();
+    public CustomPanel netArtistHistorySearchPanel = new CustomPanel();
     // 歌手搜索历史面板 内部面板1
     private CustomPanel netArtistHistorySearchInnerPanel1 = new CustomPanel();
     // 歌手搜索历史标签
@@ -1561,8 +1529,6 @@ public class PlayerFrame extends JFrame {
     private CustomButton netRadioClearInputButton = new CustomButton(clearInputIcon);
     // 电台搜索按钮
     private CustomButton netRadioSearchButton = new CustomButton(searchIcon);
-    // 电台加载更多按钮
-//    private CustomButton netRadioMoreButton = new CustomButton(MORE_TIP, moreIcon);
     // 电台播放全部按钮
     private CustomButton netRadioPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 电台刷新按钮
@@ -1586,10 +1552,10 @@ public class PlayerFrame extends JFrame {
     // 电台数量标签
     private CustomLabel netRadioCountLabel = new CustomLabel("");
     // 电台关键词面板
-    private CustomPanel netRadioKeywordsPanel = new CustomPanel();
+    public CustomPanel netRadioKeywordsPanel = new CustomPanel();
     private CustomScrollPane netRadioKeywordsPanelScrollPane = new CustomScrollPane(netRadioKeywordsPanel);
     // 电台搜索历史面板
-    private CustomPanel netRadioHistorySearchPanel = new CustomPanel();
+    public CustomPanel netRadioHistorySearchPanel = new CustomPanel();
     // 电台搜索历史面板 内部面板1
     private CustomPanel netRadioHistorySearchInnerPanel1 = new CustomPanel();
     // 电台搜索历史标签
@@ -1631,8 +1597,6 @@ public class PlayerFrame extends JFrame {
     private CustomButton netMvClearInputButton = new CustomButton(clearInputIcon);
     // MV 搜索按钮
     private CustomButton netMvSearchButton = new CustomButton(searchIcon);
-    // MV 加载更多按钮
-//    private CustomButton netMvMoreButton = new CustomButton(MORE_TIP, moreIcon);
     // MV 排序类型下拉框
     private CustomComboBox<String> netMvSortTypeComboBox = new CustomComboBox();
     // MV 刷新按钮
@@ -1656,10 +1620,10 @@ public class PlayerFrame extends JFrame {
     //  MV 数量标签
     private CustomLabel netMvCountLabel = new CustomLabel("");
     // MV 关键词面板
-    private CustomPanel netMvKeywordsPanel = new CustomPanel();
+    public CustomPanel netMvKeywordsPanel = new CustomPanel();
     private CustomScrollPane netMvKeywordsPanelScrollPane = new CustomScrollPane(netMvKeywordsPanel);
     // MV 搜索历史面板
-    private CustomPanel netMvHistorySearchPanel = new CustomPanel();
+    public CustomPanel netMvHistorySearchPanel = new CustomPanel();
     // MV 搜索历史面板 内部面板1
     private CustomPanel netMvHistorySearchInnerPanel1 = new CustomPanel();
     // MV 搜索历史标签
@@ -1762,8 +1726,6 @@ public class PlayerFrame extends JFrame {
     private CustomButton netUserClearInputButton = new CustomButton(clearInputIcon);
     // 用户搜索按钮
     private CustomButton netUserSearchButton = new CustomButton(searchIcon);
-    // 用户加载更多按钮
-//    private CustomButton netUserMoreButton = new CustomButton(MORE_TIP, moreIcon);
     // 用户播放全部按钮
     private CustomButton netUserPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 用户刷新按钮
@@ -1787,10 +1749,10 @@ public class PlayerFrame extends JFrame {
     // 用户数量标签
     private CustomLabel netUserCountLabel = new CustomLabel("");
     // 用户关键词面板
-    private CustomPanel netUserKeywordsPanel = new CustomPanel();
+    public CustomPanel netUserKeywordsPanel = new CustomPanel();
     private CustomScrollPane netUserKeywordsPanelScrollPane = new CustomScrollPane(netUserKeywordsPanel);
     // 用户搜索历史面板
-    private CustomPanel netUserHistorySearchPanel = new CustomPanel();
+    public CustomPanel netUserHistorySearchPanel = new CustomPanel();
     // 用户搜索历史面板 内部面板1
     private CustomPanel netUserHistorySearchInnerPanel1 = new CustomPanel();
     // 用户搜索历史标签
@@ -2843,32 +2805,30 @@ public class PlayerFrame extends JFrame {
                             if (videoDialog == null) forwardButton.doClick();
                         }
                     }
-                } else if (currDialogs.isEmpty()) {
-                    if (code == KeyEvent.VK_ENTER) {
-                        // 回车跳页
-                        if (collectionPageTextField.hasFocus()) collectionGoButton.doClick();
-                        else if (netMusicPageTextField.hasFocus()) netMusicGoButton.doClick();
-                        else if (netPlaylistPageTextField.hasFocus()) netPlaylistGoButton.doClick();
-                        else if (netAlbumPageTextField.hasFocus()) netAlbumGoButton.doClick();
-                        else if (netArtistPageTextField.hasFocus()) netArtistGoButton.doClick();
-                        else if (netRadioPageTextField.hasFocus()) netRadioGoButton.doClick();
-                        else if (netMvPageTextField.hasFocus()) netMvGoButton.doClick();
-                        else if (netRankingPageTextField.hasFocus()) netRankingGoButton.doClick();
-                        else if (netUserPageTextField.hasFocus()) netUserGoButton.doClick();
-                        else if (netCommentPageTextField.hasFocus()) netCommentGoButton.doClick();
-                        else if (netSheetPageTextField.hasFocus()) netSheetGoButton.doClick();
-                        else if (netRecommendPageTextField.hasFocus()) netRecommendGoButton.doClick();
-                        else {
-                            // 回车搜索
-                            int selectedIndex = tabbedPane.getSelectedIndex();
-                            if (selectedIndex == TabIndex.NET_MUSIC) searchButton.doClick();
-                            else if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistSearchButton.doClick();
-                            else if (selectedIndex == TabIndex.NET_ALBUM) netAlbumSearchButton.doClick();
-                            else if (selectedIndex == TabIndex.NET_ARTIST) netArtistSearchButton.doClick();
-                            else if (selectedIndex == TabIndex.NET_RADIO) netRadioSearchButton.doClick();
-                            else if (selectedIndex == TabIndex.NET_MV) netMvSearchButton.doClick();
-                            else if (selectedIndex == TabIndex.NET_USER) netUserSearchButton.doClick();
-                        }
+                } else if (currDialogs.isEmpty() && code == KeyEvent.VK_ENTER && released) {
+                    // 回车跳页
+                    if (collectionPageTextField.hasFocus()) collectionGoButton.doClick();
+                    else if (netMusicPageTextField.hasFocus()) netMusicGoButton.doClick();
+                    else if (netPlaylistPageTextField.hasFocus()) netPlaylistGoButton.doClick();
+                    else if (netAlbumPageTextField.hasFocus()) netAlbumGoButton.doClick();
+                    else if (netArtistPageTextField.hasFocus()) netArtistGoButton.doClick();
+                    else if (netRadioPageTextField.hasFocus()) netRadioGoButton.doClick();
+                    else if (netMvPageTextField.hasFocus()) netMvGoButton.doClick();
+                    else if (netRankingPageTextField.hasFocus()) netRankingGoButton.doClick();
+                    else if (netUserPageTextField.hasFocus()) netUserGoButton.doClick();
+                    else if (netCommentPageTextField.hasFocus()) netCommentGoButton.doClick();
+                    else if (netSheetPageTextField.hasFocus()) netSheetGoButton.doClick();
+                    else if (netRecommendPageTextField.hasFocus()) netRecommendGoButton.doClick();
+                    else {
+                        // 回车搜索
+                        int selectedIndex = tabbedPane.getSelectedIndex();
+                        if (selectedIndex == TabIndex.NET_MUSIC) searchButton.doClick();
+                        else if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistSearchButton.doClick();
+                        else if (selectedIndex == TabIndex.NET_ALBUM) netAlbumSearchButton.doClick();
+                        else if (selectedIndex == TabIndex.NET_ARTIST) netArtistSearchButton.doClick();
+                        else if (selectedIndex == TabIndex.NET_RADIO) netRadioSearchButton.doClick();
+                        else if (selectedIndex == TabIndex.NET_MV) netMvSearchButton.doClick();
+                        else if (selectedIndex == TabIndex.NET_USER) netUserSearchButton.doClick();
                     }
                 }
             }
@@ -3237,12 +3197,6 @@ public class PlayerFrame extends JFrame {
         // 载入在线音乐搜索历史关键词
         JSONArray historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
-            // 显示 “搜索历史” 标签
-            if (!historySearchJsonArray.isEmpty()) {
-                netMusicKeywordsPanel.add(netMusicHistorySearchPanel);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netMusicClearHistorySearchButton);
-            }
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3258,13 +3212,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netMusicHistorySearchInnerPanel2.remove(b);
-                            netMusicHistorySearchInnerPanel2.repaint();
-                            if (netMusicHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netMusicKeywordsPanel.remove(netMusicHistorySearchPanel);
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netMusicHistorySearchInnerPanel2.remove(b);
+                        netMusicHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -3277,12 +3227,6 @@ public class PlayerFrame extends JFrame {
         // 载入歌单搜索历史关键词
         historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_PLAYLIST_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
-            // 显示 “搜索历史” 标签
-            if (!historySearchJsonArray.isEmpty()) {
-                netPlaylistKeywordsPanel.add(netPlaylistHistorySearchPanel);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netPlaylistClearHistorySearchButton);
-            }
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3298,14 +3242,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netPlaylistHistorySearchInnerPanel2.remove(b);
-                            netPlaylistHistorySearchInnerPanel2.repaint();
-                            if (netPlaylistHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netPlaylistKeywordsPanel.remove(netPlaylistHistorySearchPanel);
-                                netPlaylistKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netPlaylistHistorySearchInnerPanel2.remove(b);
+                        netPlaylistHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -3318,12 +3257,6 @@ public class PlayerFrame extends JFrame {
         // 载入专辑搜索历史关键词
         historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_ALBUM_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
-            // 显示 “搜索历史” 标签
-            if (!historySearchJsonArray.isEmpty()) {
-                netAlbumKeywordsPanel.add(netAlbumHistorySearchPanel);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netAlbumClearHistorySearchButton);
-            }
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3339,14 +3272,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netAlbumHistorySearchInnerPanel2.remove(b);
-                            netAlbumHistorySearchInnerPanel2.repaint();
-                            if (netAlbumHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netAlbumKeywordsPanel.remove(netAlbumHistorySearchPanel);
-                                netAlbumKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netAlbumHistorySearchInnerPanel2.remove(b);
+                        netAlbumHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -3359,12 +3287,6 @@ public class PlayerFrame extends JFrame {
         // 载入歌手搜索历史关键词
         historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_ARTIST_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
-            // 显示 “搜索历史” 标签
-            if (!historySearchJsonArray.isEmpty()) {
-                netArtistKeywordsPanel.add(netArtistHistorySearchPanel);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netArtistClearHistorySearchButton);
-            }
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3380,14 +3302,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netArtistHistorySearchInnerPanel2.remove(b);
-                            netArtistHistorySearchInnerPanel2.repaint();
-                            if (netArtistHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netArtistKeywordsPanel.remove(netArtistHistorySearchPanel);
-                                netArtistKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netArtistHistorySearchInnerPanel2.remove(b);
+                        netArtistHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -3400,12 +3317,6 @@ public class PlayerFrame extends JFrame {
         // 载入电台搜索历史关键词
         historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_RADIO_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
-            // 显示 “搜索历史” 标签
-            if (!historySearchJsonArray.isEmpty()) {
-                netRadioKeywordsPanel.add(netRadioHistorySearchPanel);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netRadioClearHistorySearchButton);
-            }
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3421,14 +3332,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netRadioHistorySearchInnerPanel2.remove(b);
-                            netRadioHistorySearchInnerPanel2.repaint();
-                            if (netRadioHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netRadioKeywordsPanel.remove(netRadioHistorySearchPanel);
-                                netRadioKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netRadioHistorySearchInnerPanel2.remove(b);
+                        netRadioHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -3441,12 +3347,6 @@ public class PlayerFrame extends JFrame {
         // 载入 MV 搜索历史关键词
         historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_MV_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
-            // 显示 “搜索历史” 标签
-            if (!historySearchJsonArray.isEmpty()) {
-                netMvKeywordsPanel.add(netMvHistorySearchPanel);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netMvClearHistorySearchButton);
-            }
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3462,14 +3362,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netMvHistorySearchInnerPanel2.remove(b);
-                            netMvHistorySearchInnerPanel2.repaint();
-                            if (netMvHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netMvKeywordsPanel.remove(netMvHistorySearchPanel);
-                                netMvKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netMvHistorySearchInnerPanel2.remove(b);
+                        netMvHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -3482,12 +3377,6 @@ public class PlayerFrame extends JFrame {
         // 载入用户搜索历史关键词
         historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_USER_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
-            // 显示 “搜索历史” 标签
-            if (!historySearchJsonArray.isEmpty()) {
-                netUserKeywordsPanel.add(netUserHistorySearchPanel);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netUserClearHistorySearchButton);
-            }
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3503,21 +3392,15 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netUserHistorySearchInnerPanel2.remove(b);
-                            netUserHistorySearchInnerPanel2.repaint();
-                            if (netUserHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netUserKeywordsPanel.remove(netUserHistorySearchPanel);
-                                netUserKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netUserHistorySearchInnerPanel2.remove(b);
+                        netUserHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
                 b.setForeColor(currUIStyle.getButtonColor());
                 netUserHistorySearchInnerPanel2.add(b);
             }
-            netUserKeywordsPanel.repaint();
         }
 
         // 开屏空列表提示
@@ -7215,7 +7098,7 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索按钮事件
         searchButton.addActionListener(e -> {
-            netMusicCurrKeyword = searchTextField.getText();
+            netMusicCurrKeyword = searchTextField.getText().trim();
             if (!netMusicCurrKeyword.equals("")) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netMusicCurrKeyword);
@@ -7231,13 +7114,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netMusicHistorySearchInnerPanel2.remove(b);
-                            netMusicHistorySearchInnerPanel2.repaint();
-                            if (netMusicHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netMusicKeywordsPanel.remove(netMusicHistorySearchPanel);
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netMusicHistorySearchInnerPanel2.remove(b);
+                        netMusicHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -7249,8 +7128,6 @@ public class PlayerFrame extends JFrame {
                 int c = netMusicHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netMusicHistorySearchInnerPanel2.remove(c - 1);
-                // 显示 “搜索历史” 面板
-                netMusicKeywordsPanel.add(netMusicHistorySearchPanel);
                 // 更新 LAF，防止按钮样式不正确
                 SwingUtilities.updateComponentTreeUI(netMusicClearHistorySearchButton);
                 netMusicHistorySearchPanel.repaint();
@@ -7368,9 +7245,7 @@ public class PlayerFrame extends JFrame {
         netMusicSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netMusicCurrKeyword = searchTextField.getText();
-            netMusicCurrPage = 1;
-            netMusicRefreshButton.doClick();
+            searchButton.doClick();
         });
         netMusicSearchTypeComboBox.addItem("常规");
         netMusicSearchTypeComboBox.addItem("歌词");
@@ -7378,16 +7253,14 @@ public class PlayerFrame extends JFrame {
         netMusicSearchTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netMusicCurrKeyword = searchTextField.getText();
-            netMusicCurrPage = 1;
-            netMusicRefreshButton.doClick();
+            netMusicCurrKeyword = searchTextField.getText().trim();
+            searchButton.doClick();
         });
         netMusicSearchSubTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netMusicCurrKeyword = searchTextField.getText();
-            netMusicCurrPage = 1;
-            netMusicRefreshButton.doClick();
+            netMusicCurrKeyword = searchTextField.getText().trim();
+            searchButton.doClick();
         });
         netMusicSearchSubTypeComboBox.setVisible(false);
         // 刷新按钮事件
@@ -8226,15 +8099,12 @@ public class PlayerFrame extends JFrame {
         netMusicHotSearchPanel.add(netMusicHotSearchInnerPanel2);
         // 搜索历史面板
         // 清空搜索历史按钮
-        netMusicClearHistorySearchButton.addActionListener(e -> {
-            netMusicHistorySearchInnerPanel2.removeAll();
-            netMusicKeywordsPanel.remove(netMusicHistorySearchPanel);
-            netMusicKeywordsPanel.repaint();
-        });
+        netMusicClearHistorySearchButton.addActionListener(e -> netMusicHistorySearchInnerPanel2.removeAll());
         netMusicClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
         netMusicClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMusicClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMusicClearHistorySearchButton, THIS));
 
+        netMusicHistorySearchInnerPanel1.setVisible(false);
         netMusicHistorySearchInnerPanel1.add(netMusicHistorySearchLabel);
         netMusicHistorySearchInnerPanel1.add(netMusicClearHistorySearchButton);
         netMusicHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -8242,11 +8112,25 @@ public class PlayerFrame extends JFrame {
         netMusicHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netMusicHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netMusicHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netMusicHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                netMusicHistorySearchInnerPanel1.setVisible(true);
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                if (netMusicHistorySearchInnerPanel2.getComponentCount() == 0)
+                    netMusicHistorySearchInnerPanel1.setVisible(false);
+            }
+        });
         netMusicHistorySearchPanel.setLayout(new BoxLayout(netMusicHistorySearchPanel, BoxLayout.Y_AXIS));
         netMusicHistorySearchPanel.add(netMusicHistorySearchInnerPanel1);
         netMusicHistorySearchPanel.add(netMusicHistorySearchInnerPanel2);
+
         // 关键词面板
         netMusicKeywordsPanel.setLayout(new BoxLayout(netMusicKeywordsPanel, BoxLayout.Y_AXIS));
+        netMusicKeywordsPanel.add(netMusicHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
         d = new Dimension(1000, 1000);
@@ -8535,9 +8419,7 @@ public class PlayerFrame extends JFrame {
         netPlaylistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netPlaylistSearchTextField.isOccupied()) {
-                    netPlaylistClearInputButton.setVisible(true);
-                }
+                if (netPlaylistSearchTextField.isOccupied()) netPlaylistClearInputButton.setVisible(true);
             }
 
             @Override
@@ -8565,6 +8447,7 @@ public class PlayerFrame extends JFrame {
                 netPlaylistLeftBox.add(netPlaylistScrollPane);
                 // 添加回工具栏的搜索
                 netPlaylistToolBar.remove(1);
+                netPlaylistToolBar.add(netPlaylistIdCheckBox);
                 netPlaylistToolBar.add(netPlaylistSearchTextField);
                 netPlaylistToolBar.add(netPlaylistClearInputButton);
                 netPlaylistToolBar.add(netPlaylistSearchButton);
@@ -8574,6 +8457,7 @@ public class PlayerFrame extends JFrame {
                 if (currPlaylistMusicInfo == null && currPlaylistPlaylistInfo == null
                         && currPlaylistCommentInfo == null && currPlaylistUserInfo == null) {
                     // 删除标题标签
+                    netPlaylistToolBar.add(netPlaylistIdCheckBox);
                     netPlaylistToolBar.add(netPlaylistSearchTextField);
                     netPlaylistToolBar.add(netPlaylistClearInputButton);
                     netPlaylistToolBar.add(netPlaylistSearchButton);
@@ -8593,6 +8477,7 @@ public class PlayerFrame extends JFrame {
                 // 删除标题标签
                 netPlaylistToolBar.removeAll();
                 netPlaylistToolBar.add(netPlaylistBackwardButton);
+                netPlaylistToolBar.add(netPlaylistIdCheckBox);
                 netPlaylistToolBar.add(netPlaylistSearchTextField);
                 netPlaylistToolBar.add(netPlaylistClearInputButton);
                 netPlaylistToolBar.add(netPlaylistSearchButton);
@@ -8616,7 +8501,7 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索歌单按钮事件
         netPlaylistSearchButton.addActionListener(e -> {
-            netPlaylistCurrKeyword = netPlaylistSearchTextField.getText();
+            netPlaylistCurrKeyword = netPlaylistSearchTextField.getText().trim();
             if (!netPlaylistCurrKeyword.equals("")) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netPlaylistCurrKeyword);
@@ -8632,14 +8517,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netPlaylistHistorySearchInnerPanel2.remove(b);
-                            netPlaylistHistorySearchInnerPanel2.repaint();
-                            if (netPlaylistHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netPlaylistKeywordsPanel.remove(netPlaylistHistorySearchPanel);
-                                netPlaylistKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netPlaylistHistorySearchInnerPanel2.remove(b);
+                        netPlaylistHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -8651,8 +8531,6 @@ public class PlayerFrame extends JFrame {
                 int c = netPlaylistHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netPlaylistHistorySearchInnerPanel2.remove(c - 1);
-                // 显示 “搜索历史” 面板
-                netPlaylistKeywordsPanel.add(netPlaylistHistorySearchPanel);
                 // 更新 LAF，防止按钮样式不正确
                 SwingUtilities.updateComponentTreeUI(netPlaylistClearHistorySearchButton);
                 netPlaylistHistorySearchPanel.repaint();
@@ -8660,8 +8538,10 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌单并显示歌单列表
-                        CommonResult<NetPlaylistInfo> result = MusicServerUtils.searchPlaylists(
-                                netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage = 1);
+                        netPlaylistCurrPage = 1;
+                        CommonResult<NetPlaylistInfo> result = netPlaylistIdCheckBox.isSelected() ?
+                                MusicServerUtils.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
+                                : MusicServerUtils.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -8720,6 +8600,7 @@ public class PlayerFrame extends JFrame {
                                 : playlistRequest ? MusicServerUtils.getSimilarPlaylists(currPlaylistPlaylistInfo)
                                 : commentRequest ? MusicServerUtils.getUserPlaylists(currPlaylistCommentInfo, limit, netPlaylistCurrPage)
                                 : userRequest ? MusicServerUtils.getUserPlaylists(currPlaylistUserInfo, limit, netPlaylistCurrPage)
+                                : netPlaylistIdCheckBox.isSelected() ? MusicServerUtils.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
                                 : MusicServerUtils.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         Integer total = result.total;
@@ -8976,6 +8857,7 @@ public class PlayerFrame extends JFrame {
         netPlaylistEndPageButton.setToolTipText(END_PAGE_TIP);
 
         netPlaylistToolBar.add(netPlaylistBackwardButton);
+        netPlaylistToolBar.add(netPlaylistIdCheckBox);
         netPlaylistToolBar.add(netPlaylistSearchTextField);
         netPlaylistToolBar.add(netPlaylistClearInputButton);
         netPlaylistToolBar.add(netPlaylistSearchButton);
@@ -8985,9 +8867,7 @@ public class PlayerFrame extends JFrame {
         netPlaylistSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netPlaylistCurrKeyword = netPlaylistSearchTextField.getText();
-            netPlaylistCurrPage = 1;
-            netPlaylistRefreshButton.doClick();
+            netPlaylistSearchButton.doClick();
         });
 
         // 歌单数量和当前歌曲标签
@@ -9095,10 +8975,8 @@ public class PlayerFrame extends JFrame {
                         netPlaylistLeftBox.remove(netPlaylistScrollPane);
                         netPlaylistLeftBox.add(playlistListBox);
                         // 删除工具栏的搜索
-                        netPlaylistToolBar.remove(netPlaylistSearchTextField);
-                        netPlaylistToolBar.remove(netPlaylistClearInputButton);
-                        netPlaylistToolBar.remove(netPlaylistSearchButton);
-                        netPlaylistToolBar.remove(netPlaylistTitleLabel);
+                        netPlaylistToolBar.removeAll();
+                        netPlaylistToolBar.add(netPlaylistBackwardButton);
                         netPlaylistToolBar.add(Box.createHorizontalGlue());
                         // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                         netMusicList.setModel(emptyListModel);
@@ -9486,15 +9364,12 @@ public class PlayerFrame extends JFrame {
 
         // 搜索历史面板
         // 清空搜索历史按钮
-        netPlaylistClearHistorySearchButton.addActionListener(e -> {
-            netPlaylistHistorySearchInnerPanel2.removeAll();
-            netPlaylistKeywordsPanel.remove(netPlaylistHistorySearchPanel);
-            netPlaylistKeywordsPanel.repaint();
-        });
+        netPlaylistClearHistorySearchButton.addActionListener(e -> netPlaylistHistorySearchInnerPanel2.removeAll());
         netPlaylistClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
         netPlaylistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netPlaylistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netPlaylistClearHistorySearchButton, THIS));
 
+        netPlaylistHistorySearchInnerPanel1.setVisible(false);
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistHistorySearchLabel);
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistClearHistorySearchButton);
         netPlaylistHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -9502,13 +9377,25 @@ public class PlayerFrame extends JFrame {
         netPlaylistHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netPlaylistHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netPlaylistHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netPlaylistHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                netPlaylistHistorySearchInnerPanel1.setVisible(true);
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                if (netPlaylistHistorySearchInnerPanel2.getComponentCount() == 0)
+                    netPlaylistHistorySearchInnerPanel1.setVisible(false);
+            }
+        });
         netPlaylistHistorySearchPanel.setLayout(new BoxLayout(netPlaylistHistorySearchPanel, BoxLayout.Y_AXIS));
         netPlaylistHistorySearchPanel.add(netPlaylistHistorySearchInnerPanel1);
         netPlaylistHistorySearchPanel.add(netPlaylistHistorySearchInnerPanel2);
+
         // 关键词面板
         netPlaylistKeywordsPanel.setLayout(new BoxLayout(netPlaylistKeywordsPanel, BoxLayout.Y_AXIS));
-//        // 滚动条监听器
-//        netPlaylistKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netPlaylistKeywordsPanelScrollPane, THIS));
+        netPlaylistKeywordsPanel.add(netPlaylistHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
         Dimension d = new Dimension(900, 500);
@@ -9605,7 +9492,7 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索专辑按钮事件
         netAlbumSearchButton.addActionListener(e -> {
-            netAlbumCurrKeyword = netAlbumSearchTextField.getText();
+            netAlbumCurrKeyword = netAlbumSearchTextField.getText().trim();
             if (!netAlbumCurrKeyword.equals("")) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netAlbumCurrKeyword);
@@ -9621,14 +9508,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netAlbumHistorySearchInnerPanel2.remove(b);
-                            netAlbumHistorySearchInnerPanel2.repaint();
-                            if (netAlbumHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netAlbumKeywordsPanel.remove(netAlbumHistorySearchPanel);
-                                netAlbumKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netAlbumHistorySearchInnerPanel2.remove(b);
+                        netAlbumHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -9640,8 +9522,6 @@ public class PlayerFrame extends JFrame {
                 int c = netAlbumHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netAlbumHistorySearchInnerPanel2.remove(c - 1);
-                // 显示 “搜索历史” 面板
-                netAlbumKeywordsPanel.add(netAlbumHistorySearchPanel);
                 // 更新 LAF，防止按钮样式不正确
                 SwingUtilities.updateComponentTreeUI(netAlbumClearHistorySearchButton);
                 netAlbumHistorySearchPanel.repaint();
@@ -9977,9 +9857,7 @@ public class PlayerFrame extends JFrame {
         netAlbumSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netAlbumCurrKeyword = netAlbumSearchTextField.getText();
-            netAlbumCurrPage = 1;
-            netAlbumRefreshButton.doClick();
+            netAlbumSearchButton.doClick();
         });
 
         // 专辑数量和当前歌曲标签
@@ -10491,15 +10369,12 @@ public class PlayerFrame extends JFrame {
 
         // 搜索历史面板
         // 清空搜索历史按钮
-        netAlbumClearHistorySearchButton.addActionListener(e -> {
-            netAlbumHistorySearchInnerPanel2.removeAll();
-            netAlbumKeywordsPanel.remove(netAlbumHistorySearchPanel);
-            netAlbumKeywordsPanel.repaint();
-        });
+        netAlbumClearHistorySearchButton.addActionListener(e -> netAlbumHistorySearchInnerPanel2.removeAll());
         netAlbumClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
         netAlbumClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netAlbumClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netAlbumClearHistorySearchButton, THIS));
 
+        netAlbumHistorySearchInnerPanel1.setVisible(false);
         netAlbumHistorySearchInnerPanel1.add(netAlbumHistorySearchLabel);
         netAlbumHistorySearchInnerPanel1.add(netAlbumClearHistorySearchButton);
         netAlbumHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -10507,13 +10382,25 @@ public class PlayerFrame extends JFrame {
         netAlbumHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netAlbumHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netAlbumHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netAlbumHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                netAlbumHistorySearchInnerPanel1.setVisible(true);
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                if (netAlbumHistorySearchInnerPanel2.getComponentCount() == 0)
+                    netAlbumHistorySearchInnerPanel1.setVisible(false);
+            }
+        });
         netAlbumHistorySearchPanel.setLayout(new BoxLayout(netAlbumHistorySearchPanel, BoxLayout.Y_AXIS));
         netAlbumHistorySearchPanel.add(netAlbumHistorySearchInnerPanel1);
         netAlbumHistorySearchPanel.add(netAlbumHistorySearchInnerPanel2);
+
         // 关键词面板
         netAlbumKeywordsPanel.setLayout(new BoxLayout(netAlbumKeywordsPanel, BoxLayout.Y_AXIS));
-//        // 滚动条监听器
-//        netAlbumKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netAlbumKeywordsPanelScrollPane, THIS));
+        netAlbumKeywordsPanel.add(netAlbumHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
         Dimension d = new Dimension(900, 500);
@@ -10617,7 +10504,7 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索歌手按钮事件
         netArtistSearchButton.addActionListener(e -> {
-            netArtistCurrKeyword = netArtistSearchTextField.getText();
+            netArtistCurrKeyword = netArtistSearchTextField.getText().trim();
             if (!netArtistCurrKeyword.equals("")) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netArtistCurrKeyword);
@@ -10633,14 +10520,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netArtistHistorySearchInnerPanel2.remove(b);
-                            netArtistHistorySearchInnerPanel2.repaint();
-                            if (netArtistHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netArtistKeywordsPanel.remove(netArtistHistorySearchPanel);
-                                netArtistKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netArtistHistorySearchInnerPanel2.remove(b);
+                        netArtistHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -10652,8 +10534,6 @@ public class PlayerFrame extends JFrame {
                 int c = netArtistHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netArtistHistorySearchInnerPanel2.remove(c - 1);
-                // 显示 “搜索历史” 面板
-                netArtistKeywordsPanel.add(netArtistHistorySearchPanel);
                 // 更新 LAF，防止按钮样式不正确
                 SwingUtilities.updateComponentTreeUI(netArtistClearHistorySearchButton);
                 netArtistHistorySearchPanel.repaint();
@@ -10993,9 +10873,7 @@ public class PlayerFrame extends JFrame {
         netArtistSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netArtistCurrKeyword = netArtistSearchTextField.getText();
-            netArtistCurrPage = 1;
-            netArtistRefreshButton.doClick();
+            netArtistSearchButton.doClick();
         });
 
         // 歌手数量和当前歌曲标签
@@ -11733,15 +11611,12 @@ public class PlayerFrame extends JFrame {
 
         // 搜索历史面板
         // 清空搜索历史按钮
-        netArtistClearHistorySearchButton.addActionListener(e -> {
-            netArtistHistorySearchInnerPanel2.removeAll();
-            netArtistKeywordsPanel.remove(netArtistHistorySearchPanel);
-            netArtistKeywordsPanel.repaint();
-        });
+        netArtistClearHistorySearchButton.addActionListener(e -> netArtistHistorySearchInnerPanel2.removeAll());
         netArtistClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
         netArtistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netArtistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netArtistClearHistorySearchButton, THIS));
 
+        netArtistHistorySearchInnerPanel1.setVisible(false);
         netArtistHistorySearchInnerPanel1.add(netArtistHistorySearchLabel);
         netArtistHistorySearchInnerPanel1.add(netArtistClearHistorySearchButton);
         netArtistHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -11749,13 +11624,25 @@ public class PlayerFrame extends JFrame {
         netArtistHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netArtistHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netArtistHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netArtistHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                netArtistHistorySearchInnerPanel1.setVisible(true);
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                if (netArtistHistorySearchInnerPanel2.getComponentCount() == 0)
+                    netArtistHistorySearchInnerPanel1.setVisible(false);
+            }
+        });
         netArtistHistorySearchPanel.setLayout(new BoxLayout(netArtistHistorySearchPanel, BoxLayout.Y_AXIS));
         netArtistHistorySearchPanel.add(netArtistHistorySearchInnerPanel1);
         netArtistHistorySearchPanel.add(netArtistHistorySearchInnerPanel2);
+
         // 关键词面板
         netArtistKeywordsPanel.setLayout(new BoxLayout(netArtistKeywordsPanel, BoxLayout.Y_AXIS));
-//        // 滚动条监听器
-//        netArtistKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netArtistKeywordsPanelScrollPane, THIS));
+        netArtistKeywordsPanel.add(netArtistHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
         Dimension d = new Dimension(900, 500);
@@ -11857,7 +11744,7 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索电台按钮事件
         netRadioSearchButton.addActionListener(e -> {
-            netRadioCurrKeyword = netRadioSearchTextField.getText();
+            netRadioCurrKeyword = netRadioSearchTextField.getText().trim();
             if (!netRadioCurrKeyword.equals("")) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netRadioCurrKeyword);
@@ -11873,14 +11760,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netRadioHistorySearchInnerPanel2.remove(b);
-                            netRadioHistorySearchInnerPanel2.repaint();
-                            if (netRadioHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netRadioKeywordsPanel.remove(netRadioHistorySearchPanel);
-                                netRadioKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netRadioHistorySearchInnerPanel2.remove(b);
+                        netRadioHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -11892,8 +11774,6 @@ public class PlayerFrame extends JFrame {
                 int c = netRadioHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netRadioHistorySearchInnerPanel2.remove(c - 1);
-                // 显示 “搜索历史” 面板
-                netRadioKeywordsPanel.add(netRadioHistorySearchPanel);
                 // 更新 LAF，防止按钮样式不正确
                 SwingUtilities.updateComponentTreeUI(netRadioClearHistorySearchButton);
                 netRadioHistorySearchPanel.repaint();
@@ -12226,9 +12106,7 @@ public class PlayerFrame extends JFrame {
         netRadioSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netRadioCurrKeyword = netRadioSearchTextField.getText();
-            netRadioCurrPage = 1;
-            netRadioRefreshButton.doClick();
+            netRadioSearchButton.doClick();
         });
 
         // 电台数量和当前歌曲标签
@@ -12865,15 +12743,12 @@ public class PlayerFrame extends JFrame {
 
         // 搜索历史面板
         // 清空搜索历史按钮
-        netRadioClearHistorySearchButton.addActionListener(e -> {
-            netRadioHistorySearchInnerPanel2.removeAll();
-            netRadioKeywordsPanel.remove(netRadioHistorySearchPanel);
-            netRadioKeywordsPanel.repaint();
-        });
+        netRadioClearHistorySearchButton.addActionListener(e -> netRadioHistorySearchInnerPanel2.removeAll());
         netRadioClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
         netRadioClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netRadioClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netRadioClearHistorySearchButton, THIS));
 
+        netRadioHistorySearchInnerPanel1.setVisible(false);
         netRadioHistorySearchInnerPanel1.add(netRadioHistorySearchLabel);
         netRadioHistorySearchInnerPanel1.add(netRadioClearHistorySearchButton);
         netRadioHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -12881,13 +12756,25 @@ public class PlayerFrame extends JFrame {
         netRadioHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netRadioHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netRadioHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netRadioHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                netRadioHistorySearchInnerPanel1.setVisible(true);
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                if (netRadioHistorySearchInnerPanel2.getComponentCount() == 0)
+                    netRadioHistorySearchInnerPanel1.setVisible(false);
+            }
+        });
         netRadioHistorySearchPanel.setLayout(new BoxLayout(netRadioHistorySearchPanel, BoxLayout.Y_AXIS));
         netRadioHistorySearchPanel.add(netRadioHistorySearchInnerPanel1);
         netRadioHistorySearchPanel.add(netRadioHistorySearchInnerPanel2);
+
         // 关键词面板
         netRadioKeywordsPanel.setLayout(new BoxLayout(netRadioKeywordsPanel, BoxLayout.Y_AXIS));
-//        // 滚动条监听器
-//        netRadioKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netRadioKeywordsPanelScrollPane, THIS));
+        netRadioKeywordsPanel.add(netRadioHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
         Dimension d = new Dimension(900, 500);
@@ -12948,7 +12835,7 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索 MV 按钮事件
         netMvSearchButton.addActionListener(e -> {
-            netMvCurrKeyword = netMvSearchTextField.getText();
+            netMvCurrKeyword = netMvSearchTextField.getText().trim();
             if (!netMvCurrKeyword.equals("")) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netMvCurrKeyword);
@@ -12964,14 +12851,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netMvHistorySearchInnerPanel2.remove(b);
-                            netMvHistorySearchInnerPanel2.repaint();
-                            if (netMvHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netMvKeywordsPanel.remove(netMvHistorySearchPanel);
-                                netMvKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netMvHistorySearchInnerPanel2.remove(b);
+                        netMvHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -12983,8 +12865,6 @@ public class PlayerFrame extends JFrame {
                 int c = netMvHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netMvHistorySearchInnerPanel2.remove(c - 1);
-                // 显示 “搜索历史” 面板
-                netMvKeywordsPanel.add(netMvHistorySearchPanel);
                 // 更新 LAF，防止按钮样式不正确
                 SwingUtilities.updateComponentTreeUI(netMvClearHistorySearchButton);
                 netMvHistorySearchPanel.repaint();
@@ -13206,9 +13086,7 @@ public class PlayerFrame extends JFrame {
         netMvSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netMvCurrKeyword = netMvSearchTextField.getText();
-            netMvCurrPage = 1;
-            netMvRefreshButton.doClick();
+            netMvSearchButton.doClick();
         });
 
         //  MV 数量和当前歌曲标签
@@ -13641,15 +13519,12 @@ public class PlayerFrame extends JFrame {
 
         // 搜索历史面板
         // 清空搜索历史按钮
-        netMvClearHistorySearchButton.addActionListener(e -> {
-            netMvHistorySearchInnerPanel2.removeAll();
-            netMvKeywordsPanel.remove(netMvHistorySearchPanel);
-            netMvKeywordsPanel.repaint();
-        });
+        netMvClearHistorySearchButton.addActionListener(e -> netMvHistorySearchInnerPanel2.removeAll());
         netMvClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
         netMvClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMvClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMvClearHistorySearchButton, THIS));
 
+        netMvHistorySearchInnerPanel1.setVisible(false);
         netMvHistorySearchInnerPanel1.add(netMvHistorySearchLabel);
         netMvHistorySearchInnerPanel1.add(netMvClearHistorySearchButton);
         netMvHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -13657,13 +13532,25 @@ public class PlayerFrame extends JFrame {
         netMvHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netMvHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netMvHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netMvHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                netMvHistorySearchInnerPanel1.setVisible(true);
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                if (netMvHistorySearchInnerPanel2.getComponentCount() == 0)
+                    netMvHistorySearchInnerPanel1.setVisible(false);
+            }
+        });
         netMvHistorySearchPanel.setLayout(new BoxLayout(netMvHistorySearchPanel, BoxLayout.Y_AXIS));
         netMvHistorySearchPanel.add(netMvHistorySearchInnerPanel1);
         netMvHistorySearchPanel.add(netMvHistorySearchInnerPanel2);
+
         // 关键词面板
         netMvKeywordsPanel.setLayout(new BoxLayout(netMvKeywordsPanel, BoxLayout.Y_AXIS));
-//        // 滚动条监听器
-//        netMvKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netMvKeywordsPanelScrollPane, THIS));
+        netMvKeywordsPanel.add(netMvHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
         Dimension d = new Dimension(900, 500);
@@ -14327,7 +14214,7 @@ public class PlayerFrame extends JFrame {
         });
         // 搜索用户按钮事件
         netUserSearchButton.addActionListener(e -> {
-            netUserCurrKeyword = netUserSearchTextField.getText();
+            netUserCurrKeyword = netUserSearchTextField.getText().trim();
             if (!netUserCurrKeyword.equals("")) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netUserCurrKeyword);
@@ -14343,14 +14230,9 @@ public class PlayerFrame extends JFrame {
                 b.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            netUserHistorySearchInnerPanel2.remove(b);
-                            netUserHistorySearchInnerPanel2.repaint();
-                            if (netUserHistorySearchInnerPanel2.getComponentCount() == 0) {
-                                netUserKeywordsPanel.remove(netUserHistorySearchPanel);
-                                netUserKeywordsPanel.repaint();
-                            }
-                        }
+                        if (e.getButton() != MouseEvent.BUTTON3) return;
+                        netUserHistorySearchInnerPanel2.remove(b);
+                        netUserHistorySearchInnerPanel2.repaint();
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
@@ -14362,8 +14244,6 @@ public class PlayerFrame extends JFrame {
                 int c = netUserHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netUserHistorySearchInnerPanel2.remove(c - 1);
-                // 显示 “搜索历史” 面板
-                netUserKeywordsPanel.add(netUserHistorySearchPanel);
                 // 更新 LAF，防止按钮样式不正确
                 SwingUtilities.updateComponentTreeUI(netUserClearHistorySearchButton);
                 netUserHistorySearchPanel.repaint();
@@ -14722,9 +14602,7 @@ public class PlayerFrame extends JFrame {
         netUserSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netUserCurrKeyword = netUserSearchTextField.getText();
-            netUserCurrPage = 1;
-            netUserRefreshButton.doClick();
+            netUserSearchButton.doClick();
         });
 
         // 用户数量和当前歌曲标签
@@ -15431,15 +15309,12 @@ public class PlayerFrame extends JFrame {
 
         // 搜索历史面板
         // 清空搜索历史按钮
-        netUserClearHistorySearchButton.addActionListener(e -> {
-            netUserHistorySearchInnerPanel2.removeAll();
-            netUserKeywordsPanel.remove(netUserHistorySearchPanel);
-            netUserKeywordsPanel.repaint();
-        });
+        netUserClearHistorySearchButton.addActionListener(e -> netUserHistorySearchInnerPanel2.removeAll());
         netUserClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
         netUserClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netUserClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netUserClearHistorySearchButton, THIS));
 
+        netUserHistorySearchInnerPanel1.setVisible(false);
         netUserHistorySearchInnerPanel1.add(netUserHistorySearchLabel);
         netUserHistorySearchInnerPanel1.add(netUserClearHistorySearchButton);
         netUserHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -15447,13 +15322,25 @@ public class PlayerFrame extends JFrame {
         netUserHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netUserHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netUserHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netUserHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+            @Override
+            public void componentAdded(ContainerEvent e) {
+                netUserHistorySearchInnerPanel1.setVisible(true);
+            }
+
+            @Override
+            public void componentRemoved(ContainerEvent e) {
+                if (netUserHistorySearchInnerPanel2.getComponentCount() == 0)
+                    netUserHistorySearchInnerPanel1.setVisible(false);
+            }
+        });
         netUserHistorySearchPanel.setLayout(new BoxLayout(netUserHistorySearchPanel, BoxLayout.Y_AXIS));
         netUserHistorySearchPanel.add(netUserHistorySearchInnerPanel1);
         netUserHistorySearchPanel.add(netUserHistorySearchInnerPanel2);
+
         // 关键词面板
         netUserKeywordsPanel.setLayout(new BoxLayout(netUserKeywordsPanel, BoxLayout.Y_AXIS));
-//        // 滚动条监听器
-//        netUserKeywordsPanelScrollPane.addMouseListener(new ScrollPaneListener(netUserKeywordsPanelScrollPane, THIS));
+        netUserKeywordsPanel.add(netUserHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
         Dimension d = new Dimension(900, 500);
@@ -15505,6 +15392,7 @@ public class PlayerFrame extends JFrame {
                 netCommentList.setModel(netCommentListModel);
                 if (netCommentListModel.isEmpty()) {
                     netCommentBox.remove(netCommentScrollPane);
+                    emptyHintPanelParent = emptyHintPanel.getParent();
                     netCommentBox.add(emptyHintPanel);
                 } else {
                     netCommentBox.remove(emptyHintPanel);
@@ -15538,8 +15426,10 @@ public class PlayerFrame extends JFrame {
         });
     }
 
+    private Container emptyHintPanelParent;
+
     // 获取乐谱
-    void getSheets(NetMusicInfo info, boolean first) {
+    private void getSheets(NetMusicInfo info, boolean first) {
         loadingAndRun(() -> {
             try {
                 // 获取乐谱并显示乐谱列表
@@ -15564,6 +15454,7 @@ public class PlayerFrame extends JFrame {
                 netSheetList.setModel(netSheetListModel);
                 if (netSheetListModel.isEmpty()) {
                     netSheetBox.remove(netSheetScrollPane);
+                    emptyHintPanelParent = emptyHintPanel.getParent();
                     netSheetBox.add(emptyHintPanel);
                 } else {
                     netSheetBox.remove(emptyHintPanel);
@@ -15601,6 +15492,11 @@ public class PlayerFrame extends JFrame {
         netCommentPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netCommentBackwardButton.addActionListener(e -> {
+            // 归还占有的空白提示面板
+            if (emptyHintPanelParent != null) {
+                emptyHintPanelParent.add(emptyHintPanel);
+                emptyHintPanelParent = null;
+            }
             netCommentList.setModel(emptyListModel);
             if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
             globalPanel.remove(netCommentBox);
@@ -16024,6 +15920,11 @@ public class PlayerFrame extends JFrame {
         netSheetPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netSheetBackwardButton.addActionListener(e -> {
+            // 归还占有的空白提示面板
+            if (emptyHintPanelParent != null) {
+                emptyHintPanelParent.add(emptyHintPanel);
+                emptyHintPanelParent = null;
+            }
             netSheetList.setModel(emptyListModel);
             if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
             globalPanel.remove(netSheetBox);
@@ -21083,6 +20984,9 @@ public class PlayerFrame extends JFrame {
         netMusicPageTextField.setForeground(labelColor);
         netMusicPageTextField.setCaretColor(labelColor);
         // 歌单搜索栏透明
+        netPlaylistIdCheckBox.setForeground(labelColor);
+        netPlaylistIdCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, labelColor));
+        netPlaylistIdCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, labelColor));
         focusListeners = netPlaylistSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
@@ -22467,7 +22371,7 @@ public class PlayerFrame extends JFrame {
                         }
                     });
                 }
-                netLeftBox.repaint();
+                netMusicHotSearchPanel.repaint();
             } catch (IORuntimeException ioRuntimeException) {
                 // 无网络连接
                 new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -22569,7 +22473,7 @@ public class PlayerFrame extends JFrame {
                 loading.start();
                 loading.setText(LOADING_MSG);
                 runnable.run();
-                Thread.sleep(15);
+                Thread.sleep(20);
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {

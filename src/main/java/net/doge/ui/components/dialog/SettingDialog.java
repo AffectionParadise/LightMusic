@@ -44,12 +44,6 @@ public class SettingDialog extends JDialog {
     // 阴影大小像素
     private final int pixels = 10;
 
-    // 关闭窗口图标
-    private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
-    // 复选框图标
-    private ImageIcon uncheckedIcon = new ImageIcon(SimplePath.ICON_PATH + "unchecked.png");
-    private ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
-
     private SettingDialogPanel globalPanel = new SettingDialogPanel();
     private CustomPanel centerPanel = new CustomPanel();
     private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
@@ -58,7 +52,7 @@ public class SettingDialog extends JDialog {
     private CustomPanel topPanel = new CustomPanel();
     private CustomLabel titleLabel = new CustomLabel();
     private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton(closeWindowIcon);
+    private CustomButton closeButton = new CustomButton();
 
     // 设置项
     private CustomPanel autoUpdatePanel = new CustomPanel();
@@ -107,7 +101,7 @@ public class SettingDialog extends JDialog {
     private CustomPanel fobPanel = new CustomPanel();
     private CustomLabel fobLabel = new CustomLabel("快进/快退时间：");
     private CustomComboBox<String> fobComboBox = new CustomComboBox();
-//    private CustomPanel specStylePanel = new CustomPanel();
+    //    private CustomPanel specStylePanel = new CustomPanel();
 //    private CustomLabel specStyleLabel = new CustomLabel("频谱样式：");
 //    private CustomComboBox<String> specStyleComboBox = new CustomComboBox();
     private CustomPanel balancePanel = new CustomPanel();
@@ -255,8 +249,8 @@ public class SettingDialog extends JDialog {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
-        closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
             f.currDialogs.remove(this);
@@ -625,8 +619,8 @@ public class SettingDialog extends JDialog {
         });
 
         // 复选框图标
-        ImageIcon icon = ImageUtils.dye(uncheckedIcon, labelColor);
-        ImageIcon selectedIcon = ImageUtils.dye(checkedIcon, labelColor);
+        ImageIcon icon = ImageUtils.dye(f.uncheckedIcon, labelColor);
+        ImageIcon selectedIcon = ImageUtils.dye(f.checkedIcon, labelColor);
         autoUpdateCheckBox.setIcon(icon);
         autoUpdateCheckBox.setSelectedIcon(selectedIcon);
         autoDownloadLrcCheckBox.setIcon(icon);
@@ -836,18 +830,19 @@ public class SettingDialog extends JDialog {
             f.historyModel.remove(f.maxHistoryCount);
 
         // 删除多余的搜索历史记录
-        CustomPanel[] ps = new CustomPanel[]{f.netMusicHistorySearchInnerPanel2,
+        CustomPanel[] ips = new CustomPanel[]{f.netMusicHistorySearchInnerPanel2,
                 f.netPlaylistHistorySearchInnerPanel2,
                 f.netAlbumHistorySearchInnerPanel2,
                 f.netArtistHistorySearchInnerPanel2,
                 f.netRadioHistorySearchInnerPanel2,
                 f.netMvHistorySearchInnerPanel2,
                 f.netUserHistorySearchInnerPanel2};
-        for (CustomPanel p : ps)
-            for (int i = f.maxSearchHistoryCount, s = p.getComponentCount(); i < s; i++) {
-                p.remove(f.maxSearchHistoryCount);
-                p.repaint();
+        for (int i = 0, len = ips.length; i < len; i++) {
+            CustomPanel ip = ips[i];
+            for (int j = f.maxSearchHistoryCount, c = ip.getComponentCount(); j < c; j++) {
+                ip.remove(f.maxSearchHistoryCount);
             }
+        }
 
         f.currCloseWindowOption = closeOptionComboBox.getSelectedIndex();
         f.windowSize = windowSizeComboBox.getSelectedIndex();

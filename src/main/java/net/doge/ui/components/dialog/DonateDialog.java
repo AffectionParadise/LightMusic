@@ -36,9 +36,6 @@ public class DonateDialog extends JDialog {
 
     private DialogButton yes;
 
-    // 关闭窗口图标
-    private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
-
     // 标题
     private String title = "捐赠 & 感谢";
     private String thankMsg = "同时感谢以下本项目使用到的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
@@ -50,7 +47,7 @@ public class DonateDialog extends JDialog {
     private CustomPanel topPanel = new CustomPanel();
     private CustomLabel titleLabel = new CustomLabel();
     private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton(closeWindowIcon);
+    private CustomButton closeButton = new CustomButton();
 
     // 收款码
     private ImageIcon weixinIcon = new ImageIcon(SimplePath.ICON_PATH + "weixin.png");
@@ -87,8 +84,8 @@ public class DonateDialog extends JDialog {
         titleLabel.setText(title);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
-        closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> close());
         // 鼠标事件

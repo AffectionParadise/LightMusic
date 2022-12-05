@@ -96,8 +96,6 @@ public class VideoDialog extends JDialog {
     private ImageIcon forwIcon = new ImageIcon(SimplePath.ICON_PATH + "forw.png");
     // 快进快退时间图标
     private ImageIcon fobTimeIcon = new ImageIcon(SimplePath.ICON_PATH + "fobTime.png");
-    // 关闭窗口图标
-    private ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
 
     // 标题
     private String title = "";
@@ -110,7 +108,7 @@ public class VideoDialog extends JDialog {
     private CustomPanel topPanel = new CustomPanel();
     private CustomLabel titleLabel = new CustomLabel();
     private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton(closeWindowIcon);
+    private CustomButton closeButton = new CustomButton();
 
     // 进度条面板
     private CustomPanel progressPanel = new CustomPanel();
@@ -129,35 +127,6 @@ public class VideoDialog extends JDialog {
     private CustomButton collectButton = new CustomButton(collectIcon);
     private CustomButton downloadButton = new CustomButton(downloadIcon);
     private CustomButton rateButton = new CustomButton(rateIcon);
-    //    private CustomPopupMenu ratePopupMenu;
-//    private ButtonGroup rateMenuItemsButtonGroup = new ButtonGroup();
-//    private CustomRadioButtonMenuItem[] rateMenuItems = {
-//            new CustomRadioButtonMenuItem("0.2x"),
-//            new CustomRadioButtonMenuItem("0.3x"),
-//            new CustomRadioButtonMenuItem("0.4x"),
-//            new CustomRadioButtonMenuItem("0.5x"),
-//            new CustomRadioButtonMenuItem("0.6x"),
-//            new CustomRadioButtonMenuItem("0.7x"),
-//            new CustomRadioButtonMenuItem("0.8x"),
-//            new CustomRadioButtonMenuItem("0.9x"),
-//            new CustomRadioButtonMenuItem("1x", true),
-//            new CustomRadioButtonMenuItem("1.1x"),
-//            new CustomRadioButtonMenuItem("1.2x"),
-//            new CustomRadioButtonMenuItem("1.3x"),
-//            new CustomRadioButtonMenuItem("1.4x"),
-//            new CustomRadioButtonMenuItem("1.5x"),
-//            new CustomRadioButtonMenuItem("1.6x"),
-//            new CustomRadioButtonMenuItem("1.7x"),
-//            new CustomRadioButtonMenuItem("1.8x"),
-//            new CustomRadioButtonMenuItem("1.9x"),
-//            new CustomRadioButtonMenuItem("2x"),
-//            new CustomRadioButtonMenuItem("3x"),
-//            new CustomRadioButtonMenuItem("4x"),
-//            new CustomRadioButtonMenuItem("5x"),
-//            new CustomRadioButtonMenuItem("6x"),
-//            new CustomRadioButtonMenuItem("7x"),
-//            new CustomRadioButtonMenuItem("8x")
-//    };
     private CustomButton fobTimeButton = new CustomButton(fobTimeIcon);
     private CustomButton fullScreenButton = new CustomButton(fullScreenIcon);
     private CustomPopupMenu fobTimePopupMenu;
@@ -414,8 +383,8 @@ public class VideoDialog extends JDialog {
         titleLabel.setText(StringUtils.textToHtml(title));
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(closeWindowIcon, style.getButtonColor()));
-        closeButton.setPreferredSize(new Dimension(closeWindowIcon.getIconWidth() + 2, closeWindowIcon.getIconHeight()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
             Future<?> future = GlobalExecutors.requestExecutor.submit(() -> {
@@ -567,20 +536,6 @@ public class VideoDialog extends JDialog {
         downloadButton.addActionListener(e -> {
             downloadMv();
         });
-        // 倍速
-//        ratePopupMenu = new CustomPopupMenu(f);
-//        for (CustomRadioButtonMenuItem menuItem : rateMenuItems) {
-//            Color menuItemColor = style.getMenuItemColor();
-//            menuItem.setForeground(menuItemColor);
-//            menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
-//            menuItem.addActionListener(e -> {
-//                mp.setRate(Double.parseDouble(menuItem.getText().replace("x", "")));
-//                rateButton.setText(menuItem.getText());
-//                updateRadioButtonMenuItemIcon();
-//            });
-//            rateMenuItemsButtonGroup.add(menuItem);
-//            ratePopupMenu.add(menuItem);
-//        }
         rateButton.setForeground(style.getButtonColor());
         rateButton.setToolTipText(RATE_TIP);
         rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getButtonColor()));
@@ -590,13 +545,6 @@ public class VideoDialog extends JDialog {
             RateDialog rd = new RateDialog(f, this, rateButton);
             rd.showDialog();
         });
-//        rateButton.setComponentPopupMenu(ratePopupMenu);
-//        rateButton.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseReleased(MouseEvent e) {
-//                ratePopupMenu.show(rateButton, e.getX(), e.getY());
-//            }
-//        });
         // 快进/快退时间
         fobTimePopupMenu = new CustomPopupMenu(f);
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
