@@ -125,8 +125,8 @@ public class PlayerFrame extends JFrame {
     private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n" +
             "下面是一些常见问题解答，请仔细阅读。祝你使用愉快~\n\n" +
             "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n" +
-            "注：\n1. 此操作要求你的歌单权限是公开的，不能是私密，否则查看不到\n" +
-            "2. 如果你确实不想公开你的歌单，也可以在“歌单广场”选项卡勾上“歌单 ID”，搜索你的歌单 ID）\n\n" +
+            "注：\n1.此操作要求你的歌单权限是公开的，不能是私密，否则看不到\n" +
+            "2.如果你确实不想公开你的歌单，也可以在“歌单广场”选项卡勾上“歌单 ID”，搜索你的歌单 ID\n\n" +
             "Q2：如何进行收藏等其他操作？\nA2：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
             "Q3：如何批量操作？\nA3：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
             "Q4：为什么有些歌曲名字和音频不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
@@ -713,10 +713,6 @@ public class PlayerFrame extends JFrame {
     private int currPersonalMusicTab = PersonalMusicTabIndex.LOCAL_MUSIC;
     // 当前推荐展示的标签
     private int currRecommendTab = -1;
-    // 默认图标转过的度数
-//    private int degree = 0;
-//    private Color newColor;
-//    private int step = 3;
     // 是否静音
     public boolean isMute;
     // 是否高斯模糊
@@ -822,8 +818,6 @@ public class PlayerFrame extends JFrame {
     private CustomButton styleToolButton = new CustomButton(styleIcon);
     // 换肤按钮弹出菜单
     private CustomPopupMenu stylePopupMenu = new CustomPopupMenu(THIS);
-//    private ButtonGroup stylePopupMenuButtonGroup = new ButtonGroup();
-//    private List<CustomRadioButtonMenuItem> stylePopupMenuItems = fetchStyleMenuItems();
 
     // 歌词列表
     private CustomList<Statement> lrcList = new CustomList<>();
@@ -19910,65 +19904,10 @@ public class PlayerFrame extends JFrame {
                                         : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
                         originalRatio.set(tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio);
                     }
-//                    ((TranslucentLrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
-//                    // 重绘歌词列表避免其不刷新！
-//                    lrcList.repaint();
-//                    // 桌面歌词随之更新
-//                    if (nextLrc >= 0)
-//                        desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
 
             }
-//            Color labelColor = currUIStyle.getLabelColor();
-//            Color brighterColor = labelColor.brighter(), darkerColor = ColorUtils.darker(labelColor);
-//            if(newColor!=null) {
-//                newColor = new Color(Math.min(newColor.getRed()-step, 255),Math.min(newColor.getGreen()-step, 255),Math.min(newColor.getBlue()-step, 255));
-//                if(newColor.getRed() < darkerColor.getRed() || newColor.getRed() >= brighterColor.getRed() && newColor.getGreen() >= brighterColor.getGreen()
-//                && newColor.getBlue()>=brighterColor.getBlue()) step=-step;
-//            }
-//            else newColor = labelColor;
-//            titleLabel.setIcon(ImageUtils.dye(titleIcon, newColor));
-//            try {
-//                BufferedImage titleBufferedImage = ImageUtils.castImageIconToBuffedImageTranslucent(titleIcon);
-//                titleBufferedImage = Thumbnails.of(titleBufferedImage).scale(1).rotate(degree).asBufferedImage();
-//                int w = titleBufferedImage.getWidth(), h = titleBufferedImage.getHeight();
-//                titleBufferedImage = Thumbnails.of(titleBufferedImage).scale(1).sourceRegion(new Rectangle((w - 50) / 2, (h - 50) / 2, 50, 50)).asBufferedImage();
-//                ImageIcon rotated = new ImageIcon(titleBufferedImage);
-//                System.out.println(rotated.getIconWidth() + " " + rotated.getIconHeight());
-//                titleLabel.setIcon(rotated);
-//                degree = (degree + 2) % 360;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            // 播放时加载默认专辑图片旋转动画
-//            ImageIcon icon = player.getMusicInfo().getAlbum();
-//            if (icon == null) {
-//                ImageIcon imgIcon = ImageUtils.dye(
-//                        defaultAlbumIcon,
-//                        currUIStyle.getButtonColor());
-//                BufferedImage bImageTranslucent = ImageUtils.castImageIconToBuffedImageTranslucent(imgIcon);
-//                BufferedImage rotated = null;
-//                try {
-//                    rotated = Thumbnails.of(bImageTranslucent)
-//                            .rotate(degree)
-//                            .size(ALBUM_IMAGE_WIDTH, ALBUM_IMAGE_HEIGHT)
-//                            .asBufferedImage();
-//                    degree = (degree + 1) % 360;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                ImageIcon rotatedImageIcon
-//                        = new ImageIcon(rotated.getSubimage(
-//                        (rotated.getWidth() - ALBUM_IMAGE_WIDTH) / 2,
-//                        (rotated.getHeight() - ALBUM_IMAGE_HEIGHT) / 2,
-//                        ALBUM_IMAGE_WIDTH,
-//                        ALBUM_IMAGE_HEIGHT)
-//                );
-//                albumImage.setIcon(rotatedImageIcon);
-//                // 解决卸载文件后还在继续渲染默认专辑文件的问题
-//                if (player.isEmpty()) albumImage.setIcon(null);
-//            }
         });
         // 播放结束
         mp.setOnEndOfMedia(() -> {

@@ -772,7 +772,7 @@ public class MusicServerUtils {
                     JSONObject tagJson = tagArray.getJSONObject(j);
 
                     String name = tagJson.getString("name");
-                    String id = tagJson.getString("id") + " " + tagJson.getString("digest");
+                    String id = String.format("%s %s", tagJson.getString("id"), tagJson.getString("digest"));
 
                     if (!Tags.playlistTag.containsKey(name)) Tags.playlistTag.put(name, new String[c]);
                     Tags.playlistTag.get(name)[4] = id;
@@ -6923,7 +6923,7 @@ public class MusicServerUtils {
                     } else
                         content = cj.optString("rootcommentcontent").replace("\\n", "\n");
                     // 评论可能已被删除
-                    if (content == null) content = "该评论已被删除";
+                    if (content.isEmpty()) content = "该评论已被删除";
                     String time = TimeUtils.msToPhrase(cj.getLong("time") * 1000);
                     Integer likedCount = cj.getInt("praisenum");
 
