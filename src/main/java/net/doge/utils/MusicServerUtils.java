@@ -1,7 +1,10 @@
 package net.doge.utils;
 
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.http.*;
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpStatus;
 import net.doge.constants.*;
 import net.doge.models.*;
 import net.doge.ui.components.LoadingPanel;
@@ -17,8 +20,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -20884,7 +20887,11 @@ public class MusicServerUtils {
         for (NetMusicInfo info : data) {
             // 部分歌曲没有时长，先填充时长，准备判断
             if (!info.hasDuration()) fillDuration(info);
-            if (info.equals(musicInfo) || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
+            // 匹配依据：歌名、歌手相似度，时长之差绝对值
+            if (info.equals(musicInfo)
+                    || StringUtils.similar(info.getName(), musicInfo.getName()) == 0
+                    || StringUtils.similar(info.getArtist(), musicInfo.getArtist()) < 0.5
+                    || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
                 continue;
             String url = fetchMusicUrl(info.getId(), info.getSource());
             if (StringUtils.isNotEmpty(url)) {

@@ -428,6 +428,18 @@ public class StringUtils {
     }
 
     /**
+     * 返回 s1 与 s2 相似度
+     *
+     * @param s1
+     * @param s2
+     * @return
+     */
+    public static double similar(String s1, String s2) {
+        if (s1 == null || s2 == null) return 0;
+        return StrUtil.similar(s1, s2);
+    }
+
+    /**
      * 去除字符串前后指定字符
      *
      * @param str

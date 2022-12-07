@@ -4,8 +4,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
 import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.UnsupportedTagException;
-import it.sauronsoftware.jave.EncoderException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -2283,6 +2281,7 @@ public class PlayerFrame extends JFrame {
         globalExecutor.submit(() -> {
             try {
                 motto = MusicServerUtils.getMotto();
+                if (player.loadedMusic()) return;
                 titleLabel.setVisible(false);
                 titleLabel.setText(StringUtils.textToHtmlWithSpace(TITLE + "\n" + motto));
                 titleLabel.setVisible(true);
@@ -19540,7 +19539,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 准备播放，初始化播放器和 UI
-    private void prepareToPlay(AudioFile file, NetMusicInfo netMusicInfo) throws IOException, UnsupportedAudioFileException, InterruptedException, EncoderException, InvalidDataException, UnsupportedTagException, URISyntaxException {
+    private void prepareToPlay(AudioFile file, NetMusicInfo netMusicInfo) throws UnsupportedAudioFileException, InvalidDataException {
         player.load(file, netMusicInfo);
         clearLrc();
         loadLrc(file, netMusicInfo, false, currLrcType == LyricType.TRANSLATION);
@@ -20132,21 +20131,7 @@ public class PlayerFrame extends JFrame {
                 } else {
                     new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                 }
-                // 异常后允许重试的情况下自动播放下一首，超出最大重试次数停止，防止死循环
-                if (currPlayMode != PlayMode.SINGLE && allowRetry) {
-                    if (++retry <= MAX_RETRY) {
-                        // 顺序播放
-                        if (currPlayMode == PlayMode.SEQUENCE) {
-                            if (currSong < playQueueModel.size() - 1) playNext();
-                                // 播放完后卸载文件
-                            else unload();
-                        }
-                        // 列表循环
-                        else if (currPlayMode == PlayMode.LIST_CYCLE) playNext();
-                            // 随机播放
-                        else if (currPlayMode == PlayMode.SHUFFLE) playNextShuffle();
-                    } else retry = 0;
-                }
+                retryPlay(allowRetry);
                 return false;
             }
         }
@@ -20165,64 +20150,67 @@ public class PlayerFrame extends JFrame {
             }
             retry = 0;
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
+        } catch (UnsupportedAudioFileException | MediaException e) {
             new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
-        } catch (MediaException e) {
-            new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (EncoderException e) {
-            e.printStackTrace();
         } catch (IllegalArgumentException | InvalidDataException | IllegalMediaException e) {
             new TipDialog(THIS, INVALID_AUDIO_FILE_MSG).showDialog();
-        } catch (UnsupportedTagException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
+        retryPlay(allowRetry);
         return false;
+    }
+
+    // 重试播放
+    private void retryPlay(boolean allowRetry) {
+        // 异常后允许重试的情况下自动播放下一首，超出最大重试次数停止，防止死循环
+        if (currPlayMode != PlayMode.SINGLE && allowRetry) {
+            if (++retry <= MAX_RETRY) {
+                // 顺序播放
+                if (currPlayMode == PlayMode.SEQUENCE) {
+                    if (currSong < playQueueModel.size() - 1) playNext();
+                        // 播放完后卸载文件
+                    else unload();
+                }
+                // 列表循环
+                else if (currPlayMode == PlayMode.LIST_CYCLE) playNext();
+                    // 随机播放
+                else if (currPlayMode == PlayMode.SHUFFLE) playNextShuffle();
+            } else retry = 0;
+        }
     }
 
     // 播放上一曲
     private void playLast() {
         int size = playQueueModel.getSize();
         // 当前播放列表非空
-        if (size != 0) {
-            // 选中上一曲
-            currSong = currSong - 1 < 0 ? size - 1 : currSong - 1;
-            playQueue.setSelectedIndex(currSong);
-            playExecutor.submit(() -> playSelected(playQueue, true));
-        }
+        if (size == 0) return;
+        // 选中上一曲
+        currSong = currSong - 1 < 0 ? size - 1 : currSong - 1;
+        playQueue.setSelectedIndex(currSong);
+        playExecutor.submit(() -> playSelected(playQueue, true));
     }
 
     // 播放下一曲 / 顺序播放
     private void playNext() {
         int size = playQueueModel.getSize();
         // 当前播放列表非空
-        if (size != 0) {
-            // 选中下一曲
-            currSong = (currSong + 1) % playQueue.getModel().getSize();
-            playQueue.setSelectedIndex(currSong);
-            playExecutor.submit(() -> playSelected(playQueue, true));
-        }
+        if (size == 0) return;
+        // 选中下一曲
+        currSong = (currSong + 1) % size;
+        playQueue.setSelectedIndex(currSong);
+        playExecutor.submit(() -> playSelected(playQueue, true));
     }
 
     // 生成随机播放序列
     private void generateShuffleList() {
-        // 随机列表为空或者歌曲数量发生变化
-        if (shuffleList.isEmpty() || shuffleList.size() != playQueueModel.getSize()) {
-            shuffleList.clear();
-            for (int i = 0, size = playQueueModel.getSize(); i < size; i++) shuffleList.add(i);
-        }
+        shuffleList.clear();
+        for (int i = 0, size = playQueueModel.getSize(); i < size; i++) shuffleList.add(i);
         Collections.shuffle(shuffleList);
         shuffleIndex = 0;
     }
 
     // 播放随机列表的下一首
     private void playNextShuffle() {
-        // 随机列表播放完了，或者播放队列发生变化，就生成一个
+        // 随机列表为空，或者播放队列发生变化，就生成一个
         if (shuffleIndex >= shuffleList.size() || shuffleList.size() != playQueueModel.size()) {
             generateShuffleList();
         }
