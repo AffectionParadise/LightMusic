@@ -30,6 +30,17 @@ public class ImageUtils {
     private static final ShadowFilter shadowFilter = new ShadowFilter();
     // 边框阴影过滤器
     private static final ShadowFilter borderShadowFilter = new ShadowFilter();
+    private static final int thickness = 30;
+
+    static {
+        shadowFilter.setRadius(10);
+        shadowFilter.setDistance(0);
+        shadowFilter.setOpacity(0.65f);
+
+        borderShadowFilter.setRadius(thickness);
+        borderShadowFilter.setDistance(0);
+        borderShadowFilter.setOpacity(0.65f);
+    }
 
     /**
      * 从文件路径读取图片
@@ -602,9 +613,6 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage shadow(BufferedImage img) {
-        shadowFilter.setRadius(10);
-        shadowFilter.setDistance(-0.3f);
-        shadowFilter.setOpacity(0.65f);
         return shadowFilter.filter(img, null);
     }
 
@@ -615,15 +623,11 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage borderShadow(BufferedImage img) {
-        final int thickness = 30;
         int ow = img.getWidth(), oh = img.getHeight();
         BufferedImage newImg = createTranslucentImage(ow + 2 * thickness, oh + 2 * thickness);
         Graphics2D g = newImg.createGraphics();
         g.drawImage(img, thickness, thickness, null);
         g.dispose();
-        borderShadowFilter.setRadius(thickness);
-        borderShadowFilter.setDistance(-0.5f);
-        borderShadowFilter.setOpacity(0.65f);
         newImg = borderShadowFilter.filter(newImg, null);
         newImg = width(newImg, ow);
         return newImg;

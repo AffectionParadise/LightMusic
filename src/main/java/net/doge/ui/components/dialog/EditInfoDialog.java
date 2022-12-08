@@ -30,7 +30,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @Author yzx
@@ -104,23 +103,21 @@ public class EditInfoDialog extends JDialog {
     private boolean confirmed = false;
     private Object[] results = new Object[components.length];
 
-    // 父窗口和是否是模态，传入 OK 按钮文字，要展示的文件
-    public EditInfoDialog(PlayerFrame f, boolean isModel, String okButtonText, AudioFile file) {
-        super(f, isModel);
+    // 父窗口，传入要展示的文件
+    public EditInfoDialog(PlayerFrame f, AudioFile file) {
+        super(f);
         this.f = f;
         this.style = f.getCurrUIStyle();
         this.file = file;
 
         Color buttonColor = style.getButtonColor();
-        okButton = new DialogButton(okButtonText, buttonColor);
+        okButton = new DialogButton("保存", buttonColor);
 
         comboBox.addItem("");
-        for (String genre : ID3v1Genres.GENRES) {
-            comboBox.addItem(genre);
-        }
+        for (String genre : ID3v1Genres.GENRES) comboBox.addItem(genre);
     }
 
-    public void showDialog() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public void showDialog() {
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
         topPanel.addMouseListener(new MouseAdapter() {
@@ -250,7 +247,7 @@ public class EditInfoDialog extends JDialog {
         centerPanel.setLayout(new GridLayout(7, 2));
 
         // 获得传入的歌曲信息
-        String fileName = file.getName();
+        String fileName = StringUtils.wrapLineByWidth(file.getName(), 300);
         String fileSize = FileUtils.getUnitString(FileUtils.getDirOrFileSize(file));
         String creationTime = TimeUtils.msToDatetime(FileUtils.getCreationTime(file));
         String lastModifiedTime = TimeUtils.msToDatetime(file.lastModified());

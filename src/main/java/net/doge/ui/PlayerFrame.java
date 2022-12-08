@@ -6914,8 +6914,10 @@ public class PlayerFrame extends JFrame {
             Object o = musicList.getSelectedValue();
             if (o instanceof AudioFile) {
                 AudioFile file = ((AudioFile) o);
-                if (file.exists()) editInfo(file);
-                else new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
+                if (file.exists()) {
+                    editInfo(file);
+                    updateRenderer(musicList);
+                } else new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
             }
         });
         // 右键菜单删除
@@ -18783,8 +18785,10 @@ public class PlayerFrame extends JFrame {
             Object o = playQueue.getSelectedValue();
             if (o instanceof AudioFile) {
                 AudioFile file = (AudioFile) o;
-                if (file.exists()) editInfo((AudioFile) o);
-                else new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
+                if (file.exists()) {
+                    editInfo((AudioFile) o);
+                    updateRenderer(playQueue);
+                } else new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
             }
         });
         // 从播放队列删除菜单项
@@ -19709,8 +19713,7 @@ public class PlayerFrame extends JFrame {
 
     // 清空歌词
     private void clearLrc() {
-        // 解决 CustomList 选中第一行更新缓慢的 BUG
-//        lrcList.setModel(emptyListModel);
+        lrcList.setModel(emptyLrcListModel);
         lrcListModel.clear();
         if (statements != null) statements.clear();
         nextLrc = NextLrc.NOT_EXISTS;
@@ -21504,20 +21507,8 @@ public class PlayerFrame extends JFrame {
 
     // 打开编辑歌曲信息弹窗
     private void editInfo(AudioFile file) {
-        try {
-            EditInfoDialog editInfoDialog = new EditInfoDialog(THIS, true, "保存", file);
-            editInfoDialog.showDialog();
-        } catch (ClassNotFoundException classNotFoundException) {
-            classNotFoundException.printStackTrace();
-        } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-            unsupportedLookAndFeelException.printStackTrace();
-        } catch (InstantiationException instantiationException) {
-            instantiationException.printStackTrace();
-        } catch (IllegalAccessException illegalAccessException) {
-            illegalAccessException.printStackTrace();
-        } catch (InvocationTargetException invocationTargetException) {
-            invocationTargetException.printStackTrace();
-        }
+        EditInfoDialog editInfoDialog = new EditInfoDialog(THIS, file);
+        editInfoDialog.showDialog();
     }
 
     // 打开自定义风格弹窗

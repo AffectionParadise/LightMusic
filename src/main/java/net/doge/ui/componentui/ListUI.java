@@ -35,20 +35,10 @@ public class ListUI extends BasicListUI {
     }
 
     @Override
-    protected void paintCell(Graphics g,
-                             int row,
-                             Rectangle rowBounds,
-                             ListCellRenderer cellRenderer,
-                             ListModel dataModel,
-                             ListSelectionModel selModel,
-                             int leadIndex) {
-        Graphics2D g2d = (Graphics2D) g;
-        if (row != highlightIndex) {
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-        } else {
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
+    protected void paintCell(Graphics g, int row, Rectangle rowBounds, ListCellRenderer cellRenderer, ListModel dataModel, ListSelectionModel selModel, int leadIndex) {
         try {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, row != highlightIndex ? 0.7f : 1));
             super.paintCell(g, row, rowBounds, cellRenderer, dataModel, selModel, leadIndex);
         } catch (ArrayIndexOutOfBoundsException e) {
 

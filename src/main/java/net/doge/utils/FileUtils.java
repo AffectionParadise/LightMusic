@@ -187,16 +187,14 @@ public class FileUtils {
     public static long getCreationTime(File file) {
         if (file == null) return 0;
 
-        BasicFileAttributes attr = null;
         try {
             Path path = file.toPath();
-            attr = Files.readAttributes(path, BasicFileAttributes.class);
+            BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
+            long creationTime = attr.creationTime().toMillis();
+            return creationTime;
         } catch (IOException e) {
-            e.printStackTrace();
+            return 0;
         }
-        // 创建时间
-        long creationTime = attr.creationTime().toMillis();
-        return creationTime;
     }
 
     /**
@@ -208,15 +206,14 @@ public class FileUtils {
     public static long getAccessTime(File file) {
         if (file == null) return 0;
 
-        BasicFileAttributes attr = null;
         try {
             Path path = file.toPath();
-            attr = Files.readAttributes(path, BasicFileAttributes.class);
+            BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
+            long accessTime = attr.lastAccessTime().toMillis();
+            return accessTime;
         } catch (IOException e) {
-            e.printStackTrace();
+            return 0;
         }
-        long accessTime = attr.lastAccessTime().toMillis();
-        return accessTime;
     }
 
     /**
