@@ -222,6 +222,7 @@ public class FileUtils {
      * @param file
      */
     public static long getDirOrFileSize(File file) {
+        if (file == null || !file.exists()) return 0;
         if (file.isFile()) return file.length();
         File[] files = file.listFiles();
         long total = 0;

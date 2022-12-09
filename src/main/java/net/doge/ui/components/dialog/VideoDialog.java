@@ -352,7 +352,9 @@ public class VideoDialog extends JDialog {
                 initAgain();
             }
             // 歌曲 url 过期后重新加载 url 再播放
-            else if (type == MediaException.Type.MEDIA_INACCESSIBLE || type == MediaException.Type.UNKNOWN) {
+            else if (type == MediaException.Type.MEDIA_INACCESSIBLE
+                    || type == MediaException.Type.MEDIA_UNAVAILABLE
+                    || type == MediaException.Type.UNKNOWN) {
                 if (!isLocal) netMvInfo.setUrl(uri = MusicServerUtils.fetchMvUrl(netMvInfo));
                 initAgain();
             }
@@ -441,10 +443,6 @@ public class VideoDialog extends JDialog {
         progressPanel.add(timeBar);
         progressPanel.add(durationLabel);
         bottomBox.add(progressPanel);
-    }
-
-    public boolean isFullScreen() {
-        return fullScreen;
     }
 
     // 控制面板

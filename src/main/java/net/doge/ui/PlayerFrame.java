@@ -796,14 +796,9 @@ public class PlayerFrame extends JFrame {
     private CustomLabel albumLabel = new CustomLabel();
     // 专辑图片
     private CustomLabel albumImageLabel = new CustomLabel();
-    // 专辑图片右键弹出菜单
-    private CustomPopupMenu albumImagePopupMenu = new CustomPopupMenu(THIS);
-    // 右键菜单：导出专辑图片
+    // 歌曲信息弹出菜单
+    private CustomPopupMenu leftInfoPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem saveAlbumImageMenuItem = new CustomMenuItem(SAVE_ALBUM_IMAGE_TEXT);
-    // 歌曲信息右键弹出菜单
-    private CustomPopupMenu songNamePopupMenu = new CustomPopupMenu(THIS);
-    private CustomPopupMenu artistPopupMenu = new CustomPopupMenu(THIS);
-    private CustomPopupMenu albumPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem copySongNameMenuItem = new CustomMenuItem("复制歌曲名");
     private CustomMenuItem copyArtistMenuItem = new CustomMenuItem("复制艺术家");
     private CustomMenuItem copyAlbumMenuItem = new CustomMenuItem("复制专辑名");
@@ -2356,11 +2351,12 @@ public class PlayerFrame extends JFrame {
                     if (player.loadedMusic()) {
                         showAlbumImage();
                         // 防止歌词面板错位
-                        infoAndLrcBox.add(leftInfoBox);
-                        infoAndLrcBox.add(lrcAndSpecBox);
+                        lrcAndSpecBox.setVisible(false);
+                        lrcAndSpecBox.setVisible(true);
+                        leftInfoBox.setVisible(false);
+                        leftInfoBox.setVisible(true);
                     }
-                    // 背景
-                    if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
+                    if (blurType == BlurType.OFF) doBlur();
                 });
             }
         });
@@ -4240,7 +4236,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 打开歌曲文件夹
-    void openDirInit() {
+    private void openDirInit() {
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("选择歌曲文件夹");
         // 添加歌曲文件夹菜单项也是同一个监听器
@@ -4294,13 +4290,13 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化关闭歌曲文件
-    void closeSongInit() {
+    private void closeSongInit() {
         closeSong.setEnabled(false);
         closeSong.addActionListener(e -> unload());
     }
 
     // 初始化清空缓存
-    void clearCacheInit() {
+    private void clearCacheInit() {
         clearCache.addActionListener(e -> {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
                     String.format(ASK_CLEAR_CACHE_MSG, FileUtils.getUnitString(FileUtils.getDirOrFileSize(new File(SimplePath.CACHE_PATH)))), "是", "否");
@@ -4314,7 +4310,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 初始化个性化菜单
-    void individuationMenuInit() {
+    private void individuationMenuInit() {
         // 自定义风格
         styleCustomMenuItem.addActionListener(e -> {
             customStyle();
@@ -6024,23 +6020,6 @@ public class PlayerFrame extends JFrame {
         saveAlbumImageMenuItem.addActionListener(e -> {
             saveImg(player.getMusicInfo().getAlbumImage());
         });
-        albumImagePopupMenu.add(saveAlbumImageMenuItem);
-        albumImageLabel.setComponentPopupMenu(albumImagePopupMenu);
-        albumImageLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3 && player.getMusicInfo().hasAlbumImage()) {
-                    albumImagePopupMenu.show(albumImageLabel, e.getX(), e.getY());
-                }
-            }
-        });
-
-        songNamePopupMenu.add(copySongNameMenuItem);
-        artistPopupMenu.add(copyArtistMenuItem);
-        albumPopupMenu.add(copyAlbumMenuItem);
-        songNameLabel.setComponentPopupMenu(songNamePopupMenu);
-        artistLabel.setComponentPopupMenu(artistPopupMenu);
-        albumLabel.setComponentPopupMenu(albumPopupMenu);
         copySongNameMenuItem.addActionListener(e -> {
             StringSelection stringSelection
                     = new StringSelection(StringUtils.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, "")));
@@ -6059,6 +6038,18 @@ public class PlayerFrame extends JFrame {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
+        leftInfoPopupMenu.add(saveAlbumImageMenuItem);
+        leftInfoPopupMenu.add(copySongNameMenuItem);
+        leftInfoPopupMenu.add(copyArtistMenuItem);
+        leftInfoPopupMenu.add(copyAlbumMenuItem);
+        leftInfoBox.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    leftInfoPopupMenu.show(leftInfoBox, e.getX(), e.getY());
+                }
+            }
+        });
 
         // 添加左下的标签
         leftBottomBox.add(Box.createVerticalGlue());
@@ -6069,7 +6060,7 @@ public class PlayerFrame extends JFrame {
         leftBottomBox.add(albumLabel);
         leftBottomBox.add(Box.createVerticalGlue());
         // 专辑图片和下边所有标签整体
-        leftInfoBox.add(Box.createVerticalGlue());        // 创建胶水使其填充位置(居中的方法)
+        leftInfoBox.add(Box.createVerticalGlue());
         leftInfoBox.add(albumImageLabel);
         leftInfoBox.add(Box.createVerticalGlue());
         leftInfoBox.add(leftBottomBox);
@@ -19340,19 +19331,17 @@ public class PlayerFrame extends JFrame {
         blurPopupMenu.add(lgBlurMenuItem);
         gsMenuItem.addActionListener(e -> {
             gsOn = !gsOn;
+            doBlur();
             gsMenuItem.setIcon(gsOn ? ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()) : null);
-            if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
-            else doBlur();
         });
         darkerMenuItem.addActionListener(e -> {
             darkerOn = !darkerOn;
+            doBlur();
             darkerMenuItem.setIcon(darkerOn ? ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()) : null);
-            if (blurType == BlurType.OFF) doStyleBlur(currUIStyle);
-            else doBlur();
         });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurType.OFF;
-            doStyleBlur(currUIStyle);
+            doBlur();
             blurButton.setIcon(ImageUtils.dye(blurOffIcon, currUIStyle.getButtonColor()));
         });
         cvBlurMenuItem.addActionListener(e -> {
@@ -19553,11 +19542,7 @@ public class PlayerFrame extends JFrame {
     // 卸载当前文件
     private void unload() {
         player.unload();
-        try {
-            unloadUI();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        unloadUI();
         clearLrc();
     }
 
@@ -19626,7 +19611,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 界面关闭文件
-    private void unloadUI() throws IOException {
+    private void unloadUI() {
         // 重置标题
         updateMotto();
         setTitle(TITLE);
@@ -19659,7 +19644,7 @@ public class PlayerFrame extends JFrame {
             miniDialog.infoLabel.setText(changePaneButton.getText());
         }
         // 恢复背景
-        if (blurType != BlurType.OFF) doStyleBlur(currUIStyle);
+        if (blurType != BlurType.OFF) doBlur();
         // 禁止 MV、收藏、下载、评论、乐谱
         mvButton.setEnabled(false);
         collectButton.setEnabled(false);
@@ -19828,7 +19813,9 @@ public class PlayerFrame extends JFrame {
 //                mp.seek(ct);
             }
             // 歌曲 url 过期后重新加载 url 再播放
-            else if (type == MediaException.Type.MEDIA_INACCESSIBLE || type == MediaException.Type.UNKNOWN) {
+            else if (type == MediaException.Type.MEDIA_INACCESSIBLE
+                    || type == MediaException.Type.MEDIA_UNAVAILABLE
+                    || type == MediaException.Type.UNKNOWN) {
                 playExecutor.submit(() -> {
                     netMusicInfo.setUrl(MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource()));
                     player.initialMp(null, netMusicInfo);
@@ -20768,14 +20755,10 @@ public class PlayerFrame extends JFrame {
         updateMenuItemStyle(stylePopupMenu, menuItemColor);
         updateMenuItemStyle(addPopupMenu, menuItemColor);
         updateMenuItemStyle(sortPopupMenu, menuItemColor);
-        updateMenuItemStyle(albumImagePopupMenu, menuItemColor);
         updateMenuItemStyle(descriptionPanelPopupMenu, menuItemColor);
-        updateMenuItemStyle(songNamePopupMenu, menuItemColor);
-        updateMenuItemStyle(artistPopupMenu, menuItemColor);
-        updateMenuItemStyle(albumPopupMenu, menuItemColor);
+        updateMenuItemStyle(leftInfoPopupMenu, menuItemColor);
         updateMenuItemStyle(lrcPopupMenu, menuItemColor);
         updateMenuItemStyle(spectrumPopupMenu, menuItemColor);
-//        updateMenuItemStyle(ratePopupMenu, menuItemColor);
         updateMenuItemStyle(playModePopupMenu, menuItemColor);
         updateMenuItemStyle(blurPopupMenu, menuItemColor);
         updateMenuItemStyle(mainMenu, menuItemColor);
@@ -21474,8 +21457,7 @@ public class PlayerFrame extends JFrame {
         // 按钮图标颜色
         if (!player.loadedMusic() || player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
             changePaneButton.setIcon(ImageUtils.dye(new ImageIcon(
-                    ImageUtils.setRadius(
-                            ImageUtils.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), buttonColor));
+                    ImageUtils.setRadius(ImageUtils.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), buttonColor));
         }
         // 默认专辑图颜色
         if (player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
@@ -22007,12 +21989,12 @@ public class PlayerFrame extends JFrame {
 
     // 模糊碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化
     private void doBlur() {
+        // 未加载歌曲，转为主题模糊
+        if (blurType == BlurType.OFF || !player.loadedMusic()) {
+            doStyleBlur(currUIStyle);
+            return;
+        }
         blurExecutor.submit(() -> {
-            // 未加载歌曲，转为主题模糊
-            if (!player.loadedMusic()) {
-                doStyleBlur(currUIStyle);
-                return;
-            }
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
             if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurType.MC)
@@ -22066,7 +22048,7 @@ public class PlayerFrame extends JFrame {
 
     // 风格背景模糊
     private void doStyleBlur(UIStyle style) {
-        globalExecutor.submit(() -> {
+        blurExecutor.submit(() -> {
             BufferedImage styleImage = style.getImg();
             if (gsOn) {
                 // 缩小
@@ -22085,8 +22067,6 @@ public class PlayerFrame extends JFrame {
             // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
             globalPanel.setBackgroundImage(styleImage);
             updateUpperComp();
-            // 改变迷你窗口背景
-//                if (miniDialog != null) miniDialog.doBlur(styleImage);
             globalPanelTimer.start();
         });
     }
@@ -22367,7 +22347,8 @@ public class PlayerFrame extends JFrame {
     // 退出播放器
     private void exit() {
         try {
-            if (player.loadedMusic()) player.unload();        // 从播放器卸载当前文件，避免播放中的文件被占用
+            // 先暂停播放
+            player.pause();
             // 缓存超出最大值时清理
             if (FileUtils.getDirOrFileSize(new File(SimplePath.CACHE_PATH)) > maxCacheSize * 1024 * 1024)
                 clearCache();

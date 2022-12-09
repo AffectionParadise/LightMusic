@@ -72,7 +72,6 @@ public class SliderUI extends BasicSliderUI {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.setColor(thumbColor);
         g2d.fillOval(thumbRect.x, thumbRect.y + 4, thumbRect.width, thumbRect.width);
-//        else g2d.fillOval(thumbRect.x + 2, thumbRect.y + 6, thumbRect.width - 4, thumbRect.width - 4);
     }
 
     /**
@@ -88,14 +87,8 @@ public class SliderUI extends BasicSliderUI {
         // 画未填充部分
         g2d.setColor(trackBgColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, isTimeBar ? 0.2f : 0.3f));
-        int thx = Math.max(thumbRect.x, trackRect.x);
-//        g2d.fillRect(
-//                thx,
-//                trackRect.y + 9,
-//                trackRect.width - thx + trackRect.x,
-//                trackRect.height - 18
-//        );
-        g2d.fillRoundRect(thx, trackRect.y + 8, trackRect.width - thx + trackRect.x, trackRect.height - 16, 4, 4);
+        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (bigThumb ? 7 : 8), height = trackRect.height - (bigThumb ? 14 : 16);
+        g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, 4, 4);
         // 在时间条画出缓冲完成的部分
         if (isTimeBar) {
             int w = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
@@ -103,10 +96,10 @@ public class SliderUI extends BasicSliderUI {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
             g2d.fillRoundRect(
                     thx,
-                    trackRect.y + 8,
+                    thy,
                     // 缓冲长度没超过已填充长度时可以不画；缓冲长度超出轨道长度时取轨道长度
                     Math.min(Math.max(w - thx + trackRect.x, 0), trackRect.width - thx + trackRect.x),
-                    trackRect.height - 16, 4, 4
+                    height, 4, 4
             );
         }
         // 画已填充部分
@@ -114,9 +107,9 @@ public class SliderUI extends BasicSliderUI {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.fillRoundRect(
                 trackRect.x,
-                trackRect.y + 8,
+                thy,
                 thumbRect.x - trackRect.x + thumbRect.width / 2,
-                trackRect.height - 16, 4, 4
+                height, 4, 4
         );
     }
 

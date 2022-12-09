@@ -3937,7 +3937,7 @@ public class MusicServerUtils {
                         musicInfo.setArtistId(artistArray.getJSONObject(0).getString("author_id"));
                 }
                 if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.optString("album_name"));
-                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.optString("album_id"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
                         BufferedImage albumImage = getImageFromUrl(data.getString("img"));
