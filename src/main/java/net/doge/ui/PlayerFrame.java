@@ -15395,6 +15395,7 @@ public class PlayerFrame extends JFrame {
                     globalPanel.remove(tabbedPane);
                     globalPanel.remove(netSheetBox);
                     globalPanel.add(netCommentBox, BorderLayout.CENTER);
+                    netCommentBox.repaint();
                     netSheetListModel.clear();
                     if (currPane != MusicPane.SHEET) lastPane = currPane;
                     currPane = MusicPane.COMMENT;
@@ -15455,6 +15456,7 @@ public class PlayerFrame extends JFrame {
                     globalPanel.remove(tabbedPane);
                     globalPanel.remove(netCommentBox);
                     globalPanel.add(netSheetBox, BorderLayout.CENTER);
+                    netSheetBox.repaint();
                     netCommentListModel.clear();
                     if (currPane != MusicPane.COMMENT) lastPane = currPane;
                     currPane = MusicPane.SHEET;
