@@ -105,7 +105,7 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
         Dimension ps = iconLabel.getPreferredSize();
         Dimension ps2 = nameLabel.getPreferredSize();
         int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);
 

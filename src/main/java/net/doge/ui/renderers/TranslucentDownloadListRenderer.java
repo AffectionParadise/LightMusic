@@ -112,7 +112,7 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         Dimension ps = nameLabel.getPreferredSize();
         Dimension ps2 = sizeLabel.getPreferredSize();
         int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 50));
+        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 46));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);
 

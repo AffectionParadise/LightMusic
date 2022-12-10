@@ -54,7 +54,7 @@ public class DefaultCatalogListRenderer extends DefaultListCellRenderer {
         nameLabel.setText(name);
 
         Dimension ps = nameLabel.getPreferredSize();
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ps.height + 16, 50));
+        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ps.height + 16, 46));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);
 

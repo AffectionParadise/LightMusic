@@ -148,7 +148,7 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 50));
+        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 46));
         outerPanel.setPreferredSize(d);
         // 设置 list 元素宽度防止 outerPanel 设置最佳大小时不改变大小！
         list.setFixedCellWidth(list.getVisibleRect().width - 10);

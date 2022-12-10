@@ -72,11 +72,9 @@ public class TranslucentNetCommentListRenderer extends DefaultListCellRenderer {
         label.setIcon(profile != null ? new ImageIcon(profile) : isSelected ? defaultProfileS : defaultProfile);
 
         Dimension ps = label.getPreferredSize();
-        label.setPreferredSize(new Dimension(ps.width, ps.height + 20));
+        label.setPreferredSize(new Dimension(ps.width, ps.height + 12));
         list.setFixedCellWidth(lw);
 
-        // 所有标签透明
-        label.setOpaque(false);
         return label;
     }
 

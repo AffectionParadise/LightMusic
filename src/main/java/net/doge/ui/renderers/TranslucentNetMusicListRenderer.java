@@ -134,7 +134,7 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
         int lw = list.getVisibleRect().width - 10;
-        Dimension d = new Dimension(lw, Math.max(ph + 10, 50));
+        Dimension d = new Dimension(lw, Math.max(ph, 36));
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);
         list.setFixedCellWidth(lw);
@@ -142,7 +142,6 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
         if (musicInfo.hasLrcMatch()) {
             String lrcMatch = StringUtils.textToHtml(StringUtils.wrapLineByWidth("词： " + musicInfo.getLrcMatch(), lw));
             CustomLabel lrcMatchLabel = new CustomLabel(lrcMatch);
-            lrcMatchLabel.setOpaque(false);
             lrcMatchLabel.setForeground(isSelected ? selectedColor : foreColor);
             lrcMatchLabel.setFont(customFont);
             Dimension p = lrcMatchLabel.getPreferredSize();

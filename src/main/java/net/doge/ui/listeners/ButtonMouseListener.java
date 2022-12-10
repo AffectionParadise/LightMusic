@@ -21,8 +21,6 @@ public class ButtonMouseListener extends MouseAdapter {
     public ButtonMouseListener(JButton b, PlayerFrame f) {
         this.b = b;
         this.f = f;
-
-        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     @Override
@@ -42,12 +40,11 @@ public class ButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            Color buttonColor = f.getCurrUIStyle().getButtonColor();
-            Color darkerColor = ColorUtils.darker(buttonColor);
-            if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), darkerColor));
-            b.setForeground(darkerColor);
-        }
+        if (e.getButton() != MouseEvent.BUTTON1) return;
+        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color darkerColor = ColorUtils.darker(buttonColor);
+        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), darkerColor));
+        b.setForeground(darkerColor);
     }
 
     @Override

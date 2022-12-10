@@ -38,6 +38,7 @@ public class CustomButton extends JButton {
         setFocusable(false);
         setFocusPainted(false);
         setFont(Fonts.NORMAL);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     @Override

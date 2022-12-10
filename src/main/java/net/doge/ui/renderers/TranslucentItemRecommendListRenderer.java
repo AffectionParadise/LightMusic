@@ -135,7 +135,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             Dimension ps2 = nameLabel.getPreferredSize();
             Dimension ps3 = creatorLabel.getPreferredSize();
             int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
 
             outerPanel.setDrawBg(isSelected || hoverIndex == index);
@@ -195,7 +195,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             Dimension ps2 = nameLabel.getPreferredSize();
             Dimension ps3 = artistLabel.getPreferredSize();
             int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
             list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
@@ -255,7 +255,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             Dimension ps = iconLabel.getPreferredSize();
             Dimension ps2 = nameLabel.getPreferredSize();
             int ph = Math.max(ps.height, ps2.height);
-            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
             list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
@@ -328,7 +328,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             Dimension ps2 = nameLabel.getPreferredSize();
             Dimension ps3 = dCustomLabel.getPreferredSize();
             int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
             list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
@@ -395,7 +395,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             Dimension ps2 = nameLabel.getPreferredSize();
             Dimension ps3 = artistLabel.getPreferredSize();
             int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
             list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
@@ -455,7 +455,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             Dimension ps = iconLabel.getPreferredSize();
             Dimension ps2 = nameLabel.getPreferredSize();
             int ph = Math.max(ps.height, ps2.height);
-            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
             list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
@@ -536,7 +536,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             Dimension ps = avatarLabel.getPreferredSize();
             Dimension ps2 = nameLabel.getPreferredSize();
             int ph = Math.max(ps.height, ps2.height);
-            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 16, 50));
+            Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
             list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
