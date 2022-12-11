@@ -150,7 +150,7 @@ public class ManageCustomStyleDialog extends JDialog {
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -176,7 +176,7 @@ public class ManageCustomStyleDialog extends JDialog {
     }
 
     // 组装界面
-    void initView() {
+    private void initView() {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
@@ -213,7 +213,7 @@ public class ManageCustomStyleDialog extends JDialog {
         applyButton.addActionListener(e -> {
             UIStyle style = styleList.getSelectedValue();
             if (style == null) return;
-            if(!style.hasImg()) {
+            if (!style.hasImg()) {
                 new TipDialog(f, IMG_LOST_MSG).showDialog();
                 return;
             }
@@ -394,7 +394,7 @@ public class ManageCustomStyleDialog extends JDialog {
     }
 
     // 初始化数据
-    void initStyles() {
+    private void initStyles() {
         List<UIStyle> styles = f.getStyles();
         styleList.setModel(emptyListModel);
         styleListModel.clear();
@@ -408,14 +408,14 @@ public class ManageCustomStyleDialog extends JDialog {
         styleList.setModel(styleListModel);
     }
 
-    void updateRenderer(JList list) {
+    private void updateRenderer(JList list) {
         ListCellRenderer renderer = list.getCellRenderer();
         list.setCellRenderer(null);
         list.setCellRenderer(renderer);
     }
 
     // 主题更换时更新窗口主题
-    void updateStyle() {
+    private void updateStyle() {
         UIStyle st = f.getCurrUIStyle();
         Color labelColor = st.getLabelColor();
         Color buttonColor = st.getButtonColor();

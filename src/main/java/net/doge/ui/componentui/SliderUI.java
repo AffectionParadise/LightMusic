@@ -84,11 +84,12 @@ public class SliderUI extends BasicSliderUI {
         Graphics2D g2d = (Graphics2D) g;
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // 画未填充部分
         g2d.setColor(trackBgColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, isTimeBar ? 0.2f : 0.3f));
-        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (bigThumb ? 7 : 8), height = trackRect.height - (bigThumb ? 14 : 16);
-        g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, 4, 4);
+        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (bigThumb ? 7 : 8), height = trackRect.height - (bigThumb ? 14 : 16),
+                arc = bigThumb ? 6 : 4;
+        // 画未填充部分
+        g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
         // 在时间条画出缓冲完成的部分
         if (isTimeBar) {
             int w = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
@@ -99,7 +100,7 @@ public class SliderUI extends BasicSliderUI {
                     thy,
                     // 缓冲长度没超过已填充长度时可以不画；缓冲长度超出轨道长度时取轨道长度
                     Math.min(Math.max(w - thx + trackRect.x, 0), trackRect.width - thx + trackRect.x),
-                    height, 4, 4
+                    height, arc, arc
             );
         }
         // 画已填充部分
@@ -109,7 +110,7 @@ public class SliderUI extends BasicSliderUI {
                 trackRect.x,
                 thy,
                 thumbRect.x - trackRect.x + thumbRect.width / 2,
-                height, 4, 4
+                height, arc, arc
         );
     }
 

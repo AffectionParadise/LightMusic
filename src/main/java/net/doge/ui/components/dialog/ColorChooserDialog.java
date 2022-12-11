@@ -196,7 +196,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -229,7 +229,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         return result;
     }
 
-    void initView() {
+    private void initView() {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
         Dimension d = new Dimension(1, 10);
@@ -443,7 +443,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     }
 
     // 改变颜色模型
-    void updateColorModel() {
+    private void updateColorModel() {
         updating = true;
         if (isRGB()) {
             max1 = max2 = max3 = 255;
@@ -483,7 +483,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
     }
 
     // 颜色更新时更新界面
-    void updateUI() {
+    private void updateUI() {
 //        paletteLabel.repaint();
 //        vSlider.repaint();
         rSlider.repaint();
@@ -502,12 +502,12 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         }
     }
 
-    void updateColor(Color color) {
+    private void updateColor(Color color) {
         updateColor(color, false);
     }
 
     // 更新 RGB 颜色
-    void updateColor(Color color, boolean sliderRequest) {
+    private void updateColor(Color color, boolean sliderRequest) {
         updating = true;
         r = color.getRed();
         g = color.getGreen();
@@ -535,7 +535,7 @@ public class ColorChooserDialog extends JDialog implements DocumentListener {
         updating = false;
     }
 
-    void checkDocument(DocumentEvent e) {
+    private void checkDocument(DocumentEvent e) {
         Document doc = e.getDocument();
         JTextField tf = null;
         boolean d1 = doc == rTextField.getDocument(), d2 = doc == gTextField.getDocument(),

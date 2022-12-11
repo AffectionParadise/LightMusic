@@ -74,7 +74,7 @@ public class AboutDialog extends JDialog {
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(title);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -193,7 +193,7 @@ public class AboutDialog extends JDialog {
         doBlur(bufferedImage);
     }
 
-    void close() {
+    private void close() {
         f.currDialogs.remove(this);
         dispose();
     }

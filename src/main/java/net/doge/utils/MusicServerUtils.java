@@ -6588,7 +6588,7 @@ public class MusicServerUtils {
             JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray userArray = data.optJSONArray("object_list");
-            if (userArray != null) {
+            if (userArray != null && !userArray.isEmpty()) {
                 t = data.getInt("total");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);

@@ -63,7 +63,7 @@ public class CustomCheckMenuItem extends JCheckBoxMenuItem {
     }
 
     private void createBorder() {
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 0));
+        setBorder(BorderFactory.createEmptyBorder(4, 5, 4, 0));
     }
 
     @Override

@@ -7,7 +7,6 @@ package net.doge.constants;
  */
 public class EqualizerData {
     public static final int BAND_NUM = 10;
-    public static final int DEFAULT_GAIN = 0;
     public static final int MAX_GAIN = 12;
     public static final int MIN_GAIN = -12;
 

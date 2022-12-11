@@ -282,7 +282,7 @@ public class VideoDialog extends JDialog {
         }
     }
 
-    void fitMediaView() {
+    private void fitMediaView() {
         // 视频实际尺寸
         int width = media.getWidth(), height = media.getHeight();
         if (width == 0 || height == 0) return;
@@ -303,7 +303,7 @@ public class VideoDialog extends JDialog {
     }
 
     // 初始化视频界面
-    void initView() {
+    private void initView() {
         if (isLocal) {
             File mediaFile = new File(uri);
             media = new Media(mediaFile.toURI().toString());
@@ -373,14 +373,14 @@ public class VideoDialog extends JDialog {
     }
 
     // 出错时重新初始化
-    void initAgain() {
+    private void initAgain() {
         initView();
         timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), f, mp, true));
         playVideo();
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(StringUtils.textToHtml(title));
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -417,7 +417,7 @@ public class VideoDialog extends JDialog {
     }
 
     // 进度条
-    void initTimeBar() {
+    private void initTimeBar() {
         currTimeLabel.setForeground(style.getTimeBarColor());
         durationLabel.setForeground(style.getTimeBarColor());
         timeBar.setMinimum(TIME_BAR_MIN);
@@ -446,7 +446,7 @@ public class VideoDialog extends JDialog {
     }
 
     // 控制面板
-    void initControlPanel() {
+    private void initControlPanel() {
         playOrPauseButton.setToolTipText(PLAY_TIP);
         playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
         playOrPauseButton.setPreferredSize(new Dimension(pauseIcon.getIconWidth(), pauseIcon.getIconHeight()));

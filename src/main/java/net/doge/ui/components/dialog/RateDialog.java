@@ -110,7 +110,7 @@ public class RateDialog extends JDialog {
         doBlur(bufferedImage);
     }
 
-    void initView() {
+    private void initView() {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 

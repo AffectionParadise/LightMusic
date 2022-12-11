@@ -49,9 +49,8 @@ public class MusicPlayer {
     // 判断是否支持该格式
     public boolean support(String format) {
         for (String fmt : Format.AUDIO_TYPE_SUPPORTED) {
-            if (fmt.equals(format.toLowerCase())) {
-                return true;
-            }
+            if (!fmt.equals(format.toLowerCase())) continue;
+            return true;
         }
         return false;
     }
@@ -268,80 +267,74 @@ public class MusicPlayer {
 
     // 重新播放
     public void replay() {
-        if (mp != null) mp.seek(Duration.seconds(0));
+        if (mp == null) return;
+        mp.seek(Duration.seconds(0));
     }
 
     // 设置音量
     public void setVolume(double volume) {
-        if (mp != null) mp.setVolume(volume);
+        if (mp == null) return;
+        mp.setVolume(volume);
     }
 
     // 快进
     public void forward(double seconds) {
-        if (mp != null) mp.seek(getCurrTimeDuration().add(Duration.seconds(seconds)));
+        if (mp == null) return;
+        mp.seek(getCurrTimeDuration().add(Duration.seconds(seconds)));
     }
 
     // 快退
     public void backward(double seconds) {
-        if (mp != null) mp.seek(getCurrTimeDuration().subtract(Duration.seconds(seconds)));
+        if (mp == null) return;
+        mp.seek(getCurrTimeDuration().subtract(Duration.seconds(seconds)));
     }
 
     // 设置静音
     public void setMute(boolean isMute) {
-        if (mp != null) mp.setMute(isMute);
+        if (mp == null) return;
+        mp.setMute(isMute);
     }
 
     // 设置均衡
     public void setBalance(double b) {
-        if (mp != null) mp.setBalance(b);
+        if (mp == null) return;
+        mp.setBalance(b);
     }
 
     // 设置当前播放时间
     public void seek(double t) {
-        if (mp != null) mp.seek(Duration.seconds(t));
+        if (mp == null) return;
+        mp.seek(Duration.seconds(t));
     }
 
     // 设置播放速率
     public void setRate(double rate) {
-        if (mp != null) mp.setRate(rate);
+        if (mp == null) return;
+        mp.setRate(rate);
     }
 
     // 调整均衡器增益
     public void adjustEqualizerBands(double[] ds) {
-        if (mp != null) {
-            AudioEqualizer audioEqualizer = mp.getAudioEqualizer();
-            if (audioEqualizer != null) {
-                ObservableList<EqualizerBand> bands = audioEqualizer.getBands();
-                bands.get(0).setCenterFrequency(31.25);
-                bands.get(1).setCenterFrequency(62.5);
-                for (int i = 0, size = bands.size(); i < size; i++) {
-                    EqualizerBand band = bands.get(i);
-                    double val = ds[i];
-                    val = Math.min(val, EqualizerBand.MAX_GAIN);
-                    val = Math.max(val, EqualizerBand.MIN_GAIN);
-                    band.setGain(val);
-                }
-            }
+        if (mp == null) return;
+        AudioEqualizer audioEqualizer = mp.getAudioEqualizer();
+        if (audioEqualizer == null) return;
+        ObservableList<EqualizerBand> bands = audioEqualizer.getBands();
+        bands.get(0).setCenterFrequency(31.25);
+        bands.get(1).setCenterFrequency(62.5);
+        for (int i = 0, size = bands.size(); i < size; i++) {
+            EqualizerBand band = bands.get(i);
+            double val = ds[i];
+            val = Math.min(val, EqualizerBand.MAX_GAIN);
+            val = Math.max(val, EqualizerBand.MIN_GAIN);
+            band.setGain(val);
         }
-    }
-
-    // 获取当前均衡器增益
-    public double[] getEqualizerBands() {
-        if (mp != null) {
-            ObservableList<EqualizerBand> bands = mp.getAudioEqualizer().getBands();
-            double[] data = new double[EqualizerData.BAND_NUM];
-            for (int i = 0, size = bands.size(); i < size; i++) {
-                EqualizerBand band = bands.get(i);
-                data[i] = band.getGain();
-            }
-            return data;
-        }
-        return null;
     }
 
     // 获取缓冲完成的时间
     public double getBufferedSeconds() {
-        return mp != null && mp.getBufferProgressTime() != null ? mp.getBufferProgressTime().toSeconds() : 0;
+        if (mp == null) return 0;
+        Duration progressTime = mp.getBufferProgressTime();
+        return progressTime != null ? progressTime.toSeconds() : 0;
     }
 
     // 获取当前播放时间
@@ -367,11 +360,11 @@ public class MusicPlayer {
 
     // 获取总时间字符串
     public String getDurationString() {
-        return musicInfo != null ? TimeUtils.format(musicInfo.getDuration()) : "00:00";
+        return TimeUtils.format(musicInfo.getDuration());
     }
 
     // 获取总时间秒
     public double getDurationSeconds() {
-        return musicInfo != null ? musicInfo.getDuration() : 0;
+        return musicInfo.getDuration();
     }
 }

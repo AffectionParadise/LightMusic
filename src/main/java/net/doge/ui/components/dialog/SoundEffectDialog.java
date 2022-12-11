@@ -48,7 +48,7 @@ public class SoundEffectDialog extends JDialog {
     private CustomPanel sliderPanel = new CustomPanel();
 
     private CustomLabel soundEffectLabel = new CustomLabel("音效：");
-    private CustomComboBox comboBox = new CustomComboBox<>();
+    private CustomComboBox<String> comboBox = new CustomComboBox<>();
     private final CustomPanel[] panels = {
             new CustomPanel(),
             new CustomPanel(),
@@ -174,7 +174,7 @@ public class SoundEffectDialog extends JDialog {
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -199,26 +199,28 @@ public class SoundEffectDialog extends JDialog {
         globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
-    void initView() {
+    private void initView() {
         centerPanel.setLayout(new BorderLayout());
 
+        Color labelColor = style.getLabelColor();
+        Color sliderColor = style.getSliderColor();
+
         // 音效选择面板
-        soundEffectLabel.setForeground(style.getLabelColor());
+        soundEffectLabel.setForeground(labelColor);
         comboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            String s = (String) comboBox.getSelectedItem();
+            int index = comboBox.getSelectedIndex();
             // 记录当前音效
-            f.currSoundEffectName = s;
-            for (int i = 0, len = EqualizerData.names.length; i < len; i++) {
-                if (EqualizerData.names[i].equals(s)) {
-                    // 记录当前均衡
-                    f.ed = EqualizerData.data[i];
-                    f.getPlayer().adjustEqualizerBands(EqualizerData.data[i]);
-                    fitData(EqualizerData.data[i]);
-                    break;
-                }
-            }
+            f.currSoundEffect = index;
+            double[][] eds = EqualizerData.data;
+            if (index >= eds.length) return;
+
+            double[] newEd = eds[index];
+            // 记录当前均衡
+            f.ed = newEd;
+            f.getPlayer().adjustEqualizerBands(newEd);
+            fitData(newEd);
         });
         // 下拉框 UI
         Color buttonColor = style.getButtonColor();
@@ -231,9 +233,13 @@ public class SoundEffectDialog extends JDialog {
         // 滑动条面板
         sliderPanel.setLayout(new GridLayout(1, 10));
         for (int i = 0, len = panels.length; i < len; i++) {
+            CustomPanel p = panels[i];
             CustomSlider s = sliders[i];
+            CustomLabel val = vals[i];
+            CustomLabel hz = hzs[i];
+
             // 滑动条
-            s.setUI(new VSliderUI(s, style.getSliderColor(), style.getSliderColor()));
+            s.setUI(new VSliderUI(s, sliderColor, sliderColor));
             s.setPreferredSize(new Dimension(30, 300));
             s.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
             s.setMinimum(EqualizerData.MIN_GAIN);
@@ -247,30 +253,28 @@ public class SoundEffectDialog extends JDialog {
             s.addChangeListener(e -> {
                 // 更新值
                 updateVals();
-                if (!fitting) {
-                    comboBox.setSelectedItem("自定义");
-                    // 调整并记录当前均衡
-                    f.getPlayer().adjustEqualizerBands(f.ed = getData());
-                }
+                if (fitting) return;
+                comboBox.setSelectedItem("自定义");
+                // 调整并记录当前均衡
+                f.getPlayer().adjustEqualizerBands(f.ed = getData());
             });
 
-            Color labelColor = style.getLabelColor();
             // 值
-            vals[i].setForeground(labelColor);
+            val.setForeground(labelColor);
             // 频率
-            hzs[i].setForeground(labelColor);
+            hz.setForeground(labelColor);
 
-            panels[i].setLayout(new BorderLayout());
-            panels[i].setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-            panels[i].add(vals[i], BorderLayout.NORTH);
-            panels[i].add(s, BorderLayout.CENTER);
-            panels[i].add(hzs[i], BorderLayout.SOUTH);
+            p.setLayout(new BorderLayout());
+            p.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            p.add(val, BorderLayout.NORTH);
+            p.add(s, BorderLayout.CENTER);
+            p.add(hz, BorderLayout.SOUTH);
 
-            sliderPanel.add(panels[i]);
+            sliderPanel.add(p);
         }
 
         // 加载当前音效
-        comboBox.setSelectedItem(f.currSoundEffectName);
+        comboBox.setSelectedIndex(f.currSoundEffect);
         // 加载当前均衡
         fitData(f.ed);
 
@@ -278,7 +282,7 @@ public class SoundEffectDialog extends JDialog {
     }
 
     // 根据滑动条的值获取均衡数据
-    double[] getData() {
+    private double[] getData() {
         double[] data = new double[EqualizerData.BAND_NUM];
         int i = 0;
         for (CustomSlider slider : sliders) data[i++] = slider.getValue();
@@ -286,14 +290,14 @@ public class SoundEffectDialog extends JDialog {
     }
 
     // 根据均衡数据调整滑动条
-    void fitData(double[] data) {
+    private void fitData(double[] data) {
         fitting = true;
         for (int i = 0, len = data.length; i < len; i++) sliders[i].setValue((int) data[i]);
         fitting = false;
     }
 
     // 更新值显示
-    void updateVals() {
+    private void updateVals() {
         for (int i = 0, len = sliders.length; i < len; i++) {
             int val = sliders[i].getValue();
             String s = String.valueOf(val > 0 ? "+" + val : val);

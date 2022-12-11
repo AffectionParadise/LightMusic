@@ -172,7 +172,7 @@ public abstract class ImageViewDialog extends JDialog {
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -198,7 +198,7 @@ public abstract class ImageViewDialog extends JDialog {
     }
 
     // 组装界面
-    void initView() {
+    private void initView() {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
@@ -321,7 +321,7 @@ public abstract class ImageViewDialog extends JDialog {
     }
 
     // 显示第 i 张图片
-    boolean showImg(int i) {
+    private boolean showImg(int i) {
         BufferedImage img = getImg(i);
         pageLabel.setText(String.format("%s / %s", i, results.total));
         if (img == null) {
@@ -346,7 +346,7 @@ public abstract class ImageViewDialog extends JDialog {
     public abstract void requestFailed();
 
     // 获取第 i 张图片
-    BufferedImage getImg(int i) {
+    private BufferedImage getImg(int i) {
         try {
             // 请求指定页数的图片
             int dp = i % limit == 0 ? i / limit : i / limit + 1, di = (i - 1) % limit;
@@ -367,7 +367,7 @@ public abstract class ImageViewDialog extends JDialog {
     }
 
     // 导出第 i 张图片
-    void saveImg(int i) {
+    private void saveImg(int i) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存图片");
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();

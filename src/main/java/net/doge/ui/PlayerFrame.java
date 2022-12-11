@@ -2136,10 +2136,10 @@ public class PlayerFrame extends JFrame {
     // 获取榜单事件
     Runnable getRankingAction;
 
-    // 当前音效名称
-    public String currSoundEffectName = EqualizerData.names[0];
+    // 当前音效索引
+    public int currSoundEffect;
     // 当前均衡
-    public double[] ed = EqualizerData.data[0];
+    public double[] ed;
 
     // 当前相似歌曲原歌曲
     private NetMusicInfo currMusicMusicInfo;
@@ -2305,7 +2305,7 @@ public class PlayerFrame extends JFrame {
             @Override
             public void windowGainedFocus(WindowEvent e) {
                 if (windowState == WindowState.MAXIMIZED) desktopLyricDialog.setVisible(false);
-                lrcScrollAnimation = true;
+                if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
             }
 
             @Override
@@ -2998,8 +2998,13 @@ public class PlayerFrame extends JFrame {
         // 载入是否静音
         isMute = config.optBoolean(ConfigConstants.MUTE, false);
         if (isMute) muteButton.setIcon(ImageUtils.dye(muteIcon, currUIStyle.getButtonColor()));
-        // 载入音效名称
-        currSoundEffectName = config.optString(ConfigConstants.SOUND_EFFECT_NAME, EqualizerData.names[0]);
+        // 载入音效
+        currSoundEffect = config.optInt(ConfigConstants.SOUND_EFFECT, 0);
+        JSONArray edArray = config.optJSONArray(ConfigConstants.EQUALIZER_DATA);
+        ed = new double[EqualizerData.BAND_NUM];
+        if (edArray != null) {
+            for (int i = 0, s = edArray.size(); i < s; i++) ed[i] = edArray.optDouble(i);
+        }
         // 载入均衡数据
         JSONArray equalizerData = config.optJSONArray(ConfigConstants.EQUALIZER_DATA);
         if (equalizerData != null) {
@@ -3706,8 +3711,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.MUTE, isMute);
         // 存入音量
         config.put(ConfigConstants.VOLUME, volumeSlider.getValue());
-        // 存入音效名称
-        config.put(ConfigConstants.SOUND_EFFECT_NAME, currSoundEffectName);
+        // 存入音效
+        config.put(ConfigConstants.SOUND_EFFECT, currSoundEffect);
         // 存入均衡数据
         config.put(ConfigConstants.EQUALIZER_DATA, ed);
         // 存入迷你窗口位置
@@ -6088,8 +6093,9 @@ public class PlayerFrame extends JFrame {
                 leftBox.remove(emptyHintPanel);
                 leftBox.add(musicScrollPane);
             }
-            musicToolBar.add(addToolButton, 0);
-            musicToolBar.add(reimportToolButton, 1);
+            addToolButton.setVisible(true);
+            reimportToolButton.setVisible(true);
+            sortToolButton.setVisible(true);
             leftBox.repaint();
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
@@ -6109,8 +6115,9 @@ public class PlayerFrame extends JFrame {
                 leftBox.remove(emptyHintPanel);
                 leftBox.add(musicScrollPane);
             }
-            musicToolBar.remove(addToolButton);
-            musicToolBar.remove(reimportToolButton);
+            addToolButton.setVisible(false);
+            reimportToolButton.setVisible(false);
+            sortToolButton.setVisible(false);
             leftBox.repaint();
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
@@ -6164,8 +6171,9 @@ public class PlayerFrame extends JFrame {
             }
             leftBox.add(collectionTabbedPane);
 
-            musicToolBar.remove(addToolButton);
-            musicToolBar.remove(reimportToolButton);
+            addToolButton.setVisible(false);
+            reimportToolButton.setVisible(false);
+            sortToolButton.setVisible(false);
             leftBox.repaint();
 
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
@@ -6228,9 +6236,8 @@ public class PlayerFrame extends JFrame {
         addToolButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    addPopupMenu.show(addToolButton, e.getX(), e.getY());
-                }
+                if (e.getButton() != MouseEvent.BUTTON1) return;
+                addPopupMenu.show(addToolButton, e.getX(), e.getY());
             }
         });
         // 点击重新导入按钮事件
@@ -6238,43 +6245,41 @@ public class PlayerFrame extends JFrame {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REIMPORT_MSG, "是", "否");
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
-            if (response == JOptionPane.YES_OPTION) {
-                if (catalogs.isEmpty()) {
-                    new TipDialog(THIS, NO_CATALOG_MSG).showDialog();
-                    return;
-                }
-                ListModel model = musicList.getModel();
-                musicList.setModel(emptyListModel);
-                musicListModel.clear();
-                int audioFileCount = 0;
-                for (File dir : catalogs) {
-                    // 文件夹不存在，跳过
-                    if (!dir.exists()) continue;
-
-                    File[] files = dir.listFiles();
-                    for (File file : files) {
-                        // 支持这种文件格式才添加
-                        if (player.support(FileUtils.getSuffix(file))) {
-                            audioFileCount++;
-                            AudioFile audioFile = new AudioFile(file);
-                            globalExecutor.submit(() -> {
-                                MusicUtils.fillAudioFileInfo(audioFile);
-                                musicList.repaint();
-                            });
-                            musicListModel.addElement(audioFile);
-                        }
-                    }
-                }
-                musicList.setModel(model);
-                boolean f = musicList.getModel() == filterModel;
-                filterPersonalMusic();
-                if (!f) {
-                    musicList.setModel(musicListModel);
-                    countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
-                }
-                String msg = "成功添加 " + audioFileCount + " 首歌曲";
-                new TipDialog(THIS, msg).showDialog();
+            if (response != JOptionPane.YES_OPTION) return;
+            if (catalogs.isEmpty()) {
+                new TipDialog(THIS, NO_CATALOG_MSG).showDialog();
+                return;
             }
+            ListModel model = musicList.getModel();
+            musicList.setModel(emptyListModel);
+            musicListModel.clear();
+            int audioFileCount = 0;
+            for (File dir : catalogs) {
+                // 文件夹不存在，跳过
+                if (!dir.exists()) continue;
+
+                File[] files = dir.listFiles();
+                for (File file : files) {
+                    // 支持这种文件格式才添加
+                    if (!player.support(FileUtils.getSuffix(file))) continue;
+                    audioFileCount++;
+                    AudioFile audioFile = new AudioFile(file);
+                    globalExecutor.submit(() -> {
+                        MusicUtils.fillAudioFileInfo(audioFile);
+                        musicList.repaint();
+                    });
+                    musicListModel.addElement(audioFile);
+                }
+            }
+            musicList.setModel(model);
+            boolean f = musicList.getModel() == filterModel;
+            filterPersonalMusic();
+            if (!f) {
+                musicList.setModel(musicListModel);
+                countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+            }
+            String msg = "成功添加 " + audioFileCount + " 首歌曲";
+            new TipDialog(THIS, msg).showDialog();
         });
         // 点击管理歌曲目录按钮事件
         manageCatalogToolButton.addActionListener(e -> {
@@ -6284,68 +6289,63 @@ public class PlayerFrame extends JFrame {
         // 点击删除按钮事件
         removeToolButton.addActionListener(e -> {
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
-            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || selectedIndex == CollectionTabIndex.MUSIC) {
+            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC) {
                 List selectedValues = musicList.getSelectedValuesList();
-                if (selectedValues.size() != 0) {
-                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
-                    confirmDialog.showDialog();
-                    int response = confirmDialog.getResponse();
-                    // 删除选中的文件
-                    if (response == JOptionPane.YES_OPTION) {
-                        DefaultListModel<Object> model = (DefaultListModel<Object>) musicList.getModel();
-                        // 解决删除元素带来的性能问题
-                        ListCellRenderer r = musicList.getCellRenderer();
-                        musicList.setCellRenderer(null);
-                        for (Object o : selectedValues) {
-                            // 改变取消收藏状态
-                            if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.isPlayingObject(o) && hasBeenCollected(o))
-                                collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
-                            model.removeElement(o);
-                            if (model == filterModel) {
-                                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC)
-                                    musicListModel.removeElement(o);
-                                else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY)
-                                    historyModel.removeElement(o);
-                                else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION)
-                                    collectionModel.removeElement(o);
-                            }
-                        }
-                        musicList.setCellRenderer(r);
-                        new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
+                if (selectedValues.isEmpty()) return;
+                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
+                confirmDialog.showDialog();
+                int response = confirmDialog.getResponse();
+                if (response != JOptionPane.YES_OPTION) return;
+                // 删除选中的文件
+                DefaultListModel<Object> model = (DefaultListModel<Object>) musicList.getModel();
+                // 解决删除元素带来的性能问题
+                ListCellRenderer r = musicList.getCellRenderer();
+                musicList.setCellRenderer(null);
+                for (Object o : selectedValues) {
+                    // 改变取消收藏状态
+                    if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.isPlayingObject(o) && hasBeenCollected(o))
+                        collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
+                    model.removeElement(o);
+                    if (model == filterModel) {
+                        if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC)
+                            musicListModel.removeElement(o);
+                        else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY)
+                            historyModel.removeElement(o);
+                        else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION)
+                            collectionModel.removeElement(o);
                     }
                 }
+                musicList.setCellRenderer(r);
+                new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
             } else {
                 List selectedValues = collectionList.getSelectedValuesList();
-                if (selectedValues.size() != 0) {
-                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                            ASK_REMOVE_ITEMS_MSG, "是", "否");
-                    confirmDialog.showDialog();
-                    int response = confirmDialog.getResponse();
-                    // 删除选中的项目
-                    if (response == JOptionPane.YES_OPTION) {
-                        for (Object o : selectedValues) {
-                            DefaultListModel<Object> model = (DefaultListModel<Object>) collectionList.getModel();
-                            model.removeElement(o);
-                            if (model == filterModel) {
-                                if (selectedIndex == CollectionTabIndex.PLAYLIST)
-                                    playlistCollectionModel.removeElement(o);
-                                else if (selectedIndex == CollectionTabIndex.ALBUM)
-                                    albumCollectionModel.removeElement(o);
-                                else if (selectedIndex == CollectionTabIndex.ARTIST)
-                                    artistCollectionModel.removeElement(o);
-                                else if (selectedIndex == CollectionTabIndex.RADIO)
-                                    radioCollectionModel.removeElement(o);
-                                else if (selectedIndex == CollectionTabIndex.MV) mvCollectionModel.removeElement(o);
-                                else if (selectedIndex == CollectionTabIndex.RANKING)
-                                    rankingCollectionModel.removeElement(o);
-                                else if (selectedIndex == CollectionTabIndex.USER)
-                                    userCollectionModel.removeElement(o);
-                            }
-                        }
-                        new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
+                if (selectedValues.isEmpty()) return;
+                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
+                confirmDialog.showDialog();
+                int response = confirmDialog.getResponse();
+                if (response != JOptionPane.YES_OPTION) return;
+                // 删除选中的项目
+                for (Object o : selectedValues) {
+                    DefaultListModel<Object> model = (DefaultListModel<Object>) collectionList.getModel();
+                    model.removeElement(o);
+                    if (model == filterModel) {
+                        if (selectedIndex == CollectionTabIndex.PLAYLIST)
+                            playlistCollectionModel.removeElement(o);
+                        else if (selectedIndex == CollectionTabIndex.ALBUM)
+                            albumCollectionModel.removeElement(o);
+                        else if (selectedIndex == CollectionTabIndex.ARTIST)
+                            artistCollectionModel.removeElement(o);
+                        else if (selectedIndex == CollectionTabIndex.RADIO)
+                            radioCollectionModel.removeElement(o);
+                        else if (selectedIndex == CollectionTabIndex.MV)
+                            mvCollectionModel.removeElement(o);
+                        else if (selectedIndex == CollectionTabIndex.RANKING)
+                            rankingCollectionModel.removeElement(o);
+                        else if (selectedIndex == CollectionTabIndex.USER)
+                            userCollectionModel.removeElement(o);
                     }
                 }
+                new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
             }
         });
         // 点击清空按钮事件
@@ -6353,105 +6353,101 @@ public class PlayerFrame extends JFrame {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_CLEAR_LIST_MSG, "是", "否");
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
+            if (response != JOptionPane.YES_OPTION) return;
             // 清空列表
-            if (response == JOptionPane.YES_OPTION) {
-                int selectedIndex = collectionTabbedPane.getSelectedIndex();
-                if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                        || selectedIndex == CollectionTabIndex.MUSIC) {
-                    DefaultListModel<Object> model = (DefaultListModel<Object>) musicList.getModel();
-                    musicList.setModel(emptyListModel);
-                    model.clear();
-                    if (model == filterModel) {
-                        if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC)
-                            musicListModel.clear();
-                        else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY)
-                            historyModel.clear();
-                        else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
-                            collectionModel.clear();
-                            collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
-                        }
-                    } else if (model == collectionModel) {
+            int selectedIndex = collectionTabbedPane.getSelectedIndex();
+            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC) {
+                DefaultListModel<Object> model = (DefaultListModel<Object>) musicList.getModel();
+                musicList.setModel(emptyListModel);
+                model.clear();
+                if (model == filterModel) {
+                    if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC)
+                        musicListModel.clear();
+                    else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY)
+                        historyModel.clear();
+                    else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                        collectionModel.clear();
                         collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
                     }
-                } else {
-                    DefaultListModel<Object> model = (DefaultListModel<Object>) collectionList.getModel();
-                    collectionList.setModel(emptyListModel);
-                    model.clear();
-                    if (model == filterModel) {
-                        if (selectedIndex == CollectionTabIndex.PLAYLIST) playlistCollectionModel.clear();
-                        else if (selectedIndex == CollectionTabIndex.ALBUM) albumCollectionModel.clear();
-                        else if (selectedIndex == CollectionTabIndex.ARTIST) artistCollectionModel.clear();
-                        else if (selectedIndex == CollectionTabIndex.RADIO) radioCollectionModel.clear();
-                        else if (selectedIndex == CollectionTabIndex.MV) mvCollectionModel.clear();
-                        else if (selectedIndex == CollectionTabIndex.RANKING) rankingCollectionModel.clear();
-                        else if (selectedIndex == CollectionTabIndex.USER) userCollectionModel.clear();
-                    }
+                } else if (model == collectionModel) {
+                    collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getButtonColor()));
                 }
-                new TipDialog(THIS, CLEAR_SUCCESS_MSG).showDialog();
+            } else {
+                DefaultListModel<Object> model = (DefaultListModel<Object>) collectionList.getModel();
+                collectionList.setModel(emptyListModel);
+                model.clear();
+                if (model == filterModel) {
+                    if (selectedIndex == CollectionTabIndex.PLAYLIST) playlistCollectionModel.clear();
+                    else if (selectedIndex == CollectionTabIndex.ALBUM) albumCollectionModel.clear();
+                    else if (selectedIndex == CollectionTabIndex.ARTIST) artistCollectionModel.clear();
+                    else if (selectedIndex == CollectionTabIndex.RADIO) radioCollectionModel.clear();
+                    else if (selectedIndex == CollectionTabIndex.MV) mvCollectionModel.clear();
+                    else if (selectedIndex == CollectionTabIndex.RANKING) rankingCollectionModel.clear();
+                    else if (selectedIndex == CollectionTabIndex.USER) userCollectionModel.clear();
+                }
             }
+            new TipDialog(THIS, CLEAR_SUCCESS_MSG).showDialog();
         });
         // 去重事件
         duplicateToolButton.addActionListener(e -> {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_DUPLICATE_MSG, "是", "否");
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
-            if (response == JOptionPane.YES_OPTION) {
-                Set<Object> set = new HashSet<>();
-                DefaultListModel<Object> model = null;
-                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) model = musicListModel;
-                else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) model = historyModel;
-                else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
-                    int selectedIndex = collectionTabbedPane.getSelectedIndex();
-                    if (selectedIndex == CollectionTabIndex.MUSIC) model = collectionModel;
-                    else if (selectedIndex == CollectionTabIndex.PLAYLIST) model = playlistCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.ALBUM) model = albumCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.ARTIST) model = artistCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.RADIO) model = radioCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.MV) model = mvCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.RANKING) model = rankingCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
-                }
-                for (int i = 0; i < model.getSize(); i++) {
-                    Object elem = model.get(i);
-                    if (!set.contains(elem)) set.add(elem);
-                    else model.remove(i--);
-                }
-                set.clear();
-                for (int i = 0; i < filterModel.getSize(); i++) {
-                    Object elem = filterModel.get(i);
-                    if (!set.contains(elem)) set.add(elem);
-                    else filterModel.remove(i--);
-                }
-                new TipDialog(THIS, DUPLICATE_SUCCESS_MSG).showDialog();
+            if (response != JOptionPane.YES_OPTION) return;
+            Set<Object> set = new HashSet<>();
+            DefaultListModel<Object> model = null;
+            if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) model = musicListModel;
+            else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) model = historyModel;
+            else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                int selectedIndex = collectionTabbedPane.getSelectedIndex();
+                if (selectedIndex == CollectionTabIndex.MUSIC) model = collectionModel;
+                else if (selectedIndex == CollectionTabIndex.PLAYLIST) model = playlistCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.ALBUM) model = albumCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.ARTIST) model = artistCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.RADIO) model = radioCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.MV) model = mvCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.RANKING) model = rankingCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
             }
+            for (int i = 0; i < model.getSize(); i++) {
+                Object elem = model.get(i);
+                if (!set.contains(elem)) set.add(elem);
+                else model.remove(i--);
+            }
+            set.clear();
+            for (int i = 0; i < filterModel.getSize(); i++) {
+                Object elem = filterModel.get(i);
+                if (!set.contains(elem)) set.add(elem);
+                else filterModel.remove(i--);
+            }
+            new TipDialog(THIS, DUPLICATE_SUCCESS_MSG).showDialog();
         });
         // 倒序事件
         reverseToolButton.addActionListener(e -> {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REVERSE_MSG, "是", "否");
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
-            if (response == JOptionPane.YES_OPTION) {
-                DefaultListModel<Object> model = null;
-                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) model = musicListModel;
-                else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) model = historyModel;
-                else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
-                    int selectedIndex = collectionTabbedPane.getSelectedIndex();
-                    if (selectedIndex == CollectionTabIndex.MUSIC) model = collectionModel;
-                    else if (selectedIndex == CollectionTabIndex.PLAYLIST) model = playlistCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.ALBUM) model = albumCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.ARTIST) model = artistCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.RADIO) model = radioCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.MV) model = mvCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.RANKING) model = rankingCollectionModel;
-                    else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
-                }
-                for (int i = 0, s = model.size(), half = s / 2; i < half; i++) {
-                    Object t = model.get(i);
-                    model.set(i, model.get(s - 1 - i));
-                    model.set(s - 1 - i, t);
-                }
-                new TipDialog(THIS, REVERSE_SUCCESS_MSG).showDialog();
+            if (response != JOptionPane.YES_OPTION) return;
+            DefaultListModel<Object> model = null;
+            if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) model = musicListModel;
+            else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) model = historyModel;
+            else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                int selectedIndex = collectionTabbedPane.getSelectedIndex();
+                if (selectedIndex == CollectionTabIndex.MUSIC) model = collectionModel;
+                else if (selectedIndex == CollectionTabIndex.PLAYLIST) model = playlistCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.ALBUM) model = albumCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.ARTIST) model = artistCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.RADIO) model = radioCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.MV) model = mvCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.RANKING) model = rankingCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
             }
+            for (int i = 0, s = model.size(), half = s / 2; i < half; i++) {
+                Object t = model.get(i);
+                model.set(i, model.get(s - 1 - i));
+                model.set(s - 1 - i, t);
+            }
+            new TipDialog(THIS, REVERSE_SUCCESS_MSG).showDialog();
         });
         // 升序
         ascendingMenuItem.addActionListener(e -> {
@@ -6546,19 +6542,15 @@ public class PlayerFrame extends JFrame {
         sortToolButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    // 注意：弹出坐标必须相对于按钮！
-//                    SwingUtilities.updateComponentTreeUI(sortPopupMenu);
-                    sortPopupMenu.show(sortToolButton, e.getX(), e.getY());
-                }
+                if (e.getButton() != MouseEvent.BUTTON1) return;
+                sortPopupMenu.show(sortToolButton, e.getX(), e.getY());
             }
         });
         // 点击上下移按钮事件
         moveUpToolButton.addActionListener(e -> {
             int index = collectionTabbedPane.getSelectedIndex();
             CustomList list;
-            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || index == CollectionTabIndex.MUSIC) {
+            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || index == CollectionTabIndex.MUSIC) {
                 list = musicList;
             } else list = collectionList;
             int selectedIndex = list.getSelectedIndex();
@@ -6648,8 +6640,6 @@ public class PlayerFrame extends JFrame {
         musicToolBar.add(countLabel);
         // 加胶水让工具栏左对齐
         musicToolBar.add(Box.createHorizontalGlue());
-//        // 换肤按钮在最右边
-//        musicToolBar.add(styleToolButton);
         leftBox.add(musicToolBar);
     }
 
@@ -6887,9 +6877,7 @@ public class PlayerFrame extends JFrame {
             }
         });
         // 右键菜单播放
-        playMenuItem.addActionListener(e -> {
-            playExecutor.submit(() -> playSelected(musicList, false));
-        });
+        playMenuItem.addActionListener(e -> playExecutor.submit(() -> playSelected(musicList, false)));
         // 下一首播放
         nextPlayMenuItem.addActionListener(e -> nextPlay(musicList));
         // 右键菜单打开文件所在位置
@@ -6912,9 +6900,7 @@ public class PlayerFrame extends JFrame {
             }
         });
         // 右键菜单删除
-        removeMenuItem.addActionListener(e -> {
-            removeToolButton.doClick();
-        });
+        removeMenuItem.addActionListener(e -> removeToolButton.doClick());
         // 右键菜单收藏/取消收藏
         collectMenuItem.addActionListener(e -> {
             ListModel model = musicList.getModel();
@@ -6946,9 +6932,7 @@ public class PlayerFrame extends JFrame {
             }
         });
         // 右键菜单播放 MV
-        playMvMenuItem.addActionListener(e -> {
-            playMv(MvType.MUSIC_LIST);
-        });
+        playMvMenuItem.addActionListener(e -> playMv(MvType.MUSIC_LIST));
         // 右键菜单下载
         downloadMenuItem.addActionListener(e -> {
             List values = musicList.getSelectedValuesList();
@@ -15491,7 +15475,7 @@ public class PlayerFrame extends JFrame {
             if (lastPane == MusicPane.MUSIC) {
                 globalPanel.add(tabbedPane, BorderLayout.CENTER);
             } else if (lastPane == MusicPane.LYRIC) {
-                lrcScrollAnimation = true;
+                if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
                 globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
             }
             globalPanel.repaint();
@@ -15919,7 +15903,7 @@ public class PlayerFrame extends JFrame {
             if (lastPane == MusicPane.MUSIC) {
                 globalPanel.add(tabbedPane, BorderLayout.CENTER);
             } else if (lastPane == MusicPane.LYRIC) {
-                lrcScrollAnimation = true;
+                if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
                 globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
             }
             globalPanel.repaint();
@@ -19147,7 +19131,7 @@ public class PlayerFrame extends JFrame {
             }
             // 歌单切到歌词页面
             else if (currPane == MusicPane.MUSIC || lastPane == MusicPane.MUSIC) {
-                lrcScrollAnimation = true;
+                if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
                 // 清空评论数据
                 if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
                 if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
@@ -19808,11 +19792,9 @@ public class PlayerFrame extends JFrame {
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
             // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
             if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
-//                Duration ct = mp.getCurrentTime();
                 player.initialMp(player.getMusicInfo().getFile(), netMusicInfo);
                 playLoaded(false);
                 seekLrc(0);
-//                mp.seek(ct);
             }
             // 歌曲 url 过期后重新加载 url 再播放
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE
@@ -19862,39 +19844,30 @@ public class PlayerFrame extends JFrame {
                 if (!timeBar.getValueIsAdjusting()) timeBar.setValue((int) (player.getCurrScale() * TIME_BAR_MAX));
                 currTimeLabel.setText(player.getCurrTimeString());
                 // 监听并更新歌词(若有歌词)
-                if (nextLrc >= 0) {
-                    double currTimeSeconds = player.getCurrTimeSeconds();
-                    // 判断是否该高亮下一行歌词
-                    if (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() + lrcOffset) {
-                        // 删除第一行歌词，整体往上移
-//                        lrcListModel.set(LRC_INDEX - 7, lrcListModel.get(LRC_INDEX - 5));
-//                        lrcListModel.set(LRC_INDEX - 5, lrcListModel.get(LRC_INDEX - 3));
-//                        lrcListModel.set(LRC_INDEX - 3, lrcListModel.get(LRC_INDEX - 1));
-//                        lrcListModel.set(LRC_INDEX + 1, nextLrc + 1 < statements.size() ? statements.get(nextLrc + 1) : new Statement(0, " "));
-//                        lrcListModel.set(LRC_INDEX + 3, nextLrc + 2 < statements.size() ? statements.get(nextLrc + 2) : new Statement(0, " "));
-//                        lrcListModel.set(LRC_INDEX + 5, nextLrc + 3 < statements.size() ? statements.get(nextLrc + 3) : new Statement(0, " "));
-//                        lrcListModel.set(LRC_INDEX - 1, statements.get(nextLrc++));
-                        row = LRC_INDEX + 1 + nextLrc * 2;
-                        if (!lrcScrollAnimation && !lrcScrollWaiting) {
-                            currScrollVal = lrcScrollPane.getVValue();
-                            lrcScrollAnimation = true;
-                        }
-                        TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
-                        renderer.setRow(row);
-                        nextLrc++;
-                        originalRatio.set(0);
-                        return;
+                if (nextLrc < 0) return;
+                double currTimeSeconds = player.getCurrTimeSeconds();
+                // 判断是否该高亮下一行歌词
+                if (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() + lrcOffset) {
+                    row = LRC_INDEX + 1 + nextLrc * 2;
+                    if (!lrcScrollAnimation && !lrcScrollWaiting) {
+                        currScrollVal = lrcScrollPane.getVValue();
+                        lrcScrollAnimation = true;
                     }
-                    // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
-                    if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() + lrcOffset)
-                        originalRatio.set(1);
-                    else {
-                        double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() - lrcOffset) /
-                                ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
-                                        : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
-                                        : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
-                        originalRatio.set(tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio);
-                    }
+                    TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
+                    renderer.setRow(row);
+                    nextLrc++;
+                    originalRatio.set(0);
+                    return;
+                }
+                // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
+                if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() + lrcOffset)
+                    originalRatio.set(1);
+                else {
+                    double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() - lrcOffset) /
+                            ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
+                                    : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
+                                    : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
+                    originalRatio.set(tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio);
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
 
@@ -19926,8 +19899,8 @@ public class PlayerFrame extends JFrame {
     }
 
     // 播放载入的歌曲
-    private void playLoaded(boolean isReplay) {
-        if (isReplay) player.replay();
+    private void playLoaded(boolean replay) {
+        if (replay) player.replay();
         else {
             playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getButtonColor()));
             playOrPauseButton.setToolTipText(PAUSE_TIP);

@@ -206,7 +206,7 @@ public class MiniDialog extends JDialog {
     }
 
     // 初始化界面
-    void initView() {
+    private void initView() {
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.submit(() -> {
                 globalPanel.setOpacity((float) Math.min(1, globalPanel.getOpacity() + 0.05));

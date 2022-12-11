@@ -86,8 +86,8 @@ public class ConfigConstants {
     public final static String MUTE = "isMute";
     // 音量
     public final static String VOLUME = "volume";
-    // 音效名称
-    public final static String SOUND_EFFECT_NAME = "soundEffectName";
+    // 音效
+    public final static String SOUND_EFFECT = "soundEffect";
     // 均衡数据
     public final static String EQUALIZER_DATA = "equalizerData";
     // 迷你窗口 x

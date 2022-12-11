@@ -156,7 +156,7 @@ public class ConfirmDialog extends JDialog {
         doBlur(bufferedImage);
     }
 
-    void close() {
+    private void close() {
         f.currDialogs.remove(this);
         dispose();
     }

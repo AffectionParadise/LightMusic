@@ -201,7 +201,7 @@ public class DesktopLyricDialog extends JDialog {
         mainPanel.repaint();
     }
 
-    void showUI() {
+    private void showUI() {
         updateLock();
         updateOnTop();
         boolean unlocked = !f.desktopLyricLocked;
@@ -215,7 +215,7 @@ public class DesktopLyricDialog extends JDialog {
         setTouchOver(false);
     }
 
-    void hideUI() {
+    private void hideUI() {
         lock.setIcon(null);
         restore.setVisible(false);
         descendTrans.setVisible(false);
@@ -227,7 +227,7 @@ public class DesktopLyricDialog extends JDialog {
     }
 
     // 初始化响应事件
-    void initResponse() {
+    private void initResponse() {
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
         mainPanel.addMouseListener(new MouseAdapter() {

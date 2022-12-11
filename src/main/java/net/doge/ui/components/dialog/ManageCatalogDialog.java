@@ -145,7 +145,7 @@ public class ManageCatalogDialog extends JDialog {
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -171,7 +171,7 @@ public class ManageCatalogDialog extends JDialog {
     }
 
     // 组装界面
-    void initView() {
+    private void initView() {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
@@ -306,10 +306,8 @@ public class ManageCatalogDialog extends JDialog {
     }
 
     // 初始化数据
-    void initCatalogs() {
-        for (File dir : catalogs) {
-            catalogListModel.addElement(dir);
-        }
+    private void initCatalogs() {
+        for (File dir : catalogs) catalogListModel.addElement(dir);
     }
 
     private void doBlur(BufferedImage bufferedImage) {

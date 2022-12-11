@@ -1,17 +1,10 @@
 package net.doge.ui.componentui;
 
-import javafx.scene.media.MediaPlayer;
-import net.doge.models.MusicPlayer;
-import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.dialog.TipDialog;
 import net.doge.utils.ColorUtils;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 /**
  * @Author yzx
@@ -51,16 +44,16 @@ public class MuteSliderUI extends BasicSliderUI {
         // 画未填充部分
         g2d.setColor(trackBgColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-        int thx = Math.max(thumbRect.x, trackRect.x);
-        g2d.fillRoundRect(thx, trackRect.y + 8, trackRect.width - thx + trackRect.x, trackRect.height - 16, 4, 4);
+        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + 7, height = trackRect.height - 14, arc = 6;
+        g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
         // 画已填充部分
         g2d.setColor(trackColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.fillRoundRect(
                 trackRect.x,
-                trackRect.y + 8,
+                thy,
                 thumbRect.x - trackRect.x + thumbRect.width / 2,
-                trackRect.height - 16, 4, 4
+                height, arc, arc
         );
     }
 

@@ -245,7 +245,7 @@ public class SettingDialog extends JDialog {
     }
 
     // 初始化标题栏
-    void initTitleBar() {
+    private void initTitleBar() {
         titleLabel.setForeground(style.getLabelColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -270,7 +270,7 @@ public class SettingDialog extends JDialog {
         globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
-    void initView() {
+    private void initView() {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
         // 对齐

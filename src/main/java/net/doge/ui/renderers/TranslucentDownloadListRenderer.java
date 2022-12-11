@@ -60,8 +60,6 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         CustomLabel percentLabel = new CustomLabel();
         CustomLabel statusLabel = new CustomLabel();
 
-        iconLabel.setIconTextGap(15);
-
         progressSlider.setMinimum(0);
         progressSlider.setMaximum(100);
         progressSlider.setUI(new MuteSliderUI(progressSlider, isSelected ? selectedColor : foreColor));
@@ -94,8 +92,8 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.add(statusLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(task.getName(), maxWidth));
         String type = StringUtils.textToHtml(TaskType.s[task.getType()]);
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(task.getName(), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
         String percentStr = StringUtils.textToHtml(String.format("%.2f %%", percent));
         String size = StringUtils.textToHtml(StringUtils.wrapLineByWidth(
