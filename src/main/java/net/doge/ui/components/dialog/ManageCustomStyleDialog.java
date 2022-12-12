@@ -78,7 +78,7 @@ public class ManageCustomStyleDialog extends JDialog {
     public ManageCustomStyleDialog(PlayerFrame f, boolean isModel) {
         super(f, isModel);
         this.f = f;
-        this.style = f.getCurrUIStyle();
+        this.style = f.currUIStyle;
 
         Color buttonColor = style.getButtonColor();
         allSelectButton = new DialogButton("全选", buttonColor);
@@ -135,15 +135,15 @@ public class ManageCustomStyleDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
-            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
+            bufferedImage = f.player.getMusicInfo().getAlbumImage();
+            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
-            UIStyle style = f.getCurrUIStyle();
+            UIStyle style = f.currUIStyle;
             bufferedImage = style.getImg();
         }
         doBlur(bufferedImage);
@@ -223,7 +223,7 @@ public class ManageCustomStyleDialog extends JDialog {
         // 添加事件
         addButton.addActionListener(e -> {
             UIStyle value = styleList.getSelectedValue();
-            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, true, "添加", value != null ? value : f.getCurrUIStyle());
+            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, true, "添加", value != null ? value : f.currUIStyle);
             customStyleDialog.showDialog();
             if (customStyleDialog.getConfirmed()) {
                 // 创建自定义样式并更换
@@ -257,8 +257,8 @@ public class ManageCustomStyleDialog extends JDialog {
             d.showDialog();
             if (d.getResponse() == JOptionPane.YES_OPTION) {
                 List<UIStyle> selectedStyles = styleList.getSelectedValuesList();
-                List<UIStyle> styles = f.getStyles();
-                UIStyle currUIStyle = f.getCurrUIStyle();
+                List<UIStyle> styles = f.styles;
+                UIStyle currUIStyle = f.currUIStyle;
                 selectedStyles.forEach(style -> {
                     // 删除正在使用的样式，先换回默认样式，再删除
                     if (style == currUIStyle) f.changeUIStyle(styles.get(0));
@@ -320,7 +320,7 @@ public class ManageCustomStyleDialog extends JDialog {
                 selectedStyle.setSpectrumColor((Color) results[11]);
                 selectedStyle.setMenuItemColor((Color) results[12]);
                 // 若编辑的样式正在使用，则更换
-                if (f.getCurrUIStyle() == selectedStyle) {
+                if (f.currUIStyle == selectedStyle) {
                     f.changeUIStyle(selectedStyle);
                     updateStyle();
                 }
@@ -395,7 +395,7 @@ public class ManageCustomStyleDialog extends JDialog {
 
     // 初始化数据
     private void initStyles() {
-        List<UIStyle> styles = f.getStyles();
+        List<UIStyle> styles = f.styles;
         styleList.setModel(emptyListModel);
         styleListModel.clear();
         if (f.customOnly) {
@@ -416,7 +416,7 @@ public class ManageCustomStyleDialog extends JDialog {
 
     // 主题更换时更新窗口主题
     private void updateStyle() {
-        UIStyle st = f.getCurrUIStyle();
+        UIStyle st = f.currUIStyle;
         Color labelColor = st.getLabelColor();
         Color buttonColor = st.getButtonColor();
 
@@ -444,7 +444,7 @@ public class ManageCustomStyleDialog extends JDialog {
     private void doBlur(BufferedImage bufferedImage) {
         int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
-            boolean loadedMusic = f.getPlayer().loadedMusic();
+            boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
             if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小

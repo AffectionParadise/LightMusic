@@ -2,7 +2,6 @@ package net.doge.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import java.io.*;
@@ -21,14 +20,12 @@ public class JsonUtils {
      * @throws IOException
      */
     public static JSONObject readJson(String source) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(source));
+        try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
             StringBuffer sb = new StringBuffer();
             String s;
             while ((s = reader.readLine()) != null) {
                 sb.append(s);
             }
-            reader.close();
             return JSONObject.fromObject(sb.toString());
         } catch (Exception e) {
             return new JSONObject();
@@ -82,26 +79,5 @@ public class JsonUtils {
         if (StringUtils.isEmpty(jsonStr)) return jsonStr;
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(jsonStr);
         return JSON.toJSONString(jsonObject, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteDateUseDateFormat);
-    }
-
-    /**
-     * 判断文件是不是 Json
-     *
-     * @param file
-     * @return
-     */
-    public static boolean isJson(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        StringBuffer sb = new StringBuffer();
-        String s;
-        while ((s = reader.readLine()) != null) {
-            sb.append(s);
-        }
-        try {
-            JSONObject.fromObject(sb.toString());
-            return true;
-        } catch (JSONException e) {
-            return false;
-        }
     }
 }

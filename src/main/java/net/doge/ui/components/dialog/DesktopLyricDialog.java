@@ -111,7 +111,7 @@ public class DesktopLyricDialog extends JDialog {
 
     public DesktopLyricDialog(PlayerFrame f) {
         this.f = f;
-        this.style = f.getCurrUIStyle();
+        this.style = f.currUIStyle;
         foreColor = style.getHighlightColor();
 
         // 将桌面歌词窗口设置为固定大小与固定位置
@@ -123,7 +123,7 @@ public class DesktopLyricDialog extends JDialog {
         setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 15);
 
         // 设置主题色
-        themeColor = f.getCurrUIStyle().getLrcColor();
+        themeColor = f.currUIStyle.getLrcColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
@@ -177,7 +177,7 @@ public class DesktopLyricDialog extends JDialog {
 
     // 更新样式
     public void updateStyle() {
-        UIStyle st = f.getCurrUIStyle();
+        UIStyle st = f.currUIStyle;
         Color bc = st.getButtonColor();
 
         unlockIcon = ImageUtils.dye(unlockIcon, bc);

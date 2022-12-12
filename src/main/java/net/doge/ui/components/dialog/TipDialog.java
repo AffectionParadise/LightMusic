@@ -90,15 +90,15 @@ public class TipDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
-            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
+            bufferedImage = f.player.getMusicInfo().getAlbumImage();
+            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
-            UIStyle style = f.getCurrUIStyle();
+            UIStyle style = f.currUIStyle;
             bufferedImage = style.getImg();
         }
         doBlur(bufferedImage);
@@ -112,7 +112,7 @@ public class TipDialog extends JDialog {
 
     private void initView() {
         // 设置主题色
-        themeColor = f.getCurrUIStyle().getLabelColor();
+        themeColor = f.currUIStyle.getLabelColor();
         setUndecorated(true);
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
@@ -172,7 +172,7 @@ public class TipDialog extends JDialog {
     private void doBlur(BufferedImage bufferedImage) {
         int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
-            boolean loadedMusic = f.getPlayer().loadedMusic();
+            boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
             if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小
@@ -228,7 +228,7 @@ public class TipDialog extends JDialog {
 //            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
                 g2d.drawImage(backgroundImage, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
             }
-//            g2d.setColor(ImageUtils.getAvgRGB(f.getGlobalPanel().getBackgroundImage()));
+//            g2d.setColor(ImageUtils.getAvgRGB(f.desktopLyricDialog.getBackgroundImage()));
 //            g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 10, 10);
 
             // 画边框阴影

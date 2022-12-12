@@ -90,9 +90,9 @@ public class PlayerFrame extends JFrame {
     // 歌词高亮位置
     private final int LRC_INDEX = 8;
     // 历史记录最大条数
-    public int maxHistoryCount = 300;
+    public int maxHistoryCount;
     // 搜索历史最大条数
-    public int maxSearchHistoryCount = 50;
+    public int maxSearchHistoryCount;
     // 最大尝试播放次数
     private final int MAX_RETRY = 3;
     // 图片圆角半径弧度
@@ -607,9 +607,9 @@ public class PlayerFrame extends JFrame {
     private final String REMOVE_HISTORY_KEYWORD_TIP = "右击删除该历史";
 
     // 当前包含的所有歌曲目录
-    private List<File> catalogs = new LinkedList<>();
+    public List<File> catalogs = new LinkedList<>();
     // 各种界面风格
-    private List<UIStyle> styles = new LinkedList<>();
+    public List<UIStyle> styles = new LinkedList<>();
 
     // 添加界面风格
     {
@@ -633,13 +633,13 @@ public class PlayerFrame extends JFrame {
     // 当前均衡
     public double currBalance = DEFAULT_BALANCE;
     // 最大缓存大小(MB，超出后自动清理)
-    public long maxCacheSize = 1024;
+    public long maxCacheSize;
     // 当前排序方式
     private int currSortMethod = -1;
     // 当前排序顺序
     private int currSortOrder = SortMethod.ASCENDING;
     // 当前播放曲目的索引
-    private int currSong = -1;
+    private int currSong;
     // 播放失败后重试次数
     private int retry = 0;
     // 当前播放模式
@@ -720,7 +720,7 @@ public class PlayerFrame extends JFrame {
     // 模糊类型
     public int blurType;
     // 是否显示频谱
-    private boolean showSpectrum;
+    public boolean showSpectrum;
     // 是否自动下载歌词
     public boolean isAutoDownloadLrc;
     // 是否显示桌面歌词
@@ -745,7 +745,7 @@ public class PlayerFrame extends JFrame {
     private int lastPane;
 
     // 默认专辑图片
-    private BufferedImage defaultAlbumImage;
+    public BufferedImage defaultAlbumImage;
     // 加载中图片
     private BufferedImage loadingImage;
 
@@ -758,9 +758,9 @@ public class PlayerFrame extends JFrame {
     private Font globalFont = Fonts.NORMAL;
 
     // 当前主界面风格
-    private UIStyle currUIStyle = styles.get(0);
+    public UIStyle currUIStyle = styles.get(0);
 
-    private MusicPlayer player = new MusicPlayer(THIS);
+    public MusicPlayer player = new MusicPlayer(THIS);
 
     // 标题部分
     private CustomPanel topPanel = new CustomPanel();
@@ -868,7 +868,7 @@ public class PlayerFrame extends JFrame {
     private CustomButton backwardButton = new CustomButton(backwIcon);
     private CustomPanel volumePanel = new CustomPanel();
     public CustomButton muteButton = new CustomButton(soundIcon);
-    private CustomSlider volumeSlider = new CustomSlider();
+    public CustomSlider volumeSlider = new CustomSlider();
     private CustomButton rateButton = new CustomButton(rateIcon);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
     private CustomButton blurButton = new CustomButton(cvBlurIcon);
@@ -1973,7 +1973,7 @@ public class PlayerFrame extends JFrame {
     private CustomScrollPane collectionItemDescriptionScrollPane = new CustomScrollPane(collectionItemDescriptionPanel);
 
     // 全局 Panel
-    private GlobalPanel globalPanel = new GlobalPanel();
+    public GlobalPanel globalPanel = new GlobalPanel();
     // 页面切换 Panel
     private CustomPanel changePanePanel = new CustomPanel();
     // 控制面板 Panel
@@ -2249,7 +2249,7 @@ public class PlayerFrame extends JFrame {
     private ExecutorService globalExecutor = Executors.newFixedThreadPool(5);
 
     // 桌面歌词对话框
-    private DesktopLyricDialog desktopLyricDialog = new DesktopLyricDialog(THIS);
+    public DesktopLyricDialog desktopLyricDialog = new DesktopLyricDialog(THIS);
     // MV 播放对话框
     private VideoDialog videoDialog;
     // 迷你窗口
@@ -2543,6 +2543,12 @@ public class PlayerFrame extends JFrame {
 
         add(globalPanel);
         setVisible(true);
+
+        // 加载上一次播放的歌曲
+        if (currSong > -1) {
+            playQueue.setSelectedIndex(currSong);
+            playExecutor.submit(() -> playSelected(playQueue, false, false));
+        }
 
         // 加载全局快捷键监听器
         loadHotKeyListener();
@@ -3052,14 +3058,6 @@ public class PlayerFrame extends JFrame {
         // 载入本地音乐列表
         loadLocalMusicList(config);
 
-        // 载入上次播放歌曲，选中并加载
-//            int musicIndex = config.getInt(ConfigConstants.MUSIC_PLAYING);
-//            if (musicIndex > -1) {
-//                musicList.setSelectedIndex(musicIndex);
-//                currSong = musicIndex;
-//                prepareToPlay((File) musicListModel.get(musicIndex), null);
-//            }
-
         // 载入历史列表
         JSONArray historyJsonArray = config.optJSONArray(ConfigConstants.HISTORY);
         if (historyJsonArray != null) {
@@ -3187,6 +3185,20 @@ public class PlayerFrame extends JFrame {
                 }
             }
         }
+
+        // 载入上次播放歌曲，选中并加载
+        currSong = config.optInt(ConfigConstants.CURR_SONG, -1);
+        if (currSong >= playQueueModel.size()) currSong = -1;
+
+        // 载入选项卡
+        tabbedPane.setSelectedIndex(config.optInt(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
+        // 载入个人音乐选项卡
+        currPersonalMusicTab = config.optInt(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
+        if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) localMusicButton.doClick();
+        else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) historyButton.doClick();
+        else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) collectionButton.doClick();
+        // 载入收藏选项卡
+        collectionTabbedPane.setSelectedIndex(config.optInt(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
 
         // 载入在线音乐搜索历史关键词
         JSONArray historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
@@ -3395,12 +3407,6 @@ public class PlayerFrame extends JFrame {
                 b.setForeColor(currUIStyle.getButtonColor());
                 netUserHistorySearchInnerPanel2.add(b);
             }
-        }
-
-        // 开屏空列表提示
-        if (musicListModel.isEmpty()) {
-            leftBox.remove(musicScrollPane);
-            leftBox.add(emptyHintPanel);
         }
 
         return !config.isEmpty();
@@ -3644,6 +3650,12 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.BACKWARD_KEYS, KeyUtils.codesToStr(backwardKeys));
         config.put(ConfigConstants.FORWARD_KEYS, KeyUtils.codesToStr(forwardKeys));
         config.put(ConfigConstants.VIDEO_FULL_SCREEN_KEYS, KeyUtils.codesToStr(videoFullScreenKeys));
+        // 存入选项卡
+        config.put(ConfigConstants.TAB_INDEX, tabbedPane.getSelectedIndex());
+        // 存入个人音乐选项卡
+        config.put(ConfigConstants.PERSONAL_TAB_INDEX, currPersonalMusicTab);
+        // 存入收藏选项卡
+        config.put(ConfigConstants.COLLECTION_TAB_INDEX, collectionTabbedPane.getSelectedIndex());
         // 存入是否自动更新
         config.put(ConfigConstants.AUTO_UPDATE, autoUpdate);
         // 存入关闭窗口操作
@@ -3736,7 +3748,7 @@ public class PlayerFrame extends JFrame {
         // 存入当前播放列表(文件路径)
         saveLocalMusicList(config);
         // 存入当前播放的歌曲索引
-        config.put(ConfigConstants.MUSIC_PLAYING, currSong);
+        config.put(ConfigConstants.CURR_SONG, currSong);
         // 存入当前历史列表
         JSONArray historyJsonArray = new JSONArray();
         for (int i = 0, len = historyModel.getSize(); i < len; i++) {
@@ -6723,7 +6735,7 @@ public class PlayerFrame extends JFrame {
                         musicCollectionLeftBox.add(emptyHintPanel);
                         musicCollectionLeftBox.repaint();
                     }
-                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
                     if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
                         countLabel.setText(String.format("共 %s 项", size));
                     } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
@@ -6959,8 +6971,8 @@ public class PlayerFrame extends JFrame {
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
             if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toAvailableString());
-            } else searchTextField.setText(o.toString());
+                searchTextField.setText(((NetMusicInfo) o).toKeywords());
+            } else searchTextField.setText(((AudioFile) o).toKeywords());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
         });
@@ -7470,8 +7482,8 @@ public class PlayerFrame extends JFrame {
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
             if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toAvailableString());
-            } else searchTextField.setText(o.toString());
+                searchTextField.setText(((NetMusicInfo) o).toKeywords());
+            } else searchTextField.setText(((AudioFile) o).toKeywords());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
         });
@@ -18722,8 +18734,8 @@ public class PlayerFrame extends JFrame {
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
             if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toAvailableString());
-            } else searchTextField.setText(o.toString());
+                searchTextField.setText(((NetMusicInfo) o).toKeywords());
+            } else searchTextField.setText(((AudioFile) o).toKeywords());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
         });
@@ -19913,10 +19925,11 @@ public class PlayerFrame extends JFrame {
             player.setRate(currRate);
             player.setBalance(currBalance);
             player.adjustEqualizerBands(ed);
-            if (!player.isPlaying()) player.play();
+            player.play();
             // 重绘歌单，刷新播放中的图标
             musicList.repaint();
             netMusicList.repaint();
+            playQueue.repaint();
         }
     }
 
@@ -19962,8 +19975,12 @@ public class PlayerFrame extends JFrame {
         new TipDialog(THIS, NEXT_PLAY_SUCCESS_MSG).showDialog();
     }
 
-    // 播放选中歌曲，返回是否播放成功
     private boolean playSelected(CustomList list, boolean allowRetry) {
+        return playSelected(list, allowRetry, true);
+    }
+
+    // 播放选中歌曲，返回是否播放成功
+    private boolean playSelected(CustomList list, boolean allowRetry, boolean instantPlay) {
         AudioFile file = null;
         NetMusicInfo musicInfo = null;
 
@@ -20034,20 +20051,22 @@ public class PlayerFrame extends JFrame {
             file = (AudioFile) o;
             // 根本没选歌曲，跳出
             if (file == null) return false;
-            // 文件不存在，询问是否从列表中删除
+            // 文件不存在，在不允许重试情况下询问是否从列表中删除
             if (!file.exists()) {
-                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_FIFE_NOT_FOUND_MSG, "是", "否");
-                confirmDialog.showDialog();
-                int response = confirmDialog.getResponse();
-                if (response == JOptionPane.YES_OPTION) {
-                    model.removeElement(o);
-                    // 解决删除元素带来的性能问题
-                    playQueue.setModel(emptyListModel);
-                    playQueueModel.removeElement(o);
-                    playQueue.setModel(playQueueModel);
-                    currSong--;
-                    new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
-                }
+                if (!allowRetry) {
+                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_FIFE_NOT_FOUND_MSG, "是", "否");
+                    confirmDialog.showDialog();
+                    int response = confirmDialog.getResponse();
+                    if (response == JOptionPane.YES_OPTION) {
+                        model.removeElement(o);
+                        // 解决删除元素带来的性能问题
+                        playQueue.setModel(emptyListModel);
+                        playQueueModel.removeElement(o);
+                        playQueue.setModel(playQueueModel);
+                        currSong--;
+                        new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
+                    }
+                } else retryPlay();
                 return false;
             }
             // 如果歌曲信息不完整，获取歌曲文件的头信息
@@ -20096,7 +20115,7 @@ public class PlayerFrame extends JFrame {
                 } else {
                     new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                 }
-                retryPlay(allowRetry);
+                if (allowRetry) retryPlay();
                 return false;
             }
         }
@@ -20104,14 +20123,15 @@ public class PlayerFrame extends JFrame {
             if (file != null && musicInfo == null && !file.isIntegrated())
                 throw new IllegalMediaException("音频文件损坏");
             prepareToPlay(file, musicInfo);
-            playLoaded(false);
+            if (instantPlay) playLoaded(false);
             // 添加到历史播放列表
             if (model != historyModel) {
                 // 先删掉重复的音乐，再添加
                 historyModel.removeElement(musicInfo == null ? file : musicInfo);
                 historyModel.add(0, musicInfo == null ? file : musicInfo);
                 // 超过最大记录条数，删除最后一条
-                if (historyModel.getSize() > maxHistoryCount) historyModel.remove(historyModel.getSize() - 1);
+                int size = historyModel.getSize();
+                if (size > maxHistoryCount) historyModel.remove(size - 1);
             }
             retry = 0;
             return true;
@@ -20119,15 +20139,17 @@ public class PlayerFrame extends JFrame {
             new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
         } catch (IllegalArgumentException | InvalidDataException | IllegalMediaException e) {
             new TipDialog(THIS, INVALID_AUDIO_FILE_MSG).showDialog();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        retryPlay(allowRetry);
+        if (allowRetry) retryPlay();
         return false;
     }
 
     // 重试播放
-    private void retryPlay(boolean allowRetry) {
+    private void retryPlay() {
         // 异常后允许重试的情况下自动播放下一首，超出最大重试次数停止，防止死循环
-        if (currPlayMode != PlayMode.SINGLE && allowRetry) {
+        if (currPlayMode != PlayMode.SINGLE) {
             if (++retry <= MAX_RETRY) {
                 // 顺序播放
                 if (currPlayMode == PlayMode.SEQUENCE) {
@@ -21539,7 +21561,6 @@ public class PlayerFrame extends JFrame {
 
     // 播放/暂停按钮执行
     public void playOrPause() {
-        NetMusicInfo netMusicInfo = player.getNetMusicInfo();
         switch (player.getStatus()) {
             // 空状态，载入选择的音乐并播放
             case PlayerStatus.EMPTY:
@@ -21550,12 +21571,6 @@ public class PlayerFrame extends JFrame {
             // 就绪状态
             case PlayerStatus.LOADED:
                 playLoaded(false);
-                playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getButtonColor()));
-                playOrPauseButton.setToolTipText(PAUSE_TIP);
-                if (miniDialog != null) {
-                    miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
-                    miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
-                }
                 break;
             // 暂停状态
             case PlayerStatus.PAUSING:
@@ -21567,6 +21582,7 @@ public class PlayerFrame extends JFrame {
                     miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
                 }
                 // 重置标题
+                NetMusicInfo netMusicInfo = player.getNetMusicInfo();
                 String title = netMusicInfo != null ? TITLE + "（正在播放：" + netMusicInfo.toSimpleString() + "）"
                         : TITLE + "（正在播放：" + player.getMusicInfo().getFile() + "）";
                 titleLabel.setText(StringUtils.textToHtml(title));
@@ -21588,6 +21604,7 @@ public class PlayerFrame extends JFrame {
                     miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
                 }
                 // 重置标题
+                netMusicInfo = player.getNetMusicInfo();
                 title = TITLE + "（暂停中：" + (netMusicInfo != null ? netMusicInfo.toSimpleString()
                         : player.getMusicInfo().getFile()) + "）";
                 titleLabel.setText(StringUtils.textToHtml(title));
@@ -22378,42 +22395,5 @@ public class PlayerFrame extends JFrame {
         });
         enableAntiAliasing();
         new PlayerFrame().initUI();
-    }
-
-    // 传给自定义样式对话框的参数
-    public UIStyle getCurrUIStyle() {
-        return currUIStyle;
-    }
-
-    public List<UIStyle> getStyles() {
-        return styles;
-    }
-
-    public List<File> getCatalogs() {
-        return catalogs;
-    }
-
-    public CustomSlider getVolumeSlider() {
-        return volumeSlider;
-    }
-
-    public BufferedImage getDefaultAlbumImage() {
-        return defaultAlbumImage;
-    }
-
-    public MusicPlayer getPlayer() {
-        return player;
-    }
-
-    public GlobalPanel getGlobalPanel() {
-        return globalPanel;
-    }
-
-    public DesktopLyricDialog getDesktopLyricDialog() {
-        return desktopLyricDialog;
-    }
-
-    public boolean isShowSpectrum() {
-        return showSpectrum;
     }
 }

@@ -52,7 +52,7 @@ public class CustomPopupMenu extends JPopupMenu {
         Graphics2D g2d = (Graphics2D) g;
 
 //        try {
-//            BufferedImage bgImg = f.getDefaultAlbumImage();
+//            BufferedImage bgImg = f.defaultAlbumImage;
 //            BufferedImage img = rect.width > rect.height ?
 //                    Thumbnails.of(bgImg).width((int) (rect.width * 1.2)).asBufferedImage()
 //                    : Thumbnails.of(bgImg).height((int) (rect.height * 1.2)).asBufferedImage();
@@ -65,7 +65,7 @@ public class CustomPopupMenu extends JPopupMenu {
 //            img = ImageUtils.darker(ImageUtils.setRadius(ImageUtils.doBlur(ImageUtils.eraseTranslucency(img)), 0.1));
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(ImageUtils.getAvgRGB(f.getGlobalPanel().getBackgroundImage()));
+        g2d.setColor(ImageUtils.getAvgRGB(f.globalPanel.getBackgroundImage()));
         g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 10, 10);
 
         // 画边框阴影

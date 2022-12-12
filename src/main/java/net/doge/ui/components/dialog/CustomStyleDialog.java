@@ -112,7 +112,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     public CustomStyleDialog(PlayerFrame f, boolean isModel, String okButtonText, UIStyle showedStyle) {
         super(f, isModel);
         this.f = f;
-        this.style = f.getCurrUIStyle();
+        this.style = f.currUIStyle;
         this.showedStyle = showedStyle;
 
         Color buttonColor = style.getButtonColor();
@@ -159,7 +159,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 return;
             }
             // 风格名称不重复
-            List<UIStyle> styles = f.getStyles();
+            List<UIStyle> styles = f.styles;
             for (UIStyle style : styles) {
                 // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
                 if (style.getStyleName().equals(results[0])
@@ -222,15 +222,15 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
-            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
+            bufferedImage = f.player.getMusicInfo().getAlbumImage();
+            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
-            UIStyle style = f.getCurrUIStyle();
+            UIStyle style = f.currUIStyle;
             bufferedImage = style.getImg();
         }
         doBlur(bufferedImage);
@@ -424,7 +424,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     private void doBlur(BufferedImage bufferedImage) {
         int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
-            boolean loadedMusic = f.getPlayer().loadedMusic();
+            boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
             if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小

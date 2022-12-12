@@ -47,14 +47,14 @@ public class SpectrumPanel extends JFXPanel {
     }
 
     public void paintSpectrum(Graphics g) {
-        double[] specs = f.getPlayer().getSpecs();
+        double[] specs = f.player.getSpecs();
         int pw = getWidth(), ph = getHeight();
         if (pw == 0 || ph == 0) return;
         int barNum = SpectrumConstants.BAR_NUM, imgX = (pw - SpectrumConstants.BAR_WIDTH * barNum - SpectrumConstants.BAR_GAP * (barNum - 1)) / 2;
         Graphics2D g2d = (Graphics2D) g;
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) f.specOpacity));
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(f.getCurrUIStyle().getSpectrumColor());
+        g2d.setColor(f.currUIStyle.getSpectrumColor());
         g2d.setStroke(stroke);
         int style = f.currSpecStyle;
         for (int i = 0; i < barNum; i++) {

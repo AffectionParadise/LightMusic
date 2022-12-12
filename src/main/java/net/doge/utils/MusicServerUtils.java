@@ -20882,7 +20882,7 @@ public class MusicServerUtils {
      * @return
      */
     public static void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
-        CommonResult<NetMusicInfo> result = searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toAvailableString(), 5, 1);
+        CommonResult<NetMusicInfo> result = searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 5, 1);
         List<NetMusicInfo> data = result.data;
         for (NetMusicInfo info : data) {
             // 部分歌曲没有时长，先填充时长，准备判断

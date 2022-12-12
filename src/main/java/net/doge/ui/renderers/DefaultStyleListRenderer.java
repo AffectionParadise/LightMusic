@@ -70,7 +70,7 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(style.getStyleName(), maxWidth));
         String type = StringUtils.textToHtml(style.isCustom() ? "自定义" : "预设");
-        String inUse = StringUtils.textToHtml(f.getCurrUIStyle() == style ? "使用中" : "");
+        String inUse = StringUtils.textToHtml(f.currUIStyle == style ? "使用中" : "");
 
         nameLabel.setText(name);
         typeLabel.setText(type);

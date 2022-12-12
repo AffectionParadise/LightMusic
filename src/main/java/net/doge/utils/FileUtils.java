@@ -61,10 +61,8 @@ public class FileUtils {
      * 计算文件hash值
      */
     public static String getHash(File file) {
-        FileInputStream fis = null;
         String sha256 = null;
-        try {
-            fis = new FileInputStream(file);
+        try (FileInputStream fis = new FileInputStream(file)) {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte buffer[] = new byte[1024];
             int length;
@@ -75,14 +73,6 @@ public class FileUtils {
             sha256 = byte2hexLower(digest);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return sha256;
     }
@@ -92,11 +82,8 @@ public class FileUtils {
         String stmp = "";
         for (int i = 0; i < b.length; i++) {
             stmp = Integer.toHexString(b[i] & 0XFF);
-            if (stmp.length() == 1) {
-                hs = hs + "0" + stmp;
-            } else {
-                hs = hs + stmp;
-            }
+            if (stmp.length() == 1) hs = hs + "0" + stmp;
+            else hs = hs + stmp;
         }
         return hs;
     }
@@ -171,11 +158,14 @@ public class FileUtils {
      * @return
      * @throws IOException
      */
-    public static boolean startsWithLeftBrace(File file) throws IOException {
-        FileReader fileReader = new FileReader(file);
-        int ch = fileReader.read();
-        fileReader.close();
-        return ch == '{';
+    public static boolean startsWithLeftBrace(File file) {
+        try (FileReader fileReader = new FileReader(file)) {
+            int ch = fileReader.read();
+            fileReader.close();
+            return ch == '{';
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
@@ -291,14 +281,12 @@ public class FileUtils {
      */
     public static String readAsStr(File f) {
         if (f == null) return null;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(f));
+        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
             StringBuffer sb = new StringBuffer();
             String s;
             while ((s = reader.readLine()) != null) {
                 sb.append(s);
             }
-            reader.close();
             return sb.toString();
         } catch (IOException e) {
             return null;

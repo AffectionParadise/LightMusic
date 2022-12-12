@@ -106,7 +106,7 @@ public class SoundEffectDialog extends JDialog {
     public SoundEffectDialog(PlayerFrame f, boolean isModel) {
         super(f, isModel);
         this.f = f;
-        this.style = f.getCurrUIStyle();
+        this.style = f.currUIStyle;
 
         for (String se : EqualizerData.names) comboBox.addItem(se);
         comboBox.addItem("自定义");
@@ -159,15 +159,15 @@ public class SoundEffectDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
-            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
+            bufferedImage = f.player.getMusicInfo().getAlbumImage();
+            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
-            UIStyle style = f.getCurrUIStyle();
+            UIStyle style = f.currUIStyle;
             bufferedImage = style.getImg();
         }
         doBlur(bufferedImage);
@@ -219,7 +219,7 @@ public class SoundEffectDialog extends JDialog {
             double[] newEd = eds[index];
             // 记录当前均衡
             f.ed = newEd;
-            f.getPlayer().adjustEqualizerBands(newEd);
+            f.player.adjustEqualizerBands(newEd);
             fitData(newEd);
         });
         // 下拉框 UI
@@ -256,7 +256,7 @@ public class SoundEffectDialog extends JDialog {
                 if (fitting) return;
                 comboBox.setSelectedItem("自定义");
                 // 调整并记录当前均衡
-                f.getPlayer().adjustEqualizerBands(f.ed = getData());
+                f.player.adjustEqualizerBands(f.ed = getData());
             });
 
             // 值
@@ -308,7 +308,7 @@ public class SoundEffectDialog extends JDialog {
     private void doBlur(BufferedImage bufferedImage) {
         int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
-            boolean loadedMusic = f.getPlayer().loadedMusic();
+            boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
             if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小

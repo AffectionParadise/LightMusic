@@ -138,4 +138,9 @@ public class AudioFile extends File {
 //    public void setCopyright(String copyright) {
 //        this.copyright = copyright;
 //    }
+
+    public String toKeywords() {
+        return songName
+                + (StringUtils.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
+    }
 }

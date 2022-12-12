@@ -25,7 +25,7 @@ public class ButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color buttonColor = f.currUIStyle.getButtonColor();
         Color brighterColor = ColorUtils.brighter(buttonColor);
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));
         b.setForeground(brighterColor);
@@ -33,7 +33,7 @@ public class ButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color buttonColor = f.currUIStyle.getButtonColor();
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), buttonColor));
         b.setForeground(buttonColor);
     }
@@ -41,7 +41,7 @@ public class ButtonMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color buttonColor = f.currUIStyle.getButtonColor();
         Color darkerColor = ColorUtils.darker(buttonColor);
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), darkerColor));
         b.setForeground(darkerColor);
@@ -49,7 +49,7 @@ public class ButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color buttonColor = f.currUIStyle.getButtonColor();
         Color brighterColor = ColorUtils.brighter(buttonColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));

@@ -53,19 +53,19 @@ public class ConfirmDialog extends JDialog {
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText) {
         this(f, message);
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color buttonColor = f.currUIStyle.getButtonColor();
         yes = new DialogButton(yesText, buttonColor);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText) {
         this(f, message, yesText);
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color buttonColor = f.currUIStyle.getButtonColor();
         no = new DialogButton(noText, buttonColor);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText, String cancelText) {
         this(f, message, yesText, noText);
-        Color buttonColor = f.getCurrUIStyle().getButtonColor();
+        Color buttonColor = f.currUIStyle.getButtonColor();
         cancel = new DialogButton(cancelText, buttonColor);
     }
 
@@ -86,7 +86,7 @@ public class ConfirmDialog extends JDialog {
     }
 
     public void showDialog() {
-        Color labelColor = f.getCurrUIStyle().getLabelColor();
+        Color labelColor = f.currUIStyle.getLabelColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
@@ -142,15 +142,15 @@ public class ConfirmDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
-            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
+            bufferedImage = f.player.getMusicInfo().getAlbumImage();
+            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
-            UIStyle style = f.getCurrUIStyle();
+            UIStyle style = f.currUIStyle;
             bufferedImage = style.getImg();
         }
         doBlur(bufferedImage);
@@ -168,7 +168,7 @@ public class ConfirmDialog extends JDialog {
     private void doBlur(BufferedImage bufferedImage) {
         int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
-            boolean loadedMusic = f.getPlayer().loadedMusic();
+            boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
             if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小

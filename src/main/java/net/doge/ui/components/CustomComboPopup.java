@@ -54,8 +54,7 @@ public class CustomComboPopup extends BasicComboPopup {
 
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(ImageUtils.getAvgRGB(f.getGlobalPanel().getBackgroundImage()));
-//                g2d.fillRoundRect(rect.x, rect.y , rect.width, rect.height , 8, 8);
+        g2d.setColor(ImageUtils.getAvgRGB(f.globalPanel.getBackgroundImage()));
         g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 8, 8);
 
         // 画边框阴影

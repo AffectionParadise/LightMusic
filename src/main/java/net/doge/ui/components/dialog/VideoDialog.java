@@ -173,7 +173,7 @@ public class VideoDialog extends JDialog {
 //        this.netMvInfo = netMvInfo;
 //        this.uri = isLocal ? SimplePath.DOWNLOAD_MV_PATH + netMvInfo.toSimpleFileName() : netMvInfo.getUrl();
 //        title = netMvInfo.toSimpleString();
-//        style = f.getCurrUIStyle();
+//        style = f.currUIStyle;
 //
 //        initUI();
 //    }
@@ -185,7 +185,7 @@ public class VideoDialog extends JDialog {
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();
         title = netMvInfo.toSimpleString();
-        style = f.getCurrUIStyle();
+        style = f.currUIStyle;
 
         mediaWidth = WindowSize.videoDimensions[f.windowSize][0];
         mediaHeight = WindowSize.videoDimensions[f.windowSize][1];
@@ -195,7 +195,7 @@ public class VideoDialog extends JDialog {
 
     public void initUI() {
         // 取消桌面歌词置顶避免遮挡视线
-        f.getDesktopLyricDialog().setAlwaysOnTop(false);
+        f.desktopLyricDialog.setAlwaysOnTop(false);
 
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
@@ -250,15 +250,15 @@ public class VideoDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.getPlayer().loadedMusic()) {
-            bufferedImage = f.getPlayer().getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.getDefaultAlbumImage()) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
+            bufferedImage = f.player.getMusicInfo().getAlbumImage();
+            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
                 bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG)
                 bufferedImage = ImageUtils.toGradient(bufferedImage);
         } else {
-            UIStyle style = f.getCurrUIStyle();
+            UIStyle style = f.currUIStyle;
             bufferedImage = style.getImg();
         }
         doBlur(bufferedImage);
@@ -392,7 +392,7 @@ public class VideoDialog extends JDialog {
             Future<?> future = GlobalExecutors.requestExecutor.submit(() -> {
                 dispose();
                 // 恢复桌面歌词置顶
-                f.getDesktopLyricDialog().setAlwaysOnTop(f.desktopLyricOnTop);
+                f.desktopLyricDialog.setAlwaysOnTop(f.desktopLyricOnTop);
                 mp.dispose();
             });
             try {
@@ -490,18 +490,10 @@ public class VideoDialog extends JDialog {
         volumeSlider.setMaximum(MAX_VOLUME);
         volumeSlider.addChangeListener(e -> {
             mp.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
-            if (isMute) {
-                muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtils.dye(soundIcon, style.getButtonColor()));
-                mp.setMute(isMute = false);
-            }
-        });
-        // 移入手势
-        volumeSlider.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                volumeSlider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
+            if (!isMute) return;
+            muteButton.setToolTipText(SOUND_TIP);
+            muteButton.setIcon(ImageUtils.dye(soundIcon, style.getButtonColor()));
+            mp.setMute(isMute = false);
         });
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
@@ -638,7 +630,7 @@ public class VideoDialog extends JDialog {
     }
 
     private void playVideo() {
-        volumeSlider.setValue(f.getVolumeSlider().getValue());
+        volumeSlider.setValue(f.volumeSlider.getValue());
         mp.setRate(f.currVideoRate);
         mp.play();
         playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
@@ -687,7 +679,7 @@ public class VideoDialog extends JDialog {
     private void doBlur(BufferedImage bufferedImage) {
         int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
-            boolean loadedMusic = f.getPlayer().loadedMusic();
+            boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
             if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小

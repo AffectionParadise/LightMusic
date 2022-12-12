@@ -21,6 +21,12 @@ public class ConfigConstants {
     public final static String BACKWARD_KEYS = "backwardKeys";
     public final static String FORWARD_KEYS = "forwardKeys";
     public final static String VIDEO_FULL_SCREEN_KEYS = "videoFullScreenKeys";
+    // 选项卡
+    public final static String TAB_INDEX = "tabIndex";
+    // 个人音乐选项卡
+    public final static String PERSONAL_TAB_INDEX = "personalTabIndex";
+    // 收藏选项卡
+    public final static String COLLECTION_TAB_INDEX = "collectionTabIndex";
     // 是否自动更新
     public final static String AUTO_UPDATE = "autoUpdate";
     // 关闭窗口操作
@@ -129,7 +135,7 @@ public class ConfigConstants {
     // 当前播放队列
     public final static String PLAY_QUEUE = "playQueue";
     // 当前播放歌曲
-    public final static String MUSIC_PLAYING = "musicPlaying";
+    public final static String CURR_SONG = "currSong";
 
     // 在线音乐来源
     public final static String NET_MUSIC_SOURCE = "source";

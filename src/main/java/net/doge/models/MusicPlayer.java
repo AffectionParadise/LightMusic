@@ -176,7 +176,7 @@ public class MusicPlayer {
                 if (!netMusicInfo.hasAlbumImage()) {
                     netMusicInfo.setInvokeLater(() -> {
                         BufferedImage albumImage = netMusicInfo.getAlbumImage();
-                        musicInfo.setAlbumImage(albumImage != null ? albumImage : f.getDefaultAlbumImage());
+                        musicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
                         f.showAlbumImage();
                     });
                 } else {
@@ -200,7 +200,7 @@ public class MusicPlayer {
             // 获取 MP3 专辑图片
             GlobalExecutors.imageExecutor.submit(() -> {
                 BufferedImage albumImage = MusicUtils.getAlbumImage(source);
-                musicInfo.setAlbumImage(albumImage != null ? albumImage : f.getDefaultAlbumImage());
+                musicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
                 f.showAlbumImage();
             });
         }
@@ -209,7 +209,7 @@ public class MusicPlayer {
             musicInfo.setName(source.getNameWithoutSuffix());
             musicInfo.setArtist("未知");
             musicInfo.setAlbumName("未知");
-            musicInfo.setAlbumImage(f.getDefaultAlbumImage());
+            musicInfo.setAlbumImage(f.defaultAlbumImage);
             f.showAlbumImage();
         }
     }
@@ -236,7 +236,6 @@ public class MusicPlayer {
             mp = null;
         }
         mp = new MediaPlayer(media);
-        play();
         // 播放器状态监听器
         f.loadMonitor(mp);
         // 设置频谱更新间隔
