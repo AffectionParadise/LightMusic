@@ -60,7 +60,7 @@ public class StringUtils {
      * @return
      */
     public static boolean isEmpty(String s) {
-        return null == s || "".equals(s);
+        return null == s || s.isEmpty();
     }
 
     /**
@@ -70,7 +70,7 @@ public class StringUtils {
      * @return
      */
     public static boolean isNotEmpty(String s) {
-        return null != s && !"".equals(s);
+        return null != s && !s.isEmpty();
     }
 
     /**

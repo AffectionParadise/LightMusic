@@ -5259,7 +5259,7 @@ public class PlayerFrame extends JFrame {
         collectionGoButton.addActionListener(e -> {
             String text = collectionPageTextField.getText();
             collectionPageTextField.setText("");
-            if ("".equals(text)) return;
+            if (text.isEmpty()) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > netMusicInCollectionMaxPage) {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -5379,7 +5379,7 @@ public class PlayerFrame extends JFrame {
                                 MusicServerUtils.fillPlaylistInfo(playlistInfo);
                                 collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtils.textToHtml("".equals(playlistInfo.getTag()) ? "" : "标签：" + playlistInfo.getTag()));
+                                    collectionItemTagLabel.setText(StringUtils.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                                 if (playlistInfo.getDescription() != null)
                                     collectionItemDescriptionLabel.setText(StringUtils.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
@@ -5568,7 +5568,7 @@ public class PlayerFrame extends JFrame {
                                 MusicServerUtils.fillArtistInfo(artistInfo);
                                 collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtils.textToHtml("".equals(artistInfo.getTag()) ? "" : artistInfo.getTag()));
+                                    collectionItemTagLabel.setText(StringUtils.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
                                     collectionItemDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
@@ -5664,7 +5664,7 @@ public class PlayerFrame extends JFrame {
                                 MusicServerUtils.fillRadioInfo(radioInfo);
                                 collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtils.textToHtml("".equals(radioInfo.getTag()) ? "" : "标签：" + radioInfo.getTag()));
+                                    collectionItemTagLabel.setText(StringUtils.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
                                     collectionItemDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
@@ -7289,7 +7289,7 @@ public class PlayerFrame extends JFrame {
         netMusicGoButton.addActionListener(e -> {
             String text = netMusicPageTextField.getText();
             netMusicPageTextField.setText("");
-            if ("".equals(text)) return;
+            if (text.isEmpty()) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > netMusicMaxPage) {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -8779,7 +8779,7 @@ public class PlayerFrame extends JFrame {
             if (lc == netPlaylistScrollPane || lc == emptyHintPanel) {
                 String text = netPlaylistPageTextField.getText();
                 netPlaylistPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netPlaylistMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -8792,7 +8792,7 @@ public class PlayerFrame extends JFrame {
             else {
                 String text = netPlaylistPageTextField.getText();
                 netPlaylistPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netMusicInPlaylistMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -8915,7 +8915,7 @@ public class PlayerFrame extends JFrame {
                             MusicServerUtils.fillPlaylistInfo(playlistInfo);
                             playlistCoverAndNameLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
                             if (playlistInfo.getTag() != null)
-                                playlistTagLabel.setText(StringUtils.textToHtml("".equals(playlistInfo.getTag()) ? "" : "标签：" + playlistInfo.getTag()));
+                                playlistTagLabel.setText(StringUtils.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                             if (playlistInfo.getDescription() != null)
                                 playlistDescriptionLabel.setText(StringUtils.textToHtml(playlistInfo.getDescription()));
                             if (playlistInfo.hasCoverImg()) {
@@ -9770,7 +9770,7 @@ public class PlayerFrame extends JFrame {
             if (lc == netAlbumScrollPane || lc == emptyHintPanel) {
                 String text = netAlbumPageTextField.getText();
                 netAlbumPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netAlbumMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -9783,7 +9783,7 @@ public class PlayerFrame extends JFrame {
             else {
                 String text = netAlbumPageTextField.getText();
                 netAlbumPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netMusicInAlbumMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -10786,7 +10786,7 @@ public class PlayerFrame extends JFrame {
             if (lc == netArtistScrollPane || lc == emptyHintPanel) {
                 String text = netArtistPageTextField.getText();
                 netArtistPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netArtistMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -10799,7 +10799,7 @@ public class PlayerFrame extends JFrame {
             else {
                 String text = netArtistPageTextField.getText();
                 netArtistPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netMusicInArtistMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -10921,7 +10921,7 @@ public class PlayerFrame extends JFrame {
                             MusicServerUtils.fillArtistInfo(artistInfo);
                             artistCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
                             if (artistInfo.getTag() != null)
-                                artistTagLabel.setText(StringUtils.textToHtml("".equals(artistInfo.getTag()) ? "" : artistInfo.getTag()));
+                                artistTagLabel.setText(StringUtils.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                             if (artistInfo.getDescription() != null)
                                 artistDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
                             if (artistInfo.hasCoverImg()) {
@@ -12019,7 +12019,7 @@ public class PlayerFrame extends JFrame {
             if (lc == netRadioScrollPane || lc == emptyHintPanel) {
                 String text = netRadioPageTextField.getText();
                 netRadioPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netRadioMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -12032,7 +12032,7 @@ public class PlayerFrame extends JFrame {
             else {
                 String text = netRadioPageTextField.getText();
                 netRadioPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netMusicInRadioMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -12154,7 +12154,7 @@ public class PlayerFrame extends JFrame {
                             MusicServerUtils.fillRadioInfo(radioInfo);
                             radioCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
                             if (radioInfo.getTag() != null)
-                                radioTagLabel.setText(StringUtils.textToHtml("".equals(radioInfo.getTag()) ? "" : "标签：" + radioInfo.getTag()));
+                                radioTagLabel.setText(StringUtils.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                             if (radioInfo.getDescription() != null)
                                 radioDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
                             if (radioInfo.hasCoverImg()) {
@@ -13014,7 +13014,7 @@ public class PlayerFrame extends JFrame {
         netMvGoButton.addActionListener(e -> {
             String text = netMvPageTextField.getText();
             netMvPageTextField.setText("");
-            if ("".equals(text)) return;
+            if (text.isEmpty()) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > netMvMaxPage) {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -13764,7 +13764,7 @@ public class PlayerFrame extends JFrame {
                     == netRankingScrollPane) {
                 String text = netRankingPageTextField.getText();
                 netRankingPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netRankingMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -13776,7 +13776,7 @@ public class PlayerFrame extends JFrame {
             else {
                 String text = netRankingPageTextField.getText();
                 netRankingPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netMusicInRankingMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -14514,7 +14514,7 @@ public class PlayerFrame extends JFrame {
             if (lc == netUserScrollPane || lc == emptyHintPanel) {
                 String text = netUserPageTextField.getText();
                 netUserPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netUserMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -14527,7 +14527,7 @@ public class PlayerFrame extends JFrame {
             else {
                 String text = netUserPageTextField.getText();
                 netUserPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netMusicInUserMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -15549,7 +15549,7 @@ public class PlayerFrame extends JFrame {
         netCommentGoButton.addActionListener(e -> {
             String text = netCommentPageTextField.getText();
             netCommentPageTextField.setText("");
-            if ("".equals(text)) return;
+            if (text.isEmpty()) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > netCommentMaxPage) {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -15965,7 +15965,7 @@ public class PlayerFrame extends JFrame {
         netSheetGoButton.addActionListener(e -> {
             String text = netSheetPageTextField.getText();
             netSheetPageTextField.setText("");
-            if ("".equals(text)) return;
+            if (text.isEmpty()) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > netSheetMaxPage) {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -16882,7 +16882,7 @@ public class PlayerFrame extends JFrame {
             if (!recommendBackwardButton.isEnabled()) {
                 String text = netRecommendPageTextField.getText();
                 netRecommendPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 // netRecommendMaxPage 为 -1 时，页数未知
                 if (destPage < 1 || destPage > netRecommendMaxPage && netRecommendMaxPage > 0) {
@@ -16896,7 +16896,7 @@ public class PlayerFrame extends JFrame {
             else {
                 String text = netRecommendPageTextField.getText();
                 netRecommendPageTextField.setText("");
-                if ("".equals(text)) return;
+                if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
                 if (destPage < 1 || destPage > netMusicInRecommendMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
@@ -17708,7 +17708,7 @@ public class PlayerFrame extends JFrame {
                                 MusicServerUtils.fillPlaylistInfo(playlistInfo);
                                 recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtils.textToHtml("".equals(playlistInfo.getTag()) ? "" : "标签：" + playlistInfo.getTag()));
+                                    recommendItemTagLabel.setText(StringUtils.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                                 if (playlistInfo.getDescription() != null)
                                     recommendItemDescriptionLabel.setText(StringUtils.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
@@ -17895,7 +17895,7 @@ public class PlayerFrame extends JFrame {
                                 MusicServerUtils.fillArtistInfo(artistInfo);
                                 recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtils.textToHtml("".equals(artistInfo.getTag()) ? "" : artistInfo.getTag()));
+                                    recommendItemTagLabel.setText(StringUtils.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
                                     recommendItemDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
@@ -17990,7 +17990,7 @@ public class PlayerFrame extends JFrame {
                                 MusicServerUtils.fillRadioInfo(radioInfo);
                                 recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtils.textToHtml("".equals(radioInfo.getTag()) ? "" : "标签：" + radioInfo.getTag()));
+                                    recommendItemTagLabel.setText(StringUtils.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
                                     recommendItemDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
@@ -19716,7 +19716,7 @@ public class PlayerFrame extends JFrame {
                 transStr = null;
             } else {
                 lrc = netMusicInfo.getLrc();
-                if ("".equals(lrc.trim())) throw new NoLyricException("歌词是一个空串");
+                if (lrc.trim().isEmpty()) throw new NoLyricException("歌词是一个空串");
                 lrcData = new LrcData(lrc, false);
                 // 获取 lrc 文件内容
                 lrcStr = lrcData.getLrcStr();

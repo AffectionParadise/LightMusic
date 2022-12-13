@@ -2909,6 +2909,8 @@ public class MusicServerUtils {
     private static final String USER_FOLLOWS_XM_API = "https://www.ximalaya.com/revision/user/following?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户关注 API (猫耳)
     private static final String USER_FOLLOWS_ME_API = "https://www.missevan.com/person/getuserattention?type=0&user_id=%s&p=%s&page_size=%s";
+    // 用户关注 API (堆糖)
+    private static final String USER_FOLLOWS_DT_API = "https://www.duitang.com/napi/friendship/follows/?user_id=%s&start=%s&limit=%s";
     // 用户关注 API (哔哩哔哩)
     private static final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
     // 用户粉丝 API
@@ -2917,6 +2919,8 @@ public class MusicServerUtils {
     private static final String USER_FOLLOWEDS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户粉丝 API (猫耳)
     private static final String USER_FOLLOWEDS_ME_API = "https://www.missevan.com/person/getuserattention?type=1&user_id=%s&p=%s&page_size=%s";
+    // 用户粉丝 API (堆糖)
+    private static final String USER_FOLLOWEDS_DT_API = "https://www.duitang.com/napi/friendship/fans/?user_id=%s&start=%s&limit=%s";
     // 用户粉丝 API (哔哩哔哩)
     private static final String USER_FOLLOWEDS_BI_API = "https://api.bilibili.com/x/relation/followers?vmid=%s&pn=%s&ps=%s";
 
@@ -15803,17 +15807,23 @@ public class MusicServerUtils {
         // 堆糖
         else if (source == NetMusicSource.DT) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_DT_API, uid))
+                    .setFollowRedirects(true)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
+            Elements a = doc.select("div.people-funs a");
 
             if (!userInfo.hasGender()) userInfo.setGender("保密");
             if (!userInfo.hasSign())
                 userInfo.setSign(doc.select("div.people-desc").text().trim());
+            if (!userInfo.hasProgramCount()) {
+                String s = doc.select("ul.people-nav li a").get(1).select("u").text().trim();
+                if (StringUtils.isNotEmpty(s)) userInfo.setProgramCount(Integer.parseInt(s));
+            }
             if (!userInfo.hasFollow())
-                userInfo.setFollow(Integer.parseInt(ReUtil.get("(\\d+)", doc.select("div.people-funs a").first().text(), 1)));
+                userInfo.setFollow(Integer.parseInt(ReUtil.get("(\\d+)", a.first().text(), 1)));
             if (!userInfo.hasFollowed())
-                userInfo.setFollowed(Integer.parseInt(ReUtil.get("(\\d+)", doc.select("div.people-funs a").last().text(), 1)));
+                userInfo.setFollowed(Integer.parseInt(ReUtil.get("(\\d+)", a.last().text(), 1)));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
             String bgUrl = doc.select("img.header-bg").attr("src");
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgUrl)));
@@ -20534,6 +20544,46 @@ public class MusicServerUtils {
             }
         }
 
+        // 堆糖
+        else if (source == NetMusicSource.DT) {
+            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_DT_API, id, (page - 1) * limit, limit))
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray userArray = data.getJSONArray("object_list");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("id");
+                String userName = userJson.getString("username");
+                String gender = "保密";
+                String avatarThumbUrl = userJson.getString("avatar");
+                String avatarUrl = avatarThumbUrl;
+                Integer follow = userJson.getInt("followCount");
+                Integer followed = userJson.getInt("beFollowCount");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.DT);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+                userInfo.setFollow(follow);
+                userInfo.setFollowed(followed);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+        }
+
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_BI_API, id, page, limit))
@@ -20699,6 +20749,46 @@ public class MusicServerUtils {
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+        }
+
+        // 堆糖
+        else if (source == NetMusicSource.DT) {
+            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_DT_API, id, (page - 1) * limit, limit))
+                    .execute()
+                    .body();
+            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject data = userInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray userArray = data.getJSONArray("object_list");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("id");
+                String userName = userJson.getString("username");
+                String gender = "保密";
+                String avatarThumbUrl = userJson.getString("avatar");
+                String avatarUrl = avatarThumbUrl;
+                Integer follow = userJson.getInt("followCount");
+                Integer followed = userJson.getInt("beFollowCount");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.DT);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+                userInfo.setFollow(follow);
+                userInfo.setFollowed(followed);
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {

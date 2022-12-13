@@ -1,9 +1,8 @@
 package net.doge.models;
 
-import net.doge.utils.CharsetUtils;
 import lombok.Data;
+import net.doge.utils.CharsetUtils;
 import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
 
 import java.io.*;
 import java.util.Collections;
@@ -83,7 +82,7 @@ public class LrcData {
             // 判断该行是否为有效行
             if (!isValidLine(strLine)) continue;
             // 判断该行数据是否表示歌名
-            if (null == title || "".equals(title.trim())) {
+            if (null == title || title.trim().isEmpty()) {
                 Pattern pattern = Pattern.compile("\\[ti:(.+?)\\]");
                 Matcher matcher = pattern.matcher(strLine);
                 if (matcher.find()) {
@@ -92,7 +91,7 @@ public class LrcData {
                 }
             }
             // 判断该行数据是否表示演唱者
-            if (null == artist || "".equals(artist.trim())) {
+            if (null == artist || artist.trim().isEmpty()) {
                 Pattern pattern = Pattern.compile("\\[ar:(.+?)\\]");
                 Matcher matcher = pattern.matcher(strLine);
                 if (matcher.find()) {
@@ -101,7 +100,7 @@ public class LrcData {
                 }
             }
             // 判断该行数据是否表示专辑
-            if (null == album || "".equals(album.trim())) {
+            if (null == album || album.trim().isEmpty()) {
                 Pattern pattern = Pattern.compile("\\[al:(.+?)\\]");
                 Matcher matcher = pattern.matcher(strLine);
                 if (matcher.find()) {
@@ -110,7 +109,7 @@ public class LrcData {
                 }
             }
             // 判断该行数据是否表示歌词制作者
-            if (null == lrcMaker || "".equals(lrcMaker.trim())) {
+            if (null == lrcMaker || lrcMaker.trim().isEmpty()) {
                 Pattern pattern = Pattern.compile("\\[by:(.+?)\\]");
                 Matcher matcher = pattern.matcher(strLine);
                 if (matcher.find()) {

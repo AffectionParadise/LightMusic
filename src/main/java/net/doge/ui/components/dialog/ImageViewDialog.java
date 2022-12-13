@@ -277,7 +277,7 @@ public abstract class ImageViewDialog extends JDialog {
             if (results == null) return;
             String text = pageTextField.getText();
             pageTextField.setText("");
-            if ("".equals(text)) return;
+            if (text.isEmpty()) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > results.total) {
                 new TipDialog(f, ILLEGAL_PAGE_MSG).showDialog();

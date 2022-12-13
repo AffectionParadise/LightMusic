@@ -41,8 +41,6 @@ public class NetUserInfo {
     private String avatarThumbUrl;
     // 背景图
     private BufferedImage bgImg;
-    // 背景图 url (猫耳)
-//    private String bgImgUrl;
     // 签名
     private String sign;
     // 关注数
@@ -83,6 +81,10 @@ public class NetUserInfo {
 
     public boolean fromME() {
         return source == NetMusicSource.ME;
+    }
+
+    public boolean fromDt() {
+        return source == NetMusicSource.DT;
     }
 
     public boolean fromBI() {

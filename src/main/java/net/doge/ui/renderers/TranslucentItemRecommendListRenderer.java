@@ -80,7 +80,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         list.setFixedCellWidth(list.getVisibleRect().width - 10);
-        
+
         if (value instanceof NetPlaylistInfo) {
             NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) value;
 
@@ -517,9 +517,11 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             String gender = netUserInfo.hasGender() ? netUserInfo.getGender() : "";
 //        String birthday = netUserInfo.hasBirthday() ? netUserInfo.getBirthday() : "";
 //        String area = netUserInfo.hasArea() ? netUserInfo.getArea() : "";
+            boolean hasRadioCount = netUserInfo.hasRadioCount(), hasProgramCount = netUserInfo.hasProgramCount();
             String playlistCount = netUserInfo.hasPlaylistCount() ? netUserInfo.getPlaylistCount() + " 歌单"
-                    : netUserInfo.hasRadioCount() ? netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目"
-                    : netUserInfo.hasProgramCount() ? netUserInfo.getProgramCount() + " 节目"
+                    : hasRadioCount && hasProgramCount ? netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目"
+                    : hasRadioCount ? netUserInfo.getRadioCount() + " 电台"
+                    : hasProgramCount ? netUserInfo.getProgramCount() + (netUserInfo.fromDt() ? " 专辑" : netUserInfo.fromBI() ? " 视频" : " 节目")
                     : "";
             String follow = netUserInfo.hasFollow() ? StringUtils.formatNumberWithoutSuffix(netUserInfo.getFollow()) + " 关注" : "";
             String followed = netUserInfo.hasFollowed() ? StringUtils.formatNumberWithoutSuffix(netUserInfo.getFollowed()) + " 粉丝" : "";
