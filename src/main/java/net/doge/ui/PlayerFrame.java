@@ -21401,8 +21401,8 @@ public class PlayerFrame extends JFrame {
         TranslucentLrcListRenderer lrcListRenderer = new TranslucentLrcListRenderer();
         lrcListRenderer.setRow(row);
         lrcListRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        lrcListRenderer.setBackgroundColor(lrcColor);        // 歌词颜色
-        lrcListRenderer.setForegroundColor(highlightColor);
+        lrcListRenderer.setBgColor(lrcColor);
+        lrcListRenderer.setHighlightColor(highlightColor);
         lrcList.setCellRenderer(lrcListRenderer);
         lrcList.setUI(new ListUI(LRC_INDEX - 1));  // 歌词禁用字体透明，需要用到自定义 List
 
@@ -22048,6 +22048,7 @@ public class PlayerFrame extends JFrame {
                 // 高斯模糊
                 styleImage = ImageUtils.doBlur(styleImage);
             }
+            styleImage = ImageUtils.eraseTranslucency(styleImage);
             // 放大至窗口大小
             styleImage = ImageUtils.width(styleImage, getWidth());
             if (darkerOn) {

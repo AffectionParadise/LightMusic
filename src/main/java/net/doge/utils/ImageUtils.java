@@ -258,8 +258,9 @@ public class ImageUtils {
     public static BufferedImage eraseTranslucency(BufferedImage image) {
         int w = image.getWidth(), h = image.getHeight();
         BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = bufferedImage.createGraphics();
-        g2d.drawImage(image, 0, 0, w, h, null);
+        Graphics2D g = bufferedImage.createGraphics();
+        g.drawImage(image, 0, 0, w, h, null);
+        g.dispose();
         return bufferedImage;
     }
 
@@ -406,15 +407,7 @@ public class ImageUtils {
      */
     public static BufferedImage setRadius(BufferedImage image, double arc) {
         if (image == null) return null;
-        int width = image.getWidth(), height = image.getHeight(), cornerRadius = (int) (width * arc);
-        BufferedImage outputImage = createTranslucentImage(width, height);
-        Graphics2D g = outputImage.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.fillRoundRect(0, 0, width, height, cornerRadius, cornerRadius);
-        g.setComposite(AlphaComposite.SrcIn);
-        g.drawImage(image, 0, 0, width, height, null);
-        g.dispose();
-        return outputImage;
+        return setRadius(image, (int) (image.getWidth() * arc));
     }
 
     /**

@@ -21089,6 +21089,16 @@ public class MusicServerUtils {
             return url;
         }
 
+        // 猫耳
+        else if (source == NetMusicSource.ME) {
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, songId))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("info").getJSONObject("sound");
+            String url = data.getString("soundurl");
+            return url;
+        }
+
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_BI_API, songId))

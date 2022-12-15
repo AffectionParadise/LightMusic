@@ -51,18 +51,6 @@ public class CustomPopupMenu extends JPopupMenu {
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-//        try {
-//            BufferedImage bgImg = f.defaultAlbumImage;
-//            BufferedImage img = rect.width > rect.height ?
-//                    Thumbnails.of(bgImg).width((int) (rect.width * 1.2)).asBufferedImage()
-//                    : Thumbnails.of(bgImg).height((int) (rect.height * 1.2)).asBufferedImage();
-//            int iw = img.getWidth(), ih = img.getHeight();
-//            img = Thumbnails.of(img)
-//                    .scale(1f)
-//                    .sourceRegion((int) (iw * 0.1), (ih - rect.height) / 2, rect.width, rect.height)
-//                    .outputQuality(0.1)
-//                    .asBufferedImage();
-//            img = ImageUtils.darker(ImageUtils.setRadius(ImageUtils.doBlur(ImageUtils.eraseTranslucency(img)), 0.1));
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(ImageUtils.getAvgRGB(f.globalPanel.getBackgroundImage()));
@@ -73,9 +61,6 @@ public class CustomPopupMenu extends JPopupMenu {
             g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
             g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
         }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override

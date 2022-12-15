@@ -21,9 +21,9 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
     private final Font defaultFont = Fonts.NORMAL;
     private final Font highlightFont = Fonts.NORMAL_BIG;
     // 走过的歌词颜色
-    private Color foregroundColor;
+    private Color highlightColor;
     // 未走的歌词颜色
-    private Color backgroundColor;
+    private Color bgColor;
     // 高亮文字
     private StringTwoColor stc;
     // 比例
@@ -56,14 +56,14 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
         // 标签
         label.setOpaque(false);
         label.setUI(index != row ? normalLabelUI : highlightLabelUI);
-        label.setForeground(backgroundColor);
+        label.setForeground(bgColor);
 
         // 高亮的行的样式
         if (index == row) {
             label.setFont(highlightFont);
             if (stc == null || stc.getWidthThreshold() != maxWidth
-                    || !stc.getText().equals(lyric) || !stc.getC1().equals(foregroundColor) || !stc.getC2().equals(backgroundColor))
-                stc = new StringTwoColor(label, lyric, foregroundColor, backgroundColor, ratio, false, maxWidth);
+                    || !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
+                stc = new StringTwoColor(label, lyric, highlightColor, bgColor, ratio, false, maxWidth);
             else stc.setRatio(ratio);
             label.setIcon(stc.getImageIcon());
             label.setText("");
@@ -87,7 +87,7 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
 //        CustomLabel lyricLabel = new CustomLabel();
 //
 //        lyricLabel.setUI(index != row ? normalLabelUI : highlightLabelUI);
-//        lyricLabel.setForeground(backgroundColor);
+//        lyricLabel.setForeground(bgColor);
 //
 //        GridLayout layout = new GridLayout(1, 1);
 //        layout.setHgap(15);
@@ -103,8 +103,8 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
 //        if (index == row) {
 //            lyricLabel.setFont(highlightFont);
 //            if (stc == null || stc.getWidthThreshold() != maxWidth ||
-//                    !stc.getText().equals(lyric) || !stc.getC1().equals(foregroundColor) || !stc.getC2().equals(backgroundColor))
-//                stc = new StringTwoColor(lyricLabel, lyric, foregroundColor, backgroundColor, ratio, false, maxWidth);
+//                    !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
+//                stc = new StringTwoColor(lyricLabel, lyric, highlightColor, bgColor, ratio, false, maxWidth);
 //            else stc.setRatio(ratio);
 //            lyricLabel.setIcon(stc.getImageIcon());
 //        }
