@@ -18973,7 +18973,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) vs.getUI()).setActive(vs.getValueIsAdjusting());
+                ((ScrollBarUI) vs.getUI()).setActive(vs.getValueIsAdjusting() || lrcScrollWaiting);
             }
 
             @Override
@@ -22365,7 +22365,7 @@ public class PlayerFrame extends JFrame {
                 loading.start();
                 loading.setText(LOADING_MSG);
                 runnable.run();
-                Thread.sleep(20);
+                Thread.sleep(25);
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {
