@@ -30,10 +30,10 @@ import java.awt.*;
 public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
@@ -43,29 +43,16 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
     private ImageIcon programIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.smallWidth));
     private ImageIcon playingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.smallWidth));
 
-    private ImageIcon musicSIcon;
-    private ImageIcon musicMvSIcon;
-    private ImageIcon programSIcon;
-    private ImageIcon playingSIcon;
-
     public TranslucentMusicListRenderer(MusicPlayer player) {
         this.player = player;
     }
 
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        musicIcon = ImageUtils.dye(musicIcon, foreColor);
-        musicMvIcon = ImageUtils.dye(musicMvIcon, foreColor);
-        programIcon = ImageUtils.dye(programIcon, foreColor);
-        playingIcon = ImageUtils.dye(playingIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        musicSIcon = ImageUtils.dye(musicIcon, selectedColor);
-        musicMvSIcon = ImageUtils.dye(musicMvIcon, selectedColor);
-        programSIcon = ImageUtils.dye(programIcon, selectedColor);
-        playingSIcon = ImageUtils.dye(playingIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        musicIcon = ImageUtils.dye(musicIcon, iconColor);
+        musicMvIcon = ImageUtils.dye(musicMvIcon, iconColor);
+        programIcon = ImageUtils.dye(programIcon, iconColor);
+        playingIcon = ImageUtils.dye(playingIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -91,26 +78,26 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
 
         if (isFile) {
             // 播放中的文件图标不同
-            if (!player.isPlayingFile(file)) iconLabel.setIcon(isSelected ? musicSIcon : musicIcon);
-            else iconLabel.setIcon(isSelected ? playingSIcon : playingIcon);
+            if (!player.isPlayingFile(file)) iconLabel.setIcon(musicIcon);
+            else iconLabel.setIcon( playingIcon);
         } else {
             // 播放中的文件图标不同
             if (!player.isPlayingNetMusic(netMusicInfo)) {
-                if (netMusicInfo.hasMv()) iconLabel.setIcon(isSelected ? musicMvSIcon : musicMvIcon);
-                else if (netMusicInfo.isProgram()) iconLabel.setIcon(isSelected ? programSIcon : programIcon);
-                else iconLabel.setIcon(isSelected ? musicSIcon : musicIcon);
-            } else iconLabel.setIcon(isSelected ? playingSIcon : playingIcon);
+                if (netMusicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
+                else if (netMusicInfo.isProgram()) iconLabel.setIcon( programIcon);
+                else iconLabel.setIcon(musicIcon);
+            } else iconLabel.setIcon( playingIcon);
         }
 
         iconLabel.setIconTextGap(15);
         iconLabel.setHorizontalTextPosition(LEFT);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        artistLabel.setForeground(isSelected ? selectedColor : foreColor);
-        albumNameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        durationLabel.setForeground(isSelected ? selectedColor : foreColor);
+        iconLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        artistLabel.setForeground(textColor);
+        albumNameLabel.setForeground(textColor);
+        durationLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
@@ -158,19 +145,19 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
         return outerPanel;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

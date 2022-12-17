@@ -39,11 +39,11 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        b.setForeground(ColorUtils.darker(f.currUIStyle.getButtonColor()));
+        b.setForeground(ColorUtils.darker(f.currUIStyle.getTextColor()));
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        b.setForeground(f.currUIStyle.getButtonColor());
+        b.setForeground(f.currUIStyle.getTextColor());
     }
 }

@@ -27,24 +27,18 @@ import java.awt.*;
 public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
     private ImageIcon radioIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "radioItem.png"), ImageConstants.profileWidth));
-    private ImageIcon radioSIcon;
 
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        radioIcon = ImageUtils.dye(radioIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        radioSIcon = ImageUtils.dye(radioIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        radioIcon = ImageUtils.dye(radioIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -66,16 +60,16 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(25);
-        iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : isSelected ? radioSIcon : radioIcon);
+        iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : radioIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        dCustomLabel.setForeground(isSelected ? selectedColor : foreColor);
-        categoryLabel.setForeground(isSelected ? selectedColor : foreColor);
-        trackCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-        playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-//        createTimeLabel.setForeground(isSelected ? selectedColor : foreColor);
+        iconLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        dCustomLabel.setForeground(textColor);
+        categoryLabel.setForeground(textColor);
+        trackCountLabel.setForeground(textColor);
+        playCountLabel.setForeground(textColor);
+//        createTimeLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
@@ -127,19 +121,19 @@ public class TranslucentNetRadioListRenderer extends DefaultListCellRenderer {
         return outerPanel;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

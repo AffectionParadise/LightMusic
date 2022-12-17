@@ -173,10 +173,10 @@ public abstract class ImageViewDialog extends JDialog {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -205,12 +205,12 @@ public abstract class ImageViewDialog extends JDialog {
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
 
         // 标签
-        imgLabel.setForeground(style.getLabelColor());
-        pageLabel.setForeground(style.getLabelColor());
+        imgLabel.setForeground(style.getTextColor());
+        pageLabel.setForeground(style.getTextColor());
 
         // 上/下一张按钮
         lastImgButton.setToolTipText(LAST_IMG);
-        lastImgButton.setIcon(ImageUtils.dye((ImageIcon) lastImgButton.getIcon(), style.getButtonColor()));
+        lastImgButton.setIcon(ImageUtils.dye((ImageIcon) lastImgButton.getIcon(), style.getIconColor()));
         lastImgButton.addMouseListener(new ButtonMouseListener(lastImgButton, f));
         lastImgButton.setPreferredSize(new Dimension(lastImgIcon.getIconWidth(), lastImgIcon.getIconHeight()));
         lastImgButton.addActionListener(e -> {
@@ -221,7 +221,7 @@ public abstract class ImageViewDialog extends JDialog {
             showImg(--p);
         });
         nextImgButton.setToolTipText(NEXT_IMG);
-        nextImgButton.setIcon(ImageUtils.dye((ImageIcon) nextImgButton.getIcon(), style.getButtonColor()));
+        nextImgButton.setIcon(ImageUtils.dye((ImageIcon) nextImgButton.getIcon(), style.getIconColor()));
         nextImgButton.addMouseListener(new ButtonMouseListener(nextImgButton, f));
         nextImgButton.setPreferredSize(new Dimension(nextImgIcon.getIconWidth(), nextImgIcon.getIconHeight()));
         nextImgButton.addActionListener(e -> {
@@ -234,7 +234,7 @@ public abstract class ImageViewDialog extends JDialog {
         });
         // 第一张/最后一张按钮
         firstImgButton.setToolTipText(FIRST_IMG);
-        firstImgButton.setIcon(ImageUtils.dye((ImageIcon) firstImgButton.getIcon(), style.getButtonColor()));
+        firstImgButton.setIcon(ImageUtils.dye((ImageIcon) firstImgButton.getIcon(), style.getIconColor()));
         firstImgButton.addMouseListener(new ButtonMouseListener(firstImgButton, f));
         firstImgButton.setPreferredSize(new Dimension(firstImgIcon.getIconWidth(), firstImgIcon.getIconHeight()));
         firstImgButton.addActionListener(e -> {
@@ -245,7 +245,7 @@ public abstract class ImageViewDialog extends JDialog {
             showImg(p = 1);
         });
         lstImgButton.setToolTipText(LST_IMG);
-        lstImgButton.setIcon(ImageUtils.dye((ImageIcon) lstImgButton.getIcon(), style.getButtonColor()));
+        lstImgButton.setIcon(ImageUtils.dye((ImageIcon) lstImgButton.getIcon(), style.getIconColor()));
         lstImgButton.addMouseListener(new ButtonMouseListener(lstImgButton, f));
         lstImgButton.setPreferredSize(new Dimension(lstImgIcon.getIconWidth(), lstImgIcon.getIconHeight()));
         lstImgButton.addActionListener(e -> {
@@ -270,7 +270,7 @@ public abstract class ImageViewDialog extends JDialog {
         pageTextField.setCaretColor(style.getForeColor());
         // 跳页按钮
         goButton.setToolTipText(GO_TIP);
-        goButton.setIcon(ImageUtils.dye((ImageIcon) goButton.getIcon(), style.getButtonColor()));
+        goButton.setIcon(ImageUtils.dye((ImageIcon) goButton.getIcon(), style.getIconColor()));
         goButton.addMouseListener(new ButtonMouseListener(goButton, f));
         goButton.setPreferredSize(new Dimension(goIcon.getIconWidth(), goIcon.getIconHeight()));
         goButton.addActionListener(e -> {
@@ -288,7 +288,7 @@ public abstract class ImageViewDialog extends JDialog {
 
         // 保存图片
         saveImgButton.setToolTipText(SAVE_IMG);
-        saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), style.getButtonColor()));
+        saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), style.getIconColor()));
         saveImgButton.addMouseListener(new ButtonMouseListener(saveImgButton, f));
         saveImgButton.setPreferredSize(new Dimension(saveImgIcon.getIconWidth(), saveImgIcon.getIconHeight()));
         saveImgButton.addActionListener(e -> {

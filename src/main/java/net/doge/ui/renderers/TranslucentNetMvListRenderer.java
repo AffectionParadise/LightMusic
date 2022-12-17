@@ -28,24 +28,18 @@ import java.awt.*;
 public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
     private ImageIcon mvIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "mvItem.png"), ImageConstants.profileWidth));
-    private ImageIcon mvSIcon;
 
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        mvIcon = ImageUtils.dye(mvIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        mvSIcon = ImageUtils.dye(mvIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        mvIcon = ImageUtils.dye(mvIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -65,16 +59,16 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
         CustomLabel pubTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
-        iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : isSelected ? mvSIcon : mvIcon);
+        iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb())  : mvIcon);
         iconLabel.setIconTextGap(10);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        artistLabel.setForeground(isSelected ? selectedColor : foreColor);
-        durationLabel.setForeground(isSelected ? selectedColor : foreColor);
-        playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-        pubTimeLabel.setForeground(isSelected ? selectedColor : foreColor);
+        iconLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        artistLabel.setForeground(textColor);
+        durationLabel.setForeground(textColor);
+        playCountLabel.setForeground(textColor);
+        pubTimeLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
@@ -122,19 +116,19 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
         return outerPanel;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

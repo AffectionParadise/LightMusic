@@ -11,7 +11,7 @@ import javax.swing.plaf.basic.BasicComboPopup;
 import java.awt.*;
 
 public class CustomComboPopup extends BasicComboPopup {
-    private Color foreColor;
+    private Color scrollBarColor;
     private PlayerFrame f;
 
     // 最大阴影透明度
@@ -19,11 +19,11 @@ public class CustomComboPopup extends BasicComboPopup {
     // 阴影大小像素
     private final int pixels = 10;
 
-    public CustomComboPopup(CustomComboBox comboBox, PlayerFrame f, Color foreColor) {
+    public CustomComboPopup(CustomComboBox comboBox, PlayerFrame f) {
         super(comboBox);
 
         this.f = f;
-        this.foreColor = foreColor;
+        this.scrollBarColor = f.currUIStyle.getScrollBarColor();
 
         setDefaultLightWeightPopupEnabled(false);
         setLightWeightPopupEnabled(false);
@@ -44,7 +44,7 @@ public class CustomComboPopup extends BasicComboPopup {
     protected JScrollPane createScroller() {
         CustomScrollPane sp = new CustomScrollPane(list);
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        sp.setVUI(new ScrollBarUI(foreColor));
+        sp.setVUI(new ScrollBarUI(scrollBarColor));
         return sp;
     }
 

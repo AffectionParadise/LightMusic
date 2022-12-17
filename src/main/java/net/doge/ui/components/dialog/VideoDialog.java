@@ -341,7 +341,7 @@ public class VideoDialog extends JDialog {
         mp.setOnEndOfMedia(() -> {
             mp.seek(Duration.seconds(0));
             mp.pause();
-            playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getButtonColor()));
+            playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getIconColor()));
             timeBar.setValue(0);
             currTimeLabel.setText(DEFAULT_TIME);
         });
@@ -381,11 +381,11 @@ public class VideoDialog extends JDialog {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(StringUtils.textToHtml(title));
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -448,14 +448,14 @@ public class VideoDialog extends JDialog {
     // 控制面板
     private void initControlPanel() {
         playOrPauseButton.setToolTipText(PLAY_TIP);
-        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
+        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getIconColor()));
         playOrPauseButton.setPreferredSize(new Dimension(pauseIcon.getIconWidth(), pauseIcon.getIconHeight()));
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, f));
         playOrPauseButton.addActionListener(e -> playOrPause());
 
         // 快进
         forwardButton.setToolTipText(FORWARD_TIP);
-        forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), style.getButtonColor()));
+        forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), style.getIconColor()));
         forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, f));
         forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth(), forwIcon.getIconHeight()));
         forwardButton.addActionListener(e -> {
@@ -463,7 +463,7 @@ public class VideoDialog extends JDialog {
         });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
-        backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), style.getButtonColor()));
+        backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), style.getIconColor()));
         backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, f));
         backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth(), backwIcon.getIconHeight()));
         backwardButton.addActionListener(e -> {
@@ -471,16 +471,16 @@ public class VideoDialog extends JDialog {
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
-        muteButton.setIcon(ImageUtils.dye(soundIcon, style.getButtonColor()));
+        muteButton.setIcon(ImageUtils.dye(soundIcon, style.getIconColor()));
         muteButton.addMouseListener(new ButtonMouseListener(muteButton, f));
         muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth(), muteIcon.getIconHeight()));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
-                muteButton.setIcon(ImageUtils.dye(muteIcon, style.getButtonColor()));
+                muteButton.setIcon(ImageUtils.dye(muteIcon, style.getIconColor()));
             } else {
                 muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtils.dye(soundIcon, style.getButtonColor()));
+                muteButton.setIcon(ImageUtils.dye(soundIcon, style.getIconColor()));
             }
             mp.setMute(isMute);
         });
@@ -492,12 +492,12 @@ public class VideoDialog extends JDialog {
             mp.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
             if (!isMute) return;
             muteButton.setToolTipText(SOUND_TIP);
-            muteButton.setIcon(ImageUtils.dye(soundIcon, style.getButtonColor()));
+            muteButton.setIcon(ImageUtils.dye(soundIcon, style.getIconColor()));
             mp.setMute(isMute = false);
         });
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
-        collectButton.setIcon(ImageUtils.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, style.getButtonColor()));
+        collectButton.setIcon(ImageUtils.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, style.getIconColor()));
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, f));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth(), collectIcon.getIconHeight()));
         collectButton.addActionListener(e -> {
@@ -507,28 +507,28 @@ public class VideoDialog extends JDialog {
                 GlobalExecutors.requestExecutor.submit(() -> MusicServerUtils.fillMvDetail(netMvInfo));
                 f.mvCollectionModel.add(0, netMvInfo);
                 collectButton.setToolTipText(CANCEL_COLLECTION_TIP);
-                collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, style.getButtonColor()));
+                collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, style.getIconColor()));
                 new TipDialog(f, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 f.mvCollectionModel.removeElement(netMvInfo);
                 collectButton.setToolTipText(COLLECT_TIP);
-                collectButton.setIcon(ImageUtils.dye(collectIcon, style.getButtonColor()));
+                collectButton.setIcon(ImageUtils.dye(collectIcon, style.getIconColor()));
                 new TipDialog(f, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
         // 下载
         downloadButton.setEnabled(!isLocal || !netMvInfo.isMp4());
         downloadButton.setToolTipText(DOWNLOAD_TIP);
-        downloadButton.setIcon(ImageUtils.dye(downloadIcon, style.getButtonColor()));
-        downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, ColorUtils.darker(style.getButtonColor())));
+        downloadButton.setIcon(ImageUtils.dye(downloadIcon, style.getIconColor()));
+        downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, ColorUtils.darker(style.getIconColor())));
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, f));
         downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth(), downloadIcon.getIconHeight()));
         downloadButton.addActionListener(e -> {
             downloadMv();
         });
-        rateButton.setForeground(style.getButtonColor());
+        rateButton.setForeground(style.getIconColor());
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getButtonColor()));
+        rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getIconColor()));
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, f));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
         rateButton.addActionListener(e -> {
@@ -551,9 +551,9 @@ public class VideoDialog extends JDialog {
             fobTimeMenuItemsButtonGroup.add(menuItem);
             fobTimePopupMenu.add(menuItem);
         }
-        fobTimeButton.setForeground(style.getButtonColor());
+        fobTimeButton.setForeground(style.getIconColor());
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
-        fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), style.getButtonColor()));
+        fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), style.getIconColor()));
         fobTimeButton.addMouseListener(new ButtonMouseListener(fobTimeButton, f));
         fobTimeButton.setPreferredSize(new Dimension(fobTimeIcon.getIconWidth(), fobTimeIcon.getIconHeight()));
         fobTimeButton.setComponentPopupMenu(fobTimePopupMenu);
@@ -563,9 +563,9 @@ public class VideoDialog extends JDialog {
                 fobTimePopupMenu.show(fobTimeButton, e.getX(), e.getY());
             }
         });
-        fullScreenButton.setForeground(style.getButtonColor());
+        fullScreenButton.setForeground(style.getIconColor());
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
-        fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), style.getButtonColor()));
+        fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), style.getIconColor()));
         fullScreenButton.addMouseListener(new ButtonMouseListener(fullScreenButton, f));
         fullScreenButton.setPreferredSize(new Dimension(fullScreenIcon.getIconWidth(), fullScreenIcon.getIconHeight()));
         fullScreenButton.addActionListener(e -> toFullScreen());
@@ -633,7 +633,7 @@ public class VideoDialog extends JDialog {
         volumeSlider.setValue(f.volumeSlider.getValue());
         mp.setRate(f.currVideoRate);
         mp.play();
-        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
+        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getIconColor()));
         playOrPauseButton.setToolTipText(PAUSE_TIP);
     }
 
@@ -641,12 +641,12 @@ public class VideoDialog extends JDialog {
         switch (mp.getStatus()) {
             case PLAYING:
                 mp.pause();
-                playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getButtonColor()));
+                playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 break;
             case PAUSED:
                 mp.play();
-                playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getButtonColor()));
+                playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
                 break;
             case READY:

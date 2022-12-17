@@ -27,24 +27,18 @@ import java.awt.*;
 public class TranslucentNetUserListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
     private ImageIcon userIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "userItem.png"), ImageConstants.profileWidth));
-    private ImageIcon userSIcon;
 
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        userIcon = ImageUtils.dye(userIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        userSIcon = ImageUtils.dye(userIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        userIcon = ImageUtils.dye(userIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -67,17 +61,17 @@ public class TranslucentNetUserListRenderer extends DefaultListCellRenderer {
 
         avatarLabel.setHorizontalTextPosition(LEFT);
         avatarLabel.setIconTextGap(25);
-        avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : isSelected ? userSIcon : userIcon);
+        avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : userIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        avatarLabel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        genderLabel.setForeground(isSelected ? selectedColor : foreColor);
-//        birthdayLabel.setForeground(isSelected ? selectedColor : foreColor);
-//        areaLabel.setForeground(isSelected ? selectedColor : foreColor);
-        followLabel.setForeground(isSelected ? selectedColor : foreColor);
-        followedLabel.setForeground(isSelected ? selectedColor : foreColor);
-        playlistCountLabel.setForeground(isSelected ? selectedColor : foreColor);
+        avatarLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        genderLabel.setForeground(textColor);
+//        birthdayLabel.setForeground(textColor);
+//        areaLabel.setForeground(textColor);
+        followLabel.setForeground(textColor);
+        followedLabel.setForeground(textColor);
+        playlistCountLabel.setForeground(textColor);
 
         avatarLabel.setFont(customFont);
         nameLabel.setFont(customFont);
@@ -137,19 +131,19 @@ public class TranslucentNetUserListRenderer extends DefaultListCellRenderer {
         return outerPanel;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

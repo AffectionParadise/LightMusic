@@ -215,7 +215,7 @@ public class MiniDialog extends JDialog {
         });
 
         // 颜色
-        infoLabel.setForeground(style.getLabelColor());
+        infoLabel.setForeground(style.getTextColor());
         // 正在播放的音乐信息
         infoLabel.setText(changePaneButton.getText());
         infoLabel.setIcon(changePaneButton.getIcon());
@@ -239,7 +239,7 @@ public class MiniDialog extends JDialog {
         playLastButton.setIcon(lastButton.getIcon());
         playOrPauseButton.setIcon(popButton.getIcon());
         playNextButton.setIcon(nextButton.getIcon());
-        closeButton.setIcon(ImageUtils.dye(closeMiniIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(closeMiniIcon, style.getIconColor()));
 
         // 按钮大小
         playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth(), playLastButton.getIcon().getIconHeight()));

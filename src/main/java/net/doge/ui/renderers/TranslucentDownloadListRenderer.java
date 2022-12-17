@@ -27,24 +27,18 @@ import java.awt.*;
 public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
     private ImageIcon taskIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.smallWidth));
-    private ImageIcon taskSIcon;
 
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        taskIcon = ImageUtils.dye(taskIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        taskSIcon = ImageUtils.dye(taskIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        taskIcon = ImageUtils.dye(taskIcon, iconColor);
     }
 
     @Override
@@ -52,7 +46,7 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         Task task = (Task) value;
 
         CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel(isSelected ? taskSIcon : taskIcon);
+        CustomLabel iconLabel = new CustomLabel(taskIcon);
         CustomLabel nameLabel = new CustomLabel();
         CustomLabel typeLabel = new CustomLabel();
         CustomLabel sizeLabel = new CustomLabel();
@@ -62,15 +56,15 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
 
         progressSlider.setMinimum(0);
         progressSlider.setMaximum(100);
-        progressSlider.setUI(new MuteSliderUI(progressSlider, isSelected ? selectedColor : foreColor));
+        progressSlider.setUI(new MuteSliderUI(progressSlider, textColor));
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        typeLabel.setForeground(isSelected ? selectedColor : foreColor);
-        sizeLabel.setForeground(isSelected ? selectedColor : foreColor);
-        percentLabel.setForeground(isSelected ? selectedColor : foreColor);
-        statusLabel.setForeground(isSelected ? selectedColor : foreColor);
+        iconLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        typeLabel.setForeground(textColor);
+        sizeLabel.setForeground(textColor);
+        percentLabel.setForeground(textColor);
+        statusLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
@@ -119,19 +113,19 @@ public class TranslucentDownloadListRenderer extends DefaultListCellRenderer {
         return outerPanel;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

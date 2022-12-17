@@ -158,10 +158,10 @@ public class SettingDialog extends JDialog {
         this.f = f;
         this.style = f.currUIStyle;
 
-        Color buttonColor = style.getButtonColor();
-        okButton = new DialogButton("保存", buttonColor);
-        applyButton = new DialogButton("应用", buttonColor);
-        cancelButton = new DialogButton("取消", buttonColor);
+        Color textColor = style.getTextColor();
+        okButton = new DialogButton("保存", textColor);
+        applyButton = new DialogButton("应用", textColor);
+        cancelButton = new DialogButton("取消", textColor);
     }
 
     public void showDialog() {
@@ -246,10 +246,10 @@ public class SettingDialog extends JDialog {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -327,54 +327,53 @@ public class SettingDialog extends JDialog {
         videoFullScreenPanel.setBorder(b);
 
         // 字体颜色
-        Color labelColor = style.getLabelColor();
-        autoUpdateCheckBox.setForeground(labelColor);
-        autoDownloadLrcCheckBox.setForeground(labelColor);
-        videoOnlyCheckBox.setForeground(labelColor);
-        musicDownLabel.setForeground(labelColor);
-        mvDownLabel.setForeground(labelColor);
-        cacheLabel.setForeground(labelColor);
-        maxCacheSizeLabel.setForeground(labelColor);
-        maxHistoryCountLabel.setForeground(labelColor);
-        maxSearchHistoryCountLabel.setForeground(labelColor);
-        maxConcurrentTaskCountLabel.setForeground(labelColor);
-        closeOptionLabel.setForeground(labelColor);
-        windowSizeLabel.setForeground(labelColor);
-        fobLabel.setForeground(labelColor);
-//        specStyleLabel.setForeground(labelColor);
-        balanceLabel.setForeground(labelColor);
-        backupLabel.setForeground(labelColor);
-        keyLabel.setForeground(labelColor);
-        enableKeyCheckBox.setForeground(labelColor);
-        playOrPauseLabel.setForeground(labelColor);
-        playLastLabel.setForeground(labelColor);
-        playNextLabel.setForeground(labelColor);
-        backwardLabel.setForeground(labelColor);
-        forwardLabel.setForeground(labelColor);
-        videoFullScreenLabel.setForeground(labelColor);
+        Color textColor = style.getTextColor();
+        autoUpdateCheckBox.setForeground(textColor);
+        autoDownloadLrcCheckBox.setForeground(textColor);
+        videoOnlyCheckBox.setForeground(textColor);
+        musicDownLabel.setForeground(textColor);
+        mvDownLabel.setForeground(textColor);
+        cacheLabel.setForeground(textColor);
+        maxCacheSizeLabel.setForeground(textColor);
+        maxHistoryCountLabel.setForeground(textColor);
+        maxSearchHistoryCountLabel.setForeground(textColor);
+        maxConcurrentTaskCountLabel.setForeground(textColor);
+        closeOptionLabel.setForeground(textColor);
+        windowSizeLabel.setForeground(textColor);
+        fobLabel.setForeground(textColor);
+//        specStyleLabel.setForeground(textColor);
+        balanceLabel.setForeground(textColor);
+        backupLabel.setForeground(textColor);
+        keyLabel.setForeground(textColor);
+        enableKeyCheckBox.setForeground(textColor);
+        playOrPauseLabel.setForeground(textColor);
+        playLastLabel.setForeground(textColor);
+        playNextLabel.setForeground(textColor);
+        backwardLabel.setForeground(textColor);
+        forwardLabel.setForeground(textColor);
+        videoFullScreenLabel.setForeground(textColor);
 
         // 文本框
-        Color foreColor = style.getForeColor();
-        musicDownPathTextField.setForeground(foreColor);
-        musicDownPathTextField.setCaretColor(foreColor);
-        mvDownPathTextField.setForeground(foreColor);
-        mvDownPathTextField.setCaretColor(foreColor);
-        cachePathTextField.setForeground(foreColor);
-        cachePathTextField.setCaretColor(foreColor);
-        maxCacheSizeTextField.setForeground(foreColor);
-        maxCacheSizeTextField.setCaretColor(foreColor);
+        musicDownPathTextField.setForeground(textColor);
+        musicDownPathTextField.setCaretColor(textColor);
+        mvDownPathTextField.setForeground(textColor);
+        mvDownPathTextField.setCaretColor(textColor);
+        cachePathTextField.setForeground(textColor);
+        cachePathTextField.setCaretColor(textColor);
+        maxCacheSizeTextField.setForeground(textColor);
+        maxCacheSizeTextField.setCaretColor(textColor);
         SafeDocument doc = new SafeDocument(0, maxCacheSizeLimit);
         maxCacheSizeTextField.setDocument(doc);
-        maxHistoryCountTextField.setForeground(foreColor);
-        maxHistoryCountTextField.setCaretColor(foreColor);
+        maxHistoryCountTextField.setForeground(textColor);
+        maxHistoryCountTextField.setCaretColor(textColor);
         doc = new SafeDocument(0, maxHistoryCountLimit);
         maxHistoryCountTextField.setDocument(doc);
-        maxSearchHistoryCountTextField.setForeground(foreColor);
-        maxSearchHistoryCountTextField.setCaretColor(foreColor);
+        maxSearchHistoryCountTextField.setForeground(textColor);
+        maxSearchHistoryCountTextField.setCaretColor(textColor);
         doc = new SafeDocument(0, maxSearchHistoryLimit);
         maxSearchHistoryCountTextField.setDocument(doc);
-        maxConcurrentTaskCountTextField.setForeground(foreColor);
-        maxConcurrentTaskCountTextField.setCaretColor(foreColor);
+        maxConcurrentTaskCountTextField.setForeground(textColor);
+        maxConcurrentTaskCountTextField.setCaretColor(textColor);
         doc = new SafeDocument(1, maxConcurrentTaskCountLimit);
         maxConcurrentTaskCountTextField.setDocument(doc);
         keyBindListener = new AWTEventListener() {
@@ -465,44 +464,43 @@ public class SettingDialog extends JDialog {
                 currKeys.clear();
             }
         };
-        playOrPauseTextField.setForeground(foreColor);
-        playOrPauseTextField.setCaretColor(foreColor);
+        playOrPauseTextField.setForeground(textColor);
+        playOrPauseTextField.setCaretColor(textColor);
         playOrPauseTextField.setEditable(false);
         playOrPauseTextField.addFocusListener(focusAdapter);
-        playLastTextField.setForeground(foreColor);
-        playLastTextField.setCaretColor(foreColor);
+        playLastTextField.setForeground(textColor);
+        playLastTextField.setCaretColor(textColor);
         playLastTextField.setEditable(false);
         playLastTextField.addFocusListener(focusAdapter);
-        playNextTextField.setForeground(foreColor);
-        playNextTextField.setCaretColor(foreColor);
+        playNextTextField.setForeground(textColor);
+        playNextTextField.setCaretColor(textColor);
         playNextTextField.setEditable(false);
         playNextTextField.addFocusListener(focusAdapter);
-        backwardTextField.setForeground(foreColor);
-        backwardTextField.setCaretColor(foreColor);
+        backwardTextField.setForeground(textColor);
+        backwardTextField.setCaretColor(textColor);
         backwardTextField.setEditable(false);
         backwardTextField.addFocusListener(focusAdapter);
-        forwardTextField.setForeground(foreColor);
-        forwardTextField.setCaretColor(foreColor);
+        forwardTextField.setForeground(textColor);
+        forwardTextField.setCaretColor(textColor);
         forwardTextField.setEditable(false);
         forwardTextField.addFocusListener(focusAdapter);
-        videoFullScreenTextField.setForeground(foreColor);
-        videoFullScreenTextField.setCaretColor(foreColor);
+        videoFullScreenTextField.setForeground(textColor);
+        videoFullScreenTextField.setCaretColor(textColor);
         videoFullScreenTextField.setEditable(false);
         videoFullScreenTextField.addFocusListener(focusAdapter);
 
         // 下拉框 UI
-        Color buttonColor = style.getButtonColor();
-        closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f, buttonColor));
-        windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f, buttonColor));
-        fobComboBox.setUI(new ComboBoxUI(fobComboBox, f, buttonColor));
-//        specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f, buttonColor));
-        balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f, buttonColor));
+        closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f));
+        windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f));
+        fobComboBox.setUI(new ComboBoxUI(fobComboBox, f));
+//        specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f));
+        balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f));
 
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("选择文件夹");
 
         // 按钮
-        changeMusicDownPathButton = new DialogButton("更改", buttonColor);
+        changeMusicDownPathButton = new DialogButton("更改", textColor);
         changeMusicDownPathButton.addActionListener(e -> {
             Platform.runLater(() -> {
                 File dir = dirChooser.showDialog(null);
@@ -514,7 +512,7 @@ public class SettingDialog extends JDialog {
                 }
             });
         });
-        openMusicDownPathButton = new DialogButton("打开", buttonColor);
+        openMusicDownPathButton = new DialogButton("打开", textColor);
         openMusicDownPathButton.addActionListener(e -> {
             try {
                 File dir = new File(musicDownPathTextField.getText());
@@ -529,7 +527,7 @@ public class SettingDialog extends JDialog {
             }
         });
 
-        changeMvDownPathButton = new DialogButton("更改", buttonColor);
+        changeMvDownPathButton = new DialogButton("更改", textColor);
         changeMvDownPathButton.addActionListener(e -> {
             Platform.runLater(() -> {
                 File dir = dirChooser.showDialog(null);
@@ -541,7 +539,7 @@ public class SettingDialog extends JDialog {
                 }
             });
         });
-        openMvDownPathButton = new DialogButton("打开", buttonColor);
+        openMvDownPathButton = new DialogButton("打开", textColor);
         openMvDownPathButton.addActionListener(e -> {
             try {
                 File dir = new File(mvDownPathTextField.getText());
@@ -556,7 +554,7 @@ public class SettingDialog extends JDialog {
             }
         });
 
-        changeCachePathButton = new DialogButton("更改", buttonColor);
+        changeCachePathButton = new DialogButton("更改", textColor);
         changeCachePathButton.addActionListener(e -> {
             Platform.runLater(() -> {
                 File dir = dirChooser.showDialog(null);
@@ -568,7 +566,7 @@ public class SettingDialog extends JDialog {
                 }
             });
         });
-        openCachePathButton = new DialogButton("打开", buttonColor);
+        openCachePathButton = new DialogButton("打开", textColor);
         openCachePathButton.addActionListener(e -> {
             try {
                 File dir = new File(cachePathTextField.getText());
@@ -586,7 +584,7 @@ public class SettingDialog extends JDialog {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("json 文件", "*.json");
         fileChooser.getExtensionFilters().add(filter);
-        importListButton = new DialogButton("恢复", buttonColor);
+        importListButton = new DialogButton("恢复", textColor);
         importListButton.addActionListener(e -> {
             Platform.runLater(() -> {
                 fileChooser.setTitle("选择文件");
@@ -599,7 +597,7 @@ public class SettingDialog extends JDialog {
                 }
             });
         });
-        exportListButton = new DialogButton("备份", buttonColor);
+        exportListButton = new DialogButton("备份", textColor);
         exportListButton.addActionListener(e -> {
             Platform.runLater(() -> {
                 fileChooser.setTitle("保存文件");
@@ -619,8 +617,8 @@ public class SettingDialog extends JDialog {
         });
 
         // 复选框图标
-        ImageIcon icon = ImageUtils.dye(f.uncheckedIcon, labelColor);
-        ImageIcon selectedIcon = ImageUtils.dye(f.checkedIcon, labelColor);
+        ImageIcon icon = ImageUtils.dye(f.uncheckedIcon, textColor);
+        ImageIcon selectedIcon = ImageUtils.dye(f.checkedIcon, textColor);
         autoUpdateCheckBox.setIcon(icon);
         autoUpdateCheckBox.setSelectedIcon(selectedIcon);
         autoDownloadLrcCheckBox.setIcon(icon);

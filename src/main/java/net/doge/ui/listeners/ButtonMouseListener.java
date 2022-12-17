@@ -25,34 +25,41 @@ public class ButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        Color buttonColor = f.currUIStyle.getButtonColor();
-        Color brighterColor = ColorUtils.brighter(buttonColor);
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));
-        b.setForeground(brighterColor);
+        Color iconColor = f.currUIStyle.getIconColor();
+        Color textColor = f.currUIStyle.getTextColor();
+        Color btc = ColorUtils.brighter(textColor);
+        Color bic = ColorUtils.brighter(iconColor);
+        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), bic));
+        b.setForeground(btc);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        Color buttonColor = f.currUIStyle.getButtonColor();
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), buttonColor));
-        b.setForeground(buttonColor);
+        Color iconColor = f.currUIStyle.getIconColor();
+        Color textColor = f.currUIStyle.getTextColor();
+        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), iconColor));
+        b.setForeground(textColor);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        Color buttonColor = f.currUIStyle.getButtonColor();
-        Color darkerColor = ColorUtils.darker(buttonColor);
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), darkerColor));
-        b.setForeground(darkerColor);
+        Color iconColor = f.currUIStyle.getIconColor();
+        Color textColor = f.currUIStyle.getTextColor();
+        Color dtc = ColorUtils.darker(textColor);
+        Color dic = ColorUtils.darker(iconColor);
+        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), dic));
+        b.setForeground(dtc);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Color buttonColor = f.currUIStyle.getButtonColor();
-        Color brighterColor = ColorUtils.brighter(buttonColor);
+        Color iconColor = f.currUIStyle.getIconColor();
+        Color textColor = f.currUIStyle.getTextColor();
+        Color btc = ColorUtils.brighter(textColor);
+        Color bic = ColorUtils.brighter(iconColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), brighterColor));
-        b.setForeground(c ? brighterColor : buttonColor);
+        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), bic));
+        b.setForeground(c ? btc : textColor);
     }
 }

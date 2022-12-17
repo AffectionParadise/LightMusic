@@ -110,8 +110,8 @@ public class EditInfoDialog extends JDialog {
         this.style = f.currUIStyle;
         this.file = file;
 
-        Color buttonColor = style.getButtonColor();
-        okButton = new DialogButton("保存", buttonColor);
+        Color textColor = style.getTextColor();
+        okButton = new DialogButton("保存", textColor);
 
         comboBox.addItem("");
         for (String genre : ID3v1Genres.GENRES) comboBox.addItem(genre);
@@ -219,10 +219,10 @@ public class EditInfoDialog extends JDialog {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -276,29 +276,29 @@ public class EditInfoDialog extends JDialog {
         results[12] = albumImage;
 
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+
+        Color textColor = style.getTextColor();
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
             CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
             panel.setBorder(b);
             // 添加标签
-            labels[i].setForeground(style.getLabelColor());
+            labels[i].setForeground(style.getTextColor());
             panel.add(labels[i]);
             // 组件配置
             if (components[i] instanceof CustomLabel) {
                 CustomLabel component = (CustomLabel) components[i];
-                component.setForeground(style.getLabelColor());
+                component.setForeground(style.getTextColor());
                 component.setText(StringUtils.textToHtml((String) results[i]));
             } else if (components[i] instanceof CustomTextField) {
                 CustomTextField component = (CustomTextField) components[i];
-                Color foreColor = style.getForeColor();
-                component.setForeground(foreColor);
-                component.setCaretColor(foreColor);
+                component.setForeground(textColor);
+                component.setCaretColor(textColor);
                 component.setText((String) results[i]);
             } else if (components[i] instanceof CustomComboBox) {
                 CustomComboBox component = (CustomComboBox) components[i];
                 // 下拉框 UI
-                Color buttonColor = style.getButtonColor();
-                component.setUI(new ComboBoxUI(component, f, buttonColor));
+                component.setUI(new ComboBoxUI(component, f));
 
                 int finalI = i;
                 component.addItemListener(e -> {
@@ -307,7 +307,7 @@ public class EditInfoDialog extends JDialog {
                 component.setSelectedItem(results[i]);
             } else if (components[i] instanceof DialogButton) {
                 DialogButton component = (DialogButton) components[i];
-                component.setForeColor(style.getButtonColor());
+                component.setForeColor(textColor);
                 labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载封面图片(显示一个缩略图)
                 if (results[i] != null) {

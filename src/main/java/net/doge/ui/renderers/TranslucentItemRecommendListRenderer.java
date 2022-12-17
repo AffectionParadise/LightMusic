@@ -28,10 +28,10 @@ import java.awt.*;
 public class TranslucentItemRecommendListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
@@ -43,34 +43,15 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
     private ImageIcon rankingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "rankingItem.png"), ImageConstants.profileWidth));
     private ImageIcon userIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "userItem.png"), ImageConstants.profileWidth));
 
-    private ImageIcon playlistSIcon;
-    private ImageIcon albumSIcon;
-    private ImageIcon artistSIcon;
-    private ImageIcon radioSIcon;
-    private ImageIcon mvSIcon;
-    private ImageIcon rankingSIcon;
-    private ImageIcon userSIcon;
-
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        playlistIcon = ImageUtils.dye(playlistIcon, foreColor);
-        albumIcon = ImageUtils.dye(albumIcon, foreColor);
-        artistIcon = ImageUtils.dye(artistIcon, foreColor);
-        radioIcon = ImageUtils.dye(radioIcon, foreColor);
-        mvIcon = ImageUtils.dye(mvIcon, foreColor);
-        rankingIcon = ImageUtils.dye(rankingIcon, foreColor);
-        userIcon = ImageUtils.dye(userIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        playlistSIcon = ImageUtils.dye(playlistIcon, selectedColor);
-        albumSIcon = ImageUtils.dye(albumIcon, selectedColor);
-        artistSIcon = ImageUtils.dye(artistIcon, selectedColor);
-        radioSIcon = ImageUtils.dye(radioIcon, selectedColor);
-        mvSIcon = ImageUtils.dye(mvIcon, selectedColor);
-        rankingSIcon = ImageUtils.dye(rankingIcon, selectedColor);
-        userSIcon = ImageUtils.dye(userIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        playlistIcon = ImageUtils.dye(playlistIcon, iconColor);
+        albumIcon = ImageUtils.dye(albumIcon, iconColor);
+        artistIcon = ImageUtils.dye(artistIcon, iconColor);
+        radioIcon = ImageUtils.dye(radioIcon, iconColor);
+        mvIcon = ImageUtils.dye(mvIcon, iconColor);
+        rankingIcon = ImageUtils.dye(rankingIcon, iconColor);
+        userIcon = ImageUtils.dye(userIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -93,14 +74,14 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
-            iconLabel.setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : isSelected ? playlistSIcon : playlistIcon);
+            iconLabel.setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : playlistIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-            iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-            nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            creatorLabel.setForeground(isSelected ? selectedColor : foreColor);
-            playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-            trackCountLabel.setForeground(isSelected ? selectedColor : foreColor);
+            iconLabel.setForeground(textColor);
+            nameLabel.setForeground(textColor);
+            creatorLabel.setForeground(textColor);
+            playCountLabel.setForeground(textColor);
+            trackCountLabel.setForeground(textColor);
 
             iconLabel.setFont(customFont);
             nameLabel.setFont(customFont);
@@ -153,14 +134,14 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
-            iconLabel.setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : isSelected ? albumSIcon : albumIcon);
+            iconLabel.setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : albumIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-            iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-            nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            artistLabel.setForeground(isSelected ? selectedColor : foreColor);
-            songNumLabel.setForeground(isSelected ? selectedColor : foreColor);
-            publishTimeLabel.setForeground(isSelected ? selectedColor : foreColor);
+            iconLabel.setForeground(textColor);
+            nameLabel.setForeground(textColor);
+            artistLabel.setForeground(textColor);
+            songNumLabel.setForeground(textColor);
+            publishTimeLabel.setForeground(textColor);
 
             iconLabel.setFont(customFont);
             nameLabel.setFont(customFont);
@@ -214,14 +195,14 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
-            iconLabel.setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : isSelected ? artistSIcon : artistIcon);
+            iconLabel.setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : artistIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-            iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-            nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            songNumLabel.setForeground(isSelected ? selectedColor : foreColor);
-            albumNumLabel.setForeground(isSelected ? selectedColor : foreColor);
-            mvNumLabel.setForeground(isSelected ? selectedColor : foreColor);
+            iconLabel.setForeground(textColor);
+            nameLabel.setForeground(textColor);
+            songNumLabel.setForeground(textColor);
+            albumNumLabel.setForeground(textColor);
+            mvNumLabel.setForeground(textColor);
 
             iconLabel.setFont(customFont);
             nameLabel.setFont(customFont);
@@ -268,7 +249,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel iconLabel = new CustomLabel();
             CustomLabel nameLabel = new CustomLabel();
-            CustomLabel dCustomLabel = new CustomLabel();
+            CustomLabel djLabel = new CustomLabel();
             CustomLabel categoryLabel = new CustomLabel();
             CustomLabel trackCountLabel = new CustomLabel();
             CustomLabel playCountLabel = new CustomLabel();
@@ -276,20 +257,20 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(25);
-            iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : isSelected ? radioSIcon : radioIcon);
+            iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : radioIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-            iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-            nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            dCustomLabel.setForeground(isSelected ? selectedColor : foreColor);
-            categoryLabel.setForeground(isSelected ? selectedColor : foreColor);
-            trackCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-            playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-//        createTimeLabel.setForeground(isSelected ? selectedColor : foreColor);
+            iconLabel.setForeground(textColor);
+            nameLabel.setForeground(textColor);
+            djLabel.setForeground(textColor);
+            categoryLabel.setForeground(textColor);
+            trackCountLabel.setForeground(textColor);
+            playCountLabel.setForeground(textColor);
+//        createTimeLabel.setForeground(textColor);
 
             iconLabel.setFont(customFont);
             nameLabel.setFont(customFont);
-            dCustomLabel.setFont(customFont);
+            djLabel.setFont(customFont);
             categoryLabel.setFont(customFont);
             trackCountLabel.setFont(customFont);
             playCountLabel.setFont(customFont);
@@ -301,7 +282,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             outerPanel.add(iconLabel);
             outerPanel.add(nameLabel);
-            outerPanel.add(dCustomLabel);
+            outerPanel.add(djLabel);
             outerPanel.add(categoryLabel);
             outerPanel.add(trackCountLabel);
             outerPanel.add(playCountLabel);
@@ -318,7 +299,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setText(source);
             nameLabel.setText(name);
-            dCustomLabel.setText(dj);
+            djLabel.setText(dj);
             categoryLabel.setText(category);
             trackCountLabel.setText(trackCount);
             playCountLabel.setText(playCount);
@@ -326,7 +307,7 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             Dimension ps = iconLabel.getPreferredSize();
             Dimension ps2 = nameLabel.getPreferredSize();
-            Dimension ps3 = dCustomLabel.getPreferredSize();
+            Dimension ps3 = djLabel.getPreferredSize();
             int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
             Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
             outerPanel.setPreferredSize(d);
@@ -348,15 +329,15 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(10);
-            iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : isSelected ? mvSIcon : mvIcon);
+            iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : mvIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-            iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-            nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            artistLabel.setForeground(isSelected ? selectedColor : foreColor);
-            durationLabel.setForeground(isSelected ? selectedColor : foreColor);
-            playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-            pubTimeLabel.setForeground(isSelected ? selectedColor : foreColor);
+            iconLabel.setForeground(textColor);
+            nameLabel.setForeground(textColor);
+            artistLabel.setForeground(textColor);
+            durationLabel.setForeground(textColor);
+            playCountLabel.setForeground(textColor);
+            pubTimeLabel.setForeground(textColor);
 
             iconLabel.setFont(customFont);
             nameLabel.setFont(customFont);
@@ -414,14 +395,14 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             iconLabel.setHorizontalTextPosition(LEFT);
             iconLabel.setIconTextGap(40);
-            iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : isSelected ? rankingSIcon : rankingIcon);
+            iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : rankingIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-            iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-            nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-            updateFreLabel.setForeground(isSelected ? selectedColor : foreColor);
-            updateTimeLabel.setForeground(isSelected ? selectedColor : foreColor);
+            iconLabel.setForeground(textColor);
+            nameLabel.setForeground(textColor);
+            playCountLabel.setForeground(textColor);
+            updateFreLabel.setForeground(textColor);
+            updateTimeLabel.setForeground(textColor);
 
             iconLabel.setFont(customFont);
             nameLabel.setFont(customFont);
@@ -477,17 +458,17 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
 
             avatarLabel.setHorizontalTextPosition(LEFT);
             avatarLabel.setIconTextGap(25);
-            avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : isSelected ? userSIcon : userIcon);
+            avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : userIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-            avatarLabel.setForeground(isSelected ? selectedColor : foreColor);
-            nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-            genderLabel.setForeground(isSelected ? selectedColor : foreColor);
-//        birthdayLabel.setForeground(isSelected ? selectedColor : foreColor);
-//        areaLabel.setForeground(isSelected ? selectedColor : foreColor);
-            followLabel.setForeground(isSelected ? selectedColor : foreColor);
-            followedLabel.setForeground(isSelected ? selectedColor : foreColor);
-            playlistCountLabel.setForeground(isSelected ? selectedColor : foreColor);
+            avatarLabel.setForeground(textColor);
+            nameLabel.setForeground(textColor);
+            genderLabel.setForeground(textColor);
+//        birthdayLabel.setForeground(textColor);
+//        areaLabel.setForeground(textColor);
+            followLabel.setForeground(textColor);
+            followedLabel.setForeground(textColor);
+            playlistCountLabel.setForeground(textColor);
 
             avatarLabel.setFont(customFont);
             nameLabel.setFont(customFont);
@@ -550,19 +531,19 @@ public class TranslucentItemRecommendListRenderer extends DefaultListCellRendere
         return this;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

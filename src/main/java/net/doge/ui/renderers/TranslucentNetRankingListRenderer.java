@@ -27,24 +27,18 @@ import java.awt.*;
 public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
     private ImageIcon rankingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "rankingItem.png"), ImageConstants.profileWidth));
-    private ImageIcon rankingSIcon;
 
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        rankingIcon = ImageUtils.dye(rankingIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        rankingSIcon = ImageUtils.dye(rankingIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        rankingIcon = ImageUtils.dye(rankingIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -64,14 +58,14 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(40);
-        iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : isSelected ? rankingSIcon : rankingIcon);
+        iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb())  : rankingIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        playCountLabel.setForeground(isSelected ? selectedColor : foreColor);
-        updateFreLabel.setForeground(isSelected ? selectedColor : foreColor);
-        updateTimeLabel.setForeground(isSelected ? selectedColor : foreColor);
+        iconLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        playCountLabel.setForeground(textColor);
+        updateFreLabel.setForeground(textColor);
+        updateTimeLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
@@ -114,19 +108,19 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
         return outerPanel;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

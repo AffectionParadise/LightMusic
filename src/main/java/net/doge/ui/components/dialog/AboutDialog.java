@@ -69,17 +69,17 @@ public class AboutDialog extends JDialog {
         this.f = f;
         this.style = f.currUIStyle;
 
-        Color buttonColor = style.getButtonColor();
-        yes = new DialogButton("确定", buttonColor);
+        Color textColor = style.getTextColor();
+        yes = new DialogButton("确定", textColor);
     }
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(title);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> close());
@@ -98,7 +98,7 @@ public class AboutDialog extends JDialog {
     }
 
     public void showDialog() {
-        Color labelColor = style.getLabelColor();
+        Color textColor = style.getTextColor();
         // 解决 setUndecorated(true) 后窗口不能拖动的问题
         Point origin = new Point();
         topPanel.addMouseListener(new MouseAdapter() {
@@ -123,14 +123,14 @@ public class AboutDialog extends JDialog {
         setBackground(Colors.TRANSLUCENT);
 
         appLabel.setText(f.TITLE);
-        appLabel.setIcon(ImageUtils.dye(appIcon, labelColor));
+        appLabel.setIcon(ImageUtils.dye(appIcon, textColor));
         appLabel.setIconTextGap(15);
 
-        appLabel.setForeground(labelColor);
-        editionLabel.setForeground(labelColor);
-        technoLabel.setForeground(labelColor);
-        websiteLabel.setForeground(labelColor);
-        mailLabel.setForeground(labelColor);
+        appLabel.setForeground(textColor);
+        editionLabel.setForeground(textColor);
+        technoLabel.setForeground(textColor);
+        websiteLabel.setForeground(textColor);
+        mailLabel.setForeground(textColor);
 
         appPanel.add(appLabel);
         editionPanel.add(editionLabel);

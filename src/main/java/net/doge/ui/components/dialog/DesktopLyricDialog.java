@@ -178,7 +178,7 @@ public class DesktopLyricDialog extends JDialog {
     // 更新样式
     public void updateStyle() {
         UIStyle st = f.currUIStyle;
-        Color bc = st.getButtonColor();
+        Color bc = st.getIconColor();
 
         unlockIcon = ImageUtils.dye(unlockIcon, bc);
         lockIcon = ImageUtils.dye(lockIcon, bc);

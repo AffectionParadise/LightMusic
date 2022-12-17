@@ -175,10 +175,10 @@ public class SoundEffectDialog extends JDialog {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -202,11 +202,11 @@ public class SoundEffectDialog extends JDialog {
     private void initView() {
         centerPanel.setLayout(new BorderLayout());
 
-        Color labelColor = style.getLabelColor();
+        Color textColor = style.getTextColor();
         Color sliderColor = style.getSliderColor();
 
         // 音效选择面板
-        soundEffectLabel.setForeground(labelColor);
+        soundEffectLabel.setForeground(textColor);
         comboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -223,8 +223,7 @@ public class SoundEffectDialog extends JDialog {
             fitData(newEd);
         });
         // 下拉框 UI
-        Color buttonColor = style.getButtonColor();
-        comboBox.setUI(new ComboBoxUI(comboBox, f, buttonColor, 220));
+        comboBox.setUI(new ComboBoxUI(comboBox, f, 220));
 
         soundEffectPanel.add(soundEffectLabel);
         soundEffectPanel.add(comboBox);
@@ -260,9 +259,9 @@ public class SoundEffectDialog extends JDialog {
             });
 
             // 值
-            val.setForeground(labelColor);
+            val.setForeground(textColor);
             // 频率
-            hz.setForeground(labelColor);
+            hz.setForeground(textColor);
 
             p.setLayout(new BorderLayout());
             p.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));

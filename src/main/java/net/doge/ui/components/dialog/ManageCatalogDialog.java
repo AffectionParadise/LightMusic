@@ -76,12 +76,12 @@ public class ManageCatalogDialog extends JDialog {
         this.style = f.currUIStyle;
         this.catalogs = f.catalogs;
 
-        Color buttonColor = style.getButtonColor();
-        allSelectButton = new DialogButton("全选", buttonColor);
-        nonSelectButton = new DialogButton("反选", buttonColor);
-        locateButton = new DialogButton("打开", buttonColor);
-        addButton = new DialogButton("添加", buttonColor);
-        removeButton = new DialogButton("删除", buttonColor);
+        Color textColor = style.getTextColor();
+        allSelectButton = new DialogButton("全选", textColor);
+        nonSelectButton = new DialogButton("反选", textColor);
+        locateButton = new DialogButton("打开", textColor);
+        addButton = new DialogButton("添加", textColor);
+        removeButton = new DialogButton("删除", textColor);
     }
 
     public void showDialog() {
@@ -146,10 +146,10 @@ public class ManageCatalogDialog extends JDialog {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -175,11 +175,9 @@ public class ManageCatalogDialog extends JDialog {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
-        // 可多选
-        catalogList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         // 添加标签
         tipLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        tipLabel.setForeground(style.getLabelColor());
+        tipLabel.setForeground(style.getTextColor());
         centerPanel.add(tipLabel, BorderLayout.NORTH);
         // 全选事件
         allSelectButton.addActionListener(e -> {
@@ -187,9 +185,7 @@ public class ManageCatalogDialog extends JDialog {
             catalogList.getSelectionModel().setSelectionInterval(0, catalogListModel.getSize() - 1);
         });
         // 取消全选事件
-        nonSelectButton.addActionListener(e -> {
-            catalogList.clearSelection();
-        });
+        nonSelectButton.addActionListener(e -> catalogList.clearSelection());
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("选择歌曲文件夹");
         // 打开文件夹事件
@@ -226,16 +222,14 @@ public class ManageCatalogDialog extends JDialog {
         });
         // 删除事件
         removeButton.addActionListener(e -> {
-            if (catalogList.getSelectedValue() != null) {
-                ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, "是", "否");
-                d.showDialog();
-                if (d.getResponse() == JOptionPane.YES_OPTION) {
-                    List<File> cs = catalogList.getSelectedValuesList();
-                    for (File dir : cs) {
-                        catalogListModel.removeElement(dir);
-                        catalogs.remove(dir);
-                    }
-                }
+            if (catalogList.getSelectedValue() == null) return;
+            ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, "是", "否");
+            d.showDialog();
+            if (d.getResponse() != JOptionPane.YES_OPTION) return;
+            List<File> cs = catalogList.getSelectedValuesList();
+            for (File dir : cs) {
+                catalogListModel.removeElement(dir);
+                catalogs.remove(dir);
             }
         });
 
@@ -257,6 +251,7 @@ public class ManageCatalogDialog extends JDialog {
         DefaultCatalogListRenderer r = new DefaultCatalogListRenderer();
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
+        r.setTextColor(style.getTextColor());
         catalogList.setCellRenderer(r);
         catalogList.setModel(catalogListModel);
         catalogList.addMouseMotionListener(new MouseAdapter() {
@@ -297,8 +292,9 @@ public class ManageCatalogDialog extends JDialog {
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         CustomScrollPane sp = new CustomScrollPane(catalogList);
-        sp.setHUI(new ScrollBarUI(style.getScrollBarColor()));
-        sp.setVUI(new ScrollBarUI(style.getScrollBarColor()));
+        Color scrollBarColor = style.getScrollBarColor();
+        sp.setHUI(new ScrollBarUI(scrollBarColor));
+        sp.setVUI(new ScrollBarUI(scrollBarColor));
         sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);

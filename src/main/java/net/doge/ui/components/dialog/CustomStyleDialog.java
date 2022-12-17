@@ -68,13 +68,13 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     private final CustomLabel[] labels = {
             new CustomLabel("主题名称："),
             new CustomLabel("背景图片："),
-            new CustomLabel("列表前景色："),
-            new CustomLabel("列表选中项颜色："),
+            new CustomLabel("悬停框颜色："),
+            new CustomLabel("选中框颜色："),
             new CustomLabel("歌词文字颜色："),
             new CustomLabel("歌词高亮颜色："),
-            new CustomLabel("文字标签颜色："),
+            new CustomLabel("标签文字颜色："),
             new CustomLabel("时间条颜色："),
-            new CustomLabel("按钮颜色："),
+            new CustomLabel("图标颜色："),
             new CustomLabel("滚动条颜色："),
             new CustomLabel("音量滑动条颜色："),
             new CustomLabel("频谱颜色："),
@@ -115,9 +115,9 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         this.style = f.currUIStyle;
         this.showedStyle = showedStyle;
 
-        Color buttonColor = style.getButtonColor();
-        okButton = new DialogButton(okButtonText, buttonColor);
-        pureColor = new DialogButton("纯色", buttonColor);
+        Color textColor = style.getTextColor();
+        okButton = new DialogButton(okButtonText, textColor);
+        pureColor = new DialogButton("纯色", textColor);
     }
 
     public void showDialog() {
@@ -238,10 +238,11 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        Color textColor = style.getTextColor();
+        titleLabel.setForeground(textColor);
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -273,28 +274,29 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         results[3] = showedStyle.getSelectedColor();
         results[4] = showedStyle.getLrcColor();
         results[5] = showedStyle.getHighlightColor();
-        results[6] = showedStyle.getLabelColor();
+        results[6] = showedStyle.getTextColor();
         results[7] = showedStyle.getTimeBarColor();
-        results[8] = showedStyle.getButtonColor();
+        results[8] = showedStyle.getIconColor();
         results[9] = showedStyle.getScrollBarColor();
         results[10] = showedStyle.getSliderColor();
         results[11] = showedStyle.getSpectrumColor();
         results[12] = showedStyle.getMenuItemColor();
 
         Border eb = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+
+        Color textColor = style.getTextColor();
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
             CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
             panel.setBorder(eb);
             // 添加标签
-            labels[i].setForeground(style.getLabelColor());
+            labels[i].setForeground(textColor);
             panel.add(labels[i]);
             // 组件配置
             if (components[i] instanceof CustomTextField) {
                 CustomTextField component = (CustomTextField) components[i];
-                Color foreColor = style.getForeColor();
-                component.setForeground(foreColor);
-                component.setCaretColor(foreColor);
+                component.setForeground(textColor);
+                component.setCaretColor(textColor);
                 // 加载风格名称
                 component.setText((String) results[i]);
                 Document document = component.getDocument();
@@ -302,7 +304,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
                 document.addDocumentListener(this);
             } else if (components[i] instanceof DialogButton) {
                 DialogButton component = (DialogButton) components[i];
-                component.setForeColor(style.getButtonColor());
+                component.setForeColor(textColor);
                 labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载当前样式背景图(显示一个缩略图)
                 if (results[i] != null) {
@@ -393,8 +395,9 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         });
         ((CustomPanel) ((CustomPanel) centerPanel.getComponent(1)).getComponent(1)).add(pureColor);
 
-        centerScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor()));
-        centerScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor()));
+        Color scrollBarColor = style.getScrollBarColor();
+        centerScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        centerScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     }
 

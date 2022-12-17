@@ -80,13 +80,13 @@ public class ManageCustomStyleDialog extends JDialog {
         this.f = f;
         this.style = f.currUIStyle;
 
-        Color buttonColor = style.getButtonColor();
-        allSelectButton = new DialogButton("全选", buttonColor);
-        nonSelectButton = new DialogButton("反选", buttonColor);
-        applyButton = new DialogButton("应用", buttonColor);
-        addButton = new DialogButton("添加", buttonColor);
-        editButton = new DialogButton("编辑", buttonColor);
-        removeButton = new DialogButton("删除", buttonColor);
+        Color textColor = style.getTextColor();
+        allSelectButton = new DialogButton("全选", textColor);
+        nonSelectButton = new DialogButton("反选", textColor);
+        applyButton = new DialogButton("应用", textColor);
+        addButton = new DialogButton("添加", textColor);
+        editButton = new DialogButton("编辑", textColor);
+        removeButton = new DialogButton("删除", textColor);
     }
 
     public void showDialog() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -151,10 +151,10 @@ public class ManageCustomStyleDialog extends JDialog {
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getLabelColor());
+        titleLabel.setForeground(style.getTextColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getButtonColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -182,14 +182,14 @@ public class ManageCustomStyleDialog extends JDialog {
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         // 添加标签
         tipLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        Color labelColor = style.getLabelColor();
-        tipLabel.setForeground(labelColor);
+        Color textColor = style.getTextColor();
+        tipLabel.setForeground(textColor);
         tipPanel.add(tipLabel);
         customOnlyCheckBox.setSelected(f.customOnly);
-        customOnlyCheckBox.setForeground(labelColor);
+        customOnlyCheckBox.setForeground(textColor);
         customOnlyCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, labelColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, labelColor));
+        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, textColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, textColor));
         customOnlyCheckBox.addActionListener(e -> {
             f.customOnly = customOnlyCheckBox.isSelected();
             initStyles();
@@ -261,7 +261,10 @@ public class ManageCustomStyleDialog extends JDialog {
                 UIStyle currUIStyle = f.currUIStyle;
                 selectedStyles.forEach(style -> {
                     // 删除正在使用的样式，先换回默认样式，再删除
-                    if (style == currUIStyle) f.changeUIStyle(styles.get(0));
+                    if (style == currUIStyle) {
+                        f.changeUIStyle(styles.get(0));
+                        updateStyle();
+                    }
                     styles.remove(style);
                     // 删除图片文件
                     File file = new File(style.getStyleImgPath());
@@ -312,9 +315,9 @@ public class ManageCustomStyleDialog extends JDialog {
                 selectedStyle.setSelectedColor((Color) results[3]);
                 selectedStyle.setLrcColor((Color) results[4]);
                 selectedStyle.setHighlightColor((Color) results[5]);
-                selectedStyle.setLabelColor((Color) results[6]);
+                selectedStyle.setTextColor((Color) results[6]);
                 selectedStyle.setTimeBarColor((Color) results[7]);
-                selectedStyle.setButtonColor((Color) results[8]);
+                selectedStyle.setIconColor((Color) results[8]);
                 selectedStyle.setScrollBarColor((Color) results[9]);
                 selectedStyle.setSliderColor((Color) results[10]);
                 selectedStyle.setSpectrumColor((Color) results[11]);
@@ -346,6 +349,7 @@ public class ManageCustomStyleDialog extends JDialog {
         DefaultStyleListRenderer r = new DefaultStyleListRenderer(f);
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());
+        r.setTextColor(style.getTextColor());
         styleList.setCellRenderer(r);
         styleList.setModel(styleListModel);
         styleList.addMouseMotionListener(new MouseAdapter() {
@@ -417,24 +421,25 @@ public class ManageCustomStyleDialog extends JDialog {
     // 主题更换时更新窗口主题
     private void updateStyle() {
         UIStyle st = f.currUIStyle;
-        Color labelColor = st.getLabelColor();
-        Color buttonColor = st.getButtonColor();
+        Color textColor = st.getTextColor();
+        Color iconColor = st.getIconColor();
 
-        titleLabel.setForeground(labelColor);
-        closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), buttonColor));
-        tipLabel.setForeground(labelColor);
-        customOnlyCheckBox.setForeground(labelColor);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, labelColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, labelColor));
-        allSelectButton.setForeColor(buttonColor);
-        nonSelectButton.setForeColor(buttonColor);
-        applyButton.setForeColor(buttonColor);
-        addButton.setForeColor(buttonColor);
-        editButton.setForeColor(buttonColor);
-        removeButton.setForeColor(buttonColor);
+        titleLabel.setForeground(textColor);
+        closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), iconColor));
+        tipLabel.setForeground(textColor);
+        customOnlyCheckBox.setForeground(textColor);
+        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, textColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, textColor));
+        allSelectButton.setForeColor(textColor);
+        nonSelectButton.setForeColor(textColor);
+        applyButton.setForeColor(textColor);
+        addButton.setForeColor(textColor);
+        editButton.setForeColor(textColor);
+        removeButton.setForeColor(textColor);
         DefaultStyleListRenderer r = (DefaultStyleListRenderer) styleList.getCellRenderer();
         r.setForeColor(st.getForeColor());
         r.setSelectedColor(st.getSelectedColor());
+        r.setTextColor(textColor);
         styleList.repaint();
 
         styleListScrollPane.setHUI(new ScrollBarUI(st.getScrollBarColor()));

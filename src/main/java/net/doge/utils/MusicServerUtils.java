@@ -215,8 +215,8 @@ public class MusicServerUtils {
 //    private static final String SEARCH_MUSIC_QQ_API
 //            = prefixQQ33 + "/search?key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌曲 API (搜歌词) (QQ 音乐)
-    private static final String SEARCH_MUSIC_BY_LYRIC_QQ_API
-            = prefixQQ33 + "/search?t=7&key=%s&pageNo=%s&pageSize=%s";
+//    private static final String SEARCH_MUSIC_BY_LYRIC_QQ_API
+//            = prefixQQ33 + "/search?t=7&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌曲 API (酷我)
 //    private static final String SEARCH_MUSIC_KW_API = prefixKw + "/kuwo/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s";
     private static final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
@@ -283,8 +283,8 @@ public class MusicServerUtils {
     private static final String SEARCH_ARTIST_API
             = prefix + "/cloudsearch?type=100&keywords=%s&limit=%s&offset=%s";
     // 关键词搜索歌手 API (QQ)
-    private static final String SEARCH_ARTIST_QQ_API
-            = prefixQQ33 + "/search?t=9&key=%s&pageNo=%s&pageSize=%s";
+//    private static final String SEARCH_ARTIST_QQ_API
+//            = prefixQQ33 + "/search?t=9&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌手 API (酷我)
 //    private static final String SEARCH_ARTIST_KW_API = prefixKw + "/kuwo/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s";
     private static final String SEARCH_ARTIST_KW_API = "http://www.kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
@@ -329,8 +329,8 @@ public class MusicServerUtils {
     private static final String SEARCH_MV_KG_API
             = "http://msearch.kugou.com/api/v3/search/mv?version=9108&keyword=%s&page=%s&pagesize=%s&sver=2";
     // 关键词搜索 MV API (QQ)
-    private static final String SEARCH_MV_QQ_API
-            = prefixQQ33 + "/search?t=12&key=%s&pageNo=%s&pageSize=%s";
+//    private static final String SEARCH_MV_QQ_API
+//            = prefixQQ33 + "/search?t=12&key=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索 MV API (酷我)
 //    private static final String SEARCH_MV_KW_API = prefixKw + "/kuwo/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s";
     private static final String SEARCH_MV_KW_API = "http://www.kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
@@ -4954,7 +4954,7 @@ public class MusicServerUtils {
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.post(String.format(qqSearchApi))
-                    .body(String.format(qqSearchJson, page, limit, keyword, 1))
+                    .body(String.format(qqSearchJson, page, Math.min(40, limit), keyword, 1))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);

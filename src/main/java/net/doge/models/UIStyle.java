@@ -37,12 +37,12 @@ public class UIStyle {
     private Color lrcColor;
     // 歌词高亮颜色
     private Color highlightColor;
-    // 右上角标签颜色
-    private Color labelColor;
+    // 标签文字颜色
+    private Color textColor;
     // 进度条边框和填充颜色
     private Color timeBarColor;
-    // 按钮颜色
-    private Color buttonColor;
+    // 图标颜色
+    private Color iconColor;
     // 滚动条颜色
     private Color scrollBarColor;
     // 滑动条颜色
@@ -68,11 +68,10 @@ public class UIStyle {
     }
 
     private void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
 //            invokeLater = null;
-        }
     }
 
     public void setStyleImgPath(String styleImgPath) {
@@ -100,7 +99,7 @@ public class UIStyle {
     }
 
     public UIStyle(Integer styleType, String styleName, String styleImgPath,
-                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color labelColor, Color timeBarColor, Color buttonColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
+                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
         this.styleType = styleType;
         this.styleName = styleName;
         setStyleImgPath(styleImgPath);
@@ -108,9 +107,9 @@ public class UIStyle {
         this.selectedColor = selectedColor;
         this.lrcColor = lrcColor;
         this.highlightColor = highlightColor;
-        this.labelColor = labelColor;
+        this.textColor = textColor;
         this.timeBarColor = timeBarColor;
-        this.buttonColor = buttonColor;
+        this.iconColor = iconColor;
         this.scrollBarColor = scrollBarColor;
         this.sliderColor = sliderColor;
         this.spectrumColor = spectrumColor;
@@ -118,7 +117,7 @@ public class UIStyle {
     }
 
     public UIStyle(Integer styleType, String styleName, String styleImgPath, Color bgColor,
-                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color labelColor, Color timeBarColor, Color buttonColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
+                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
         this.styleType = styleType;
         this.styleName = styleName;
         setStyleImgPath(styleImgPath);
@@ -127,9 +126,9 @@ public class UIStyle {
         this.selectedColor = selectedColor;
         this.lrcColor = lrcColor;
         this.highlightColor = highlightColor;
-        this.labelColor = labelColor;
+        this.textColor = textColor;
         this.timeBarColor = timeBarColor;
-        this.buttonColor = buttonColor;
+        this.iconColor = iconColor;
         this.scrollBarColor = scrollBarColor;
         this.sliderColor = sliderColor;
         this.spectrumColor = spectrumColor;

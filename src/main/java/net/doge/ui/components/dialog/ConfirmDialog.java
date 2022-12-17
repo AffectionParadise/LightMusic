@@ -53,20 +53,20 @@ public class ConfirmDialog extends JDialog {
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText) {
         this(f, message);
-        Color buttonColor = f.currUIStyle.getButtonColor();
-        yes = new DialogButton(yesText, buttonColor);
+        Color textColor = f.currUIStyle.getTextColor();
+        yes = new DialogButton(yesText, textColor);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText) {
         this(f, message, yesText);
-        Color buttonColor = f.currUIStyle.getButtonColor();
-        no = new DialogButton(noText, buttonColor);
+        Color textColor = f.currUIStyle.getTextColor();
+        no = new DialogButton(noText, textColor);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText, String cancelText) {
         this(f, message, yesText, noText);
-        Color buttonColor = f.currUIStyle.getButtonColor();
-        cancel = new DialogButton(cancelText, buttonColor);
+        Color textColor = f.currUIStyle.getTextColor();
+        cancel = new DialogButton(cancelText, textColor);
     }
 
     public ConfirmDialog(PlayerFrame f, String message, String yesText, String noText, String cancelText, boolean showCheck, String checkText) {
@@ -86,20 +86,20 @@ public class ConfirmDialog extends JDialog {
     }
 
     public void showDialog() {
-        Color labelColor = f.currUIStyle.getLabelColor();
+        Color textColor = f.currUIStyle.getTextColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-        checkBox.setForeground(labelColor);
-        checkBox.setIcon(ImageUtils.dye(f.uncheckedIcon, labelColor));
-        checkBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, labelColor));
+        checkBox.setForeground(textColor);
+        checkBox.setIcon(ImageUtils.dye(f.uncheckedIcon, textColor));
+        checkBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, textColor));
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
         Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);
         checkPanel.setBorder(eb);
 
         messageLabel.setText(StringUtils.textToHtml(message));
-        messageLabel.setForeground(labelColor);
+        messageLabel.setForeground(textColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);
         FlowLayout fl = new FlowLayout();

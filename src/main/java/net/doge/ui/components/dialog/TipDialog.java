@@ -112,7 +112,7 @@ public class TipDialog extends JDialog {
 
     private void initView() {
         // 设置主题色
-        themeColor = f.currUIStyle.getLabelColor();
+        themeColor = f.currUIStyle.getTextColor();
         setUndecorated(true);
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);

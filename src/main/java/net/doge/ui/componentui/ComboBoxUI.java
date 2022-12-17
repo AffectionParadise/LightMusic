@@ -24,29 +24,32 @@ import java.awt.event.MouseEvent;
 public class ComboBoxUI extends BasicComboBoxUI {
     private CustomComboBox comboBox;
     private PlayerFrame f;
-    private Color foreColor;
+    private Color textColor;
+    private Color iconColor;
 
     private ImageIcon arrowIcon = new ImageIcon(SimplePath.ICON_PATH + "arrow.png");
 
-    public ComboBoxUI(CustomComboBox comboBox, PlayerFrame f, Color foreColor) {
+    public ComboBoxUI(CustomComboBox comboBox, PlayerFrame f) {
         this.comboBox = comboBox;
         this.f = f;
-        this.foreColor = foreColor;
 
-        arrowIcon = ImageUtils.dye(arrowIcon, foreColor);
+        textColor = f.currUIStyle.getTextColor();
+        iconColor = f.currUIStyle.getIconColor();
+
+        arrowIcon = ImageUtils.dye(arrowIcon, iconColor);
 
         // 下拉列表渲染
-        comboBox.setRenderer(new ComboBoxRenderer(foreColor));
+        comboBox.setRenderer(new ComboBoxRenderer(f));
         // 设置最大显示项目数量
         comboBox.setMaximumRowCount(15);
         final int width = 170;
         if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new Dimension(width, 30));
 
-        comboBox.setForeground(foreColor);
+        comboBox.setForeground(textColor);
     }
 
-    public ComboBoxUI(CustomComboBox comboBox, PlayerFrame f, Color foreColor, int width) {
-        this(comboBox, f, foreColor);
+    public ComboBoxUI(CustomComboBox comboBox, PlayerFrame f, int width) {
+        this(comboBox, f);
         comboBox.setPreferredSize(new Dimension(width, 30));
     }
 
@@ -68,7 +71,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
     public void paintCurrentValueBackground(Graphics g, Rectangle bounds, boolean hasFocus) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(foreColor);
+        g2d.setColor(f.currUIStyle.getTextColor());
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, comboBox.isEntered() ? 0.3f : 0.15f));
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 10, 10);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
@@ -97,7 +100,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
     @Override
     protected ComboPopup createPopup() {
-        CustomComboPopup popup = new CustomComboPopup(comboBox, f, foreColor);
+        CustomComboPopup popup = new CustomComboPopup(comboBox, f);
         return popup;
     }
 }

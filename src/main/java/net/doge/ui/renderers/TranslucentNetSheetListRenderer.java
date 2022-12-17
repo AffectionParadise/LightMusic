@@ -27,24 +27,18 @@ import java.awt.*;
 public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
-    // 前景色
     private Color foreColor;
-    // 选中的颜色
     private Color selectedColor;
+    private Color textColor;
+    private Color iconColor;
     private boolean drawBg;
     private int hoverIndex = -1;
 
     private ImageIcon sheetIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "sheetItem.png"), ImageConstants.profileWidth));
-    private ImageIcon sheetSIcon;
 
-    public void setForeColor(Color foreColor) {
-        this.foreColor = foreColor;
-        sheetIcon = ImageUtils.dye(sheetIcon, foreColor);
-    }
-
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        sheetSIcon = ImageUtils.dye(sheetIcon, selectedColor);
+    public void setIconColor(Color iconColor) {
+        this.iconColor = iconColor;
+        sheetIcon = ImageUtils.dye(sheetIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -67,17 +61,17 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(15);
-        iconLabel.setIcon(netSheetInfo.hasCoverImg() ? new ImageIcon(netSheetInfo.getCoverImg()) : isSelected ? sheetSIcon : sheetIcon);
+        iconLabel.setIcon(netSheetInfo.hasCoverImg() ? new ImageIcon(netSheetInfo.getCoverImg())  : sheetIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        difficultyLabel.setForeground(isSelected ? selectedColor : foreColor);
-        musicKeyLabel.setForeground(isSelected ? selectedColor : foreColor);
-        playVersionLabel.setForeground(isSelected ? selectedColor : foreColor);
-        chordNameLabel.setForeground(isSelected ? selectedColor : foreColor);
-        bpmLabel.setForeground(isSelected ? selectedColor : foreColor);
-        pageSizeLabel.setForeground(isSelected ? selectedColor : foreColor);
+        iconLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        difficultyLabel.setForeground(textColor);
+        musicKeyLabel.setForeground(textColor);
+        playVersionLabel.setForeground(textColor);
+        chordNameLabel.setForeground(textColor);
+        bpmLabel.setForeground(textColor);
+        pageSizeLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
@@ -132,19 +126,19 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
         return outerPanel;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // 画背景
-        if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-            // 注意这里不能用 getVisibleRect ！！！
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
-
-        super.paintComponent(g);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        // 画背景
+//        if (drawBg) {
+//            Graphics2D g2d = (Graphics2D) g;
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+//            // 注意这里不能用 getVisibleRect ！！！
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        }
+//
+//        super.paintComponent(g);
+//    }
 }

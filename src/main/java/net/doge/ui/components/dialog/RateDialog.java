@@ -115,12 +115,12 @@ public class RateDialog extends JDialog {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
         // 标签
-        valLabel.setForeground(style.getLabelColor());
+        valLabel.setForeground(style.getTextColor());
         centerPanel.add(valLabel, BorderLayout.NORTH);
 
         // 滑动条
         slider.setFont(Fonts.NORMAL);
-        slider.setForeground(style.getLabelColor());
+        slider.setForeground(style.getTextColor());
         slider.setUI(new VSliderUI(slider, style.getSliderColor(), style.getSliderColor()));
         slider.setPreferredSize(new Dimension(35, 500));
         slider.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));

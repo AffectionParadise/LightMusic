@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.doge.constants.Fonts;
+import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
 
 import javax.swing.*;
@@ -20,10 +21,12 @@ import java.awt.*;
 public class ComboBoxRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
+    private Color textColor;
     private Color foreColor;
 
-    public ComboBoxRenderer(Color foreColor) {
-        this.foreColor = foreColor;
+    public ComboBoxRenderer(PlayerFrame f) {
+        textColor = f.currUIStyle.getTextColor();
+        foreColor = f.currUIStyle.getForeColor();
     }
 
     @Override
@@ -34,7 +37,8 @@ public class ComboBoxRenderer extends DefaultListCellRenderer {
         label.setDrawBg(isSelected);
         label.setText((String) value);
         label.setFont(customFont);
-        label.setForeground(foreColor);
+        label.setForeground(textColor);
+        label.setBgColor(foreColor);
 
         return label;
     }
