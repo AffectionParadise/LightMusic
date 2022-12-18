@@ -17,6 +17,8 @@ import net.doge.utils.TimeUtils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yzx
@@ -232,7 +234,15 @@ public class MusicPlayer {
         }
 
         if (mp != null) {
-            mp.dispose();
+            // 可能会造成死锁，交给线程池处理
+            Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
+            try {
+                future.get(100, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+
+            } finally {
+                if (!future.isDone()) future.cancel(true);
+            }
             mp = null;
         }
         mp = new MediaPlayer(media);

@@ -736,7 +736,7 @@ public class PlayerFrame extends JFrame {
     // 专辑图片宽/高
     private int albumImageWidth;
     // 封面图片宽/高
-    private int coverImageWidth = 300;
+    private int coverImageWidth = 260;
     // 切换面板按钮图片宽度
     private int changePaneImageWidth = 50;
     // 当前面板
@@ -2330,11 +2330,6 @@ public class PlayerFrame extends JFrame {
                     // 窗口圆角
                     SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
                             : new RoundRectangle2D.Double(0, 0, w, h, 10, 10)));
-                    // 避免标签字太多超宽！！！
-                    Dimension ld = new Dimension((int) (w * 0.3), (int) (h * 0.077));
-                    songNameLabel.setPreferredSize(ld);
-                    artistLabel.setPreferredSize(ld);
-                    albumLabel.setPreferredSize(ld);
                     // 歌词面板
                     Dimension d = new Dimension((int) (w * 0.6), h);
                     Dimension d2 = new Dimension((int) (w * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
@@ -2348,13 +2343,20 @@ public class PlayerFrame extends JFrame {
                     albumImageWidth = (int) (w * 0.33);
                     Dimension ad = new Dimension((int) (w * 0.4), Integer.MAX_VALUE);
                     albumImageLabel.setMaximumSize(ad);
+                    // 避免标签字太多超宽！！！
+                    Dimension ld = new Dimension((int) (w * 0.3), (int) (h * 0.077));
+                    songNameLabel.setPreferredSize(ld);
+                    artistLabel.setPreferredSize(ld);
+                    albumLabel.setPreferredSize(ld);
+                    songNameLabel.setVisible(false);
+                    songNameLabel.setVisible(true);
                     if (player.loadedMusic()) {
                         showAlbumImage();
                         // 防止歌词面板错位
-                        lrcAndSpecBox.setVisible(false);
-                        lrcAndSpecBox.setVisible(true);
-                        leftInfoBox.setVisible(false);
-                        leftInfoBox.setVisible(true);
+//                        leftInfoBox.setVisible(false);
+//                        leftInfoBox.setVisible(true);
+//                        lrcAndSpecBox.setVisible(false);
+//                        lrcAndSpecBox.setVisible(true);
                     }
                     if (blurType == BlurType.OFF) doBlur();
                 });
@@ -8219,7 +8221,8 @@ public class PlayerFrame extends JFrame {
         recommendItemDescriptionLabel.setBorder(eb);
         collectionItemDescriptionLabel.setBorder(eb);
         // 控制宽度
-        Dimension size = new Dimension(350, Integer.MAX_VALUE);
+        int width = coverImageWidth + 20;
+        Dimension size = new Dimension(width, Integer.MAX_VALUE);
         playlistCoverAndNameLabel.setMaximumSize(size);
         playlistTagLabel.setMaximumSize(size);
         playlistDescriptionLabel.setMaximumSize(size);
@@ -8243,8 +8246,7 @@ public class PlayerFrame extends JFrame {
         collectionItemTagLabel.setMaximumSize(size);
         collectionItemDescriptionLabel.setMaximumSize(size);
         // 滚动面板宽度
-        final int width = 360;
-        size = new Dimension(width, Integer.MAX_VALUE);
+        size = new Dimension(width + 10, Integer.MAX_VALUE);
         albumDescriptionScrollPane.setPreferredSize(size);
         playlistDescriptionScrollPane.setPreferredSize(size);
         artistDescriptionScrollPane.setPreferredSize(size);
@@ -8254,7 +8256,6 @@ public class PlayerFrame extends JFrame {
         recommendItemDescriptionScrollPane.setPreferredSize(size);
         collectionItemDescriptionScrollPane.setPreferredSize(size);
         // 滚动条最大大小
-        size = new Dimension(width, Integer.MAX_VALUE);
         playlistDescriptionScrollPane.setMaximumSize(size);
         albumDescriptionScrollPane.setMaximumSize(size);
         artistDescriptionScrollPane.setMaximumSize(size);
@@ -18941,7 +18942,7 @@ public class PlayerFrame extends JFrame {
 
         // 滚动条调整事件（鼠标滚轮滑动、滚动条拖动）
         JScrollBar vs = lrcScrollPane.getVerticalScrollBar();
-        swActionTimer = new Timer(3000, e -> {
+        swActionTimer = new Timer(2500, e -> {
             if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
             ((ScrollBarUI) vs.getUI()).setActive(false);
             swActionTimer.stop();

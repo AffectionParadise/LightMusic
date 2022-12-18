@@ -389,17 +389,16 @@ public class VideoDialog extends JDialog {
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
-            Future<?> future = GlobalExecutors.requestExecutor.submit(() -> {
-                dispose();
-                // 恢复桌面歌词置顶
-                f.desktopLyricDialog.setAlwaysOnTop(f.desktopLyricOnTop);
-                mp.dispose();
-            });
+            dispose();
+            // 恢复桌面歌词置顶
+            f.desktopLyricDialog.setAlwaysOnTop(f.desktopLyricOnTop);
+            Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
             try {
-                future.get(10, TimeUnit.MILLISECONDS);
-                if (!future.isDone()) future.cancel(true);
+                future.get(100, TimeUnit.MILLISECONDS);
             } catch (Exception ex) {
 
+            } finally {
+                if (!future.isDone()) future.cancel(true);
             }
         });
         // 鼠标事件

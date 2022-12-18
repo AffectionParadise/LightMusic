@@ -16,8 +16,6 @@ import java.awt.event.*;
  */
 @Data
 public class CustomTextField extends JTextField {
-    private Color backgroundColor;
-    private Color foregroundColor;
     private boolean occupied;
 
     private boolean drawBg;
@@ -36,7 +34,7 @@ public class CustomTextField extends JTextField {
     }
 
     // 解决设置文本后不刷新的问题
-    void init() {
+    private void init() {
         setFocusable(false);
         addMouseListener(new MouseAdapter() {
             @Override
@@ -99,6 +97,7 @@ public class CustomTextField extends JTextField {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // 画背景
+        Color foregroundColor = getForeground();
         if (drawBg) {
             g2d.setColor(foregroundColor);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));

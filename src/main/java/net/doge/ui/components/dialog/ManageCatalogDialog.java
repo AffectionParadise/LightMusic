@@ -31,11 +31,8 @@ import java.util.List;
  */
 public class ManageCatalogDialog extends JDialog {
     private final String TITLE = "管理歌曲目录";
-    // 删除确认提示
     private final String ASK_REMOVE_MSG = "确定删除选中的目录？";
-    // 目录已存在提示
-    private final String CATALOG_EXISTS_MSG = "目录已存在，无法继续添加";
-    // 目录不存在提示
+    private final String CATALOG_EXISTS_MSG = "目录已存在，无法重复添加";
     private final String CATALOG_NOT_FOUND_MSG = "该目录不存在";
     private ManageCatalogDialogPanel globalPanel = new ManageCatalogDialogPanel();
 
@@ -206,18 +203,17 @@ public class ManageCatalogDialog extends JDialog {
         addButton.addActionListener(e -> {
             Platform.runLater(() -> {
                 File dir = dirChooser.showDialog(null);
-                if (dir != null) {
-                    // 文件夹不存在直接跳出
-                    if (!dir.exists()) return;
-                    for (int i = 0, size = catalogListModel.size(); i < size; i++) {
-                        if (catalogListModel.get(i).getAbsolutePath().equals(dir.getAbsolutePath())) {
-                            new TipDialog(f, CATALOG_EXISTS_MSG).showDialog();
-                            return;
-                        }
+                if (dir == null) return;
+                // 文件夹不存在直接跳出
+                if (!dir.exists()) return;
+                for (int i = 0, size = catalogListModel.size(); i < size; i++) {
+                    if (catalogListModel.get(i).getAbsolutePath().equals(dir.getAbsolutePath())) {
+                        new TipDialog(f, CATALOG_EXISTS_MSG).showDialog();
+                        return;
                     }
-                    catalogListModel.addElement(dir);
-                    catalogs.add(dir);
                 }
+                catalogListModel.addElement(dir);
+                catalogs.add(dir);
             });
         });
         // 删除事件

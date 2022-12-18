@@ -88,7 +88,7 @@ public class MusicServerUtils {
     private static final String BI_COOKIE = "buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7";
 
     // 域名
-    private static final String host = "47.108.230.98";
+    private static final String host = "localhost";
 
     private static final String prefix = String.format("http://%s:3000", host);
     private static final String prefixQQ33 = String.format("http://%s:3300", host);
