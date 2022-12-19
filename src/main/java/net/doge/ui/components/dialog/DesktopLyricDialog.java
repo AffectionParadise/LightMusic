@@ -23,9 +23,8 @@ import java.awt.event.*;
  */
 public class DesktopLyricDialog extends JDialog {
     private int width;
-    private int height;
     private Font font = Fonts.NORMAL_HUGE;
-    private Color themeColor;
+    private Color bgColor;
     private String lyric;
     private double ratio;
     private StringTwoColor stc;
@@ -71,10 +70,10 @@ public class DesktopLyricDialog extends JDialog {
     /**
      * 设置背景色
      *
-     * @param themeColor
+     * @param bgColor
      */
-    public void setThemeColor(Color themeColor) {
-        this.themeColor = themeColor;
+    public void setBgColor(Color bgColor) {
+        this.bgColor = bgColor;
         setLyric(lyric, ratio);
     }
 
@@ -101,8 +100,8 @@ public class DesktopLyricDialog extends JDialog {
         this.ratio = ratio;
 
         tempLabel.setText(lyric);
-        if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(themeColor))
-            stc = new StringTwoColor(tempLabel, lyric, foreColor, themeColor, ratio, true, width);
+        if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(bgColor))
+            stc = new StringTwoColor(tempLabel, lyric, foreColor, bgColor, ratio, true, width);
         else stc.setRatio(ratio);
         lyricLabel.setIcon(stc.getImageIcon());
         // Icon 对象可能不变，一定要手动重绘刷新！
@@ -119,15 +118,15 @@ public class DesktopLyricDialog extends JDialog {
         FontMetrics metrics = tempLabel.getFontMetrics(font);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
-        setSize(new Dimension(width = (int) (screenSize.width * 0.5), height = metrics.getHeight() + 50));
+        setSize(new Dimension(width = (int) (screenSize.width * 0.5), metrics.getHeight() + 50));
         setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 15);
 
         // 设置主题色
-        themeColor = f.currUIStyle.getLrcColor();
+        bgColor = f.currUIStyle.getLrcColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
-        tempLabel.setForeground(themeColor);
+        tempLabel.setForeground(bgColor);
         tempLabel.setFont(font);
         setLyric(" ", 0);
         lyricLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));

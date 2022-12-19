@@ -39,9 +39,9 @@ public class MusicPlayer {
     private MediaPlayer mp;
 
     // 声音数据，用于获取频谱
-    private double[] specs = new double[SpectrumConstants.NUM_BANDS];
-    private double[] specsOrigin = new double[SpectrumConstants.NUM_BANDS];
-    private double[] specsGap = new double[SpectrumConstants.NUM_BANDS];
+    public double[] specs = new double[SpectrumConstants.NUM_BANDS];
+    public double[] specsOrigin = new double[SpectrumConstants.NUM_BANDS];
+    public double[] specsGap = new double[SpectrumConstants.NUM_BANDS];
 
     public MusicPlayer(PlayerFrame f) {
         this.f = f;

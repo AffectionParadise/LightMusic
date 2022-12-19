@@ -221,8 +221,7 @@ public class MusicServerUtils {
 //    private static final String SEARCH_MUSIC_KW_API = prefixKw + "/kuwo/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s";
     private static final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌曲 API (咪咕)
-    private static final String SEARCH_MUSIC_MG_API
-            = prefixMg + "/search?keyword=%s&pageNo=%s&pageSize=%s";
+    private static final String SEARCH_MUSIC_MG_API = prefixMg + "/search?keyword=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌曲 API (千千)
     private static final String SEARCH_MUSIC_QI_API
             = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=1&word=%s";
@@ -393,8 +392,7 @@ public class MusicServerUtils {
     private static final String GET_COMMENTS_API = prefix + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=%s&cursor=%s";
     // 获取评论 API (酷狗)
     private static final String GET_COMMENTS_KG_API
-            = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike" +
-            "&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=%s&p=%s&pagesize=%s&kugouid=&clienttoken=";
+            = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=%s&p=%s&pagesize=%s";
     // 获取评论 API (QQ)
     private static final String GET_COMMENTS_QQ_API
             = prefixQQ33 + "/comment?type=%s&biztype=%s&id=%s&pageNo=%s&pageSize=%s";

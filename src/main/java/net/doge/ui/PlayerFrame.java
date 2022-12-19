@@ -19047,26 +19047,27 @@ public class PlayerFrame extends JFrame {
 
     // 初始化动画 Timer
     private void timerInit() {
+        final int specPiece = (int) ((SpectrumConstants.PLAYER_INTERVAL - 0.01) * 1000 / SpectrumConstants.TIMER_INTERVAL);
         spectrumTimer = new Timer(SpectrumConstants.TIMER_INTERVAL, e -> {
             spectrumExecutor.submit(() -> {
-                double[] specs = player.getSpecs();
-                double[] specsOrigin = player.getSpecsOrigin();
-                double[] specsGap = player.getSpecsGap();
-                int piece = (int) ((SpectrumConstants.PLAYER_INTERVAL - 0.01) * 1000 / SpectrumConstants.TIMER_INTERVAL);
+                double[] specs = player.specs;
+                double[] specsOrigin = player.specsOrigin;
+                double[] specsGap = player.specsGap;
                 for (int i = 0, len = specsOrigin.length; i < len; i++) {
-                    if (specs[i] < specsOrigin[i]) specs[i] += Math.min(specsGap[i] / piece, specsOrigin[i] - specs[i]);
+                    if (specs[i] < specsOrigin[i])
+                        specs[i] += Math.min(specsGap[i] / specPiece, specsOrigin[i] - specs[i]);
                     else if (specs[i] > specsOrigin[i])
-                        specs[i] -= Math.min(specsGap[i] / piece, specs[i] - specsOrigin[i]);
+                        specs[i] -= Math.min(specsGap[i] / specPiece, specs[i] - specsOrigin[i]);
                 }
                 lrcAndSpecBox.repaint();
             });
         });
-        final int LRC_TIMER_INTERVAL = 10, piece = 100 / LRC_TIMER_INTERVAL;
+        final int LRC_TIMER_INTERVAL = 10, lrcPiece = 100 / LRC_TIMER_INTERVAL;
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
             lrcExecutor.submit(() -> {
                 if (nextLrc >= 0) {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio.get();
-                    if (currRatio < or) ratio = (or - currRatio) / piece + currRatio;
+                    if (currRatio < or) ratio = (or - currRatio) / lrcPiece + currRatio;
                     ((TranslucentLrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
                     desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
                 } else {
@@ -19843,9 +19844,9 @@ public class PlayerFrame extends JFrame {
         mp.setAudioSpectrumListener(new AudioSpectrumListener() {
             @Override
             public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
-                double[] specs = player.getSpecs();
-                double[] specsOrigin = player.getSpecsOrigin();
-                double[] specsGap = player.getSpecsGap();
+                double[] specs = player.specs;
+                double[] specsOrigin = player.specsOrigin;
+                double[] specsGap = player.specsGap;
                 final int barNum = SpectrumConstants.BAR_NUM, nFactor = barNum - 30, numBands = SpectrumConstants.NUM_BANDS, maxHeight = SpectrumConstants.BAR_MAX_HEIGHT;
                 double avg = 0;
                 for (int i = 0; i < numBands; i++) {
@@ -21463,7 +21464,7 @@ public class PlayerFrame extends JFrame {
         // 进度条和控制面板透明
         timeBar.setUI(new SliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI
         // 桌面歌词更新颜色
-        desktopLyricDialog.setThemeColor(lrcColor);
+        desktopLyricDialog.setBgColor(lrcColor);
         desktopLyricDialog.setForeColor(highlightColor);
         desktopLyricDialog.updateStyle();
         // 时间标签用进度条的颜色
