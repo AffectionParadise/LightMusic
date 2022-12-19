@@ -27,7 +27,7 @@ public class SpectrumConstants {
     // 播放器更新频谱数量
     public static final int NUM_BANDS = 256;
     // 播放器更新频谱时间间隔(s)
-    public static final double PLAYER_INTERVAL = 0.09;
+    public static final double PLAYER_INTERVAL = 0.1;
     // UI 更新频谱 Timer 时间间隔(ms)
     public static final int TIMER_INTERVAL = 10;
     // 频谱条数量(由界面宽度决定)
