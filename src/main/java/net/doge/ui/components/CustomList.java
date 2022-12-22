@@ -8,4 +8,10 @@ public class CustomList<E> extends JList<E> {
         super();
         setOpaque(false);
     }
+
+    @Override
+    public void setModel(ListModel<E> model) {
+        if(getModel() == model) return;
+        super.setModel(model);
+    }
 }

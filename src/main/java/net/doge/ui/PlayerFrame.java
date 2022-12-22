@@ -4517,7 +4517,7 @@ public class PlayerFrame extends JFrame {
                         leftBox.remove(musicScrollPane);
                         leftBox.add(emptyHintPanel);
                     } else {
-                        if (musicList.getModel() != model) musicList.setModel(model);
+                        musicList.setModel(model);
                         leftBox.remove(emptyHintPanel);
                         leftBox.add(musicScrollPane);
                     }
@@ -4542,7 +4542,7 @@ public class PlayerFrame extends JFrame {
                         box.remove(collectionScrollPane);
                         box.add(emptyHintPanel);
                     } else {
-                        if (collectionList.getModel() != model) collectionList.setModel(model);
+                        collectionList.setModel(model);
                         box.remove(emptyHintPanel);
                         box.add(collectionScrollPane);
                     }
@@ -6683,6 +6683,7 @@ public class PlayerFrame extends JFrame {
                 if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
                         || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
                     countLabel.setText(String.format("共 %s 首", size));
+                    musicList.setModel(model);
                     leftBox.remove(emptyHintPanel);
                     leftBox.add(musicScrollPane);
                     leftBox.repaint();
