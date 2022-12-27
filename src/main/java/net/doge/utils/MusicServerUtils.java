@@ -20862,16 +20862,15 @@ public class MusicServerUtils {
             if (artistsArray == null) artistsArray = json.optJSONArray("actors");
             if (artistsArray == null) return "";
         }
-        StringBuffer sb = new StringBuffer();
+        StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = artistsArray.size(); i < len; i++) {
             JSONObject artistJson = artistsArray.getJSONObject(i);
             String name = artistJson.optString("name", null);
             if (name == null) name = artistJson.optString("singer_name", null);
             if (name == null) name = artistJson.getString("author_name");
-            sb.append(name);
-            if (i != len - 1) sb.append("、");
+            sj.add(name);
         }
-        return sb.toString();
+        return sj.toString();
     }
 
     /**
@@ -20895,59 +20894,42 @@ public class MusicServerUtils {
      */
     public static String parseTags(JSONObject json, int source) {
         JSONArray tagArray;
+        StringJoiner sj = new StringJoiner("、");
         if (source == NetMusicSource.NET_CLOUD) {
             tagArray = json.getJSONArray("tags");
-            StringBuffer sb = new StringBuffer();
             for (int i = 0, len = tagArray.size(); i < len; i++) {
-                sb.append(tagArray.getString(i));
-                if (i != len - 1) sb.append("、");
+                sj.add(tagArray.getString(i));
             }
-            return sb.toString();
         } else if (source == NetMusicSource.QQ) {
             tagArray = json.getJSONArray("tags");
-            StringBuffer sb = new StringBuffer();
             for (int i = 0, len = tagArray.size(); i < len; i++) {
                 JSONObject tagJson = tagArray.getJSONObject(i);
-                sb.append(tagJson.getString("name"));
-                if (i != len - 1) sb.append("、");
+                sj.add(tagJson.getString("name"));
             }
-            return sb.toString();
         } else if (source == NetMusicSource.MG) {
             tagArray = json.getJSONArray("tags");
-            StringBuffer sb = new StringBuffer();
             for (int i = 0, len = tagArray.size(); i < len; i++) {
                 JSONObject tagJson = tagArray.getJSONObject(i);
-                sb.append(tagJson.getString("tagName"));
-                if (i != len - 1) sb.append("、");
+                sj.add(tagJson.getString("tagName"));
             }
-            return sb.toString();
         } else if (source == NetMusicSource.XM) {
             tagArray = json.getJSONArray("tags");
-            StringBuffer sb = new StringBuffer();
             for (int i = 0, len = tagArray.size(); i < len; i++) {
-                sb.append(tagArray.getString(i));
-                if (i != len - 1) sb.append("、");
+                sj.add(tagArray.getString(i));
             }
-            return sb.toString();
         } else if (source == NetMusicSource.QI) {
             tagArray = json.getJSONArray("tagList");
-            StringBuffer sb = new StringBuffer();
             for (int i = 0, len = tagArray.size(); i < len; i++) {
-                sb.append(tagArray.getString(i));
-                if (i != len - 1) sb.append("、");
+                sj.add(tagArray.getString(i));
             }
-            return sb.toString();
         } else if (source == NetMusicSource.ME) {
             tagArray = json.getJSONArray("tags");
-            StringBuffer sb = new StringBuffer();
             for (int i = 0, len = tagArray.size(); i < len; i++) {
                 JSONObject tagJson = tagArray.getJSONObject(i);
-                sb.append(tagJson.getString("name"));
-                if (i != len - 1) sb.append("、");
+                sj.add(tagJson.getString("name"));
             }
-            return sb.toString();
         }
-        return "";
+        return sj.toString();
     }
 
     /**
@@ -20955,12 +20937,11 @@ public class MusicServerUtils {
      */
     public static String parseCreators(JSONObject json) {
         JSONArray artistsArray = json.getJSONArray("creator");
-        StringBuffer sb = new StringBuffer();
+        StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = artistsArray.size(); i < len; i++) {
-            sb.append(artistsArray.getJSONObject(i).getString("userName"));
-            if (i != len - 1) sb.append("、");
+            sj.add(artistsArray.getJSONObject(i).getString("userName"));
         }
-        return sb.toString();
+        return sj.toString();
     }
 
     /**
@@ -20984,6 +20965,7 @@ public class MusicServerUtils {
             String url = fetchMusicUrl(info.getId(), info.getSource());
             if (StringUtils.isNotEmpty(url)) {
                 musicInfo.setUrl(url);
+                if(!musicInfo.hasDuration()) musicInfo.setDuration(info.getDuration());
                 return;
             }
         }

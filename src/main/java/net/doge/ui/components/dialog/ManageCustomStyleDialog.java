@@ -183,13 +183,14 @@ public class ManageCustomStyleDialog extends JDialog {
         // 添加标签
         tipLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         Color textColor = style.getTextColor();
+        Color iconColor = style.getIconColor();
         tipLabel.setForeground(textColor);
         tipPanel.add(tipLabel);
         customOnlyCheckBox.setSelected(f.customOnly);
         customOnlyCheckBox.setForeground(textColor);
         customOnlyCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, textColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, textColor));
+        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, iconColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, iconColor));
         customOnlyCheckBox.addActionListener(e -> {
             f.customOnly = customOnlyCheckBox.isSelected();
             initStyles();
@@ -234,7 +235,7 @@ public class ManageCustomStyleDialog extends JDialog {
                         "", ((Color) results[2]), ((Color) results[3]),
                         ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
                         ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
-                        ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
+                        ((Color) results[10]), ((Color) results[11])
                 );
                 customStyle.setInvokeLater(() -> updateRenderer(styleList));
                 if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
@@ -321,7 +322,6 @@ public class ManageCustomStyleDialog extends JDialog {
                 selectedStyle.setScrollBarColor((Color) results[9]);
                 selectedStyle.setSliderColor((Color) results[10]);
                 selectedStyle.setSpectrumColor((Color) results[11]);
-                selectedStyle.setMenuItemColor((Color) results[12]);
                 // 若编辑的样式正在使用，则更换
                 if (f.currUIStyle == selectedStyle) {
                     f.changeUIStyle(selectedStyle);
@@ -389,8 +389,9 @@ public class ManageCustomStyleDialog extends JDialog {
                 }
             }
         });
-        styleListScrollPane.setHUI(new ScrollBarUI(style.getScrollBarColor()));
-        styleListScrollPane.setVUI(new ScrollBarUI(style.getScrollBarColor()));
+        Color scrollBarColor = style.getScrollBarColor();
+        styleListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
@@ -423,13 +424,14 @@ public class ManageCustomStyleDialog extends JDialog {
         UIStyle st = f.currUIStyle;
         Color textColor = st.getTextColor();
         Color iconColor = st.getIconColor();
+        Color scrollBarColor = st.getScrollBarColor();
 
         titleLabel.setForeground(textColor);
         closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), iconColor));
         tipLabel.setForeground(textColor);
         customOnlyCheckBox.setForeground(textColor);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, textColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, textColor));
+        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, iconColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, iconColor));
         allSelectButton.setForeColor(textColor);
         nonSelectButton.setForeColor(textColor);
         applyButton.setForeColor(textColor);
@@ -442,8 +444,8 @@ public class ManageCustomStyleDialog extends JDialog {
         r.setTextColor(textColor);
         styleList.repaint();
 
-        styleListScrollPane.setHUI(new ScrollBarUI(st.getScrollBarColor()));
-        styleListScrollPane.setVUI(new ScrollBarUI(st.getScrollBarColor()));
+        styleListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
     }
 
     private void doBlur(BufferedImage bufferedImage) {

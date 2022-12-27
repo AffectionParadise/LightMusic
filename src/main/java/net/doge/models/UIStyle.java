@@ -49,8 +49,6 @@ public class UIStyle {
     private Color sliderColor;
     // 频谱颜色
     private Color spectrumColor;
-    // 菜单项颜色
-    private Color menuItemColor;
 
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
@@ -99,7 +97,8 @@ public class UIStyle {
     }
 
     public UIStyle(Integer styleType, String styleName, String styleImgPath,
-                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
+                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor,
+                   Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor) {
         this.styleType = styleType;
         this.styleName = styleName;
         setStyleImgPath(styleImgPath);
@@ -113,11 +112,11 @@ public class UIStyle {
         this.scrollBarColor = scrollBarColor;
         this.sliderColor = sliderColor;
         this.spectrumColor = spectrumColor;
-        this.menuItemColor = menuItemColor;
     }
 
     public UIStyle(Integer styleType, String styleName, String styleImgPath, Color bgColor,
-                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor, Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor, Color menuItemColor) {
+                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor,
+                   Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor) {
         this.styleType = styleType;
         this.styleName = styleName;
         setStyleImgPath(styleImgPath);
@@ -132,6 +131,5 @@ public class UIStyle {
         this.scrollBarColor = scrollBarColor;
         this.sliderColor = sliderColor;
         this.spectrumColor = spectrumColor;
-        this.menuItemColor = menuItemColor;
     }
 }

@@ -73,7 +73,7 @@ public class TranslucentNetMusicListRenderer extends DefaultListCellRenderer {
         // 播放中的文件图标不同
         if (!player.isPlayingNetMusic(musicInfo)) {
             if (musicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
-            else if (musicInfo.isProgram()) iconLabel.setIcon( programIcon);
+            else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
             else iconLabel.setIcon(musicIcon);
         } else iconLabel.setIcon(playingIcon);
 

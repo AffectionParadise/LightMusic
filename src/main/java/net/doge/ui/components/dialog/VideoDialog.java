@@ -537,9 +537,9 @@ public class VideoDialog extends JDialog {
         // 快进/快退时间
         fobTimePopupMenu = new CustomPopupMenu(f);
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
-            Color menuItemColor = style.getMenuItemColor();
-            menuItem.setForeground(menuItemColor);
-            menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
+            Color textColor = style.getTextColor();
+            menuItem.setForeground(textColor);
+            menuItem.setUI(new RadioButtonMenuItemUI(textColor));
             int time = Integer.parseInt(menuItem.getText().replace("秒", ""));
             menuItem.setSelected(time == f.videoForwardOrBackwardTime);
             menuItem.addActionListener(e -> {
@@ -661,16 +661,10 @@ public class VideoDialog extends JDialog {
 
     // 改变所有单选菜单项图标
     private void updateRadioButtonMenuItemIcon() {
-//        Component[] components = ratePopupMenu.getComponents();
-//        for (Component c : components) {
-//            CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-//            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, style.getMenuItemColor()));
-//            else mi.setIcon(null);
-//        }
         Component[] components = fobTimePopupMenu.getComponents();
         for (Component c : components) {
             CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, style.getMenuItemColor()));
+            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, style.getIconColor()));
             else mi.setIcon(null);
         }
     }

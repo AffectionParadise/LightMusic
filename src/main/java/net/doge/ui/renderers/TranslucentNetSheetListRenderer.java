@@ -61,7 +61,7 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(15);
-        iconLabel.setIcon(netSheetInfo.hasCoverImg() ? new ImageIcon(netSheetInfo.getCoverImg())  : sheetIcon);
+        iconLabel.setIcon(netSheetInfo.hasCoverImg() ? new ImageIcon(netSheetInfo.getCoverImg()) : sheetIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);

@@ -617,8 +617,9 @@ public class SettingDialog extends JDialog {
         });
 
         // 复选框图标
-        ImageIcon icon = ImageUtils.dye(f.uncheckedIcon, textColor);
-        ImageIcon selectedIcon = ImageUtils.dye(f.checkedIcon, textColor);
+        Color iconColor = style.getIconColor();
+        ImageIcon icon = ImageUtils.dye(f.uncheckedIcon, iconColor);
+        ImageIcon selectedIcon = ImageUtils.dye(f.checkedIcon, iconColor);
         autoUpdateCheckBox.setIcon(icon);
         autoUpdateCheckBox.setSelectedIcon(selectedIcon);
         autoDownloadLrcCheckBox.setIcon(icon);

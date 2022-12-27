@@ -87,12 +87,13 @@ public class ConfirmDialog extends JDialog {
 
     public void showDialog() {
         Color textColor = f.currUIStyle.getTextColor();
+        Color iconColor = f.currUIStyle.getIconColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         checkBox.setForeground(textColor);
-        checkBox.setIcon(ImageUtils.dye(f.uncheckedIcon, textColor));
-        checkBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, textColor));
+        checkBox.setIcon(ImageUtils.dye(f.uncheckedIcon, iconColor));
+        checkBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, iconColor));
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
         Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);

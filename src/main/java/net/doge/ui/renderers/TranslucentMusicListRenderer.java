@@ -79,14 +79,14 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
         if (isFile) {
             // 播放中的文件图标不同
             if (!player.isPlayingFile(file)) iconLabel.setIcon(musicIcon);
-            else iconLabel.setIcon( playingIcon);
+            else iconLabel.setIcon(playingIcon);
         } else {
             // 播放中的文件图标不同
             if (!player.isPlayingNetMusic(netMusicInfo)) {
                 if (netMusicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
-                else if (netMusicInfo.isProgram()) iconLabel.setIcon( programIcon);
+                else if (netMusicInfo.isProgram()) iconLabel.setIcon(programIcon);
                 else iconLabel.setIcon(musicIcon);
-            } else iconLabel.setIcon( playingIcon);
+            } else iconLabel.setIcon(playingIcon);
         }
 
         iconLabel.setIconTextGap(15);

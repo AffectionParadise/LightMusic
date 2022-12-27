@@ -77,14 +77,12 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
             new CustomLabel("图标颜色："),
             new CustomLabel("滚动条颜色："),
             new CustomLabel("音量滑动条颜色："),
-            new CustomLabel("频谱颜色："),
-            new CustomLabel("菜单项颜色：")
+            new CustomLabel("频谱颜色：")
     };
 
     private final Component[] components = {
             new CustomTextField(15),
             new DialogButton("选择图片"),
-            new CustomLabel(),
             new CustomLabel(),
             new CustomLabel(),
             new CustomLabel(),
@@ -264,7 +262,7 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
     }
 
     private void initView() {
-        centerPanel.setLayout(new GridLayout(7, 2));
+        centerPanel.setLayout(new GridLayout(6, 2));
 
         // 获得传入的界面样式
         results[0] = showedStyle.getStyleName();
@@ -280,7 +278,6 @@ public class CustomStyleDialog extends JDialog implements DocumentListener {
         results[9] = showedStyle.getScrollBarColor();
         results[10] = showedStyle.getSliderColor();
         results[11] = showedStyle.getSpectrumColor();
-        results[12] = showedStyle.getMenuItemColor();
 
         Border eb = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 

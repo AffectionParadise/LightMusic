@@ -59,7 +59,7 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
         CustomLabel pubTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
-        iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb())  : mvIcon);
+        iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : mvIcon);
         iconLabel.setIconTextGap(10);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);

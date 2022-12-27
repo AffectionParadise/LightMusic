@@ -404,7 +404,7 @@ public class PlayerFrame extends JFrame {
     private ImageIcon playlistIcon = new ImageIcon(SimplePath.ICON_PATH + "netPlaylist.png");
     // 专辑库图标
     private ImageIcon netAlbumIcon = new ImageIcon(SimplePath.ICON_PATH + "netAlbum.png");
-    // 歌手汇图标
+    // 歌手图标
     private ImageIcon netArtistIcon = new ImageIcon(SimplePath.ICON_PATH + "netArtist.png");
     // 电台图标
     private ImageIcon netRadioIcon = new ImageIcon(SimplePath.ICON_PATH + "netRadio.png");
@@ -890,7 +890,7 @@ public class PlayerFrame extends JFrame {
     // 模糊模式右键菜单
     private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem gsMenuItem = new CustomMenuItem("高斯模糊");
-    private CustomMenuItem darkerMenuItem = new CustomMenuItem("暗化");
+    private CustomMenuItem darkerMenuItem = new CustomMenuItem("暗角滤镜");
     private CustomMenuItem blurOffMenuItem = new CustomMenuItem("跟随主题");
     private CustomMenuItem cvBlurMenuItem = new CustomMenuItem("歌曲封面");
     private CustomMenuItem mcBlurMenuItem = new CustomMenuItem("纯主色调");
@@ -904,15 +904,15 @@ public class PlayerFrame extends JFrame {
     // 音乐馆 Tab 面板
     private CustomPanel netMusicPanel = new CustomPanel();
     private CustomLabel netMusicLabel = new CustomLabel("音乐馆", netMusicIcon);
-    // 歌单广场 Tab 面板
+    // 歌单 Tab 面板
     private CustomPanel netPlaylistPanel = new CustomPanel();
-    private CustomLabel netPlaylistLabel = new CustomLabel("歌单广场", playlistIcon);
-    // 专辑库 Tab 面板
+    private CustomLabel netPlaylistLabel = new CustomLabel("歌单", playlistIcon);
+    // 专辑 Tab 面板
     private CustomPanel netAlbumPanel = new CustomPanel();
-    private CustomLabel netAlbumLabel = new CustomLabel("专辑库", netAlbumIcon);
-    // 歌手汇 Tab 面板
+    private CustomLabel netAlbumLabel = new CustomLabel("专辑", netAlbumIcon);
+    // 歌手 Tab 面板
     private CustomPanel netArtistPanel = new CustomPanel();
-    private CustomLabel netArtistLabel = new CustomLabel("歌手汇", netArtistIcon);
+    private CustomLabel netArtistLabel = new CustomLabel("歌手", netArtistIcon);
     // 电台 Tab 面板
     private CustomPanel netRadioPanel = new CustomPanel();
     private CustomLabel netRadioLabel = new CustomLabel("电台", netRadioIcon);
@@ -2864,8 +2864,7 @@ public class PlayerFrame extends JFrame {
                         ColorUtils.RGBStringToColor(styleObject.optString("iconColor")),
                         ColorUtils.RGBStringToColor(styleObject.optString("scrollBarColor")),
                         ColorUtils.RGBStringToColor(styleObject.optString("sliderColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("spectrumColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("menuItemColor"))
+                        ColorUtils.RGBStringToColor(styleObject.optString("spectrumColor"))
                 );
                 addStyle(style);
             }
@@ -3648,7 +3647,6 @@ public class PlayerFrame extends JFrame {
                 styleObject.put("scrollBarColor", ColorUtils.colorToRGBString(style.getScrollBarColor()));
                 styleObject.put("sliderColor", ColorUtils.colorToRGBString(style.getSliderColor()));
                 styleObject.put("spectrumColor", ColorUtils.colorToRGBString(style.getSpectrumColor()));
-                styleObject.put("menuItemColor", ColorUtils.colorToRGBString(style.getMenuItemColor()));
                 styleArray.add(styleObject);
             }
         }
@@ -4346,23 +4344,21 @@ public class PlayerFrame extends JFrame {
     // 初始化个性化菜单
     private void individuationMenuInit() {
         // 自定义风格
-        styleCustomMenuItem.addActionListener(e -> {
-            customStyle();
-        });
+        styleCustomMenuItem.addActionListener(e -> customStyle());
         manageStyleMenuItem.addActionListener(e -> {
             ManageCustomStyleDialog dialog = new ManageCustomStyleDialog(THIS, true);
             try {
                 dialog.showDialog();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-                unsupportedLookAndFeelException.printStackTrace();
-            } catch (InstantiationException instantiationException) {
-                instantiationException.printStackTrace();
-            } catch (IllegalAccessException illegalAccessException) {
-                illegalAccessException.printStackTrace();
-            } catch (InvocationTargetException invocationTargetException) {
-                invocationTargetException.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            } catch (UnsupportedLookAndFeelException ex) {
+                throw new RuntimeException(ex);
+            } catch (InstantiationException ex) {
+                throw new RuntimeException(ex);
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            } catch (InvocationTargetException ex) {
+                throw new RuntimeException(ex);
             }
         });
     }
@@ -5995,43 +5991,43 @@ public class PlayerFrame extends JFrame {
                         }
                         int selectedIndex = collectionTabbedPane.getSelectedIndex();
                         if (selectedIndex == CollectionTabIndex.PLAYLIST) {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netPlaylistPopupMenu);
                             netPlaylistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ALBUM) {
-                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netAlbumPopupMenu);
                             netAlbumPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ARTIST) {
-                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netArtistPopupMenu);
                             netArtistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RADIO) {
-                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netRadioPopupMenu);
                             netRadioPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.MV) {
-                            netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netMvPopupMenu);
                             netMvPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RANKING) {
-                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netRankingPopupMenu);
                             netRankingPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.USER) {
-                            netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netUserPopupMenu);
@@ -6865,10 +6861,10 @@ public class PlayerFrame extends JFrame {
                             relatedMvMenuItem.setEnabled(ins);
                             playMvMenuItem.setEnabled(ins && ((NetMusicInfo) o).hasMv());
                             if (hasBeenCollected(o)) {
-                                collectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                collectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             locateFileMenuItem.setEnabled(!ins);
@@ -6891,10 +6887,10 @@ public class PlayerFrame extends JFrame {
                             relatedMvMenuItem.setEnabled(ins);
                             playMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
-                                collectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                collectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             locateFileMenuItem.setEnabled(!ins);
@@ -7428,10 +7424,10 @@ public class PlayerFrame extends JFrame {
                         NetMusicInfo musicInfo = netMusicList.getSelectedValue();
                         netMusicPlayMvMenuItem.setEnabled(musicInfo.hasMv());
                         if (hasBeenCollected(musicInfo)) {
-                            netMusicCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netMusicCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netMusicCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netMusicCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -9045,10 +9041,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netPlaylistList.isSelectedIndex(index)) netPlaylistList.setSelectedIndex(index);
                         if (hasBeenCollected(netPlaylistList.getSelectedValue())) {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -10033,10 +10029,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netAlbumList.isSelectedIndex(index)) netAlbumList.setSelectedIndex(index);
                         if (hasBeenCollected(netAlbumList.getSelectedValue())) {
-                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -11053,10 +11049,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netArtistList.isSelectedIndex(index)) netArtistList.setSelectedIndex(index);
                         if (hasBeenCollected(netArtistList.getSelectedValue())) {
-                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -12286,10 +12282,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netRadioList.isSelectedIndex(index)) netRadioList.setSelectedIndex(index);
                         if (hasBeenCollected(netRadioList.getSelectedValue())) {
-                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -13173,10 +13169,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netMvList.isSelectedIndex(index)) netMvList.setSelectedIndex(index);
                         if (hasBeenCollected(netMvList.getSelectedValue())) {
-                            netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -14014,10 +14010,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netRankingList.isSelectedIndex(index)) netRankingList.setSelectedIndex(index);
                         if (hasBeenCollected(netRankingList.getSelectedValue())) {
-                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -14801,10 +14797,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netUserList.isSelectedIndex(index)) netUserList.setSelectedIndex(index);
                         if (hasBeenCollected(netUserList.getSelectedValue())) {
-                            netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -15665,7 +15661,7 @@ public class PlayerFrame extends JFrame {
                             netCommentList.setSelectedIndex(index);
                         }
                         netCommentSaveProfileMenuItem.setEnabled(netCommentList.getSelectedValue().hasProfileUrl());
-//                        netCommentSaveProfileMenuItem.setForeground(netCommentSaveProfileMenuItem.isEnabled() ? currUIStyle.getMenuItemColor() : Color.LIGHT_GRAY);
+//                        netCommentSaveProfileMenuItem.setForeground(netCommentSaveProfileMenuItem.isEnabled() ? currUIStyle.getIconColor() : Color.LIGHT_GRAY);
 //                        SwingUtilities.updateComponentTreeUI(netCommentPopupMenu);
                         netCommentPopupMenu.show(netCommentList, e.getX(), e.getY());
                     }
@@ -18129,10 +18125,10 @@ public class PlayerFrame extends JFrame {
                         else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
                         else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
                         if (hasBeenCollected(o)) {
-                            menuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            menuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            menuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                            menuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             menuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -18644,10 +18640,10 @@ public class PlayerFrame extends JFrame {
                             playQueueRelatedMvMenuItem.setEnabled(ins);
                             playQueuePlayMvMenuItem.setEnabled(ins && ((NetMusicInfo) o).hasMv());
                             if (hasBeenCollected(o)) {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             playQueueLocateFileMenuItem.setEnabled(!ins);
@@ -18670,10 +18666,10 @@ public class PlayerFrame extends JFrame {
                             playQueueRelatedMvMenuItem.setEnabled(ins);
                             playQueuePlayMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getMenuItemColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             playQueueLocateFileMenuItem.setEnabled(!ins);
@@ -19349,12 +19345,12 @@ public class PlayerFrame extends JFrame {
         gsMenuItem.addActionListener(e -> {
             gsOn = !gsOn;
             doBlur();
-            gsMenuItem.setIcon(gsOn ? ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()) : null);
+            gsMenuItem.setIcon(gsOn ? ImageUtils.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
         darkerMenuItem.addActionListener(e -> {
             darkerOn = !darkerOn;
             doBlur();
-            darkerMenuItem.setIcon(darkerOn ? ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()) : null);
+            darkerMenuItem.setIcon(darkerOn ? ImageUtils.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurType.OFF;
@@ -20421,15 +20417,16 @@ public class PlayerFrame extends JFrame {
 
     // 改变所有单选菜单项图标
     public void updateMenuItemIcon(CustomPopupMenu popupMenu) {
+        Color iconColor = currUIStyle.getIconColor();
         Component[] components = popupMenu.getComponents();
         for (Component c : components) {
             if (c instanceof CustomRadioButtonMenuItem) {
                 CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-                if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, currUIStyle.getMenuItemColor()));
+                if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, iconColor));
                 else mi.setIcon(null);
             } else if (c instanceof CustomCheckMenuItem) {
                 CustomCheckMenuItem mi = (CustomCheckMenuItem) c;
-                if (mi.isSelected()) mi.setIcon(ImageUtils.dye(tickIcon, currUIStyle.getMenuItemColor()));
+                if (mi.isSelected()) mi.setIcon(ImageUtils.dye(tickIcon, iconColor));
                 else mi.setIcon(null);
             }
         }
@@ -20450,22 +20447,23 @@ public class PlayerFrame extends JFrame {
     }
 
     // 更新菜单项样式
-    private void updateMenuItemStyle(CustomPopupMenu popupMenu, Color menuItemColor) {
+    private void updateMenuItemStyle(CustomPopupMenu popupMenu) {
+        Color textColor = currUIStyle.getTextColor();
         Component[] components = popupMenu.getComponents();
         for (Component c : components) {
-            c.setForeground(menuItemColor);
+            c.setForeground(textColor);
             if (c instanceof CustomMenuItem) {
                 CustomMenuItem menuItem = (CustomMenuItem) c;
-                menuItem.setUI(new MenuItemUI(menuItemColor));
+                menuItem.setUI(new MenuItemUI(textColor));
             } else if (c instanceof CustomRadioButtonMenuItem) {
                 CustomRadioButtonMenuItem menuItem = (CustomRadioButtonMenuItem) c;
-                menuItem.setUI(new RadioButtonMenuItemUI(menuItemColor));
+                menuItem.setUI(new RadioButtonMenuItemUI(textColor));
             } else if (c instanceof CustomCheckMenuItem) {
                 CustomCheckMenuItem menuItem = (CustomCheckMenuItem) c;
-                menuItem.setUI(new CheckMenuItemUI(menuItemColor));
+                menuItem.setUI(new CheckMenuItemUI(textColor));
             } else if (c instanceof CustomMenu) {
                 CustomMenu menu = (CustomMenu) c;
-                menu.setUI(new MenuUI(menuItemColor));
+                menu.setUI(new MenuUI(textColor));
             }
         }
     }
@@ -20488,7 +20486,6 @@ public class PlayerFrame extends JFrame {
         Color timeBarColor = style.getTimeBarColor();
         Color lrcColor = style.getLrcColor();
         Color highlightColor = style.getHighlightColor();
-        Color menuItemColor = style.getMenuItemColor();
 
         // 托盘
         trayIconImg.setImage(ImageUtils.dye(trayIcon, iconColor).getImage());
@@ -20527,275 +20524,275 @@ public class PlayerFrame extends JFrame {
 
         // 右键菜单项禁用时颜色
         // 全局设置菜单项禁用颜色
-        UIManager.put("MenuItem.disabledForeground", ColorUtils.darker(menuItemColor));
+        UIManager.put("MenuItem.disabledForeground", ColorUtils.darker(textColor));
 
-        disabledColor = ColorUtils.darker(menuItemColor, 0.3f);
+        disabledColor = ColorUtils.darker(iconColor, 0.3f);
 
         // 右键菜单项图标
-        copyMottoMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        nextMottoMenuItem.setIcon(ImageUtils.dye(nextMottoIcon, menuItemColor));
+        copyMottoMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        nextMottoMenuItem.setIcon(ImageUtils.dye(nextMottoIcon, iconColor));
 
-        openMainFrameMenuItem.setIcon(ImageUtils.dye(openMainFrameIcon, menuItemColor));
-        exitMenuItem.setIcon(ImageUtils.dye(exitIcon, menuItemColor));
+        openMainFrameMenuItem.setIcon(ImageUtils.dye(openMainFrameIcon, iconColor));
+        exitMenuItem.setIcon(ImageUtils.dye(exitIcon, iconColor));
 
-        manageStyleMenuItem.setIcon(ImageUtils.dye(changeStyleIcon, menuItemColor));
-        styleCustomMenuItem.setIcon(ImageUtils.dye(addCustomStyleIcon, menuItemColor));
+        manageStyleMenuItem.setIcon(ImageUtils.dye(changeStyleIcon, iconColor));
+        styleCustomMenuItem.setIcon(ImageUtils.dye(addCustomStyleIcon, iconColor));
 
-        closeSong.setIcon(ImageUtils.dye(closeSongIcon, menuItemColor));
+        closeSong.setIcon(ImageUtils.dye(closeSongIcon, iconColor));
         closeSong.setDisabledIcon(ImageUtils.dye(closeSongIcon, disabledColor));
-        clearCache.setIcon(ImageUtils.dye(clearCacheIcon, menuItemColor));
-        settingMenuItem.setIcon(ImageUtils.dye(settingsIcon, menuItemColor));
-        donateMenuItem.setIcon(ImageUtils.dye(donateIcon, menuItemColor));
-        releaseMenuItem.setIcon(ImageUtils.dye(releaseIcon, menuItemColor));
-        updateMenuItem.setIcon(ImageUtils.dye(updateIcon, menuItemColor));
-        helpMenuItem.setIcon(ImageUtils.dye(helpIcon, menuItemColor));
-        aboutMenuItem.setIcon(ImageUtils.dye(aboutIcon, menuItemColor));
+        clearCache.setIcon(ImageUtils.dye(clearCacheIcon, iconColor));
+        settingMenuItem.setIcon(ImageUtils.dye(settingsIcon, iconColor));
+        donateMenuItem.setIcon(ImageUtils.dye(donateIcon, iconColor));
+        releaseMenuItem.setIcon(ImageUtils.dye(releaseIcon, iconColor));
+        updateMenuItem.setIcon(ImageUtils.dye(updateIcon, iconColor));
+        helpMenuItem.setIcon(ImageUtils.dye(helpIcon, iconColor));
+        aboutMenuItem.setIcon(ImageUtils.dye(aboutIcon, iconColor));
 
-        addFileMenuItem.setIcon(ImageUtils.dye(fileIcon, menuItemColor));
-        addDirMenuItem.setIcon(ImageUtils.dye(folderIcon, menuItemColor));
+        addFileMenuItem.setIcon(ImageUtils.dye(fileIcon, iconColor));
+        addDirMenuItem.setIcon(ImageUtils.dye(folderIcon, iconColor));
 
-        singleMenuItem.setIcon(ImageUtils.dye(singleIcon, menuItemColor));
-        sequenceMenuItem.setIcon(ImageUtils.dye(sequenceIcon, menuItemColor));
-        listCycleMenuItem.setIcon(ImageUtils.dye(listCycleIcon, menuItemColor));
-        shuffleMenuItem.setIcon(ImageUtils.dye(shuffleIcon, menuItemColor));
+        singleMenuItem.setIcon(ImageUtils.dye(singleIcon, iconColor));
+        sequenceMenuItem.setIcon(ImageUtils.dye(sequenceIcon, iconColor));
+        listCycleMenuItem.setIcon(ImageUtils.dye(listCycleIcon, iconColor));
+        shuffleMenuItem.setIcon(ImageUtils.dye(shuffleIcon, iconColor));
 
-        if (gsOn) gsMenuItem.setIcon(ImageUtils.dye(tickIcon, menuItemColor));
-        if (darkerOn) darkerMenuItem.setIcon(ImageUtils.dye(tickIcon, menuItemColor));
-        blurOffMenuItem.setIcon(ImageUtils.dye(blurOffIcon, menuItemColor));
-        cvBlurMenuItem.setIcon(ImageUtils.dye(cvBlurIcon, menuItemColor));
-        mcBlurMenuItem.setIcon(ImageUtils.dye(mcBlurIcon, menuItemColor));
-        lgBlurMenuItem.setIcon(ImageUtils.dye(lgBlurIcon, menuItemColor));
+        if (gsOn) gsMenuItem.setIcon(ImageUtils.dye(tickIcon, iconColor));
+        if (darkerOn) darkerMenuItem.setIcon(ImageUtils.dye(tickIcon, iconColor));
+        blurOffMenuItem.setIcon(ImageUtils.dye(blurOffIcon, iconColor));
+        cvBlurMenuItem.setIcon(ImageUtils.dye(cvBlurIcon, iconColor));
+        mcBlurMenuItem.setIcon(ImageUtils.dye(mcBlurIcon, iconColor));
+        lgBlurMenuItem.setIcon(ImageUtils.dye(lgBlurIcon, iconColor));
 
-        saveDescCoverImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
-        saveDescBgImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
-        copyDescNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        copyDescTagMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        copyDescMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        saveDescCoverImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
+        saveDescBgImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
+        copyDescNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        copyDescTagMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        copyDescMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        playMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        nextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, menuItemColor));
-        playMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, menuItemColor));
+        playMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        nextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
+        playMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, iconColor));
         playMvMenuItem.setDisabledIcon(ImageUtils.dye(playMvMenuItemIcon, disabledColor));
-        collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        downloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, menuItemColor));
+        collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        downloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
         downloadMenuItem.setDisabledIcon(ImageUtils.dye(downloadMenuItemIcon, disabledColor));
-        commentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
+        commentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
         commentMenuItem.setDisabledIcon(ImageUtils.dye(commentMenuItemIcon, disabledColor));
-        sheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, menuItemColor));
+        sheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, iconColor));
         sheetMenuItem.setDisabledIcon(ImageUtils.dye(sheetMenuItemIcon, disabledColor));
-        searchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, menuItemColor));
-        similarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, menuItemColor));
+        searchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, iconColor));
+        similarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, iconColor));
         similarSongMenuItem.setDisabledIcon(ImageUtils.dye(similarMenuItemIcon, disabledColor));
-        relatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, menuItemColor));
+        relatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
         relatedPlaylistMenuItem.setDisabledIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, disabledColor));
-        authorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, menuItemColor));
+        authorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
         authorMenuItem.setDisabledIcon(ImageUtils.dye(similarArtistMenuItemIcon, disabledColor));
-        albumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
+        albumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
         albumMenuItem.setDisabledIcon(ImageUtils.dye(browseAlbumMenuItemIcon, disabledColor));
-        recRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, menuItemColor));
+        recRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
         recRadioMenuItem.setDisabledIcon(ImageUtils.dye(radioMenuItemIcon, disabledColor));
-        relatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
+        relatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
         relatedMvMenuItem.setDisabledIcon(ImageUtils.dye(similarMvMenuItemIcon, disabledColor));
-        copyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        locateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, menuItemColor));
+        copyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        locateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, iconColor));
         locateFileMenuItem.setDisabledIcon(ImageUtils.dye(locateFileMenuItemIcon, disabledColor));
-        editInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, menuItemColor));
+        editInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, iconColor));
         editInfoMenuItem.setDisabledIcon(ImageUtils.dye(editInfoMenuItemIcon, disabledColor));
-        removeMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, menuItemColor));
+        removeMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, iconColor));
 
-        netMusicPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netMusicNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, menuItemColor));
-        netMusicPlayMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, menuItemColor));
+        netMusicPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netMusicNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
+        netMusicPlayMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, iconColor));
         netMusicPlayMvMenuItem.setDisabledIcon(ImageUtils.dye(playMvMenuItemIcon, disabledColor));
-        netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netMusicDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, menuItemColor));
-        netMusicCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
-        netMusicSheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, menuItemColor));
-        netMusicSearchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, menuItemColor));
-        netMusicSimilarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, menuItemColor));
-        netMusicRelatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, menuItemColor));
-        netMusicAuthorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, menuItemColor));
+        netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netMusicDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
+        netMusicCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
+        netMusicSheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, iconColor));
+        netMusicSearchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, iconColor));
+        netMusicSimilarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, iconColor));
+        netMusicRelatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netMusicAuthorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
         netMusicAuthorMenuItem.setDisabledIcon(ImageUtils.dye(similarArtistMenuItemIcon, disabledColor));
-        netMusicAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
+        netMusicAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
         netMusicAlbumMenuItem.setDisabledIcon(ImageUtils.dye(browseAlbumMenuItemIcon, disabledColor));
-        netMusicRecRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, menuItemColor));
+        netMusicRecRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
         netMusicRecRadioMenuItem.setDisabledIcon(ImageUtils.dye(radioMenuItemIcon, disabledColor));
-        netMusicRelatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
-        netMusicCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netMusicRelatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
+        netMusicCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netPlaylistOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, menuItemColor));
-        netPlaylistPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netPlaylistCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
-        netPlaylistSimilarPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, menuItemColor));
-        netPlaylistCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, menuItemColor));
-        netPlaylistSubscriberMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, menuItemColor));
-        netPlaylistCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netPlaylistOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
+        netPlaylistPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netPlaylistCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
+        netPlaylistSimilarPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netPlaylistCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
+        netPlaylistSubscriberMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
+        netPlaylistCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netAlbumOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, menuItemColor));
-        netAlbumPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netAlbumCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
-        netAlbumArtistMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, menuItemColor));
-        netAlbumSimilarMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
-        netAlbumPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
-        netAlbumCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netAlbumOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
+        netAlbumPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netAlbumCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
+        netAlbumArtistMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
+        netAlbumSimilarMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
+        netAlbumPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
+        netAlbumCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netArtistOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, menuItemColor));
-        netArtistPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netArtistBrowseAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
-        netArtistBrowseMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
-        netArtistSimilarArtistMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, menuItemColor));
-        netArtistFansMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, menuItemColor));
-        netArtistBuddyMenuItem.setIcon(ImageUtils.dye(buddyMenuItemIcon, menuItemColor));
-        netArtistRadiosMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, menuItemColor));
-        netArtistPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
-        netArtistCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netArtistOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
+        netArtistPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netArtistBrowseAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
+        netArtistBrowseMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
+        netArtistSimilarArtistMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
+        netArtistFansMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
+        netArtistBuddyMenuItem.setIcon(ImageUtils.dye(buddyMenuItemIcon, iconColor));
+        netArtistRadiosMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
+        netArtistPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
+        netArtistCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netRadioOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, menuItemColor));
-        netRadioPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netRadioCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
-        netRadioDjMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, menuItemColor));
-        netRadioSubscriberMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, menuItemColor));
-        netRadioSimilarMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, menuItemColor));
-        netRadioArtistsMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, menuItemColor));
-        netRadioPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
-        netRadioPostersMenuItem.setIcon(ImageUtils.dye(posterMenuItemIcon, menuItemColor));
-        netRadioCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netRadioOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
+        netRadioPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netRadioCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
+        netRadioDjMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
+        netRadioSubscriberMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
+        netRadioSimilarMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
+        netRadioArtistsMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
+        netRadioPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
+        netRadioPostersMenuItem.setIcon(ImageUtils.dye(posterMenuItemIcon, iconColor));
+        netRadioCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netMvPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netMvDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, menuItemColor));
-        netMvSimilarMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
-        netMvVideoEpisodeMenuItem.setIcon(ImageUtils.dye(videoEpisodeMenuItemIcon, menuItemColor));
-        netMvCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, menuItemColor));
-        netMvCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
-        netMvCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netMvPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netMvDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
+        netMvSimilarMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
+        netMvVideoEpisodeMenuItem.setIcon(ImageUtils.dye(videoEpisodeMenuItemIcon, iconColor));
+        netMvCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
+        netMvCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
+        netMvCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netRankingOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, menuItemColor));
-        netRankingPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netRankingCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
-        netRankingCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netRankingOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
+        netRankingPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netRankingCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
+        netRankingCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netUserOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, menuItemColor));
-        netUserPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        netUserPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, menuItemColor));
-        netUserAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
-        netUserRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, menuItemColor));
-        netUserVideoMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
-        netUserFollowMenuItem.setIcon(ImageUtils.dye(userFollowMenuItemIcon, menuItemColor));
-        netUserFollowedMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, menuItemColor));
-        netUserCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netUserOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
+        netUserPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        netUserPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netUserAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
+        netUserRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
+        netUserVideoMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
+        netUserFollowMenuItem.setIcon(ImageUtils.dye(userFollowMenuItemIcon, iconColor));
+        netUserFollowedMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
+        netUserCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        netCommentCopyMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        netCommentSaveProfileMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
+        netCommentCopyMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netCommentSaveProfileMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
         netCommentSaveProfileMenuItem.setDisabledIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, disabledColor));
-        netCommentUserMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, menuItemColor));
-        netCommentPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, menuItemColor));
-        netCommentAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
+        netCommentUserMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
+        netCommentPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netCommentAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
 
-        netSheetBrowseMenuItem.setIcon(ImageUtils.dye(browseSheetMenuItemIcon, menuItemColor));
-        netSheetCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        netSheetBrowseMenuItem.setIcon(ImageUtils.dye(browseSheetMenuItemIcon, iconColor));
+        netSheetCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        locateLrcMenuItem.setIcon(ImageUtils.dye(locateLrcMenuItemIcon, menuItemColor));
+        locateLrcMenuItem.setIcon(ImageUtils.dye(locateLrcMenuItemIcon, iconColor));
         locateLrcMenuItem.setDisabledIcon(ImageUtils.dye(locateLrcMenuItemIcon, disabledColor));
-        copyMenuItem.setIcon(ImageUtils.dye(copyLrcMenuItemIcon, menuItemColor));
-        browseLrcMenuItem.setIcon(ImageUtils.dye(browseLrcMenuItemIcon, menuItemColor));
+        copyMenuItem.setIcon(ImageUtils.dye(copyLrcMenuItemIcon, iconColor));
+        browseLrcMenuItem.setIcon(ImageUtils.dye(browseLrcMenuItemIcon, iconColor));
         browseLrcMenuItem.setDisabledIcon(ImageUtils.dye(browseLrcMenuItemIcon, disabledColor));
-        browseLrcTransMenuItem.setIcon(ImageUtils.dye(browseLrcMenuItemIcon, menuItemColor));
+        browseLrcTransMenuItem.setIcon(ImageUtils.dye(browseLrcMenuItemIcon, iconColor));
         browseLrcTransMenuItem.setDisabledIcon(ImageUtils.dye(browseLrcMenuItemIcon, disabledColor));
-        downloadLrcMenuItem.setIcon(ImageUtils.dye(downloadIcon, menuItemColor));
+        downloadLrcMenuItem.setIcon(ImageUtils.dye(downloadIcon, iconColor));
         downloadLrcMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
-        downloadLrcTransMenuItem.setIcon(ImageUtils.dye(downloadIcon, menuItemColor));
+        downloadLrcTransMenuItem.setIcon(ImageUtils.dye(downloadIcon, iconColor));
         downloadLrcTransMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
         spectrumOpacityMenuItem.setDisabledIcon(ImageUtils.dye(spectrumOpacityMenuItemIcon, disabledColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
-            mi.setIcon(ImageUtils.dye(spectrumOpacityMenuItemIcon, menuItemColor));
+            mi.setIcon(ImageUtils.dye(spectrumOpacityMenuItemIcon, iconColor));
         }
         currLrcOffsetMenuItem.setDisabledIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, disabledColor));
         for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
-            mi.setIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, menuItemColor));
+            mi.setIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, iconColor));
         }
 
-        saveAlbumImageMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, menuItemColor));
+        saveAlbumImageMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
         saveAlbumImageMenuItem.setDisabledIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, disabledColor));
-        copySongNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        copyArtistMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        copyAlbumMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
+        copySongNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        copyArtistMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        copyAlbumMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
 
-        downloadPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        downloadNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, menuItemColor));
+        downloadPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        downloadNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
         downloadNextPlayMenuItem.setDisabledIcon(ImageUtils.dye(nextPlayMenuItemIcon, disabledColor));
-        downloadLocateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, menuItemColor));
-        downloadEditInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, menuItemColor));
+        downloadLocateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, iconColor));
+        downloadEditInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, iconColor));
         downloadEditInfoMenuItem.setDisabledIcon(ImageUtils.dye(editInfoMenuItemIcon, disabledColor));
-        cancelTaskMenuItem.setIcon(ImageUtils.dye(cancelTaskMenuItemIcon, menuItemColor));
+        cancelTaskMenuItem.setIcon(ImageUtils.dye(cancelTaskMenuItemIcon, iconColor));
         cancelTaskMenuItem.setDisabledIcon(ImageUtils.dye(cancelTaskMenuItemIcon, disabledColor));
-        restartTaskMenuItem.setIcon(ImageUtils.dye(restartTaskMenuItemIcon, menuItemColor));
+        restartTaskMenuItem.setIcon(ImageUtils.dye(restartTaskMenuItemIcon, iconColor));
         restartTaskMenuItem.setDisabledIcon(ImageUtils.dye(restartTaskMenuItemIcon, disabledColor));
-        removeTaskMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, menuItemColor));
+        removeTaskMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, iconColor));
 
-        playQueuePlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, menuItemColor));
-        playQueueNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, menuItemColor));
-        playQueuePlayMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, menuItemColor));
+        playQueuePlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
+        playQueueNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
+        playQueuePlayMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, iconColor));
         playQueuePlayMvMenuItem.setDisabledIcon(ImageUtils.dye(playMvMenuItemIcon, disabledColor));
-        playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, menuItemColor));
-        playQueueDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, menuItemColor));
+        playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
+        playQueueDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
         playQueueDownloadMenuItem.setDisabledIcon(ImageUtils.dye(downloadMenuItemIcon, disabledColor));
-        playQueueCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, menuItemColor));
+        playQueueCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
         playQueueCommentMenuItem.setDisabledIcon(ImageUtils.dye(commentMenuItemIcon, disabledColor));
-        playQueueSheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, menuItemColor));
+        playQueueSheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, iconColor));
         playQueueSheetMenuItem.setDisabledIcon(ImageUtils.dye(sheetMenuItemIcon, disabledColor));
-        playQueueSearchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, menuItemColor));
-        playQueueSimilarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, menuItemColor));
+        playQueueSearchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, iconColor));
+        playQueueSimilarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, iconColor));
         playQueueSimilarSongMenuItem.setDisabledIcon(ImageUtils.dye(similarMenuItemIcon, disabledColor));
-        playQueueRelatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, menuItemColor));
+        playQueueRelatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
         playQueueRelatedPlaylistMenuItem.setDisabledIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, disabledColor));
-        playQueueAuthorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, menuItemColor));
+        playQueueAuthorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
         playQueueAuthorMenuItem.setDisabledIcon(ImageUtils.dye(similarArtistMenuItemIcon, disabledColor));
-        playQueueAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, menuItemColor));
+        playQueueAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
         playQueueAlbumMenuItem.setDisabledIcon(ImageUtils.dye(browseAlbumMenuItemIcon, disabledColor));
-        playQueueRecRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, menuItemColor));
+        playQueueRecRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
         playQueueRecRadioMenuItem.setDisabledIcon(ImageUtils.dye(radioMenuItemIcon, disabledColor));
-        playQueueRelatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, menuItemColor));
+        playQueueRelatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
         playQueueRelatedMvMenuItem.setDisabledIcon(ImageUtils.dye(similarMvMenuItemIcon, disabledColor));
-        playQueueCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, menuItemColor));
-        playQueueLocateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, menuItemColor));
+        playQueueCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        playQueueLocateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, iconColor));
         playQueueLocateFileMenuItem.setDisabledIcon(ImageUtils.dye(locateFileMenuItemIcon, disabledColor));
-        playQueueEditInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, menuItemColor));
+        playQueueEditInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, iconColor));
         playQueueEditInfoMenuItem.setDisabledIcon(ImageUtils.dye(editInfoMenuItemIcon, disabledColor));
-        playQueueRemoveMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, menuItemColor));
+        playQueueRemoveMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, iconColor));
 
         // 菜单项文字颜色
-        updateMenuItemStyle(mottoPopupMenu, menuItemColor);
-        updateMenuItemStyle(trayPopupMenu, menuItemColor);
-        updateMenuItemStyle(stylePopupMenu, menuItemColor);
-        updateMenuItemStyle(addPopupMenu, menuItemColor);
-        updateMenuItemStyle(sortPopupMenu, menuItemColor);
-        updateMenuItemStyle(descriptionPanelPopupMenu, menuItemColor);
-        updateMenuItemStyle(leftInfoPopupMenu, menuItemColor);
-        updateMenuItemStyle(lrcPopupMenu, menuItemColor);
-        updateMenuItemStyle(spectrumPopupMenu, menuItemColor);
-        updateMenuItemStyle(playModePopupMenu, menuItemColor);
-        updateMenuItemStyle(blurPopupMenu, menuItemColor);
-        updateMenuItemStyle(mainMenu, menuItemColor);
-        updateMenuItemStyle(musicPopupMenu, menuItemColor);
-        updateMenuItemStyle(netMusicPopupMenu, menuItemColor);
-        updateMenuItemStyle(netPlaylistPopupMenu, menuItemColor);
-        updateMenuItemStyle(netAlbumPopupMenu, menuItemColor);
-        updateMenuItemStyle(netArtistPopupMenu, menuItemColor);
-        updateMenuItemStyle(netRadioPopupMenu, menuItemColor);
-        updateMenuItemStyle(netRankingPopupMenu, menuItemColor);
-        updateMenuItemStyle(netUserPopupMenu, menuItemColor);
-        updateMenuItemStyle(netCommentPopupMenu, menuItemColor);
-        updateMenuItemStyle(netSheetPopupMenu, menuItemColor);
-        updateMenuItemStyle(netMvPopupMenu, menuItemColor);
-        updateMenuItemStyle(downloadPopupMenu, menuItemColor);
-        updateMenuItemStyle(playQueuePopupMenu, menuItemColor);
+        updateMenuItemStyle(mottoPopupMenu);
+        updateMenuItemStyle(trayPopupMenu);
+        updateMenuItemStyle(stylePopupMenu);
+        updateMenuItemStyle(addPopupMenu);
+        updateMenuItemStyle(sortPopupMenu);
+        updateMenuItemStyle(descriptionPanelPopupMenu);
+        updateMenuItemStyle(leftInfoPopupMenu);
+        updateMenuItemStyle(lrcPopupMenu);
+        updateMenuItemStyle(spectrumPopupMenu);
+        updateMenuItemStyle(playModePopupMenu);
+        updateMenuItemStyle(blurPopupMenu);
+        updateMenuItemStyle(mainMenu);
+        updateMenuItemStyle(musicPopupMenu);
+        updateMenuItemStyle(netMusicPopupMenu);
+        updateMenuItemStyle(netPlaylistPopupMenu);
+        updateMenuItemStyle(netAlbumPopupMenu);
+        updateMenuItemStyle(netArtistPopupMenu);
+        updateMenuItemStyle(netRadioPopupMenu);
+        updateMenuItemStyle(netRankingPopupMenu);
+        updateMenuItemStyle(netUserPopupMenu);
+        updateMenuItemStyle(netCommentPopupMenu);
+        updateMenuItemStyle(netSheetPopupMenu);
+        updateMenuItemStyle(netMvPopupMenu);
+        updateMenuItemStyle(downloadPopupMenu);
+        updateMenuItemStyle(playQueuePopupMenu);
 
         // 工具栏消除边框和透明、选项卡面板透明
         tabbedPane.setUI(new TabbedPaneUI());
@@ -20919,8 +20916,8 @@ public class PlayerFrame extends JFrame {
         netMusicPageTextField.setCaretColor(textColor);
         // 歌单搜索栏透明
         netPlaylistIdCheckBox.setForeground(textColor);
-        netPlaylistIdCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, textColor));
-        netPlaylistIdCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, textColor));
+        netPlaylistIdCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, iconColor));
+        netPlaylistIdCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, iconColor));
         focusListeners = netPlaylistSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
@@ -21557,7 +21554,7 @@ public class PlayerFrame extends JFrame {
                     "", ((Color) results[2]), ((Color) results[3]),
                     ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
                     ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
-                    ((Color) results[10]), ((Color) results[11]), ((Color) results[12])
+                    ((Color) results[10]), ((Color) results[11])
             );
             if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
             else customStyle.setStyleImgPath((String) results[1]);
