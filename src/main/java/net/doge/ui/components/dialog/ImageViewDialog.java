@@ -3,23 +3,23 @@ package net.doge.ui.components.dialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
-import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.*;
+import net.doge.constants.Colors;
+import net.doge.constants.Format;
+import net.doge.constants.GlobalExecutors;
+import net.doge.constants.SimplePath;
 import net.doge.models.CommonResult;
-import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
+import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.ListUtils;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
  * @Description 图片浏览的对话框
  * @Date 2020/12/15
  */
-public abstract class ImageViewDialog extends JDialog {
+public abstract class ImageViewDialog extends AbstractShadowDialog {
     private final String TITLE = "图片预览";
     private final int WIDTH = 1000;
     private final int HEIGHT = 850;
@@ -41,7 +41,6 @@ public abstract class ImageViewDialog extends JDialog {
     private final String LAST_PAGE_MSG = "已经是最后一张了";
     // 非法页码提示
     private final String ILLEGAL_PAGE_MSG = "请输入合法页码";
-    private ImageViewDialogPanel globalPanel = new ImageViewDialogPanel();
 
     private final String LAST_IMG = "上一张";
     private final String NEXT_IMG = "下一张";
@@ -62,11 +61,6 @@ public abstract class ImageViewDialog extends JDialog {
     private ImageIcon saveImgIcon = new ImageIcon(SimplePath.ICON_PATH + "saveImg.png");
     // 跳页图标
     private ImageIcon goIcon = new ImageIcon(SimplePath.ICON_PATH + "go.png");
-
-    // 最大阴影透明度
-    private final int TOP_OPACITY = 30;
-    // 阴影大小像素
-    private final int pixels = 10;
 
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel bottomPanel = new CustomPanel();
@@ -91,8 +85,6 @@ public abstract class ImageViewDialog extends JDialog {
     // 底部盒子
     private Box bottomBox = new Box(BoxLayout.Y_AXIS);
 
-    private PlayerFrame f;
-    private UIStyle style;
     private CommonResult<String> results;
     private List<String> cursors = new LinkedList<>();
     private int p = 1;
@@ -100,11 +92,8 @@ public abstract class ImageViewDialog extends JDialog {
     private int pn = 1;
     private int limit;
 
-    // 父窗口和是否是模态
     public ImageViewDialog(PlayerFrame f, int limit) {
-        super(f, true);
-        this.f = f;
-        this.style = f.currUIStyle;
+        super(f);
         this.limit = limit;
     }
 
@@ -155,28 +144,12 @@ public abstract class ImageViewDialog extends JDialog {
         setVisible(true);
     }
 
-    public void updateBlur() {
-        BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
-            bufferedImage = f.player.getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            if (f.blurType == BlurType.MC)
-                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG)
-                bufferedImage = ImageUtils.toGradient(bufferedImage);
-        } else {
-            UIStyle style = f.currUIStyle;
-            bufferedImage = style.getImg();
-        }
-        doBlur(bufferedImage);
-    }
-
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getTextColor());
+        titleLabel.setForeground(f.currUIStyle.getTextColor());
         titleLabel.setText(TITLE);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -204,13 +177,16 @@ public abstract class ImageViewDialog extends JDialog {
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
 
+        Color textColor = f.currUIStyle.getTextColor();
+        Color iconColor = f.currUIStyle.getIconColor();
+
         // 标签
-        imgLabel.setForeground(style.getTextColor());
-        pageLabel.setForeground(style.getTextColor());
+        imgLabel.setForeground(textColor);
+        pageLabel.setForeground(textColor);
 
         // 上/下一张按钮
         lastImgButton.setToolTipText(LAST_IMG);
-        lastImgButton.setIcon(ImageUtils.dye((ImageIcon) lastImgButton.getIcon(), style.getIconColor()));
+        lastImgButton.setIcon(ImageUtils.dye((ImageIcon) lastImgButton.getIcon(), iconColor));
         lastImgButton.addMouseListener(new ButtonMouseListener(lastImgButton, f));
         lastImgButton.setPreferredSize(new Dimension(lastImgIcon.getIconWidth(), lastImgIcon.getIconHeight()));
         lastImgButton.addActionListener(e -> {
@@ -221,7 +197,7 @@ public abstract class ImageViewDialog extends JDialog {
             showImg(--p);
         });
         nextImgButton.setToolTipText(NEXT_IMG);
-        nextImgButton.setIcon(ImageUtils.dye((ImageIcon) nextImgButton.getIcon(), style.getIconColor()));
+        nextImgButton.setIcon(ImageUtils.dye((ImageIcon) nextImgButton.getIcon(), iconColor));
         nextImgButton.addMouseListener(new ButtonMouseListener(nextImgButton, f));
         nextImgButton.setPreferredSize(new Dimension(nextImgIcon.getIconWidth(), nextImgIcon.getIconHeight()));
         nextImgButton.addActionListener(e -> {
@@ -234,7 +210,7 @@ public abstract class ImageViewDialog extends JDialog {
         });
         // 第一张/最后一张按钮
         firstImgButton.setToolTipText(FIRST_IMG);
-        firstImgButton.setIcon(ImageUtils.dye((ImageIcon) firstImgButton.getIcon(), style.getIconColor()));
+        firstImgButton.setIcon(ImageUtils.dye((ImageIcon) firstImgButton.getIcon(), iconColor));
         firstImgButton.addMouseListener(new ButtonMouseListener(firstImgButton, f));
         firstImgButton.setPreferredSize(new Dimension(firstImgIcon.getIconWidth(), firstImgIcon.getIconHeight()));
         firstImgButton.addActionListener(e -> {
@@ -245,7 +221,7 @@ public abstract class ImageViewDialog extends JDialog {
             showImg(p = 1);
         });
         lstImgButton.setToolTipText(LST_IMG);
-        lstImgButton.setIcon(ImageUtils.dye((ImageIcon) lstImgButton.getIcon(), style.getIconColor()));
+        lstImgButton.setIcon(ImageUtils.dye((ImageIcon) lstImgButton.getIcon(), iconColor));
         lstImgButton.addMouseListener(new ButtonMouseListener(lstImgButton, f));
         lstImgButton.setPreferredSize(new Dimension(lstImgIcon.getIconWidth(), lstImgIcon.getIconHeight()));
         lstImgButton.addActionListener(e -> {
@@ -266,11 +242,11 @@ public abstract class ImageViewDialog extends JDialog {
                 }
             }
         });
-        pageTextField.setForeground(style.getForeColor());
-        pageTextField.setCaretColor(style.getForeColor());
+        pageTextField.setForeground(textColor);
+        pageTextField.setCaretColor(textColor);
         // 跳页按钮
         goButton.setToolTipText(GO_TIP);
-        goButton.setIcon(ImageUtils.dye((ImageIcon) goButton.getIcon(), style.getIconColor()));
+        goButton.setIcon(ImageUtils.dye((ImageIcon) goButton.getIcon(), iconColor));
         goButton.addMouseListener(new ButtonMouseListener(goButton, f));
         goButton.setPreferredSize(new Dimension(goIcon.getIconWidth(), goIcon.getIconHeight()));
         goButton.addActionListener(e -> {
@@ -288,7 +264,7 @@ public abstract class ImageViewDialog extends JDialog {
 
         // 保存图片
         saveImgButton.setToolTipText(SAVE_IMG);
-        saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), style.getIconColor()));
+        saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), iconColor));
         saveImgButton.addMouseListener(new ButtonMouseListener(saveImgButton, f));
         saveImgButton.setPreferredSize(new Dimension(saveImgIcon.getIconWidth(), saveImgIcon.getIconHeight()));
         saveImgButton.addActionListener(e -> {
@@ -381,73 +357,5 @@ public abstract class ImageViewDialog extends JDialog {
                 ImageUtils.toFile(getImg(i), outputFile);
             }
         });
-    }
-
-    private void doBlur(BufferedImage bufferedImage) {
-        int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
-        try {
-            boolean loadedMusic = f.player.loadedMusic();
-            // 截取中间的一部分(有的图片是长方形)
-            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
-            // 处理成 100 * 100 大小
-            if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
-            // 消除透明度
-            bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            // 高斯模糊并暗化
-            if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
-            if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
-            // 放大至窗口大小
-            bufferedImage = ImageUtils.width(bufferedImage, dw);
-            if (dh > bufferedImage.getHeight())
-                bufferedImage = ImageUtils.height(bufferedImage, dh);
-            // 裁剪中间的一部分
-            if (!loadedMusic || f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
-                int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
-                bufferedImage = Thumbnails.of(bufferedImage)
-                        .scale(1f)
-                        .sourceRegion(iw > dw ? (iw - dw) / 2 : 0, iw > dw ? 0 : (ih - dh) / 2, dw, dh)
-                        .outputQuality(0.1)
-                        .asBufferedImage();
-            } else {
-                bufferedImage = ImageUtils.forceSize(bufferedImage, dw, dh);
-            }
-            // 设置圆角
-            bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
-            globalPanel.setBackgroundImage(bufferedImage);
-            repaint();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
-
-    private class ImageViewDialogPanel extends JPanel {
-        private BufferedImage backgroundImage;
-
-        public ImageViewDialogPanel() {
-            // 阴影边框
-            Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
-            setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
-        }
-
-        public void setBackgroundImage(BufferedImage backgroundImage) {
-            this.backgroundImage = backgroundImage;
-        }
-
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2d = (Graphics2D) g;
-            // 避免锯齿
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if (backgroundImage != null) {
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
-                g2d.drawImage(backgroundImage, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
-            }
-
-            // 画边框阴影
-            for (int i = 0; i < pixels; i++) {
-                g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-                g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
-            }
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
-        }
     }
 }

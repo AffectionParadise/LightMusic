@@ -1,38 +1,25 @@
 package net.doge.ui.components.dialog;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
-import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.CustomSlider;
+import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.componentui.VSliderUI;
-import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 /**
  * @Author yzx
  * @Description 播放速率对话框
  * @Date 2020/12/15
  */
-public class RateDialog extends JDialog {
-    private RateDialogPanel globalPanel = new RateDialogPanel();
-
-    // 最大阴影透明度
-    private final int TOP_OPACITY = 30;
-    // 阴影大小像素
-    private final int pixels = 10;
-
+public class RateDialog extends AbstractShadowDialog {
     // 最大/小值
     private final int MIN_VAL = 1;
     private final int MAX_VAL = 80;
@@ -41,18 +28,14 @@ public class RateDialog extends JDialog {
     private final CustomLabel valLabel = new CustomLabel();
     private final CustomSlider slider = new CustomSlider();
 
-    private PlayerFrame f;
     private VideoDialog d;
     private JComponent comp;
-    private UIStyle style;
 
-    // 父窗口和是否是模态，传入 OK 按钮文字，要展示的文件
     public RateDialog(PlayerFrame f, VideoDialog d, JComponent comp) {
-        super(d == null ? f : d);
+        super(d == null ? f : d, false);
         this.f = f;
         this.d = d;
         this.comp = comp;
-        this.style = f.currUIStyle;
     }
 
     public void close() {
@@ -94,34 +77,21 @@ public class RateDialog extends JDialog {
         setVisible(true);
     }
 
-    public void updateBlur() {
-        BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
-            bufferedImage = f.player.getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            if (f.blurType == BlurType.MC)
-                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG)
-                bufferedImage = ImageUtils.toGradient(bufferedImage);
-        } else {
-            UIStyle style = f.currUIStyle;
-            bufferedImage = style.getImg();
-        }
-        doBlur(bufferedImage);
-    }
-
     private void initView() {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
+        Color textColor = f.currUIStyle.getTextColor();
+        Color sliderColor = f.currUIStyle.getSliderColor();
+
         // 标签
-        valLabel.setForeground(style.getTextColor());
+        valLabel.setForeground(textColor);
         centerPanel.add(valLabel, BorderLayout.NORTH);
 
         // 滑动条
         slider.setFont(Fonts.NORMAL);
-        slider.setForeground(style.getTextColor());
-        slider.setUI(new VSliderUI(slider, style.getSliderColor(), style.getSliderColor()));
+        slider.setForeground(textColor);
+        slider.setUI(new VSliderUI(slider, sliderColor, sliderColor));
         slider.setPreferredSize(new Dimension(35, 500));
         slider.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         slider.setMinimum(MIN_VAL);
@@ -142,73 +112,5 @@ public class RateDialog extends JDialog {
         });
 
         centerPanel.add(slider, BorderLayout.CENTER);
-    }
-
-    private void doBlur(BufferedImage bufferedImage) {
-        int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
-        try {
-            boolean loadedMusic = f.player.loadedMusic();
-            // 截取中间的一部分(有的图片是长方形)
-            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
-            // 处理成 100 * 100 大小
-            if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
-            // 消除透明度
-            bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            // 高斯模糊并暗化
-            if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
-            if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
-            // 放大至窗口大小
-            bufferedImage = ImageUtils.width(bufferedImage, dw);
-            if (dh > bufferedImage.getHeight())
-                bufferedImage = ImageUtils.height(bufferedImage, dh);
-            // 裁剪中间的一部分
-            if (!loadedMusic || f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
-                int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
-                bufferedImage = Thumbnails.of(bufferedImage)
-                        .scale(1f)
-                        .sourceRegion(iw > dw ? (iw - dw) / 2 : 0, iw > dw ? 0 : (ih - dh) / 2, dw, dh)
-                        .outputQuality(0.1)
-                        .asBufferedImage();
-            } else {
-                bufferedImage = ImageUtils.forceSize(bufferedImage, dw, dh);
-            }
-            // 设置圆角
-            bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
-            globalPanel.setBackgroundImage(bufferedImage);
-            repaint();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
-
-    private class RateDialogPanel extends JPanel {
-        private BufferedImage backgroundImage;
-
-        public RateDialogPanel() {
-            // 阴影边框
-            Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
-            setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
-        }
-
-        public void setBackgroundImage(BufferedImage backgroundImage) {
-            this.backgroundImage = backgroundImage;
-        }
-
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2d = (Graphics2D) g;
-            // 避免锯齿
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if (backgroundImage != null) {
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
-                g2d.drawImage(backgroundImage, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
-            }
-
-            // 画边框阴影
-            for (int i = 0; i < pixels; i++) {
-                g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-                g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
-            }
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
-        }
     }
 }

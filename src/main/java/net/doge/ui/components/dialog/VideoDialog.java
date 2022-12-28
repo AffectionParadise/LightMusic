@@ -9,24 +9,20 @@ import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
-import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.*;
 import net.doge.models.NetMvInfo;
-import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
+import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.componentui.RadioButtonMenuItemUI;
 import net.doge.ui.componentui.SliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.concurrent.Future;
@@ -37,18 +33,13 @@ import java.util.concurrent.TimeUnit;
  * @Description 播放 MV 的对话框
  * @Date 2020/12/15
  */
-public class VideoDialog extends JDialog {
+public class VideoDialog extends AbstractShadowDialog {
     private final String DEFAULT_TIME = "00:00";
     private final int TIME_BAR_MIN = 0;
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     private final int MAX_VOLUME = 100;
     private int mediaWidth;
     private int mediaHeight;
-
-    // 最大阴影透明度
-    private final int TOP_OPACITY = 30;
-    // 阴影大小像素
-    private final int pixels = 10;
 
     private final String FORWARD_TIP = "快进";
     private final String BACKWARD_TIP = "快退";
@@ -101,7 +92,6 @@ public class VideoDialog extends JDialog {
     private String title = "";
     private boolean isMute;
 
-    private VideoDialogPanel globalPanel = new VideoDialogPanel();
     private JFXPanel jfxPanel = new JFXPanel();
 
     // 标题面板
@@ -161,31 +151,14 @@ public class VideoDialog extends JDialog {
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
 
-    private PlayerFrame f;
     private NetMvInfo netMvInfo;
-    private UIStyle style;
-
-    // true 表示是模态的
-//    public VideoDialog(NetMvInfo netMvInfo, boolean isLocal, PlayerFrame f) {
-//        super(f, true);
-//        this.f = f;
-//        this.isLocal = isLocal;
-//        this.netMvInfo = netMvInfo;
-//        this.uri = isLocal ? SimplePath.DOWNLOAD_MV_PATH + netMvInfo.toSimpleFileName() : netMvInfo.getUrl();
-//        title = netMvInfo.toSimpleString();
-//        style = f.currUIStyle;
-//
-//        initUI();
-//    }
 
     public VideoDialog(NetMvInfo netMvInfo, String dest, PlayerFrame f) {
-        super(f, true);
-        this.f = f;
+        super(f);
         this.isLocal = dest != null;
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();
         title = netMvInfo.toSimpleString();
-        style = f.currUIStyle;
 
         mediaWidth = WindowSize.videoDimensions[f.windowSize][0];
         mediaHeight = WindowSize.videoDimensions[f.windowSize][1];
@@ -246,22 +219,6 @@ public class VideoDialog extends JDialog {
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
         add(globalPanel);
-    }
-
-    public void updateBlur() {
-        BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
-            bufferedImage = f.player.getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            if (f.blurType == BlurType.MC)
-                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG)
-                bufferedImage = ImageUtils.toGradient(bufferedImage);
-        } else {
-            UIStyle style = f.currUIStyle;
-            bufferedImage = style.getImg();
-        }
-        doBlur(bufferedImage);
     }
 
     public void showDialog() {
@@ -341,7 +298,7 @@ public class VideoDialog extends JDialog {
         mp.setOnEndOfMedia(() -> {
             mp.seek(Duration.seconds(0));
             mp.pause();
-            playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getIconColor()));
+            playOrPauseButton.setIcon(ImageUtils.dye(playIcon, f.currUIStyle.getIconColor()));
             timeBar.setValue(0);
             currTimeLabel.setText(DEFAULT_TIME);
         });
@@ -375,17 +332,18 @@ public class VideoDialog extends JDialog {
     // 出错时重新初始化
     private void initAgain() {
         initView();
-        timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), f, mp, true));
+        Color timeBarColor = f.currUIStyle.getTimeBarColor();
+        timeBar.setUI(new SliderUI(timeBar, timeBarColor, timeBarColor, f, mp, true));
         playVideo();
     }
 
     // 初始化标题栏
     private void initTitleBar() {
-        titleLabel.setForeground(style.getTextColor());
+        titleLabel.setForeground(f.currUIStyle.getTextColor());
         titleLabel.setText(StringUtils.textToHtml(title));
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, style.getIconColor()));
+        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
         // 关闭窗口
         closeButton.addActionListener(e -> {
@@ -417,12 +375,15 @@ public class VideoDialog extends JDialog {
 
     // 进度条
     private void initTimeBar() {
-        currTimeLabel.setForeground(style.getTimeBarColor());
-        durationLabel.setForeground(style.getTimeBarColor());
+        Color textColor = f.currUIStyle.getTextColor();
+        Color timeBarColor = f.currUIStyle.getTimeBarColor();
+
+        currTimeLabel.setForeground(textColor);
+        durationLabel.setForeground(textColor);
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
-        timeBar.setUI(new SliderUI(timeBar, style.getTimeBarColor(), style.getTimeBarColor(), f, mp, true));      // 自定义进度条 UI
+        timeBar.setUI(new SliderUI(timeBar, timeBarColor, timeBarColor, f, mp, true));      // 自定义进度条 UI
         // 拖动播放时间条
         timeBar.addMouseListener(new MouseAdapter() {
             @Override
@@ -446,15 +407,18 @@ public class VideoDialog extends JDialog {
 
     // 控制面板
     private void initControlPanel() {
+        Color iconColor = f.currUIStyle.getIconColor();
+        Color sliderColor = f.currUIStyle.getSliderColor();
+
         playOrPauseButton.setToolTipText(PLAY_TIP);
-        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, iconColor));
         playOrPauseButton.setPreferredSize(new Dimension(pauseIcon.getIconWidth(), pauseIcon.getIconHeight()));
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, f));
         playOrPauseButton.addActionListener(e -> playOrPause());
 
         // 快进
         forwardButton.setToolTipText(FORWARD_TIP);
-        forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), style.getIconColor()));
+        forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), iconColor));
         forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, f));
         forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth(), forwIcon.getIconHeight()));
         forwardButton.addActionListener(e -> {
@@ -462,7 +426,7 @@ public class VideoDialog extends JDialog {
         });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
-        backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), style.getIconColor()));
+        backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), iconColor));
         backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, f));
         backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth(), backwIcon.getIconHeight()));
         backwardButton.addActionListener(e -> {
@@ -470,33 +434,33 @@ public class VideoDialog extends JDialog {
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
-        muteButton.setIcon(ImageUtils.dye(soundIcon, style.getIconColor()));
+        muteButton.setIcon(ImageUtils.dye(soundIcon, iconColor));
         muteButton.addMouseListener(new ButtonMouseListener(muteButton, f));
         muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth(), muteIcon.getIconHeight()));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
-                muteButton.setIcon(ImageUtils.dye(muteIcon, style.getIconColor()));
+                muteButton.setIcon(ImageUtils.dye(muteIcon, iconColor));
             } else {
                 muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtils.dye(soundIcon, style.getIconColor()));
+                muteButton.setIcon(ImageUtils.dye(soundIcon, iconColor));
             }
             mp.setMute(isMute);
         });
         // 音量调节滑动条
-        volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), f, mp, false));
+        volumeSlider.setUI(new SliderUI(volumeSlider, sliderColor, sliderColor, f, mp, false));
         volumeSlider.setPreferredSize(new Dimension(100, 12));
         volumeSlider.setMaximum(MAX_VOLUME);
         volumeSlider.addChangeListener(e -> {
             mp.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
             if (!isMute) return;
             muteButton.setToolTipText(SOUND_TIP);
-            muteButton.setIcon(ImageUtils.dye(soundIcon, style.getIconColor()));
+            muteButton.setIcon(ImageUtils.dye(soundIcon, iconColor));
             mp.setMute(isMute = false);
         });
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
-        collectButton.setIcon(ImageUtils.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, style.getIconColor()));
+        collectButton.setIcon(ImageUtils.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, iconColor));
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, f));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth(), collectIcon.getIconHeight()));
         collectButton.addActionListener(e -> {
@@ -506,28 +470,28 @@ public class VideoDialog extends JDialog {
                 GlobalExecutors.requestExecutor.submit(() -> MusicServerUtils.fillMvDetail(netMvInfo));
                 f.mvCollectionModel.add(0, netMvInfo);
                 collectButton.setToolTipText(CANCEL_COLLECTION_TIP);
-                collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, style.getIconColor()));
+                collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, iconColor));
                 new TipDialog(f, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 f.mvCollectionModel.removeElement(netMvInfo);
                 collectButton.setToolTipText(COLLECT_TIP);
-                collectButton.setIcon(ImageUtils.dye(collectIcon, style.getIconColor()));
+                collectButton.setIcon(ImageUtils.dye(collectIcon, iconColor));
                 new TipDialog(f, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
         // 下载
         downloadButton.setEnabled(!isLocal || !netMvInfo.isMp4());
         downloadButton.setToolTipText(DOWNLOAD_TIP);
-        downloadButton.setIcon(ImageUtils.dye(downloadIcon, style.getIconColor()));
-        downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, ColorUtils.darker(style.getIconColor())));
+        downloadButton.setIcon(ImageUtils.dye(downloadIcon, iconColor));
+        downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, ColorUtils.darker(iconColor)));
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, f));
         downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth(), downloadIcon.getIconHeight()));
         downloadButton.addActionListener(e -> {
             downloadMv();
         });
-        rateButton.setForeground(style.getIconColor());
+        rateButton.setForeground(iconColor);
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), style.getIconColor()));
+        rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), iconColor));
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, f));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
         rateButton.addActionListener(e -> {
@@ -537,7 +501,7 @@ public class VideoDialog extends JDialog {
         // 快进/快退时间
         fobTimePopupMenu = new CustomPopupMenu(f);
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
-            Color textColor = style.getTextColor();
+            Color textColor = f.currUIStyle.getTextColor();
             menuItem.setForeground(textColor);
             menuItem.setUI(new RadioButtonMenuItemUI(textColor));
             int time = Integer.parseInt(menuItem.getText().replace("秒", ""));
@@ -550,9 +514,9 @@ public class VideoDialog extends JDialog {
             fobTimeMenuItemsButtonGroup.add(menuItem);
             fobTimePopupMenu.add(menuItem);
         }
-        fobTimeButton.setForeground(style.getIconColor());
+        fobTimeButton.setForeground(iconColor);
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
-        fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), style.getIconColor()));
+        fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), iconColor));
         fobTimeButton.addMouseListener(new ButtonMouseListener(fobTimeButton, f));
         fobTimeButton.setPreferredSize(new Dimension(fobTimeIcon.getIconWidth(), fobTimeIcon.getIconHeight()));
         fobTimeButton.setComponentPopupMenu(fobTimePopupMenu);
@@ -562,9 +526,9 @@ public class VideoDialog extends JDialog {
                 fobTimePopupMenu.show(fobTimeButton, e.getX(), e.getY());
             }
         });
-        fullScreenButton.setForeground(style.getIconColor());
+        fullScreenButton.setForeground(iconColor);
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
-        fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), style.getIconColor()));
+        fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), iconColor));
         fullScreenButton.addMouseListener(new ButtonMouseListener(fullScreenButton, f));
         fullScreenButton.setPreferredSize(new Dimension(fullScreenIcon.getIconWidth(), fullScreenIcon.getIconHeight()));
         fullScreenButton.addActionListener(e -> toFullScreen());
@@ -632,7 +596,7 @@ public class VideoDialog extends JDialog {
         volumeSlider.setValue(f.volumeSlider.getValue());
         mp.setRate(f.currVideoRate);
         mp.play();
-        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, f.currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PAUSE_TIP);
     }
 
@@ -640,12 +604,12 @@ public class VideoDialog extends JDialog {
         switch (mp.getStatus()) {
             case PLAYING:
                 mp.pause();
-                playOrPauseButton.setIcon(ImageUtils.dye(playIcon, style.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtils.dye(playIcon, f.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 break;
             case PAUSED:
                 mp.play();
-                playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, style.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, f.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
                 break;
             case READY:
@@ -664,86 +628,8 @@ public class VideoDialog extends JDialog {
         Component[] components = fobTimePopupMenu.getComponents();
         for (Component c : components) {
             CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, style.getIconColor()));
+            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, f.currUIStyle.getIconColor()));
             else mi.setIcon(null);
-        }
-    }
-
-    private void doBlur(BufferedImage bufferedImage) {
-        int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
-        try {
-            boolean loadedMusic = f.player.loadedMusic();
-            // 截取中间的一部分(有的图片是长方形)
-            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
-            // 处理成 100 * 100 大小
-            if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
-            // 消除透明度
-            bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            // 高斯模糊并暗化
-            if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
-            if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
-            // 放大至窗口大小
-            bufferedImage = ImageUtils.width(bufferedImage, dw);
-            if (dh > bufferedImage.getHeight())
-                bufferedImage = ImageUtils.height(bufferedImage, dh);
-            // 裁剪中间的一部分
-            if (!loadedMusic || f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
-                int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
-                bufferedImage = Thumbnails.of(bufferedImage)
-                        .scale(1f)
-                        .sourceRegion(iw > dw ? (iw - dw) / 2 : 0, iw > dw ? 0 : (ih - dh) / 2, dw, dh)
-                        .outputQuality(0.1)
-                        .asBufferedImage();
-            } else {
-                bufferedImage = ImageUtils.forceSize(bufferedImage, dw, dh);
-            }
-            // 设置圆角
-            bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
-            globalPanel.setBackgroundImage(bufferedImage);
-            repaint();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
-
-    private class VideoDialogPanel extends JPanel {
-        private BufferedImage backgroundImage;
-
-        public VideoDialogPanel() {
-            initBorder();
-        }
-
-        public void initBorder() {
-            // 阴影边框
-            Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
-            setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
-        }
-
-        public void eraseBorder() {
-            setBorder(null);
-        }
-
-        public void setBackgroundImage(BufferedImage backgroundImage) {
-            this.backgroundImage = backgroundImage;
-        }
-
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2d = (Graphics2D) g;
-            // 避免锯齿
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if (backgroundImage != null) {
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
-                g2d.drawImage(backgroundImage, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
-            }
-
-            // 画边框阴影
-            if (!fullScreen) {
-                for (int i = 0; i < pixels; i++) {
-                    g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-                    g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
-                }
-            }
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
         }
     }
 }

@@ -24,8 +24,8 @@ import net.doge.exceptions.NoLyricException;
 import net.doge.exceptions.NoPrivilegeException;
 import net.doge.models.*;
 import net.doge.ui.components.*;
-import net.doge.ui.components.dialog.ColorChooserDialog;
 import net.doge.ui.components.dialog.*;
+import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.componentui.*;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.ChangePaneButtonMouseListener;
@@ -2265,7 +2265,7 @@ public class PlayerFrame extends JFrame {
     // 当前弹出的菜单
     public JPopupMenu currPopup;
     // 当前弹出的对话框
-    public List<JDialog> currDialogs = new LinkedList<>();
+    public List<AbstractShadowDialog> currDialogs = new LinkedList<>();
 
     // 当前窗口坐标
     public int x;
@@ -4346,7 +4346,7 @@ public class PlayerFrame extends JFrame {
         // 自定义风格
         styleCustomMenuItem.addActionListener(e -> customStyle());
         manageStyleMenuItem.addActionListener(e -> {
-            ManageCustomStyleDialog dialog = new ManageCustomStyleDialog(THIS, true);
+            ManageCustomStyleDialog dialog = new ManageCustomStyleDialog(THIS);
             try {
                 dialog.showDialog();
             } catch (ClassNotFoundException ex) {
@@ -6308,7 +6308,7 @@ public class PlayerFrame extends JFrame {
         });
         // 点击管理歌曲目录按钮事件
         manageCatalogToolButton.addActionListener(e -> {
-            ManageCatalogDialog dialog = new ManageCatalogDialog(THIS, true);
+            ManageCatalogDialog dialog = new ManageCatalogDialog(THIS);
             dialog.showDialog();
         });
         // 点击删除按钮事件
@@ -19387,7 +19387,7 @@ public class PlayerFrame extends JFrame {
         soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
         soundEffectButton.addMouseListener(new ButtonMouseListener(soundEffectButton, THIS));
         soundEffectButton.setPreferredSize(new Dimension(soundEffectIcon.getIconWidth(), soundEffectIcon.getIconHeight()));
-        soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS, true).showDialog());
+        soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS).showDialog());
         // 跳到播放队列按钮
         goToPlayQueueButton.setToolTipText(GO_TO_PLAY_QUEUE_TIP);
         goToPlayQueueButton.setPreferredSize(new Dimension(goToPlayQueueIcon.getIconWidth(), goToPlayQueueIcon.getIconHeight()));
@@ -21543,7 +21543,7 @@ public class PlayerFrame extends JFrame {
 
     // 打开自定义风格弹窗
     private void customStyle() {
-        CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, true, "添加并应用", currUIStyle);
+        CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, "添加并应用", currUIStyle);
         customStyleDialog.showDialog();
         if (customStyleDialog.getConfirmed()) {
             // 创建自定义样式并更换
@@ -22002,21 +22002,7 @@ public class PlayerFrame extends JFrame {
         // 更新弹出菜单
         if (currPopup != null) currPopup.repaint();
         // 更新对话框
-        for (JDialog d : currDialogs) {
-            if (d instanceof ConfirmDialog) ((ConfirmDialog) d).updateBlur();
-            else if (d instanceof CustomStyleDialog) ((CustomStyleDialog) d).updateBlur();
-            else if (d instanceof EditInfoDialog) ((EditInfoDialog) d).updateBlur();
-            else if (d instanceof ManageCatalogDialog) ((ManageCatalogDialog) d).updateBlur();
-            else if (d instanceof ManageCustomStyleDialog) ((ManageCustomStyleDialog) d).updateBlur();
-            else if (d instanceof SettingDialog) ((SettingDialog) d).updateBlur();
-            else if (d instanceof SoundEffectDialog) ((SoundEffectDialog) d).updateBlur();
-            else if (d instanceof TipDialog) ((TipDialog) d).updateBlur();
-            else if (d instanceof ImageViewDialog) ((ImageViewDialog) d).updateBlur();
-            else if (d instanceof RateDialog) ((RateDialog) d).updateBlur();
-            else if (d instanceof ColorChooserDialog) ((ColorChooserDialog) d).updateBlur();
-            else if (d instanceof DonateDialog) ((DonateDialog) d).updateBlur();
-            else if (d instanceof AboutDialog) ((AboutDialog) d).updateBlur();
-        }
+        for (AbstractShadowDialog d : currDialogs) d.updateBlur();
     }
 
     // 模糊碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化

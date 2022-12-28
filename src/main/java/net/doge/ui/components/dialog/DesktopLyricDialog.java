@@ -387,9 +387,4 @@ public class DesktopLyricDialog extends JDialog {
             super.paintComponent(g);
         }
     }
-
-    public static void main(String[] args) {
-        DesktopLyricDialog test = new DesktopLyricDialog(null);
-        test.setLyric("我一直在挥霍着时间", 0.3);
-    }
 }

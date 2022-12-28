@@ -28,7 +28,7 @@ public class PreDefinedUIStyle {
                     Colors.AUTUMN1, Colors.AUTUMN2, Colors.AUTUMN1, Colors.AUTUMN3, Colors.AUTUMN1,
                     Colors.AUTUMN1, Colors.AUTUMN1, Colors.AUTUMN1, Colors.AUTUMN1, Colors.AUTUMN1),
             new UIStyle(UIStyleConstants.PRE, "冬", SimplePath.STYLE_IMG_PATH + "winter.jpg",
-                    Colors.WHITE, Colors.CLOUD2, Colors.WHITE, Colors.CLOUD3, Colors.WHITE,
+                    Colors.WHITE, Colors.WINTER2, Colors.WHITE, Colors.WINTER3, Colors.WHITE,
                     Colors.WHITE, Colors.WHITE, Colors.WHITE, Colors.WHITE, Colors.WHITE),
             new UIStyle(UIStyleConstants.PRE, "粉红天堂", SimplePath.STYLE_IMG_PATH + "pinkParadise.jpg",
                     Colors.PINK_PARADISE1, Colors.PINK_PARADISE2, Colors.PINK_PARADISE1, Colors.PINK_PARADISE3, Colors.PINK_PARADISE1,
@@ -64,7 +64,7 @@ public class PreDefinedUIStyle {
                     Colors.BROOK1, Colors.BROOK2, Colors.BROOK1, Colors.BROOK3, Colors.BROOK1,
                     Colors.BROOK1, Colors.BROOK1, Colors.BROOK1, Colors.BROOK1, Colors.BROOK1),
             new UIStyle(UIStyleConstants.PRE, "新年快乐", SimplePath.STYLE_IMG_PATH + "happyNewYear.jpg",
-                    Colors.MISTY_ROSE, Colors.CHINESE_RED_2, Colors.MISTY_ROSE, Colors.CHINESE_RED_2, Colors.MISTY_ROSE,
-                    Colors.MISTY_ROSE, Colors.MISTY_ROSE, Colors.MISTY_ROSE, Colors.MISTY_ROSE, Colors.MISTY_ROSE)
+                    Colors.HAPPY_NEW_YEAR1, Colors.HAPPY_NEW_YEAR2, Colors.HAPPY_NEW_YEAR1, Colors.HAPPY_NEW_YEAR3, Colors.HAPPY_NEW_YEAR1,
+                    Colors.HAPPY_NEW_YEAR1, Colors.HAPPY_NEW_YEAR1, Colors.HAPPY_NEW_YEAR1, Colors.HAPPY_NEW_YEAR1, Colors.HAPPY_NEW_YEAR1)
     };
 }

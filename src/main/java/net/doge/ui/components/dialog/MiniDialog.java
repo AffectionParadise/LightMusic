@@ -1,15 +1,12 @@
 package net.doge.ui.components.dialog;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.BlurType;
 import net.doge.constants.Colors;
 import net.doge.constants.SimplePath;
-import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomButton;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
-import net.doge.ui.components.GlobalPanel;
+import net.doge.ui.components.dialog.factory.AbstractMiniDialog;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 
@@ -18,8 +15,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,7 +23,7 @@ import java.util.concurrent.Executors;
  * @Description 迷你模式对话框
  * @Date 2020/12/15
  */
-public class MiniDialog extends JDialog {
+public class MiniDialog extends AbstractMiniDialog {
     private final int WIDTH = 480;
     private final int HEIGHT = 76;
     private final int offsetX = WIDTH - 6;
@@ -38,7 +33,6 @@ public class MiniDialog extends JDialog {
     // 关闭窗口图标
     private ImageIcon closeMiniIcon = new ImageIcon(SimplePath.ICON_PATH + "closeMini.png");
 
-    private GlobalPanel globalPanel = new GlobalPanel();
     private CustomPanel controlPanel = new CustomPanel();
 
     // 标签 + 按钮
@@ -48,12 +42,10 @@ public class MiniDialog extends JDialog {
     public CustomButton playNextButton = new CustomButton();
     public CustomButton closeButton = new CustomButton();
 
-    private PlayerFrame f;
     private CustomButton changePaneButton;
     private CustomButton popButton;
     private CustomButton lastButton;
     private CustomButton nextButton;
-    private UIStyle style;
 
     public ExecutorService globalExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
@@ -67,9 +59,7 @@ public class MiniDialog extends JDialog {
     private boolean dragged;
 
     public MiniDialog(PlayerFrame f) {
-        super();
-        this.f = f;
-        style = f.currUIStyle;
+        super(f);
         changePaneButton = f.changePaneButton;
         popButton = f.playOrPauseButton;
         lastButton = f.lastButton;
@@ -215,7 +205,7 @@ public class MiniDialog extends JDialog {
         });
 
         // 颜色
-        infoLabel.setForeground(style.getTextColor());
+        infoLabel.setForeground(f.currUIStyle.getTextColor());
         // 正在播放的音乐信息
         infoLabel.setText(changePaneButton.getText());
         infoLabel.setIcon(changePaneButton.getIcon());
@@ -239,7 +229,7 @@ public class MiniDialog extends JDialog {
         playLastButton.setIcon(lastButton.getIcon());
         playOrPauseButton.setIcon(popButton.getIcon());
         playNextButton.setIcon(nextButton.getIcon());
-        closeButton.setIcon(ImageUtils.dye(closeMiniIcon, style.getIconColor()));
+        closeButton.setIcon(ImageUtils.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
 
         // 按钮大小
         playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth(), playLastButton.getIcon().getIconHeight()));
@@ -273,59 +263,5 @@ public class MiniDialog extends JDialog {
         globalPanel.add(controlPanel, BorderLayout.CENTER);
 
         updateBlur();
-    }
-
-    public void updateBlur() {
-        BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
-            bufferedImage = f.player.getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            if (f.blurType == BlurType.MC)
-                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG)
-                bufferedImage = ImageUtils.toGradient(bufferedImage);
-        } else {
-            UIStyle style = f.currUIStyle;
-            bufferedImage = style.getImg();
-        }
-        doBlur(bufferedImage);
-    }
-
-    public void doBlur(BufferedImage bufferedImage) {
-        int dw = getWidth(), dh = getHeight();
-        try {
-            boolean loadedMusic = f.player.loadedMusic();
-            // 截取中间的一部分(有的图片是长方形)
-            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
-            // 处理成 100 * 100 大小
-            if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
-            // 消除透明度
-            bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
-            // 高斯模糊并暗化
-            if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
-            if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
-            // 放大至窗口大小
-            bufferedImage = ImageUtils.width(bufferedImage, dw);
-            if (dh > bufferedImage.getHeight())
-                bufferedImage = ImageUtils.height(bufferedImage, dh);
-            // 裁剪中间的一部分
-            if (!loadedMusic || f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
-                int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
-                bufferedImage = Thumbnails.of(bufferedImage)
-                        .scale(1f)
-                        .sourceRegion(iw > dw ? (iw - dw) / 2 : 0, iw > dw ? 0 : (ih - dh) / 2, dw, dh)
-                        .outputQuality(0.1)
-                        .asBufferedImage();
-            } else {
-                bufferedImage = ImageUtils.forceSize(bufferedImage, dw, dh);
-            }
-            // 设置圆角
-            bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
-            globalPanel.setBackgroundImage(bufferedImage);
-            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
-            repaint();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
     }
 }
