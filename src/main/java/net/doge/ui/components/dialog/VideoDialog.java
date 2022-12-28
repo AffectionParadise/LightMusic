@@ -13,15 +13,21 @@ import net.doge.constants.*;
 import net.doge.models.NetMvInfo;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
-import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.componentui.RadioButtonMenuItemUI;
 import net.doge.ui.componentui.SliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.*;
+import net.doge.utils.ColorUtils;
+import net.doge.utils.ImageUtils;
+import net.doge.utils.MusicServerUtils;
+import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -33,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * @Description 播放 MV 的对话框
  * @Date 2020/12/15
  */
-public class VideoDialog extends AbstractShadowDialog {
+public class VideoDialog extends AbstractTitledDialog {
     private final String DEFAULT_TIME = "00:00";
     private final int TIME_BAR_MIN = 0;
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
@@ -88,17 +94,9 @@ public class VideoDialog extends AbstractShadowDialog {
     // 快进快退时间图标
     private ImageIcon fobTimeIcon = new ImageIcon(SimplePath.ICON_PATH + "fobTime.png");
 
-    // 标题
-    private String title = "";
     private boolean isMute;
 
     private JFXPanel jfxPanel = new JFXPanel();
-
-    // 标题面板
-    private CustomPanel topPanel = new CustomPanel();
-    private CustomLabel titleLabel = new CustomLabel();
-    private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton();
 
     // 进度条面板
     private CustomPanel progressPanel = new CustomPanel();
@@ -154,11 +152,10 @@ public class VideoDialog extends AbstractShadowDialog {
     private NetMvInfo netMvInfo;
 
     public VideoDialog(NetMvInfo netMvInfo, String dest, PlayerFrame f) {
-        super(f);
+        super(f, netMvInfo.toSimpleString());
         this.isLocal = dest != null;
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();
-        title = netMvInfo.toSimpleString();
 
         mediaWidth = WindowSize.videoDimensions[f.windowSize][0];
         mediaHeight = WindowSize.videoDimensions[f.windowSize][1];
@@ -170,25 +167,6 @@ public class VideoDialog extends AbstractShadowDialog {
         // 取消桌面歌词置顶避免遮挡视线
         f.desktopLyricDialog.setAlwaysOnTop(false);
 
-        // 解决 setUndecorated(true) 后窗口不能拖动的问题
-        Point origin = new Point();
-        topPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1) return;
-                origin.x = e.getX();
-                origin.y = e.getY();
-            }
-        });
-        topPanel.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // mouseDragged 不能正确返回 button 值，需要借助此方法
-                if (!SwingUtilities.isLeftMouseButton(e)) return;
-                Point p = getLocation();
-                setLocation(x = p.x + e.getX() - origin.x, y = p.y + e.getY() - origin.y);
-            }
-        });
         // 保持在屏幕正中间
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -209,6 +187,7 @@ public class VideoDialog extends AbstractShadowDialog {
         globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
+        initCloseResponse();
         initView();
         initTimeBar();
         initControlPanel();
@@ -269,17 +248,7 @@ public class VideoDialog extends AbstractShadowDialog {
         mp = new MediaPlayer(media);
         mediaView = new MediaView(mp);
         // 视频宽高控制
-//            media.widthProperty().addListener(new ChangeListener<Number>() {
-//                @Override
-//                public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-//                    int width = media.getWidth(), height = media.getHeight();
-//                    if (width > height) mediaView.setFitWidth(mediaWidth);
-//                    else mediaView.setFitWidth(mediaWidth_2);
-//                }
-//            });
-        media.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-            fitMediaView();
-        });
+        media.heightProperty().addListener((observableValue, oldValue, newValue) -> fitMediaView());
         // 刷新缓冲长度
         mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
         mp.currentTimeProperty().addListener(l -> {
@@ -337,17 +306,9 @@ public class VideoDialog extends AbstractShadowDialog {
         playVideo();
     }
 
-    // 初始化标题栏
-    private void initTitleBar() {
-        titleLabel.setForeground(f.currUIStyle.getTextColor());
-        titleLabel.setText(StringUtils.textToHtml(title));
-        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
-        // 关闭窗口
+    // 初始化关闭响应事件
+    private void initCloseResponse() {
         closeButton.addActionListener(e -> {
-            dispose();
             // 恢复桌面歌词置顶
             f.desktopLyricDialog.setAlwaysOnTop(f.desktopLyricOnTop);
             Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
@@ -359,18 +320,6 @@ public class VideoDialog extends AbstractShadowDialog {
                 if (!future.isDone()) future.cancel(true);
             }
         });
-        // 鼠标事件
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
-        windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setMinimumSize(new Dimension(30, 30));
-        windowCtrlPanel.add(closeButton);
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-        topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalGlue());
-        topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
     // 进度条

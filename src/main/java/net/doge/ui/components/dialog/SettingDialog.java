@@ -6,10 +6,9 @@ import javafx.stage.FileChooser;
 import net.doge.constants.*;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
-import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.componentui.ScrollBarUI;
-import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.JsonUtils;
 import net.doge.utils.KeyUtils;
@@ -31,20 +30,13 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Description 设置对话框
  * @Date 2020/12/15
  */
-public class SettingDialog extends AbstractShadowDialog {
-    private final String TITLE = "设置";
-
+public class SettingDialog extends AbstractTitledDialog {
     // 目录不存在提示
     private final String CATALOG_NOT_FOUND_MSG = "该目录不存在";
 
     private CustomPanel centerPanel = new CustomPanel();
     private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
     private CustomPanel buttonPanel = new CustomPanel();
-
-    private CustomPanel topPanel = new CustomPanel();
-    private CustomLabel titleLabel = new CustomLabel();
-    private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton();
 
     // 设置项
     private CustomPanel autoUpdatePanel = new CustomPanel();
@@ -142,7 +134,7 @@ public class SettingDialog extends AbstractShadowDialog {
     AWTEventListener mouseListener;
 
     public SettingDialog(PlayerFrame f) {
-        super(f);
+        super(f, "设置");
 
         Color textColor = f.currUIStyle.getTextColor();
         okButton = new DialogButton("保存", textColor);
@@ -151,28 +143,6 @@ public class SettingDialog extends AbstractShadowDialog {
     }
 
     public void showDialog() {
-        // 解决 setUndecorated(true) 后窗口不能拖动的问题
-        Point origin = new Point();
-        topPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1) return;
-                origin.x = e.getX();
-                origin.y = e.getY();
-            }
-        });
-        topPanel.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // mouseDragged 不能正确返回 button 值，需要借助此方法
-                if (!SwingUtilities.isLeftMouseButton(e)) return;
-                Point p = getLocation();
-                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
-            }
-        });
-
-        setTitle(TITLE);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setSize(700, 750);
 
@@ -196,7 +166,7 @@ public class SettingDialog extends AbstractShadowDialog {
             applySettings();
             new TipDialog(f, "应用成功").showDialog();
         });
-        cancelButton.addActionListener(e -> closeButton.doClick());
+        cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
         buttonPanel.add(applyButton);
         buttonPanel.add(cancelButton);
@@ -212,32 +182,6 @@ public class SettingDialog extends AbstractShadowDialog {
 
         f.currDialogs.add(this);
         setVisible(true);
-    }
-
-    // 初始化标题栏
-    private void initTitleBar() {
-        titleLabel.setForeground(f.currUIStyle.getTextColor());
-        titleLabel.setText(TITLE);
-        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
-        // 关闭窗口
-        closeButton.addActionListener(e -> {
-            f.currDialogs.remove(this);
-            dispose();
-        });
-        // 鼠标事件
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
-        windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setMinimumSize(new Dimension(30, 30));
-        windowCtrlPanel.add(closeButton);
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-        topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalGlue());
-        topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
     private void initView() {

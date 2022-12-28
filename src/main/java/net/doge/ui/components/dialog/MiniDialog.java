@@ -42,15 +42,9 @@ public class MiniDialog extends AbstractMiniDialog {
     public CustomButton playNextButton = new CustomButton();
     public CustomButton closeButton = new CustomButton();
 
-    private CustomButton changePaneButton;
-    private CustomButton popButton;
-    private CustomButton lastButton;
-    private CustomButton nextButton;
 
     public ExecutorService globalExecutor = Executors.newSingleThreadExecutor();
-    private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService locationExecutor = Executors.newSingleThreadExecutor();
-    private Timer globalPanelTimer;
     private Timer locationTimer;
 
     private int destX;
@@ -60,10 +54,6 @@ public class MiniDialog extends AbstractMiniDialog {
 
     public MiniDialog(PlayerFrame f) {
         super(f);
-        changePaneButton = f.changePaneButton;
-        popButton = f.playOrPauseButton;
-        lastButton = f.lastButton;
-        nextButton = f.nextButton;
         initUI();
     }
 
@@ -197,26 +187,19 @@ public class MiniDialog extends AbstractMiniDialog {
 
     // 初始化界面
     private void initView() {
-        globalPanelTimer = new Timer(10, e -> {
-            globalPanelExecutor.submit(() -> {
-                globalPanel.setOpacity((float) Math.min(1, globalPanel.getOpacity() + 0.05));
-                if (globalPanel.getOpacity() >= 1) globalPanelTimer.stop();
-            });
-        });
-
         // 颜色
         infoLabel.setForeground(f.currUIStyle.getTextColor());
         // 正在播放的音乐信息
-        infoLabel.setText(changePaneButton.getText());
-        infoLabel.setIcon(changePaneButton.getIcon());
+        infoLabel.setText(f.changePaneButton.getText());
+        infoLabel.setIcon(f.changePaneButton.getIcon());
         infoLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         infoLabel.setIconTextGap(10);
         infoLabel.setPreferredSize(new Dimension(240, 66));
 
         // 提示
-        playLastButton.setToolTipText(lastButton.getToolTipText());
-        playOrPauseButton.setToolTipText(popButton.getToolTipText());
-        playNextButton.setToolTipText(nextButton.getToolTipText());
+        playLastButton.setToolTipText(f.lastButton.getToolTipText());
+        playOrPauseButton.setToolTipText(f.playOrPauseButton.getToolTipText());
+        playNextButton.setToolTipText(f.nextButton.getToolTipText());
         closeButton.setToolTipText(CLOSE_TIP);
 
         // 监听事件
@@ -226,9 +209,9 @@ public class MiniDialog extends AbstractMiniDialog {
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
 
         // 图标
-        playLastButton.setIcon(lastButton.getIcon());
-        playOrPauseButton.setIcon(popButton.getIcon());
-        playNextButton.setIcon(nextButton.getIcon());
+        playLastButton.setIcon(f.lastButton.getIcon());
+        playOrPauseButton.setIcon(f.playOrPauseButton.getIcon());
+        playNextButton.setIcon(f.nextButton.getIcon());
         closeButton.setIcon(ImageUtils.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
 
         // 按钮大小
@@ -237,9 +220,9 @@ public class MiniDialog extends AbstractMiniDialog {
         playNextButton.setPreferredSize(new Dimension(playNextButton.getIcon().getIconWidth(), playNextButton.getIcon().getIconHeight()));
         closeButton.setPreferredSize(new Dimension(closeButton.getIcon().getIconWidth(), closeButton.getIcon().getIconHeight()));
 
-        playLastButton.addActionListener(e -> lastButton.doClick());
-        playNextButton.addActionListener(e -> nextButton.doClick());
-        playOrPauseButton.addActionListener(e -> popButton.doClick());
+        playLastButton.addActionListener(e -> f.lastButton.doClick());
+        playNextButton.addActionListener(e -> f.nextButton.doClick());
+        playOrPauseButton.addActionListener(e -> f.playOrPauseButton.doClick());
         closeButton.addActionListener(e -> {
             dispose();
             f.miniDialog = null;

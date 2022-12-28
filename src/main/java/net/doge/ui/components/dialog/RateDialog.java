@@ -50,7 +50,6 @@ public class RateDialog extends AbstractShadowDialog {
                 close();
             }
         });
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setLocation(400, 200);
 

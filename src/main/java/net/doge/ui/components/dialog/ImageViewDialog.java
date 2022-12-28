@@ -10,14 +10,15 @@ import net.doge.constants.SimplePath;
 import net.doge.models.CommonResult;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
-import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.ListUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -29,8 +30,7 @@ import java.util.List;
  * @Description 图片浏览的对话框
  * @Date 2020/12/15
  */
-public abstract class ImageViewDialog extends AbstractShadowDialog {
-    private final String TITLE = "图片预览";
+public abstract class ImageViewDialog extends AbstractTitledDialog {
     private final int WIDTH = 1000;
     private final int HEIGHT = 850;
     // 加载图片提示
@@ -65,11 +65,6 @@ public abstract class ImageViewDialog extends AbstractShadowDialog {
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel bottomPanel = new CustomPanel();
 
-    private CustomPanel topPanel = new CustomPanel();
-    private CustomLabel titleLabel = new CustomLabel();
-    private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton();
-
     private CustomLabel imgLabel = new CustomLabel("");
     public CustomButton lastImgButton = new CustomButton(lastImgIcon);
     private CustomLabel pageLabel = new CustomLabel();
@@ -93,32 +88,11 @@ public abstract class ImageViewDialog extends AbstractShadowDialog {
     private int limit;
 
     public ImageViewDialog(PlayerFrame f, int limit) {
-        super(f);
+        super(f, "图片预览");
         this.limit = limit;
     }
 
     public void showDialog() {
-        // 解决 setUndecorated(true) 后窗口不能拖动的问题
-        Point origin = new Point();
-        topPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1) return;
-                origin.x = e.getX();
-                origin.y = e.getY();
-            }
-        });
-        topPanel.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // mouseDragged 不能正确返回 button 值，需要借助此方法
-                if (!SwingUtilities.isLeftMouseButton(e)) return;
-                Point p = getLocation();
-                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
-            }
-        });
-
-        setTitle(TITLE);
         setResizable(false);
         setSize(WIDTH, HEIGHT);
 
@@ -131,8 +105,6 @@ public abstract class ImageViewDialog extends AbstractShadowDialog {
         initView();
         dialog.close();
 
-//        loadHotKeyListener();
-
         add(globalPanel, BorderLayout.CENTER);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
@@ -142,32 +114,6 @@ public abstract class ImageViewDialog extends AbstractShadowDialog {
 
         f.currDialogs.add(this);
         setVisible(true);
-    }
-
-    // 初始化标题栏
-    private void initTitleBar() {
-        titleLabel.setForeground(f.currUIStyle.getTextColor());
-        titleLabel.setText(TITLE);
-        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
-        // 关闭窗口
-        closeButton.addActionListener(e -> {
-            dispose();
-            f.currDialogs.remove(this);
-        });
-        // 鼠标事件
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
-        windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
-        windowCtrlPanel.add(closeButton);
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-        topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalGlue());
-        topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
     // 组装界面
@@ -291,7 +237,7 @@ public abstract class ImageViewDialog extends AbstractShadowDialog {
         GlobalExecutors.imageExecutor.submit(() -> {
             if (!showImg(p)) {
                 requestFailed();
-                closeButton.doClick();
+                close();
             }
         });
     }

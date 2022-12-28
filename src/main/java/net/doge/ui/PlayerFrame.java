@@ -4347,19 +4347,7 @@ public class PlayerFrame extends JFrame {
         styleCustomMenuItem.addActionListener(e -> customStyle());
         manageStyleMenuItem.addActionListener(e -> {
             ManageCustomStyleDialog dialog = new ManageCustomStyleDialog(THIS);
-            try {
-                dialog.showDialog();
-            } catch (ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            } catch (UnsupportedLookAndFeelException ex) {
-                throw new RuntimeException(ex);
-            } catch (InstantiationException ex) {
-                throw new RuntimeException(ex);
-            } catch (IllegalAccessException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new RuntimeException(ex);
-            }
+            dialog.showDialog();
         });
     }
 

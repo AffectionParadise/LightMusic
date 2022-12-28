@@ -10,6 +10,8 @@ import net.doge.utils.ImageUtils;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author yzx
@@ -17,6 +19,9 @@ import java.io.IOException;
  * @Date 2021/1/5
  */
 public abstract class AbstractMiniDialog extends JDialog {
+    private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
+    private Timer globalPanelTimer;
+
     protected GlobalPanel globalPanel = new GlobalPanel();
 
     protected PlayerFrame f;
@@ -24,6 +29,13 @@ public abstract class AbstractMiniDialog extends JDialog {
     public AbstractMiniDialog(PlayerFrame f) {
         super(f);
         this.f = f;
+
+        globalPanelTimer = new Timer(10, e -> {
+            globalPanelExecutor.submit(() -> {
+                globalPanel.setOpacity((float) Math.min(1, globalPanel.getOpacity() + 0.05));
+                if (globalPanel.getOpacity() >= 1) globalPanelTimer.stop();
+            });
+        });
     }
 
     public void updateBlur() {
@@ -73,7 +85,7 @@ public abstract class AbstractMiniDialog extends JDialog {
             // 设置圆角
             bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
             globalPanel.setBackgroundImage(bufferedImage);
-            repaint();
+            globalPanelTimer.start();
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

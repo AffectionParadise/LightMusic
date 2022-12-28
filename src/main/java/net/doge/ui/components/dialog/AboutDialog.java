@@ -4,12 +4,10 @@ import net.doge.constants.Colors;
 import net.doge.constants.SimplePath;
 import net.doge.constants.SoftInfo;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomButton;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.ui.components.DialogButton;
-import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
-import net.doge.ui.listeners.ButtonMouseListener;
+import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
@@ -24,17 +22,8 @@ import java.awt.event.MouseMotionAdapter;
  * @Description 关于对话框
  * @Date 2021/1/5
  */
-public class AboutDialog extends AbstractShadowDialog {
+public class AboutDialog extends AbstractTitledDialog {
     private DialogButton yes;
-
-    // 标题
-    private final String title = "关于";
-
-    // 标题面板
-    private CustomPanel topPanel = new CustomPanel();
-    private CustomLabel titleLabel = new CustomLabel();
-    private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton();
 
     private ImageIcon appIcon = new ImageIcon(SimplePath.ICON_PATH + "title.png");
 
@@ -52,34 +41,10 @@ public class AboutDialog extends AbstractShadowDialog {
     private CustomPanel buttonPanel = new CustomPanel();
 
     public AboutDialog(PlayerFrame f) {
-        super(f);
+        super(f, "关于");
 
         Color textColor = f.currUIStyle.getTextColor();
         yes = new DialogButton("确定", textColor);
-    }
-
-    // 初始化标题栏
-    private void initTitleBar() {
-        titleLabel.setForeground(f.currUIStyle.getTextColor());
-        titleLabel.setText(title);
-        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
-        // 关闭窗口
-        closeButton.addActionListener(e -> close());
-        // 鼠标事件
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
-        windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setMinimumSize(new Dimension(30, 30));
-        windowCtrlPanel.add(closeButton);
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-        topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalGlue());
-        topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
     public void showDialog() {
@@ -160,10 +125,5 @@ public class AboutDialog extends AbstractShadowDialog {
 
         f.currDialogs.add(this);
         setVisible(true);
-    }
-
-    private void close() {
-        f.currDialogs.remove(this);
-        dispose();
     }
 }

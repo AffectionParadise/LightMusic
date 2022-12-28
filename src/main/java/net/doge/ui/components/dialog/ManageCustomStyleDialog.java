@@ -5,9 +5,8 @@ import net.doge.constants.UIStyleConstants;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
-import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.componentui.ScrollBarUI;
-import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.DefaultStyleListRenderer;
 import net.doge.utils.ImageUtils;
 
@@ -15,9 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -25,8 +22,7 @@ import java.util.List;
  * @Description 管理自定义样式的对话框
  * @Date 2020/12/15
  */
-public class ManageCustomStyleDialog extends AbstractShadowDialog {
-    private final String TITLE = "管理主题";
+public class ManageCustomStyleDialog extends AbstractTitledDialog {
     private final String IMG_LOST_MSG = "主题背景图片丢失，请重新编辑主题";
     private final String EDIT_DENIED_MSG = "不能编辑预设的主题";
     private final String REMOVE_DENIED_MSG = "不能删除预设的主题";
@@ -34,11 +30,6 @@ public class ManageCustomStyleDialog extends AbstractShadowDialog {
     private final String SINGLE_SELECT_MSG = "需要编辑的主题一次只能选择一个";
 
     private CustomPanel centerPanel = new CustomPanel();
-
-    private CustomPanel topPanel = new CustomPanel();
-    private CustomLabel titleLabel = new CustomLabel();
-    private CustomPanel windowCtrlPanel = new CustomPanel();
-    private CustomButton closeButton = new CustomButton();
 
     private CustomPanel northPanel = new CustomPanel();
     private CustomPanel tipPanel = new CustomPanel();
@@ -62,7 +53,7 @@ public class ManageCustomStyleDialog extends AbstractShadowDialog {
     private Box rightBox = new Box(BoxLayout.Y_AXIS);
 
     public ManageCustomStyleDialog(PlayerFrame f) {
-        super(f);
+        super(f, "管理主题");
 
         Color textColor = f.currUIStyle.getTextColor();
         allSelectButton = new DialogButton("全选", textColor);
@@ -73,28 +64,7 @@ public class ManageCustomStyleDialog extends AbstractShadowDialog {
         removeButton = new DialogButton("删除", textColor);
     }
 
-    public void showDialog() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        // 解决 setUndecorated(true) 后窗口不能拖动的问题
-        Point origin = new Point();
-        topPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1) return;
-                origin.x = e.getX();
-                origin.y = e.getY();
-            }
-        });
-        topPanel.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // mouseDragged 不能正确返回 button 值，需要借助此方法
-                if (!SwingUtilities.isLeftMouseButton(e)) return;
-                Point p = getLocation();
-                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
-            }
-        });
-
-        setTitle(TITLE);
+    public void showDialog() {
         setResizable(false);
         setSize(800, 700);
 
@@ -115,32 +85,6 @@ public class ManageCustomStyleDialog extends AbstractShadowDialog {
 
         f.currDialogs.add(this);
         setVisible(true);
-    }
-
-    // 初始化标题栏
-    private void initTitleBar() {
-        titleLabel.setForeground(f.currUIStyle.getTextColor());
-        titleLabel.setText(TITLE);
-        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
-        // 关闭窗口
-        closeButton.addActionListener(e -> {
-            dispose();
-            f.currDialogs.remove(this);
-        });
-        // 鼠标事件
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
-        FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
-        windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
-        windowCtrlPanel.add(closeButton);
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-        topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalGlue());
-        topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 
     // 组装界面

@@ -1,9 +1,6 @@
 package net.doge.ui.components;
 
-import net.doge.utils.ImageUtils;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

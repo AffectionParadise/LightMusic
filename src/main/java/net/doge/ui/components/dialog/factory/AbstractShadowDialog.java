@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @Author yzx
- * @Description 抽象对话框
+ * @Description 抽象阴影对话框
  * @Date 2021/1/5
  */
 public abstract class AbstractShadowDialog extends JDialog {
