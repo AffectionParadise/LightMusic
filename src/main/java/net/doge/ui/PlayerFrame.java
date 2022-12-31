@@ -57,7 +57,6 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -2752,33 +2751,24 @@ public class PlayerFrame extends JFrame {
             KeyEvent kE = (KeyEvent) event;
             boolean released = kE.getID() == KeyEvent.KEY_RELEASED, pressed = kE.getID() == KeyEvent.KEY_PRESSED;
             if (!released && !pressed) return;
+
             int code = kE.getKeyCode();
 
             // 图片浏览窗口的监听事件
             if (imageViewDialog != null && released && !imageViewDialog.pageTextField.hasFocus()) {
-                if (code == KeyEvent.VK_LEFT) {
-                    imageViewDialog.lastImgButton.doClick();
-                } else if (code == KeyEvent.VK_RIGHT) {
-                    imageViewDialog.nextImgButton.doClick();
-                }
+                if (code == KeyEvent.VK_LEFT) imageViewDialog.lastImgButton.doClick();
+                else if (code == KeyEvent.VK_RIGHT) imageViewDialog.nextImgButton.doClick();
             }
-            // 视频界面恢复窗口事件
-            else if (videoDialog != null) {
-                if (keyEnabled) {
-                    // 记录所有按键
-                    if (released && !currKeys.isEmpty()) currKeys.removeLast();
-                    else if (!currKeys.contains(code)) currKeys.add(code);
-                    else return;
-                    if (ListUtils.equals(playOrPauseKeys, currKeys)) {
-                        videoDialog.playOrPause();
-                    } else if (ListUtils.equals(backwardKeys, currKeys)) {
-                        videoDialog.backwardButton.doClick();
-                    } else if (ListUtils.equals(forwardKeys, currKeys)) {
-                        videoDialog.forwardButton.doClick();
-                    } else if (ListUtils.equals(videoFullScreenKeys, currKeys)) {
-                        videoDialog.switchWindow();
-                    }
-                }
+            // 视频界面快捷键
+            else if (videoDialog != null && keyEnabled) {
+                // 记录所有按键
+                if (released && !currKeys.isEmpty()) currKeys.removeLast();
+                else if (pressed && !currKeys.contains(code)) currKeys.add(code);
+                else return;
+                if (ListUtils.equals(playOrPauseKeys, currKeys)) videoDialog.playOrPause();
+                else if (ListUtils.equals(backwardKeys, currKeys)) videoDialog.backwardButton.doClick();
+                else if (ListUtils.equals(forwardKeys, currKeys)) videoDialog.forwardButton.doClick();
+                else if (ListUtils.equals(videoFullScreenKeys, currKeys)) videoDialog.switchWindow();
             } else {
                 // 搜索框输入时不受影响
                 if (!collectionPageTextField.hasFocus()
@@ -2798,19 +2788,14 @@ public class PlayerFrame extends JFrame {
                     if (keyEnabled) {
                         // 记录所有按键
                         if (released && !currKeys.isEmpty()) currKeys.removeLast();
-                        else if (!currKeys.contains(code)) currKeys.add(code);
+                        else if (pressed && !currKeys.contains(code)) currKeys.add(code);
                         else return;
-                        if (ListUtils.equals(playOrPauseKeys, currKeys)) {
-                            if (videoDialog == null) playOrPause();
-                        } else if (ListUtils.equals(playLastKeys, currKeys)) {
-                            if (videoDialog == null) playLast();
-                        } else if (ListUtils.equals(playNextKeys, currKeys)) {
-                            if (videoDialog == null) playNext();
-                        } else if (ListUtils.equals(backwardKeys, currKeys)) {
-                            if (videoDialog == null) backwardButton.doClick();
-                        } else if (ListUtils.equals(forwardKeys, currKeys)) {
-                            if (videoDialog == null) forwardButton.doClick();
-                        }
+                        if (videoDialog != null) return;
+                        if (ListUtils.equals(playOrPauseKeys, currKeys)) playOrPause();
+                        else if (ListUtils.equals(playLastKeys, currKeys)) playLast();
+                        else if (ListUtils.equals(playNextKeys, currKeys)) playNext();
+                        else if (ListUtils.equals(backwardKeys, currKeys)) backwardButton.doClick();
+                        else if (ListUtils.equals(forwardKeys, currKeys)) forwardButton.doClick();
                     }
                 } else if (currDialogs.isEmpty() && code == KeyEvent.VK_ENTER && released) {
                     // 回车跳页
@@ -5337,7 +5322,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) collectionList.getCellRenderer();
+                ItemRecommendListRenderer renderer = (ItemRecommendListRenderer) collectionList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -5348,7 +5333,7 @@ public class PlayerFrame extends JFrame {
         collectionList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) collectionList.getCellRenderer();
+                ItemRecommendListRenderer renderer = (ItemRecommendListRenderer) collectionList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 collectionList.repaint();
@@ -6804,7 +6789,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) musicList.getCellRenderer();
+                MusicListRenderer renderer = (MusicListRenderer) musicList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -6815,7 +6800,7 @@ public class PlayerFrame extends JFrame {
         musicList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) musicList.getCellRenderer();
+                MusicListRenderer renderer = (MusicListRenderer) musicList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 musicList.repaint();
@@ -7378,7 +7363,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetMusicListRenderer renderer = (TranslucentNetMusicListRenderer) netMusicList.getCellRenderer();
+                NetMusicListRenderer renderer = (NetMusicListRenderer) netMusicList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -7389,7 +7374,7 @@ public class PlayerFrame extends JFrame {
         netMusicList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetMusicListRenderer renderer = (TranslucentNetMusicListRenderer) netMusicList.getCellRenderer();
+                NetMusicListRenderer renderer = (NetMusicListRenderer) netMusicList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netMusicList.repaint();
@@ -8882,7 +8867,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetPlaylistListRenderer renderer = (TranslucentNetPlaylistListRenderer) netPlaylistList.getCellRenderer();
+                NetPlaylistListRenderer renderer = (NetPlaylistListRenderer) netPlaylistList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -8893,7 +8878,7 @@ public class PlayerFrame extends JFrame {
         netPlaylistList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetPlaylistListRenderer renderer = (TranslucentNetPlaylistListRenderer) netPlaylistList.getCellRenderer();
+                NetPlaylistListRenderer renderer = (NetPlaylistListRenderer) netPlaylistList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netPlaylistList.repaint();
@@ -9872,7 +9857,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetAlbumListRenderer renderer = (TranslucentNetAlbumListRenderer) netAlbumList.getCellRenderer();
+                NetAlbumListRenderer renderer = (NetAlbumListRenderer) netAlbumList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -9883,7 +9868,7 @@ public class PlayerFrame extends JFrame {
         netAlbumList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetAlbumListRenderer renderer = (TranslucentNetAlbumListRenderer) netAlbumList.getCellRenderer();
+                NetAlbumListRenderer renderer = (NetAlbumListRenderer) netAlbumList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netAlbumList.repaint();
@@ -10888,7 +10873,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetArtistListRenderer renderer = (TranslucentNetArtistListRenderer) netArtistList.getCellRenderer();
+                NetArtistListRenderer renderer = (NetArtistListRenderer) netArtistList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -10899,7 +10884,7 @@ public class PlayerFrame extends JFrame {
         netArtistList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetArtistListRenderer renderer = (TranslucentNetArtistListRenderer) netArtistList.getCellRenderer();
+                NetArtistListRenderer renderer = (NetArtistListRenderer) netArtistList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netArtistList.repaint();
@@ -12121,7 +12106,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetRadioListRenderer renderer = (TranslucentNetRadioListRenderer) netRadioList.getCellRenderer();
+                NetRadioListRenderer renderer = (NetRadioListRenderer) netRadioList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -12132,7 +12117,7 @@ public class PlayerFrame extends JFrame {
         netRadioList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetRadioListRenderer renderer = (TranslucentNetRadioListRenderer) netRadioList.getCellRenderer();
+                NetRadioListRenderer renderer = (NetRadioListRenderer) netRadioList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netRadioList.repaint();
@@ -13101,7 +13086,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetMvListRenderer renderer = (TranslucentNetMvListRenderer) netMvList.getCellRenderer();
+                NetMvListRenderer renderer = (NetMvListRenderer) netMvList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -13112,7 +13097,7 @@ public class PlayerFrame extends JFrame {
         netMvList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetMvListRenderer renderer = (TranslucentNetMvListRenderer) netMvList.getCellRenderer();
+                NetMvListRenderer renderer = (NetMvListRenderer) netMvList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netMvList.repaint();
@@ -13859,7 +13844,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetRankingListRenderer renderer = (TranslucentNetRankingListRenderer) netRankingList.getCellRenderer();
+                NetRankingListRenderer renderer = (NetRankingListRenderer) netRankingList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -13870,7 +13855,7 @@ public class PlayerFrame extends JFrame {
         netRankingList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetRankingListRenderer renderer = (TranslucentNetRankingListRenderer) netRankingList.getCellRenderer();
+                NetRankingListRenderer renderer = (NetRankingListRenderer) netRankingList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netRankingList.repaint();
@@ -14618,7 +14603,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetUserListRenderer renderer = (TranslucentNetUserListRenderer) netUserList.getCellRenderer();
+                NetUserListRenderer renderer = (NetUserListRenderer) netUserList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -14629,7 +14614,7 @@ public class PlayerFrame extends JFrame {
         netUserList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetUserListRenderer renderer = (TranslucentNetUserListRenderer) netUserList.getCellRenderer();
+                NetUserListRenderer renderer = (NetUserListRenderer) netUserList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netUserList.repaint();
@@ -15619,7 +15604,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetCommentListRenderer renderer = (TranslucentNetCommentListRenderer) netCommentList.getCellRenderer();
+                NetCommentListRenderer renderer = (NetCommentListRenderer) netCommentList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -15630,7 +15615,7 @@ public class PlayerFrame extends JFrame {
         netCommentList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetCommentListRenderer renderer = (TranslucentNetCommentListRenderer) netCommentList.getCellRenderer();
+                NetCommentListRenderer renderer = (NetCommentListRenderer) netCommentList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netCommentList.repaint();
@@ -16042,7 +16027,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentNetSheetListRenderer renderer = (TranslucentNetSheetListRenderer) netSheetList.getCellRenderer();
+                NetSheetListRenderer renderer = (NetSheetListRenderer) netSheetList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -16053,7 +16038,7 @@ public class PlayerFrame extends JFrame {
         netSheetList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentNetSheetListRenderer renderer = (TranslucentNetSheetListRenderer) netSheetList.getCellRenderer();
+                NetSheetListRenderer renderer = (NetSheetListRenderer) netSheetList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 netSheetList.repaint();
@@ -17667,7 +17652,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) itemRecommendList.getCellRenderer();
+                ItemRecommendListRenderer renderer = (ItemRecommendListRenderer) itemRecommendList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -17678,7 +17663,7 @@ public class PlayerFrame extends JFrame {
         itemRecommendList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentItemRecommendListRenderer renderer = (TranslucentItemRecommendListRenderer) itemRecommendList.getCellRenderer();
+                ItemRecommendListRenderer renderer = (ItemRecommendListRenderer) itemRecommendList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 itemRecommendList.repaint();
@@ -18272,7 +18257,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentDownloadListRenderer renderer = (TranslucentDownloadListRenderer) downloadList.getCellRenderer();
+                DownloadListRenderer renderer = (DownloadListRenderer) downloadList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -18283,7 +18268,7 @@ public class PlayerFrame extends JFrame {
         downloadList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentDownloadListRenderer renderer = (TranslucentDownloadListRenderer) downloadList.getCellRenderer();
+                DownloadListRenderer renderer = (DownloadListRenderer) downloadList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 downloadList.repaint();
@@ -18575,7 +18560,7 @@ public class PlayerFrame extends JFrame {
             }
 
             private void setHoverIndex(int index) {
-                TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) playQueue.getCellRenderer();
+                MusicListRenderer renderer = (MusicListRenderer) playQueue.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -18586,7 +18571,7 @@ public class PlayerFrame extends JFrame {
         playQueue.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                TranslucentMusicListRenderer renderer = (TranslucentMusicListRenderer) playQueue.getCellRenderer();
+                MusicListRenderer renderer = (MusicListRenderer) playQueue.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 playQueue.repaint();
@@ -18891,6 +18876,34 @@ public class PlayerFrame extends JFrame {
 
         // 焦点(不画焦点框)
         lrcList.setFocusable(false);
+        // 悬停框
+//        lrcList.addMouseMotionListener(new MouseAdapter() {
+//            @Override
+//            public void mouseMoved(MouseEvent e) {
+//                int index = lrcList.locationToIndex(e.getPoint());
+//                Rectangle bounds = lrcList.getCellBounds(index, index);
+//                if (bounds == null) return;
+//                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
+//            }
+//
+//            private void setHoverIndex(int index) {
+//                LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+//                if (renderer == null) return;
+//                int hoverIndex = renderer.getHoverIndex();
+//                if (hoverIndex == index) return;
+//                renderer.setHoverIndex(index);
+//                lrcList.repaint();
+//            }
+//        });
+//        lrcList.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseExited(MouseEvent e) {
+//                LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+//                if (renderer == null) return;
+//                renderer.setHoverIndex(-1);
+//                lrcList.repaint();
+//            }
+//        });
         // 右键弹出菜单
         lrcList.addMouseListener(new MouseAdapter() {
             @Override
@@ -19053,10 +19066,10 @@ public class PlayerFrame extends JFrame {
                 if (nextLrc >= 0) {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio.get();
                     if (currRatio < or) ratio = (or - currRatio) / lrcPiece + currRatio;
-                    ((TranslucentLrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
+                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
                     desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
                 } else {
-                    ((TranslucentLrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
+                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
                     desktopLyricDialog.setLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_MSG : BAD_FORMAT_LRC_MSG, 0);
                 }
                 if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
@@ -19793,7 +19806,7 @@ public class PlayerFrame extends JFrame {
             lrcScrollPane.setVValue(currScrollVal = 0);
             if (!reload) {
                 // 更新歌词面板渲染
-                TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
+                LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
                 renderer.setRow(row);
             }
             lrcList.setModel(lrcListModel);
@@ -19870,7 +19883,7 @@ public class PlayerFrame extends JFrame {
                         currScrollVal = lrcScrollPane.getVValue();
                         lrcScrollAnimation = true;
                     }
-                    TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
+                    LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
                     renderer.setRow(row);
                     nextLrc++;
                     originalRatio.set(0);
@@ -21214,105 +21227,105 @@ public class PlayerFrame extends JFrame {
         playQueueCountLabel.setForeground(textColor);
 
         // 播放列表透明
-        TranslucentMusicListRenderer musicListRenderer = new TranslucentMusicListRenderer(player);
+        MusicListRenderer musicListRenderer = new MusicListRenderer(player);
         musicListRenderer.setForeColor(foreColor);
         musicListRenderer.setSelectedColor(selectedColor);
         musicListRenderer.setTextColor(textColor);
         musicListRenderer.setIconColor(iconColor);
         musicList.setCellRenderer(musicListRenderer);
 
-        TranslucentNetMusicListRenderer netMusicListRenderer = new TranslucentNetMusicListRenderer(player);
+        NetMusicListRenderer netMusicListRenderer = new NetMusicListRenderer(player);
         netMusicListRenderer.setForeColor(foreColor);
         netMusicListRenderer.setSelectedColor(selectedColor);
         netMusicListRenderer.setTextColor(textColor);
         netMusicListRenderer.setIconColor(iconColor);
         netMusicList.setCellRenderer(netMusicListRenderer);
 
-        TranslucentNetPlaylistListRenderer netPlaylistListRenderer = new TranslucentNetPlaylistListRenderer();
+        NetPlaylistListRenderer netPlaylistListRenderer = new NetPlaylistListRenderer();
         netPlaylistListRenderer.setForeColor(foreColor);
         netPlaylistListRenderer.setSelectedColor(selectedColor);
         netPlaylistListRenderer.setTextColor(textColor);
         netPlaylistListRenderer.setIconColor(iconColor);
         netPlaylistList.setCellRenderer(netPlaylistListRenderer);
 
-        TranslucentNetAlbumListRenderer netAlbumListRenderer = new TranslucentNetAlbumListRenderer();
+        NetAlbumListRenderer netAlbumListRenderer = new NetAlbumListRenderer();
         netAlbumListRenderer.setForeColor(foreColor);
         netAlbumListRenderer.setSelectedColor(selectedColor);
         netAlbumListRenderer.setTextColor(textColor);
         netAlbumListRenderer.setIconColor(iconColor);
         netAlbumList.setCellRenderer(netAlbumListRenderer);
 
-        TranslucentNetArtistListRenderer netArtistListRenderer = new TranslucentNetArtistListRenderer();
+        NetArtistListRenderer netArtistListRenderer = new NetArtistListRenderer();
         netArtistListRenderer.setForeColor(foreColor);
         netArtistListRenderer.setSelectedColor(selectedColor);
         netArtistListRenderer.setTextColor(textColor);
         netArtistListRenderer.setIconColor(iconColor);
         netArtistList.setCellRenderer(netArtistListRenderer);
 
-        TranslucentNetRadioListRenderer netRadioListRenderer = new TranslucentNetRadioListRenderer();
+        NetRadioListRenderer netRadioListRenderer = new NetRadioListRenderer();
         netRadioListRenderer.setForeColor(foreColor);
         netRadioListRenderer.setSelectedColor(selectedColor);
         netRadioListRenderer.setTextColor(textColor);
         netRadioListRenderer.setIconColor(iconColor);
         netRadioList.setCellRenderer(netRadioListRenderer);
 
-        TranslucentNetMvListRenderer netMvListRenderer = new TranslucentNetMvListRenderer();
+        NetMvListRenderer netMvListRenderer = new NetMvListRenderer();
         netMvListRenderer.setForeColor(foreColor);
         netMvListRenderer.setSelectedColor(selectedColor);
         netMvListRenderer.setTextColor(textColor);
         netMvListRenderer.setIconColor(iconColor);
         netMvList.setCellRenderer(netMvListRenderer);
 
-        TranslucentNetRankingListRenderer netRankingListRenderer = new TranslucentNetRankingListRenderer();
+        NetRankingListRenderer netRankingListRenderer = new NetRankingListRenderer();
         netRankingListRenderer.setForeColor(foreColor);
         netRankingListRenderer.setSelectedColor(selectedColor);
         netRankingListRenderer.setTextColor(textColor);
         netRankingListRenderer.setIconColor(iconColor);
         netRankingList.setCellRenderer(netRankingListRenderer);
 
-        TranslucentNetUserListRenderer netUserListRenderer = new TranslucentNetUserListRenderer();
+        NetUserListRenderer netUserListRenderer = new NetUserListRenderer();
         netUserListRenderer.setForeColor(foreColor);
         netUserListRenderer.setSelectedColor(selectedColor);
         netUserListRenderer.setTextColor(textColor);
         netUserListRenderer.setIconColor(iconColor);
         netUserList.setCellRenderer(netUserListRenderer);
 
-        TranslucentNetCommentListRenderer netCommentListRenderer = new TranslucentNetCommentListRenderer();
+        NetCommentListRenderer netCommentListRenderer = new NetCommentListRenderer();
         netCommentListRenderer.setForeColor(foreColor);
         netCommentListRenderer.setSelectedColor(selectedColor);
         netCommentListRenderer.setTextColor(textColor);
         netCommentListRenderer.setIconColor(iconColor);
         netCommentList.setCellRenderer(netCommentListRenderer);
 
-        TranslucentNetSheetListRenderer netSheetListRenderer = new TranslucentNetSheetListRenderer();
+        NetSheetListRenderer netSheetListRenderer = new NetSheetListRenderer();
         netSheetListRenderer.setForeColor(foreColor);
         netSheetListRenderer.setSelectedColor(selectedColor);
         netSheetListRenderer.setTextColor(textColor);
         netSheetListRenderer.setIconColor(iconColor);
         netSheetList.setCellRenderer(netSheetListRenderer);
 
-        TranslucentItemRecommendListRenderer itemRecommendListRenderer = new TranslucentItemRecommendListRenderer();
+        ItemRecommendListRenderer itemRecommendListRenderer = new ItemRecommendListRenderer();
         itemRecommendListRenderer.setForeColor(foreColor);
         itemRecommendListRenderer.setSelectedColor(selectedColor);
         itemRecommendListRenderer.setTextColor(textColor);
         itemRecommendListRenderer.setIconColor(iconColor);
         itemRecommendList.setCellRenderer(itemRecommendListRenderer);
 
-        TranslucentItemRecommendListRenderer collectionListRenderer = new TranslucentItemRecommendListRenderer();
+        ItemRecommendListRenderer collectionListRenderer = new ItemRecommendListRenderer();
         collectionListRenderer.setForeColor(foreColor);
         collectionListRenderer.setSelectedColor(selectedColor);
         collectionListRenderer.setTextColor(textColor);
         collectionListRenderer.setIconColor(iconColor);
         collectionList.setCellRenderer(collectionListRenderer);
 
-        TranslucentDownloadListRenderer downloadListRenderer = new TranslucentDownloadListRenderer();
+        DownloadListRenderer downloadListRenderer = new DownloadListRenderer();
         downloadListRenderer.setForeColor(foreColor);
         downloadListRenderer.setSelectedColor(selectedColor);
         downloadListRenderer.setTextColor(textColor);
         downloadListRenderer.setIconColor(iconColor);
         downloadList.setCellRenderer(downloadListRenderer);
 
-        TranslucentMusicListRenderer playQueueRenderer = new TranslucentMusicListRenderer(player);
+        MusicListRenderer playQueueRenderer = new MusicListRenderer(player);
         playQueueRenderer.setForeColor(foreColor);
         playQueueRenderer.setSelectedColor(selectedColor);
         playQueueRenderer.setTextColor(textColor);
@@ -21437,7 +21450,7 @@ public class PlayerFrame extends JFrame {
         playQueueScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
 
         // 歌词高亮显示
-        TranslucentLrcListRenderer lrcListRenderer = new TranslucentLrcListRenderer();
+        LrcListRenderer lrcListRenderer = new LrcListRenderer();
         lrcListRenderer.setRow(row);
         lrcListRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         lrcListRenderer.setBgColor(lrcColor);
@@ -21960,7 +21973,7 @@ public class PlayerFrame extends JFrame {
                 currScrollVal = lrcScrollPane.getVValue();
                 lrcScrollAnimation = true;
             }
-            TranslucentLrcListRenderer renderer = (TranslucentLrcListRenderer) lrcList.getCellRenderer();
+            LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
             renderer.setRow(row);
             double tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime() - lrcOffset) /
                     ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset

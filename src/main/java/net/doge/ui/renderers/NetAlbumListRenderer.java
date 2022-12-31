@@ -7,7 +7,7 @@ import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
-import net.doge.models.NetSheetInfo;
+import net.doge.models.NetAlbumInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
@@ -24,7 +24,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
+public class NetAlbumListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -34,11 +34,11 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon sheetIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "sheetItem.png"), ImageConstants.profileWidth));
+    private ImageIcon albumIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "albumItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        sheetIcon = ImageUtils.dye(sheetIcon, iconColor);
+        albumIcon = ImageUtils.dye(albumIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -47,40 +47,31 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetSheetInfo netSheetInfo = (NetSheetInfo) value;
+        NetAlbumInfo netAlbumInfo = (NetAlbumInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
         CustomLabel nameLabel = new CustomLabel();
-        CustomLabel difficultyLabel = new CustomLabel();
-        CustomLabel musicKeyLabel = new CustomLabel();
-        CustomLabel playVersionLabel = new CustomLabel();
-        CustomLabel chordNameLabel = new CustomLabel();
-        CustomLabel bpmLabel = new CustomLabel();
-        CustomLabel pageSizeLabel = new CustomLabel();
+        CustomLabel artistLabel = new CustomLabel();
+        CustomLabel songNumLabel = new CustomLabel();
+        CustomLabel publishTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
-        iconLabel.setIconTextGap(15);
-        iconLabel.setIcon(netSheetInfo.hasCoverImg() ? new ImageIcon(netSheetInfo.getCoverImg()) : sheetIcon);
+        iconLabel.setIconTextGap(40);
+        iconLabel.setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : albumIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        difficultyLabel.setForeground(textColor);
-        musicKeyLabel.setForeground(textColor);
-        playVersionLabel.setForeground(textColor);
-        chordNameLabel.setForeground(textColor);
-        bpmLabel.setForeground(textColor);
-        pageSizeLabel.setForeground(textColor);
+        artistLabel.setForeground(textColor);
+        songNumLabel.setForeground(textColor);
+        publishTimeLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        difficultyLabel.setFont(customFont);
-        musicKeyLabel.setFont(customFont);
-        playVersionLabel.setFont(customFont);
-        chordNameLabel.setFont(customFont);
-        bpmLabel.setFont(customFont);
-        pageSizeLabel.setFont(customFont);
+        artistLabel.setFont(customFont);
+        songNumLabel.setFont(customFont);
+        publishTimeLabel.setFont(customFont);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
@@ -88,35 +79,27 @@ public class TranslucentNetSheetListRenderer extends DefaultListCellRenderer {
 
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
-        outerPanel.add(difficultyLabel);
-        outerPanel.add(musicKeyLabel);
-        outerPanel.add(playVersionLabel);
-        outerPanel.add(chordNameLabel);
-        outerPanel.add(bpmLabel);
-        outerPanel.add(pageSizeLabel);
+        outerPanel.add(artistLabel);
+        outerPanel.add(songNumLabel);
+        outerPanel.add(publishTimeLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netSheetInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netSheetInfo.getName(), maxWidth));
-        String difficulty = netSheetInfo.hasDifficulty() ? StringUtils.textToHtml(netSheetInfo.getDifficulty()) : "";
-        String musicKey = netSheetInfo.hasMusicKey() ? StringUtils.textToHtml(netSheetInfo.getMusicKey()) : "";
-        String playVersion = netSheetInfo.hasPlayVersion() ? StringUtils.textToHtml(netSheetInfo.getPlayVersion()) : "";
-        String chordName = netSheetInfo.hasChordName() ? StringUtils.textToHtml(netSheetInfo.getChordName()) : "";
-        String bpm = netSheetInfo.hasBpm() ? StringUtils.textToHtml(netSheetInfo.getBpm() + " 拍/分钟") : "";
-        String pageSize = netSheetInfo.hasPageSize() ? StringUtils.textToHtml(netSheetInfo.getPageSize() + " 页") : "";
+        String source = StringUtils.textToHtml(NetMusicSource.names[netAlbumInfo.getSource()]);
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netAlbumInfo.getName(), maxWidth));
+        String artist = netAlbumInfo.hasArtist() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netAlbumInfo.getArtist(), maxWidth)) : "";
+        String songNum = netAlbumInfo.hasSongNum() ? netAlbumInfo.isPhoto() ? netAlbumInfo.getSongNum() + " 图片" : netAlbumInfo.getSongNum() + " 歌曲" : "";
+        String publishTime = netAlbumInfo.hasPublishTime() ? netAlbumInfo.getPublishTime() + " 发行" : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        difficultyLabel.setText(difficulty);
-        musicKeyLabel.setText(musicKey);
-        playVersionLabel.setText(playVersion);
-        chordNameLabel.setText(chordName);
-        bpmLabel.setText(bpm);
-        pageSizeLabel.setText(pageSize);
+        artistLabel.setText(artist);
+        songNumLabel.setText(songNum);
+        publishTimeLabel.setText(publishTime);
 
         Dimension ps = iconLabel.getPreferredSize();
         Dimension ps2 = nameLabel.getPreferredSize();
-        int ph = Math.max(ps.height, ps2.height);
+        Dimension ps3 = artistLabel.getPreferredSize();
+        int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
         Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);

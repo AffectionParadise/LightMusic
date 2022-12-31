@@ -35,6 +35,8 @@ public class StringTwoColor {
      * @param widthThreshold 文字最大宽度
      */
     public StringTwoColor(JLabel label, String text, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
+        if (StringUtils.isEmpty(text)) return;
+
         this.text = text;
         this.c1 = c1;
         this.c2 = c2;
@@ -51,8 +53,6 @@ public class StringTwoColor {
             metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i));
         for (int i = 0, len = metricsHuge.length; i < len; i++)
             metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i));
-
-        if (StringUtils.isEmpty(text)) return;
 
 //        Color borderColor = ColorUtils.darker(ColorUtils.darker(c2));
 //        int shadowXOffset = 2, shadowYOffset = 2;
@@ -79,7 +79,9 @@ public class StringTwoColor {
                 }
             }
         }
-//        if (isDesktopLyric) width += shadowXOffset;
+        // 桌面歌词阴影显示不完全解决
+        final int shadowHOffset = 3;
+        if (isDesktopLyric) width += 2 * shadowHOffset;
         height = metrics.getHeight();
         height += label.getFont().getSize();
 
@@ -113,8 +115,8 @@ public class StringTwoColor {
 //        }
 
         // 画字符串
-        int widthDrawn = 0;
         if (!isDesktopLyric) {
+            int widthDrawn = 0;
             for (int i = 0, len = text.length(); i < len; i++) {
                 int codePoint = text.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
@@ -133,6 +135,7 @@ public class StringTwoColor {
                 }
             }
         } else {
+            int widthDrawn = shadowHOffset;
             for (int i = 0, len = text.length(); i < len; i++) {
                 int codePoint = text.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
@@ -182,9 +185,7 @@ public class StringTwoColor {
         g2.dispose();
 
         // 按照比例清除相关的像素点
-        if (ratio <= 1 && ratio >= 0) {
-            setRatio(ratio);
-        }
+        if (ratio <= 1 && ratio >= 0) setRatio(ratio);
     }
 
     public void setRatio(double ratio) {

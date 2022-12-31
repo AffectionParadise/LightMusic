@@ -7,12 +7,11 @@ import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
-import net.doge.models.NetMvInfo;
+import net.doge.models.NetRankingInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +24,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
+public class NetRankingListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -35,11 +34,11 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon mvIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "mvItem.png"), ImageConstants.profileWidth));
+    private ImageIcon rankingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "rankingItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        mvIcon = ImageUtils.dye(mvIcon, iconColor);
+        rankingIcon = ImageUtils.dye(rankingIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -48,34 +47,31 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetMvInfo netMvInfo = (NetMvInfo) value;
+        NetRankingInfo netRankingInfo = (NetRankingInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
         CustomLabel nameLabel = new CustomLabel();
-        CustomLabel artistLabel = new CustomLabel();
-        CustomLabel durationLabel = new CustomLabel();
         CustomLabel playCountLabel = new CustomLabel();
-        CustomLabel pubTimeLabel = new CustomLabel();
+        CustomLabel updateFreLabel = new CustomLabel();
+        CustomLabel updateTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
-        iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : mvIcon);
-        iconLabel.setIconTextGap(10);
+        iconLabel.setIconTextGap(40);
+        iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : rankingIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        artistLabel.setForeground(textColor);
-        durationLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
-        pubTimeLabel.setForeground(textColor);
+        updateFreLabel.setForeground(textColor);
+        updateTimeLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        artistLabel.setFont(customFont);
-        durationLabel.setFont(customFont);
         playCountLabel.setFont(customFont);
-        pubTimeLabel.setFont(customFont);
+        updateFreLabel.setFont(customFont);
+        updateTimeLabel.setFont(customFont);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
@@ -83,30 +79,26 @@ public class TranslucentNetMvListRenderer extends DefaultListCellRenderer {
 
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
-        outerPanel.add(artistLabel);
-        outerPanel.add(durationLabel);
         outerPanel.add(playCountLabel);
-        outerPanel.add(pubTimeLabel);
+        outerPanel.add(updateFreLabel);
+        outerPanel.add(updateTimeLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netMvInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netMvInfo.getName(), maxWidth));
-        String artist = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netMvInfo.getArtist(), maxWidth));
-        String duration = netMvInfo.hasDuration() ? TimeUtils.format(netMvInfo.getDuration()) : "--:--";
-        String playCount = netMvInfo.hasPlayCount() ? StringUtils.formatNumber(netMvInfo.getPlayCount()) : "";
-        String pubTime = netMvInfo.hasPubTime() ? netMvInfo.getPubTime() : "";
+        String source = StringUtils.textToHtml(NetMusicSource.names[netRankingInfo.getSource()]);
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRankingInfo.getName(), maxWidth));
+        String playCount = netRankingInfo.hasPlayCount() ? StringUtils.formatNumber(netRankingInfo.getPlayCount()) : "";
+        String updateFre = netRankingInfo.hasUpdateFre() ? netRankingInfo.getUpdateFre() : "";
+        String updateTime = netRankingInfo.hasUpdateTime() ? netRankingInfo.getUpdateTime() + " 更新" : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        artistLabel.setText(artist);
-        durationLabel.setText(duration);
         playCountLabel.setText(playCount);
-        pubTimeLabel.setText(pubTime);
+        updateFreLabel.setText(updateFre);
+        updateTimeLabel.setText(updateTime);
 
         Dimension ps = iconLabel.getPreferredSize();
         Dimension ps2 = nameLabel.getPreferredSize();
-        Dimension ps3 = artistLabel.getPreferredSize();
-        int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
+        int ph = Math.max(ps.height, ps2.height);
         Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);

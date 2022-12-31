@@ -9,107 +9,6 @@ import java.util.*;
  * @Date 2020/12/15
  */
 public class KeyUtils {
-    private static final Map<Integer, String> map = new HashMap<>();
-
-    static {
-        map.put(KeyEvent.VK_F1, "F1");
-        map.put(KeyEvent.VK_F2, "F2");
-        map.put(KeyEvent.VK_F3, "F3");
-        map.put(KeyEvent.VK_F4, "F4");
-        map.put(KeyEvent.VK_F5, "F5");
-        map.put(KeyEvent.VK_F6, "F6");
-        map.put(KeyEvent.VK_F7, "F7");
-        map.put(KeyEvent.VK_F8, "F8");
-        map.put(KeyEvent.VK_F9, "F9");
-        map.put(KeyEvent.VK_F10, "F10");
-        map.put(KeyEvent.VK_F11, "F11");
-        map.put(KeyEvent.VK_F12, "F12");
-        map.put(KeyEvent.VK_A, "A");
-        map.put(KeyEvent.VK_B, "B");
-        map.put(KeyEvent.VK_C, "C");
-        map.put(KeyEvent.VK_D, "D");
-        map.put(KeyEvent.VK_E, "E");
-        map.put(KeyEvent.VK_F, "F");
-        map.put(KeyEvent.VK_G, "G");
-        map.put(KeyEvent.VK_H, "H");
-        map.put(KeyEvent.VK_I, "I");
-        map.put(KeyEvent.VK_J, "J");
-        map.put(KeyEvent.VK_K, "K");
-        map.put(KeyEvent.VK_L, "L");
-        map.put(KeyEvent.VK_M, "M");
-        map.put(KeyEvent.VK_N, "N");
-        map.put(KeyEvent.VK_O, "O");
-        map.put(KeyEvent.VK_P, "P");
-        map.put(KeyEvent.VK_Q, "Q");
-        map.put(KeyEvent.VK_R, "R");
-        map.put(KeyEvent.VK_S, "S");
-        map.put(KeyEvent.VK_T, "T");
-        map.put(KeyEvent.VK_U, "U");
-        map.put(KeyEvent.VK_V, "V");
-        map.put(KeyEvent.VK_W, "W");
-        map.put(KeyEvent.VK_X, "X");
-        map.put(KeyEvent.VK_Y, "Y");
-        map.put(KeyEvent.VK_Z, "Z");
-        map.put(KeyEvent.VK_BACK_QUOTE, "`");
-        map.put(KeyEvent.VK_0, "0");
-        map.put(KeyEvent.VK_1, "1");
-        map.put(KeyEvent.VK_2, "2");
-        map.put(KeyEvent.VK_3, "3");
-        map.put(KeyEvent.VK_4, "4");
-        map.put(KeyEvent.VK_5, "5");
-        map.put(KeyEvent.VK_6, "6");
-        map.put(KeyEvent.VK_7, "7");
-        map.put(KeyEvent.VK_8, "8");
-        map.put(KeyEvent.VK_9, "9");
-        map.put(KeyEvent.VK_MINUS, "-");
-        map.put(KeyEvent.VK_EQUALS, "=");
-        map.put(KeyEvent.VK_EXCLAMATION_MARK, "!");
-        map.put(KeyEvent.VK_AT, "@");
-        map.put(KeyEvent.VK_NUMBER_SIGN, "#");
-        map.put(KeyEvent.VK_DOLLAR, "$");
-        map.put(KeyEvent.VK_CIRCUMFLEX, "^");
-        map.put(KeyEvent.VK_AMPERSAND, "&");
-        map.put(KeyEvent.VK_ASTERISK, "*");
-        map.put(KeyEvent.VK_LEFT_PARENTHESIS, "(");
-        map.put(KeyEvent.VK_RIGHT_PARENTHESIS, ")");
-        map.put(KeyEvent.VK_UNDERSCORE, "_");
-        map.put(KeyEvent.VK_PLUS, "+");
-        map.put(KeyEvent.VK_TAB, "Tab");
-        map.put(KeyEvent.VK_ENTER, "Enter");
-        map.put(KeyEvent.VK_OPEN_BRACKET, "[");
-        map.put(KeyEvent.VK_CLOSE_BRACKET, "]");
-        map.put(KeyEvent.VK_BACK_SLASH, "\\");
-        map.put(KeyEvent.VK_SEMICOLON, ";");
-        map.put(KeyEvent.VK_COLON, ":");
-        map.put(KeyEvent.VK_QUOTE, "'");
-        map.put(KeyEvent.VK_QUOTEDBL, "\"");
-        map.put(KeyEvent.VK_COMMA, ",");
-        map.put(KeyEvent.VK_PERIOD, ".");
-        map.put(KeyEvent.VK_SLASH, "/");
-        map.put(KeyEvent.VK_SPACE, "Space");
-        map.put(KeyEvent.VK_BACK_SPACE, "Back");
-        map.put(KeyEvent.VK_ENTER, "Enter");
-        map.put(KeyEvent.VK_TAB, "Tab");
-        map.put(KeyEvent.VK_CAPS_LOCK, "CapsLk");
-        map.put(KeyEvent.VK_CONTROL, "Ctrl");
-        map.put(KeyEvent.VK_SHIFT, "Shift");
-        map.put(KeyEvent.VK_ALT, "Alt");
-        map.put(KeyEvent.VK_WINDOWS, "Win");
-        map.put(KeyEvent.VK_ESCAPE, "Esc");
-        map.put(KeyEvent.VK_DELETE, "Delete");
-        map.put(KeyEvent.VK_UP, "↑");
-        map.put(KeyEvent.VK_DOWN, "↓");
-        map.put(KeyEvent.VK_LEFT, "←");
-        map.put(KeyEvent.VK_RIGHT, "→");
-        map.put(KeyEvent.VK_HOME, "Home");
-        map.put(KeyEvent.VK_END, "End");
-        map.put(KeyEvent.VK_PAGE_UP, "Pgup");
-        map.put(KeyEvent.VK_PAGE_DOWN, "Pgdn");
-        map.put(KeyEvent.VK_INSERT, "Insert");
-        map.put(KeyEvent.VK_PRINTSCREEN, "PrtSc");
-        map.put(KeyEvent.VK_NUM_LOCK, "NumLock");
-    }
-
     /**
      * KeyEvent 转为字符串
      *
@@ -117,7 +16,133 @@ public class KeyUtils {
      * @return
      */
     public static String toStr(int code) {
-        return map.get(code);
+        if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9 ||
+                code >= KeyEvent.VK_A && code <= KeyEvent.VK_Z) {
+            return String.valueOf((char)code);
+        }
+
+        switch(code) {
+            case KeyEvent.VK_ENTER: return "Enter";
+            case KeyEvent.VK_BACK_SPACE: return "Backspace";
+            case KeyEvent.VK_TAB: return "Tab";
+            case KeyEvent.VK_CANCEL: return "Cancel";
+            case KeyEvent.VK_CLEAR: return "Clear";
+            case KeyEvent.VK_COMPOSE: return "Compose";
+            case KeyEvent.VK_PAUSE: return "Pause";
+            case KeyEvent.VK_CAPS_LOCK: return "Capslock";
+            case KeyEvent.VK_ESCAPE: return "Esc";
+            case KeyEvent.VK_SPACE: return "Space";
+            case KeyEvent.VK_PAGE_UP: return "Pageup";
+            case KeyEvent.VK_PAGE_DOWN: return "Pagedown";
+            case KeyEvent.VK_END: return "End";
+            case KeyEvent.VK_HOME: return "Home";
+            case KeyEvent.VK_LEFT: return "←";
+            case KeyEvent.VK_UP: return "↑";
+            case KeyEvent.VK_RIGHT: return "→";
+            case KeyEvent.VK_DOWN: return "↓";
+            case KeyEvent.VK_BEGIN: return "Begin";
+
+            // modifiers
+            case KeyEvent.VK_SHIFT: return "Shift";
+            case KeyEvent.VK_CONTROL: return "Ctrl";
+            case KeyEvent.VK_ALT: return "Alt";
+            case KeyEvent.VK_META: return "Meta";
+            case KeyEvent.VK_ALT_GRAPH: return "Altgraph";
+
+            // punctuation
+            case KeyEvent.VK_COMMA: return ",";
+            case KeyEvent.VK_PERIOD: return ".";
+            case KeyEvent.VK_SLASH: return "/";
+            case KeyEvent.VK_SEMICOLON: return ";";
+            case KeyEvent.VK_EQUALS: return "=";
+            case KeyEvent.VK_OPEN_BRACKET: return "[";
+            case KeyEvent.VK_BACK_SLASH: return "\"";
+            case KeyEvent.VK_CLOSE_BRACKET: return "]";
+
+            // numpad numeric keys handled below
+            case KeyEvent.VK_MULTIPLY: return "Nummul";
+            case KeyEvent.VK_ADD: return "Numadd";
+            case KeyEvent.VK_SEPARATOR: return "Numsep";
+            case KeyEvent.VK_SUBTRACT: return "Numsub";
+            case KeyEvent.VK_DECIMAL: return "Numdec";
+            case KeyEvent.VK_DIVIDE: return "Numdiv";
+            case KeyEvent.VK_DELETE: return "Delete";
+            case KeyEvent.VK_NUM_LOCK: return "Numlock";
+            case KeyEvent.VK_SCROLL_LOCK: return "Scrolllock";
+
+            case KeyEvent.VK_WINDOWS: return "Win";
+            case KeyEvent.VK_CONTEXT_MENU: return "Contextmenu";
+
+            case KeyEvent.VK_F1: return "F1";
+            case KeyEvent.VK_F2: return "F2";
+            case KeyEvent.VK_F3: return "F3";
+            case KeyEvent.VK_F4: return "F4";
+            case KeyEvent.VK_F5: return "F5";
+            case KeyEvent.VK_F6: return "F6";
+            case KeyEvent.VK_F7: return "F7";
+            case KeyEvent.VK_F8: return "F8";
+            case KeyEvent.VK_F9: return "F9";
+            case KeyEvent.VK_F10: return "F10";
+            case KeyEvent.VK_F11: return "F11";
+            case KeyEvent.VK_F12: return "F12";
+            case KeyEvent.VK_F13: return "F13";
+            case KeyEvent.VK_F14: return "F14";
+            case KeyEvent.VK_F15: return "F15";
+            case KeyEvent.VK_F16: return "F16";
+            case KeyEvent.VK_F17: return "F17";
+            case KeyEvent.VK_F18: return "F18";
+            case KeyEvent.VK_F19: return "F19";
+            case KeyEvent.VK_F20: return "F20";
+            case KeyEvent.VK_F21: return "F21";
+            case KeyEvent.VK_F22: return "F22";
+            case KeyEvent.VK_F23: return "F23";
+            case KeyEvent.VK_F24: return "F24";
+
+            case KeyEvent.VK_PRINTSCREEN: return "PrtSc";
+            case KeyEvent.VK_INSERT: return "Insert";
+            case KeyEvent.VK_HELP: return "Help";
+            case KeyEvent.VK_BACK_QUOTE: return "`";
+            case KeyEvent.VK_QUOTE: return "'";
+
+            case KeyEvent.VK_KP_UP: return "↑";
+            case KeyEvent.VK_KP_DOWN: return "↓";
+            case KeyEvent.VK_KP_LEFT: return "←";
+            case KeyEvent.VK_KP_RIGHT: return "→";
+
+            case KeyEvent.VK_AMPERSAND: return "&";
+            case KeyEvent.VK_ASTERISK: return "*";
+            case KeyEvent.VK_QUOTEDBL: return "\"";
+            case KeyEvent.VK_LESS: return "<";
+            case KeyEvent.VK_GREATER: return ">";
+            case KeyEvent.VK_BRACELEFT: return "(";
+            case KeyEvent.VK_BRACERIGHT: return ")";
+            case KeyEvent.VK_AT: return "@";
+            case KeyEvent.VK_COLON: return ":";
+            case KeyEvent.VK_CIRCUMFLEX: return "^";
+            case KeyEvent.VK_DOLLAR: return "$";
+            case KeyEvent.VK_EURO_SIGN: return "€";
+            case KeyEvent.VK_EXCLAMATION_MARK: return "!";
+            case KeyEvent.VK_INVERTED_EXCLAMATION_MARK: return "¡";
+            case KeyEvent.VK_LEFT_PARENTHESIS: return "{";
+            case KeyEvent.VK_NUMBER_SIGN: return "#";
+            case KeyEvent.VK_MINUS: return "-";
+            case KeyEvent.VK_PLUS: return "+";
+            case KeyEvent.VK_RIGHT_PARENTHESIS: return "}";
+            case KeyEvent.VK_UNDERSCORE: return "_";
+        }
+
+        // 数字键盘 0-9
+        if (code >= KeyEvent.VK_NUMPAD0 && code <= KeyEvent.VK_NUMPAD9) {
+            String numpad = "Num";
+            char c = (char)(code - KeyEvent.VK_NUMPAD0 + '0');
+            return numpad + c;
+        }
+
+        if ((code & 0x01000000) != 0) {
+            return String.valueOf((char)(code ^ 0x01000000));
+        }
+        String unknown = "Unknown";
+        return unknown + " code: 0x" + Integer.toString(code, 16);
     }
 
     /**
@@ -135,7 +160,7 @@ public class KeyUtils {
     }
 
     /**
-     * 字符串转为 KeyCode 列表
+     * 字符串转为 code 列表
      *
      * @param
      * @return
@@ -149,7 +174,7 @@ public class KeyUtils {
     }
 
     /**
-     * KeyCode 列表转为字符串
+     * code 列表转为字符串
      *
      * @param
      * @return

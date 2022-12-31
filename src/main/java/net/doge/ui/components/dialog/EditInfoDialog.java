@@ -76,6 +76,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
     };
 
     private DialogButton okButton;
+    private DialogButton cancelButton;
 
     // 面板展示的文件
     private AudioFile file;
@@ -90,6 +91,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
         Color textColor = f.currUIStyle.getTextColor();
         okButton = new DialogButton("保存", textColor);
+        cancelButton = new DialogButton("取消", textColor);
 
         comboBox.addItem("");
         for (String genre : ID3v1Genres.GENRES) comboBox.addItem(genre);
@@ -142,7 +144,9 @@ public class EditInfoDialog extends AbstractTitledDialog {
             dispose();
             f.currDialogs.remove(this);
         });
+        cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 

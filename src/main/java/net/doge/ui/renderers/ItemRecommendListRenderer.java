@@ -25,7 +25,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslucentItemRecommendListRenderer extends DefaultListCellRenderer {
+public class ItemRecommendListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;

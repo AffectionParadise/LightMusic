@@ -27,7 +27,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
+public class MusicListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -43,7 +43,7 @@ public class TranslucentMusicListRenderer extends DefaultListCellRenderer {
     private ImageIcon programIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.smallWidth));
     private ImageIcon playingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.smallWidth));
 
-    public TranslucentMusicListRenderer(MusicPlayer player) {
+    public MusicListRenderer(MusicPlayer player) {
         this.player = player;
     }
 

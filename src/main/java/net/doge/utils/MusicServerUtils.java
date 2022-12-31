@@ -4167,7 +4167,7 @@ public class MusicServerUtils {
                     });
                 }
                 if (!musicInfo.hasUrl()) {
-                    String url = data.getString("soundurl");
+                    String url = data.optString("soundurl");
                     musicInfo.setUrl(url);
                     if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
                 }
@@ -6904,7 +6904,8 @@ public class MusicServerUtils {
 
         // QQ
         else if (source == NetMusicSource.QQ && StringUtils.isNotEmpty(typeStr[1])) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, hotOnly ? 1 : 0, typeStr[1], id, page, limit))
+            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, hotOnly ? 1 : 0, typeStr[1],
+                            id, page, hotOnly ? limit : Math.min(25, limit)))
                     .execute()
                     .body();
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
@@ -7154,7 +7155,7 @@ public class MusicServerUtils {
                 String username = commentJson.getString("username");
                 String profileUrl = commentJson.getString("icon");
                 String content = commentJson.getString("comment_content");
-                String time = TimeUtils.strToPhrase(commentJson.getString("ctime"));
+                String time = commentJson.getString("ctime");
                 Integer likedCount = commentJson.getInt("like_num");
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
@@ -7182,7 +7183,7 @@ public class MusicServerUtils {
                     username = cj.getString("username");
                     profileUrl = cj.getString("icon");
                     content = cj.getString("comment_content");
-                    time = TimeUtils.strToPhrase(cj.getString("ctime"));
+                    time = cj.getString("ctime");
                     likedCount = cj.getInt("like_num");
 
                     NetCommentInfo ci = new NetCommentInfo();
@@ -11394,8 +11395,26 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.fromObject(programInfoBody);
-            JSONArray programArray = programInfoJson.getJSONObject("info").getJSONObject("sounds").getJSONArray("day3");
+            JSONObject info = programInfoJson.getJSONObject("info");
+            // 轮播图
+            JSONArray programArray = info.getJSONArray("links");
             t = programArray.size();
+            for (int i = (page - 1) * limit, len = Math.min(programArray.size(), page * limit); i < len; i++) {
+                JSONObject programJson = programArray.getJSONObject(i);
+
+                String id = ReUtil.get("/sound/(\\d+)", programJson.getString("url"), 1);
+                String name = programJson.getString("title");
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setId(id);
+                musicInfo.setName(name);
+
+                res.add(musicInfo);
+            }
+            // 右侧节目
+            programArray = info.getJSONObject("sounds").getJSONArray("day3");
+            t = Math.max(t, programArray.size());
             for (int i = (page - 1) * limit, len = Math.min(programArray.size(), page * limit); i < len; i++) {
                 JSONObject programJson = programArray.getJSONObject(i);
 
@@ -20965,7 +20984,7 @@ public class MusicServerUtils {
             String url = fetchMusicUrl(info.getId(), info.getSource());
             if (StringUtils.isNotEmpty(url)) {
                 musicInfo.setUrl(url);
-                if(!musicInfo.hasDuration()) musicInfo.setDuration(info.getDuration());
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDuration());
                 return;
             }
         }
@@ -21075,7 +21094,7 @@ public class MusicServerUtils {
                     .execute()
                     .body();
             JSONObject data = JSONObject.fromObject(songBody).getJSONObject("info").getJSONObject("sound");
-            String url = data.getString("soundurl");
+            String url = data.optString("soundurl");
             return url;
         }
 

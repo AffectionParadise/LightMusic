@@ -7,7 +7,7 @@ import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
-import net.doge.models.NetPlaylistInfo;
+import net.doge.models.NetRadioInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
@@ -24,7 +24,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslucentNetPlaylistListRenderer extends DefaultListCellRenderer {
+public class NetRadioListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -34,11 +34,11 @@ public class TranslucentNetPlaylistListRenderer extends DefaultListCellRenderer 
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon playlistIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "playlistItem.png"), ImageConstants.profileWidth));
+    private ImageIcon radioIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "radioItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        playlistIcon = ImageUtils.dye(playlistIcon, iconColor);
+        radioIcon = ImageUtils.dye(radioIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -47,31 +47,37 @@ public class TranslucentNetPlaylistListRenderer extends DefaultListCellRenderer 
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) value;
+        NetRadioInfo netRadioInfo = (NetRadioInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
         CustomLabel nameLabel = new CustomLabel();
-        CustomLabel creatorLabel = new CustomLabel();
-        CustomLabel playCountLabel = new CustomLabel();
+        CustomLabel dCustomLabel = new CustomLabel();
+        CustomLabel categoryLabel = new CustomLabel();
         CustomLabel trackCountLabel = new CustomLabel();
+        CustomLabel playCountLabel = new CustomLabel();
+//        CustomLabel createTimeLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
-        iconLabel.setIconTextGap(40);
-        iconLabel.setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : playlistIcon);
+        iconLabel.setIconTextGap(25);
+        iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : radioIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        creatorLabel.setForeground(textColor);
-        playCountLabel.setForeground(textColor);
+        dCustomLabel.setForeground(textColor);
+        categoryLabel.setForeground(textColor);
         trackCountLabel.setForeground(textColor);
+        playCountLabel.setForeground(textColor);
+//        createTimeLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        creatorLabel.setFont(customFont);
-        playCountLabel.setFont(customFont);
+        dCustomLabel.setFont(customFont);
+        categoryLabel.setFont(customFont);
         trackCountLabel.setFont(customFont);
+        playCountLabel.setFont(customFont);
+//        createTimeLabel.setFont(customFont);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
@@ -79,26 +85,32 @@ public class TranslucentNetPlaylistListRenderer extends DefaultListCellRenderer 
 
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
-        outerPanel.add(creatorLabel);
+        outerPanel.add(dCustomLabel);
+        outerPanel.add(categoryLabel);
         outerPanel.add(trackCountLabel);
         outerPanel.add(playCountLabel);
+//        outerPanel.add(createTimeLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netPlaylistInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netPlaylistInfo.getName(), maxWidth));
-        String creator = netPlaylistInfo.hasCreator() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netPlaylistInfo.getCreator(), maxWidth)) : "";
-        String playCount = netPlaylistInfo.hasPlayCount() ? StringUtils.formatNumber(netPlaylistInfo.getPlayCount()) : "";
-        String trackCount = netPlaylistInfo.hasTrackCount() ? netPlaylistInfo.getTrackCount() + " 歌曲" : "";
+        String source = StringUtils.textToHtml(NetMusicSource.names[netRadioInfo.getSource()]);
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.getName(), maxWidth));
+        String dj = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", maxWidth));
+        String category = netRadioInfo.hasCategory() ? netRadioInfo.getCategory() : "";
+        String trackCount = netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() + " 节目" : "";
+        String playCount = netRadioInfo.hasPlayCount() ? StringUtils.formatNumber(netRadioInfo.getPlayCount()) : "";
+//        String createTime = netRadioInfo.hasCreateTime() ? netRadioInfo.getCreateTime() : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        creatorLabel.setText(creator);
-        playCountLabel.setText(playCount);
+        dCustomLabel.setText(dj);
+        categoryLabel.setText(category);
         trackCountLabel.setText(trackCount);
+        playCountLabel.setText(playCount);
+//        createTimeLabel.setText(createTime);
 
         Dimension ps = iconLabel.getPreferredSize();
         Dimension ps2 = nameLabel.getPreferredSize();
-        Dimension ps3 = creatorLabel.getPreferredSize();
+        Dimension ps3 = dCustomLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
         Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
         outerPanel.setPreferredSize(d);

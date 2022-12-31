@@ -23,7 +23,7 @@ import java.awt.image.BufferedImage;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslucentNetCommentListRenderer extends DefaultListCellRenderer {
+public class NetCommentListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;

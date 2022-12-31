@@ -7,7 +7,7 @@ import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.componentui.ScrollBarUI;
-import net.doge.ui.renderers.DefaultStyleListRenderer;
+import net.doge.ui.renderers.StyleListRenderer;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;
@@ -262,7 +262,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         rightBox.add(removeButton);
         rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
-        DefaultStyleListRenderer r = new DefaultStyleListRenderer(f);
+        StyleListRenderer r = new StyleListRenderer(f);
         r.setForeColor(foreColor);
         r.setSelectedColor(selectedColor);
         r.setTextColor(textColor);
@@ -278,7 +278,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             }
 
             private void setHoverIndex(int index) {
-                DefaultStyleListRenderer renderer = (DefaultStyleListRenderer) styleList.getCellRenderer();
+                StyleListRenderer renderer = (StyleListRenderer) styleList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -290,7 +290,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         styleList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                DefaultStyleListRenderer renderer = (DefaultStyleListRenderer) styleList.getCellRenderer();
+                StyleListRenderer renderer = (StyleListRenderer) styleList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 repaint();
@@ -354,7 +354,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         addButton.setForeColor(textColor);
         editButton.setForeColor(textColor);
         removeButton.setForeColor(textColor);
-        DefaultStyleListRenderer r = (DefaultStyleListRenderer) styleList.getCellRenderer();
+        StyleListRenderer r = (StyleListRenderer) styleList.getCellRenderer();
         r.setForeColor(st.getForeColor());
         r.setSelectedColor(st.getSelectedColor());
         r.setTextColor(textColor);

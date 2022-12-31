@@ -17,7 +17,7 @@ import java.awt.*;
  * @Date 2020/12/7
  */
 @Data
-public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
+public class LrcListRenderer extends DefaultListCellRenderer {
     private final Font defaultFont = Fonts.NORMAL;
     private final Font highlightFont = Fonts.NORMAL_BIG;
     // 走过的歌词颜色
@@ -29,11 +29,12 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
     // 比例
     private double ratio;
     private int row;
+    private int hoverIndex = -1;
 
     private LabelUI highlightLabelUI;
     private LabelUI normalLabelUI;
 
-    public TranslucentLrcListRenderer() {
+    public LrcListRenderer() {
         highlightLabelUI = new LabelUI(1);
         normalLabelUI = new LabelUI(0.5f);
     }
@@ -121,6 +122,8 @@ public class TranslucentLrcListRenderer extends DefaultListCellRenderer {
 //
 //        // 调整 list 对应行的高度
 //        ((ListUI) list.getUI()).setCellHeight(index, d.height);
+//
+//        outerPanel.setDrawBg(hoverIndex == index);
 //
 //        return outerPanel;
     }

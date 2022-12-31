@@ -82,6 +82,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     private DialogButton pureColor;
 
     private DialogButton okButton;
+    private DialogButton cancelButton;
 
     // 面板展示的样式
     private UIStyle showedStyle;
@@ -96,6 +97,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
 
         Color textColor = f.currUIStyle.getTextColor();
         okButton = new DialogButton(okButtonText, textColor);
+        cancelButton = new DialogButton("取消", textColor);
         pureColor = new DialogButton("纯色", textColor);
     }
 
@@ -163,7 +165,9 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
             dispose();
             f.currDialogs.remove(this);
         });
+        cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 

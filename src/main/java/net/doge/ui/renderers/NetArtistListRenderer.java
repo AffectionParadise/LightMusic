@@ -7,7 +7,7 @@ import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
-import net.doge.models.NetRankingInfo;
+import net.doge.models.NetArtistInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.ImageUtils;
@@ -24,7 +24,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
+public class NetArtistListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -34,11 +34,11 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon rankingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "rankingItem.png"), ImageConstants.profileWidth));
+    private ImageIcon artistIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "artistItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        rankingIcon = ImageUtils.dye(rankingIcon, iconColor);
+        artistIcon = ImageUtils.dye(artistIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -47,31 +47,31 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetRankingInfo netRankingInfo = (NetRankingInfo) value;
+        NetArtistInfo netArtistInfo = (NetArtistInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
         CustomLabel nameLabel = new CustomLabel();
-        CustomLabel playCountLabel = new CustomLabel();
-        CustomLabel updateFreLabel = new CustomLabel();
-        CustomLabel updateTimeLabel = new CustomLabel();
+        CustomLabel songNumLabel = new CustomLabel();
+        CustomLabel albumNumLabel = new CustomLabel();
+        CustomLabel mvNumLabel = new CustomLabel();
 
         iconLabel.setHorizontalTextPosition(LEFT);
         iconLabel.setIconTextGap(40);
-        iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : rankingIcon);
+        iconLabel.setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : artistIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        playCountLabel.setForeground(textColor);
-        updateFreLabel.setForeground(textColor);
-        updateTimeLabel.setForeground(textColor);
+        songNumLabel.setForeground(textColor);
+        albumNumLabel.setForeground(textColor);
+        mvNumLabel.setForeground(textColor);
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        playCountLabel.setFont(customFont);
-        updateFreLabel.setFont(customFont);
-        updateTimeLabel.setFont(customFont);
+        songNumLabel.setFont(customFont);
+        albumNumLabel.setFont(customFont);
+        mvNumLabel.setFont(customFont);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
@@ -79,22 +79,22 @@ public class TranslucentNetRankingListRenderer extends DefaultListCellRenderer {
 
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
-        outerPanel.add(playCountLabel);
-        outerPanel.add(updateFreLabel);
-        outerPanel.add(updateTimeLabel);
+        outerPanel.add(songNumLabel);
+        outerPanel.add(albumNumLabel);
+        outerPanel.add(mvNumLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netRankingInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRankingInfo.getName(), maxWidth));
-        String playCount = netRankingInfo.hasPlayCount() ? StringUtils.formatNumber(netRankingInfo.getPlayCount()) : "";
-        String updateFre = netRankingInfo.hasUpdateFre() ? netRankingInfo.getUpdateFre() : "";
-        String updateTime = netRankingInfo.hasUpdateTime() ? netRankingInfo.getUpdateTime() + " 更新" : "";
+        String source = StringUtils.textToHtml(NetMusicSource.names[netArtistInfo.getSource()]);
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netArtistInfo.getName(), maxWidth));
+        String songNum = netArtistInfo.hasSongNum() ? netArtistInfo.fromME() ? netArtistInfo.getSongNum() + " 电台" : netArtistInfo.getSongNum() + " 歌曲" : "";
+        String albumNum = netArtistInfo.hasAlbumNum() ? netArtistInfo.getAlbumNum() + " 专辑" : "";
+        String mvNum = netArtistInfo.hasMvNum() ? netArtistInfo.getMvNum() + " MV" : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        playCountLabel.setText(playCount);
-        updateFreLabel.setText(updateFre);
-        updateTimeLabel.setText(updateTime);
+        songNumLabel.setText(songNum);
+        albumNumLabel.setText(albumNum);
+        mvNumLabel.setText(mvNum);
 
         Dimension ps = iconLabel.getPreferredSize();
         Dimension ps2 = nameLabel.getPreferredSize();

@@ -1,16 +1,16 @@
 package net.doge.ui.renderers;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.doge.constants.Fonts;
-import net.doge.models.UIStyle;
-import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.CustomPanel;
 import net.doge.utils.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * @Author yzx
@@ -18,7 +18,9 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/7
  */
 @Data
-public class DefaultStyleListRenderer extends DefaultListCellRenderer {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CatalogListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -27,58 +29,31 @@ public class DefaultStyleListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private PlayerFrame f;
-
-    public DefaultStyleListRenderer(PlayerFrame f) {
-        this.f = f;
-    }
-
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        UIStyle style = (UIStyle) value;
+        File file = (File) value;
 
         CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
         CustomLabel nameLabel = new CustomLabel();
-        CustomLabel typeLabel = new CustomLabel();
-        CustomLabel inUseLabel = new CustomLabel();
-
-        BufferedImage img = style.getImgThumb();
-        if (img != null) iconLabel.setIcon(new ImageIcon(img));
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        typeLabel.setForeground(textColor);
-        inUseLabel.setForeground(textColor);
 
-        iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        typeLabel.setFont(customFont);
-        inUseLabel.setFont(customFont);
 
-        GridLayout layout = new GridLayout(1, 2);
+        GridLayout layout = new GridLayout(1, 1);
         layout.setHgap(15);
         outerPanel.setLayout(layout);
 
-        outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
-        outerPanel.add(typeLabel);
-        outerPanel.add(inUseLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(style.getStyleName(), maxWidth));
-        String type = StringUtils.textToHtml(style.isCustom() ? "自定义" : "预设");
-        String inUse = StringUtils.textToHtml(f.currUIStyle == style ? "使用中" : "");
+        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(file.getAbsolutePath(), maxWidth));
 
         nameLabel.setText(name);
-        typeLabel.setText(type);
-        inUseLabel.setText(inUse);
 
-        Dimension ps = iconLabel.getPreferredSize();
-        Dimension ps2 = nameLabel.getPreferredSize();
-        int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
+        Dimension ps = nameLabel.getPreferredSize();
+        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ps.height + 16, 46));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);
 

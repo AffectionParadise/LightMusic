@@ -7,7 +7,7 @@ import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.componentui.ScrollBarUI;
-import net.doge.ui.renderers.DefaultCatalogListRenderer;
+import net.doge.ui.renderers.CatalogListRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -162,7 +162,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         rightBox.add(removeButton);
         rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
-        DefaultCatalogListRenderer r = new DefaultCatalogListRenderer();
+        CatalogListRenderer r = new CatalogListRenderer();
         r.setForeColor(foreColor);
         r.setSelectedColor(selectedColor);
         r.setTextColor(textColor);
@@ -178,7 +178,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
             }
 
             private void setHoverIndex(int index) {
-                DefaultCatalogListRenderer renderer = (DefaultCatalogListRenderer) catalogList.getCellRenderer();
+                CatalogListRenderer renderer = (CatalogListRenderer) catalogList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
@@ -189,7 +189,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         catalogList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                DefaultCatalogListRenderer renderer = (DefaultCatalogListRenderer) catalogList.getCellRenderer();
+                CatalogListRenderer renderer = (CatalogListRenderer) catalogList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
                 repaint();
