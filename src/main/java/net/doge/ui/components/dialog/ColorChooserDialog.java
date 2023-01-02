@@ -4,10 +4,14 @@ import net.doge.constants.Colors;
 import net.doge.models.HSV;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
+import net.doge.ui.components.button.DialogButton;
+import net.doge.ui.components.combobox.CustomComboBox;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
-import net.doge.ui.componentui.ColorSliderUI;
+import net.doge.ui.components.panel.CustomPanel;
+import net.doge.ui.components.textfield.CustomTextField;
+import net.doge.ui.components.textfield.SafeDocument;
+import net.doge.ui.componentui.slider.ColorSliderUI;
 import net.doge.ui.componentui.ComboBoxUI;
-import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ColorUtils;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
@@ -284,15 +288,12 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         });
 
         // 按钮
-        ok.addMouseListener(new ButtonMouseListener(ok, f));
         ok.addActionListener(e -> {
             confirmed = true;
             result = makeColor();
             close();
         });
-        cancel.addMouseListener(new ButtonMouseListener(ok, f));
         cancel.addActionListener(e -> close());
-        reset.addMouseListener(new ButtonMouseListener(ok, f));
         reset.addActionListener(e -> updateColor(source));
 
         // 下拉框

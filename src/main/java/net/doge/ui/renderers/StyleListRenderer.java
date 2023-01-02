@@ -5,7 +5,7 @@ import net.doge.constants.Fonts;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.utils.StringUtils;
 
 import javax.swing.*;

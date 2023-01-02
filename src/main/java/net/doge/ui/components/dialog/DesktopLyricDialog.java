@@ -5,9 +5,9 @@ import net.doge.constants.Fonts;
 import net.doge.constants.SimplePath;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.StringTwoColor;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
@@ -283,14 +283,14 @@ public class DesktopLyricDialog extends JDialog {
         });
 
         lock.addMouseListener(new ButtonMouseListener(lock, f));
-        lock.setPreferredSize(new Dimension(lockIcon.getIconWidth(), lockIcon.getIconHeight()));
+        lock.setPreferredSize(new Dimension(lockIcon.getIconWidth() + 10, lockIcon.getIconHeight() + 10));
         lock.addActionListener(e -> {
             f.desktopLyricLocked = !f.desktopLyricLocked;
             updateLock();
         });
         restore.setToolTipText(RESTORE_TIP);
         restore.addMouseListener(new ButtonMouseListener(restore, f));
-        restore.setPreferredSize(new Dimension(restoreIcon.getIconWidth(), restoreIcon.getIconHeight()));
+        restore.setPreferredSize(new Dimension(restoreIcon.getIconWidth() + 10, restoreIcon.getIconHeight() + 10));
         restore.addActionListener(e -> {
             f.desktopLyricX = f.desktopLyricY = -1;
             setLocation(dx, dy);
@@ -298,25 +298,25 @@ public class DesktopLyricDialog extends JDialog {
         });
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
         descendTrans.addMouseListener(new ButtonMouseListener(descendTrans, f));
-        descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth(), descendTransIcon.getIconHeight()));
+        descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth() + 10, descendTransIcon.getIconHeight() + 10));
         descendTrans.addActionListener(e -> {
             lyricLabel.decreaseAlpha();
         });
         ascendTrans.setToolTipText(ASCEND_TRANS_TIP);
         ascendTrans.addMouseListener(new ButtonMouseListener(ascendTrans, f));
-        ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth(), ascendTransIcon.getIconHeight()));
+        ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth() + 10, ascendTransIcon.getIconHeight() + 10));
         ascendTrans.addActionListener(e -> {
             lyricLabel.increaseAlpha();
         });
         onTop.addMouseListener(new ButtonMouseListener(onTop, f));
-        onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth(), onTopIcon.getIconHeight()));
+        onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth() + 10, onTopIcon.getIconHeight() + 10));
         onTop.addActionListener(e -> {
             setAlwaysOnTop(f.desktopLyricOnTop = !f.desktopLyricOnTop);
             updateOnTop();
         });
         close.setToolTipText(CLOSE_TIP);
         close.addMouseListener(new ButtonMouseListener(close, f));
-        close.setPreferredSize(new Dimension(closeIcon.getIconWidth(), closeIcon.getIconHeight()));
+        close.setPreferredSize(new Dimension(closeIcon.getIconWidth() + 10, closeIcon.getIconHeight() + 10));
         close.addActionListener(e -> {
             f.desktopLyricButton.doClick();
         });

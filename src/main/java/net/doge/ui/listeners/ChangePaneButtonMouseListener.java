@@ -1,7 +1,7 @@
 package net.doge.ui.listeners;
 
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.componentui.ChangePaneButtonUI;
 import net.doge.utils.ColorUtils;
 

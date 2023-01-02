@@ -3,9 +3,9 @@ package net.doge.ui.components.dialog;
 import net.doge.constants.Colors;
 import net.doge.constants.SimplePath;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.dialog.factory.AbstractMiniDialog;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
  * @Date 2020/12/15
  */
 public class MiniDialog extends AbstractMiniDialog {
-    private final int WIDTH = 480;
+    private final int WIDTH = 460;
     private final int HEIGHT = 76;
     private final int offsetX = WIDTH - 6;
     private final int offsetY = HEIGHT - 6;
@@ -215,10 +215,10 @@ public class MiniDialog extends AbstractMiniDialog {
         closeButton.setIcon(ImageUtils.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
 
         // 按钮大小
-        playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth(), playLastButton.getIcon().getIconHeight()));
-        playOrPauseButton.setPreferredSize(new Dimension(playOrPauseButton.getIcon().getIconWidth(), playOrPauseButton.getIcon().getIconHeight()));
-        playNextButton.setPreferredSize(new Dimension(playNextButton.getIcon().getIconWidth(), playNextButton.getIcon().getIconHeight()));
-        closeButton.setPreferredSize(new Dimension(closeButton.getIcon().getIconWidth(), closeButton.getIcon().getIconHeight()));
+        playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth() + 10, playLastButton.getIcon().getIconHeight() + 10));
+        playOrPauseButton.setPreferredSize(new Dimension(playOrPauseButton.getIcon().getIconWidth() + 10, playOrPauseButton.getIcon().getIconHeight() + 10));
+        playNextButton.setPreferredSize(new Dimension(playNextButton.getIcon().getIconWidth() + 10, playNextButton.getIcon().getIconHeight() + 10));
+        closeButton.setPreferredSize(new Dimension(closeButton.getIcon().getIconWidth() + 10, closeButton.getIcon().getIconHeight() + 10));
 
         playLastButton.addActionListener(e -> f.lastButton.doClick());
         playNextButton.addActionListener(e -> f.nextButton.doClick());
@@ -232,7 +232,7 @@ public class MiniDialog extends AbstractMiniDialog {
         });
 
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
-        fl.setHgap(20);
+        fl.setHgap(10);
         controlPanel.setLayout(fl);
 
         controlPanel.add(infoLabel);

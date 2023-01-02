@@ -3,13 +3,13 @@ package net.doge.ui.components.dialog;
 import net.doge.constants.Colors;
 import net.doge.constants.EqualizerData;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomComboBox;
+import net.doge.ui.components.combobox.CustomComboBox;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.CustomSlider;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.componentui.ComboBoxUI;
-import net.doge.ui.componentui.VSliderUI;
+import net.doge.ui.componentui.slider.VSliderUI;
 
 import javax.swing.*;
 import java.awt.*;

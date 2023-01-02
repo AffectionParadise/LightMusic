@@ -2,10 +2,10 @@ package net.doge.ui.renderers;
 
 import lombok.Data;
 import net.doge.constants.Fonts;
-import net.doge.models.Statement;
+import net.doge.models.lyric.Statement;
 import net.doge.ui.components.StringTwoColor;
 import net.doge.ui.componentui.LabelUI;
-import net.doge.ui.componentui.ListUI;
+import net.doge.ui.componentui.list.ListUI;
 import net.doge.utils.StringUtils;
 
 import javax.swing.*;

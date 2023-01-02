@@ -5,8 +5,12 @@ import javafx.stage.DirectoryChooser;
 import net.doge.constants.Colors;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
+import net.doge.ui.components.button.DialogButton;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
-import net.doge.ui.componentui.ScrollBarUI;
+import net.doge.ui.components.list.CustomList;
+import net.doge.ui.components.list.CustomScrollPane;
+import net.doge.ui.components.panel.CustomPanel;
+import net.doge.ui.componentui.list.ScrollBarUI;
 import net.doge.ui.renderers.CatalogListRenderer;
 
 import javax.swing.*;

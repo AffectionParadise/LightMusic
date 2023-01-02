@@ -1,8 +1,8 @@
 package net.doge.ui.listeners;
 
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomScrollPane;
-import net.doge.ui.componentui.ScrollBarUI;
+import net.doge.ui.components.list.CustomScrollPane;
+import net.doge.ui.componentui.list.ScrollBarUI;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

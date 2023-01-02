@@ -2,6 +2,8 @@ package net.doge.models;
 
 import lombok.Data;
 import net.doge.constants.*;
+import net.doge.models.entity.NetMusicInfo;
+import net.doge.models.entity.NetMvInfo;
 import net.doge.utils.FileUtils;
 import net.doge.utils.MusicServerUtils;
 

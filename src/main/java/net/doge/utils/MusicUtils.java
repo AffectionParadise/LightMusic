@@ -7,9 +7,9 @@ import it.sauronsoftware.jave.EncoderException;
 import it.sauronsoftware.jave.MultimediaInfo;
 import net.doge.constants.Format;
 import net.doge.constants.SimplePath;
-import net.doge.models.AudioFile;
-import net.doge.models.MediaInfo;
-import net.doge.models.NetMusicInfo;
+import net.doge.models.entity.AudioFile;
+import net.doge.models.entity.MediaInfo;
+import net.doge.models.entity.NetMusicInfo;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;

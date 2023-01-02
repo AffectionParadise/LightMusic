@@ -4,7 +4,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurType;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.GlobalPanel;
+import net.doge.ui.components.panel.GlobalPanel;
 import net.doge.utils.ImageUtils;
 
 import javax.swing.*;

@@ -1,6 +1,6 @@
 package net.doge.utils;
 
-import net.doge.models.Statement;
+import net.doge.models.lyric.Statement;
 
 import java.io.*;
 import java.nio.file.Files;

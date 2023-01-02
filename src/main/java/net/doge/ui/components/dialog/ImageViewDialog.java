@@ -10,7 +10,11 @@ import net.doge.constants.SimplePath;
 import net.doge.models.CommonResult;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
+import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.components.panel.CustomPanel;
+import net.doge.ui.components.textfield.CustomTextField;
+import net.doge.ui.components.textfield.SafeDocument;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.ListUtils;
@@ -134,7 +138,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         lastImgButton.setToolTipText(LAST_IMG);
         lastImgButton.setIcon(ImageUtils.dye((ImageIcon) lastImgButton.getIcon(), iconColor));
         lastImgButton.addMouseListener(new ButtonMouseListener(lastImgButton, f));
-        lastImgButton.setPreferredSize(new Dimension(lastImgIcon.getIconWidth(), lastImgIcon.getIconHeight()));
+        lastImgButton.setPreferredSize(new Dimension(lastImgIcon.getIconWidth() + 10, lastImgIcon.getIconHeight() + 10));
         lastImgButton.addActionListener(e -> {
             if (p == 1) {
                 new TipDialog(f, FIRST_PAGE_MSG).showDialog();
@@ -145,7 +149,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         nextImgButton.setToolTipText(NEXT_IMG);
         nextImgButton.setIcon(ImageUtils.dye((ImageIcon) nextImgButton.getIcon(), iconColor));
         nextImgButton.addMouseListener(new ButtonMouseListener(nextImgButton, f));
-        nextImgButton.setPreferredSize(new Dimension(nextImgIcon.getIconWidth(), nextImgIcon.getIconHeight()));
+        nextImgButton.setPreferredSize(new Dimension(nextImgIcon.getIconWidth() + 10, nextImgIcon.getIconHeight() + 10));
         nextImgButton.addActionListener(e -> {
             if (results == null) return;
             if (p >= results.total) {
@@ -158,7 +162,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         firstImgButton.setToolTipText(FIRST_IMG);
         firstImgButton.setIcon(ImageUtils.dye((ImageIcon) firstImgButton.getIcon(), iconColor));
         firstImgButton.addMouseListener(new ButtonMouseListener(firstImgButton, f));
-        firstImgButton.setPreferredSize(new Dimension(firstImgIcon.getIconWidth(), firstImgIcon.getIconHeight()));
+        firstImgButton.setPreferredSize(new Dimension(firstImgIcon.getIconWidth() + 10, firstImgIcon.getIconHeight() + 10));
         firstImgButton.addActionListener(e -> {
             if (p == 1) {
                 new TipDialog(f, FIRST_PAGE_MSG).showDialog();
@@ -169,7 +173,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         lstImgButton.setToolTipText(LST_IMG);
         lstImgButton.setIcon(ImageUtils.dye((ImageIcon) lstImgButton.getIcon(), iconColor));
         lstImgButton.addMouseListener(new ButtonMouseListener(lstImgButton, f));
-        lstImgButton.setPreferredSize(new Dimension(lstImgIcon.getIconWidth(), lstImgIcon.getIconHeight()));
+        lstImgButton.setPreferredSize(new Dimension(lstImgIcon.getIconWidth() + 10, lstImgIcon.getIconHeight() + 10));
         lstImgButton.addActionListener(e -> {
             if (results == null) return;
             if (p >= results.total) {
@@ -194,7 +198,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         goButton.setToolTipText(GO_TIP);
         goButton.setIcon(ImageUtils.dye((ImageIcon) goButton.getIcon(), iconColor));
         goButton.addMouseListener(new ButtonMouseListener(goButton, f));
-        goButton.setPreferredSize(new Dimension(goIcon.getIconWidth(), goIcon.getIconHeight()));
+        goButton.setPreferredSize(new Dimension(goIcon.getIconWidth() + 10, goIcon.getIconHeight() + 10));
         goButton.addActionListener(e -> {
             if (results == null) return;
             String text = pageTextField.getText();
@@ -212,14 +216,14 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         saveImgButton.setToolTipText(SAVE_IMG);
         saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), iconColor));
         saveImgButton.addMouseListener(new ButtonMouseListener(saveImgButton, f));
-        saveImgButton.setPreferredSize(new Dimension(saveImgIcon.getIconWidth(), saveImgIcon.getIconHeight()));
+        saveImgButton.setPreferredSize(new Dimension(saveImgIcon.getIconWidth() + 10, saveImgIcon.getIconHeight() + 10));
         saveImgButton.addActionListener(e -> {
             saveImg(p);
         });
 
         centerPanel.add(imgLabel, BorderLayout.CENTER);
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(20);
+        fl.setHgap(5);
         bottomPanel.setLayout(fl);
         bottomPanel.add(firstImgButton);
         bottomPanel.add(lastImgButton);

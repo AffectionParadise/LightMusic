@@ -23,10 +23,33 @@ import net.doge.exceptions.IllegalMediaException;
 import net.doge.exceptions.NoLyricException;
 import net.doge.exceptions.NoPrivilegeException;
 import net.doge.models.*;
+import net.doge.models.entity.*;
+import net.doge.models.lyric.LrcData;
+import net.doge.models.lyric.Statement;
 import net.doge.ui.components.*;
+import net.doge.ui.components.button.CustomButton;
+import net.doge.ui.components.button.DialogButton;
+import net.doge.ui.components.button.TabButton;
+import net.doge.ui.components.combobox.CustomComboBox;
 import net.doge.ui.components.dialog.*;
 import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.components.list.CustomList;
+import net.doge.ui.components.list.CustomScrollPane;
+import net.doge.ui.components.menu.*;
+import net.doge.ui.components.panel.CustomPanel;
+import net.doge.ui.components.panel.GlobalPanel;
+import net.doge.ui.components.panel.LoadingPanel;
+import net.doge.ui.components.panel.SpectrumPanel;
+import net.doge.ui.components.textfield.CustomTextField;
+import net.doge.ui.components.textfield.SafeDocument;
 import net.doge.ui.componentui.*;
+import net.doge.ui.componentui.list.ListUI;
+import net.doge.ui.componentui.list.ScrollBarUI;
+import net.doge.ui.componentui.menu.CheckMenuItemUI;
+import net.doge.ui.componentui.menu.MenuItemUI;
+import net.doge.ui.componentui.menu.MenuUI;
+import net.doge.ui.componentui.menu.RadioButtonMenuItemUI;
+import net.doge.ui.componentui.slider.SliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.listeners.ChangePaneButtonMouseListener;
 import net.doge.ui.listeners.ScrollPaneListener;
@@ -391,7 +414,7 @@ public class PlayerFrame extends JFrame {
     private ImageIcon endPageIcon = new ImageIcon(SimplePath.ICON_PATH + "endPage.png");
     // 个人音乐图标
     private ImageIcon personalMusicIcon = new ImageIcon(SimplePath.ICON_PATH + "favorite.png");
-    // 离线音乐图标
+    // 本地音乐图标
     private ImageIcon localMusicIcon = new ImageIcon(SimplePath.ICON_PATH + "local.png");
     // 播放历史图标
     private ImageIcon historyIcon = new ImageIcon(SimplePath.ICON_PATH + "history.png");
@@ -581,7 +604,7 @@ public class PlayerFrame extends JFrame {
     private final String GO_TIP = "跳页";
     private final String NEXT_PAGE_TIP = "下一页";
     private final String END_PAGE_TIP = "最后一页";
-    private final String LOCAL_MUSIC_TIP = "离线音乐";
+    private final String LOCAL_MUSIC_TIP = "本地音乐";
     private final String HISTORY_TIP = "播放历史";
     private final String COLLECTION_TIP = "收藏";
     private final String RECOMMEND_PLAYLIST_TIP = "推荐歌单";
@@ -973,7 +996,7 @@ public class PlayerFrame extends JFrame {
     // 个人音乐播放列表
     private CustomList musicList = new CustomList<>();
     private CustomScrollPane musicScrollPane = new CustomScrollPane(musicList);
-    // 离线音乐 ListModel
+    // 本地音乐 ListModel
     private DefaultListModel musicListModel = new DefaultListModel<>();
     // 播放历史 ListModel
     public DefaultListModel historyModel = new DefaultListModel<>();
@@ -1080,12 +1103,12 @@ public class PlayerFrame extends JFrame {
     private CustomMenuItem removeMenuItem = new CustomMenuItem(REMOVE_MENU_ITEM_TEXT);
     // 个人音乐工具栏
     private CustomToolBar personalMusicToolBar = new CustomToolBar();
-    // 离线音乐按钮
-    private CustomButton localMusicButton = new CustomButton(localMusicIcon);
+    // 本地音乐按钮
+    private TabButton localMusicButton = new TabButton(localMusicIcon);
     // 播放历史按钮
-    private CustomButton historyButton = new CustomButton(historyIcon);
+    private TabButton historyButton = new TabButton(historyIcon);
     // 收藏按钮
-    private CustomButton collectionButton = new CustomButton(collectionIcon);
+    private TabButton collectionButton = new TabButton(collectionIcon);
 
     // 播放列表工具栏
     private CustomToolBar musicToolBar = new CustomToolBar();
@@ -1774,25 +1797,25 @@ public class PlayerFrame extends JFrame {
     // 推荐工具栏
     private CustomToolBar recommendToolBar = new CustomToolBar();
     // 推荐歌单按钮
-    private CustomButton playlistRecommendButton = new CustomButton(playlistRecommendIcon);
+    private TabButton playlistRecommendButton = new TabButton(playlistRecommendIcon);
     // 精品歌单按钮
-    private CustomButton highQualityPlaylistButton = new CustomButton(highQualityPlaylistIcon);
+    private TabButton highQualityPlaylistButton = new TabButton(highQualityPlaylistIcon);
     // 飙升歌曲按钮
-    private CustomButton hotMusicButton = new CustomButton(hotMusicIcon);
+    private TabButton hotMusicButton = new TabButton(hotMusicIcon);
     // 推荐单曲按钮
-    private CustomButton netMusicRecommendButton = new CustomButton(musicRecommendIcon);
+    private TabButton netMusicRecommendButton = new TabButton(musicRecommendIcon);
     // 新碟上架按钮
-    private CustomButton newAlbumRecommendButton = new CustomButton(newAlbumRecommendIcon);
+    private TabButton newAlbumRecommendButton = new TabButton(newAlbumRecommendIcon);
     // 歌手排行按钮
-    private CustomButton artistListRecommendButton = new CustomButton(artistListRecommendIcon);
+    private TabButton artistListRecommendButton = new TabButton(artistListRecommendIcon);
     // 新晋电台按钮
-    private CustomButton newRadioRecommendButton = new CustomButton(newRadioRecommendIcon);
+    private TabButton newRadioRecommendButton = new TabButton(newRadioRecommendIcon);
     // 热门电台按钮
-    private CustomButton hotRadioRecommendButton = new CustomButton(hotRadioRecommendIcon);
+    private TabButton hotRadioRecommendButton = new TabButton(hotRadioRecommendIcon);
     // 推荐节目按钮
-    private CustomButton programRecommendButton = new CustomButton(programRecommendIcon);
+    private TabButton programRecommendButton = new TabButton(programRecommendIcon);
     // 推荐 MV 按钮
-    private CustomButton mvRecommendButton = new CustomButton(mvRecommendIcon);
+    private TabButton mvRecommendButton = new TabButton(mvRecommendIcon);
     // 推荐数量面板
     private CustomPanel recommendCountPanel = new CustomPanel();
     // 推荐源
@@ -2429,7 +2452,7 @@ public class PlayerFrame extends JFrame {
         // 初始化个人音乐工具条
         personalMusicToolBarInit();
 
-        // 初始化离线音乐工具条
+        // 初始化本地音乐工具条
         musicToolBarInit();
 
         // 初始化个人音乐列表
@@ -2623,6 +2646,7 @@ public class PlayerFrame extends JFrame {
             // 关闭频谱
             closeSpectrum();
             dispose();
+            miniButton.setDrawBg(false);
             miniDialog = new MiniDialog(THIS);
             miniDialog.showDialog();
             miniButton.setIcon(ImageUtils.dye(miniIcon, currUIStyle.getIconColor()));
@@ -2686,7 +2710,7 @@ public class PlayerFrame extends JFrame {
         // 隐藏详情暂时不可见
         hideDetailButton.setVisible(false);
         // 最佳大小
-        Dimension d = new Dimension(30, hideDetailIcon.getIconHeight());
+        Dimension d = new Dimension(hideDetailIcon.getIconWidth() + 10, hideDetailIcon.getIconHeight() + 10);
         hideDetailButton.setPreferredSize(d);
         styleToolButton.setPreferredSize(d);
         mainMenuButton.setPreferredSize(d);
@@ -2715,7 +2739,7 @@ public class PlayerFrame extends JFrame {
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         fl.setHgap(16);
         windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        windowCtrlPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         windowCtrlPanel.setMinimumSize(new Dimension(360, 10));
         windowCtrlPanel.add(hideDetailButton);
         windowCtrlPanel.add(styleToolButton);
@@ -5256,7 +5280,7 @@ public class PlayerFrame extends JFrame {
         });
         collectionRecordTypeComboBox.setVisible(false);
         // 控制按钮大小
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         collectionRefreshButton.setPreferredSize(dimension);
         collectionStartPageButton.setPreferredSize(dimension);
         collectionLastPageButton.setPreferredSize(dimension);
@@ -6079,7 +6103,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化个人音乐工具栏
     private void personalMusicToolBarInit() {
-        // 离线音乐事件
+        // 本地音乐事件
         localMusicButton.addActionListener(e -> {
             currPersonalMusicTab = PersonalMusicTabIndex.LOCAL_MUSIC;
             updateTabButtonStyle();
@@ -6209,7 +6233,7 @@ public class PlayerFrame extends JFrame {
         leftBox.add(personalMusicToolBar);
     }
 
-    // 初始化离线音乐工具栏
+    // 初始化本地音乐工具栏
     private void musicToolBarInit() {
         // 按钮悬浮和点击效果
         addToolButton.addMouseListener(new ButtonMouseListener(addToolButton, THIS));
@@ -7286,7 +7310,7 @@ public class PlayerFrame extends JFrame {
             netMusicGoPageAction.run();
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netMusicRefreshButton.setPreferredSize(dimension);
         netMusicStartPageButton.setPreferredSize(dimension);
         netMusicLastPageButton.setPreferredSize(dimension);
@@ -8029,7 +8053,7 @@ public class PlayerFrame extends JFrame {
         // 搜索建议面板
         // 刷新搜索建议按钮
         netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.submit(() -> updateSearchSuggestion()));
-        netMusicRefreshSearchSuggestionButton.setPreferredSize(new Dimension(20, 20));
+        netMusicRefreshSearchSuggestionButton.setPreferredSize(new Dimension(30, 30));
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshSearchSuggestionButton.addMouseListener(new ButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
 
@@ -8049,7 +8073,7 @@ public class PlayerFrame extends JFrame {
         // 热搜面板
         // 刷新热门搜索按钮
         netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.submit(() -> updateHotSearch()));
-        netMusicRefreshHotSearchButton.setPreferredSize(new Dimension(20, 20));
+        netMusicRefreshHotSearchButton.setPreferredSize(new Dimension(30, 30));
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshHotSearchButton.addMouseListener(new ButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
 
@@ -8069,7 +8093,7 @@ public class PlayerFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netMusicClearHistorySearchButton.addActionListener(e -> netMusicHistorySearchInnerPanel2.removeAll());
-        netMusicClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
+        netMusicClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netMusicClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMusicClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMusicClearHistorySearchButton, THIS));
 
@@ -8794,7 +8818,7 @@ public class PlayerFrame extends JFrame {
         netPlaylistClearInputButton.setVisible(false);
         netPlaylistPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netPlaylistRefreshButton.setPreferredSize(dimension);
         netPlaylistStartPageButton.setPreferredSize(dimension);
         netPlaylistLastPageButton.setPreferredSize(dimension);
@@ -9333,7 +9357,7 @@ public class PlayerFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netPlaylistClearHistorySearchButton.addActionListener(e -> netPlaylistHistorySearchInnerPanel2.removeAll());
-        netPlaylistClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
+        netPlaylistClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netPlaylistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netPlaylistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netPlaylistClearHistorySearchButton, THIS));
 
@@ -9785,7 +9809,7 @@ public class PlayerFrame extends JFrame {
         netAlbumClearInputButton.setVisible(false);
         netAlbumPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netAlbumRefreshButton.setPreferredSize(dimension);
         netAlbumStartPageButton.setPreferredSize(dimension);
         netAlbumLastPageButton.setPreferredSize(dimension);
@@ -10338,7 +10362,7 @@ public class PlayerFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netAlbumClearHistorySearchButton.addActionListener(e -> netAlbumHistorySearchInnerPanel2.removeAll());
-        netAlbumClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
+        netAlbumClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netAlbumClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netAlbumClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netAlbumClearHistorySearchButton, THIS));
 
@@ -10801,7 +10825,7 @@ public class PlayerFrame extends JFrame {
         netArtistClearInputButton.setVisible(false);
         netArtistPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netArtistRefreshButton.setPreferredSize(dimension);
         netArtistStartPageButton.setPreferredSize(dimension);
         netArtistLastPageButton.setPreferredSize(dimension);
@@ -11580,7 +11604,7 @@ public class PlayerFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netArtistClearHistorySearchButton.addActionListener(e -> netArtistHistorySearchInnerPanel2.removeAll());
-        netArtistClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
+        netArtistClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netArtistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netArtistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netArtistClearHistorySearchButton, THIS));
 
@@ -12034,7 +12058,7 @@ public class PlayerFrame extends JFrame {
         netRadioClearInputButton.setVisible(false);
         netRadioPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netRadioRefreshButton.setPreferredSize(dimension);
         netRadioStartPageButton.setPreferredSize(dimension);
         netRadioLastPageButton.setPreferredSize(dimension);
@@ -12712,7 +12736,7 @@ public class PlayerFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netRadioClearHistorySearchButton.addActionListener(e -> netRadioHistorySearchInnerPanel2.removeAll());
-        netRadioClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
+        netRadioClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netRadioClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netRadioClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netRadioClearHistorySearchButton, THIS));
 
@@ -13010,7 +13034,7 @@ public class PlayerFrame extends JFrame {
             searchMvGoPageAction.run();
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netMvRefreshButton.setPreferredSize(dimension);
         netMvStartPageButton.setPreferredSize(dimension);
         netMvLastPageButton.setPreferredSize(dimension);
@@ -13488,7 +13512,7 @@ public class PlayerFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netMvClearHistorySearchButton.addActionListener(e -> netMvHistorySearchInnerPanel2.removeAll());
-        netMvClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
+        netMvClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netMvClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMvClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMvClearHistorySearchButton, THIS));
 
@@ -13777,7 +13801,7 @@ public class PlayerFrame extends JFrame {
         // 按钮初始不可见
         netRankingPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netRankingRefreshButton.setPreferredSize(dimension);
         netRankingStartPageButton.setPreferredSize(dimension);
         netRankingLastPageButton.setPreferredSize(dimension);
@@ -14530,7 +14554,7 @@ public class PlayerFrame extends JFrame {
         netUserPlayAllButton.setVisible(false);
         netUserRecordTypeComboBox.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netUserRefreshButton.setPreferredSize(dimension);
         netUserStartPageButton.setPreferredSize(dimension);
         netUserLastPageButton.setPreferredSize(dimension);
@@ -15278,7 +15302,7 @@ public class PlayerFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netUserClearHistorySearchButton.addActionListener(e -> netUserHistorySearchInnerPanel2.removeAll());
-        netUserClearHistorySearchButton.setPreferredSize(new Dimension(20, 20));
+        netUserClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netUserClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netUserClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netUserClearHistorySearchButton, THIS));
 
@@ -15462,6 +15486,7 @@ public class PlayerFrame extends JFrame {
         netCommentPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netCommentBackwardButton.addActionListener(e -> {
+            netCommentBackwardButton.setDrawBg(false);
             // 归还占有的空白提示面板
             if (emptyHintPanelParent != null) {
                 emptyHintPanelParent.add(emptyHintPanel);
@@ -15545,7 +15570,7 @@ public class PlayerFrame extends JFrame {
             getComments(currCommentObjectInfo, false);
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netCommentRefreshButton.setPreferredSize(dimension);
         netCommentStartPageButton.setPreferredSize(dimension);
         netCommentLastPageButton.setPreferredSize(dimension);
@@ -15890,6 +15915,7 @@ public class PlayerFrame extends JFrame {
         netSheetPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netSheetBackwardButton.addActionListener(e -> {
+            netSheetBackwardButton.setDrawBg(false);
             // 归还占有的空白提示面板
             if (emptyHintPanelParent != null) {
                 emptyHintPanelParent.add(emptyHintPanel);
@@ -15961,7 +15987,7 @@ public class PlayerFrame extends JFrame {
             getSheets(currSheetMusicInfo, false);
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netSheetRefreshButton.setPreferredSize(dimension);
         netSheetStartPageButton.setPreferredSize(dimension);
         netSheetLastPageButton.setPreferredSize(dimension);
@@ -17477,7 +17503,7 @@ public class PlayerFrame extends JFrame {
         netRecommendTagComboBox.setVisible(false);
         netRecommendPlayAllButton.setVisible(false);
         // 控制按钮大小
-        Dimension dimension = new Dimension(20, 20);
+        Dimension dimension = new Dimension(30, 30);
         netRecommendRefreshButton.setPreferredSize(dimension);
         netRecommendStartPageButton.setPreferredSize(dimension);
         netRecommendLastPageButton.setPreferredSize(dimension);
@@ -19135,13 +19161,10 @@ public class PlayerFrame extends JFrame {
     // 初始化控制面板
     private void controlPanelInit() {
         // changePaneButton 图标遮罩 UI
-        ChangePaneButtonUI changePaneButtonUI = new ChangePaneButtonUI();
-        changePaneButton.setUI(changePaneButtonUI);
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         changePaneButton.setIconTextGap(10);
         changePaneButton.setPreferredSize(new Dimension(280, 66));
         changePaneButton.setText(NO_LRC_MSG);
-        changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton, changePaneButtonUI, THIS));
         changePaneButton.addActionListener(e -> {
             // 歌词页面切到歌单
             if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) {
@@ -19178,13 +19201,13 @@ public class PlayerFrame extends JFrame {
         mvButton.setToolTipText(MV_TIP);
         mvButton.setEnabled(false);
         mvButton.addMouseListener(new ButtonMouseListener(mvButton, THIS));
-        mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth(), mvIcon.getIconHeight()));
+        mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth() + 10, mvIcon.getIconHeight() + 10));
         mvButton.addActionListener(e -> playMv(MvType.PLAYING));
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
         collectButton.setEnabled(false);
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, THIS));
-        collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth(), collectIcon.getIconHeight()));
+        collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
         collectButton.addActionListener(e -> {
             Object o = player.getNetMusicInfo();
             if (o == null) o = player.getMusicInfo().getFile();
@@ -19202,13 +19225,13 @@ public class PlayerFrame extends JFrame {
         downloadButton.setToolTipText(DOWNLOAD_TIP);
         downloadButton.setEnabled(false);
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, THIS));
-        downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth(), downloadIcon.getIconHeight()));
+        downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + 10, downloadIcon.getIconHeight() + 10));
         downloadButton.addActionListener(e -> singleDownload(player.getNetMusicInfo()));
         // 评论
         commentButton.setToolTipText(COMMENT_TIP);
         commentButton.setEnabled(false);
         commentButton.addMouseListener(new ButtonMouseListener(commentButton, THIS));
-        commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth(), commentIcon.getIconHeight()));
+        commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth() + 10, commentIcon.getIconHeight() + 10));
         commentButton.addActionListener(e -> {
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
             if (currPane != MusicPane.COMMENT || currCommentObjectInfo != netMusicInfo)
@@ -19218,7 +19241,7 @@ public class PlayerFrame extends JFrame {
         sheetButton.setToolTipText(SHEET_TIP);
         sheetButton.setEnabled(false);
         sheetButton.addMouseListener(new ButtonMouseListener(sheetButton, THIS));
-        sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth(), sheetIcon.getIconHeight()));
+        sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth() + 10, sheetIcon.getIconHeight() + 10));
         sheetButton.addActionListener(e -> {
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
             if (currPane != MusicPane.SHEET || currSheetMusicInfo != netMusicInfo)
@@ -19226,15 +19249,15 @@ public class PlayerFrame extends JFrame {
         });
         lastButton.setToolTipText(LAST_TIP);
         lastButton.addMouseListener(new ButtonMouseListener(lastButton, THIS));
-        lastButton.setPreferredSize(new Dimension(lastIcon.getIconWidth(), lastIcon.getIconHeight()));
+        lastButton.setPreferredSize(new Dimension(lastIcon.getIconWidth() + 10, lastIcon.getIconHeight() + 10));
         lastButton.addActionListener(e -> playLast());
         playOrPauseButton.setToolTipText(PLAY_TIP);
-        playOrPauseButton.setPreferredSize(new Dimension(playIcon.getIconWidth(), playIcon.getIconHeight()));
+        playOrPauseButton.setPreferredSize(new Dimension(playIcon.getIconWidth() + 10, playIcon.getIconHeight() + 10));
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, THIS));
         playOrPauseButton.addActionListener(e -> playOrPause());
         nextButton.setToolTipText(NEXT_TIP);
         nextButton.addMouseListener(new ButtonMouseListener(nextButton, THIS));
-        nextButton.setPreferredSize(new Dimension(nextIcon.getIconWidth(), nextIcon.getIconHeight()));
+        nextButton.setPreferredSize(new Dimension(nextIcon.getIconWidth() + 10, nextIcon.getIconHeight() + 10));
         nextButton.addActionListener(e -> {
             // 单曲循环和顺序播放，都播放下一首
             if (currPlayMode != PlayMode.SHUFFLE) {
@@ -19249,7 +19272,7 @@ public class PlayerFrame extends JFrame {
         // 默认提示语为“列表循环”
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
         playModeButton.addMouseListener(new ButtonMouseListener(playModeButton, THIS));
-        playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth(), listCycleIcon.getIconHeight()));
+        playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth() + 10, listCycleIcon.getIconHeight() + 10));
         // 播放模式切换事件
         playModeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -19279,10 +19302,10 @@ public class PlayerFrame extends JFrame {
 
         backwardButton.setToolTipText(BACKW_TIP);
         backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, THIS));
-        backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth(), backwIcon.getIconHeight()));
+        backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth() + 10, backwIcon.getIconHeight() + 10));
         forwardButton.setToolTipText(FORW_TIP);
         forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, THIS));
-        forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth(), forwIcon.getIconHeight()));
+        forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth() + 10, forwIcon.getIconHeight() + 10));
         // 快进快退
         backwardButton.addActionListener(e -> {
             player.backward(forwardOrBackwardTime);
@@ -19296,7 +19319,7 @@ public class PlayerFrame extends JFrame {
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
         muteButton.addMouseListener(new ButtonMouseListener(muteButton, THIS));
-        muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth(), muteIcon.getIconHeight()));
+        muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth() + 10, muteIcon.getIconHeight() + 10));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
@@ -19321,7 +19344,7 @@ public class PlayerFrame extends JFrame {
         });
         rateButton.setToolTipText(RATE_TIP);
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, THIS));
-        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth(), rateIcon.getIconHeight()));
+        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth() + 10, rateIcon.getIconHeight() + 10));
         rateButton.addActionListener(e -> {
             RateDialog rd = new RateDialog(THIS, null, rateButton);
             rd.showDialog();
@@ -19329,7 +19352,7 @@ public class PlayerFrame extends JFrame {
         // 频谱开关按钮
         switchSpectrumButton.setToolTipText(SWITCH_SPECTRUM_TIP);
         switchSpectrumButton.addMouseListener(new ButtonMouseListener(switchSpectrumButton, THIS));
-        switchSpectrumButton.setPreferredSize(new Dimension(spectrumOnIcon.getIconWidth(), spectrumOnIcon.getIconHeight()));
+        switchSpectrumButton.setPreferredSize(new Dimension(spectrumOnIcon.getIconWidth() + 10, spectrumOnIcon.getIconHeight() + 10));
         switchSpectrumButton.addActionListener(e -> {
             if (showSpectrum = !showSpectrum) openSpectrum();
             else closeSpectrum();
@@ -19376,7 +19399,7 @@ public class PlayerFrame extends JFrame {
         // 模糊按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
         blurButton.addMouseListener(new ButtonMouseListener(blurButton, THIS));
-        blurButton.setPreferredSize(new Dimension(cvBlurIcon.getIconWidth(), cvBlurIcon.getIconHeight()));
+        blurButton.setPreferredSize(new Dimension(cvBlurIcon.getIconWidth() + 10, cvBlurIcon.getIconHeight() + 10));
         blurButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -19387,11 +19410,11 @@ public class PlayerFrame extends JFrame {
         // 音效按钮
         soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
         soundEffectButton.addMouseListener(new ButtonMouseListener(soundEffectButton, THIS));
-        soundEffectButton.setPreferredSize(new Dimension(soundEffectIcon.getIconWidth(), soundEffectIcon.getIconHeight()));
+        soundEffectButton.setPreferredSize(new Dimension(soundEffectIcon.getIconWidth() + 10, soundEffectIcon.getIconHeight() + 10));
         soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS).showDialog());
         // 跳到播放队列按钮
         goToPlayQueueButton.setToolTipText(GO_TO_PLAY_QUEUE_TIP);
-        goToPlayQueueButton.setPreferredSize(new Dimension(goToPlayQueueIcon.getIconWidth(), goToPlayQueueIcon.getIconHeight()));
+        goToPlayQueueButton.setPreferredSize(new Dimension(goToPlayQueueIcon.getIconWidth() + 10, goToPlayQueueIcon.getIconHeight() + 10));
         goToPlayQueueButton.addMouseListener(new ButtonMouseListener(goToPlayQueueButton, THIS));
         goToPlayQueueButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -19411,7 +19434,7 @@ public class PlayerFrame extends JFrame {
         // 桌面歌词开关
         desktopLyricButton.setToolTipText(DESKTOP_LRC_TIP);
         desktopLyricButton.addMouseListener(new ButtonMouseListener(desktopLyricButton, THIS));
-        desktopLyricButton.setPreferredSize(new Dimension(desktopLyricOnIcon.getIconWidth(), desktopLyricOnIcon.getIconHeight()));
+        desktopLyricButton.setPreferredSize(new Dimension(desktopLyricOnIcon.getIconWidth() + 10, desktopLyricOnIcon.getIconHeight() + 10));
         desktopLyricButton.addActionListener(e -> {
             if (showDesktopLyric = !showDesktopLyric) {
                 // 最大化时不显示桌面歌词
@@ -19425,7 +19448,7 @@ public class PlayerFrame extends JFrame {
         // 繁简切换按钮
         switchChineseButton.setToolTipText(SWITCH_CHINESE_TIP);
         switchChineseButton.addMouseListener(new ButtonMouseListener(switchChineseButton, THIS));
-        switchChineseButton.setPreferredSize(new Dimension(tradChineseIcon.getIconWidth(), tradChineseIcon.getIconHeight()));
+        switchChineseButton.setPreferredSize(new Dimension(tradChineseIcon.getIconWidth() + 10, tradChineseIcon.getIconHeight() + 10));
         switchChineseButton.addActionListener(e -> {
             // 切换到繁体
             if (currChineseType == ChineseType.SIMPLIFIED) {
@@ -19447,7 +19470,7 @@ public class PlayerFrame extends JFrame {
         // 日文罗马音切换按钮
         switchJapaneseButton.setToolTipText(SWITCH_JAPANESE_TIP);
         switchJapaneseButton.addMouseListener(new ButtonMouseListener(switchJapaneseButton, THIS));
-        switchJapaneseButton.setPreferredSize(new Dimension(kanaIcon.getIconWidth(), kanaIcon.getIconHeight()));
+        switchJapaneseButton.setPreferredSize(new Dimension(kanaIcon.getIconWidth() + 10, kanaIcon.getIconHeight() + 10));
         switchJapaneseButton.addActionListener(e -> {
             // 切换到罗马音
             if (currJapaneseType == JapaneseType.KANA) {
@@ -19475,7 +19498,7 @@ public class PlayerFrame extends JFrame {
         // 歌词原文/翻译切换按钮
         switchLrcTypeButton.setToolTipText(SWITCH_LRC_TYPE_TIP);
         switchLrcTypeButton.addMouseListener(new ButtonMouseListener(switchLrcTypeButton, THIS));
-        switchLrcTypeButton.setPreferredSize(new Dimension(originalIcon.getIconWidth(), originalIcon.getIconHeight()));
+        switchLrcTypeButton.setPreferredSize(new Dimension(originalIcon.getIconWidth() + 10, originalIcon.getIconHeight() + 10));
         switchLrcTypeButton.addActionListener(e -> {
             // 切换到翻译
             if (currLrcType == LyricType.ORIGINAL) {
@@ -19497,15 +19520,18 @@ public class PlayerFrame extends JFrame {
         });
         // 按钮水平隔开一段间距
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(10);
+        fl.setHgap(0);
         controlPanel.setLayout(fl);
-        controlPanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 12));
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
         controlPanel.add(backwardButton);
         controlPanel.add(lastButton);
         controlPanel.add(playOrPauseButton);
         controlPanel.add(nextButton);
         controlPanel.add(forwardButton);
         controlPanel.add(playModeButton);
+        fl = new FlowLayout();
+        fl.setHgap(0);
+        volumePanel.setLayout(fl);
         volumePanel.add(muteButton);
         volumePanel.add(volumeSlider);
         controlPanel.add(volumePanel);
@@ -19516,7 +19542,7 @@ public class PlayerFrame extends JFrame {
         controlPanel.add(goToPlayQueueButton);
 
         fl = new FlowLayout();
-        fl.setHgap(10);
+        fl.setHgap(0);
         changePanePanel.setLayout(fl);
         changePanePanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         changePanePanel.add(changePaneButton);
@@ -19527,9 +19553,9 @@ public class PlayerFrame extends JFrame {
         changePanePanel.add(sheetButton);
 
         fl = new FlowLayout();
-        fl.setHgap(6);
+        fl.setHgap(0);
         controlLrcPanel.setLayout(fl);
-        controlLrcPanel.setBorder(BorderFactory.createEmptyBorder(23, 0, 0, 0));
+        controlLrcPanel.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
         controlLrcPanel.add(desktopLyricButton);
         controlLrcPanel.add(switchLrcTypeButton);
         controlLrcPanel.add(switchChineseButton);
@@ -19830,7 +19856,9 @@ public class PlayerFrame extends JFrame {
                     || type == MediaException.Type.MEDIA_UNAVAILABLE
                     || type == MediaException.Type.UNKNOWN) {
                 playExecutor.submit(() -> {
-                    netMusicInfo.setUrl(MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource()));
+                    String url = MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
+                    if (StringUtils.isNotEmpty(url)) netMusicInfo.setUrl(url);
+                    else MusicServerUtils.fillAvailableMusicUrl(netMusicInfo);
                     player.initialMp(null, netMusicInfo);
                     if (!player.isPlaying()) return;
                     playLoaded(false);
@@ -20346,7 +20374,7 @@ public class PlayerFrame extends JFrame {
                 }
             });
         }
-        // 按时长排序只支持离线音乐
+        // 按时长排序只支持本地音乐
         else if (method == SortMethod.BY_TIME && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
                 double d1;
@@ -20361,7 +20389,7 @@ public class PlayerFrame extends JFrame {
                 return order == SortMethod.ASCENDING ? Double.compare(d1, d2) : Double.compare(d2, d1);
             });
         }
-        // 按修改时间排序只支持离线音乐
+        // 按修改时间排序只支持本地音乐
         else if (method == SortMethod.BY_LAST_MODIFIED_TIME && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
                 long t1 = ((File) o1).lastModified();
@@ -20369,7 +20397,7 @@ public class PlayerFrame extends JFrame {
                 return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
-        // 按创建时间排序只支持离线音乐
+        // 按创建时间排序只支持本地音乐
         else if (method == SortMethod.BY_CREATION_TIME && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
                 long t1 = FileUtils.getCreationTime((File) o1);
@@ -20377,7 +20405,7 @@ public class PlayerFrame extends JFrame {
                 return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
-        // 按访问时间排序只支持离线音乐
+        // 按访问时间排序只支持本地音乐
         else if (method == SortMethod.BY_LAST_ACCESS_TIME && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
                 long t1 = FileUtils.getAccessTime((File) o1);
@@ -20385,7 +20413,7 @@ public class PlayerFrame extends JFrame {
                 return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
-        // 文件大小排序只支持离线音乐
+        // 文件大小排序只支持本地音乐
         else if (method == SortMethod.BY_SIZE && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
                 long l1 = ((File) o1).length();
@@ -20437,12 +20465,12 @@ public class PlayerFrame extends JFrame {
     private void updateTabButtonStyle() {
         Component[] components = personalMusicToolBar.getComponents();
         for (int i = 0, len = components.length; i < len; i++) {
-            CustomButton b = (CustomButton) components[i];
+            TabButton b = (TabButton) components[i];
             b.setDrawBg(currPersonalMusicTab == i);
         }
         components = recommendToolBar.getComponents();
         for (int i = 0, len = components.length; i < len; i++) {
-            CustomButton b = (CustomButton) components[i];
+            TabButton b = (TabButton) components[i];
             b.setDrawBg(currRecommendTab == i);
         }
     }
@@ -21471,6 +21499,9 @@ public class PlayerFrame extends JFrame {
         durationLabel.setForeground(textColor);
 
         changePaneButton.setForeground(textColor);
+        ChangePaneButtonUI cui = new ChangePaneButtonUI(THIS);
+        changePaneButton.setUI(cui);
+        changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton, cui, THIS));
 
         mvButton.setIcon(ImageUtils.dye((ImageIcon) mvButton.getIcon(), iconColor));
         collectButton.setIcon(ImageUtils.dye((ImageIcon) collectButton.getIcon(), iconColor));

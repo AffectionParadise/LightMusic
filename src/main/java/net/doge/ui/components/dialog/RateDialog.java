@@ -4,10 +4,10 @@ import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.CustomSlider;
 import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
-import net.doge.ui.componentui.VSliderUI;
+import net.doge.ui.componentui.slider.VSliderUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +25,8 @@ public class RateDialog extends AbstractShadowDialog {
     private final int MAX_VAL = 80;
 
     private CustomPanel centerPanel = new CustomPanel();
-    private final CustomLabel valLabel = new CustomLabel();
-    private final CustomSlider slider = new CustomSlider();
+    private CustomLabel valLabel = new CustomLabel();
+    private CustomSlider slider = new CustomSlider();
 
     private VideoDialog d;
     private JComponent comp;

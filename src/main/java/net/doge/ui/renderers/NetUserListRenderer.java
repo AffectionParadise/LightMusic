@@ -7,9 +7,9 @@ import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
-import net.doge.models.NetUserInfo;
+import net.doge.models.entity.NetUserInfo;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.StringUtils;
 

@@ -2,9 +2,9 @@ package net.doge.ui.componentui;
 
 import net.doge.constants.SimplePath;
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomButton;
-import net.doge.ui.components.CustomComboBox;
-import net.doge.ui.components.CustomComboPopup;
+import net.doge.ui.components.button.CustomButton;
+import net.doge.ui.components.combobox.CustomComboBox;
+import net.doge.ui.components.combobox.CustomComboPopup;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.ComboBoxRenderer;
 import net.doge.utils.ImageUtils;

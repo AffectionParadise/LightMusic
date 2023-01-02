@@ -5,8 +5,12 @@ import net.doge.constants.UIStyleConstants;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
+import net.doge.ui.components.button.DialogButton;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
-import net.doge.ui.componentui.ScrollBarUI;
+import net.doge.ui.components.list.CustomList;
+import net.doge.ui.components.list.CustomScrollPane;
+import net.doge.ui.components.panel.CustomPanel;
+import net.doge.ui.componentui.list.ScrollBarUI;
 import net.doge.ui.renderers.StyleListRenderer;
 import net.doge.utils.ImageUtils;
 

@@ -1,9 +1,9 @@
 package net.doge.ui.components.dialog.factory;
 
 import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.CustomButton;
+import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.CustomPanel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.utils.ImageUtils;
 
@@ -58,7 +58,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
         closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 2, f.closeWindowIcon.getIconHeight()));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 10, f.closeWindowIcon.getIconHeight() + 10));
         // 关闭窗口
         closeButton.addActionListener(e -> close());
         // 鼠标事件

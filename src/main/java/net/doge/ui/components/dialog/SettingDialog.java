@@ -6,9 +6,15 @@ import javafx.stage.FileChooser;
 import net.doge.constants.*;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
+import net.doge.ui.components.button.DialogButton;
+import net.doge.ui.components.combobox.CustomComboBox;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.components.list.CustomScrollPane;
+import net.doge.ui.components.panel.CustomPanel;
+import net.doge.ui.components.textfield.CustomTextField;
+import net.doge.ui.components.textfield.SafeDocument;
 import net.doge.ui.componentui.ComboBoxUI;
-import net.doge.ui.componentui.ScrollBarUI;
+import net.doge.ui.componentui.list.ScrollBarUI;
 import net.doge.utils.ImageUtils;
 import net.doge.utils.JsonUtils;
 import net.doge.utils.KeyUtils;
@@ -92,9 +98,9 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomLabel balanceLabel = new CustomLabel("声道平衡：");
     private CustomComboBox<String> balanceComboBox = new CustomComboBox();
     private CustomPanel backupPanel = new CustomPanel();
-    private CustomLabel backupLabel = new CustomLabel("播放列表备份/恢复（仅包括离线音乐列表、所有收藏列表）");
-    private DialogButton importListButton;
-    private DialogButton exportListButton;
+    private CustomLabel backupLabel = new CustomLabel("播放列表备份/恢复（仅包括本地音乐列表、所有收藏列表）");
+    private DialogButton backupListButton;
+    private DialogButton restoreListButton;
 
     public LinkedList<Integer> playOrPauseKeys = new LinkedList<>();
     public LinkedList<Integer> playLastKeys = new LinkedList<>();
@@ -498,21 +504,8 @@ public class SettingDialog extends AbstractTitledDialog {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("json 文件", "*.json");
         fileChooser.getExtensionFilters().add(filter);
-        importListButton = new DialogButton("恢复", textColor);
-        importListButton.addActionListener(e -> {
-            Platform.runLater(() -> {
-                fileChooser.setTitle("选择文件");
-                File input = fileChooser.showOpenDialog(null);
-                if (input != null) {
-                    JSONObject config = JsonUtils.readJson(input);
-                    f.loadLocalMusicList(config);
-                    f.loadCollectedMusicList(config);
-                    new TipDialog(f, "恢复成功").showDialog();
-                }
-            });
-        });
-        exportListButton = new DialogButton("备份", textColor);
-        exportListButton.addActionListener(e -> {
+        backupListButton = new DialogButton("备份", textColor);
+        backupListButton.addActionListener(e -> {
             Platform.runLater(() -> {
                 fileChooser.setTitle("保存文件");
                 File output = fileChooser.showSaveDialog(null);
@@ -526,6 +519,19 @@ public class SettingDialog extends AbstractTitledDialog {
                     } catch (IOException ex) {
                         new TipDialog(f, "备份失败").showDialog();
                     }
+                }
+            });
+        });
+        restoreListButton = new DialogButton("恢复", textColor);
+        restoreListButton.addActionListener(e -> {
+            Platform.runLater(() -> {
+                fileChooser.setTitle("选择文件");
+                File input = fileChooser.showOpenDialog(null);
+                if (input != null) {
+                    JSONObject config = JsonUtils.readJson(input);
+                    f.loadLocalMusicList(config);
+                    f.loadCollectedMusicList(config);
+                    new TipDialog(f, "恢复成功").showDialog();
                 }
             });
         });
@@ -603,8 +609,8 @@ public class SettingDialog extends AbstractTitledDialog {
         balancePanel.add(balanceComboBox);
 
         backupPanel.add(backupLabel);
-        backupPanel.add(importListButton);
-        backupPanel.add(exportListButton);
+        backupPanel.add(backupListButton);
+        backupPanel.add(restoreListButton);
 
         keyPanel.add(keyLabel);
         keyPanel.add(enableKeyCheckBox);

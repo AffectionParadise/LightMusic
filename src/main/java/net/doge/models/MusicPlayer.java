@@ -9,6 +9,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Data;
 import net.doge.constants.*;
+import net.doge.models.entity.AudioFile;
+import net.doge.models.entity.NetMusicInfo;
+import net.doge.models.entity.SimpleMusicInfo;
 import net.doge.ui.PlayerFrame;
 import net.doge.utils.MusicUtils;
 import net.doge.utils.StringUtils;
@@ -31,7 +34,7 @@ public class MusicPlayer {
     private PlayerFrame f;
     // 当前载入的文件的信息
     private SimpleMusicInfo musicInfo = new SimpleMusicInfo();
-    // 载入的在线音乐信息，如果是离线音乐则为 null
+    // 载入的在线音乐信息，如果是本地音乐则为 null
     private NetMusicInfo netMusicInfo;
     // 当前播放器状态
     private int status;
