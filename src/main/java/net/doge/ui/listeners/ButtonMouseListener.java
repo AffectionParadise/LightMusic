@@ -27,22 +27,26 @@ public class ButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        if(!b.isEnabled()) return;
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
         Color btc = ColorUtils.brighter(textColor);
         Color bic = ColorUtils.brighter(iconColor);
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), bic));
         b.setForeground(btc);
-        if (!(b instanceof TabButton)) b.setDrawBg(true);
+//        if (b instanceof TabButton) return;
+        b.setDrawBg(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        if(!b.isEnabled()) return;
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
         if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), iconColor));
         b.setForeground(textColor);
-        if (!(b instanceof TabButton)) b.setDrawBg(false);
+//        if (b instanceof TabButton) return;
+        b.setDrawBg(b instanceof TabButton && ((TabButton) b).isActive());
     }
 
     @Override

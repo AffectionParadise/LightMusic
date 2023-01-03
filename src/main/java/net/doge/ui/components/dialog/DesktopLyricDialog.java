@@ -132,7 +132,7 @@ public class DesktopLyricDialog extends JDialog {
         lyricLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(15);
+        fl.setHgap(10);
         buttonPanel.setLayout(fl);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(lock);

@@ -758,7 +758,7 @@ public class PlayerFrame extends JFrame {
     // 专辑图片宽/高
     private int albumImageWidth;
     // 封面图片宽/高
-    private int coverImageWidth = 260;
+    private int coverImageWidth = 240;
     // 切换面板按钮图片宽度
     private int changePaneImageWidth = 50;
     // 当前面板
@@ -2737,9 +2737,9 @@ public class PlayerFrame extends JFrame {
         closeButton.addMouseListener(new ButtonMouseListener(closeButton, THIS));
 
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
-        fl.setHgap(16);
+        fl.setHgap(14);
         windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+        windowCtrlPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
         windowCtrlPanel.setMinimumSize(new Dimension(360, 10));
         windowCtrlPanel.add(hideDetailButton);
         windowCtrlPanel.add(styleToolButton);
@@ -5040,6 +5040,7 @@ public class PlayerFrame extends JFrame {
         collectionPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 收藏后退按钮事件
         collectionBackwardButton.addActionListener(e -> {
+            collectionBackwardButton.setDrawBg(false);
             // 返回到歌单/专辑/歌手/电台
             // 先清空在线音乐列表
             ((DefaultListModel) netMusicList.getModel()).clear();
@@ -16151,6 +16152,7 @@ public class PlayerFrame extends JFrame {
         netRecommendPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 推荐后退按钮事件
         recommendBackwardButton.addActionListener(e -> {
+            recommendBackwardButton.setDrawBg(false);
             // 返回到歌单/专辑/歌手/电台
             // 先清空在线音乐列表
             ((DefaultListModel) netMusicList.getModel()).clear();
@@ -20466,12 +20468,12 @@ public class PlayerFrame extends JFrame {
         Component[] components = personalMusicToolBar.getComponents();
         for (int i = 0, len = components.length; i < len; i++) {
             TabButton b = (TabButton) components[i];
-            b.setDrawBg(currPersonalMusicTab == i);
+            b.setActive(currPersonalMusicTab == i);
         }
         components = recommendToolBar.getComponents();
         for (int i = 0, len = components.length; i < len; i++) {
             TabButton b = (TabButton) components[i];
-            b.setDrawBg(currRecommendTab == i);
+            b.setActive(currRecommendTab == i);
         }
     }
 
@@ -20499,7 +20501,6 @@ public class PlayerFrame extends JFrame {
 
     // 改变 UI 风格
     public void changeUIStyle(UIStyle style) {
-        style.setInvokeLater(() -> changeUIStyle(style));
         if (!style.hasImg()) {
             changeUIStyle(styles.get(0));
             return;

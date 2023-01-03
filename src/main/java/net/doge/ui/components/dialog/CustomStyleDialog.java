@@ -57,15 +57,15 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     private final CustomLabel[] labels = {
             new CustomLabel("主题名称："),
             new CustomLabel("背景图片："),
-            new CustomLabel("悬停框颜色："),
-            new CustomLabel("选中框颜色："),
+            new CustomLabel("列表悬停框颜色："),
+            new CustomLabel("列表选中框颜色："),
             new CustomLabel("歌词文字颜色："),
             new CustomLabel("歌词高亮颜色："),
-            new CustomLabel("标签文字颜色："),
+            new CustomLabel("界面文字颜色："),
             new CustomLabel("时间条颜色："),
             new CustomLabel("图标颜色："),
             new CustomLabel("滚动条颜色："),
-            new CustomLabel("音量滑动条颜色："),
+            new CustomLabel("音量条颜色："),
             new CustomLabel("频谱颜色：")
     };
 

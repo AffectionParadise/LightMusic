@@ -178,7 +178,7 @@ public class ColorUtils {
      * @return
      */
     public static Color brighter(Color color) {
-        final float factor = 0.6f;
+        final float factor = 0.15f;
         int red = (int) ((color.getRed() * (1 - factor) / 255 + factor) * 255);
         int green = (int) ((color.getGreen() * (1 - factor) / 255 + factor) * 255);
         int blue = (int) ((color.getBlue() * (1 - factor) / 255 + factor) * 255);
@@ -192,11 +192,7 @@ public class ColorUtils {
      * @return
      */
     public static Color darker(Color color) {
-        final float factor = 0.15f;
-        int red = (int) ((color.getRed() * (1 - factor)));
-        int green = (int) ((color.getGreen() * (1 - factor)));
-        int blue = (int) ((color.getBlue() * (1 - factor)));
-        return new Color(red, green, blue, color.getAlpha());
+        return darker(color, 0.15f);
     }
 
     /**

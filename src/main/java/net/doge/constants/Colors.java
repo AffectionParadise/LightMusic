@@ -40,7 +40,7 @@ public class Colors {
     public static final Color NIGHT2 = new Color(201, 188, 139);
     public static final Color NIGHT3 = new Color(227, 194, 28);
 
-    public static final Color SPRING1 = new Color(231, 255, 229);
+    public static final Color SPRING1 = new Color(241, 255, 240);
     public static final Color SPRING2 = new Color(172, 243, 162);
     public static final Color SPRING3 = new Color(110, 208, 98);
 
@@ -48,7 +48,7 @@ public class Colors {
     public static final Color SUMMER2 = new Color(152, 196, 229);
     public static final Color SUMMER3 = new Color(102, 194, 255);
 
-    public static final Color AUTUMN1 = new Color(255, 248, 233);
+    public static final Color AUTUMN1 = new Color(252, 245, 238);
     public static final Color AUTUMN2 = new Color(201, 188, 139);
     public static final Color AUTUMN3 = new Color(206, 177, 27);
 
@@ -67,7 +67,7 @@ public class Colors {
     public static final Color AL2 = new Color(212, 162, 220);
     public static final Color AL3 = new Color(178, 136, 215);
 
-    public static final Color SUNSET_OCEAN1 = new Color(209, 225, 225);
+    public static final Color SUNSET_OCEAN1 = new Color(236, 255, 255);
     public static final Color SUNSET_OCEAN2 = new Color(254, 206, 95);
     public static final Color SUNSET_OCEAN3 = new Color(42, 152, 182);
 
@@ -100,6 +100,6 @@ public class Colors {
     public static final Color BROOK3 = new Color(206, 134, 0);
 
     public static final Color HAPPY_NEW_YEAR1 = new Color(255, 240, 240);
-    public static final Color HAPPY_NEW_YEAR2 = new Color(227, 137, 137);
-    public static final Color HAPPY_NEW_YEAR3 = new Color(255, 105, 103);
+    public static final Color HAPPY_NEW_YEAR2 = new Color(255, 180, 180);
+    public static final Color HAPPY_NEW_YEAR3 = new Color(255, 115, 113);
 }

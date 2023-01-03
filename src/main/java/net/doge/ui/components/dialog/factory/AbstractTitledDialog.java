@@ -71,7 +71,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 0, 15));
         globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 

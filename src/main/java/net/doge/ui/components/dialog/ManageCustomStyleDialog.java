@@ -362,9 +362,10 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         r.setForeColor(st.getForeColor());
         r.setSelectedColor(st.getSelectedColor());
         r.setTextColor(textColor);
-        styleList.repaint();
 
         styleListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
         styleListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+
+        repaint();
     }
 }
