@@ -4547,7 +4547,6 @@ public class MusicServerUtils {
                 String albumName = albumJson.getString("albumname");
                 String artist = albumJson.getString("singername");
                 String artistId = albumJson.getString("singerid");
-//            String description = albumJson.getString("intro");
                 String publishTime = albumJson.getString("publishtime").replace(" 00:00:00", "");
                 Integer songNum = albumJson.getInt("songcount");
                 String coverImgThumbUrl = albumJson.getString("imgurl").replace("/{size}", "");
@@ -4559,8 +4558,6 @@ public class MusicServerUtils {
                 albumInfo.setArtist(artist);
                 albumInfo.setArtistId(artistId);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-//            albumInfo.setCoverImgUrl(coverImgUrl);
-//            albumInfo.setDescription(description);
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
@@ -6519,6 +6516,7 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 
@@ -9569,8 +9567,7 @@ public class MusicServerUtils {
 //            Integer songNum = artistJson.getInt("songcount");
 //            Integer albumNum = artistJson.getInt("albumcount");
 //            Integer mvNum = artistJson.getInt("mvcount");
-                    String coverImgUrl = artistJson.getString("imgurl").replace("{size}", "240");
-                    String coverImgThumbUrl = coverImgUrl;
+                    String coverImgThumbUrl = artistJson.getString("imgurl").replace("{size}", "240");
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
                     artistInfo.setSource(NetMusicSource.KG);
@@ -9579,7 +9576,6 @@ public class MusicServerUtils {
 //            artistInfo.setSongNum(songNum);
 //            artistInfo.setAlbumNum(albumNum);
 //            artistInfo.setMvNum(mvNum);
-                    artistInfo.setCoverImgUrl(coverImgUrl);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
@@ -14248,6 +14244,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = playlistJson.getString("coverImgUrl");
             String description = playlistJson.getString("description");
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description.equals("null") ? "" : description);
             if (!playlistInfo.hasCreator())
@@ -14277,6 +14275,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = data.getString("imgurl").replace("/{size}", "");
             String description = data.getString("intro");
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             playlistInfo.setTag("");
@@ -14293,6 +14293,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = data.getString("logo");
             String description = data.getString("desc").replace("<br>", "\n");
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(parseTags(data, NetMusicSource.QQ));
@@ -14309,6 +14311,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = data.getString("img500");
             String description = data.getString("info");
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(data.getString("tag").replace(",", "、"));
@@ -14324,6 +14328,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = data.getJSONObject("imgItem").getString("img");
             String description = data.getString("summary");
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(parseTags(data, NetMusicSource.MG));
@@ -14339,6 +14345,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = playlistJson.getString("pic");
             String description = playlistJson.getString("desc");
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(parseTags(playlistJson, NetMusicSource.QI));
@@ -14357,6 +14365,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = album.getString("front_cover");
             String description = StringUtils.removeHTMLLabel(album.getString("intro"));
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(parseTags(info, NetMusicSource.ME));
@@ -14373,6 +14383,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = data.getString("cover");
             String description = data.getString("intro");
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             playlistInfo.setTag("");
@@ -14621,6 +14633,8 @@ public class MusicServerUtils {
             if (!albumInfo.hasSongNum()) albumInfo.setSongNum(albumJson.getInt("size"));
             if (!albumInfo.hasPublishTime())
                 albumInfo.setPublishTime(TimeUtils.msToDate(albumJson.getLong("publishTime")));
+
+            if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             albumInfo.setDescription(description.equals("null") ? "" : description);
         }
@@ -14635,7 +14649,9 @@ public class MusicServerUtils {
 
             String coverImgUrl = data.getString("imgurl").replace("/{size}", "");
             String description = data.getString("intro").replace("\\n", "\n");
-            albumInfo.setCoverImg(getImageFromUrl(coverImgUrl));
+
+            if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
+            GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             albumInfo.setDescription(description);
         }
 
@@ -14650,6 +14666,8 @@ public class MusicServerUtils {
             // QQ 专辑封面图片 url 获取方式与歌曲相同
             String coverImgUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumInfo.getId());
             String description = data.getString("desc");
+
+            if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             albumInfo.setDescription(description);
         }
@@ -14666,6 +14684,8 @@ public class MusicServerUtils {
                 String coverImgUrl = data.getString("pic");
                 String description = data.getString("albuminfo");
                 Integer songNum = data.getInt("total");
+
+                if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
                 GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
                 albumInfo.setDescription(description);
                 albumInfo.setSongNum(songNum);
@@ -14682,6 +14702,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = "https:" + data.getString("picUrl");
             String description = data.getString("desc");
+
+            if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             albumInfo.setDescription(description);
         }
@@ -14699,6 +14721,8 @@ public class MusicServerUtils {
             if (!albumInfo.hasSongNum()) albumInfo.setSongNum(albumJson.getJSONArray("trackList").size());
             if (!albumInfo.hasPublishTime())
                 albumInfo.setPublishTime(albumJson.getString("releaseDate").split("T")[0]);
+
+            if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             albumInfo.setDescription(description);
         }
@@ -14717,6 +14741,7 @@ public class MusicServerUtils {
             String coverImgUrl = doc.select("div#mainpic img").attr("src");
 
             albumInfo.setDescription(info + desc + "\n曲目：\n" + tracks);
+            if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
         }
 
@@ -14733,6 +14758,8 @@ public class MusicServerUtils {
             if (!albumInfo.hasSongNum()) albumInfo.setSongNum(albumJson.getInt("count"));
             if (!albumInfo.hasPublishTime())
                 albumInfo.setPublishTime(TimeUtils.msToDate(albumJson.getLong("updated_at_ts") * 1000));
+
+            if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             albumInfo.setDescription(description);
         }
@@ -14989,6 +15016,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = artistJson.getString("img1v1Url");
             String description = artistJson.getString("briefDesc");
+
+            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description.equals("null") ? "" : description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(artistJson.getInt("musicSize"));
@@ -15005,6 +15034,8 @@ public class MusicServerUtils {
 
             String description = data.getString("intro");
             String coverImgUrl = data.getString("imgurl").replace("{size}", "240");
+
+            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getInt("songcount"));
@@ -15022,6 +15053,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = String.format(ARTIST_IMG_QQ_API, id);
             String description = data.optString("desc");
+
+            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
         }
@@ -15036,6 +15069,8 @@ public class MusicServerUtils {
 
             String description = StringUtils.removeHTMLLabel(data.getString("info"));
             String coverImgUrl = data.getString("pic300");
+
+            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getInt("musicNum"));
@@ -15053,6 +15088,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = "https:" + data.getString("picUrl");
             String description = data.getString("desc");
+
+            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
         }
@@ -15067,6 +15104,8 @@ public class MusicServerUtils {
 
             String description = data.getString("introduce");
             String coverImgUrl = data.getString("pic");
+
+            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getInt("trackTotal"));
@@ -15083,11 +15122,14 @@ public class MusicServerUtils {
                 JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("info").getJSONObject("organization");
 
+                String coverImgUrl = data.getString("avatar");
                 String intro = StringUtils.removeHTMLLabel(data.getString("intro"));
                 String announcement = StringUtils.removeHTMLLabel(data.getString("announcement"));
 
                 if (!artistInfo.hasDescription()) artistInfo.setDescription(intro + "\n\n" + announcement);
-                GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(data.getString("avatar"))));
+
+                if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
+                GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             } else {
                 String artistInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, id, 1, 1))
                         .execute()
@@ -15121,7 +15163,10 @@ public class MusicServerUtils {
                 if (!artistInfo.hasDescription()) artistInfo.setDescription(cv.getString("profile"));
                 if (!artistInfo.hasSongNum())
                     artistInfo.setSongNum(dramas.getJSONObject("pagination").getInt("count"));
-                GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(cv.getString("icon"))));
+
+                String coverImgUrl = cv.getString("icon");
+                if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
+                GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             }
         }
 
@@ -15138,6 +15183,7 @@ public class MusicServerUtils {
             String coverImgUrl = doc.select("div.nbg img").attr("src");
 
             artistInfo.setDescription(info + desc);
+            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
         }
     }
@@ -15176,15 +15222,13 @@ public class MusicServerUtils {
                 Integer trackCount = radioJson.getInt("programCount");
                 String category = radioJson.getString("category");
                 if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
-                String coverImgUrl = radioJson.getString("picUrl");
-                String coverImgThumbUrl = coverImgUrl;
+                String coverImgThumbUrl = radioJson.getString("picUrl");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
                 radioInfo.setDjId(djId);
-                radioInfo.setCoverImgUrl(coverImgUrl);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                radioInfo.setPlayCount(playCount);
                 radioInfo.setTrackCount(trackCount);
@@ -15252,8 +15296,7 @@ public class MusicServerUtils {
                 int musicSize = episodes.getJSONArray("music").size();
                 Integer trackCount = episodeSize + ftSize + musicSize;
                 String category = drama.getString("catalog_name");
-                String coverImgUrl = drama.getString("cover");
-                String coverImgThumbUrl = coverImgUrl;
+                String coverImgThumbUrl = drama.getString("cover");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setSource(NetMusicSource.ME);
@@ -15261,7 +15304,6 @@ public class MusicServerUtils {
                 radioInfo.setName(radioName);
                 if (!"null".equals(dj)) radioInfo.setDj(dj);
                 radioInfo.setDjId(djId);
-                radioInfo.setCoverImgUrl(coverImgUrl);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 radioInfo.setPlayCount(playCount);
                 radioInfo.setTrackCount(trackCount);
@@ -15301,6 +15343,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = radioJson.getString("picUrl");
             String description = radioJson.getString("desc");
+
+            if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             radioInfo.setDescription(description.equals("null") ? "" : description);
             if (!radioInfo.hasDj()) radioInfo.setDj(radioJson.getJSONObject("dj").getString("nickname"));
@@ -15342,6 +15386,7 @@ public class MusicServerUtils {
             String tag = parseTags(radioJson, NetMusicSource.XM);
             String description = radioJson.getString("shortIntro");
 
+            if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             if (!radioInfo.hasTag()) radioInfo.setTag(tag);
             if (!radioInfo.hasDescription()) radioInfo.setDescription(description);
@@ -15359,6 +15404,8 @@ public class MusicServerUtils {
 
             String coverImgUrl = drama.getString("cover");
             String description = drama.getString("abstract");
+
+            if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             if (!radioInfo.hasTag()) radioInfo.setTag(parseTags(drama, NetMusicSource.ME));
             if (!radioInfo.hasDescription()) radioInfo.setDescription(StringUtils.removeHTMLLabel(description));
@@ -15400,6 +15447,7 @@ public class MusicServerUtils {
                 String coverImgUrl = doc.select("div#mainpic img").attr("src");
 
                 radioInfo.setDescription(info + desc + "作者简介：\n" + authorIntro + "目录：\n" + catalog + "丛书信息：\n" + trace);
+                if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
                 GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             } else if (isGame) {
                 String radioInfoBody = HttpRequest.get(String.format(GAME_RADIO_DETAIL_DB_API, id))
@@ -15413,6 +15461,7 @@ public class MusicServerUtils {
                 String coverImgUrl = doc.select("div.pic img").attr("src");
 
                 radioInfo.setDescription(info + desc);
+                if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
                 GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             } else {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_DB_API, id))
@@ -15427,6 +15476,7 @@ public class MusicServerUtils {
                 String coverImgUrl = doc.select("div#mainpic img").attr("src");
 
                 radioInfo.setDescription(info + desc);
+                if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
                 GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(getImageFromUrl(coverImgUrl)));
             }
         }
@@ -15656,8 +15706,10 @@ public class MusicServerUtils {
             JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("info").getJSONObject("album");
 
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(getImageFromUrl(data.getString("front_cover"))));
-            rankingInfo.setDescription(StringUtils.removeHTMLLabel(data.getString("intro")));
+            String description = StringUtils.removeHTMLLabel(data.getString("intro"));
+
+            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            rankingInfo.setDescription(description);
         }
     }
 
@@ -15698,7 +15750,10 @@ public class MusicServerUtils {
             if (!userInfo.hasFollowed()) userInfo.setFollowed(profileJson.getInt("followeds"));
             if (!userInfo.hasPlaylistCount()) userInfo.setPlaylistCount(profileJson.getInt("playlistCount"));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(profileJson.getString("backgroundUrl"))));
+
+            String bgImgUrl = profileJson.getString("backgroundUrl");
+            if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgImgUrl)));
         }
 
         // QQ
@@ -15732,7 +15787,10 @@ public class MusicServerUtils {
             if (!userInfo.hasRadioCount()) userInfo.setRadioCount(data.getInt("albumsCount"));
             if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("tracksCount"));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl("http:" + data.getString("background"))));
+
+            String bgImgUrl = "http:" + data.getString("background");
+            if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgImgUrl)));
         }
 
         // 猫耳
@@ -15765,9 +15823,11 @@ public class MusicServerUtils {
                 if (!userInfo.hasFollowed())
                     userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
                 GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+
                 String bgUrl = ReUtil.get("style=\"background-image:url\\((.*?)\\)\"", userInfoBody, 1);
-                GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(
-                        (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl)));
+                String bgImgUrl = (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl;
+                if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
+                GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgImgUrl)));
             };
 
             List<Future<?>> taskList = new LinkedList<>();
@@ -15797,7 +15857,8 @@ public class MusicServerUtils {
             if (!userInfo.hasSign()) userInfo.setSign(userInfoJson.getString("wishes"));
             if (!userInfo.hasFollowed()) userInfo.setFollowed(userInfoJson.getInt("fansCnt"));
             if (!userInfo.hasProgramCount()) userInfo.setProgramCount(userInfoJson.getInt("videoCnt"));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfoJson.getString("avatar"))));
+
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
         }
 
         // 豆瓣
@@ -15843,8 +15904,10 @@ public class MusicServerUtils {
             if (!userInfo.hasFollowed())
                 userInfo.setFollowed(Integer.parseInt(ReUtil.get("(\\d+)", a.last().text(), 1)));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-            String bgUrl = doc.select("img.header-bg").attr("src");
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgUrl)));
+
+            String bgImgUrl = doc.select("img.header-bg").attr("src");
+            if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgImgUrl)));
         }
 
         // 哔哩哔哩
@@ -15865,7 +15928,10 @@ public class MusicServerUtils {
             if (!userInfo.hasFollowed()) userInfo.setFollowed(card.getInt("fans"));
             if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("archive_count"));
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(data.getJSONObject("space").getString("s_img"))));
+
+            String bgImgUrl = data.getJSONObject("space").getString("s_img");
+            if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgImgUrl)));
         }
     }
 
@@ -18461,7 +18527,6 @@ public class MusicServerUtils {
                     String dj = netUserInfo.getName();
                     Long playCount = radioJson.getLong("view_count");
                     String coverImgThumbUrl = radioJson.getString("cover");
-                    String coverImgUrl = coverImgThumbUrl;
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setSource(NetMusicSource.ME);
@@ -18469,7 +18534,6 @@ public class MusicServerUtils {
                     radioInfo.setName(radioName);
                     radioInfo.setDj(dj);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    radioInfo.setCoverImgUrl(coverImgUrl);
                     radioInfo.setPlayCount(playCount);
 //                    radioInfo.setCategory(category);
                     GlobalExecutors.imageExecutor.execute(() -> {
@@ -18502,14 +18566,12 @@ public class MusicServerUtils {
                         String radioName = radioJson.getString("name");
 //                    String category = radioJson.getString("type");
                         String coverImgThumbUrl = radioJson.getString("cover");
-                        String coverImgUrl = coverImgThumbUrl;
 
                         NetRadioInfo radioInfo = new NetRadioInfo();
                         radioInfo.setSource(NetMusicSource.ME);
                         radioInfo.setId(radioId);
                         radioInfo.setName(radioName);
                         radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                        radioInfo.setCoverImgUrl(coverImgUrl);
 //                    radioInfo.setCategory(category);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
@@ -19455,14 +19517,12 @@ public class MusicServerUtils {
                 String artistId = artistJson.getString("author_id");
                 String artistName = artistJson.getString("author_name");
                 String coverImgThumbUrl = artistJson.getString("sizable_avatar").replace("{size}", "240");
-                String coverImgUrl = coverImgThumbUrl;
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetMusicSource.KG);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                artistInfo.setCoverImgUrl(coverImgUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);

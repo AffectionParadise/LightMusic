@@ -86,6 +86,10 @@ public class NetArtistInfo {
         return isOrganization;
     }
 
+    public boolean hasCoverImgUrl() {
+        return StringUtils.isNotEmpty(coverImgUrl);
+    }
+
     public boolean hasCoverImg() {
         return coverImg != null;
     }

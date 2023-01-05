@@ -21,10 +21,7 @@ import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.componentui.menu.RadioButtonMenuItemUI;
 import net.doge.ui.componentui.slider.SliderUI;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ColorUtils;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.MusicServerUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,7 +153,7 @@ public class VideoDialog extends AbstractTitledDialog {
     private NetMvInfo netMvInfo;
 
     public VideoDialog(NetMvInfo netMvInfo, String dest, PlayerFrame f) {
-        super(f, netMvInfo.toSimpleString());
+        super(f, StringUtils.textToHtml(netMvInfo.toSimpleString()));
         this.isLocal = dest != null;
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();

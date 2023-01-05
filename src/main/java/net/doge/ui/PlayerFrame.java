@@ -758,7 +758,7 @@ public class PlayerFrame extends JFrame {
     // 专辑图片宽/高
     private int albumImageWidth;
     // 封面图片宽/高
-    private int coverImageWidth = 240;
+    private int coverImageWidth = 200;
     // 切换面板按钮图片宽度
     private int changePaneImageWidth = 50;
     // 当前面板
@@ -4563,7 +4563,13 @@ public class PlayerFrame extends JFrame {
                         // 显示收藏用户的歌曲列表
                         netMusicList.setModel(netMusicListForUserCollectionModel);
                     }
-                    collectionItemListCountBox.add(netMusicScrollPane);
+                    if (netMusicList.getModel().getSize() == 0) {
+                        collectionItemListCountBox.remove(netMusicScrollPane);
+                        collectionItemListCountBox.add(emptyHintPanel);
+                    } else {
+                        collectionItemListCountBox.remove(emptyHintPanel);
+                        collectionItemListCountBox.add(netMusicScrollPane);
+                    }
                     collectionItemListBox.add(collectionItemListCountBox);
                     collectionLeftBox.add(collectionItemListBox);
                 }
@@ -8196,6 +8202,493 @@ public class PlayerFrame extends JFrame {
         recommendItemCoverAndNameLabel.setIconTextGap(gap);
         collectionItemCoverAndNameLabel.setIconTextGap(gap);
         collectionItemDescriptionLabel.setIconTextGap(gap);
+
+        // 显示大图
+        playlistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) playlistDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) playlistDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
+                String url = playlistInfo.hasCoverImgUrl() ? playlistInfo.getCoverImgUrl() : playlistInfo.getCoverImgThumbUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        albumCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) albumDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) albumDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
+                String url = albumInfo.hasCoverImgUrl() ? albumInfo.getCoverImgUrl() : albumInfo.getCoverImgThumbUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        artistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) artistDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) artistDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                NetArtistInfo artistInfo = netArtistList.getSelectedValue();
+                String url = artistInfo.hasCoverImgUrl() ? artistInfo.getCoverImgUrl() : artistInfo.getCoverImgThumbUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        radioCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) radioDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) radioDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                NetRadioInfo radioInfo = netRadioList.getSelectedValue();
+                String url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        rankingCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) rankingDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) rankingDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
+                String url = rankingInfo.getCoverImgUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        userCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                NetUserInfo userInfo = netUserList.getSelectedValue();
+                String url = userInfo.hasAvatarUrl() ? userInfo.getAvatarUrl() : userInfo.getAvatarThumbUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        userDescriptionLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                NetUserInfo userInfo = netUserList.getSelectedValue();
+                String url = userInfo.getBgImgUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        recommendItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) recommendItemDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) recommendItemDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                Object o = itemRecommendList.getSelectedValue();
+                String url = null;
+                if (o instanceof NetPlaylistInfo) {
+                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                    url = playlistInfo.hasCoverImgUrl() ? playlistInfo.getCoverImgUrl() : playlistInfo.getCoverImgThumbUrl();
+                } else if (o instanceof NetAlbumInfo) {
+                    NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                    url = albumInfo.hasCoverImgUrl() ? albumInfo.getCoverImgUrl() : albumInfo.getCoverImgThumbUrl();
+                } else if (o instanceof NetArtistInfo) {
+                    NetArtistInfo artistInfo = (NetArtistInfo) o;
+                    url = artistInfo.hasCoverImgUrl() ? artistInfo.getCoverImgUrl() : artistInfo.getCoverImgThumbUrl();
+                } else if (o instanceof NetRadioInfo) {
+                    NetRadioInfo radioInfo = (NetRadioInfo) o;
+                    url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
+                }
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    final String finalUrl = url;
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(finalUrl);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        collectionItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                Object o = collectionList.getSelectedValue();
+                String url = null;
+                if (o instanceof NetPlaylistInfo) {
+                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                    url = playlistInfo.hasCoverImgUrl() ? playlistInfo.getCoverImgUrl() : playlistInfo.getCoverImgThumbUrl();
+                } else if (o instanceof NetAlbumInfo) {
+                    NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                    url = albumInfo.hasCoverImgUrl() ? albumInfo.getCoverImgUrl() : albumInfo.getCoverImgThumbUrl();
+                } else if (o instanceof NetArtistInfo) {
+                    NetArtistInfo artistInfo = (NetArtistInfo) o;
+                    url = artistInfo.hasCoverImgUrl() ? artistInfo.getCoverImgUrl() : artistInfo.getCoverImgThumbUrl();
+                } else if (o instanceof NetRadioInfo) {
+                    NetRadioInfo radioInfo = (NetRadioInfo) o;
+                    url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
+                } else if (o instanceof NetRankingInfo) {
+                    NetRankingInfo rankingInfo = (NetRankingInfo) o;
+                    url = rankingInfo.getCoverImgUrl();
+                } else if (o instanceof NetUserInfo) {
+                    NetUserInfo userInfo = (NetUserInfo) o;
+                    url = userInfo.hasAvatarUrl() ? userInfo.getAvatarUrl() : userInfo.getAvatarThumbUrl();
+                }
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    final String finalUrl = url;
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(finalUrl);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+        collectionItemDescriptionLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
+                Object o = collectionList.getSelectedValue();
+                if (!(o instanceof NetUserInfo)) return;
+                String url = ((NetUserInfo) o).getBgImgUrl();
+                if (StringUtils.isEmpty(url)) return;
+                try {
+                    imageViewDialog = new ImageViewDialog(THIS, 1) {
+                        @Override
+                        public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
+                            LinkedList<String> res = new LinkedList<>();
+                            res.add(url);
+                            return new CommonResult<>(res, 1);
+                        }
+
+                        @Override
+                        public void requestFailed() {
+                            new TipDialog(THIS, NO_IMG_MSG).showDialog();
+                        }
+                    };
+                    imageViewDialog.showDialog();
+                    imageViewDialog = null;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
 
         // 边框间距
         Border eb = BorderFactory.createEmptyBorder(15, 0, 0, 0);

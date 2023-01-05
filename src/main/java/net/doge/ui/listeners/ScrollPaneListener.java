@@ -27,13 +27,11 @@ public class ScrollPaneListener extends MouseAdapter {
     public void mouseEntered(MouseEvent e) {
         ScrollBarUI ui = (ScrollBarUI) sp.getVUI();
         ui.setActive(true);
-        sp.repaint();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         ScrollBarUI ui = (ScrollBarUI) sp.getVUI();
         ui.setActive(false);
-        sp.repaint();
     }
 }

@@ -640,4 +640,19 @@ public class ImageUtils {
             return null;
         }
     }
+
+    /**
+     * 旋转图像
+     *
+     * @param image
+     * @param angle
+     * @return
+     */
+    public static BufferedImage rotate(BufferedImage image, double angle) {
+        try {
+            return Thumbnails.of(image).scale(1f).rotate(angle).asBufferedImage();
+        } catch (IOException e) {
+            return null;
+        }
+    }
 }

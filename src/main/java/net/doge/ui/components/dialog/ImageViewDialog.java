@@ -37,6 +37,8 @@ import java.util.List;
 public abstract class ImageViewDialog extends AbstractTitledDialog {
     private final int WIDTH = 1000;
     private final int HEIGHT = 850;
+    private final int IMG_MAX_WIDTH = WIDTH - 100;
+    private final int IMG_MAX_HEIGHT = HEIGHT - 150;
     // 加载图片提示
     private final String LOADING_IMG_MSG = "请稍候，图片加载中......";
     // 已经是第一张提示
@@ -46,6 +48,10 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     // 非法页码提示
     private final String ILLEGAL_PAGE_MSG = "请输入合法页码";
 
+    private final String ZOOM_IN = "放大";
+    private final String ZOOM_OUT = "缩小";
+    private final String LEFT_ROTATE = "逆时针旋转 90 度";
+    private final String RIGHT_ROTATE = "顺时针旋转 90 度";
     private final String LAST_IMG = "上一张";
     private final String NEXT_IMG = "下一张";
     private final String FIRST_IMG = "第一张";
@@ -53,6 +59,14 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private final String SAVE_IMG = "保存图片";
     private final String GO_TIP = "跳页";
 
+    // 放大图标
+    private ImageIcon zoomInIcon = new ImageIcon(SimplePath.ICON_PATH + "zoomIn.png");
+    // 缩小图标
+    private ImageIcon zoomOutIcon = new ImageIcon(SimplePath.ICON_PATH + "zoomOut.png");
+    // 逆时针旋转图标
+    private ImageIcon leftRotateIcon = new ImageIcon(SimplePath.ICON_PATH + "leftRotate.png");
+    // 顺时针旋转图标
+    private ImageIcon rightRotateIcon = new ImageIcon(SimplePath.ICON_PATH + "rightRotate.png");
     // 上一张图标
     private ImageIcon lastImgIcon = new ImageIcon(SimplePath.ICON_PATH + "lastPage.png");
     // 下一张图标
@@ -70,6 +84,11 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private CustomPanel bottomPanel = new CustomPanel();
 
     private CustomLabel imgLabel = new CustomLabel("");
+    public CustomButton zoomInButton = new CustomButton(zoomInIcon);
+    public CustomButton zoomOutButton = new CustomButton(zoomOutIcon);
+    public CustomButton leftRotateButton = new CustomButton(leftRotateIcon);
+    public CustomButton rightRotateButton = new CustomButton(rightRotateIcon);
+    public CustomButton firstImgButton = new CustomButton(firstImgIcon);
     public CustomButton lastImgButton = new CustomButton(lastImgIcon);
     private CustomLabel pageLabel = new CustomLabel();
     // 页数框
@@ -77,19 +96,22 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     // 跳页按钮
     private CustomButton goButton = new CustomButton(goIcon);
     public CustomButton nextImgButton = new CustomButton(nextImgIcon);
-    private CustomButton saveImgButton = new CustomButton(saveImgIcon);
-    public CustomButton firstImgButton = new CustomButton(firstImgIcon);
     private CustomButton lstImgButton = new CustomButton(lstImgIcon);
+    private CustomButton saveImgButton = new CustomButton(saveImgIcon);
 
     // 底部盒子
     private Box bottomBox = new Box(BoxLayout.Y_AXIS);
 
     private CommonResult<String> results;
     private List<String> cursors = new LinkedList<>();
+    // 分页
     private int p = 1;
-
     private int pn = 1;
     private int limit;
+    // 当前图片
+    private BufferedImage img;
+    // 大小比例
+    private float scale;
 
     public ImageViewDialog(PlayerFrame f, int limit) {
         super(f, "图片预览");
@@ -134,6 +156,28 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         imgLabel.setForeground(textColor);
         pageLabel.setForeground(textColor);
 
+        // 放大/缩小
+        zoomInButton.setToolTipText(ZOOM_IN);
+        zoomInButton.setIcon(ImageUtils.dye((ImageIcon) zoomInButton.getIcon(), iconColor));
+        zoomInButton.addMouseListener(new ButtonMouseListener(zoomInButton, f));
+        zoomInButton.setPreferredSize(new Dimension(zoomInIcon.getIconWidth() + 10, zoomInIcon.getIconHeight() + 10));
+        zoomInButton.addActionListener(e -> showScaledImg(scale = Math.min(20f, scale + 0.1f)));
+        zoomOutButton.setToolTipText(ZOOM_OUT);
+        zoomOutButton.setIcon(ImageUtils.dye((ImageIcon) zoomOutButton.getIcon(), iconColor));
+        zoomOutButton.addMouseListener(new ButtonMouseListener(zoomOutButton, f));
+        zoomOutButton.setPreferredSize(new Dimension(zoomOutIcon.getIconWidth() + 10, zoomOutIcon.getIconHeight() + 10));
+        zoomOutButton.addActionListener(e -> showScaledImg(scale = Math.max(0.1f, scale - 0.1f)));
+        // 逆时针/顺时针旋转
+        leftRotateButton.setToolTipText(LEFT_ROTATE);
+        leftRotateButton.setIcon(ImageUtils.dye((ImageIcon) leftRotateButton.getIcon(), iconColor));
+        leftRotateButton.addMouseListener(new ButtonMouseListener(leftRotateButton, f));
+        leftRotateButton.setPreferredSize(new Dimension(leftRotateIcon.getIconWidth() + 10, leftRotateIcon.getIconHeight() + 10));
+        leftRotateButton.addActionListener(e -> showRotatedImg(-90));
+        rightRotateButton.setToolTipText(RIGHT_ROTATE);
+        rightRotateButton.setIcon(ImageUtils.dye((ImageIcon) rightRotateButton.getIcon(), iconColor));
+        rightRotateButton.addMouseListener(new ButtonMouseListener(rightRotateButton, f));
+        rightRotateButton.setPreferredSize(new Dimension(rightRotateIcon.getIconWidth() + 10, rightRotateIcon.getIconHeight() + 10));
+        rightRotateButton.addActionListener(e -> showRotatedImg(90));
         // 上/下一张按钮
         lastImgButton.setToolTipText(LAST_IMG);
         lastImgButton.setIcon(ImageUtils.dye((ImageIcon) lastImgButton.getIcon(), iconColor));
@@ -187,9 +231,8 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         pageTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    goButton.doClick();
-                }
+                if (e.getKeyCode() != KeyEvent.VK_ENTER) return;
+                goButton.doClick();
             }
         });
         pageTextField.setForeground(textColor);
@@ -217,14 +260,16 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), iconColor));
         saveImgButton.addMouseListener(new ButtonMouseListener(saveImgButton, f));
         saveImgButton.setPreferredSize(new Dimension(saveImgIcon.getIconWidth() + 10, saveImgIcon.getIconHeight() + 10));
-        saveImgButton.addActionListener(e -> {
-            saveImg(p);
-        });
+        saveImgButton.addActionListener(e -> saveImg(p));
 
         centerPanel.add(imgLabel, BorderLayout.CENTER);
         FlowLayout fl = new FlowLayout();
         fl.setHgap(5);
         bottomPanel.setLayout(fl);
+        bottomPanel.add(zoomInButton);
+        bottomPanel.add(zoomOutButton);
+        bottomPanel.add(leftRotateButton);
+        bottomPanel.add(rightRotateButton);
         bottomPanel.add(firstImgButton);
         bottomPanel.add(lastImgButton);
         bottomPanel.add(pageLabel);
@@ -248,18 +293,36 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
 
     // 显示第 i 张图片
     private boolean showImg(int i) {
-        BufferedImage img = getImg(i);
+        img = getImg(i);
         pageLabel.setText(String.format("%s / %s", i, results.total));
+        return showImg(img);
+    }
+
+    // 显示旋转后的图片
+    private boolean showRotatedImg(double angle) {
+        img = ImageUtils.rotate(img, angle);
+        return showScaledImg(scale);
+    }
+
+    // 显示放大/缩小的图片
+    private boolean showScaledImg(float scale) {
+        return showImg(ImageUtils.scale(img, scale));
+    }
+
+    // 显示图片
+    private boolean showImg(BufferedImage img) {
         if (img == null) {
             imgLabel.setIcon(null);
             imgLabel.setText("图片走丢了T_T");
             return false;
         }
         // 调整图像大小适应窗口
-        int w = img.getWidth(), mw = WIDTH - 50, mh = HEIGHT - 150;
-        if (w > mw) img = ImageUtils.width(img, mw);
+        int w = img.getWidth();
+        if (w > IMG_MAX_WIDTH) img = ImageUtils.width(img, IMG_MAX_WIDTH);
         int h = img.getHeight();
-        if (h > mh) img = ImageUtils.height(img, mh);
+        if (h > IMG_MAX_HEIGHT) img = ImageUtils.height(img, IMG_MAX_HEIGHT);
+        // 调整后重新计算比例
+        scale = (float) img.getWidth() / this.img.getWidth();
         imgLabel.setIcon(new ImageIcon(img));
         imgLabel.setText("");
         return true;
@@ -304,7 +367,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         Platform.runLater(() -> {
             File outputFile = fileChooser.showSaveDialog(null);
             if (outputFile != null) {
-                ImageUtils.toFile(getImg(i), outputFile);
+                ImageUtils.toFile(img, outputFile);
             }
         });
     }

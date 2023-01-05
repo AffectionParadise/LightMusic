@@ -50,6 +50,10 @@ public class NetRankingInfo {
         return StringUtils.isNotEmpty(updateTime);
     }
 
+    public boolean hasCoverImgUrl() {
+        return StringUtils.isNotEmpty(coverImgUrl);
+    }
+
     public boolean hasCoverImg() {
         return coverImg != null;
     }
