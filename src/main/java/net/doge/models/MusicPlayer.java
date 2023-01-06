@@ -41,7 +41,7 @@ public class MusicPlayer {
     // 播放器
     private MediaPlayer mp;
 
-    // 声音数据，用于获取频谱
+    // 频谱数据
     public double[] specs = new double[SpectrumConstants.NUM_BANDS];
     public double[] specsOrigin = new double[SpectrumConstants.NUM_BANDS];
     public double[] specsGap = new double[SpectrumConstants.NUM_BANDS];
@@ -69,9 +69,9 @@ public class MusicPlayer {
         // 先清除上一次播放数据
         clearMetadata();
         // 初始化 MediaPlayer 对象
-        initialMp(source, netMusicInfo);
+        initMp(source, netMusicInfo);
         // 加载音乐信息
-        initialMusicInfo(source, netMusicInfo);
+        initMusicInfo(source, netMusicInfo);
         status = PlayerStatus.LOADED;
     }
 
@@ -95,10 +95,7 @@ public class MusicPlayer {
 
     // 卸载当前文件
     public void unload() {
-        if (mp != null) {
-            mp.dispose();
-            mp = null;
-        }
+        disposeMp();
         clearMetadata();
         status = PlayerStatus.EMPTY;
     }
@@ -154,7 +151,7 @@ public class MusicPlayer {
     }
 
     // 初始化音频信息(pcm wav)
-    private void initialMusicInfo(AudioFile source, NetMusicInfo netMusicInfo) {
+    private void initMusicInfo(AudioFile source, NetMusicInfo netMusicInfo) {
         this.netMusicInfo = netMusicInfo;
 
         // 音频格式(以 source 文件为准)
@@ -219,44 +216,43 @@ public class MusicPlayer {
         }
     }
 
+    // 释放 MediaPlayer 对象
+    private void disposeMp() {
+        if (mp == null) return;
+        // 可能会造成死锁，交给线程池处理
+        Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
+        try {
+            future.get(100, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+
+        } finally {
+            if (!future.isDone()) future.cancel(true);
+        }
+        mp = null;
+    }
+
+    private void initRequestHeaders(NetMusicInfo netMusicInfo, Media media) {
+        if (netMusicInfo == null || netMusicInfo.getSource() != NetMusicSource.BI) return;
+        try {
+            // 由于 Media 类不能重写，只能通过反射机制设置请求头
+            Field field = Media.class.getDeclaredField("jfxLocator");
+            field.setAccessible(true);
+            Locator locator = (Locator) field.get(media);
+            locator.setConnectionProperty("referer", "http://www.bilibili.com/");
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // 初始化 MediaPlayer 对象
-    public void initialMp(AudioFile source, NetMusicInfo netMusicInfo) {
+    public void initMp(AudioFile source, NetMusicInfo netMusicInfo) {
         // 加载文件(在线音乐直接播放 url)
         Media media = new Media(source == null ? netMusicInfo.getUrl() : source.toURI().toString());
-
-        if (netMusicInfo != null && netMusicInfo.getSource() == NetMusicSource.BI) {
-            try {
-                // 由于 Media 类不能重写，只能通过反射机制设置请求头
-                Field field = Media.class.getDeclaredField("jfxLocator");
-                field.setAccessible(true);
-                Locator locator = (Locator) field.get(media);
-                locator.setConnectionProperty("referer", "http://www.bilibili.com/");
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        if (mp != null) {
-            // 可能会造成死锁，交给线程池处理
-            Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
-            try {
-                future.get(100, TimeUnit.MILLISECONDS);
-            } catch (Exception e) {
-
-            } finally {
-                if (!future.isDone()) future.cancel(true);
-            }
-            mp = null;
-        }
+        initRequestHeaders(netMusicInfo, media);
+        disposeMp();
         mp = new MediaPlayer(media);
-        // 播放器状态监听器
-        f.loadMonitor(mp);
-        // 设置频谱更新间隔
-        mp.setAudioSpectrumInterval(SpectrumConstants.PLAYER_INTERVAL);
-        // 设置频谱更新数量
-        mp.setAudioSpectrumNumBands(SpectrumConstants.NUM_BANDS);
-        // 设置频谱阈值，默认是 -60
-        mp.setAudioSpectrumThreshold(SpectrumConstants.THRESHOLD);
+        // 初始化 MediaPlayer 设置
+        f.initPlayer();
     }
 
     public void play() {
@@ -289,17 +285,17 @@ public class MusicPlayer {
         mp.setVolume(volume);
     }
 
-    // 快进
-    public void forward(double seconds) {
-        if (mp == null) return;
-        mp.seek(getCurrTimeDuration().add(Duration.seconds(seconds)));
-    }
-
-    // 快退
-    public void backward(double seconds) {
-        if (mp == null) return;
-        mp.seek(getCurrTimeDuration().subtract(Duration.seconds(seconds)));
-    }
+//    // 快进
+//    public void forward(double seconds) {
+//        if (mp == null) return;
+//        mp.seek(getCurrTimeDuration().add(Duration.seconds(seconds)));
+//    }
+//
+//    // 快退
+//    public void backward(double seconds) {
+//        if (mp == null) return;
+//        mp.seek(getCurrTimeDuration().subtract(Duration.seconds(seconds)));
+//    }
 
     // 设置静音
     public void setMute(boolean isMute) {

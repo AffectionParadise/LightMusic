@@ -634,6 +634,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage scale(BufferedImage image, float scale) {
+        if (image == null) return null;
         try {
             return Thumbnails.of(image).scale(scale).asBufferedImage();
         } catch (IOException e) {
@@ -649,6 +650,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage rotate(BufferedImage image, double angle) {
+        if (image == null) return null;
         try {
             return Thumbnails.of(image).scale(1f).rotate(angle).asBufferedImage();
         } catch (IOException e) {

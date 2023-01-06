@@ -6326,7 +6326,6 @@ public class MusicServerUtils {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setAvatarUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
                     userInfo.setFollowed(followed);
                     userInfo.setPlaylistCount(playlistCount);
@@ -6417,7 +6416,6 @@ public class MusicServerUtils {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setAvatarUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
                     userInfo.setFollowed(followed);
                     userInfo.setRadioCount(radioCount);
@@ -6454,7 +6452,6 @@ public class MusicServerUtils {
                 String userName = userJson.getString("username");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar2");
-                String avatarUrl = avatarThumbUrl;
 //                String bgImgUrl = userJson.getString("coverurl2");
                 Integer follow = userJson.getInt("follownum");
                 Integer followed = userJson.getInt("fansnum");
@@ -6468,7 +6465,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
 //                userInfo.setRadioCount(radioCount);
@@ -6516,7 +6512,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 
@@ -6556,7 +6551,6 @@ public class MusicServerUtils {
                     String gender = "保密";
                     String sr = img.attr("src");
                     String avatarThumbUrl = sr.contains("/user") ? sr.replaceFirst("normal", "large") : sr.replaceFirst("/up", "/ul");
-                    String avatarUrl = avatarThumbUrl;
                     Integer followed = Integer.parseInt(ReUtil.get("(\\d+)人关注", info.text(), 1));
 
                     NetUserInfo userInfo = new NetUserInfo();
@@ -6565,7 +6559,6 @@ public class MusicServerUtils {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setAvatarUrl(avatarUrl);
                     userInfo.setFollowed(followed);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
@@ -6598,7 +6591,6 @@ public class MusicServerUtils {
                     String userName = userJson.getString("username");
                     String gender = "保密";
                     String avatarThumbUrl = userJson.getString("avatar");
-                    String avatarUrl = avatarThumbUrl;
                     Integer follow = userJson.getInt("followCount");
                     Integer followed = userJson.getInt("beFollowCount");
 
@@ -6608,7 +6600,6 @@ public class MusicServerUtils {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setAvatarUrl(avatarUrl);
                     userInfo.setFollow(follow);
                     userInfo.setFollowed(followed);
 
@@ -6646,7 +6637,6 @@ public class MusicServerUtils {
                     int gen = userJson.getInt("gender");
                     String gender = gen == 1 ? "♂ 男" : gen == 2 ? "♀ 女" : "保密";
                     String avatarThumbUrl = "https:" + userJson.getString("upic");
-                    String avatarUrl = avatarThumbUrl;
                     Integer programCount = userJson.getInt("videos");
                     Integer followed = userJson.getInt("fans");
 
@@ -6656,7 +6646,6 @@ public class MusicServerUtils {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setAvatarUrl(avatarUrl);
                     userInfo.setProgramCount(programCount);
                     userInfo.setFollowed(followed);
 
@@ -15749,7 +15738,10 @@ public class MusicServerUtils {
             if (!userInfo.hasFollow()) userInfo.setFollow(profileJson.getInt("follows"));
             if (!userInfo.hasFollowed()) userInfo.setFollowed(profileJson.getInt("followeds"));
             if (!userInfo.hasPlaylistCount()) userInfo.setPlaylistCount(profileJson.getInt("playlistCount"));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+
+            String avatarUrl = profileJson.getString("avatarUrl");
+            if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = profileJson.getString("backgroundUrl");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
@@ -15786,7 +15778,10 @@ public class MusicServerUtils {
             if (!userInfo.hasFollowed()) userInfo.setFollowed(data.getInt("fansCount"));
             if (!userInfo.hasRadioCount()) userInfo.setRadioCount(data.getInt("albumsCount"));
             if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("tracksCount"));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+
+            String avatarUrl = "http:" + data.getString("cover");
+            if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = "http:" + data.getString("background");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
@@ -15822,7 +15817,10 @@ public class MusicServerUtils {
                     userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
                 if (!userInfo.hasFollowed())
                     userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
-                GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+
+                String avatarUrl = "https:" + doc.select("div#topusermainicon img").attr("src");
+                if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+                GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
 
                 String bgUrl = ReUtil.get("style=\"background-image:url\\((.*?)\\)\"", userInfoBody, 1);
                 String bgImgUrl = (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl;
@@ -15858,7 +15856,9 @@ public class MusicServerUtils {
             if (!userInfo.hasFollowed()) userInfo.setFollowed(userInfoJson.getInt("fansCnt"));
             if (!userInfo.hasProgramCount()) userInfo.setProgramCount(userInfoJson.getInt("videoCnt"));
 
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+            String avatarUrl = userInfoJson.getString("avatar");
+            if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
         }
 
         // 豆瓣
@@ -15880,7 +15880,10 @@ public class MusicServerUtils {
 //                userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
 //            if (!userInfo.hasFollowed())
 //                userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+
+            String avatarUrl = doc.select("div.basic-info img").attr("src");
+            if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
         }
 
         // 堆糖
@@ -15903,7 +15906,10 @@ public class MusicServerUtils {
                 userInfo.setFollow(Integer.parseInt(ReUtil.get("(\\d+)", a.first().text(), 1)));
             if (!userInfo.hasFollowed())
                 userInfo.setFollowed(Integer.parseInt(ReUtil.get("(\\d+)", a.last().text(), 1)));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+
+            String avatarUrl = doc.select("a.people-avatar img").attr("src").replaceFirst("\\.thumb\\.\\d+_\\d+_\\w+", "");
+            if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = doc.select("img.header-bg").attr("src");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
@@ -15927,7 +15933,10 @@ public class MusicServerUtils {
             if (!userInfo.hasFollow()) userInfo.setFollow(card.getInt("attention"));
             if (!userInfo.hasFollowed()) userInfo.setFollowed(card.getInt("fans"));
             if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("archive_count"));
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+
+            String avatarUrl = card.getString("face");
+            if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = data.getJSONObject("space").getString("s_img");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
@@ -19603,7 +19612,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
 //                userInfo.setFollow(follow);
 //                userInfo.setFollowed(followed);
@@ -19658,7 +19666,6 @@ public class MusicServerUtils {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setAvatarUrl(avatarThumbUrl);
 //                    userInfo.setSign(sign);
 //                    userInfo.setFollow(follow);
 //                    userInfo.setFollowed(followed);
@@ -19711,7 +19718,6 @@ public class MusicServerUtils {
                 String userName = userJson.getString("name");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar");
-                String avatarUrl = avatarThumbUrl;
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.ME);
@@ -19719,7 +19725,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
@@ -19759,7 +19764,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
@@ -20010,7 +20014,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
 //                userInfo.setFollow(follow);
 //                userInfo.setFollowed(followed);
@@ -20267,7 +20270,6 @@ public class MusicServerUtils {
                 userInfo.setGender(gender);
                 userInfo.setAccAge(accAge);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
                 userInfo.setPlaylistCount(playlistCount);
@@ -20303,7 +20305,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
                 userInfo.setRadioCount(radioCount);
@@ -20346,7 +20347,6 @@ public class MusicServerUtils {
                         userInfo.setName(tun.getElementsByTag("a").first().text());
                         String avaUrl = "https:" + doc.getElementById("topusermainicon").getElementsByTag("img").first().attr("src");
                         userInfo.setAvatarThumbUrl(avaUrl);
-                        userInfo.setAvatarUrl(avaUrl);
                         userInfo.setGender("保密");
                         userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
                         userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
@@ -20398,7 +20398,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 
@@ -20421,25 +20420,25 @@ public class MusicServerUtils {
                 Element h1 = doc.select("div.info > h1").first();
                 Elements img = doc.select("div.basic-info img");
 
-                String userName = h1.ownText().trim();
-                if (StringUtils.isNotEmpty(userName)) {
-                    String gender = "保密";
-                    String avatarThumbUrl = img.attr("src");
-                    String avatarUrl = avatarThumbUrl;
+                if (h1 != null) {
+                    String userName = h1.ownText().trim();
+                    if (StringUtils.isNotEmpty(userName)) {
+                        String gender = "保密";
+                        String avatarThumbUrl = img.attr("src");
 
-                    NetUserInfo userInfo = new NetUserInfo();
-                    userInfo.setSource(NetMusicSource.DB);
-                    userInfo.setId(id);
-                    userInfo.setName(userName);
-                    userInfo.setGender(gender);
-                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setAvatarUrl(avatarUrl);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
-                        userInfo.setAvatarThumb(coverImgThumb);
-                    });
+                        NetUserInfo userInfo = new NetUserInfo();
+                        userInfo.setSource(NetMusicSource.DB);
+                        userInfo.setId(id);
+                        userInfo.setName(userName);
+                        userInfo.setGender(gender);
+                        userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
+                            userInfo.setAvatarThumb(coverImgThumb);
+                        });
 
-                    res.add(userInfo);
+                        res.add(userInfo);
+                    }
                 }
             }
 
@@ -20468,7 +20467,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
@@ -20522,7 +20520,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
@@ -20564,7 +20561,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
 //                userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
                 userInfo.setRadioCount(radioCount);
@@ -20597,7 +20593,6 @@ public class MusicServerUtils {
                 String gender = "保密";
 //                String sign = userJson.getString("userintro");
                 String avatarThumbUrl = userJson.getString("boardiconurl2");
-                String avatarUrl = avatarThumbUrl;
                 Integer followed = userJson.getInt("fansnum");
                 Integer programCount = userJson.getInt("soundnumchecked");
 
@@ -20607,7 +20602,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
@@ -20638,7 +20632,6 @@ public class MusicServerUtils {
                 String userName = userJson.getString("username");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar");
-                String avatarUrl = avatarThumbUrl;
                 Integer follow = userJson.getInt("followCount");
                 Integer followed = userJson.getInt("beFollowCount");
 
@@ -20648,7 +20641,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
 
@@ -20678,14 +20670,12 @@ public class MusicServerUtils {
                 String userId = userJson.getString("mid");
                 String userName = userJson.getString("uname");
                 String avatarThumbUrl = userJson.getString("face");
-                String avatarUrl = avatarThumbUrl;
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.BI);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
@@ -20738,7 +20728,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
@@ -20780,7 +20769,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
 //                userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
                 userInfo.setRadioCount(radioCount);
@@ -20813,7 +20801,6 @@ public class MusicServerUtils {
                 String gender = "保密";
 //                String sign = userJson.getString("userintro");
                 String avatarThumbUrl = userJson.getString("boardiconurl2");
-                String avatarUrl = avatarThumbUrl;
                 Integer followed = userJson.getInt("fansnum");
                 Integer programCount = userJson.getInt("soundnumchecked");
 
@@ -20823,7 +20810,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
@@ -20854,7 +20840,6 @@ public class MusicServerUtils {
                 String userName = userJson.getString("username");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar");
-                String avatarUrl = avatarThumbUrl;
                 Integer follow = userJson.getInt("followCount");
                 Integer followed = userJson.getInt("beFollowCount");
 
@@ -20864,7 +20849,6 @@ public class MusicServerUtils {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
 
@@ -20894,14 +20878,12 @@ public class MusicServerUtils {
                 String userId = userJson.getString("mid");
                 String userName = userJson.getString("uname");
                 String avatarThumbUrl = userJson.getString("face");
-                String avatarUrl = avatarThumbUrl;
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.BI);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setAvatarUrl(avatarUrl);
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {

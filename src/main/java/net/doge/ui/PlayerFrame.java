@@ -95,8 +95,6 @@ public class PlayerFrame extends JFrame {
     private final String SONG_NAME_LABEL = "歌曲名：";
     private final String ARTIST_LABEL = "艺术家：";
     private final String ALBUM_NAME_LABEL = "专辑名：";
-    // 进度条最小值
-    private final int TIME_BAR_MIN = 0;
     // 进度条最大值
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     // 默认音量
@@ -653,7 +651,7 @@ public class PlayerFrame extends JFrame {
     // 当前频谱样式
     public int currSpecStyle;
     // 当前均衡
-    public double currBalance = DEFAULT_BALANCE;
+    public double currBalance;
     // 最大缓存大小(MB，超出后自动清理)
     public long maxCacheSize;
     // 当前排序方式
@@ -2786,7 +2784,7 @@ public class PlayerFrame extends JFrame {
             // 视频界面快捷键
             else if (videoDialog != null && keyEnabled) {
                 // 记录所有按键
-                if (released && !currKeys.isEmpty()) currKeys.removeLast();
+                if (released && !currKeys.isEmpty()) currKeys.removeLastOccurrence(code);
                 else if (pressed && !currKeys.contains(code)) currKeys.add(code);
                 else return;
                 if (ListUtils.equals(playOrPauseKeys, currKeys)) videoDialog.playOrPause();
@@ -2811,7 +2809,7 @@ public class PlayerFrame extends JFrame {
                     // 播放或暂停、上下一首
                     if (keyEnabled) {
                         // 记录所有按键
-                        if (released && !currKeys.isEmpty()) currKeys.removeLast();
+                        if (released && !currKeys.isEmpty()) currKeys.removeLastOccurrence(code);
                         else if (pressed && !currKeys.contains(code)) currKeys.add(code);
                         else return;
                         if (videoDialog != null) return;
@@ -19331,9 +19329,9 @@ public class PlayerFrame extends JFrame {
         locateLrcMenuItem.addActionListener(e -> {
             Statement stmt = lrcList.getSelectedValue();
             if (stmt == null) return;
-            double time = stmt.getTime() + lrcOffset;
-            player.seek(time);
-            seekLrc(time);
+            double t = stmt.getTime() + lrcOffset;
+            player.seek(t);
+            seekLrc(t);
         });
         // 查看歌词文件
         browseLrcMenuItem.addActionListener(e -> {
@@ -19623,9 +19621,8 @@ public class PlayerFrame extends JFrame {
 
     // 初始化进度条
     private void timeBarInit() {
-        timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
-        timeBar.setValue(TIME_BAR_MIN);
+        timeBar.setValue(0);
         // 拖动播放时间条
         timeBar.addMouseListener(new MouseAdapter() {
             @Override
@@ -19803,13 +19800,14 @@ public class PlayerFrame extends JFrame {
         forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth() + 10, forwIcon.getIconHeight() + 10));
         // 快进快退
         backwardButton.addActionListener(e -> {
-            player.backward(forwardOrBackwardTime);
-            seekLrc(player.getCurrTimeSeconds() - forwardOrBackwardTime);
-
+            double t = player.getCurrTimeSeconds() - forwardOrBackwardTime;
+            player.seek(t);
+            seekLrc(t);
         });
         forwardButton.addActionListener(e -> {
-            player.forward(forwardOrBackwardTime);
-            seekLrc(player.getCurrTimeSeconds() + forwardOrBackwardTime);
+            double t = player.getCurrTimeSeconds() + forwardOrBackwardTime;
+            player.seek(t);
+            seekLrc(t);
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
@@ -20089,7 +20087,7 @@ public class PlayerFrame extends JFrame {
         setTitle(title);
         // 重置当前播放时间
         currTimeLabel.setText(player.getCurrTimeString());
-        timeBar.setValue(TIME_BAR_MIN);
+        timeBar.setValue(0);
         // 重置总时间
         durationLabel.setText(player.getDurationString());
         // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
@@ -20158,7 +20156,7 @@ public class PlayerFrame extends JFrame {
         playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
         // 重置播放进度条
-        timeBar.setValue(TIME_BAR_MIN);
+        timeBar.setValue(0);
         // 重置桌面歌词
         desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
         // 禁止“关闭当前歌曲”
@@ -20334,14 +20332,28 @@ public class PlayerFrame extends JFrame {
         }
     }
 
-    // 开启监控播放器状态的事件，在载入音乐文件后调用
-    public void loadMonitor(MediaPlayer mp) {
+    // 初始化播放器设置
+    public void initPlayer() {
+        player.setMute(isMute);
+        player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
+        player.setRate(currRate);
+        player.setBalance(currBalance);
+        player.adjustEqualizerBands(ed);
+
+        MediaPlayer mp = player.getMp();
+        // 设置频谱更新间隔
+        mp.setAudioSpectrumInterval(SpectrumConstants.PLAYER_INTERVAL);
+        // 设置频谱更新数量
+        mp.setAudioSpectrumNumBands(SpectrumConstants.NUM_BANDS);
+        // 设置频谱阈值，默认是 -60
+        mp.setAudioSpectrumThreshold(SpectrumConstants.THRESHOLD);
+
         mp.setOnError(() -> {
             MediaException.Type type = mp.getError().getType();
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
             // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
             if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
-                player.initialMp(player.getMusicInfo().getFile(), netMusicInfo);
+                player.initMp(player.getMusicInfo().getFile(), netMusicInfo);
                 if (!player.isPlaying()) return;
                 playLoaded(false);
                 seekLrc(0);
@@ -20354,7 +20366,7 @@ public class PlayerFrame extends JFrame {
                     String url = MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
                     if (StringUtils.isNotEmpty(url)) netMusicInfo.setUrl(url);
                     else MusicServerUtils.fillAvailableMusicUrl(netMusicInfo);
-                    player.initialMp(null, netMusicInfo);
+                    player.initMp(null, netMusicInfo);
                     if (!player.isPlaying()) return;
                     playLoaded(false);
                     seekLrc(0);
@@ -20461,11 +20473,6 @@ public class PlayerFrame extends JFrame {
                 miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
                 miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
             }
-            player.setMute(isMute);
-            player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
-            player.setRate(currRate);
-            player.setBalance(currBalance);
-            player.adjustEqualizerBands(ed);
             player.play();
             // 重绘歌单，刷新播放中的图标
             musicList.repaint();

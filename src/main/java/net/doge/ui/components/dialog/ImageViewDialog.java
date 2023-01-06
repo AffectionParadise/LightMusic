@@ -48,6 +48,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     // 非法页码提示
     private final String ILLEGAL_PAGE_MSG = "请输入合法页码";
 
+    private final String ADAPT = "缩放以适应";
     private final String ZOOM_IN = "放大";
     private final String ZOOM_OUT = "缩小";
     private final String LEFT_ROTATE = "逆时针旋转 90 度";
@@ -59,6 +60,8 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private final String SAVE_IMG = "保存图片";
     private final String GO_TIP = "跳页";
 
+    // 适应图标
+    private ImageIcon adaptIcon = new ImageIcon(SimplePath.ICON_PATH + "adapt.png");
     // 放大图标
     private ImageIcon zoomInIcon = new ImageIcon(SimplePath.ICON_PATH + "zoomIn.png");
     // 缩小图标
@@ -83,7 +86,9 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel bottomPanel = new CustomPanel();
 
-    private CustomLabel imgLabel = new CustomLabel("");
+    private CustomLabel imgLabel = new CustomLabel();
+    private CustomLabel scaleLabel = new CustomLabel();
+    public CustomButton adaptButton = new CustomButton(adaptIcon);
     public CustomButton zoomInButton = new CustomButton(zoomInIcon);
     public CustomButton zoomOutButton = new CustomButton(zoomOutIcon);
     public CustomButton leftRotateButton = new CustomButton(leftRotateIcon);
@@ -154,8 +159,15 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
 
         // 标签
         imgLabel.setForeground(textColor);
+        scaleLabel.setForeground(textColor);
         pageLabel.setForeground(textColor);
 
+        // 适应
+        adaptButton.setToolTipText(ADAPT);
+        adaptButton.setIcon(ImageUtils.dye((ImageIcon) adaptButton.getIcon(), iconColor));
+        adaptButton.addMouseListener(new ButtonMouseListener(adaptButton, f));
+        adaptButton.setPreferredSize(new Dimension(adaptIcon.getIconWidth() + 10, adaptIcon.getIconHeight() + 10));
+        adaptButton.addActionListener(e -> showImg(img));
         // 放大/缩小
         zoomInButton.setToolTipText(ZOOM_IN);
         zoomInButton.setIcon(ImageUtils.dye((ImageIcon) zoomInButton.getIcon(), iconColor));
@@ -260,12 +272,14 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         saveImgButton.setIcon(ImageUtils.dye((ImageIcon) saveImgButton.getIcon(), iconColor));
         saveImgButton.addMouseListener(new ButtonMouseListener(saveImgButton, f));
         saveImgButton.setPreferredSize(new Dimension(saveImgIcon.getIconWidth() + 10, saveImgIcon.getIconHeight() + 10));
-        saveImgButton.addActionListener(e -> saveImg(p));
+        saveImgButton.addActionListener(e -> saveImg());
 
         centerPanel.add(imgLabel, BorderLayout.CENTER);
         FlowLayout fl = new FlowLayout();
         fl.setHgap(5);
         bottomPanel.setLayout(fl);
+        bottomPanel.add(scaleLabel);
+        bottomPanel.add(adaptButton);
         bottomPanel.add(zoomInButton);
         bottomPanel.add(zoomOutButton);
         bottomPanel.add(leftRotateButton);
@@ -314,6 +328,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         if (img == null) {
             imgLabel.setIcon(null);
             imgLabel.setText("图片走丢了T_T");
+            scaleLabel.setText("");
             return false;
         }
         // 调整图像大小适应窗口
@@ -323,6 +338,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         if (h > IMG_MAX_HEIGHT) img = ImageUtils.height(img, IMG_MAX_HEIGHT);
         // 调整后重新计算比例
         scale = (float) img.getWidth() / this.img.getWidth();
+        scaleLabel.setText(String.format("%d%%", (int) (scale * 100 + 0.5)));
         imgLabel.setIcon(new ImageIcon(img));
         imgLabel.setText("");
         return true;
@@ -356,7 +372,8 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     }
 
     // 导出第 i 张图片
-    private void saveImg(int i) {
+    private void saveImg() {
+        if (img == null) return;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存图片");
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
