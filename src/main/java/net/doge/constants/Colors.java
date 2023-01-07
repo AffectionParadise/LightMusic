@@ -53,7 +53,7 @@ public class Colors {
     public static final Color AUTUMN3 = new Color(206, 177, 27);
 
     public static final Color WINTER2 = new Color(206, 219, 255);
-    public static final Color WINTER3 = new Color(69, 194, 232);
+    public static final Color WINTER3 = new Color(81, 194, 224);
 
     public static final Color PINK_PARADISE1 = new Color(255, 239, 242);
     public static final Color PINK_PARADISE2 = new Color(236, 124, 167);

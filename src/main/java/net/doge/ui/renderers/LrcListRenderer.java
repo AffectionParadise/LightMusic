@@ -30,6 +30,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private double ratio;
     private int row;
     private int hoverIndex = -1;
+//    private boolean drawBg;
 
     private LabelUI highlightLabelUI;
     private LabelUI normalLabelUI;
@@ -123,7 +124,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //        // 调整 list 对应行的高度
 //        ((ListUI) list.getUI()).setCellHeight(index, d.height);
 //
-//        outerPanel.setDrawBg(hoverIndex == index);
+//        outerPanel.setDrawBg(drawBg && isSelected);
 //
 //        return outerPanel;
     }

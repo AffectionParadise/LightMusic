@@ -9316,7 +9316,6 @@ public class MusicServerUtils {
 
         boolean dt = defaultTag.equals(tag);
 
-
         if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getHighQualityPlaylists));
             taskList.add(GlobalExecutors.requestExecutor.submit(getHotPickedPlaylists));
@@ -11429,7 +11428,7 @@ public class MusicServerUtils {
                         .body();
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = ReUtil.get("p=(\\d+)", doc.select("li.last a").attr("href"), 1);
-                t = ts.isEmpty() ? limit : Integer.parseInt(ts) * limit;
+                t = StringUtils.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
                 Elements boxes = doc.select(".video-box");
                 for (int i = 0, size = boxes.size(); i < size; i++) {
                     Element box = boxes.get(i);

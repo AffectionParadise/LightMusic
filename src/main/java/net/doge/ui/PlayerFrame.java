@@ -22147,7 +22147,7 @@ public class PlayerFrame extends JFrame {
                 break;
             // 暂停状态
             case PlayerStatus.PAUSING:
-                player.continuePlay();
+                player.play();
                 playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
                 if (miniDialog != null) {

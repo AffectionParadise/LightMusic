@@ -268,11 +268,6 @@ public class MusicPlayer {
         status = PlayerStatus.PAUSING;
     }
 
-    // 继续播放
-    public void continuePlay() {
-        play();
-    }
-
     // 重新播放
     public void replay() {
         if (mp == null) return;
@@ -284,18 +279,6 @@ public class MusicPlayer {
         if (mp == null) return;
         mp.setVolume(volume);
     }
-
-//    // 快进
-//    public void forward(double seconds) {
-//        if (mp == null) return;
-//        mp.seek(getCurrTimeDuration().add(Duration.seconds(seconds)));
-//    }
-//
-//    // 快退
-//    public void backward(double seconds) {
-//        if (mp == null) return;
-//        mp.seek(getCurrTimeDuration().subtract(Duration.seconds(seconds)));
-//    }
 
     // 设置静音
     public void setMute(boolean isMute) {
