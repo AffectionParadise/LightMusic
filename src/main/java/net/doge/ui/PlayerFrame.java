@@ -20411,8 +20411,9 @@ public class PlayerFrame extends JFrame {
                 // 监听并更新歌词(若有歌词)
                 if (nextLrc < 0) return;
                 double currTimeSeconds = player.getCurrTimeSeconds();
-                // 判断是否该高亮下一行歌词
-                if (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() + lrcOffset) {
+                // 判断是否该高亮下一行歌词，每次时间更新可能跳过多行歌词
+                boolean wrapped = false;
+                while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() + lrcOffset) {
                     row = LRC_INDEX + 1 + nextLrc * 2;
                     if (!lrcScrollAnimation && !lrcScrollWaiting) {
                         currScrollVal = lrcScrollPane.getVValue();
@@ -20422,8 +20423,9 @@ public class PlayerFrame extends JFrame {
                     renderer.setRow(row);
                     nextLrc++;
                     originalRatio.set(0);
-                    return;
+                    wrapped = true;
                 }
+                if (wrapped) return;
                 // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
                 if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() + lrcOffset)
                     originalRatio.set(1);
