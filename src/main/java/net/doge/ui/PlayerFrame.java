@@ -20079,12 +20079,23 @@ public class PlayerFrame extends JFrame {
         clearLrc();
     }
 
+    private String statusText = "";
+
+    // 更新标题文字
+    private void updateTitle(String st) {
+        synchronized (statusText) {
+            if (!"暂停中".equals(st)) statusText = st;
+            String title = String.format(TITLE + "（%s：%s）", st,
+                    player.loadedNetMusic() ? player.getNetMusicInfo().toSimpleString() : player.getMusicInfo().getFile());
+            titleLabel.setText(StringUtils.textToHtml(title));
+            setTitle(title);
+        }
+    }
+
     // 界面加载新文件
     private void loadUI(AudioFile file, NetMusicInfo netMusicInfo) {
-        // 重置标题
-        String title = TITLE + "（正在播放：" + (netMusicInfo != null ? netMusicInfo.toSimpleString() : file) + "）";
-        titleLabel.setText(StringUtils.textToHtml(title));
-        setTitle(title);
+        // 设置标题
+        updateTitle("加载中");
         // 重置当前播放时间
         currTimeLabel.setText(player.getCurrTimeString());
         timeBar.setValue(0);
@@ -20362,6 +20373,8 @@ public class PlayerFrame extends JFrame {
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE
                     || type == MediaException.Type.MEDIA_UNAVAILABLE
                     || type == MediaException.Type.UNKNOWN) {
+                // 重置标题
+                updateTitle("刷新 URL 中");
                 playExecutor.submit(() -> {
                     String url = MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
                     if (StringUtils.isNotEmpty(url)) netMusicInfo.setUrl(url);
@@ -20400,8 +20413,12 @@ public class PlayerFrame extends JFrame {
 //                }
             }
         });
-        // 缓冲时间改变后刷新进度条
-        mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
+        // 缓冲时间改变后刷新时间条
+        mp.bufferProgressTimeProperty().addListener(l -> {
+            timeBar.repaint();
+            if (player.isLoaded() && !"播放中".equals(statusText) && !"已就绪".equals(statusText) && player.getBufferedSeconds() > 0)
+                updateTitle("已就绪");
+        });
         mp.currentTimeProperty().addListener(l -> {
             // 随着播放，设置进度条和时间标签的值
             try {
@@ -20469,6 +20486,7 @@ public class PlayerFrame extends JFrame {
     private void playLoaded(boolean replay) {
         if (replay) player.replay();
         else {
+            updateTitle("播放中");
             playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
             playOrPauseButton.setToolTipText(PAUSE_TIP);
             if (miniDialog != null) {
@@ -20596,6 +20614,7 @@ public class PlayerFrame extends JFrame {
 
         Object o = pre ? list.getSelectedValue() : playQueue.getSelectedValue();
         currSong = pre ? list.getSelectedIndex() : playQueue.getSelectedIndex();
+
         // 本地文件
         if (o instanceof AudioFile) {
             file = (AudioFile) o;
@@ -20699,20 +20718,19 @@ public class PlayerFrame extends JFrame {
     // 重试播放
     private void retryPlay() {
         // 异常后允许重试的情况下自动播放下一首，超出最大重试次数停止，防止死循环
-        if (currPlayMode != PlayMode.SINGLE) {
-            if (++retry <= MAX_RETRY) {
-                // 顺序播放
-                if (currPlayMode == PlayMode.SEQUENCE) {
-                    if (currSong < playQueueModel.size() - 1) playNext();
-                        // 播放完后卸载文件
-                    else unload();
-                }
-                // 列表循环
-                else if (currPlayMode == PlayMode.LIST_CYCLE) playNext();
-                    // 随机播放
-                else if (currPlayMode == PlayMode.SHUFFLE) playNextShuffle();
-            } else retry = 0;
-        }
+        if (currPlayMode == PlayMode.SINGLE) return;
+        if (++retry <= MAX_RETRY) {
+            // 顺序播放
+            if (currPlayMode == PlayMode.SEQUENCE) {
+                if (currSong < playQueueModel.size() - 1) playNext();
+                    // 播放完后卸载文件
+                else unload();
+            }
+            // 列表循环
+            else if (currPlayMode == PlayMode.LIST_CYCLE) playNext();
+                // 随机播放
+            else if (currPlayMode == PlayMode.SHUFFLE) playNextShuffle();
+        } else retry = 0;
     }
 
     // 播放上一曲
@@ -22146,6 +22164,8 @@ public class PlayerFrame extends JFrame {
             // 就绪状态
             case PlayerStatus.LOADED:
                 playLoaded(false);
+                // 重置标题
+                updateTitle("播放中");
                 break;
             // 暂停状态
             case PlayerStatus.PAUSING:
@@ -22157,11 +22177,7 @@ public class PlayerFrame extends JFrame {
                     miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
                 }
                 // 重置标题
-                NetMusicInfo netMusicInfo = player.getNetMusicInfo();
-                String title = netMusicInfo != null ? TITLE + "（正在播放：" + netMusicInfo.toSimpleString() + "）"
-                        : TITLE + "（正在播放：" + player.getMusicInfo().getFile() + "）";
-                titleLabel.setText(StringUtils.textToHtml(title));
-                setTitle(title);
+                updateTitle(statusText);
                 break;
             // 播放状态
             case PlayerStatus.PLAYING:
@@ -22179,17 +22195,13 @@ public class PlayerFrame extends JFrame {
                     miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
                 }
                 // 重置标题
-                netMusicInfo = player.getNetMusicInfo();
-                title = TITLE + "（暂停中：" + (netMusicInfo != null ? netMusicInfo.toSimpleString()
-                        : player.getMusicInfo().getFile()) + "）";
-                titleLabel.setText(StringUtils.textToHtml(title));
-                setTitle(title);
+                updateTitle("暂停中");
                 break;
         }
     }
 
     // 导出图片
-    void saveImg(BufferedImage albumImage) {
+    private void saveImg(BufferedImage albumImage) {
         if (albumImage == null) return;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存图片");
@@ -22207,7 +22219,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 下载歌词
-    void downloadLrc(NetMusicInfo musicInfo) {
+    private void downloadLrc(NetMusicInfo musicInfo) {
         globalExecutor.submit(() -> {
             try {
                 FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
@@ -22226,7 +22238,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 下载歌词翻译
-    void downloadLrcTrans(NetMusicInfo musicInfo) {
+    private void downloadLrcTrans(NetMusicInfo musicInfo) {
         globalExecutor.submit(() -> {
             FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
             FileUtils.writeStr(transStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcTransFileName(), false);
@@ -22235,7 +22247,7 @@ public class PlayerFrame extends JFrame {
     }
 
     // 下载歌曲(单首)
-    void singleDownload(NetMusicInfo musicInfo) {
+    private void singleDownload(NetMusicInfo musicInfo) {
         String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
         String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
 
@@ -22926,7 +22938,7 @@ public class PlayerFrame extends JFrame {
                 loading.start();
                 loading.setText(LOADING_MSG);
                 runnable.run();
-                Thread.sleep(25);
+                Thread.sleep(28);
             } catch (Exception ex) {
                 ex.printStackTrace();
             } finally {

@@ -120,6 +120,11 @@ public class MusicPlayer {
         return status == PlayerStatus.PLAYING;
     }
 
+    // 判断是否在就绪状态
+    public boolean isLoaded() {
+        return status == PlayerStatus.LOADED;
+    }
+
     // 判断是否在空状态
     public boolean isEmpty() {
         return status == PlayerStatus.EMPTY;
@@ -331,11 +336,6 @@ public class MusicPlayer {
     // 获取当前播放时间
     public double getCurrTimeSeconds() {
         return mp != null ? mp.getCurrentTime().toSeconds() : 0;
-    }
-
-    // 获取当前播放时间(Duration)
-    public Duration getCurrTimeDuration() {
-        return mp != null ? mp.getCurrentTime() : null;
     }
 
     // 获取当前进度比例

@@ -1,7 +1,5 @@
 package net.doge.models.lyric;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import net.doge.utils.StringUtils;
 
 /**
@@ -9,12 +7,17 @@ import net.doge.utils.StringUtils;
  * @Description
  * @Date 2020/12/7
  */
-@NoArgsConstructor
-@AllArgsConstructor
 public class Statement {
-    private double time = 0.0;                                //时间, 单位为s, 精确到0.01s
-    private double endTime = 0.0;                             //结束时间, 单位为s, 精确到0.01s
-    private String lyric = "";                                //歌词
+    // 开始时间
+    private double time = 0.0;
+    // 结束时间
+    private double endTime = 0.0;
+    // 歌词
+    private String lyric = "";
+
+    public Statement() {
+
+    }
 
     public Statement(double time, String lyric) {
         this.time = time;
@@ -65,16 +68,10 @@ public class Statement {
         return Double.valueOf(endTime).intValue() != 0;
     }
 
-    /*
-     * 获取歌词
-     */
     public String getLyric() {
         return lyric;
     }
 
-    /*
-     * 设置歌词
-     */
     public void setLyric(String lyric) {
         this.lyric = lyric;
     }
@@ -86,13 +83,6 @@ public class Statement {
      */
     public boolean isEmpty() {
         return StringUtils.isEmpty(lyric.trim());
-    }
-
-    /*
-     * 打印歌词
-     */
-    public void printLyric() {
-        System.out.println(time + ": " + lyric);
     }
 
     @Override

@@ -113,9 +113,4 @@ public class BvAvConverter {
         }
         return res;
     }
-
-    public static void main(String[] args) {
-        System.out.println(BvAvConverter.convertBv2Av("bv17x411w7KC"));
-        System.out.println(BvAvConverter.convertAv2Bv("av170001"));
-    }
 }

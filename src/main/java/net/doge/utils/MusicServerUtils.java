@@ -2598,7 +2598,8 @@ public class MusicServerUtils {
     // 歌曲 URL 获取 API (酷我)
 //    private static final String GET_SONG_URL_KW_API = prefixKw + "/kuwo/url?mid=%s";
 //    private static final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&httpsStatus=1";
-    private static final String GET_SONG_URL_KW_API = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=%s";
+//    private static final String GET_SONG_URL_KW_API = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=%s";
+    private static final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=convert_url3&br=320kmp3";
     // 歌曲 URL 获取 API (千千)
     private static final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
@@ -2607,6 +2608,7 @@ public class MusicServerUtils {
     private static final String GET_SONG_URL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/url?sid=%s";
 
     // 歌词 API
+//    private static final String LYRIC_API = prefix + "/lyric/new?id=%s";
     private static final String LYRIC_API = prefix + "/lyric?id=%s";
     // 歌词 API (酷狗)
 //    private static final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=lrc&charset=utf8";
@@ -3324,21 +3326,22 @@ public class MusicServerUtils {
                         String songId = songJson.getString("id");
                         String songName = songJson.getString("name").trim();
                         String artist = parseArtists(songJson, NetMusicSource.NET_CLOUD);
-                        String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
-                        String albumName = songJson.getJSONObject("al").getString("name");
-                        String albumId = songJson.getJSONObject("al").getString("id");
-                        Double duration = songJson.getDouble("dt") / 1000;
-                        String mvId = songJson.getString("mv");
-                        JSONArray lyrics = songJson.optJSONArray("lyrics");
-                        String lrcMatch = null;
-                        if (lyrics != null) {
-                            StringBuffer sb = new StringBuffer();
-                            for (int j = 0, size = lyrics.size(); j < size; j++) {
-                                sb.append(lyrics.get(j));
-                                if (j != size - 1) sb.append(" / ");
-                            }
-                            lrcMatch = StringUtils.removeHTMLLabel(sb.toString());
-                        }
+                        String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                        String albumName = songJson.getJSONObject("album").getString("name");
+                        String albumId = songJson.getJSONObject("album").getString("id");
+                        Double duration = songJson.getDouble("duration") / 1000;
+                        String mvId = songJson.getString("mvid");
+                        String lrcMatch = songJson.getJSONObject("lyrics").getString("txt").replace("\n", " / ");
+//                        JSONArray lyrics = songJson.optJSONArray("lyrics");
+//                        String lrcMatch = null;
+//                        if (lyrics != null) {
+//                            StringBuffer sb = new StringBuffer();
+//                            for (int j = 0, size = lyrics.size(); j < size; j++) {
+//                                sb.append(lyrics.get(j));
+//                                if (j != size - 1) sb.append(" / ");
+//                            }
+//                            lrcMatch = StringUtils.removeHTMLLabel(sb.toString());
+//                        }
 
                         NetMusicInfo musicInfo = new NetMusicInfo();
                         musicInfo.setId(songId);
@@ -21090,11 +21093,17 @@ public class MusicServerUtils {
 
         // 酷我(解锁付费音乐)
         else if (source == NetMusicSource.KW) {
+//            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
+//                    .header(Header.REFERER, "https://www.kuwo.cn/")
+//                    .execute()
+//                    .body();
+//            return urlBody;
             String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
-                    .header(Header.REFERER, "https://www.kuwo.cn/")
                     .execute()
                     .body();
-            return urlBody;
+            JSONObject urlJson = JSONObject.fromObject(urlBody);
+            JSONObject data = urlJson.getJSONObject("data");
+            return data.getString("url");
         }
 
         // 咪咕

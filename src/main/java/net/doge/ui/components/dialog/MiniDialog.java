@@ -231,8 +231,8 @@ public class MiniDialog extends AbstractMiniDialog {
             f.lrcScrollAnimation = true;
         });
 
-        FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
-        fl.setHgap(10);
+        FlowLayout fl = new FlowLayout();
+        fl.setHgap(5);
         controlPanel.setLayout(fl);
 
         controlPanel.add(infoLabel);
@@ -241,7 +241,7 @@ public class MiniDialog extends AbstractMiniDialog {
         controlPanel.add(playNextButton);
         controlPanel.add(closeButton);
 
-        controlPanel.setPreferredSize(new Dimension(300, 60));
+//        controlPanel.setPreferredSize(new Dimension(300, 60));
 
         globalPanel.add(controlPanel, BorderLayout.CENTER);
 
