@@ -142,8 +142,9 @@ public class Task {
     // 任务开始之前先请求所需信息
     private void prepareInfo() {
         if (type == TaskType.MUSIC) {
-            // 先补全音乐信息
-            MusicServerUtils.fillNetMusicInfo(netMusicInfo);
+            // 先补全音乐信息、url
+            MusicServerUtils.fillMusicInfo(netMusicInfo);
+            MusicServerUtils.fillMusicUrl(netMusicInfo);
             url = netMusicInfo.getUrl();
             dest = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleFileName();
         } else if (type == TaskType.MV) {

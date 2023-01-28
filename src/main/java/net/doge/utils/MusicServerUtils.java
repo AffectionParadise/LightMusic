@@ -2569,7 +2569,7 @@ public class MusicServerUtils {
     // 节目信息 API
     private static final String SINGLE_PROGRAM_DETAIL_API = prefix + "/dj/program/detail?id=%s";
     // 歌曲信息 API (酷狗)
-    private static final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&hash=1&album_audio_id=%s";
+    private static final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
     // 歌曲信息 API (QQ)
     private static final String SINGLE_SONG_DETAIL_QQ_API = prefixQQ33 + "/song?songmid=%s";
     // 歌曲封面信息 API (QQ)
@@ -3846,9 +3846,9 @@ public class MusicServerUtils {
     }
 
     /**
-     * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、url、歌词)
+     * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
-    public static void fillNetMusicInfo(NetMusicInfo musicInfo) {
+    public static void fillMusicInfo(NetMusicInfo musicInfo) {
         // 歌曲信息是完整的
         if (musicInfo.isIntegrated()) return;
 
@@ -3909,16 +3909,16 @@ public class MusicServerUtils {
                     }
                 }
             }));
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.hasUrl()) {
-                    String url = fetchMusicUrl(songId, NetMusicSource.NET_CLOUD);
-                    // 排除试听部分，直接换源
-                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
-                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
-                    // 网易云音乐里面有的电台节目是 flac 格式！
-                    if (url.endsWith(Format.FLAC)) musicInfo.setFormat(Format.FLAC);
-                }
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                if (!musicInfo.hasUrl()) {
+//                    String url = fetchMusicUrl(songId, NetMusicSource.NET_CLOUD);
+//                    // 排除试听部分，直接换源
+//                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+//                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+//                    // 网易云音乐里面有的电台节目是 flac 格式！
+//                    if (url.endsWith(Format.FLAC)) musicInfo.setFormat(Format.FLAC);
+//                }
+//            }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
@@ -3951,12 +3951,12 @@ public class MusicServerUtils {
                         musicInfo.callback();
                     });
                 }
-                if (!musicInfo.hasUrl()) {
-                    // 排除试听部分，直接换源
-                    String url = data.getString("play_url");
-                    if (StringUtils.isNotEmpty(url) && data.getInt("is_free_part") == 0) musicInfo.setUrl(url);
-                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
-                }
+//                if (!musicInfo.hasUrl()) {
+//                    // 排除试听部分，直接换源
+//                    String url = data.getString("play_url");
+//                    if (StringUtils.isNotEmpty(url) && data.getInt("is_free_part") == 0) musicInfo.setUrl(url);
+//                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+//                }
                 if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
             }));
 //            // 填充歌词、翻译、罗马音
@@ -3997,14 +3997,14 @@ public class MusicServerUtils {
                     });
                 }
             }));
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.hasUrl()) {
-                    // 排除试听部分，直接换源
-                    String url = fetchMusicUrl(songId, NetMusicSource.QQ);
-                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
-                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
-                }
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                if (!musicInfo.hasUrl()) {
+//                    // 排除试听部分，直接换源
+//                    String url = fetchMusicUrl(songId, NetMusicSource.QQ);
+//                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+//                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+//                }
+//            }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
@@ -4032,14 +4032,14 @@ public class MusicServerUtils {
                     });
                 }
             }));
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.hasUrl()) {
-                    // 无链接，直接换源
-                    String url = fetchMusicUrl(songId, NetMusicSource.KW);
-                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
-                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
-                }
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                if (!musicInfo.hasUrl()) {
+//                    // 无链接，直接换源
+//                    String url = fetchMusicUrl(songId, NetMusicSource.KW);
+//                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+//                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+//                }
+//            }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
@@ -4074,12 +4074,12 @@ public class MusicServerUtils {
                     musicInfo.callback();
                 });
             }
-            if (!musicInfo.hasUrl()) {
-                // 无链接，直接换源
-                String url = data.getString("320");
-                if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
-                else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
-            }
+//            if (!musicInfo.hasUrl()) {
+//                // 无链接，直接换源
+//                String url = data.getString("320");
+//                if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+//                else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+//            }
             if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyric"));
         }
 
@@ -4106,14 +4106,14 @@ public class MusicServerUtils {
                     musicInfo.callback();
                 });
             }
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.hasUrl()) {
-                    // 无链接或试听，直接换源
-                    String url = fetchMusicUrl(songId, NetMusicSource.QI);
-                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
-                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
-                }
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                if (!musicInfo.hasUrl()) {
+//                    // 无链接或试听，直接换源
+//                    String url = fetchMusicUrl(songId, NetMusicSource.QI);
+//                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+//                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+//                }
+//            }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
@@ -4142,13 +4142,13 @@ public class MusicServerUtils {
                     });
                 }
             }));
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.hasUrl()) {
-                    String url = fetchMusicUrl(songId, NetMusicSource.XM);
-                    if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-                    musicInfo.setUrl(url);
-                }
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                if (!musicInfo.hasUrl()) {
+//                    String url = fetchMusicUrl(songId, NetMusicSource.XM);
+//                    if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+//                    musicInfo.setUrl(url);
+//                }
+//            }));
             musicInfo.setLrc("");
         }
 
@@ -4170,11 +4170,11 @@ public class MusicServerUtils {
                         musicInfo.callback();
                     });
                 }
-                if (!musicInfo.hasUrl()) {
-                    String url = data.optString("soundurl");
-                    musicInfo.setUrl(url);
-                    if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-                }
+//                if (!musicInfo.hasUrl()) {
+//                    String url = data.optString("soundurl");
+//                    musicInfo.setUrl(url);
+//                    if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+//                }
             }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
@@ -4214,11 +4214,11 @@ public class MusicServerUtils {
                     });
                 }
             }));
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                String url = fetchMusicUrl(songId, NetMusicSource.BI);
-                if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-                musicInfo.setUrl(url);
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                String url = fetchMusicUrl(songId, NetMusicSource.BI);
+//                if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+//                musicInfo.setUrl(url);
+//            }));
             // 填充歌词、翻译、罗马音
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
@@ -4235,6 +4235,88 @@ public class MusicServerUtils {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * 补充 NetMusicInfo 的 url
+     */
+    public static void fillMusicUrl(NetMusicInfo musicInfo) {
+        // 歌曲信息是完整的
+        if (musicInfo.isIntegrated()) return;
+
+        String songId = musicInfo.getId();
+        int source = musicInfo.getSource();
+
+        // 网易云
+        if (source == NetMusicSource.NET_CLOUD) {
+            String url = fetchMusicUrl(songId, NetMusicSource.NET_CLOUD);
+            // 排除试听部分，直接换源
+            if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+            else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+            // 网易云音乐里面有的电台节目是 flac 格式！
+            if (url.endsWith(Format.FLAC)) musicInfo.setFormat(Format.FLAC);
+        }
+
+        // 酷狗
+        else if (source == NetMusicSource.KG) {
+            // 排除试听部分，直接换源
+            String url = fetchMusicUrl(songId, NetMusicSource.KG);
+            if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+            else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+        }
+
+        // QQ
+        else if (source == NetMusicSource.QQ) {
+            // 排除试听部分，直接换源
+            String url = fetchMusicUrl(songId, NetMusicSource.QQ);
+            if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+            else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+        }
+
+        // 酷我
+        else if (source == NetMusicSource.KW) {
+            // 无链接，直接换源
+            String url = fetchMusicUrl(songId, NetMusicSource.KW);
+            if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+            else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+        }
+
+        // 咪咕
+        else if (source == NetMusicSource.MG) {
+            // 无链接，直接换源
+            String url = fetchMusicUrl(songId, NetMusicSource.MG);
+            if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+            else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+        }
+
+        // 千千
+        else if (source == NetMusicSource.QI) {
+            // 无链接或试听，直接换源
+            String url = fetchMusicUrl(songId, NetMusicSource.QI);
+            if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
+            else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
+        }
+
+        // 喜马拉雅
+        else if (source == NetMusicSource.XM) {
+            String url = fetchMusicUrl(songId, NetMusicSource.XM);
+            if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+            musicInfo.setUrl(url);
+        }
+
+        // 猫耳
+        else if (source == NetMusicSource.ME) {
+            String url = fetchMusicUrl(songId, NetMusicSource.ME);
+            musicInfo.setUrl(url);
+            if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+        }
+
+        // 哔哩哔哩
+        else if (source == NetMusicSource.BI) {
+            String url = fetchMusicUrl(songId, NetMusicSource.BI);
+            if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+            musicInfo.setUrl(url);
+        }
     }
 
     /**

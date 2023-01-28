@@ -3,7 +3,6 @@ package net.doge.ui;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
-import com.mpatric.mp3agic.InvalidDataException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -22,7 +21,10 @@ import net.doge.constants.*;
 import net.doge.exceptions.IllegalMediaException;
 import net.doge.exceptions.NoLyricException;
 import net.doge.exceptions.NoPrivilegeException;
-import net.doge.models.*;
+import net.doge.models.CommonResult;
+import net.doge.models.MusicPlayer;
+import net.doge.models.Task;
+import net.doge.models.UIStyle;
 import net.doge.models.entity.*;
 import net.doge.models.lyric.LrcData;
 import net.doge.models.lyric.Statement;
@@ -42,7 +44,9 @@ import net.doge.ui.components.panel.LoadingPanel;
 import net.doge.ui.components.panel.SpectrumPanel;
 import net.doge.ui.components.textfield.CustomTextField;
 import net.doge.ui.components.textfield.SafeDocument;
-import net.doge.ui.componentui.*;
+import net.doge.ui.componentui.ChangePaneButtonUI;
+import net.doge.ui.componentui.ComboBoxUI;
+import net.doge.ui.componentui.TabbedPaneUI;
 import net.doge.ui.componentui.list.ListUI;
 import net.doge.ui.componentui.list.ScrollBarUI;
 import net.doge.ui.componentui.menu.CheckMenuItemUI;
@@ -63,7 +67,6 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -4298,7 +4301,7 @@ public class PlayerFrame extends JFrame {
                         } else if (response == JOptionPane.CANCEL_OPTION) return;
                     }
                     // 添加到歌曲目录
-                    if (ListUtils.search(catalogs, dir) < 0) catalogs.add(dir);
+                    if (!catalogs.contains(dir)) catalogs.add(dir);
 
                     File[] files = dir.listFiles();
                     int audioFileCount = 0;
@@ -4315,7 +4318,7 @@ public class PlayerFrame extends JFrame {
                         }
                     }
                     musicList.setModel(model);
-                    boolean f = musicList.getModel() == filterModel;
+                    boolean f = model == filterModel;
                     filterPersonalMusic();
                     if (!f) {
                         musicList.setModel(musicListModel);
@@ -6330,7 +6333,7 @@ public class PlayerFrame extends JFrame {
                 musicList.setCellRenderer(null);
                 for (Object o : selectedValues) {
                     // 改变取消收藏状态
-                    if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.isPlayingObject(o) && hasBeenCollected(o))
+                    if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.loadedObject(o) && hasBeenCollected(o))
                         collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
                     model.removeElement(o);
                     if (model == filterModel) {
@@ -6940,7 +6943,7 @@ public class PlayerFrame extends JFrame {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     collectionModel.add(0, o);
-                    if (player.isPlayingObject(o))
+                    if (player.loadedObject(o))
                         collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
@@ -6951,7 +6954,7 @@ public class PlayerFrame extends JFrame {
                 values.forEach(o -> {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
-                        if (player.isPlayingObject(o))
+                        if (player.loadedObject(o))
                             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -7455,7 +7458,7 @@ public class PlayerFrame extends JFrame {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     collectionModel.add(0, o);
-                    if (player.isPlayingObject(o))
+                    if (player.loadedObject(o))
                         collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
@@ -7466,7 +7469,7 @@ public class PlayerFrame extends JFrame {
                 values.forEach(o -> {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
-                        if (player.isPlayingObject(o))
+                        if (player.loadedObject(o))
                             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -18933,7 +18936,7 @@ public class PlayerFrame extends JFrame {
                     // 解决删除元素带来的性能问题
                     playQueue.setModel(emptyListModel);
                     for (Object o : selectedValues) {
-                        if (player.isPlayingObject(o)) unload();
+                        if (player.loadedObject(o)) unload();
                         playQueueModel.removeElement(o);
                     }
                     playQueue.setModel(playQueueModel);
@@ -19001,8 +19004,8 @@ public class PlayerFrame extends JFrame {
                 playQueueModel.set(selectedIndex - 1, o2);
                 playQueueModel.set(selectedIndex, o1);
                 playQueue.setSelectedIndex(selectedIndex - 1);
-                if (player.isPlayingObject(o1)) currSong = selectedIndex;
-                else if (player.isPlayingObject(o2)) currSong = selectedIndex - 1;
+                if (player.loadedObject(o1)) currSong = selectedIndex;
+                else if (player.loadedObject(o2)) currSong = selectedIndex - 1;
             }
         });
         playQueueMoveDownToolButton.addActionListener(e -> {
@@ -19013,8 +19016,8 @@ public class PlayerFrame extends JFrame {
                 playQueueModel.set(selectedIndex, o2);
                 playQueueModel.set(selectedIndex + 1, o1);
                 playQueue.setSelectedIndex(selectedIndex + 1);
-                if (player.isPlayingObject(o1)) currSong = selectedIndex + 1;
-                else if (player.isPlayingObject(o2)) currSong = selectedIndex;
+                if (player.loadedObject(o1)) currSong = selectedIndex + 1;
+                else if (player.loadedObject(o2)) currSong = selectedIndex;
             }
         });
 
@@ -19194,7 +19197,7 @@ public class PlayerFrame extends JFrame {
                     Object o = values.get(i);
                     if (hasBeenCollected(o)) continue;
                     collectionModel.add(0, o);
-                    if (player.isPlayingObject(o))
+                    if (player.loadedObject(o))
                         collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
@@ -19205,7 +19208,7 @@ public class PlayerFrame extends JFrame {
                 values.forEach(o -> {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
-                        if (player.isPlayingObject(o))
+                        if (player.loadedObject(o))
                             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -19337,14 +19340,14 @@ public class PlayerFrame extends JFrame {
         browseLrcMenuItem.addActionListener(e -> {
             String lrcPath = "";
             // 在线音乐先将歌词存为临时文件再查看
-            if (player.isPlayingNetMusic()) {
+            if (player.loadedNetMusic()) {
                 NetMusicInfo netMusicInfo = player.getNetMusicInfo();
                 lrcPath = new File(SimplePath.CACHE_PATH + netMusicInfo.toLrcFileName()).getAbsolutePath();
                 FileUtils.writeStr(lrcStr, lrcPath, false);
             }
             // 本地音乐直接打开 lrc 文件
             else {
-                File file = player.getMusicInfo().getFile();
+                File file = player.getAudioFile();
                 String filePath = file.getAbsolutePath();
                 lrcPath = filePath.substring(0, filePath.lastIndexOf('.')) + ".lrc";
             }
@@ -19354,7 +19357,7 @@ public class PlayerFrame extends JFrame {
         browseLrcTransMenuItem.addActionListener(e -> {
             String lrcPath = "";
             // 在线音乐先将歌词翻译存为临时文件再查看
-            if (player.isPlayingNetMusic()) {
+            if (player.loadedNetMusic()) {
                 NetMusicInfo netMusicInfo = player.getNetMusicInfo();
                 lrcPath = new File(SimplePath.CACHE_PATH + netMusicInfo.toLrcTransFileName()).getAbsolutePath();
                 FileUtils.writeStr(transStr, lrcPath, false);
@@ -19438,11 +19441,11 @@ public class PlayerFrame extends JFrame {
                     locateLrcMenuItem.setEnabled(nextLrc >= 0);
                     browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS);
                     // 在线音乐歌词有翻译才能查看翻译
-                    browseLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
+                    browseLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getNetMusicInfo().hasTrans());
                     // 只允许下载在线音乐的歌词
-                    downloadLrcMenuItem.setEnabled(player.isPlayingNetMusic() && nextLrc != NextLrc.NOT_EXISTS);
+                    downloadLrcMenuItem.setEnabled(player.loadedNetMusic() && nextLrc != NextLrc.NOT_EXISTS);
                     // 在线音乐歌词有翻译才能下载翻译
-                    downloadLrcTransMenuItem.setEnabled(player.isPlayingNetMusic() && player.getNetMusicInfo().hasTrans());
+                    downloadLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getNetMusicInfo().hasTrans());
 
                     lrcPopupMenu.show(lrcList, e.getX(), e.getY());
                 }
@@ -19702,7 +19705,7 @@ public class PlayerFrame extends JFrame {
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
         collectButton.addActionListener(e -> {
             Object o = player.getNetMusicInfo();
-            if (o == null) o = player.getMusicInfo().getFile();
+            if (o == null) o = player.getAudioFile();
             if (!hasBeenCollected(o)) {
                 collectionModel.add(0, o);
                 collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
@@ -19955,7 +19958,7 @@ public class PlayerFrame extends JFrame {
                 currChineseType = ChineseType.SIMPLIFIED;
                 if (nextLrc >= 0)
                     // 切换简体只是重新加载歌词！
-                    loadLrc(player.getMusicInfo().getFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
+                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
                 switchChineseButton.setIcon(ImageUtils.dye(simpChineseIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
@@ -19970,8 +19973,8 @@ public class PlayerFrame extends JFrame {
                 currJapaneseType = JapaneseType.ROMAJI;
                 if (nextLrc >= 0) {
                     // 使用已有的罗马音歌词
-                    if (player.isPlayingNetMusic() && player.getNetMusicInfo().hasRoma()) {
-                        loadLrc(player.getMusicInfo().getFile(), player.getNetMusicInfo(), true, false);
+                    if (player.loadedNetMusic() && player.getNetMusicInfo().hasRoma()) {
+                        loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, false);
                     } else {
                         for (Statement stmt : statements) stmt.setLyric(StringUtils.toRomaji(stmt.getLyric()));
                     }
@@ -19983,7 +19986,7 @@ public class PlayerFrame extends JFrame {
                 currJapaneseType = JapaneseType.KANA;
                 if (nextLrc >= 0)
                     // 切换简体只是重新加载歌词！
-                    loadLrc(player.getMusicInfo().getFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
+                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
                 switchJapaneseButton.setIcon(ImageUtils.dye(kanaIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
@@ -19998,7 +20001,7 @@ public class PlayerFrame extends JFrame {
                 currLrcType = LyricType.TRANSLATION;
                 if (nextLrc >= 0)
                     // 重新加载歌词
-                    loadLrc(player.getMusicInfo().getFile(), player.getNetMusicInfo(), true, true);
+                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, true);
                 switchLrcTypeButton.setIcon(ImageUtils.dye(translationIcon, currUIStyle.getIconColor()));
             }
             // 切换到原歌词
@@ -20006,7 +20009,7 @@ public class PlayerFrame extends JFrame {
                 currLrcType = LyricType.ORIGINAL;
                 if (nextLrc >= 0)
                     // 重新加载歌词
-                    loadLrc(player.getMusicInfo().getFile(), player.getNetMusicInfo(), true, false);
+                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, false);
                 switchLrcTypeButton.setIcon(ImageUtils.dye(originalIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
@@ -20064,14 +20067,6 @@ public class PlayerFrame extends JFrame {
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
     }
 
-    // 准备播放，初始化播放器和 UI
-    private void prepareToPlay(AudioFile file, NetMusicInfo netMusicInfo) throws UnsupportedAudioFileException, InvalidDataException {
-        player.load(file, netMusicInfo);
-        clearLrc();
-        loadLrc(file, netMusicInfo, false, currLrcType == LyricType.TRANSLATION);
-        loadUI(file, netMusicInfo);
-    }
-
     // 卸载当前文件
     private void unload() {
         player.unload();
@@ -20084,9 +20079,9 @@ public class PlayerFrame extends JFrame {
     // 更新标题文字
     private void updateTitle(String st) {
         synchronized (statusText) {
-            if (!"暂停中".equals(st)) statusText = st;
+            statusText = st;
             String title = String.format(TITLE + "（%s：%s）", st,
-                    player.loadedNetMusic() ? player.getNetMusicInfo().toSimpleString() : player.getMusicInfo().getFile());
+                    player.loadedNetMusic() ? player.getNetMusicInfo().toSimpleString() : player.getAudioFile());
             titleLabel.setText(StringUtils.textToHtml(title));
             setTitle(title);
         }
@@ -20140,16 +20135,18 @@ public class PlayerFrame extends JFrame {
             collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
         else
             collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+
+        SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
         // 设置歌曲名称
-        songNameLabel.setText(StringUtils.textToHtml(SONG_NAME_LABEL + player.getMusicInfo().getName()));
+        songNameLabel.setText(StringUtils.textToHtml(SONG_NAME_LABEL + simpleMusicInfo.getName()));
         songNameLabel.setVisible(false);
         songNameLabel.setVisible(true);
         // 设置艺术家
-        artistLabel.setText(StringUtils.textToHtml(ARTIST_LABEL + player.getMusicInfo().getArtist()));
+        artistLabel.setText(StringUtils.textToHtml(ARTIST_LABEL + simpleMusicInfo.getArtist()));
         artistLabel.setVisible(false);
         artistLabel.setVisible(true);
         // 设置专辑名称
-        albumLabel.setText(StringUtils.textToHtml(ALBUM_NAME_LABEL + player.getMusicInfo().getAlbumName()));
+        albumLabel.setText(StringUtils.textToHtml(ALBUM_NAME_LABEL + simpleMusicInfo.getAlbumName()));
         albumLabel.setVisible(false);
         albumLabel.setVisible(true);
     }
@@ -20364,7 +20361,7 @@ public class PlayerFrame extends JFrame {
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
             // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
             if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
-                player.initMp(player.getMusicInfo().getFile(), netMusicInfo);
+                player.initMp();
                 if (!player.isPlaying()) return;
                 playLoaded(false);
                 seekLrc(0);
@@ -20379,7 +20376,7 @@ public class PlayerFrame extends JFrame {
                     String url = MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
                     if (StringUtils.isNotEmpty(url)) netMusicInfo.setUrl(url);
                     else MusicServerUtils.fillAvailableMusicUrl(netMusicInfo);
-                    player.initMp(null, netMusicInfo);
+                    player.initMp();
                     if (!player.isPlaying()) return;
                     playLoaded(false);
                     seekLrc(0);
@@ -20413,12 +20410,14 @@ public class PlayerFrame extends JFrame {
 //                }
             }
         });
-        // 缓冲时间改变后刷新时间条
-        mp.bufferProgressTimeProperty().addListener(l -> {
-            timeBar.repaint();
-            if (player.isLoaded() && !"播放中".equals(statusText) && !"已就绪".equals(statusText) && player.getBufferedSeconds() > 0)
-                updateTitle("已就绪");
+        // 播放器状态监听
+        mp.statusProperty().addListener(l -> {
+            if (player.isLoaded() && !"已就绪".equals(statusText)) updateTitle("已就绪");
+            else if (player.isPlaying() && !"播放中".equals(statusText)) updateTitle("播放中");
+            else if (player.isPausing() && !"暂停中".equals(statusText)) updateTitle("暂停中");
         });
+        // 缓冲时间改变后刷新时间条
+        mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
         mp.currentTimeProperty().addListener(l -> {
             // 随着播放，设置进度条和时间标签的值
             try {
@@ -20486,14 +20485,14 @@ public class PlayerFrame extends JFrame {
     private void playLoaded(boolean replay) {
         if (replay) player.replay();
         else {
-            updateTitle("播放中");
+            // 开始播放，若播放成功则更新 UI
+            if(!player.play()) return;
             playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
             playOrPauseButton.setToolTipText(PAUSE_TIP);
             if (miniDialog != null) {
                 miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
                 miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
             }
-            player.play();
             // 重绘歌单，刷新播放中的图标
             musicList.repaint();
             netMusicList.repaint();
@@ -20520,7 +20519,7 @@ public class PlayerFrame extends JFrame {
         }
 
         // 判断歌曲是否正在播放
-        if (player.isPlayingObject(obj)) {
+        if (player.loadedObject(obj)) {
             new TipDialog(THIS, ALREADY_PLAYING_MSG).showDialog();
             return;
         }
@@ -20618,8 +20617,6 @@ public class PlayerFrame extends JFrame {
         // 本地文件
         if (o instanceof AudioFile) {
             file = (AudioFile) o;
-            // 根本没选歌曲，跳出
-            if (file == null) return false;
             // 文件不存在，在不允许重试情况下询问是否从列表中删除
             if (!file.exists()) {
                 if (!allowRetry) {
@@ -20645,9 +20642,33 @@ public class PlayerFrame extends JFrame {
         else if (o instanceof NetMusicInfo) {
             try {
                 musicInfo = (NetMusicInfo) o;
-                // 如果歌曲信息不完整，获取歌曲额外的信息(除了曲名、艺术家、id)
-                MusicServerUtils.fillNetMusicInfo(musicInfo);
+                // 如果歌曲信息不完整，获取歌曲额外的信息(除了 url)
+                MusicServerUtils.fillMusicInfo(musicInfo);
                 updateRenderer(netMusicList);
+            } catch (Exception e) {
+                if (e instanceof IORuntimeException) {
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } else if (e instanceof HttpException) {
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } else {
+                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
+                }
+                if (allowRetry) retryPlay();
+                return false;
+            }
+        }
+        try {
+            player.load(file, musicInfo);
+            clearLrc();
+            loadLrc(file, musicInfo, false, currLrcType == LyricType.TRANSLATION);
+            loadUI(file, musicInfo);
+
+            if (file != null && musicInfo == null && !file.isIntegrated())
+                throw new IllegalMediaException("音频文件损坏");
+
+            // 加载在线音乐的 url
+            if (o instanceof NetMusicInfo) {
+                MusicServerUtils.fillMusicUrl(musicInfo);
                 String url = musicInfo.getUrl();
                 // 歌曲无版权
                 if (StringUtils.isEmpty(url)) throw new NoPrivilegeException("歌曲无版权");
@@ -20674,24 +20695,11 @@ public class PlayerFrame extends JFrame {
                     file = tmpFile;
                     if (loading.isShowing()) loading.stop();
                 }
-            } catch (Exception e) {
-                if (e instanceof IORuntimeException) {
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } else if (e instanceof HttpException) {
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } else if (e instanceof IllegalMediaException) {
-                    new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
-                } else {
-                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
-                }
-                if (allowRetry) retryPlay();
-                return false;
             }
-        }
-        try {
-            if (file != null && musicInfo == null && !file.isIntegrated())
-                throw new IllegalMediaException("音频文件损坏");
-            prepareToPlay(file, musicInfo);
+
+            // 初始化 MediaPlayer 对象
+            player.initMp();
+
             if (instantPlay) playLoaded(false);
             // 添加到历史播放列表
             if (model != historyModel) {
@@ -20704,12 +20712,14 @@ public class PlayerFrame extends JFrame {
             }
             retry = 0;
             return true;
-        } catch (UnsupportedAudioFileException | MediaException e) {
-            new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
-        } catch (IllegalArgumentException | InvalidDataException | IllegalMediaException e) {
-            new TipDialog(THIS, INVALID_AUDIO_FILE_MSG).showDialog();
         } catch (Exception e) {
-            e.printStackTrace();
+            updateTitle("加载失败");
+            if (e instanceof MediaException) new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
+            else if (e instanceof IllegalArgumentException || e instanceof IllegalMediaException)
+                new TipDialog(THIS, INVALID_AUDIO_FILE_MSG).showDialog();
+            else if (e instanceof IORuntimeException) new TipDialog(THIS, NO_NET_MSG).showDialog();
+            else if (e instanceof HttpException) new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+            else new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
         }
         if (allowRetry) retryPlay();
         return false;
@@ -20778,7 +20788,7 @@ public class PlayerFrame extends JFrame {
     private void updateCurrSong() {
         currSong = -1;
         for (int i = 0, size = playQueueModel.size(); i < size; i++) {
-            if (player.isPlayingObject(playQueueModel.get(i))) {
+            if (player.loadedObject(playQueueModel.get(i))) {
                 currSong = i;
                 return;
             }
@@ -20946,6 +20956,7 @@ public class PlayerFrame extends JFrame {
         musicList.setModel(emptyListModel);
         model.clear();
         list.forEach(o -> model.addElement(o));
+        list.clear();
         musicList.setModel(model);
         countLabel.setText(String.format("共 %s 首", model.size()));
     }
@@ -22164,8 +22175,6 @@ public class PlayerFrame extends JFrame {
             // 就绪状态
             case PlayerStatus.LOADED:
                 playLoaded(false);
-                // 重置标题
-                updateTitle("播放中");
                 break;
             // 暂停状态
             case PlayerStatus.PAUSING:
@@ -22176,8 +22185,6 @@ public class PlayerFrame extends JFrame {
                     miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
                     miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
                 }
-                // 重置标题
-                updateTitle(statusText);
                 break;
             // 播放状态
             case PlayerStatus.PLAYING:
@@ -22194,8 +22201,6 @@ public class PlayerFrame extends JFrame {
                     miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
                     miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
                 }
-                // 重置标题
-                updateTitle("暂停中");
                 break;
         }
     }

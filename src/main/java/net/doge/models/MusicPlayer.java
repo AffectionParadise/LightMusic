@@ -18,7 +18,6 @@ import net.doge.utils.StringUtils;
 import net.doge.utils.TimeUtils;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +33,8 @@ public class MusicPlayer {
     private PlayerFrame f;
     // 当前载入的文件的信息
     private SimpleMusicInfo musicInfo = new SimpleMusicInfo();
+    // 载入的本地音乐信息
+    private AudioFile audioFile;
     // 载入的在线音乐信息，如果是本地音乐则为 null
     private NetMusicInfo netMusicInfo;
     // 当前播放器状态
@@ -68,8 +69,8 @@ public class MusicPlayer {
     public void load(AudioFile source, NetMusicInfo netMusicInfo) {
         // 先清除上一次播放数据
         clearMetadata();
-        // 初始化 MediaPlayer 对象
-        initMp(source, netMusicInfo);
+        // 释放上一个 MediaPlayer 对象
+        disposeMp();
         // 加载音乐信息
         initMusicInfo(source, netMusicInfo);
         status = PlayerStatus.LOADED;
@@ -77,7 +78,6 @@ public class MusicPlayer {
 
     // 清除上一次的播放数据
     private void clearMetadata() {
-        musicInfo.setFile(null);
         musicInfo.setFormat(null);
         musicInfo.setName(null);
         musicInfo.setArtist(null);
@@ -85,6 +85,7 @@ public class MusicPlayer {
         musicInfo.setDuration(0);
         musicInfo.setInvokeLater(null);
         musicInfo.setAlbumImage(null);
+        audioFile = null;
         netMusicInfo = null;
 
         for (int i = 0, len = specsOrigin.length; i < len; i++) {
@@ -102,12 +103,18 @@ public class MusicPlayer {
 
     // 判断播放器是否载入了歌曲
     public boolean loadedMusic() {
-        return loadedFile() || loadedNetMusic();
+        return loadedAudioFile() || loadedNetMusic();
     }
 
     // 判断播放器是否载入了文件
-    public boolean loadedFile() {
-        return musicInfo != null && musicInfo.hasFile();
+    public boolean loadedAudioFile() {
+        return netMusicInfo == null && audioFile != null;
+    }
+
+    // 判断播放器是否载入了指定文件
+    public boolean loadedAudioFile(AudioFile file) {
+        if (!loadedAudioFile()) return false;
+        return audioFile.equals(file);
     }
 
     // 判断播放器是否载入了在线音乐
@@ -115,9 +122,27 @@ public class MusicPlayer {
         return netMusicInfo != null;
     }
 
+    // 判断播放器是否载入了指定在线音乐
+    public boolean loadedNetMusic(NetMusicInfo netMusicInfo) {
+        if (!loadedNetMusic()) return false;
+        return netMusicInfo.equals(this.netMusicInfo);
+    }
+
+    // 判断播放器是否载入了指定对象
+    public boolean loadedObject(Object o) {
+        if (o instanceof AudioFile) return loadedAudioFile((AudioFile) o);
+        else if (o instanceof NetMusicInfo) return loadedNetMusic((NetMusicInfo) o);
+        return false;
+    }
+
     // 判断是否在播放状态
     public boolean isPlaying() {
         return status == PlayerStatus.PLAYING;
+    }
+
+    // 判断是否在播放状态
+    public boolean isPausing() {
+        return status == PlayerStatus.PAUSING;
     }
 
     // 判断是否在就绪状态
@@ -130,41 +155,15 @@ public class MusicPlayer {
         return status == PlayerStatus.EMPTY;
     }
 
-    // 判断播放器是否正在播放某文件
-    public boolean isPlayingFile(File file) {
-        if (!loadedFile() || file == null) return false;
-        return musicInfo.getFile().equals(file);
-    }
-
-    // 判断播放器是否正在播放在线音乐
-    public boolean isPlayingNetMusic() {
-        return netMusicInfo != null;
-    }
-
-    // 判断播放器是否正在播放某在线音乐
-    public boolean isPlayingNetMusic(NetMusicInfo netMusicInfo) {
-        if (!loadedNetMusic() || netMusicInfo == null) return false;
-        return netMusicInfo.equals(this.netMusicInfo);
-    }
-
-    // 判断播放器是否正在播放某对象
-    public boolean isPlayingObject(Object o) {
-        if (!loadedMusic()) return false;
-        if (o instanceof File) return isPlayingFile((File) o);
-        else if (o instanceof NetMusicInfo) return isPlayingNetMusic((NetMusicInfo) o);
-        return false;
-    }
-
     // 初始化音频信息(pcm wav)
     private void initMusicInfo(AudioFile source, NetMusicInfo netMusicInfo) {
+        this.audioFile = source;
         this.netMusicInfo = netMusicInfo;
 
         // 音频格式(以 source 文件为准)
         musicInfo.setFormat(source == null ? netMusicInfo.getFormat() : source.getFormat());
         // 时长(优先考虑 NetMusicInfo 的 duration 属性，有时 getDuration 方法返回的时长不准确)
         musicInfo.setDuration(netMusicInfo != null ? netMusicInfo.getDuration() : source.getDuration());
-        // 文件
-        musicInfo.setFile(source);
 
         // 在线音乐的信息
         if (netMusicInfo != null) {
@@ -250,20 +249,21 @@ public class MusicPlayer {
     }
 
     // 初始化 MediaPlayer 对象
-    public void initMp(AudioFile source, NetMusicInfo netMusicInfo) {
+    public void initMp() {
         // 加载文件(在线音乐直接播放 url)
-        Media media = new Media(source == null ? netMusicInfo.getUrl() : source.toURI().toString());
+        Media media = new Media(netMusicInfo != null ? netMusicInfo.getUrl() : audioFile.toURI().toString());
         initRequestHeaders(netMusicInfo, media);
-        disposeMp();
         mp = new MediaPlayer(media);
         // 初始化 MediaPlayer 设置
         f.initPlayer();
     }
 
-    public void play() {
-        if (mp == null) return;
+    // 播放
+    public boolean play() {
+        if (mp == null) return false;
         mp.play();
         status = PlayerStatus.PLAYING;
+        return true;
     }
 
     // 暂停

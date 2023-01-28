@@ -12,8 +12,6 @@ import java.awt.image.BufferedImage;
  */
 @Data
 public class SimpleMusicInfo {
-    // 文件
-    private AudioFile file;
     // 音频格式
     private String format;
     // 时长(秒)
@@ -41,10 +39,6 @@ public class SimpleMusicInfo {
             // 调用后丢弃
             invokeLater = null;
         }
-    }
-
-    public boolean hasFile() {
-        return file != null;
     }
 
     public boolean hasDuration() {

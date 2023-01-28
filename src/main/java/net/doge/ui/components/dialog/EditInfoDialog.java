@@ -113,7 +113,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
         globalPanel.add(centerScrollPane, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
-            if (f.player.isPlayingFile(file)) {
+            if (f.player.loadedAudioFile(file)) {
                 new TipDialog(f, FILE_BEING_USED_MSG).showDialog();
                 return;
             } else {

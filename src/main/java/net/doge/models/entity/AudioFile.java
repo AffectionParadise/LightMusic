@@ -16,7 +16,7 @@ public class AudioFile extends File {
     // 专辑
     private String album;
     // 时长
-    private Double duration;
+    private double duration;
 //    // 流派
 //    private String genre;
 //    // 注释
@@ -38,7 +38,7 @@ public class AudioFile extends File {
      * @return
      */
     public boolean isIntegrated() {
-        return duration != null;
+        return hasDuration();
     }
 
     public String getNameWithoutSuffix() {
@@ -80,7 +80,7 @@ public class AudioFile extends File {
     }
 
     public boolean hasDuration() {
-        return duration != null && !Double.isNaN(duration) && !Double.isInfinite(duration) && duration.intValue() != 0;
+        return duration != 0;
     }
 
     public String getSongName() {
@@ -107,11 +107,11 @@ public class AudioFile extends File {
         this.album = album;
     }
 
-    public Double getDuration() {
+    public double getDuration() {
         return duration;
     }
 
-    public void setDuration(Double duration) {
+    public void setDuration(double duration) {
         this.duration = duration;
     }
 

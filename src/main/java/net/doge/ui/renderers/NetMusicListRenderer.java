@@ -71,7 +71,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         CustomLabel durationLabel = new CustomLabel();
 
         // 播放中的文件图标不同
-        if (!player.isPlayingNetMusic(musicInfo)) {
+        if (!player.loadedNetMusic(musicInfo)) {
             if (musicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
             else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
             else iconLabel.setIcon(musicIcon);
