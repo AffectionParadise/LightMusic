@@ -9,10 +9,6 @@ public class PlayerStatus {
     public static final int EMPTY = 100;
     public static final int LOADED = 200;
     public static final int PLAYING = 300;
-    public static final int PAUSING = 400;
+    public static final int PAUSED = 400;
     public static final int STOPPED = 500;
-    public static final int INTERRUPTED = 600;
-
-    public static final int FORWARD = 700;
-    public static final int WAITING = 700;
 }

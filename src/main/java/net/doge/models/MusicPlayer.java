@@ -135,14 +135,9 @@ public class MusicPlayer {
         return false;
     }
 
-    // 判断是否在播放状态
-    public boolean isPlaying() {
-        return status == PlayerStatus.PLAYING;
-    }
-
-    // 判断是否在播放状态
-    public boolean isPausing() {
-        return status == PlayerStatus.PAUSING;
+    // 判断是否在空状态
+    public boolean isEmpty() {
+        return status == PlayerStatus.EMPTY;
     }
 
     // 判断是否在就绪状态
@@ -150,9 +145,19 @@ public class MusicPlayer {
         return status == PlayerStatus.LOADED;
     }
 
-    // 判断是否在空状态
-    public boolean isEmpty() {
-        return status == PlayerStatus.EMPTY;
+    // 判断是否在播放状态
+    public boolean isPlaying() {
+        return status == PlayerStatus.PLAYING;
+    }
+
+    // 判断是否在暂停状态
+    public boolean isPaused() {
+        return status == PlayerStatus.PAUSED;
+    }
+
+    // 判断是否在停止状态
+    public boolean isStopped() {
+        return status == PlayerStatus.STOPPED;
     }
 
     // 初始化音频信息(pcm wav)
@@ -270,7 +275,7 @@ public class MusicPlayer {
     public void pause() {
         if (mp == null) return;
         mp.pause();
-        status = PlayerStatus.PAUSING;
+        status = PlayerStatus.PAUSED;
     }
 
     // 重新播放

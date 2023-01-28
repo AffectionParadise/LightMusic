@@ -176,9 +176,10 @@ public class PlayerFrame extends JFrame {
     private final String CLEAR_SUCCESS_MSG = "清空成功";
     private final String DUPLICATE_SUCCESS_MSG = "去重成功";
     private final String REVERSE_SUCCESS_MSG = "倒序成功";
-    private final String CHANGE_SEQUENCE_MSG = "已切换到顺序播放";
-    private final String CHANGE_LIST_CYCLE_MSG = "已切换到列表循环";
+    private final String CHANGE_DISABLED_MSG = "已切换到播完暂停";
     private final String CHANGE_SINGLE_MSG = "已切换到单曲循环";
+    private final String CHANGE_LIST_CYCLE_MSG = "已切换到列表循环";
+    private final String CHANGE_SEQUENCE_MSG = "已切换到顺序播放";
     private final String CHANGE_SHUFFLE_MSG = "已切换到随机播放";
     private final String DOWNLOAD_COMPLETED_MSG = "下载完成";
     private final String TASK_ADDED_MSG = "已加入到下载队列";
@@ -323,6 +324,8 @@ public class PlayerFrame extends JFrame {
     private ImageIcon backwIcon = new ImageIcon(SimplePath.ICON_PATH + "backw.png");
     // 快进图标
     private ImageIcon forwIcon = new ImageIcon(SimplePath.ICON_PATH + "forw.png");
+    // 播完暂停图标
+    private ImageIcon playModeDisabledIcon = new ImageIcon(SimplePath.ICON_PATH + "playModeDisabled.png");
     // 单曲循环图标
     private ImageIcon singleIcon = new ImageIcon(SimplePath.ICON_PATH + "single.png");
     // 顺序播放图标
@@ -565,6 +568,7 @@ public class PlayerFrame extends JFrame {
     private final String NEXT_TIP = "下一首";
     private final String BACKW_TIP = "快退";
     private final String FORW_TIP = "快进";
+    private final String PLAY_MODE_DISABLED_TIP = "播完暂停";
     private final String SINGLE_TIP = "单曲循环";
     private final String SEQUENCE_TIP = "顺序播放";
     private final String LIST_CYCLE_TIP = "列表循环";
@@ -905,6 +909,7 @@ public class PlayerFrame extends JFrame {
 
     // 播放模式右键菜单
     private CustomPopupMenu playModePopupMenu = new CustomPopupMenu(THIS);
+    private CustomMenuItem playModeDisabledMenuItem = new CustomMenuItem("播完暂停");
     private CustomMenuItem singleMenuItem = new CustomMenuItem("单曲循环");
     private CustomMenuItem sequenceMenuItem = new CustomMenuItem("顺序播放");
     private CustomMenuItem listCycleMenuItem = new CustomMenuItem("列表循环");
@@ -2988,6 +2993,9 @@ public class PlayerFrame extends JFrame {
         desktopLyricDialog.setAlpha((float) desktopLyricAlpha);
         // 载入播放模式
         switch (config.optInt(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
+            case PlayMode.DISABLED:
+                changeToDisabled(false);
+                break;
             case PlayMode.SEQUENCE:
                 changeToSequence(false);
                 break;
@@ -19626,22 +19634,20 @@ public class PlayerFrame extends JFrame {
     private void timeBarInit() {
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(0);
-        // 拖动播放时间条
+        // 释放时间条，播放器响应
         timeBar.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (player.isEmpty()) return;
-                double t = player.getMusicInfo().getDuration() * timeBar.getValue() / TIME_BAR_MAX;
-                currTimeLabel.setText(TimeUtils.format(t));
-            }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (player.isEmpty()) return;
-                double t = player.getMusicInfo().getDuration() * timeBar.getValue() / TIME_BAR_MAX;
+                double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMusicInfo().getDuration();
                 player.seek(t);
                 seekLrc(t);
             }
+        });
+        // 改变时间条的值，当前时间标签的值随之改变
+        timeBar.addChangeListener(e -> {
+            double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMusicInfo().getDuration();
+            currTimeLabel.setText(TimeUtils.format(t));
         });
         // 设置进度条最佳大小
         timeBar.setPreferredSize(new Dimension(1100, 20));
@@ -19773,10 +19779,13 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = playModePopupMenu.getHeight();
-                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? 177 : h));
+                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? 195 : h));
             }
         });
         // 播放模式弹出菜单
+        playModeDisabledMenuItem.addActionListener(e -> {
+            if (currPlayMode != PlayMode.DISABLED) changeToDisabled(true);
+        });
         singleMenuItem.addActionListener(e -> {
             if (currPlayMode != PlayMode.SINGLE) changeToSingle(true);
         });
@@ -19790,6 +19799,7 @@ public class PlayerFrame extends JFrame {
             if (currPlayMode != PlayMode.SHUFFLE) changeToShuffle(true);
         });
 
+        playModePopupMenu.add(playModeDisabledMenuItem);
         playModePopupMenu.add(singleMenuItem);
         playModePopupMenu.add(sequenceMenuItem);
         playModePopupMenu.add(listCycleMenuItem);
@@ -20092,7 +20102,6 @@ public class PlayerFrame extends JFrame {
         // 设置标题
         updateTitle("加载中");
         // 重置当前播放时间
-        currTimeLabel.setText(player.getCurrTimeString());
         timeBar.setValue(0);
         // 重置总时间
         durationLabel.setText(player.getDurationString());
@@ -20156,8 +20165,6 @@ public class PlayerFrame extends JFrame {
         // 重置标题
         updateMotto();
         setTitle(TITLE);
-        // 重置当前播放时间
-        currTimeLabel.setText(DEFAULT_TIME);
         // 重置总时间
         durationLabel.setText(DEFAULT_TIME);
         // 重置为“播放”
@@ -20414,7 +20421,7 @@ public class PlayerFrame extends JFrame {
         mp.statusProperty().addListener(l -> {
             if (player.isLoaded() && !"已就绪".equals(statusText)) updateTitle("已就绪");
             else if (player.isPlaying() && !"播放中".equals(statusText)) updateTitle("播放中");
-            else if (player.isPausing() && !"暂停中".equals(statusText)) updateTitle("暂停中");
+            else if (player.isPaused() && !"暂停中".equals(statusText)) updateTitle("暂停中");
         });
         // 缓冲时间改变后刷新时间条
         mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
@@ -20423,7 +20430,6 @@ public class PlayerFrame extends JFrame {
             try {
                 // 未被操作时频繁更新时间条
                 if (!timeBar.getValueIsAdjusting()) timeBar.setValue((int) (player.getCurrScale() * TIME_BAR_MAX));
-                currTimeLabel.setText(player.getCurrTimeString());
                 // 监听并更新歌词(若有歌词)
                 if (nextLrc < 0) return;
                 double currTimeSeconds = player.getCurrTimeSeconds();
@@ -20458,25 +20464,23 @@ public class PlayerFrame extends JFrame {
         });
         // 播放结束
         mp.setOnEndOfMedia(() -> {
-            // 单曲循环
-            if (currPlayMode == PlayMode.SINGLE) {
-                playLoaded(true);
-                seekLrc(0);
-            }
-            // 顺序播放
-            else if (currPlayMode == PlayMode.SEQUENCE) {
-                if (currSong < playQueueModel.size() - 1) playNext();
-                    // 播放完后卸载文件
-                else unload();
-            }
-            // 列表循环
-            else if (currPlayMode == PlayMode.LIST_CYCLE) {
-                playNext();
-            }
-            // 随机播放
-            else if (currPlayMode == PlayMode.SHUFFLE) {
-                // 播放下一个随机
-                playNextShuffle();
+            switch (currPlayMode) {
+                case PlayMode.SINGLE:
+                    playLoaded(true);
+                    seekLrc(0);
+                    break;
+                case PlayMode.SEQUENCE:
+                    if (currSong < playQueueModel.size() - 1) playNext();
+                        // 播放完后卸载文件
+                    else unload();
+                    break;
+                case PlayMode.LIST_CYCLE:
+                    playNext();
+                    break;
+                case PlayMode.SHUFFLE:
+                    // 播放下一个随机
+                    playNextShuffle();
+                    break;
             }
         });
     }
@@ -20484,20 +20488,18 @@ public class PlayerFrame extends JFrame {
     // 播放载入的歌曲
     private void playLoaded(boolean replay) {
         if (replay) player.replay();
-        else {
-            // 开始播放，若播放成功则更新 UI
-            if(!player.play()) return;
-            playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
-            playOrPauseButton.setToolTipText(PAUSE_TIP);
-            if (miniDialog != null) {
-                miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
-                miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
-            }
-            // 重绘歌单，刷新播放中的图标
-            musicList.repaint();
-            netMusicList.repaint();
-            playQueue.repaint();
+        else if (!player.play()) return;
+        // 开始播放，若播放成功则更新 UI
+        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setToolTipText(PAUSE_TIP);
+        if (miniDialog != null) {
+            miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
+            miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
         }
+        // 重绘歌单，刷新播放中的图标
+        musicList.repaint();
+        netMusicList.repaint();
+        playQueue.repaint();
     }
 
     // 添加到下一首播放
@@ -20793,6 +20795,14 @@ public class PlayerFrame extends JFrame {
                 return;
             }
         }
+    }
+
+    // 改变到播完暂停
+    private void changeToDisabled(boolean showDialog) {
+        playModeButton.setIcon(ImageUtils.dye(playModeDisabledIcon, currUIStyle.getIconColor()));
+        playModeButton.setToolTipText(PLAY_MODE_DISABLED_TIP);
+        currPlayMode = PlayMode.DISABLED;
+        if (showDialog) new TipDialog(THIS, CHANGE_DISABLED_MSG).showDialog();
     }
 
     // 改变到单曲循环
@@ -21112,6 +21122,7 @@ public class PlayerFrame extends JFrame {
         addFileMenuItem.setIcon(ImageUtils.dye(fileIcon, iconColor));
         addDirMenuItem.setIcon(ImageUtils.dye(folderIcon, iconColor));
 
+        playModeDisabledMenuItem.setIcon(ImageUtils.dye(playModeDisabledIcon, iconColor));
         singleMenuItem.setIcon(ImageUtils.dye(singleIcon, iconColor));
         sequenceMenuItem.setIcon(ImageUtils.dye(sequenceIcon, iconColor));
         listCycleMenuItem.setIcon(ImageUtils.dye(listCycleIcon, iconColor));
@@ -22177,7 +22188,7 @@ public class PlayerFrame extends JFrame {
                 playLoaded(false);
                 break;
             // 暂停状态
-            case PlayerStatus.PAUSING:
+            case PlayerStatus.PAUSED:
                 player.play();
                 playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
@@ -22189,12 +22200,12 @@ public class PlayerFrame extends JFrame {
             // 播放状态
             case PlayerStatus.PLAYING:
                 // 淡出式暂停
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.25), new KeyValue(player.getMp().volumeProperty(), 0)));
-                timeline.setOnFinished(event -> {
-                    player.pause();
-                    player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
-                });
-                timeline.play();
+                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.25), new KeyValue(player.getMp().volumeProperty(), 0)));
+                    timeline.setOnFinished(event -> {
+                        player.pause();
+                        player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
+                    });
+                    timeline.play();
                 playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 if (miniDialog != null) {
