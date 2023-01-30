@@ -124,6 +124,7 @@ public class PlayerFrame extends JFrame {
     private final double LARGE_ARC = 0.03;
     //    private final double WIN_ARC = 0.01;
     private final String PAGINATION_MSG = "第 %s 页，共 %s 页";
+    private final String LRC_LOADING_MSG = "加载歌词中......";
     private final String NO_LRC_MSG = "尽情享受音乐的世界";
     private final String BAD_FORMAT_LRC_MSG = "该歌词不支持滚动";
     private final String LOADING_MSG = "加载中，客官请稍等......";
@@ -19447,11 +19448,11 @@ public class PlayerFrame extends JFrame {
                     if (lyric.trim().isEmpty()) return;
                     // 歌曲有歌词时才能查看
                     locateLrcMenuItem.setEnabled(nextLrc >= 0);
-                    browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS);
+                    browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS && nextLrc != NextLrc.LOADING);
                     // 在线音乐歌词有翻译才能查看翻译
                     browseLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getNetMusicInfo().hasTrans());
                     // 只允许下载在线音乐的歌词
-                    downloadLrcMenuItem.setEnabled(player.loadedNetMusic() && nextLrc != NextLrc.NOT_EXISTS);
+                    downloadLrcMenuItem.setEnabled(player.loadedNetMusic() && nextLrc != NextLrc.NOT_EXISTS && nextLrc != NextLrc.LOADING);
                     // 在线音乐歌词有翻译才能下载翻译
                     downloadLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getNetMusicInfo().hasTrans());
 
@@ -19600,7 +19601,7 @@ public class PlayerFrame extends JFrame {
                     desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
                 } else {
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
-                    desktopLyricDialog.setLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_MSG : BAD_FORMAT_LRC_MSG, 0);
+                    desktopLyricDialog.setLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_MSG : nextLrc == NextLrc.LOADING ? LRC_LOADING_MSG : BAD_FORMAT_LRC_MSG, 0);
                 }
                 if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
             });
@@ -20252,8 +20253,30 @@ public class PlayerFrame extends JFrame {
         nextLrc = NextLrc.NOT_EXISTS;
     }
 
+    // 歌词加载中
+    private void lrcLoading() {
+        clearLrc();
+
+        Statement empty = new Statement(0, " ");
+        for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
+        lrcListModel.addElement(new Statement(0, LRC_LOADING_MSG));
+        for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
+
+        row = LRC_INDEX;
+        nextLrc = NextLrc.LOADING;
+        originalRatio.set(0);
+        lrcScrollPane.setVValue(currScrollVal = 0);
+        // 更新歌词面板渲染
+        LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+        renderer.setRow(row);
+        lrcList.setModel(lrcListModel);
+    }
+
     // 加载歌词(如果有)
     private void loadLrc(AudioFile file, NetMusicInfo netMusicInfo, boolean reload, boolean loadTrans) {
+        if (player.isEmpty()) return;
+        clearLrc();
+
         LrcData lrcData, transData = null, romaData = null;
         String lrcPath = null, lrc = null;
         boolean isFile = netMusicInfo == null;
@@ -20294,7 +20317,6 @@ public class PlayerFrame extends JFrame {
                 else
                     for (Statement stmt : statements) stmt.setLyric(StringUtils.toRomaji(stmt.getLyric()));
             }
-            lrcList.setModel(emptyLrcListModel);
             if (reload) lrcListModel.clear();
             // 添加空白充数
             Statement empty = new Statement(0, " ");
@@ -20616,8 +20638,10 @@ public class PlayerFrame extends JFrame {
         Object o = pre ? list.getSelectedValue() : playQueue.getSelectedValue();
         currSong = pre ? list.getSelectedIndex() : playQueue.getSelectedIndex();
 
+        boolean isAudioFile = o instanceof AudioFile;
+
         // 本地文件
-        if (o instanceof AudioFile) {
+        if (isAudioFile) {
             file = (AudioFile) o;
             // 文件不存在，在不允许重试情况下询问是否从列表中删除
             if (!file.exists()) {
@@ -20641,7 +20665,7 @@ public class PlayerFrame extends JFrame {
             if (!file.isIntegrated()) MusicUtils.fillAudioFileInfo(file);
         }
         // 在线音乐
-        else if (o instanceof NetMusicInfo) {
+        else {
             try {
                 musicInfo = (NetMusicInfo) o;
                 // 如果歌曲信息不完整，获取歌曲额外的信息(除了 url)
@@ -20661,15 +20685,28 @@ public class PlayerFrame extends JFrame {
         }
         try {
             player.load(file, musicInfo);
-            clearLrc();
-            loadLrc(file, musicInfo, false, currLrcType == LyricType.TRANSLATION);
             loadUI(file, musicInfo);
 
-            if (file != null && musicInfo == null && !file.isIntegrated())
+            if (isAudioFile && !file.isIntegrated())
                 throw new IllegalMediaException("音频文件损坏");
 
-            // 加载在线音乐的 url
-            if (o instanceof NetMusicInfo) {
+            // 本地音乐直接加载歌词，在线音乐等待歌词缓冲完成再加载
+            if (isAudioFile) {
+                loadLrc(file, null, false, currLrcType == LyricType.TRANSLATION);
+            } else {
+                NetMusicInfo finalMusicInfo = musicInfo;
+                globalExecutor.submit(() -> {
+                    try {
+                        if (!finalMusicInfo.hasLrc()) lrcLoading();
+                        MusicServerUtils.fillLrc(finalMusicInfo);
+                    } catch (Exception e) {
+
+                    } finally {
+                        loadLrc(null, finalMusicInfo, false, currLrcType == LyricType.TRANSLATION);
+                    }
+                });
+
+                // 加载在线音乐的 url
                 MusicServerUtils.fillMusicUrl(musicInfo);
                 String url = musicInfo.getUrl();
                 // 歌曲无版权
@@ -20696,6 +20733,8 @@ public class PlayerFrame extends JFrame {
                     }
                     file = tmpFile;
                     if (loading.isShowing()) loading.stop();
+                    // 刷新加载歌曲
+                    player.load(file, musicInfo);
                 }
             }
 
@@ -22200,12 +22239,12 @@ public class PlayerFrame extends JFrame {
             // 播放状态
             case PlayerStatus.PLAYING:
                 // 淡出式暂停
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.25), new KeyValue(player.getMp().volumeProperty(), 0)));
-                    timeline.setOnFinished(event -> {
-                        player.pause();
-                        player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
-                    });
-                    timeline.play();
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.25), new KeyValue(player.getMp().volumeProperty(), 0)));
+                timeline.setOnFinished(event -> {
+                    player.pause();
+                    player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
+                });
+                timeline.play();
                 playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 if (miniDialog != null) {

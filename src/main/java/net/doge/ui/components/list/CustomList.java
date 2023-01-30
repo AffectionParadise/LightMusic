@@ -11,7 +11,7 @@ public class CustomList<E> extends JList<E> {
 
     @Override
     public void setModel(ListModel<E> model) {
-        if(getModel() == model) return;
+        if (getModel() == model) return;
         super.setModel(model);
     }
 }

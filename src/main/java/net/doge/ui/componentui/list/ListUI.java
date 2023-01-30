@@ -11,6 +11,7 @@ import java.awt.*;
  */
 public class ListUI extends BasicListUI {
     private int highlightIndex;
+    private ListModel emptyModel = new DefaultListModel();
 
     public ListUI(int highlightIndex) {
         this.highlightIndex = highlightIndex;

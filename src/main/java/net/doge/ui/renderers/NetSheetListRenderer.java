@@ -98,8 +98,8 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String source = StringUtils.textToHtml(NetMusicSource.names[netSheetInfo.getSource()]);
         String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netSheetInfo.getName(), maxWidth));
-        String difficulty = netSheetInfo.hasDifficulty() ? StringUtils.textToHtml(netSheetInfo.getDifficulty()) : "";
-        String musicKey = netSheetInfo.hasMusicKey() ? StringUtils.textToHtml(netSheetInfo.getMusicKey()) : "";
+        String difficulty = netSheetInfo.hasDifficulty() ? StringUtils.textToHtml(netSheetInfo.getDifficulty() + "难度") : "";
+        String musicKey = netSheetInfo.hasMusicKey() ? StringUtils.textToHtml(netSheetInfo.getMusicKey() + "调") : "";
         String playVersion = netSheetInfo.hasPlayVersion() ? StringUtils.textToHtml(netSheetInfo.getPlayVersion()) : "";
         String chordName = netSheetInfo.hasChordName() ? StringUtils.textToHtml(netSheetInfo.getChordName()) : "";
         String bpm = netSheetInfo.hasBpm() ? StringUtils.textToHtml(netSheetInfo.getBpm() + " 拍/分钟") : "";

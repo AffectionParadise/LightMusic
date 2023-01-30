@@ -3920,9 +3920,9 @@ public class MusicServerUtils {
 //                }
 //            }));
             // 填充歌词、翻译、罗马音
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                fillLrc(musicInfo);
+//            }));
         }
 
         // 酷狗
@@ -3961,7 +3961,7 @@ public class MusicServerUtils {
             }));
 //            // 填充歌词、翻译、罗马音
 //            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-//                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
+//                fillLrc(musicInfo);
 //            }));
         }
 
@@ -4006,9 +4006,9 @@ public class MusicServerUtils {
 //                }
 //            }));
             // 填充歌词、翻译、罗马音
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                fillLrc(musicInfo);
+//            }));
         }
 
         // 酷我
@@ -4041,9 +4041,9 @@ public class MusicServerUtils {
 //                }
 //            }));
             // 填充歌词、翻译、罗马音
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                fillLrc(musicInfo);
+//            }));
         }
 
         // 咪咕
@@ -4115,9 +4115,9 @@ public class MusicServerUtils {
 //                }
 //            }));
             // 填充歌词、翻译、罗马音
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                fillLrc(musicInfo);
+//            }));
         }
 
         // 喜马拉雅
@@ -4177,9 +4177,9 @@ public class MusicServerUtils {
 //                }
             }));
             // 填充歌词、翻译、罗马音
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                fillLrc(musicInfo);
+//            }));
             // 猫耳的专辑需要单独请求专辑信息接口！
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 String albumBody = HttpRequest.get(String.format(SONG_ALBUM_DETAIL_ME_API, songId))
@@ -4220,9 +4220,9 @@ public class MusicServerUtils {
 //                musicInfo.setUrl(url);
 //            }));
             // 填充歌词、翻译、罗马音
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                if (!musicInfo.isLrcIntegrated()) fillLrc(musicInfo);
-            }));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+//                fillLrc(musicInfo);
+//            }));
         }
 
         // 阻塞等待所有请求完成
@@ -21408,6 +21408,8 @@ public class MusicServerUtils {
      * 根据为 NetMusicInfo 填充歌词字符串（包括原文、翻译、罗马音），没有的部分填充 ""
      */
     public static void fillLrc(NetMusicInfo netMusicInfo) {
+        if(netMusicInfo.isLrcIntegrated()) return;
+        
         int source = netMusicInfo.getSource();
         String id = netMusicInfo.getId();
 //        String hash = netMusicInfo.getHash();

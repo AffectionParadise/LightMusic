@@ -256,7 +256,7 @@ public class MusicPlayer {
     // 初始化 MediaPlayer 对象
     public void initMp() {
         // 加载文件(在线音乐直接播放 url)
-        Media media = new Media(netMusicInfo != null ? netMusicInfo.getUrl() : audioFile.toURI().toString());
+        Media media = new Media(audioFile != null ? audioFile.toURI().toString() : netMusicInfo.getUrl());
         initRequestHeaders(netMusicInfo, media);
         mp = new MediaPlayer(media);
         // 初始化 MediaPlayer 设置
