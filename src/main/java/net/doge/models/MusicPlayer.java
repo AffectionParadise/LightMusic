@@ -226,7 +226,7 @@ public class MusicPlayer {
     }
 
     // 释放 MediaPlayer 对象
-    private void disposeMp() {
+    public void disposeMp() {
         if (mp == null) return;
         // 可能会造成死锁，交给线程池处理
         Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
@@ -278,10 +278,17 @@ public class MusicPlayer {
         status = PlayerStatus.PAUSED;
     }
 
+    // 停止
+    public void stop() {
+        if (mp == null) return;
+        status = PlayerStatus.STOPPED;
+    }
+
     // 重新播放
     public void replay() {
         if (mp == null) return;
         mp.seek(Duration.seconds(0));
+        status = PlayerStatus.PLAYING;
     }
 
     // 设置音量
@@ -291,9 +298,9 @@ public class MusicPlayer {
     }
 
     // 设置静音
-    public void setMute(boolean isMute) {
+    public void setMute(boolean mute) {
         if (mp == null) return;
-        mp.setMute(isMute);
+        mp.setMute(mute);
     }
 
     // 设置均衡
@@ -306,6 +313,8 @@ public class MusicPlayer {
     public void seek(double t) {
         if (mp == null) return;
         mp.seek(Duration.seconds(t));
+        // 如果停止播放，改变播放进度时先暂停，不然会自动播放
+        if(isStopped()) pause();
     }
 
     // 设置播放速率

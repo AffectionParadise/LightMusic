@@ -7,7 +7,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.AudioSpectrumListener;
@@ -683,7 +682,7 @@ public class PlayerFrame extends JFrame {
     // 当前歌词类型
     private int currLrcType = LyricType.ORIGINAL;
     // 歌词显示比率(源)
-    private SimpleDoubleProperty originalRatio = new SimpleDoubleProperty();
+    private double originalRatio;
     // 搜索每页大小
     private int limit = 50;
     private int commentLimit = 30;
@@ -19595,7 +19594,7 @@ public class PlayerFrame extends JFrame {
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
             lrcExecutor.submit(() -> {
                 if (nextLrc >= 0) {
-                    double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio.get();
+                    double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio;
                     if (currRatio < or) ratio = (or - currRatio) / lrcPiece + currRatio;
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
                     desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
@@ -20264,7 +20263,7 @@ public class PlayerFrame extends JFrame {
 
         row = LRC_INDEX;
         nextLrc = NextLrc.LOADING;
-        originalRatio.set(0);
+        originalRatio = 0;
         lrcScrollPane.setVValue(currScrollVal = 0);
         // 更新歌词面板渲染
         LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
@@ -20358,7 +20357,7 @@ public class PlayerFrame extends JFrame {
             nextLrc = isBadFormat ? NextLrc.BAD_FORMAT : NextLrc.NOT_EXISTS;
             row = LRC_INDEX;
         } finally {
-            originalRatio.set(0);
+            originalRatio = 0;
             lrcScrollPane.setVValue(currScrollVal = 0);
             if (!reload) {
                 // 更新歌词面板渲染
@@ -20390,6 +20389,7 @@ public class PlayerFrame extends JFrame {
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
             // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
             if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
+                player.disposeMp();
                 player.initMp();
                 if (!player.isPlaying()) return;
                 playLoaded(false);
@@ -20405,6 +20405,7 @@ public class PlayerFrame extends JFrame {
                     String url = MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
                     if (StringUtils.isNotEmpty(url)) netMusicInfo.setUrl(url);
                     else MusicServerUtils.fillAvailableMusicUrl(netMusicInfo);
+                    player.disposeMp();
                     player.initMp();
                     if (!player.isPlaying()) return;
                     playLoaded(false);
@@ -20466,19 +20467,19 @@ public class PlayerFrame extends JFrame {
                     LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
                     renderer.setRow(row);
                     nextLrc++;
-                    originalRatio.set(0);
+                    originalRatio = 0;
                     wrapped = true;
                 }
                 if (wrapped) return;
                 // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
                 if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() + lrcOffset)
-                    originalRatio.set(1);
+                    originalRatio = 1;
                 else {
                     double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() - lrcOffset) /
                             ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
                                     : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
                                     : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
-                    originalRatio.set(tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio);
+                    originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
 
@@ -20486,7 +20487,12 @@ public class PlayerFrame extends JFrame {
         });
         // 播放结束
         mp.setOnEndOfMedia(() -> {
+            // 播放结束后先设置歌词比率为 0，避免多余的滚动动画
+            originalRatio = 0;
             switch (currPlayMode) {
+                case PlayMode.DISABLED:
+                    stopPlayback();
+                    break;
                 case PlayMode.SINGLE:
                     playLoaded(true);
                     seekLrc(0);
@@ -20509,6 +20515,8 @@ public class PlayerFrame extends JFrame {
 
     // 播放载入的歌曲
     private void playLoaded(boolean replay) {
+        // 播放器停止后重新播放需要手动设置标题
+        if(player.isStopped()) updateTitle("播放中");
         if (replay) player.replay();
         else if (!player.play()) return;
         // 开始播放，若播放成功则更新 UI
@@ -20519,9 +20527,9 @@ public class PlayerFrame extends JFrame {
             miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
         }
         // 重绘歌单，刷新播放中的图标
-        musicList.repaint();
-        netMusicList.repaint();
-        playQueue.repaint();
+        if (musicList.isShowing()) musicList.repaint();
+        else if (netMusicList.isShowing()) netMusicList.repaint();
+        else if (playQueue.isShowing()) playQueue.repaint();
     }
 
     // 添加到下一首播放
@@ -20690,7 +20698,7 @@ public class PlayerFrame extends JFrame {
             if (isAudioFile && !file.isIntegrated())
                 throw new IllegalMediaException("音频文件损坏");
 
-            // 本地音乐直接加载歌词，在线音乐等待歌词缓冲完成再加载
+            // 本地音乐直接加载歌词，在线音乐等待歌词缓冲完成再加载 url
             if (isAudioFile) {
                 loadLrc(file, null, false, currLrcType == LyricType.TRANSLATION);
             } else {
@@ -22252,6 +22260,22 @@ public class PlayerFrame extends JFrame {
                     miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
                 }
                 break;
+            // 停止状态
+            case PlayerStatus.STOPPED:
+                playLoaded(true);
+                break;
+        }
+    }
+
+    // 停止播放
+    private void stopPlayback() {
+        updateTitle("已停止");
+        player.stop();
+        playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setToolTipText(PLAY_TIP);
+        if (miniDialog != null) {
+            miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
+            miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
         }
     }
 
@@ -22580,7 +22604,7 @@ public class PlayerFrame extends JFrame {
                     ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
                             : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
                             : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
-            originalRatio.set(tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio);
+            originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
             break;
         }
     }
