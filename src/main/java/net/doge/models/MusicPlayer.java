@@ -314,7 +314,7 @@ public class MusicPlayer {
         if (mp == null) return;
         mp.seek(Duration.seconds(t));
         // 如果停止播放，改变播放进度时先暂停，不然会自动播放
-        if(isStopped()) pause();
+        if (isStopped()) pause();
     }
 
     // 设置播放速率
@@ -352,24 +352,24 @@ public class MusicPlayer {
         return mp != null ? mp.getCurrentTime().toSeconds() : 0;
     }
 
-    // 获取当前进度比例
-    public double getCurrScale() {
-        double s = getCurrTimeSeconds() / musicInfo.getDuration();
-        return s <= 1 ? s : Double.isInfinite(s) ? 0 : 1;
-    }
-
     // 获取当前进度字符串
     public String getCurrTimeString() {
         return TimeUtils.format(getCurrTimeSeconds());
     }
 
-    // 获取总时间字符串
-    public String getDurationString() {
-        return TimeUtils.format(musicInfo.getDuration());
-    }
-
     // 获取总时间秒
     public double getDurationSeconds() {
         return musicInfo.getDuration();
+    }
+
+    // 获取总时间字符串
+    public String getDurationString() {
+        return TimeUtils.format(getDurationSeconds());
+    }
+
+    // 获取当前进度比例
+    public double getCurrScale() {
+        double s = getCurrTimeSeconds() / musicInfo.getDuration();
+        return s <= 1 ? s : Double.isInfinite(s) ? 0 : 1;
     }
 }

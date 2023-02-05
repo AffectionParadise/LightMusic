@@ -136,8 +136,7 @@ public class SliderUI extends BasicSliderUI {
                         SwingUtilities.convertPointToScreen(p, slider);
                         lrcDialog.setLocation(p.x - lrcDialog.getWidth() / 2 + thumbRect.width / 2, p.y - lrcDialog.getHeight() - 5);
                     }
-                } else
-                    dialog.setMessage("音量：" + slider.getValue());
+                } else dialog.setMessage("音量：" + slider.getValue());
                 if (!dialog.isShowing()) dialog.showDialog();
                 if (lrcDialog != null && lrcDialog.isNotEmpty() && !lrcDialog.isShowing()) lrcDialog.showDialog(false);
             }

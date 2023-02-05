@@ -20441,21 +20441,21 @@ public class PlayerFrame extends JFrame {
             }
         });
         // 播放器状态监听
-        mp.statusProperty().addListener(l -> {
+        mp.statusProperty().addListener((observable, oldValue, newValue) -> {
             if (player.isLoaded() && !"已就绪".equals(statusText)) updateTitle("已就绪");
             else if (player.isPlaying() && !"播放中".equals(statusText)) updateTitle("播放中");
             else if (player.isPaused() && !"暂停中".equals(statusText)) updateTitle("暂停中");
         });
         // 缓冲时间改变后刷新时间条
-        mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
-        mp.currentTimeProperty().addListener(l -> {
+        mp.bufferProgressTimeProperty().addListener((observable, oldValue, newValue) -> timeBar.repaint());
+        mp.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
             // 随着播放，设置进度条和时间标签的值
             try {
                 // 未被操作时频繁更新时间条
                 if (!timeBar.getValueIsAdjusting()) timeBar.setValue((int) (player.getCurrScale() * TIME_BAR_MAX));
                 // 监听并更新歌词(若有歌词)
                 if (nextLrc < 0) return;
-                double currTimeSeconds = player.getCurrTimeSeconds();
+                double currTimeSeconds = newValue.toSeconds();
                 // 判断是否该高亮下一行歌词，每次时间更新可能跳过多行歌词
                 boolean wrapped = false;
                 while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() + lrcOffset) {
@@ -20487,8 +20487,6 @@ public class PlayerFrame extends JFrame {
         });
         // 播放结束
         mp.setOnEndOfMedia(() -> {
-            // 播放结束后先设置歌词比率为 0，避免多余的滚动动画
-            originalRatio = 0;
             switch (currPlayMode) {
                 case PlayMode.DISABLED:
                     stopPlayback();
@@ -22263,6 +22261,7 @@ public class PlayerFrame extends JFrame {
             // 停止状态
             case PlayerStatus.STOPPED:
                 playLoaded(true);
+                seekLrc(0);
                 break;
         }
     }
@@ -22588,11 +22587,9 @@ public class PlayerFrame extends JFrame {
     private void seekLrc(double t) {
         if (nextLrc < 0) return;
         for (int i = 0, size = statements.size(); i < size; i++) {
-            if (t < statements.get(i).getTime() + lrcOffset) {
-                nextLrc = i;
-            } else if (i == size - 1) {
-                nextLrc = size;
-            } else continue;
+            if (t < statements.get(i).getTime() + lrcOffset) nextLrc = i;
+            else if (i == size - 1) nextLrc = size;
+            else continue;
             row = LRC_INDEX + 1 + (nextLrc - 1) * 2;
             if (!lrcScrollAnimation) {
                 currScrollVal = lrcScrollPane.getVValue();

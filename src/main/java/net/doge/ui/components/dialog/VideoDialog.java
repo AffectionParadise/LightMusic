@@ -249,16 +249,17 @@ public class VideoDialog extends AbstractTitledDialog {
         mp = new MediaPlayer(media);
         mediaView = new MediaView(mp);
         // 视频宽高控制
-        media.heightProperty().addListener((observableValue, oldValue, newValue) -> fitMediaView());
+        media.heightProperty().addListener((observable, oldValue, newValue) -> fitMediaView());
         // 刷新缓冲长度
-        mp.bufferProgressTimeProperty().addListener(l -> timeBar.repaint());
-        mp.currentTimeProperty().addListener(l -> {
+        mp.bufferProgressTimeProperty().addListener((observable, oldValue, newValue) -> timeBar.repaint());
+        mp.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+            double currTimeSeconds = newValue.toSeconds(), durationSeconds = media.getDuration().toSeconds();
             // 未被操作时频繁更新时间条
             if (!timeBar.getValueIsAdjusting())
-                timeBar.setValue((int) (mp.getCurrentTime().toSeconds() / media.getDuration().toSeconds() * TIME_BAR_MAX));
-            currTimeLabel.setText(TimeUtils.format(mp.getCurrentTime().toSeconds()));
+                timeBar.setValue((int) (currTimeSeconds / durationSeconds * TIME_BAR_MAX));
+            currTimeLabel.setText(TimeUtils.format(currTimeSeconds));
             if (resized) return;
-            durationLabel.setText(TimeUtils.format(media.getDuration().toSeconds()));
+            durationLabel.setText(TimeUtils.format(durationSeconds));
             // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
             String t = durationLabel.getText().replaceAll("[1-9]", "0");
             FontMetrics m = durationLabel.getFontMetrics(globalFont);
