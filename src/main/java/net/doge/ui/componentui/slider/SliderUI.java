@@ -29,6 +29,11 @@ public class SliderUI extends BasicSliderUI {
     private TipDialog dialog;
     private TipDialog lrcDialog;
 
+//    private int bufferedGap;
+//    private int currBufferedWidth;
+//    private int originBufferedWidth;
+//    private Timer bufferTimer;
+
     private boolean bigThumb;
     private boolean cursorOnSlider;
 
@@ -43,6 +48,8 @@ public class SliderUI extends BasicSliderUI {
         dialog = new TipDialog(f, 0);
         if (isTimeBar) lrcDialog = new TipDialog(f, 0);
         this.isTimeBar = isTimeBar;
+
+//        initTimer();
     }
 
     // 视频播放器
@@ -56,7 +63,29 @@ public class SliderUI extends BasicSliderUI {
         dialog = new TipDialog(f, 0);
         dialog.setAlwaysOnTop(true);
         this.isTimeBar = isTimeBar;
+
+//        initTimer();
     }
+
+//    // 初始化动画 Timer
+//    private void initTimer() {
+//        bufferTimer = new Timer(1, e -> {
+//            if (currBufferedWidth < originBufferedWidth)
+//                currBufferedWidth = Math.min(currBufferedWidth + bufferedGap, originBufferedWidth);
+//            else if (currBufferedWidth > originBufferedWidth)
+//                currBufferedWidth = Math.max(currBufferedWidth - bufferedGap, originBufferedWidth);
+//            else bufferTimer.stop();
+//            slider.repaint();
+//        });
+//    }
+
+//    // 更新缓冲长度
+//    public void updateBufferedWidth() {
+//        originBufferedWidth = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
+//                : (int) (mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width + 0.5);
+//        bufferedGap = 1;
+//        if (!bufferTimer.isRunning()) bufferTimer.start();
+//    }
 
     /**
      * 自定义把手

@@ -8002,6 +8002,7 @@ public class PlayerFrame extends JFrame {
                     netMvCountPanel.add(netMvCountLabel, netMvCountPanel.getComponentIndex(netMvCountLabel));
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
+                    netMvSourceComboBox.setVisible(false);
                     netMvSortTypeComboBox.setVisible(false);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
@@ -11727,6 +11728,7 @@ public class PlayerFrame extends JFrame {
                     // 更新数量显示
                     netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.setVisible(true);
+                    netMvSourceComboBox.setVisible(false);
                     netMvSortTypeComboBox.setVisible(false);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
@@ -20514,7 +20516,7 @@ public class PlayerFrame extends JFrame {
     // 播放载入的歌曲
     private void playLoaded(boolean replay) {
         // 播放器停止后重新播放需要手动设置标题
-        if(player.isStopped()) updateTitle("播放中");
+        if (player.isStopped()) updateTitle("播放中");
         if (replay) player.replay();
         else if (!player.play()) return;
         // 开始播放，若播放成功则更新 UI
