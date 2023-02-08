@@ -23,6 +23,8 @@ import java.awt.event.MouseEvent;
  */
 public class ComboBoxUI extends BasicComboBoxUI {
     private CustomComboBox comboBox;
+    private CustomComboPopup popup;
+    private CustomButton arrowButton;
     private PlayerFrame f;
     private Color textColor;
     private Color iconColor;
@@ -79,28 +81,52 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
     @Override
     protected JButton createArrowButton() {
-        CustomButton btn = new CustomButton();
-        btn.setIcon(arrowIcon);
-        btn.addMouseListener(new ButtonMouseListener(btn, f));
-        btn.addMouseListener(new MouseAdapter() {
+        arrowButton = new CustomButton();
+        arrowButton.setIcon(arrowIcon);
+        arrowButton.addMouseListener(new ButtonMouseListener(arrowButton, f));
+        arrowButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 comboBox.setEntered(true);
-                // 自动弹出菜单
-//                if (!comboBox.isPopupVisible()) comboBox.showPopup();
+                comboBox.showPopup();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if(!comboBox.getBounds().contains(e.getPoint())) comboBox.setEntered(false);
+                if(comboBox.getBounds().contains(e.getPoint())) return;
+                comboBox.setEntered(false);
             }
         });
-        return btn;
+        return arrowButton;
     }
 
     @Override
     protected ComboPopup createPopup() {
-        CustomComboPopup popup = new CustomComboPopup(comboBox, f);
+        popup = new CustomComboPopup(comboBox, f);
+        popup.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                validateHiding(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                validateHiding(e);
+            }
+
+            private void validateHiding(MouseEvent e) {
+                if(popup.getBounds().contains(e.getPoint())) return;
+                comboBox.hidePopup();
+            }
+        });
+        return popup;
+    }
+
+    public CustomButton getArrowButton() {
+        return arrowButton;
+    }
+
+    public CustomComboPopup getPopup() {
         return popup;
     }
 }
