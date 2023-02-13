@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * @Description 文件工具类
  * @Date 2020/12/21
  */
-public class FileUtils {
+public class FileUtil {
     private static Pattern filePattern = Pattern.compile("[\\\\/:*?\"<>|]");
 
     /**
@@ -326,7 +326,7 @@ public class FileUtils {
                 File f = new File(fileNameOrStr);
                 FileInputStream fis = new FileInputStream(f);
                 // 获取文件编码并读取歌词
-                bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtils.getCharsetName(f)));
+                bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtil.getCharsetName(f)));
             } else {
                 bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
             }

@@ -153,7 +153,7 @@ public class VideoDialog extends AbstractTitledDialog {
     private NetMvInfo netMvInfo;
 
     public VideoDialog(NetMvInfo netMvInfo, String dest, PlayerFrame f) {
-        super(f, StringUtils.textToHtml(netMvInfo.toSimpleString()));
+        super(f, StringUtil.textToHtml(netMvInfo.toSimpleString()));
         this.isLocal = dest != null;
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();
@@ -257,9 +257,8 @@ public class VideoDialog extends AbstractTitledDialog {
             // 未被操作时频繁更新时间条
             if (!timeBar.getValueIsAdjusting())
                 timeBar.setValue((int) (currTimeSeconds / durationSeconds * TIME_BAR_MAX));
-            currTimeLabel.setText(TimeUtils.format(currTimeSeconds));
             if (resized) return;
-            durationLabel.setText(TimeUtils.format(durationSeconds));
+            durationLabel.setText(TimeUtil.format(durationSeconds));
             // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
             String t = durationLabel.getText().replaceAll("[1-9]", "0");
             FontMetrics m = durationLabel.getFontMetrics(globalFont);
@@ -269,7 +268,7 @@ public class VideoDialog extends AbstractTitledDialog {
         mp.setOnEndOfMedia(() -> {
             mp.seek(Duration.seconds(0));
             mp.pause();
-            playOrPauseButton.setIcon(ImageUtils.dye(playIcon, f.currUIStyle.getIconColor()));
+            playOrPauseButton.setIcon(ImageUtil.dye(playIcon, f.currUIStyle.getIconColor()));
             timeBar.setValue(0);
             currTimeLabel.setText(DEFAULT_TIME);
         });
@@ -283,7 +282,7 @@ public class VideoDialog extends AbstractTitledDialog {
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE
                     || type == MediaException.Type.MEDIA_UNAVAILABLE
                     || type == MediaException.Type.UNKNOWN) {
-                if (!isLocal) netMvInfo.setUrl(uri = MusicServerUtils.fetchMvUrl(netMvInfo));
+                if (!isLocal) netMvInfo.setUrl(uri = MusicServerUtil.fetchMvUrl(netMvInfo));
                 initAgain();
             }
             // 尝试多次无效直接关闭窗口
@@ -338,16 +337,15 @@ public class VideoDialog extends AbstractTitledDialog {
         // 拖动播放时间条
         timeBar.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseDragged(MouseEvent e) {
-                double t = media.getDuration().toSeconds() * timeBar.getValue() / TIME_BAR_MAX;
-                currTimeLabel.setText(TimeUtils.format(t));
-            }
-
-            @Override
             public void mouseReleased(MouseEvent e) {
-                double t = media.getDuration().toSeconds() * timeBar.getValue() / TIME_BAR_MAX;
+                double t = (double) timeBar.getValue() / TIME_BAR_MAX * media.getDuration().toSeconds();
                 mp.seek(Duration.seconds(t));
             }
+        });
+        // 改变时间条的值，当前时间标签的值随之改变
+        timeBar.addChangeListener(e -> {
+            double t = (double) timeBar.getValue() / TIME_BAR_MAX * media.getDuration().toSeconds();
+            currTimeLabel.setText(TimeUtil.format(t));
         });
         // 设置进度条最佳大小
         progressPanel.add(currTimeLabel);
@@ -362,14 +360,14 @@ public class VideoDialog extends AbstractTitledDialog {
         Color sliderColor = f.currUIStyle.getSliderColor();
 
         playOrPauseButton.setToolTipText(PLAY_TIP);
-        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, iconColor));
+        playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, iconColor));
         playOrPauseButton.setPreferredSize(new Dimension(pauseIcon.getIconWidth() + 10, pauseIcon.getIconHeight() + 10));
         playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, f));
         playOrPauseButton.addActionListener(e -> playOrPause());
 
         // 快进
         forwardButton.setToolTipText(FORWARD_TIP);
-        forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), iconColor));
+        forwardButton.setIcon(ImageUtil.dye((ImageIcon) forwardButton.getIcon(), iconColor));
         forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, f));
         forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth() + 10, forwIcon.getIconHeight() + 10));
         forwardButton.addActionListener(e -> {
@@ -377,7 +375,7 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
-        backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), iconColor));
+        backwardButton.setIcon(ImageUtil.dye((ImageIcon) backwardButton.getIcon(), iconColor));
         backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, f));
         backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth() + 10, backwIcon.getIconHeight() + 10));
         backwardButton.addActionListener(e -> {
@@ -385,16 +383,16 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
-        muteButton.setIcon(ImageUtils.dye(soundIcon, iconColor));
+        muteButton.setIcon(ImageUtil.dye(soundIcon, iconColor));
         muteButton.addMouseListener(new ButtonMouseListener(muteButton, f));
         muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth() + 10, muteIcon.getIconHeight() + 10));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
-                muteButton.setIcon(ImageUtils.dye(muteIcon, iconColor));
+                muteButton.setIcon(ImageUtil.dye(muteIcon, iconColor));
             } else {
                 muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtils.dye(soundIcon, iconColor));
+                muteButton.setIcon(ImageUtil.dye(soundIcon, iconColor));
             }
             mp.setMute(isMute);
         });
@@ -406,35 +404,35 @@ public class VideoDialog extends AbstractTitledDialog {
             mp.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
             if (!isMute) return;
             muteButton.setToolTipText(SOUND_TIP);
-            muteButton.setIcon(ImageUtils.dye(soundIcon, iconColor));
+            muteButton.setIcon(ImageUtil.dye(soundIcon, iconColor));
             mp.setMute(isMute = false);
         });
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
-        collectButton.setIcon(ImageUtils.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, iconColor));
+        collectButton.setIcon(ImageUtil.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, iconColor));
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, f));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
         collectButton.addActionListener(e -> {
             if (!f.hasBeenCollected(netMvInfo)) {
                 // 加载 MV 基本信息
                 netMvInfo.setInvokeLater(() -> f.updateRenderer(f.collectionList));
-                GlobalExecutors.requestExecutor.submit(() -> MusicServerUtils.fillMvDetail(netMvInfo));
+                GlobalExecutors.requestExecutor.submit(() -> MusicServerUtil.fillMvDetail(netMvInfo));
                 f.mvCollectionModel.add(0, netMvInfo);
                 collectButton.setToolTipText(CANCEL_COLLECTION_TIP);
-                collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, iconColor));
+                collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, iconColor));
                 new TipDialog(f, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 f.mvCollectionModel.removeElement(netMvInfo);
                 collectButton.setToolTipText(COLLECT_TIP);
-                collectButton.setIcon(ImageUtils.dye(collectIcon, iconColor));
+                collectButton.setIcon(ImageUtil.dye(collectIcon, iconColor));
                 new TipDialog(f, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
         // 下载
         downloadButton.setEnabled(!isLocal || !netMvInfo.isMp4());
         downloadButton.setToolTipText(DOWNLOAD_TIP);
-        downloadButton.setIcon(ImageUtils.dye(downloadIcon, iconColor));
-        downloadButton.setDisabledIcon(ImageUtils.dye(downloadIcon, ColorUtils.darker(iconColor)));
+        downloadButton.setIcon(ImageUtil.dye(downloadIcon, iconColor));
+        downloadButton.setDisabledIcon(ImageUtil.dye(downloadIcon, ColorUtil.darker(iconColor)));
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, f));
         downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + 10, downloadIcon.getIconHeight() + 10));
         downloadButton.addActionListener(e -> {
@@ -442,7 +440,7 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         rateButton.setForeground(iconColor);
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), iconColor));
+        rateButton.setIcon(ImageUtil.dye((ImageIcon) rateButton.getIcon(), iconColor));
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, f));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth() + 10, rateIcon.getIconHeight() + 10));
         rateButton.addActionListener(e -> {
@@ -467,7 +465,7 @@ public class VideoDialog extends AbstractTitledDialog {
         }
         fobTimeButton.setForeground(iconColor);
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
-        fobTimeButton.setIcon(ImageUtils.dye((ImageIcon) fobTimeButton.getIcon(), iconColor));
+        fobTimeButton.setIcon(ImageUtil.dye((ImageIcon) fobTimeButton.getIcon(), iconColor));
         fobTimeButton.addMouseListener(new ButtonMouseListener(fobTimeButton, f));
         fobTimeButton.setPreferredSize(new Dimension(fobTimeIcon.getIconWidth() + 10, fobTimeIcon.getIconHeight() + 10));
         fobTimeButton.setComponentPopupMenu(fobTimePopupMenu);
@@ -479,7 +477,7 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         fullScreenButton.setForeground(iconColor);
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
-        fullScreenButton.setIcon(ImageUtils.dye((ImageIcon) fullScreenButton.getIcon(), iconColor));
+        fullScreenButton.setIcon(ImageUtil.dye((ImageIcon) fullScreenButton.getIcon(), iconColor));
         fullScreenButton.addMouseListener(new ButtonMouseListener(fullScreenButton, f));
         fullScreenButton.setPreferredSize(new Dimension(fullScreenIcon.getIconWidth() + 10, fullScreenIcon.getIconHeight() + 10));
         fullScreenButton.addActionListener(e -> toFullScreen());
@@ -549,7 +547,7 @@ public class VideoDialog extends AbstractTitledDialog {
         volumeSlider.setValue(f.volumeSlider.getValue());
         mp.setRate(f.currVideoRate);
         mp.play();
-        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, f.currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, f.currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PAUSE_TIP);
     }
 
@@ -557,12 +555,12 @@ public class VideoDialog extends AbstractTitledDialog {
         switch (mp.getStatus()) {
             case PLAYING:
                 mp.pause();
-                playOrPauseButton.setIcon(ImageUtils.dye(playIcon, f.currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(playIcon, f.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 break;
             case PAUSED:
                 mp.play();
-                playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, f.currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, f.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
                 break;
             case READY:
@@ -581,7 +579,7 @@ public class VideoDialog extends AbstractTitledDialog {
         Component[] components = fobTimePopupMenu.getComponents();
         for (Component c : components) {
             CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-            if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, f.currUIStyle.getIconColor()));
+            if (mi.isSelected()) mi.setIcon(ImageUtil.dye(dotIcon, f.currUIStyle.getIconColor()));
             else mi.setIcon(null);
         }
     }

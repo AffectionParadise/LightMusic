@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import net.doge.constants.Fonts;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,7 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
         outerPanel.add(nameLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(file.getAbsolutePath(), maxWidth));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(file.getAbsolutePath(), maxWidth));
 
         nameLabel.setText(name);
 

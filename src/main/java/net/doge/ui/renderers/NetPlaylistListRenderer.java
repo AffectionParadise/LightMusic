@@ -10,8 +10,8 @@ import net.doge.constants.SimplePath;
 import net.doge.models.entity.NetPlaylistInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,11 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon playlistIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "playlistItem.png"), ImageConstants.profileWidth));
+    private ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playlistItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        playlistIcon = ImageUtils.dye(playlistIcon, iconColor);
+        playlistIcon = ImageUtil.dye(playlistIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -84,10 +84,10 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netPlaylistInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netPlaylistInfo.getName(), maxWidth));
-        String creator = netPlaylistInfo.hasCreator() ? StringUtils.textToHtml(StringUtils.wrapLineByWidth(netPlaylistInfo.getCreator(), maxWidth)) : "";
-        String playCount = netPlaylistInfo.hasPlayCount() ? StringUtils.formatNumber(netPlaylistInfo.getPlayCount()) : "";
+        String source = StringUtil.textToHtml(NetMusicSource.names[netPlaylistInfo.getSource()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getName(), maxWidth));
+        String creator = netPlaylistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getCreator(), maxWidth)) : "";
+        String playCount = netPlaylistInfo.hasPlayCount() ? StringUtil.formatNumber(netPlaylistInfo.getPlayCount()) : "";
         String trackCount = netPlaylistInfo.hasTrackCount() ? netPlaylistInfo.getTrackCount() + " 歌曲" : "";
 
         iconLabel.setText(source);

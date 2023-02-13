@@ -8,7 +8,7 @@ import net.sf.json.JSONObject;
  * @Description 地区工具类
  * @Date 2020/12/15
  */
-public class AreaUtils {
+public class AreaUtil {
     private static JSONArray jsonArray;
 
     static {

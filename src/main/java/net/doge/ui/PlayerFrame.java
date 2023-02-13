@@ -193,7 +193,7 @@ public class PlayerFrame extends JFrame {
     private final String ASK_CLEAR_PLAY_QUEUE_MSG = "是否要清空播放队列？";
     // 加载 MV 提示
     private final String LOADING_MV_MSG = "请稍候，MV 加载中......";
-    private final String DEFAULT_TIME = TimeUtils.format(0);
+    private final String DEFAULT_TIME = TimeUtil.format(0);
     private final String PLAY_MENU_ITEM_TEXT = "播放";
     private final String NEXT_PLAY_MENU_ITEM_TEXT = "下一首播放";
     private final String OPEN_MENU_ITEM_TEXT = "打开";
@@ -777,8 +777,8 @@ public class PlayerFrame extends JFrame {
     private BufferedImage loadingImage;
 
     {
-        defaultAlbumImage = ImageUtils.read(SimplePath.ICON_PATH + "album.png");
-        loadingImage = ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
+        defaultAlbumImage = ImageUtil.read(SimplePath.ICON_PATH + "album.png");
+        loadingImage = ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
     }
 
     // 全局字体
@@ -2303,10 +2303,10 @@ public class PlayerFrame extends JFrame {
     private void updateMotto() {
         globalExecutor.submit(() -> {
             try {
-                motto = MusicServerUtils.getMotto();
+                motto = MusicServerUtil.getMotto();
                 if (player.loadedMusic()) return;
                 titleLabel.setVisible(false);
-                titleLabel.setText(StringUtils.textToHtmlWithSpace(TITLE + "\n" + motto));
+                titleLabel.setText(StringUtil.textToHtmlWithSpace(TITLE + "\n" + motto));
                 titleLabel.setVisible(true);
             } catch (Exception e) {
                 titleLabel.setText(TITLE);
@@ -2655,7 +2655,7 @@ public class PlayerFrame extends JFrame {
             miniButton.setDrawBg(false);
             miniDialog = new MiniDialog(THIS);
             miniDialog.showDialog();
-            miniButton.setIcon(ImageUtils.dye(miniIcon, currUIStyle.getIconColor()));
+            miniButton.setIcon(ImageUtil.dye(miniIcon, currUIStyle.getIconColor()));
         });
         // 最小化
         minimizeButton.addActionListener(e -> {
@@ -2666,7 +2666,7 @@ public class PlayerFrame extends JFrame {
         maximizeButton.addActionListener(e -> {
             if (windowState == NORMAL) {
                 windowState = WindowState.MAXIMIZED;
-                maximizeButton.setIcon(ImageUtils.dye(restoreIcon, currUIStyle.getIconColor()));
+                maximizeButton.setIcon(ImageUtil.dye(restoreIcon, currUIStyle.getIconColor()));
                 // 取消桌面歌词显示
                 desktopLyricDialog.setVisible(false);
                 // 不覆盖任务栏
@@ -2675,7 +2675,7 @@ public class PlayerFrame extends JFrame {
                 setBounds(0, 0, screenSize.width, screenSize.height - insets.bottom);
             } else {
                 windowState = WindowState.NORMAL;
-                maximizeButton.setIcon(ImageUtils.dye(maximizeIcon, currUIStyle.getIconColor()));
+                maximizeButton.setIcon(ImageUtil.dye(maximizeIcon, currUIStyle.getIconColor()));
                 // 如果开启桌面歌词，恢复桌面歌词显示
                 desktopLyricDialog.setVisible(showDesktopLyric);
                 // 恢复窗口大小
@@ -2795,10 +2795,10 @@ public class PlayerFrame extends JFrame {
                 if (released && !currKeys.isEmpty()) currKeys.removeLastOccurrence(code);
                 else if (pressed && !currKeys.contains(code)) currKeys.add(code);
                 else return;
-                if (ListUtils.equals(playOrPauseKeys, currKeys)) videoDialog.playOrPause();
-                else if (ListUtils.equals(backwardKeys, currKeys)) videoDialog.backwardButton.doClick();
-                else if (ListUtils.equals(forwardKeys, currKeys)) videoDialog.forwardButton.doClick();
-                else if (ListUtils.equals(videoFullScreenKeys, currKeys)) videoDialog.switchWindow();
+                if (ListUtil.equals(playOrPauseKeys, currKeys)) videoDialog.playOrPause();
+                else if (ListUtil.equals(backwardKeys, currKeys)) videoDialog.backwardButton.doClick();
+                else if (ListUtil.equals(forwardKeys, currKeys)) videoDialog.forwardButton.doClick();
+                else if (ListUtil.equals(videoFullScreenKeys, currKeys)) videoDialog.switchWindow();
             } else {
                 // 搜索框输入时不受影响
                 if (!collectionPageTextField.hasFocus()
@@ -2821,11 +2821,11 @@ public class PlayerFrame extends JFrame {
                         else if (pressed && !currKeys.contains(code)) currKeys.add(code);
                         else return;
                         if (videoDialog != null) return;
-                        if (ListUtils.equals(playOrPauseKeys, currKeys)) playOrPause();
-                        else if (ListUtils.equals(playLastKeys, currKeys)) playLast();
-                        else if (ListUtils.equals(playNextKeys, currKeys)) playNext();
-                        else if (ListUtils.equals(backwardKeys, currKeys)) backwardButton.doClick();
-                        else if (ListUtils.equals(forwardKeys, currKeys)) forwardButton.doClick();
+                        if (ListUtil.equals(playOrPauseKeys, currKeys)) playOrPause();
+                        else if (ListUtil.equals(playLastKeys, currKeys)) playLast();
+                        else if (ListUtil.equals(playNextKeys, currKeys)) playNext();
+                        else if (ListUtil.equals(backwardKeys, currKeys)) backwardButton.doClick();
+                        else if (ListUtil.equals(forwardKeys, currKeys)) forwardButton.doClick();
                     }
                 } else if (currDialogs.isEmpty() && code == KeyEvent.VK_ENTER && released) {
                     // 回车跳页
@@ -2859,7 +2859,7 @@ public class PlayerFrame extends JFrame {
 
     // 加载配置
     private boolean loadConfig() {
-        JSONObject config = JsonUtils.readJson(ConfigConstants.fileName);
+        JSONObject config = JsonUtil.readJson(ConfigConstants.fileName);
         // 载入已保存的自定义风格(逆序加载，这样才能保持顺序一致)
         JSONArray styleArray = config.optJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
         if (styleArray != null) {
@@ -2869,51 +2869,51 @@ public class PlayerFrame extends JFrame {
                         UIStyleConstants.CUSTOM,
                         styleObject.optString("name"),
                         styleObject.optString("imgPath"),
-                        ColorUtils.RGBStringToColor(styleObject.optString("bgColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("foreColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("selectedColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("lrcColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("highlightColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("textColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("timeBarColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("iconColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("scrollBarColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("sliderColor")),
-                        ColorUtils.RGBStringToColor(styleObject.optString("spectrumColor"))
+                        ColorUtil.RGBStringToColor(styleObject.optString("bgColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("foreColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("selectedColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("lrcColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("highlightColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("textColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("timeBarColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("iconColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("scrollBarColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("sliderColor")),
+                        ColorUtil.RGBStringToColor(styleObject.optString("spectrumColor"))
                 );
                 addStyle(style);
             }
         }
         // 载入是否启用快捷键
         keyEnabled = config.optBoolean(ConfigConstants.KEY_ENABLED, true);
-        playOrPauseKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.PLAY_OR_PAUSE_KEYS));
+        playOrPauseKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.PLAY_OR_PAUSE_KEYS));
         if (playOrPauseKeys.isEmpty()) {
             playOrPauseKeys.add(KeyEvent.VK_CONTROL);
             playOrPauseKeys.add(KeyEvent.VK_F5);
         }
-        playLastKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.PLAY_LAST_KEYS));
+        playLastKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.PLAY_LAST_KEYS));
         if (playLastKeys.isEmpty()) {
             playLastKeys.add(KeyEvent.VK_CONTROL);
             playLastKeys.add(KeyEvent.VK_LEFT);
         }
-        playNextKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.PLAY_NEXT_KEYS));
+        playNextKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.PLAY_NEXT_KEYS));
         if (playNextKeys.isEmpty()) {
             playNextKeys.add(KeyEvent.VK_CONTROL);
             playNextKeys.add(KeyEvent.VK_RIGHT);
         }
-        backwardKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.BACKWARD_KEYS));
+        backwardKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.BACKWARD_KEYS));
         if (backwardKeys.isEmpty()) {
             backwardKeys.add(KeyEvent.VK_CONTROL);
             backwardKeys.add(KeyEvent.VK_ALT);
             backwardKeys.add(KeyEvent.VK_LEFT);
         }
-        forwardKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.FORWARD_KEYS));
+        forwardKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.FORWARD_KEYS));
         if (forwardKeys.isEmpty()) {
             forwardKeys.add(KeyEvent.VK_CONTROL);
             forwardKeys.add(KeyEvent.VK_ALT);
             forwardKeys.add(KeyEvent.VK_RIGHT);
         }
-        videoFullScreenKeys = KeyUtils.strToCodes(config.optString(ConfigConstants.VIDEO_FULL_SCREEN_KEYS));
+        videoFullScreenKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.VIDEO_FULL_SCREEN_KEYS));
         if (videoFullScreenKeys.isEmpty()) {
             videoFullScreenKeys.add(KeyEvent.VK_F11);
         }
@@ -2933,19 +2933,19 @@ public class PlayerFrame extends JFrame {
         // 载入歌曲下载路径
         String musicDownPath = config.optString(ConfigConstants.MUSIC_DOWN_PATH);
         if (!musicDownPath.isEmpty()) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
-        FileUtils.makeSureDir(musicDownPath);
+        FileUtil.makeSureDir(musicDownPath);
         // 载入 MV 下载路径
         String mvDownPath = config.optString(ConfigConstants.MV_DOWN_PATH);
         if (!mvDownPath.isEmpty()) SimplePath.DOWNLOAD_MV_PATH = mvDownPath;
-        FileUtils.makeSureDir(mvDownPath);
+        FileUtil.makeSureDir(mvDownPath);
         // 载入缓存路径
         String cachePath = config.optString(ConfigConstants.CACHE_PATH);
         if (!cachePath.isEmpty()) {
             SimplePath.CACHE_PATH = cachePath;
             SimplePath.IMG_CACHE_PATH = cachePath + (cachePath.endsWith("/") ? "" : "/") + "img/";
         }
-        FileUtils.makeSureDir(cachePath);
-        FileUtils.makeSureDir(SimplePath.IMG_CACHE_PATH);
+        FileUtil.makeSureDir(cachePath);
+        FileUtil.makeSureDir(SimplePath.IMG_CACHE_PATH);
         // 载入最大缓存大小
         maxCacheSize = config.optLong(ConfigConstants.MAX_CACHE_SIZE, 1024);
         // 载入最大播放历史数量
@@ -2957,14 +2957,14 @@ public class PlayerFrame extends JFrame {
         GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(maxConcurrentTaskCount);
         // 载入是否显示频谱
         showSpectrum = config.optBoolean(ConfigConstants.SHOW_SPECTRUM, true);
-        switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
+        switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
         // 载入是否高斯模糊
         gsOn = config.optBoolean(ConfigConstants.GS_ON, false);
         // 载入是否暗化
         darkerOn = config.optBoolean(ConfigConstants.DARKER_ON, true);
         // 载入模糊类型
         blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurType.OFF);
-        blurButton.setIcon(ImageUtils.dye(blurType == BlurType.CV ? cvBlurIcon : blurType == BlurType.MC ? mcBlurIcon :
+        blurButton.setIcon(ImageUtil.dye(blurType == BlurType.CV ? cvBlurIcon : blurType == BlurType.MC ? mcBlurIcon :
                 blurType == BlurType.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
@@ -2978,7 +2978,7 @@ public class PlayerFrame extends JFrame {
         desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
         if (showDesktopLyric = config.optBoolean(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
             desktopLyricDialog.setVisible(true);
-        } else desktopLyricButton.setIcon(ImageUtils.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
+        } else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
         // 载入是否锁定桌面歌词
         desktopLyricLocked = config.optBoolean(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
         // 载入桌面歌词坐标
@@ -3032,7 +3032,7 @@ public class PlayerFrame extends JFrame {
         volumeSlider.setValue(config.optInt(ConfigConstants.VOLUME, DEFAULT_VOLUME));
         // 载入是否静音
         isMute = config.optBoolean(ConfigConstants.MUTE, false);
-        if (isMute) muteButton.setIcon(ImageUtils.dye(muteIcon, currUIStyle.getIconColor()));
+        if (isMute) muteButton.setIcon(ImageUtil.dye(muteIcon, currUIStyle.getIconColor()));
         // 载入音效
         currSoundEffect = config.optInt(ConfigConstants.SOUND_EFFECT, 0);
         JSONArray edArray = config.optJSONArray(ConfigConstants.EQUALIZER_DATA);
@@ -3052,21 +3052,21 @@ public class PlayerFrame extends JFrame {
         // 载入中文类型
         currChineseType = config.optInt(ConfigConstants.CHINESE_TYPE, ChineseType.SIMPLIFIED);
         if (currChineseType == ChineseType.SIMPLIFIED)
-            switchChineseButton.setIcon(ImageUtils.dye(simpChineseIcon, currUIStyle.getIconColor()));
+            switchChineseButton.setIcon(ImageUtil.dye(simpChineseIcon, currUIStyle.getIconColor()));
         else
-            switchChineseButton.setIcon(ImageUtils.dye(tradChineseIcon, currUIStyle.getIconColor()));
+            switchChineseButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
         // 载入日文类型
         currJapaneseType = config.optInt(ConfigConstants.JAPANESE_TYPE, JapaneseType.KANA);
         if (currJapaneseType == JapaneseType.KANA)
-            switchJapaneseButton.setIcon(ImageUtils.dye(kanaIcon, currUIStyle.getIconColor()));
+            switchJapaneseButton.setIcon(ImageUtil.dye(kanaIcon, currUIStyle.getIconColor()));
         else
-            switchJapaneseButton.setIcon(ImageUtils.dye(romajiIcon, currUIStyle.getIconColor()));
+            switchJapaneseButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
         // 载入歌词类型
         currLrcType = config.optInt(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL);
         if (currLrcType == LyricType.ORIGINAL)
-            switchLrcTypeButton.setIcon(ImageUtils.dye(originalIcon, currUIStyle.getIconColor()));
+            switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
         else if (currLrcType == LyricType.TRANSLATION)
-            switchLrcTypeButton.setIcon(ImageUtils.dye(translationIcon, currUIStyle.getIconColor()));
+            switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
         // 载入排序顺序
         currSortOrder = config.optInt(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
         ascendingMenuItem.setSelected(currSortOrder == SortMethod.ASCENDING);
@@ -3093,7 +3093,7 @@ public class PlayerFrame extends JFrame {
                 if (!s.contains("\"")) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.submit(() -> {
-                        MusicUtils.fillAudioFileInfo(audioFile);
+                        MusicUtil.fillAudioFileInfo(audioFile);
                         musicList.repaint();
                     });
                     historyModel.addElement(audioFile);
@@ -3149,10 +3149,10 @@ public class PlayerFrame extends JFrame {
                         try {
                             String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleLrcFileName();
                             // 写入歌曲信息
-                            if (netMusicInfo.isMp3()) MusicUtils.writeMP3Info(dest, netMusicInfo);
+                            if (netMusicInfo.isMp3()) MusicUtil.writeMP3Info(dest, netMusicInfo);
                             // 自动下载歌词
-                            if (isAutoDownloadLrc && StringUtils.isNotEmpty(netMusicInfo.getLrc()))
-                                FileUtils.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
+                            if (isAutoDownloadLrc && StringUtil.isNotEmpty(netMusicInfo.getLrc()))
+                                FileUtil.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -3188,7 +3188,7 @@ public class PlayerFrame extends JFrame {
                 if (!s.contains("\"")) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.submit(() -> {
-                        MusicUtils.fillAudioFileInfo(audioFile);
+                        MusicUtil.fillAudioFileInfo(audioFile);
                         playQueue.repaint();
                     });
                     playQueueModel.addElement(audioFile);
@@ -3450,7 +3450,7 @@ public class PlayerFrame extends JFrame {
                 String filePath = musicJsonArray.getString(i);
                 AudioFile audioFile = new AudioFile(filePath);
                 globalExecutor.submit(() -> {
-                    MusicUtils.fillAudioFileInfo(audioFile);
+                    MusicUtil.fillAudioFileInfo(audioFile);
                     musicList.repaint();
                 });
                 musicListModel.addElement(audioFile);
@@ -3469,7 +3469,7 @@ public class PlayerFrame extends JFrame {
                 if (!s.contains("\"")) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.submit(() -> {
-                        MusicUtils.fillAudioFileInfo(audioFile);
+                        MusicUtil.fillAudioFileInfo(audioFile);
                         musicList.repaint();
                     });
                     collectionModel.addElement(audioFile);
@@ -3654,31 +3654,31 @@ public class PlayerFrame extends JFrame {
                 JSONObject styleObject = new JSONObject();
                 styleObject.put("name", style.getStyleName());
                 styleObject.put("imgPath", style.getStyleImgPath());
-                styleObject.put("bgColor", ColorUtils.colorToRGBString(style.getBgColor()));
-                styleObject.put("foreColor", ColorUtils.colorToRGBString(style.getForeColor()));
-                styleObject.put("selectedColor", ColorUtils.colorToRGBString(style.getSelectedColor()));
-                styleObject.put("lrcColor", ColorUtils.colorToRGBString(style.getLrcColor()));
-                styleObject.put("highlightColor", ColorUtils.colorToRGBString(style.getHighlightColor()));
-                styleObject.put("textColor", ColorUtils.colorToRGBString(style.getTextColor()));
-                styleObject.put("timeBarColor", ColorUtils.colorToRGBString(style.getTimeBarColor()));
-                styleObject.put("iconColor", ColorUtils.colorToRGBString(style.getIconColor()));
-                styleObject.put("scrollBarColor", ColorUtils.colorToRGBString(style.getScrollBarColor()));
-                styleObject.put("sliderColor", ColorUtils.colorToRGBString(style.getSliderColor()));
-                styleObject.put("spectrumColor", ColorUtils.colorToRGBString(style.getSpectrumColor()));
+                styleObject.put("bgColor", ColorUtil.colorToRGBString(style.getBgColor()));
+                styleObject.put("foreColor", ColorUtil.colorToRGBString(style.getForeColor()));
+                styleObject.put("selectedColor", ColorUtil.colorToRGBString(style.getSelectedColor()));
+                styleObject.put("lrcColor", ColorUtil.colorToRGBString(style.getLrcColor()));
+                styleObject.put("highlightColor", ColorUtil.colorToRGBString(style.getHighlightColor()));
+                styleObject.put("textColor", ColorUtil.colorToRGBString(style.getTextColor()));
+                styleObject.put("timeBarColor", ColorUtil.colorToRGBString(style.getTimeBarColor()));
+                styleObject.put("iconColor", ColorUtil.colorToRGBString(style.getIconColor()));
+                styleObject.put("scrollBarColor", ColorUtil.colorToRGBString(style.getScrollBarColor()));
+                styleObject.put("sliderColor", ColorUtil.colorToRGBString(style.getSliderColor()));
+                styleObject.put("spectrumColor", ColorUtil.colorToRGBString(style.getSpectrumColor()));
                 styleArray.add(styleObject);
             }
         }
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
         // 当前 UI 风格索引
-        config.put(ConfigConstants.CURR_UI_STYLE, ListUtils.search(styles, currUIStyle));
+        config.put(ConfigConstants.CURR_UI_STYLE, ListUtil.search(styles, currUIStyle));
         // 存入快捷键
         config.put(ConfigConstants.KEY_ENABLED, keyEnabled);
-        config.put(ConfigConstants.PLAY_OR_PAUSE_KEYS, KeyUtils.codesToStr(playOrPauseKeys));
-        config.put(ConfigConstants.PLAY_LAST_KEYS, KeyUtils.codesToStr(playLastKeys));
-        config.put(ConfigConstants.PLAY_NEXT_KEYS, KeyUtils.codesToStr(playNextKeys));
-        config.put(ConfigConstants.BACKWARD_KEYS, KeyUtils.codesToStr(backwardKeys));
-        config.put(ConfigConstants.FORWARD_KEYS, KeyUtils.codesToStr(forwardKeys));
-        config.put(ConfigConstants.VIDEO_FULL_SCREEN_KEYS, KeyUtils.codesToStr(videoFullScreenKeys));
+        config.put(ConfigConstants.PLAY_OR_PAUSE_KEYS, KeyUtil.codesToStr(playOrPauseKeys));
+        config.put(ConfigConstants.PLAY_LAST_KEYS, KeyUtil.codesToStr(playLastKeys));
+        config.put(ConfigConstants.PLAY_NEXT_KEYS, KeyUtil.codesToStr(playNextKeys));
+        config.put(ConfigConstants.BACKWARD_KEYS, KeyUtil.codesToStr(backwardKeys));
+        config.put(ConfigConstants.FORWARD_KEYS, KeyUtil.codesToStr(forwardKeys));
+        config.put(ConfigConstants.VIDEO_FULL_SCREEN_KEYS, KeyUtil.codesToStr(videoFullScreenKeys));
         // 存入选项卡
         config.put(ConfigConstants.TAB_INDEX, tabbedPane.getSelectedIndex());
         // 存入个人音乐选项卡
@@ -3942,7 +3942,7 @@ public class PlayerFrame extends JFrame {
         }
         config.put(ConfigConstants.NET_USER_HISTORY_SEARCH, historySearchJsonArray);
 
-        JsonUtils.saveJson(config, ConfigConstants.fileName);
+        JsonUtil.saveJson(config, ConfigConstants.fileName);
     }
 
     // 存入本地音乐列表
@@ -4265,7 +4265,7 @@ public class PlayerFrame extends JFrame {
                         if (file.exists()) {
                             AudioFile audioFile = new AudioFile(file);
                             globalExecutor.submit(() -> {
-                                MusicUtils.fillAudioFileInfo(audioFile);
+                                MusicUtil.fillAudioFileInfo(audioFile);
                                 musicList.repaint();
                             });
                             musicListModel.addElement(audioFile);
@@ -4315,11 +4315,11 @@ public class PlayerFrame extends JFrame {
                     int audioFileCount = 0;
                     for (File file : files) {
                         // 支持这种文件格式才添加
-                        if (player.support(FileUtils.getSuffix(file))) {
+                        if (player.support(FileUtil.getSuffix(file))) {
                             audioFileCount++;
                             AudioFile audioFile = new AudioFile(file);
                             globalExecutor.submit(() -> {
-                                MusicUtils.fillAudioFileInfo(audioFile);
+                                MusicUtil.fillAudioFileInfo(audioFile);
                                 musicList.repaint();
                             });
                             musicListModel.addElement(audioFile);
@@ -4349,7 +4349,7 @@ public class PlayerFrame extends JFrame {
     private void clearCacheInit() {
         clearCache.addActionListener(e -> {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                    String.format(ASK_CLEAR_CACHE_MSG, FileUtils.getUnitString(FileUtils.getDirOrFileSize(new File(SimplePath.CACHE_PATH)))), "是", "否");
+                    String.format(ASK_CLEAR_CACHE_MSG, FileUtil.getUnitString(FileUtil.getDirOrFileSize(new File(SimplePath.CACHE_PATH)))), "是", "否");
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response == JOptionPane.YES_OPTION) {
@@ -4912,7 +4912,7 @@ public class PlayerFrame extends JFrame {
                         NetPlaylistInfo playlistInfo = (NetPlaylistInfo) playlistCollectionModel.get(finalI);
                         if (playlistInfo.isIntegrated()) return;
                         playlistInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtils.preloadPlaylistInfo(playlistInfo);
+                        MusicServerUtil.preloadPlaylistInfo(playlistInfo);
                     });
                 }
             } else if (selectedIndex == CollectionTabIndex.ALBUM) {
@@ -4933,7 +4933,7 @@ public class PlayerFrame extends JFrame {
                         NetAlbumInfo albumInfo = (NetAlbumInfo) albumCollectionModel.get(finalI);
                         if (albumInfo.isIntegrated()) return;
                         albumInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtils.preloadAlbumInfo(albumInfo);
+                        MusicServerUtil.preloadAlbumInfo(albumInfo);
                     });
                 }
             } else if (selectedIndex == CollectionTabIndex.ARTIST) {
@@ -4954,7 +4954,7 @@ public class PlayerFrame extends JFrame {
                         NetArtistInfo artistInfo = (NetArtistInfo) artistCollectionModel.get(finalI);
                         if (artistInfo.isIntegrated()) return;
                         artistInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtils.preloadArtistInfo(artistInfo);
+                        MusicServerUtil.preloadArtistInfo(artistInfo);
                     });
                 }
             } else if (selectedIndex == CollectionTabIndex.RADIO) {
@@ -4975,7 +4975,7 @@ public class PlayerFrame extends JFrame {
                         NetRadioInfo radioInfo = (NetRadioInfo) radioCollectionModel.get(finalI);
                         if (radioInfo.isIntegrated()) return;
                         radioInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtils.preloadRadioInfo(radioInfo);
+                        MusicServerUtil.preloadRadioInfo(radioInfo);
                     });
                 }
             } else if (selectedIndex == CollectionTabIndex.MV) {
@@ -4996,7 +4996,7 @@ public class PlayerFrame extends JFrame {
                         NetMvInfo mvInfo = (NetMvInfo) mvCollectionModel.get(finalI);
                         if (mvInfo.isIntegrated()) return;
                         mvInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtils.preloadMvInfo(mvInfo);
+                        MusicServerUtil.preloadMvInfo(mvInfo);
                     });
                 }
             } else if (selectedIndex == CollectionTabIndex.RANKING) {
@@ -5017,7 +5017,7 @@ public class PlayerFrame extends JFrame {
                         NetRankingInfo rankingInfo = (NetRankingInfo) rankingCollectionModel.get(finalI);
                         if (rankingInfo.isIntegrated()) return;
                         rankingInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtils.preloadRankingInfo(rankingInfo);
+                        MusicServerUtil.preloadRankingInfo(rankingInfo);
                     });
                 }
             } else if (selectedIndex == CollectionTabIndex.USER) {
@@ -5038,7 +5038,7 @@ public class PlayerFrame extends JFrame {
                         NetUserInfo userInfo = (NetUserInfo) userCollectionModel.get(finalI);
                         if (userInfo.isIntegrated()) return;
                         userInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtils.preloadUserInfo(userInfo);
+                        MusicServerUtil.preloadUserInfo(userInfo);
                     });
                 }
             }
@@ -5074,7 +5074,7 @@ public class PlayerFrame extends JFrame {
                         // 这是歌单里的歌
                         if (o instanceof NetPlaylistInfo) {
                             NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInPlaylist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(
                                     playlistInfo.getId(), playlistInfo.getSource(), limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5095,7 +5095,7 @@ public class PlayerFrame extends JFrame {
                         // 这是专辑里的歌
                         else if (o instanceof NetAlbumInfo) {
                             NetAlbumInfo albumInfo = (NetAlbumInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInAlbum(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
                                     albumInfo.getId(), albumInfo.getSource(), limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5116,7 +5116,7 @@ public class PlayerFrame extends JFrame {
                         // 这是歌手里的歌
                         else if (o instanceof NetArtistInfo) {
                             NetArtistInfo artistInfo = (NetArtistInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInArtist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(
                                     artistInfo.getId(), artistInfo.getSource(), limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5137,7 +5137,7 @@ public class PlayerFrame extends JFrame {
                         // 这是电台里的歌
                         else if (o instanceof NetRadioInfo) {
                             NetRadioInfo radioInfo = (NetRadioInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRadio(radioInfo, limit, netMusicInCollectionCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5157,7 +5157,7 @@ public class PlayerFrame extends JFrame {
                         // 这是榜单里的歌
                         else if (o instanceof NetRankingInfo) {
                             NetRankingInfo RankingInfo = (NetRankingInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRanking(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
                                     RankingInfo.getId(), RankingInfo.getSource(), limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
@@ -5178,7 +5178,7 @@ public class PlayerFrame extends JFrame {
                         // 这是用户里的歌
                         else if (o instanceof NetUserInfo) {
                             NetUserInfo userInfo = (NetUserInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
                                     collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
@@ -5393,7 +5393,7 @@ public class PlayerFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5402,20 +5402,20 @@ public class PlayerFrame extends JFrame {
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillPlaylistInfo(playlistInfo);
-                                collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
+                                MusicServerUtil.fillPlaylistInfo(playlistInfo);
+                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtils.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
+                                    collectionItemTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                                 if (playlistInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtils.textToHtml(playlistInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     playlistInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5431,7 +5431,7 @@ public class PlayerFrame extends JFrame {
                     // 得到歌单的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInPlaylist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(
                                     playlistInfo.getId(), playlistInfo.getSource(), limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5489,7 +5489,7 @@ public class PlayerFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
@@ -5498,18 +5498,18 @@ public class PlayerFrame extends JFrame {
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillAlbumInfo(albumInfo);
-                                collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
+                                MusicServerUtil.fillAlbumInfo(albumInfo);
+                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
                                 if (albumInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtils.textToHtml(albumInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
                                 if (albumInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     albumInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5524,7 +5524,7 @@ public class PlayerFrame extends JFrame {
                     // 得到专辑的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInAlbum(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
                                     albumInfo.getId(), albumInfo.getSource(), limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5582,7 +5582,7 @@ public class PlayerFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5591,20 +5591,20 @@ public class PlayerFrame extends JFrame {
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillArtistInfo(artistInfo);
-                                collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
+                                MusicServerUtil.fillArtistInfo(artistInfo);
+                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtils.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
+                                    collectionItemTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     artistInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5620,7 +5620,7 @@ public class PlayerFrame extends JFrame {
                     // 得到歌手的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInArtist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(
                                     artistInfo.getId(), artistInfo.getSource(), limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5678,7 +5678,7 @@ public class PlayerFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5687,20 +5687,20 @@ public class PlayerFrame extends JFrame {
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillRadioInfo(radioInfo);
-                                collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
+                                MusicServerUtil.fillRadioInfo(radioInfo);
+                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtils.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
+                                    collectionItemTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     radioInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5716,7 +5716,7 @@ public class PlayerFrame extends JFrame {
                     // 得到电台的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRadio(radioInfo, limit, netMusicInCollectionCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5773,7 +5773,7 @@ public class PlayerFrame extends JFrame {
                     NetRankingInfo rankingInfo = (NetRankingInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
@@ -5782,18 +5782,18 @@ public class PlayerFrame extends JFrame {
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillRankingInfo(rankingInfo);
-                                collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(rankingInfo.getName()));
+                                MusicServerUtil.fillRankingInfo(rankingInfo);
+                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(rankingInfo.getName()));
                                 if (rankingInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtils.textToHtml(rankingInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
                                 if (rankingInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     rankingInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5808,7 +5808,7 @@ public class PlayerFrame extends JFrame {
                     // 得到榜单的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRanking(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
                                     rankingInfo.getId(), rankingInfo.getSource(), limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5865,7 +5865,7 @@ public class PlayerFrame extends JFrame {
                     NetUserInfo userInfo = (NetUserInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         ImageIcon icon = new ImageIcon(coverImg);
                         collectionItemCoverAndNameLabel.setIcon(icon);
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
@@ -5875,31 +5875,31 @@ public class PlayerFrame extends JFrame {
                         collectionItemDescriptionLabel.setIcon(icon);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillUserInfo(userInfo);
-                                collectionItemCoverAndNameLabel.setText(StringUtils.textToHtml(userInfo.getName()));
-                                collectionItemTagLabel.setText(StringUtils.textToHtml(userInfo.getTag()));
+                                MusicServerUtil.fillUserInfo(userInfo);
+                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(userInfo.getName()));
+                                collectionItemTagLabel.setText(StringUtil.textToHtml(userInfo.getTag()));
                                 if (userInfo.getSign() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtils.textToHtml(userInfo.getSign()));
+                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(userInfo.getSign()));
                                 if (userInfo.hasAvatar()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     userInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
                                 }
                                 if (userInfo.hasBgImg()) {
                                     collectionItemDescriptionLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     userInfo.setInvokeLater2(() -> {
                                         collectionItemDescriptionLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5920,7 +5920,7 @@ public class PlayerFrame extends JFrame {
                             else if (userInfo.fromME() || userInfo.fromBI())
                                 collectionRecordTypeComboBox.setModel(collectionOrderComboBoxModel);
 
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
                                     collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -6004,43 +6004,43 @@ public class PlayerFrame extends JFrame {
                         }
                         int selectedIndex = collectionTabbedPane.getSelectedIndex();
                         if (selectedIndex == CollectionTabIndex.PLAYLIST) {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netPlaylistPopupMenu);
                             netPlaylistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ALBUM) {
-                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netAlbumPopupMenu);
                             netAlbumPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ARTIST) {
-                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netArtistPopupMenu);
                             netArtistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RADIO) {
-                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netRadioPopupMenu);
                             netRadioPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.MV) {
-                            netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netMvPopupMenu);
                             netMvPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RANKING) {
-                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netRankingPopupMenu);
                             netRankingPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.USER) {
-                            netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
 //                            SwingUtilities.updateComponentTreeUI(netUserPopupMenu);
@@ -6065,19 +6065,19 @@ public class PlayerFrame extends JFrame {
         });
         copySongNameMenuItem.addActionListener(e -> {
             StringSelection stringSelection
-                    = new StringSelection(StringUtils.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, "")));
+                    = new StringSelection(StringUtil.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, "")));
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
         copyArtistMenuItem.addActionListener(e -> {
             StringSelection stringSelection
-                    = new StringSelection(StringUtils.removeHTMLLabel(artistLabel.getText().replaceFirst(ARTIST_LABEL, "")));
+                    = new StringSelection(StringUtil.removeHTMLLabel(artistLabel.getText().replaceFirst(ARTIST_LABEL, "")));
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
         copyAlbumMenuItem.addActionListener(e -> {
             StringSelection stringSelection
-                    = new StringSelection(StringUtils.removeHTMLLabel(albumLabel.getText().replaceFirst(ALBUM_NAME_LABEL, "")));
+                    = new StringSelection(StringUtil.removeHTMLLabel(albumLabel.getText().replaceFirst(ALBUM_NAME_LABEL, "")));
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
@@ -6299,11 +6299,11 @@ public class PlayerFrame extends JFrame {
                 File[] files = dir.listFiles();
                 for (File file : files) {
                     // 支持这种文件格式才添加
-                    if (!player.support(FileUtils.getSuffix(file))) continue;
+                    if (!player.support(FileUtil.getSuffix(file))) continue;
                     audioFileCount++;
                     AudioFile audioFile = new AudioFile(file);
                     globalExecutor.submit(() -> {
-                        MusicUtils.fillAudioFileInfo(audioFile);
+                        MusicUtil.fillAudioFileInfo(audioFile);
                         musicList.repaint();
                     });
                     musicListModel.addElement(audioFile);
@@ -6342,7 +6342,7 @@ public class PlayerFrame extends JFrame {
                 for (Object o : selectedValues) {
                     // 改变取消收藏状态
                     if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.loadedObject(o) && hasBeenCollected(o))
-                        collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+                        collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     model.removeElement(o);
                     if (model == filterModel) {
                         if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC)
@@ -6405,10 +6405,10 @@ public class PlayerFrame extends JFrame {
                         historyModel.clear();
                     else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
                         collectionModel.clear();
-                        collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+                        collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 } else if (model == collectionModel) {
-                    collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+                    collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                 }
             } else {
                 DefaultListModel<Object> model = (DefaultListModel<Object>) collectionList.getModel();
@@ -6874,10 +6874,10 @@ public class PlayerFrame extends JFrame {
                             relatedMvMenuItem.setEnabled(ins);
                             playMvMenuItem.setEnabled(ins && ((NetMusicInfo) o).hasMv());
                             if (hasBeenCollected(o)) {
-                                collectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             locateFileMenuItem.setEnabled(!ins);
@@ -6900,10 +6900,10 @@ public class PlayerFrame extends JFrame {
                             relatedMvMenuItem.setEnabled(ins);
                             playMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
-                                collectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             locateFileMenuItem.setEnabled(!ins);
@@ -6924,7 +6924,7 @@ public class PlayerFrame extends JFrame {
             Object o = musicList.getSelectedValue();
             if (o instanceof AudioFile) {
                 File file = ((AudioFile) o);
-                TerminateUtils.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
+                TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
             }
         });
         // 右键菜单编辑歌曲信息
@@ -6952,7 +6952,7 @@ public class PlayerFrame extends JFrame {
                     if (hasBeenCollected(o)) continue;
                     collectionModel.add(0, o);
                     if (player.loadedObject(o))
-                        collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
@@ -6963,7 +6963,7 @@ public class PlayerFrame extends JFrame {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
                         if (player.loadedObject(o))
-                            collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
                 if (needRefresh) musicList.setModel(model);
@@ -7145,13 +7145,13 @@ public class PlayerFrame extends JFrame {
                     try {
                         // 显示节目搜索分类标签
                         if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTag.isEmpty()) {
-                            MusicServerUtils.initProgramSearchTag();
+                            MusicServerUtil.initProgramSearchTag();
                             for (String tag : Tags.programSearchTag.keySet())
                                 netMusicSearchSubTypeComboBox.addItem(tag);
                         }
 
                         // 搜索歌曲并显示在在线播放列表
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.searchMusic(netMusicSourceComboBox.getSelectedIndex(),
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(),
                                 netMusicSearchTypeComboBox.getSelectedIndex(), (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, limit, netMusicCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
@@ -7199,19 +7199,19 @@ public class PlayerFrame extends JFrame {
         // 在线音乐跳页事件
         Runnable netMusicGoPageAction = () -> {
             boolean songRequest = currMusicMusicInfo != null;
-            if (songRequest || StringUtils.isNotEmpty(netMusicCurrKeyword)) {
+            if (songRequest || StringUtil.isNotEmpty(netMusicCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 显示节目搜索分类标签
                         if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTag.isEmpty()) {
-                            MusicServerUtils.initProgramSearchTag();
+                            MusicServerUtil.initProgramSearchTag();
                             for (String tag : Tags.programSearchTag.keySet())
                                 netMusicSearchSubTypeComboBox.addItem(tag);
                         }
 
                         // 搜索歌曲并显示在在线播放列表
-                        CommonResult<NetMusicInfo> result = songRequest ? MusicServerUtils.getSimilarSongs(currMusicMusicInfo)
-                                : MusicServerUtils.searchMusic(netMusicSourceComboBox.getSelectedIndex(), netMusicSearchTypeComboBox.getSelectedIndex(),
+                        CommonResult<NetMusicInfo> result = songRequest ? MusicServerUtil.getSimilarSongs(currMusicMusicInfo)
+                                : MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(), netMusicSearchTypeComboBox.getSelectedIndex(),
                                 (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, limit, netMusicCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
@@ -7437,10 +7437,10 @@ public class PlayerFrame extends JFrame {
                         NetMusicInfo musicInfo = netMusicList.getSelectedValue();
                         netMusicPlayMvMenuItem.setEnabled(musicInfo.hasMv());
                         if (hasBeenCollected(musicInfo)) {
-                            netMusicCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netMusicCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netMusicCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netMusicCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netMusicCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -7467,7 +7467,7 @@ public class PlayerFrame extends JFrame {
                     if (hasBeenCollected(o)) continue;
                     collectionModel.add(0, o);
                     if (player.loadedObject(o))
-                        collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
@@ -7478,7 +7478,7 @@ public class PlayerFrame extends JFrame {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
                         if (player.loadedObject(o))
-                            collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
                 if (needRefresh) musicList.setModel(model);
@@ -7527,7 +7527,7 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 获取相似歌曲
-                    CommonResult<NetMusicInfo> result = MusicServerUtils.getSimilarSongs(currMusicMusicInfo = netMusicInfo);
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getSimilarSongs(currMusicMusicInfo = netMusicInfo);
                     List<NetMusicInfo> netMusicInfos = result.data;
                     netMusicCurrPage = netMusicMaxPage = 1;
                     // 标题
@@ -7595,7 +7595,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForPlaylist();
                     // 搜索相关歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtils.getRelatedPlaylists(currPlaylistMusicInfo = netMusicInfo);
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo = netMusicInfo);
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
@@ -7668,7 +7668,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForUser();
                         // 获取作者
                         currAuthorMusicInfo = netMusicInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netMusicInfo.getArtistId(), netMusicInfo.getSource());
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netMusicInfo.getArtistId(), netMusicInfo.getSource());
                         List<NetUserInfo> netUserInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
@@ -7717,7 +7717,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForArtist();
                         // 获取歌手
                         currArtistMusicInfo = netMusicInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistInfo(netMusicInfo.getArtistId(), netMusicInfo.getSource());
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(netMusicInfo.getArtistId(), netMusicInfo.getSource());
                         List<NetArtistInfo> netArtistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
@@ -7791,7 +7791,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForRadio();
                         // 获取歌曲电台
                         currRadioMusicInfo = netMusicInfo;
-                        CommonResult<NetRadioInfo> result = MusicServerUtils.getRadioInfo(netMusicInfo.getAlbumId(), netMusicInfo.getSource());
+                        CommonResult<NetRadioInfo> result = MusicServerUtil.getRadioInfo(netMusicInfo.getAlbumId(), netMusicInfo.getSource());
                         List<NetRadioInfo> netRadioInfos = result.data;
                         int total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -7840,7 +7840,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForAlbum();
                         // 查看歌曲专辑
                         currAlbumMusicInfo = netMusicInfo;
-                        CommonResult<NetAlbumInfo> result = MusicServerUtils.getAlbumInfo(netMusicInfo.getAlbumId(), netMusicInfo.getSource());
+                        CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfo(netMusicInfo.getAlbumId(), netMusicInfo.getSource());
                         List<NetAlbumInfo> netAlbumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -7914,7 +7914,7 @@ public class PlayerFrame extends JFrame {
                     clearRequestForRadio();
                     // 获取歌曲推荐电台
                     currRecRadioMusicInfo = netMusicInfo;
-                    CommonResult<NetRadioInfo> result = MusicServerUtils.getRecRadios(netMusicInfo);
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getRecRadios(netMusicInfo);
                     List<NetRadioInfo> netRadioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -7986,7 +7986,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForMv();
                     // 获取相关 MV
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getRelatedMvs(currMvMusicInfo = netMusicInfo, limit, netMvCurrPage = 1);
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getRelatedMvs(currMvMusicInfo = netMusicInfo, limit, netMvCurrPage = 1);
                     List<NetMvInfo> netMvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -8230,7 +8230,7 @@ public class PlayerFrame extends JFrame {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
                 String url = playlistInfo.hasCoverImgUrl() ? playlistInfo.getCoverImgUrl() : playlistInfo.getCoverImgThumbUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8275,7 +8275,7 @@ public class PlayerFrame extends JFrame {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
                 String url = albumInfo.hasCoverImgUrl() ? albumInfo.getCoverImgUrl() : albumInfo.getCoverImgThumbUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8320,7 +8320,7 @@ public class PlayerFrame extends JFrame {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetArtistInfo artistInfo = netArtistList.getSelectedValue();
                 String url = artistInfo.hasCoverImgUrl() ? artistInfo.getCoverImgUrl() : artistInfo.getCoverImgThumbUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8365,7 +8365,7 @@ public class PlayerFrame extends JFrame {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetRadioInfo radioInfo = netRadioList.getSelectedValue();
                 String url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8410,7 +8410,7 @@ public class PlayerFrame extends JFrame {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
                 String url = rankingInfo.getCoverImgUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8455,7 +8455,7 @@ public class PlayerFrame extends JFrame {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetUserInfo userInfo = netUserList.getSelectedValue();
                 String url = userInfo.hasAvatarUrl() ? userInfo.getAvatarUrl() : userInfo.getAvatarThumbUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8500,7 +8500,7 @@ public class PlayerFrame extends JFrame {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetUserInfo userInfo = netUserList.getSelectedValue();
                 String url = userInfo.getBgImgUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8558,7 +8558,7 @@ public class PlayerFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) o;
                     url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
                 }
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     final String finalUrl = url;
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
@@ -8623,7 +8623,7 @@ public class PlayerFrame extends JFrame {
                     NetUserInfo userInfo = (NetUserInfo) o;
                     url = userInfo.hasAvatarUrl() ? userInfo.getAvatarUrl() : userInfo.getAvatarThumbUrl();
                 }
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     final String finalUrl = url;
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
@@ -8670,7 +8670,7 @@ public class PlayerFrame extends JFrame {
                 Object o = collectionList.getSelectedValue();
                 if (!(o instanceof NetUserInfo)) return;
                 String url = ((NetUserInfo) o).getBgImgUrl();
-                if (StringUtils.isEmpty(url)) return;
+                if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
@@ -8853,7 +8853,7 @@ public class PlayerFrame extends JFrame {
             else if (si == TabIndex.NET_RANKING) l = rankingCoverAndNameLabel;
             else if (si == TabIndex.NET_USER) l = userCoverAndNameLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemCoverAndNameLabel;
-            StringSelection stringSelection = new StringSelection(StringUtils.removeHTMLLabel(l.getText()));
+            StringSelection stringSelection = new StringSelection(StringUtil.removeHTMLLabel(l.getText()));
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
@@ -8867,7 +8867,7 @@ public class PlayerFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userTagLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemTagLabel;
             if (l == null || l.getText().isEmpty()) return;
-            StringSelection stringSelection = new StringSelection(StringUtils.removeHTMLLabel(l.getText()));
+            StringSelection stringSelection = new StringSelection(StringUtil.removeHTMLLabel(l.getText()));
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
@@ -8883,7 +8883,7 @@ public class PlayerFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userDescriptionLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemDescriptionLabel;
             if (l.getText().isEmpty()) return;
-            StringSelection stringSelection = new StringSelection(StringUtils.removeHTMLLabel(l.getText()));
+            StringSelection stringSelection = new StringSelection(StringUtil.removeHTMLLabel(l.getText()));
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         });
@@ -9036,8 +9036,8 @@ public class PlayerFrame extends JFrame {
                         // 搜索歌单并显示歌单列表
                         netPlaylistCurrPage = 1;
                         CommonResult<NetPlaylistInfo> result = netPlaylistIdCheckBox.isSelected() ?
-                                MusicServerUtils.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
-                                : MusicServerUtils.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
+                                MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
+                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -9089,15 +9089,15 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 boolean songRequest = currPlaylistMusicInfo != null, playlistRequest = currPlaylistPlaylistInfo != null,
                         commentRequest = currPlaylistCommentInfo != null, userRequest = currPlaylistUserInfo != null;
-                if (songRequest || playlistRequest || commentRequest || userRequest || StringUtils.isNotEmpty(netPlaylistCurrKeyword)) {
+                if (songRequest || playlistRequest || commentRequest || userRequest || StringUtil.isNotEmpty(netPlaylistCurrKeyword)) {
                     try {
                         // 搜索歌单并显示歌单列表
-                        CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtils.getRelatedPlaylists(currPlaylistMusicInfo)
-                                : playlistRequest ? MusicServerUtils.getSimilarPlaylists(currPlaylistPlaylistInfo)
-                                : commentRequest ? MusicServerUtils.getUserPlaylists(currPlaylistCommentInfo, limit, netPlaylistCurrPage)
-                                : userRequest ? MusicServerUtils.getUserPlaylists(currPlaylistUserInfo, limit, netPlaylistCurrPage)
-                                : netPlaylistIdCheckBox.isSelected() ? MusicServerUtils.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
-                                : MusicServerUtils.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
+                        CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo)
+                                : playlistRequest ? MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo)
+                                : commentRequest ? MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo, limit, netPlaylistCurrPage)
+                                : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, limit, netPlaylistCurrPage)
+                                : netPlaylistIdCheckBox.isSelected() ? MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
+                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -9147,7 +9147,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInPlaylist(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(
                                 playlistInfo.getId(), playlistInfo.getSource(), limit, netMusicInPlaylistCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
@@ -9419,27 +9419,27 @@ public class PlayerFrame extends JFrame {
                 NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                     playlistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     playlistCoverAndNameLabel.setText(LOADING_MSG);
                     playlistTagLabel.setText(LOADING_MSG);
                     playlistDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
-                            MusicServerUtils.fillPlaylistInfo(playlistInfo);
-                            playlistCoverAndNameLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
+                            MusicServerUtil.fillPlaylistInfo(playlistInfo);
+                            playlistCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
                             if (playlistInfo.getTag() != null)
-                                playlistTagLabel.setText(StringUtils.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
+                                playlistTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                             if (playlistInfo.getDescription() != null)
-                                playlistDescriptionLabel.setText(StringUtils.textToHtml(playlistInfo.getDescription()));
+                                playlistDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
                             if (playlistInfo.hasCoverImg()) {
                                 playlistCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 playlistInfo.setInvokeLater(() -> {
                                     playlistCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netPlaylistList.repaint();
                                 });
@@ -9456,7 +9456,7 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到歌单的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInPlaylist(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(
                                 playlistInfo.getId(), playlistInfo.getSource(), limit, netMusicInPlaylistCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
@@ -9542,10 +9542,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netPlaylistList.isSelectedIndex(index)) netPlaylistList.setSelectedIndex(index);
                         if (hasBeenCollected(netPlaylistList.getSelectedValue())) {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -9570,7 +9570,7 @@ public class PlayerFrame extends JFrame {
                 netPlaylistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
             else netPlaylistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInPlaylist(
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(
                         netPlaylistInfo.getId(), netPlaylistInfo.getSource(), netPlaylistInfo.hasTrackCount() ? netPlaylistInfo.getTrackCount() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
@@ -9641,7 +9641,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForPlaylist();
                     // 搜索相似歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtils.getSimilarPlaylists(currPlaylistPlaylistInfo = netPlaylistInfo);
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo = netPlaylistInfo);
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
@@ -9710,7 +9710,7 @@ public class PlayerFrame extends JFrame {
                     clearRequestForUser();
                     // 获取歌单创建者
                     currUserPlaylistInfo = netPlaylistInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netPlaylistInfo.getCreatorId(), netPlaylistInfo.getSource());
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netPlaylistInfo.getCreatorId(), netPlaylistInfo.getSource());
                     List<NetUserInfo> netUserInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
@@ -9779,7 +9779,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取歌单收藏者
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getPlaylistSubscribers(currSubscriberPlaylistInfo = netPlaylistInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo = netPlaylistInfo, limit, netUserCurrPage = 1);
                     List<NetUserInfo> netUserInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10025,7 +10025,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索专辑并显示专辑列表
-                        CommonResult<NetAlbumInfo> result = MusicServerUtils.searchAlbums(
+                        CommonResult<NetAlbumInfo> result = MusicServerUtil.searchAlbums(
                                 netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, limit, netAlbumCurrPage = 1);
                         List<NetAlbumInfo> netAlbumInfos = result.data;
                         Integer total = result.total;
@@ -10078,16 +10078,16 @@ public class PlayerFrame extends JFrame {
         Runnable searchAlbumGoPageAction = () -> {
             boolean songRequest = currAlbumMusicInfo != null, artistRequest = currAlbumArtistInfo != null, albumRequest = currAlbumAlbumInfo != null,
                     userRequest = currAlbumUserInfo != null, commentRequest = currAlbumCommentInfo != null;
-            if (artistRequest || albumRequest || userRequest || commentRequest || songRequest || StringUtils.isNotEmpty(netAlbumCurrKeyword)) {
+            if (artistRequest || albumRequest || userRequest || commentRequest || songRequest || StringUtil.isNotEmpty(netAlbumCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索专辑并显示专辑列表
-                        CommonResult<NetAlbumInfo> result = artistRequest ? MusicServerUtils.getAlbumInfoInArtist(currAlbumArtistInfo, limit, netAlbumCurrPage)
-                                : albumRequest ? MusicServerUtils.getSimilarAlbums(currAlbumAlbumInfo)
-                                : userRequest ? MusicServerUtils.getUserAlbums(currAlbumUserInfo, limit, netAlbumCurrPage)
-                                : commentRequest ? MusicServerUtils.getUserAlbums(currAlbumCommentInfo, limit, netAlbumCurrPage)
-                                : songRequest ? MusicServerUtils.getAlbumInfo(currAlbumMusicInfo.getAlbumId(), currAlbumMusicInfo.getSource())
-                                : MusicServerUtils.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, limit, netAlbumCurrPage);
+                        CommonResult<NetAlbumInfo> result = artistRequest ? MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo, limit, netAlbumCurrPage)
+                                : albumRequest ? MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo)
+                                : userRequest ? MusicServerUtil.getUserAlbums(currAlbumUserInfo, limit, netAlbumCurrPage)
+                                : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, limit, netAlbumCurrPage)
+                                : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getAlbumId(), currAlbumMusicInfo.getSource())
+                                : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, limit, netAlbumCurrPage);
                         List<NetAlbumInfo> netAlbumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10138,7 +10138,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInAlbum(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
                                 albumInfo.getId(), albumInfo.getSource(), limit, netMusicInAlbumCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
@@ -10409,24 +10409,24 @@ public class PlayerFrame extends JFrame {
                 NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                     albumCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     albumCoverAndNameLabel.setText(LOADING_MSG);
                     albumDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
-                            MusicServerUtils.fillAlbumInfo(albumInfo);
-                            albumCoverAndNameLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
+                            MusicServerUtil.fillAlbumInfo(albumInfo);
+                            albumCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
                             if (albumInfo.getDescription() != null)
-                                albumDescriptionLabel.setText(StringUtils.textToHtml(albumInfo.getDescription()));
+                                albumDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
                             if (albumInfo.hasCoverImg()) {
                                 albumCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 albumInfo.setInvokeLater(() -> {
                                     albumCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netAlbumList.repaint();
                                 });
@@ -10442,7 +10442,7 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到专辑的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInAlbum(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
                                 albumInfo.getId(), albumInfo.getSource(), limit, netMusicInAlbumCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
@@ -10530,10 +10530,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netAlbumList.isSelectedIndex(index)) netAlbumList.setSelectedIndex(index);
                         if (hasBeenCollected(netAlbumList.getSelectedValue())) {
-                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -10558,7 +10558,7 @@ public class PlayerFrame extends JFrame {
                 netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
             else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInAlbum(
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
                         netAlbumInfo.getId(), netAlbumInfo.getSource(), netAlbumInfo.hasSongNum() ? netAlbumInfo.getSongNum() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
@@ -10631,7 +10631,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForUser();
                         // 获取歌手/作者
                         currAuthorAlbumInfo = netAlbumInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
                         List<NetUserInfo> netUserInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
@@ -10680,7 +10680,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForArtist();
                         // 搜索专辑歌手
                         currArtistAlbumInfo = netAlbumInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
                         List<NetArtistInfo> netArtistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
@@ -10750,7 +10750,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtils.getSimilarAlbums(currAlbumAlbumInfo = netAlbumInfo);
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo = netAlbumInfo);
                     List<NetAlbumInfo> netAlbumInfos = result.data;
                     netAlbumCurrPage = netAlbumMaxPage = 1;
                     // 标题
@@ -10821,7 +10821,7 @@ public class PlayerFrame extends JFrame {
                 imageViewDialog = new ImageViewDialog(THIS, limit) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtils.getAlbumImgUrls(netAlbumInfo, pn, limit, cursor);
+                        return MusicServerUtil.getAlbumImgUrls(netAlbumInfo, pn, limit, cursor);
                     }
 
                     @Override
@@ -11037,7 +11037,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
-                        CommonResult<NetArtistInfo> result = MusicServerUtils.searchArtists(
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.searchArtists(
                                 netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, limit, netArtistCurrPage = 1);
                         List<NetArtistInfo> netArtistInfos = result.data;
                         Integer total = result.total;
@@ -11092,18 +11092,18 @@ public class PlayerFrame extends JFrame {
                     buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null,
                     radioCVRequest = currCVRadioInfo != null;
             if (artistRequest || buddyRequest || radioRequest || radioCVRequest || songRequest ||
-                    albumRequest || mvRequest || StringUtils.isNotEmpty(netArtistCurrKeyword)) {
+                    albumRequest || mvRequest || StringUtil.isNotEmpty(netArtistCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
-                        CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtils.getSimilarArtists(currArtistArtistInfo, netArtistCurrPage)
-                                : buddyRequest ? MusicServerUtils.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage, limit)
-                                : radioRequest ? MusicServerUtils.getRadioArtists(currArtistRadioInfo)
-                                : radioCVRequest ? MusicServerUtils.getRadioArtists(currCVRadioInfo)
-                                : songRequest ? MusicServerUtils.getArtistInfo(currArtistMusicInfo.getArtistId(), currArtistMusicInfo.getSource())
-                                : albumRequest ? MusicServerUtils.getArtistInfo(currArtistAlbumInfo.getArtistId(), currArtistAlbumInfo.getSource())
-                                : mvRequest ? MusicServerUtils.getArtistInfo(currArtistMvInfo.getCreatorId(), currArtistMvInfo.getSource())
-                                : MusicServerUtils.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, limit, netArtistCurrPage);
+                        CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtil.getSimilarArtists(currArtistArtistInfo, netArtistCurrPage)
+                                : buddyRequest ? MusicServerUtil.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage, limit)
+                                : radioRequest ? MusicServerUtil.getRadioArtists(currArtistRadioInfo)
+                                : radioCVRequest ? MusicServerUtil.getRadioArtists(currCVRadioInfo)
+                                : songRequest ? MusicServerUtil.getArtistInfo(currArtistMusicInfo.getArtistId(), currArtistMusicInfo.getSource())
+                                : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getArtistId(), currArtistAlbumInfo.getSource())
+                                : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getCreatorId(), currArtistMvInfo.getSource())
+                                : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, limit, netArtistCurrPage);
                         List<NetArtistInfo> netArtistInfos = result.data;
                         Integer total = result.total;
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11154,7 +11154,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetArtistInfo artistInfo = netArtistList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInArtist(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(
                                 artistInfo.getId(), artistInfo.getSource(), limit, netMusicInArtistCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
@@ -11425,27 +11425,27 @@ public class PlayerFrame extends JFrame {
                 NetArtistInfo artistInfo = netArtistList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                     artistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     artistCoverAndNameLabel.setText(LOADING_MSG);
                     artistTagLabel.setText(LOADING_MSG);
                     artistDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
-                            MusicServerUtils.fillArtistInfo(artistInfo);
-                            artistCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
+                            MusicServerUtil.fillArtistInfo(artistInfo);
+                            artistCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
                             if (artistInfo.getTag() != null)
-                                artistTagLabel.setText(StringUtils.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
+                                artistTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                             if (artistInfo.getDescription() != null)
-                                artistDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
+                                artistDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
                             if (artistInfo.hasCoverImg()) {
                                 artistCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 artistInfo.setInvokeLater(() -> {
                                     artistCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netArtistList.repaint();
                                 });
@@ -11462,7 +11462,7 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到歌手的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInArtist(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(
                                 artistInfo.getId(), artistInfo.getSource(), limit, netMusicInArtistCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
@@ -11550,10 +11550,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netArtistList.isSelectedIndex(index)) netArtistList.setSelectedIndex(index);
                         if (hasBeenCollected(netArtistList.getSelectedValue())) {
-                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -11579,7 +11579,7 @@ public class PlayerFrame extends JFrame {
             else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
-                    CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInArtist(
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(
                             netArtistInfo.getId(), netArtistInfo.getSource(), netArtistInfo.hasSongNum() ? netArtistInfo.getSongNum() : 10000, 1);
                     List<NetMusicInfo> musicInfos = result.data;
                     if (musicInfos.isEmpty()) {
@@ -11643,7 +11643,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtils.getAlbumInfoInArtist(currAlbumArtistInfo = netArtistInfo, limit, netAlbumCurrPage = 1);
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo = netArtistInfo, limit, netAlbumCurrPage = 1);
                     List<NetAlbumInfo> netAlbumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11711,10 +11711,10 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 网易云的 total 依赖于 mvNum 属性，需要先补全信息
-                    if (!netArtistInfo.hasMvNum()) MusicServerUtils.fillArtistInfo(netArtistInfo);
+                    if (!netArtistInfo.hasMvNum()) MusicServerUtil.fillArtistInfo(netArtistInfo);
                     clearRequestForMv();
                     // 搜索歌手 MV 并显示 MV 列表
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getMvInfoInArtist(currMvArtistInfo = netArtistInfo, limit, netMvCurrPage = 1);
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getMvInfoInArtist(currMvArtistInfo = netArtistInfo, limit, netMvCurrPage = 1);
                     List<NetMvInfo> netMvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11780,7 +11780,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForArtist();
                     // 搜索相似歌手
-                    CommonResult<NetArtistInfo> result = MusicServerUtils.getSimilarArtists(currArtistArtistInfo = netArtistInfo, netArtistCurrPage = 1);
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getSimilarArtists(currArtistArtistInfo = netArtistInfo, netArtistCurrPage = 1);
                     List<NetArtistInfo> netArtistInfos = result.data;
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11850,7 +11850,7 @@ public class PlayerFrame extends JFrame {
                     clearRequestForUser();
                     // 获取歌手粉丝
                     currUserArtistInfo = netArtistInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getArtistFans(netArtistInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getArtistFans(netArtistInfo, limit, netUserCurrPage = 1);
                     List<NetUserInfo> netUserInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11920,7 +11920,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForArtist();
                     // 搜索歌手合作人
-                    CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistBuddies(currBuddyArtistInfo = netArtistInfo, netArtistCurrPage = 1, limit);
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistBuddies(currBuddyArtistInfo = netArtistInfo, netArtistCurrPage = 1, limit);
                     List<NetArtistInfo> netArtistInfos = result.data;
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11989,7 +11989,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForRadio();
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtils.getArtistRadios(currRadioArtistInfo = netArtistInfo, netRadioCurrPage = 1, limit);
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getArtistRadios(currRadioArtistInfo = netArtistInfo, netRadioCurrPage = 1, limit);
                     List<NetRadioInfo> netRadioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12061,7 +12061,7 @@ public class PlayerFrame extends JFrame {
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtils.getArtistImgUrls(netArtistInfo, pn);
+                        return MusicServerUtil.getArtistImgUrls(netArtistInfo, pn);
                     }
 
                     @Override
@@ -12278,7 +12278,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索电台并显示电台列表
-                        CommonResult<NetRadioInfo> result = MusicServerUtils.searchRadios(
+                        CommonResult<NetRadioInfo> result = MusicServerUtil.searchRadios(
                                 netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, limit, netRadioCurrPage = 1);
                         List<NetRadioInfo> netRadioInfos = result.data;
                         Integer total = result.total;
@@ -12330,16 +12330,16 @@ public class PlayerFrame extends JFrame {
         Runnable searchRadioGoPageAction = () -> {
             boolean songRequest = currRadioMusicInfo != null, songRecRequest = currRecRadioMusicInfo != null, userRequest = currRadioUserInfo != null,
                     artistRequest = currRadioArtistInfo != null, radioRequest = currRadioRadioInfo != null;
-            if (userRequest || artistRequest || radioRequest || songRequest || songRecRequest || StringUtils.isNotEmpty(netRadioCurrKeyword)) {
+            if (userRequest || artistRequest || radioRequest || songRequest || songRecRequest || StringUtil.isNotEmpty(netRadioCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索电台并显示电台列表
-                        CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtils.getUserRadios(currRadioUserInfo, limit, netRadioCurrPage)
-                                : artistRequest ? MusicServerUtils.getArtistRadios(currRadioArtistInfo, netRadioCurrPage, limit)
-                                : radioRequest ? MusicServerUtils.getSimilarRadios(currRadioRadioInfo)
-                                : songRequest ? MusicServerUtils.getRadioInfo(currRadioMusicInfo.getAlbumId(), currRadioMusicInfo.getSource())
-                                : songRecRequest ? MusicServerUtils.getRecRadios(currRecRadioMusicInfo)
-                                : MusicServerUtils.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, limit, netRadioCurrPage);
+                        CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtil.getUserRadios(currRadioUserInfo, limit, netRadioCurrPage)
+                                : artistRequest ? MusicServerUtil.getArtistRadios(currRadioArtistInfo, netRadioCurrPage, limit)
+                                : radioRequest ? MusicServerUtil.getSimilarRadios(currRadioRadioInfo)
+                                : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getAlbumId(), currRadioMusicInfo.getSource())
+                                : songRecRequest ? MusicServerUtil.getRecRadios(currRecRadioMusicInfo)
+                                : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, limit, netRadioCurrPage);
                         List<NetRadioInfo> netRadioInfos = result.data;
                         Integer total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12389,7 +12389,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetRadioInfo radioInfo = netRadioList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRadio(radioInfo, limit, netMusicInRadioCurrPage);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInRadioCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12659,27 +12659,27 @@ public class PlayerFrame extends JFrame {
                 NetRadioInfo radioInfo = netRadioList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                     radioCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     radioCoverAndNameLabel.setText(LOADING_MSG);
                     radioTagLabel.setText(LOADING_MSG);
                     radioDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
-                            MusicServerUtils.fillRadioInfo(radioInfo);
-                            radioCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
+                            MusicServerUtil.fillRadioInfo(radioInfo);
+                            radioCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
                             if (radioInfo.getTag() != null)
-                                radioTagLabel.setText(StringUtils.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
+                                radioTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                             if (radioInfo.getDescription() != null)
-                                radioDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
+                                radioDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
                             if (radioInfo.hasCoverImg()) {
                                 radioCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 radioInfo.setInvokeLater(() -> {
                                     radioCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netRadioList.repaint();
                                 });
@@ -12696,7 +12696,7 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到电台的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRadio(radioInfo, limit, netMusicInRadioCurrPage = 1);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInRadioCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12784,10 +12784,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netRadioList.isSelectedIndex(index)) netRadioList.setSelectedIndex(index);
                         if (hasBeenCollected(netRadioList.getSelectedValue())) {
-                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -12812,7 +12812,7 @@ public class PlayerFrame extends JFrame {
                 netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
             else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRadio(
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
                         netRadioInfo, netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
@@ -12884,7 +12884,7 @@ public class PlayerFrame extends JFrame {
                     clearRequestForUser();
                     // 获取电台主播
                     currUserRadioInfo = netRadioInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netRadioInfo.getDjId(), netRadioInfo.getSource());
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netRadioInfo.getDjId(), netRadioInfo.getSource());
                     List<NetUserInfo> netUserInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
@@ -12953,7 +12953,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取电台订阅者
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getRadioSubscribers(currSubscriberRadioInfo = netRadioInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo = netRadioInfo, limit, netUserCurrPage = 1);
                     List<NetUserInfo> netUserInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -13023,7 +13023,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForRadio();
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtils.getSimilarRadios(currRadioRadioInfo = netRadioInfo);
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getSimilarRadios(currRadioRadioInfo = netRadioInfo);
                     List<NetRadioInfo> netRadioInfos = result.data;
                     int total = result.total;
                     netRadioCurrPage = netRadioMaxPage = 1;
@@ -13092,7 +13092,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForArtist();
                     // 搜索演职员
-                    CommonResult<NetArtistInfo> result = MusicServerUtils.getRadioArtists(currArtistRadioInfo = netRadioInfo);
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getRadioArtists(currArtistRadioInfo = netRadioInfo);
                     List<NetArtistInfo> netArtistInfos = result.data;
                     netArtistCurrPage = netArtistMaxPage = 1;
                     // 标题
@@ -13160,7 +13160,7 @@ public class PlayerFrame extends JFrame {
                 imageViewDialog = new ImageViewDialog(THIS, netRadioInfo.isGame() ? 24 : 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtils.getRadioImgUrls(netRadioInfo, pn);
+                        return MusicServerUtil.getRadioImgUrls(netRadioInfo, pn);
                     }
 
                     @Override
@@ -13193,7 +13193,7 @@ public class PlayerFrame extends JFrame {
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtils.getRadioPosterUrls(netRadioInfo, pn);
+                        return MusicServerUtil.getRadioPosterUrls(netRadioInfo, pn);
                     }
 
                     @Override
@@ -13369,7 +13369,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索 MV 并显示 MV 列表
-                        CommonResult<NetMvInfo> result = MusicServerUtils.searchMvs(
+                        CommonResult<NetMvInfo> result = MusicServerUtil.searchMvs(
                                 netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage = 1);
                         List<NetMvInfo> netMvInfos = result.data;
                         Integer total = result.total;
@@ -13421,16 +13421,16 @@ public class PlayerFrame extends JFrame {
         Runnable searchMvGoPageAction = () -> {
             boolean artistRequest = currMvArtistInfo != null, songRequest = currMvMusicInfo != null,
                     mvRequest = currMvMvInfo != null, episodeRequest = currEpisodesMvInfo != null, userRequest = currMvUserInfo != null;
-            if (artistRequest || songRequest || mvRequest || episodeRequest || userRequest || StringUtils.isNotEmpty(netMvCurrKeyword)) {
+            if (artistRequest || songRequest || mvRequest || episodeRequest || userRequest || StringUtil.isNotEmpty(netMvCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索 MV 并显示 MV 列表
-                        CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtils.getMvInfoInArtist(currMvArtistInfo, limit, netMvCurrPage)
-                                : songRequest ? MusicServerUtils.getRelatedMvs(currMvMusicInfo, limit, netMvCurrPage)
-                                : mvRequest ? MusicServerUtils.getSimilarMvs(currMvMvInfo)
-                                : episodeRequest ? MusicServerUtils.getVideoEpisodes(currEpisodesMvInfo, netMvCurrPage, limit)
-                                : userRequest ? MusicServerUtils.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit, cursor)
-                                : MusicServerUtils.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage);
+                        CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtil.getMvInfoInArtist(currMvArtistInfo, limit, netMvCurrPage)
+                                : songRequest ? MusicServerUtil.getRelatedMvs(currMvMusicInfo, limit, netMvCurrPage)
+                                : mvRequest ? MusicServerUtil.getSimilarMvs(currMvMvInfo)
+                                : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, netMvCurrPage, limit)
+                                : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit, cursor)
+                                : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage);
                         List<NetMvInfo> netMvInfos = result.data;
                         Integer total = result.total;
                         cursor = result.cursor;
@@ -13671,10 +13671,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netMvList.isSelectedIndex(index)) netMvList.setSelectedIndex(index);
                         if (hasBeenCollected(netMvList.getSelectedValue())) {
-                            netMvCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -13740,7 +13740,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForMv();
                     // 获取相似 MV
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getSimilarMvs(currMvMvInfo = netMvInfo);
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getSimilarMvs(currMvMvInfo = netMvInfo);
                     List<NetMvInfo> netMvInfos = result.data;
                     netMvCurrPage = netMvMaxPage = 1;
                     // 标题
@@ -13808,7 +13808,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForMv();
                     // 获取视频分集
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getVideoEpisodes(currEpisodesMvInfo = netMvInfo, netMvCurrPage = 1, limit);
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo = netMvInfo, netMvCurrPage = 1, limit);
                     List<NetMvInfo> netMvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -13879,7 +13879,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForArtist();
                         // 查看歌手
                         currArtistMvInfo = netMvInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
                         List<NetArtistInfo> netArtistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
@@ -13926,7 +13926,7 @@ public class PlayerFrame extends JFrame {
                         clearRequestForUser();
                         // 获取 MV 发布者
                         currUserMvInfo = netMvInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
                         List<NetUserInfo> netUserInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
@@ -14083,7 +14083,7 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 搜索榜单并显示榜单列表
-                    CommonResult<NetRankingInfo> result = MusicServerUtils.getRankings(netRankingSourceComboBox.getSelectedIndex());
+                    CommonResult<NetRankingInfo> result = MusicServerUtil.getRankings(netRankingSourceComboBox.getSelectedIndex());
                     List<NetRankingInfo> netRankingInfos = result.data;
 //                        Integer total = result.total;
 //                        netRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -14133,7 +14133,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRanking(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
                                 rankingInfo.getId(), rankingInfo.getSource(), limit, netMusicInRankingCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
@@ -14397,24 +14397,24 @@ public class PlayerFrame extends JFrame {
                 NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                     rankingCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     rankingCoverAndNameLabel.setText(LOADING_MSG);
                     rankingDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
-                            MusicServerUtils.fillRankingInfo(rankingInfo);
-                            rankingCoverAndNameLabel.setText(StringUtils.textToHtml(rankingInfo.getName()));
+                            MusicServerUtil.fillRankingInfo(rankingInfo);
+                            rankingCoverAndNameLabel.setText(StringUtil.textToHtml(rankingInfo.getName()));
                             if (rankingInfo.getDescription() != null)
-                                rankingDescriptionLabel.setText(StringUtils.textToHtml(rankingInfo.getDescription()));
+                                rankingDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
                             if (rankingInfo.hasCoverImg()) {
                                 rankingCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 rankingInfo.setInvokeLater(() -> {
                                     rankingCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netRankingList.repaint();
                                 });
@@ -14430,7 +14430,7 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到榜单的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRanking(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
                                 rankingInfo.getId(), rankingInfo.getSource(), limit, netMusicInRankingCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
@@ -14512,10 +14512,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netRankingList.isSelectedIndex(index)) netRankingList.setSelectedIndex(index);
                         if (hasBeenCollected(netRankingList.getSelectedValue())) {
-                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -14540,7 +14540,7 @@ public class PlayerFrame extends JFrame {
                 netRankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
             else netRankingInfo = (NetRankingInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRanking(
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
                         netRankingInfo.getId(), netRankingInfo.getSource(), 1000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
@@ -14748,7 +14748,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索用户并显示用户列表
-                        CommonResult<NetUserInfo> result = MusicServerUtils.searchUsers(
+                        CommonResult<NetUserInfo> result = MusicServerUtil.searchUsers(
                                 netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, limit, netUserCurrPage = 1);
                         List<NetUserInfo> netUserInfos = result.data;
                         Integer total = result.total;
@@ -14804,22 +14804,22 @@ public class PlayerFrame extends JFrame {
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
                     songRequest = currAuthorMusicInfo != null, albumRequest = currAuthorAlbumInfo != null;
             if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
-                    playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtils.isNotEmpty(netUserCurrKeyword)) {
+                    playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtil.isNotEmpty(netUserCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索用户并显示用户列表
-                        CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtils.getUserFollows(currFollowUserUserInfo, limit, netUserCurrPage)
-                                : followedUserRequest ? MusicServerUtils.getUserFolloweds(currFollowedUserUserInfo, limit, netUserCurrPage)
-                                : playlistSubRequest ? MusicServerUtils.getPlaylistSubscribers(currSubscriberPlaylistInfo, limit, netUserCurrPage)
-                                : radioSubRequest ? MusicServerUtils.getRadioSubscribers(currSubscriberRadioInfo, limit, netUserCurrPage)
-                                : artistRequest ? MusicServerUtils.getArtistFans(currUserArtistInfo, limit, netUserCurrPage)
-                                : playlistRequest ? MusicServerUtils.getUserInfo(currUserPlaylistInfo.getCreatorId(), currUserPlaylistInfo.getSource())
-                                : mvRequest ? MusicServerUtils.getUserInfo(currUserMvInfo.getCreatorId(), currUserMvInfo.getSource())
-                                : radioRequest ? MusicServerUtils.getUserInfo(currUserRadioInfo.getDjId(), currUserRadioInfo.getSource())
-                                : commentRequest ? MusicServerUtils.getUserInfo(currUserCommentInfo.getUserId(), currUserCommentInfo.getSource())
-                                : songRequest ? MusicServerUtils.getUserInfo(currAuthorMusicInfo.getArtistId(), currAuthorMusicInfo.getSource())
-                                : albumRequest ? MusicServerUtils.getUserInfo(currAuthorAlbumInfo.getArtistId(), currAuthorAlbumInfo.getSource())
-                                : MusicServerUtils.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, limit, netUserCurrPage);
+                        CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtil.getUserFollows(currFollowUserUserInfo, limit, netUserCurrPage)
+                                : followedUserRequest ? MusicServerUtil.getUserFolloweds(currFollowedUserUserInfo, limit, netUserCurrPage)
+                                : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, limit, netUserCurrPage)
+                                : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, limit, netUserCurrPage)
+                                : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, limit, netUserCurrPage)
+                                : playlistRequest ? MusicServerUtil.getUserInfo(currUserPlaylistInfo.getCreatorId(), currUserPlaylistInfo.getSource())
+                                : mvRequest ? MusicServerUtil.getUserInfo(currUserMvInfo.getCreatorId(), currUserMvInfo.getSource())
+                                : radioRequest ? MusicServerUtil.getUserInfo(currUserRadioInfo.getDjId(), currUserRadioInfo.getSource())
+                                : commentRequest ? MusicServerUtil.getUserInfo(currUserCommentInfo.getUserId(), currUserCommentInfo.getSource())
+                                : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getArtistId(), currAuthorMusicInfo.getSource())
+                                : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getArtistId(), currAuthorAlbumInfo.getSource())
+                                : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, limit, netUserCurrPage);
                         List<NetUserInfo> netUserInfos = result.data;
                         Integer total = result.total;
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -14869,7 +14869,7 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     NetUserInfo userInfo = netUserList.getSelectedValue();
-                    CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
                             netUserRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInUserCurrPage);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
@@ -15156,7 +15156,7 @@ public class PlayerFrame extends JFrame {
                 NetUserInfo userInfo = netUserList.getSelectedValue();
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                     ImageIcon icon = new ImageIcon(coverImg);
                     userCoverAndNameLabel.setIcon(icon);
                     userCoverAndNameLabel.setText(LOADING_MSG);
@@ -15165,31 +15165,31 @@ public class PlayerFrame extends JFrame {
                     userDescriptionLabel.setIcon(icon);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
-                            MusicServerUtils.fillUserInfo(userInfo);
-                            userCoverAndNameLabel.setText(StringUtils.textToHtml(userInfo.getName()));
-                            userTagLabel.setText(StringUtils.textToHtml(userInfo.getTag()));
+                            MusicServerUtil.fillUserInfo(userInfo);
+                            userCoverAndNameLabel.setText(StringUtil.textToHtml(userInfo.getName()));
+                            userTagLabel.setText(StringUtil.textToHtml(userInfo.getTag()));
                             if (userInfo.getSign() != null)
-                                userDescriptionLabel.setText(StringUtils.textToHtml(userInfo.getSign()));
+                                userDescriptionLabel.setText(StringUtil.textToHtml(userInfo.getSign()));
                             if (userInfo.hasAvatar()) {
                                 userCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 userInfo.setInvokeLater(() -> {
                                     userCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netUserList.repaint();
                                 });
                             }
                             if (userInfo.hasBgImg()) {
                                 userDescriptionLabel.setIcon(new ImageIcon(
-                                        ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 userInfo.setInvokeLater2(() -> {
                                     userDescriptionLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netUserList.repaint();
                                 });
@@ -15210,7 +15210,7 @@ public class PlayerFrame extends JFrame {
                             netUserRecordTypeComboBox.setModel(orderComboBoxModel);
 
                         // 得到用户的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
                                 netUserRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInUserCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
@@ -15299,10 +15299,10 @@ public class PlayerFrame extends JFrame {
                         if (index == -1) return;
                         if (!netUserList.isSelectedIndex(index)) netUserList.setSelectedIndex(index);
                         if (hasBeenCollected(netUserList.getSelectedValue())) {
-                            netUserCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -15327,7 +15327,7 @@ public class PlayerFrame extends JFrame {
                 netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
             else netUserInfo = (NetUserInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInUser(
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
                         netUserRecordTypeComboBox.getSelectedIndex(), netUserInfo, 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
@@ -15386,7 +15386,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForPlaylist();
                     // 搜索用户歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtils.getUserPlaylists(currPlaylistUserInfo = netUserInfo, limit, netPlaylistCurrPage = 1);
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistUserInfo = netUserInfo, limit, netPlaylistCurrPage = 1);
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15453,7 +15453,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtils.getUserAlbums(currAlbumUserInfo = netUserInfo, limit, netAlbumCurrPage = 1);
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumUserInfo = netUserInfo, limit, netAlbumCurrPage = 1);
                     List<NetAlbumInfo> netAlbumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15519,7 +15519,7 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtils.getUserRadios(currRadioUserInfo = netUserInfo, limit, netRadioCurrPage = 1);
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getUserRadios(currRadioUserInfo = netUserInfo, limit, netRadioCurrPage = 1);
                     List<NetRadioInfo> netRadioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15586,7 +15586,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForMv();
                     // 获取用户视频
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getUserVideos(currMvUserInfo = netUserInfo,
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getUserVideos(currMvUserInfo = netUserInfo,
                             netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage = 1, limit, cursor = "");
                     List<NetMvInfo> netMvInfos = result.data;
                     Integer total = result.total;
@@ -15655,7 +15655,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取用户关注
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getUserFollows(currFollowUserUserInfo = netUserInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFollows(currFollowUserUserInfo = netUserInfo, limit, netUserCurrPage = 1);
                     List<NetUserInfo> netUserInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15723,7 +15723,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取用户粉丝
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getUserFolloweds(currFollowedUserUserInfo = netUserInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFolloweds(currFollowedUserUserInfo = netUserInfo, limit, netUserCurrPage = 1);
                     List<NetUserInfo> netUserInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15857,7 +15857,7 @@ public class PlayerFrame extends JFrame {
         loadingAndRun(() -> {
             try {
                 // 获取评论并显示评论列表
-                CommonResult<NetCommentInfo> result = MusicServerUtils.getComments(
+                CommonResult<NetCommentInfo> result = MusicServerUtil.getComments(
                         currCommentObjectInfo = info, (String) netCommentTypeComboBox.getSelectedItem(),
                         commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage, first ? cursor = "" : cursor);
                 List<NetCommentInfo> netCommentInfos = result.data;
@@ -15931,7 +15931,7 @@ public class PlayerFrame extends JFrame {
         loadingAndRun(() -> {
             try {
                 // 获取乐谱并显示乐谱列表
-                CommonResult<NetSheetInfo> result = MusicServerUtils.getSheets(currSheetMusicInfo = info);
+                CommonResult<NetSheetInfo> result = MusicServerUtil.getSheets(currSheetMusicInfo = info);
                 List<NetSheetInfo> netSheetInfos = result.data;
                 netSheetCurrPage = netSheetMaxPage = 1;
                 // 更新标题和数量显示
@@ -16192,7 +16192,7 @@ public class PlayerFrame extends JFrame {
                 Platform.runLater(() -> {
                     File outputFile = fileChooser.showSaveDialog(null);
                     if (outputFile != null) {
-                        ImageUtils.toFile(netCommentInfo.getProfileUrl(), outputFile);
+                        ImageUtil.toFile(netCommentInfo.getProfileUrl(), outputFile);
                     }
                 });
             }
@@ -16205,7 +16205,7 @@ public class PlayerFrame extends JFrame {
                     clearRequestForUser();
                     // 获取评论用户
                     currUserCommentInfo = netCommentInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtils.getUserInfo(netCommentInfo.getUserId(), netCommentInfo.getSource());
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netCommentInfo.getUserId(), netCommentInfo.getSource());
                     List<NetUserInfo> netUserInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
@@ -16272,7 +16272,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForPlaylist();
                     // 搜索用户歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtils.getUserPlaylists(currPlaylistCommentInfo = netCommentInfo, limit, netPlaylistCurrPage = 1);
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo = netCommentInfo, limit, netPlaylistCurrPage = 1);
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -16339,7 +16339,7 @@ public class PlayerFrame extends JFrame {
                 try {
                     clearRequestForAlbum();
                     // 搜索用户专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtils.getUserAlbums(currAlbumCommentInfo = netCommentInfo, limit, netAlbumCurrPage = 1);
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumCommentInfo = netCommentInfo, limit, netAlbumCurrPage = 1);
                     List<NetAlbumInfo> netAlbumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -16610,7 +16610,7 @@ public class PlayerFrame extends JFrame {
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtils.getSheetImgUrls(netSheetInfo);
+                        return MusicServerUtil.getSheetImgUrls(netSheetInfo);
                     }
 
                     @Override
@@ -16692,7 +16692,7 @@ public class PlayerFrame extends JFrame {
                         // 这是歌单里的歌
                         if (o instanceof NetPlaylistInfo) {
                             NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInPlaylist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(
                                     playlistInfo.getId(), playlistInfo.getSource(), limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -16720,7 +16720,7 @@ public class PlayerFrame extends JFrame {
                         // 这是专辑里的歌
                         else if (o instanceof NetAlbumInfo) {
                             NetAlbumInfo albumInfo = (NetAlbumInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInAlbum(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
                                     albumInfo.getId(), albumInfo.getSource(), limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -16748,7 +16748,7 @@ public class PlayerFrame extends JFrame {
                         // 这是歌手里的歌
                         else if (o instanceof NetArtistInfo) {
                             NetArtistInfo artistInfo = (NetArtistInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInArtist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(
                                     artistInfo.getId(), artistInfo.getSource(), limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -16776,7 +16776,7 @@ public class PlayerFrame extends JFrame {
                         // 这是电台里的歌
                         else if (o instanceof NetRadioInfo) {
                             NetRadioInfo radioInfo = (NetRadioInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRadio(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
                                     radioInfo, limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
@@ -16819,7 +16819,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetPlaylistInfo> result = MusicServerUtils.getRecommendPlaylists(
+                        CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         int total = result.total;
@@ -16868,7 +16868,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetPlaylistInfo> result = MusicServerUtils.getHighQualityPlaylists(
+                        CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetPlaylistInfo> netPlaylistInfos = result.data;
                         int total = result.total;
@@ -16917,7 +16917,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getHotMusicRecommend(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetMusicInfo> netMusicInfos = result.data;
                         int total = result.total;
@@ -16956,7 +16956,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getNewMusic(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetMusicInfo> netMusicInfos = result.data;
                         int total = result.total;
@@ -16995,7 +16995,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetAlbumInfo> result = MusicServerUtils.getNewAlbums(
+                        CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetAlbumInfo> netAlbumInfos = result.data;
                         int total = result.total;
@@ -17045,7 +17045,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistLists(
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetArtistInfo> netArtistInfos = result.data;
                         int total = result.total;
@@ -17095,7 +17095,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetRadioInfo> result = MusicServerUtils.getNewRadios(
+                        CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(
                                 netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage);
                         List<NetRadioInfo> netRadioInfos = result.data;
                         int total = result.total;
@@ -17145,7 +17145,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetRadioInfo> result = MusicServerUtils.getHotRadios(
+                        CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetRadioInfo> netRadioInfos = result.data;
                         int total = result.total;
@@ -17195,7 +17195,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetMusicInfo> result = MusicServerUtils.getRecommendPrograms(
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetMusicInfo> netMusicInfos = result.data;
                         int total = result.total;
@@ -17234,7 +17234,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        CommonResult<NetMvInfo> result = MusicServerUtils.getRecommendMvs(
+                        CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
                         List<NetMvInfo> netMvInfos = result.data;
                         int total = result.total;
@@ -17431,14 +17431,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.recPlaylistTag.isEmpty()) MusicServerUtils.initRecPlaylistTag();
+                    if (Tags.recPlaylistTag.isEmpty()) MusicServerUtil.initRecPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.recPlaylistTag.keySet()) {
                         if (shouldShowTag(Tags.recPlaylistTag, Tags.recPlaylistMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtils.getRecommendPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     Integer total = result.total;
@@ -17495,14 +17495,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.playlistTag.isEmpty()) MusicServerUtils.initPlaylistTag();
+                    if (Tags.playlistTag.isEmpty()) MusicServerUtil.initPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.playlistTag.keySet()) {
                         if (shouldShowTag(Tags.playlistTag, Tags.playlistMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtils.getHighQualityPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     Integer total = result.total;
@@ -17557,14 +17557,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.hotSongTag.isEmpty()) MusicServerUtils.initHotSongTag();
+                    if (Tags.hotSongTag.isEmpty()) MusicServerUtil.initHotSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.hotSongTag.keySet()) {
                         if (shouldShowTag(Tags.hotSongTag, Tags.hotSongMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetMusicInfo> result = MusicServerUtils.getHotMusicRecommend(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetMusicInfo> netMusicInfos = result.data;
                     int total = result.total;
@@ -17609,14 +17609,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.newSongTag.isEmpty()) MusicServerUtils.initNewSongTag();
+                    if (Tags.newSongTag.isEmpty()) MusicServerUtil.initNewSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.newSongTag.keySet()) {
                         if (shouldShowTag(Tags.newSongTag, Tags.newSongMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetMusicInfo> result = MusicServerUtils.getNewMusic(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetMusicInfo> netMusicInfos = result.data;
                     int total = result.total;
@@ -17661,14 +17661,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.newAlbumTag.isEmpty()) MusicServerUtils.initNewAlbumTag();
+                    if (Tags.newAlbumTag.isEmpty()) MusicServerUtil.initNewAlbumTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.newAlbumTag.keySet()) {
                         if (shouldShowTag(Tags.newAlbumTag, Tags.newAlbumMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetAlbumInfo> result = MusicServerUtils.getNewAlbums(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetAlbumInfo> netAlbumInfos = result.data;
                     int total = result.total;
@@ -17722,14 +17722,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.artistTag.isEmpty()) MusicServerUtils.initArtistTag();
+                    if (Tags.artistTag.isEmpty()) MusicServerUtil.initArtistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.artistTag.keySet()) {
                         if (shouldShowTag(Tags.artistTag, Tags.artistMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetArtistInfo> result = MusicServerUtils.getArtistLists(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetArtistInfo> netArtistInfos = result.data;
                     int total = result.total;
@@ -17783,7 +17783,7 @@ public class PlayerFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
-                    CommonResult<NetRadioInfo> result = MusicServerUtils.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage = 1);
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage = 1);
                     List<NetRadioInfo> netRadioInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17836,14 +17836,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.radioTag.isEmpty()) MusicServerUtils.initRadioTag();
+                    if (Tags.radioTag.isEmpty()) MusicServerUtil.initRadioTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.radioTag.keySet()) {
                         if (shouldShowTag(Tags.radioTag, Tags.radioMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetRadioInfo> result = MusicServerUtils.getHotRadios(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetRadioInfo> netRadioInfos = result.data;
                     int total = result.total;
@@ -17897,14 +17897,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.programTag.isEmpty()) MusicServerUtils.initProgramTag();
+                    if (Tags.programTag.isEmpty()) MusicServerUtil.initProgramTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.programTag.keySet()) {
                         if (shouldShowTag(Tags.programTag, Tags.programMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetMusicInfo> result = MusicServerUtils.getRecommendPrograms(netRecommendSourceComboBox.getSelectedIndex(),
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetMusicInfo> netMusicInfos = result.data;
                     int total = result.total;
@@ -17950,14 +17950,14 @@ public class PlayerFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.mvTag.isEmpty()) MusicServerUtils.initMvTag();
+                    if (Tags.mvTag.isEmpty()) MusicServerUtil.initMvTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.mvTag.keySet()) {
                         if (shouldShowTag(Tags.mvTag, Tags.mvMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
-                    CommonResult<NetMvInfo> result = MusicServerUtils.getRecommendMvs(
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
                             netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
                     List<NetMvInfo> netMvInfos = result.data;
                     int total = result.total;
@@ -18215,7 +18215,7 @@ public class PlayerFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -18223,20 +18223,20 @@ public class PlayerFrame extends JFrame {
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillPlaylistInfo(playlistInfo);
-                                recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
+                                MusicServerUtil.fillPlaylistInfo(playlistInfo);
+                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtils.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
+                                    recommendItemTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                                 if (playlistInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtils.textToHtml(playlistInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     playlistInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -18252,7 +18252,7 @@ public class PlayerFrame extends JFrame {
                     // 得到歌单的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInPlaylist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(
                                     playlistInfo.getId(), playlistInfo.getSource(), limit, netMusicInRecommendCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -18310,7 +18310,7 @@ public class PlayerFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText("");
@@ -18318,18 +18318,18 @@ public class PlayerFrame extends JFrame {
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillAlbumInfo(albumInfo);
-                                recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
+                                MusicServerUtil.fillAlbumInfo(albumInfo);
+                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
                                 if (albumInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtils.textToHtml(albumInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
                                 if (albumInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     albumInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -18344,7 +18344,7 @@ public class PlayerFrame extends JFrame {
                     // 得到专辑的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInAlbum(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
                                     albumInfo.getId(), albumInfo.getSource(), limit, netMusicInRecommendCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -18402,7 +18402,7 @@ public class PlayerFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -18410,20 +18410,20 @@ public class PlayerFrame extends JFrame {
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillArtistInfo(artistInfo);
-                                recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
+                                MusicServerUtil.fillArtistInfo(artistInfo);
+                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtils.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
+                                    recommendItemTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtils.textToHtml(artistInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     artistInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -18439,7 +18439,7 @@ public class PlayerFrame extends JFrame {
                     // 得到歌手的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInArtist(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(
                                     artistInfo.getId(), artistInfo.getSource(), limit, netMusicInRecommendCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -18497,7 +18497,7 @@ public class PlayerFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtils.borderShadow(ImageUtils.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -18505,20 +18505,20 @@ public class PlayerFrame extends JFrame {
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
-                                MusicServerUtils.fillRadioInfo(radioInfo);
-                                recommendItemCoverAndNameLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
+                                MusicServerUtil.fillRadioInfo(radioInfo);
+                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtils.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
+                                    recommendItemTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtils.textToHtml(radioInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     radioInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtils.borderShadow(ImageUtils.setRadius(ImageUtils.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -18534,7 +18534,7 @@ public class PlayerFrame extends JFrame {
                     // 得到电台的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtils.getMusicInfoInRadio(
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
                                     radioInfo, limit, netMusicInRecommendCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -18630,10 +18630,10 @@ public class PlayerFrame extends JFrame {
                         else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
                         else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
                         if (hasBeenCollected(o)) {
-                            menuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            menuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                         } else {
-                            menuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            menuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             menuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -18665,7 +18665,7 @@ public class PlayerFrame extends JFrame {
         int si = netRecommendSourceComboBox.getSelectedIndex();
         String[] vals = tags.get(tag);
         for (int i = 0, len = map.length; i < len; i++) {
-            if (map[i] == si && StringUtils.isNotEmpty(vals[i])) return true;
+            if (map[i] == si && StringUtil.isNotEmpty(vals[i])) return true;
         }
         return false;
     }
@@ -18863,7 +18863,7 @@ public class PlayerFrame extends JFrame {
         downloadLocateFileMenuItem.addActionListener(e -> {
             Task task = downloadList.getSelectedValue();
             File file = new File(task.getDest());
-            TerminateUtils.explorer(file.exists() ? file.getAbsolutePath() :
+            TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() :
                     task.isMusic() ? new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath() :
                             new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
         });
@@ -18873,7 +18873,7 @@ public class PlayerFrame extends JFrame {
             if (task.isMusic()) {
                 AudioFile file = new AudioFile(task.getDest());
                 if (file.exists()) {
-                    MusicUtils.fillAudioFileInfo(file);
+                    MusicUtil.fillAudioFileInfo(file);
                     editInfo(file);
                 } else new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
             }
@@ -18905,7 +18905,7 @@ public class PlayerFrame extends JFrame {
                 if (task.isProcessing()) task.stop();
                 downloadListModel.removeElement(task);
                 if (!checked) continue;
-                FileUtils.delete(task.getDest());
+                FileUtil.delete(task.getDest());
             }
             downloadList.setModel(downloadListModel);
             new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
@@ -19145,10 +19145,10 @@ public class PlayerFrame extends JFrame {
                             playQueueRelatedMvMenuItem.setEnabled(ins);
                             playQueuePlayMvMenuItem.setEnabled(ins && ((NetMusicInfo) o).hasMv());
                             if (hasBeenCollected(o)) {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             playQueueLocateFileMenuItem.setEnabled(!ins);
@@ -19171,10 +19171,10 @@ public class PlayerFrame extends JFrame {
                             playQueueRelatedMvMenuItem.setEnabled(ins);
                             playQueuePlayMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
-                                playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             playQueueLocateFileMenuItem.setEnabled(!ins);
@@ -19208,7 +19208,7 @@ public class PlayerFrame extends JFrame {
                     if (hasBeenCollected(o)) continue;
                     collectionModel.add(0, o);
                     if (player.loadedObject(o))
-                        collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
@@ -19219,7 +19219,7 @@ public class PlayerFrame extends JFrame {
                     if (hasBeenCollected(o)) {
                         collectionModel.removeElement(o);
                         if (player.loadedObject(o))
-                            collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
                 if (needRefresh) musicList.setModel(model);
@@ -19284,7 +19284,7 @@ public class PlayerFrame extends JFrame {
             Object o = playQueue.getSelectedValue();
             if (o instanceof AudioFile) {
                 File file = ((AudioFile) o);
-                TerminateUtils.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
+                TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
             }
         });
         // 编辑歌曲信息菜单项
@@ -19353,7 +19353,7 @@ public class PlayerFrame extends JFrame {
             if (player.loadedNetMusic()) {
                 NetMusicInfo netMusicInfo = player.getNetMusicInfo();
                 lrcPath = new File(SimplePath.CACHE_PATH + netMusicInfo.toLrcFileName()).getAbsolutePath();
-                FileUtils.writeStr(lrcStr, lrcPath, false);
+                FileUtil.writeStr(lrcStr, lrcPath, false);
             }
             // 本地音乐直接打开 lrc 文件
             else {
@@ -19361,7 +19361,7 @@ public class PlayerFrame extends JFrame {
                 String filePath = file.getAbsolutePath();
                 lrcPath = filePath.substring(0, filePath.lastIndexOf('.')) + ".lrc";
             }
-            TerminateUtils.notepad(lrcPath);
+            TerminateUtil.notepad(lrcPath);
         });
         // 查看歌词翻译文件
         browseLrcTransMenuItem.addActionListener(e -> {
@@ -19370,9 +19370,9 @@ public class PlayerFrame extends JFrame {
             if (player.loadedNetMusic()) {
                 NetMusicInfo netMusicInfo = player.getNetMusicInfo();
                 lrcPath = new File(SimplePath.CACHE_PATH + netMusicInfo.toLrcTransFileName()).getAbsolutePath();
-                FileUtils.writeStr(transStr, lrcPath, false);
+                FileUtil.writeStr(transStr, lrcPath, false);
             }
-            TerminateUtils.notepad(lrcPath);
+            TerminateUtil.notepad(lrcPath);
         });
         // 下载歌词文件
         downloadLrcMenuItem.addActionListener(e -> {
@@ -19649,7 +19649,7 @@ public class PlayerFrame extends JFrame {
         // 改变时间条的值，当前时间标签的值随之改变
         timeBar.addChangeListener(e -> {
             double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMusicInfo().getDuration();
-            currTimeLabel.setText(TimeUtils.format(t));
+            currTimeLabel.setText(TimeUtil.format(t));
         });
         // 设置进度条最佳大小
         timeBar.setPreferredSize(new Dimension(1100, 20));
@@ -19716,11 +19716,11 @@ public class PlayerFrame extends JFrame {
             if (o == null) o = player.getAudioFile();
             if (!hasBeenCollected(o)) {
                 collectionModel.add(0, o);
-                collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+                collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 collectionModel.removeElement(o);
-                collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+                collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -19831,10 +19831,10 @@ public class PlayerFrame extends JFrame {
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
-                muteButton.setIcon(ImageUtils.dye(muteIcon, currUIStyle.getIconColor()));
+                muteButton.setIcon(ImageUtil.dye(muteIcon, currUIStyle.getIconColor()));
             } else {
                 muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtils.dye(soundIcon, currUIStyle.getIconColor()));
+                muteButton.setIcon(ImageUtil.dye(soundIcon, currUIStyle.getIconColor()));
             }
             player.setMute(isMute);
         });
@@ -19846,7 +19846,7 @@ public class PlayerFrame extends JFrame {
             player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
             if (isMute) {
                 muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtils.dye(soundIcon, currUIStyle.getIconColor()));
+                muteButton.setIcon(ImageUtil.dye(soundIcon, currUIStyle.getIconColor()));
                 player.setMute(isMute = false);
             }
         });
@@ -19864,7 +19864,7 @@ public class PlayerFrame extends JFrame {
         switchSpectrumButton.addActionListener(e -> {
             if (showSpectrum = !showSpectrum) openSpectrum();
             else closeSpectrum();
-            switchSpectrumButton.setIcon(ImageUtils.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
+            switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
         });
         // 模糊菜单
         blurPopupMenu.add(gsMenuItem);
@@ -19877,32 +19877,32 @@ public class PlayerFrame extends JFrame {
         gsMenuItem.addActionListener(e -> {
             gsOn = !gsOn;
             doBlur();
-            gsMenuItem.setIcon(gsOn ? ImageUtils.dye(tickIcon, currUIStyle.getIconColor()) : null);
+            gsMenuItem.setIcon(gsOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
         darkerMenuItem.addActionListener(e -> {
             darkerOn = !darkerOn;
             doBlur();
-            darkerMenuItem.setIcon(darkerOn ? ImageUtils.dye(tickIcon, currUIStyle.getIconColor()) : null);
+            darkerMenuItem.setIcon(darkerOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurType.OFF;
             doBlur();
-            blurButton.setIcon(ImageUtils.dye(blurOffIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(blurOffIcon, currUIStyle.getIconColor()));
         });
         cvBlurMenuItem.addActionListener(e -> {
             blurType = BlurType.CV;
             doBlur();
-            blurButton.setIcon(ImageUtils.dye(cvBlurIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(cvBlurIcon, currUIStyle.getIconColor()));
         });
         mcBlurMenuItem.addActionListener(e -> {
             blurType = BlurType.MC;
             doBlur();
-            blurButton.setIcon(ImageUtils.dye(mcBlurIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(mcBlurIcon, currUIStyle.getIconColor()));
         });
         lgBlurMenuItem.addActionListener(e -> {
             blurType = BlurType.LG;
             doBlur();
-            blurButton.setIcon(ImageUtils.dye(lgBlurIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(lgBlurIcon, currUIStyle.getIconColor()));
         });
         // 模糊按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
@@ -19947,10 +19947,10 @@ public class PlayerFrame extends JFrame {
             if (showDesktopLyric = !showDesktopLyric) {
                 // 最大化时不显示桌面歌词
                 desktopLyricDialog.setVisible(windowState != WindowState.MAXIMIZED);
-                desktopLyricButton.setIcon(ImageUtils.dye(desktopLyricOnIcon, currUIStyle.getIconColor()));
+                desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOnIcon, currUIStyle.getIconColor()));
             } else {
                 desktopLyricDialog.setVisible(false);
-                desktopLyricButton.setIcon(ImageUtils.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
+                desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
             }
         });
         // 繁简切换按钮
@@ -19961,8 +19961,8 @@ public class PlayerFrame extends JFrame {
             // 切换到繁体
             if (currChineseType == ChineseType.SIMPLIFIED) {
                 if (nextLrc >= 0)
-                    for (Statement stmt : statements) stmt.setLyric(StringUtils.toTraditionalChinese(stmt.getLyric()));
-                switchChineseButton.setIcon(ImageUtils.dye(tradChineseIcon, currUIStyle.getIconColor()));
+                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
+                switchChineseButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
                 currChineseType = ChineseType.TRADITIONAL;
             }
             // 切换到简体
@@ -19971,7 +19971,7 @@ public class PlayerFrame extends JFrame {
                 if (nextLrc >= 0)
                     // 切换简体只是重新加载歌词！
                     loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
-                switchChineseButton.setIcon(ImageUtils.dye(simpChineseIcon, currUIStyle.getIconColor()));
+                switchChineseButton.setIcon(ImageUtil.dye(simpChineseIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
         });
@@ -19988,10 +19988,10 @@ public class PlayerFrame extends JFrame {
                     if (player.loadedNetMusic() && player.getNetMusicInfo().hasRoma()) {
                         loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, false);
                     } else {
-                        for (Statement stmt : statements) stmt.setLyric(StringUtils.toRomaji(stmt.getLyric()));
+                        for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
                     }
                 }
-                switchJapaneseButton.setIcon(ImageUtils.dye(romajiIcon, currUIStyle.getIconColor()));
+                switchJapaneseButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
             }
             // 切换到日语
             else if (currJapaneseType == JapaneseType.ROMAJI) {
@@ -19999,7 +19999,7 @@ public class PlayerFrame extends JFrame {
                 if (nextLrc >= 0)
                     // 切换简体只是重新加载歌词！
                     loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
-                switchJapaneseButton.setIcon(ImageUtils.dye(kanaIcon, currUIStyle.getIconColor()));
+                switchJapaneseButton.setIcon(ImageUtil.dye(kanaIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
         });
@@ -20014,7 +20014,7 @@ public class PlayerFrame extends JFrame {
                 if (nextLrc >= 0)
                     // 重新加载歌词
                     loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, true);
-                switchLrcTypeButton.setIcon(ImageUtils.dye(translationIcon, currUIStyle.getIconColor()));
+                switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
             }
             // 切换到原歌词
             else if (currLrcType == LyricType.TRANSLATION) {
@@ -20022,7 +20022,7 @@ public class PlayerFrame extends JFrame {
                 if (nextLrc >= 0)
                     // 重新加载歌词
                     loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, false);
-                switchLrcTypeButton.setIcon(ImageUtils.dye(originalIcon, currUIStyle.getIconColor()));
+                switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
         });
@@ -20094,7 +20094,7 @@ public class PlayerFrame extends JFrame {
             statusText = st;
             String title = String.format(TITLE + "（%s：%s）", st,
                     player.loadedNetMusic() ? player.getNetMusicInfo().toSimpleString() : player.getAudioFile());
-            titleLabel.setText(StringUtils.textToHtml(title));
+            titleLabel.setText(StringUtil.textToHtml(title));
             setTitle(title);
         }
     }
@@ -20114,7 +20114,7 @@ public class PlayerFrame extends JFrame {
         currTimeLabel.setPreferredSize(d);
         durationLabel.setPreferredSize(d);
         // 重置为“播放”
-        playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
         if (miniDialog != null) {
             miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -20132,9 +20132,9 @@ public class PlayerFrame extends JFrame {
         // 设置切换面板文字
         final int maxLen = 34;
         if (netMusicInfo != null)
-            changePaneButton.setText(StringUtils.textToHtml(StringUtils.shorten(netMusicInfo.toSimpleString(), maxLen)));
+            changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(netMusicInfo.toSimpleString(), maxLen)));
         else
-            changePaneButton.setText(StringUtils.textToHtml(StringUtils.shorten(file.toString(), maxLen)));
+            changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(file.toString(), maxLen)));
         if (miniDialog != null) miniDialog.infoLabel.setText(changePaneButton.getText());
         // 设置 MV、收藏、下载、评论、乐谱按钮
         mvButton.setEnabled(netMusicInfo != null && netMusicInfo.hasMv());
@@ -20143,21 +20143,21 @@ public class PlayerFrame extends JFrame {
         commentButton.setEnabled(netMusicInfo != null);
         sheetButton.setEnabled(netMusicInfo != null);
         if (netMusicInfo != null && hasBeenCollected(netMusicInfo) || hasBeenCollected(file))
-            collectButton.setIcon(ImageUtils.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+            collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
         else
-            collectButton.setIcon(ImageUtils.dye(collectIcon, currUIStyle.getIconColor()));
+            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
 
         SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
         // 设置歌曲名称
-        songNameLabel.setText(StringUtils.textToHtml(SONG_NAME_LABEL + simpleMusicInfo.getName()));
+        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + simpleMusicInfo.getName()));
         songNameLabel.setVisible(false);
         songNameLabel.setVisible(true);
         // 设置艺术家
-        artistLabel.setText(StringUtils.textToHtml(ARTIST_LABEL + simpleMusicInfo.getArtist()));
+        artistLabel.setText(StringUtil.textToHtml(ARTIST_LABEL + simpleMusicInfo.getArtist()));
         artistLabel.setVisible(false);
         artistLabel.setVisible(true);
         // 设置专辑名称
-        albumLabel.setText(StringUtils.textToHtml(ALBUM_NAME_LABEL + simpleMusicInfo.getAlbumName()));
+        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + simpleMusicInfo.getAlbumName()));
         albumLabel.setVisible(false);
         albumLabel.setVisible(true);
     }
@@ -20170,7 +20170,7 @@ public class PlayerFrame extends JFrame {
         // 重置总时间
         durationLabel.setText(DEFAULT_TIME);
         // 重置为“播放”
-        playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
         // 重置播放进度条
         timeBar.setValue(0);
@@ -20185,8 +20185,8 @@ public class PlayerFrame extends JFrame {
 
         // 卸载专辑图片
         albumImageLabel.setIcon(null);
-        changePaneButton.setIcon(ImageUtils.dye(
-                new ImageIcon(ImageUtils.setRadius(ImageUtils.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)),
+        changePaneButton.setIcon(ImageUtil.dye(
+                new ImageIcon(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)),
                 currUIStyle.getIconColor()));
         changePaneButton.setText(NO_LRC_MSG);
         if (miniDialog != null) {
@@ -20236,11 +20236,11 @@ public class PlayerFrame extends JFrame {
         boolean isDefault = albumImage == defaultAlbumImage;
         saveAlbumImageMenuItem.setEnabled(!isDefault);
         // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
-        BufferedImage image = ImageUtils.width(ImageUtils.cropCenter(albumImage), albumImageWidth);
-        if (isDefault) image = ImageUtils.dye(image, currUIStyle.getTextColor());
-        albumImageLabel.setIcon(new ImageIcon(ImageUtils.borderShadow(ImageUtils.setRadius(image, LARGE_ARC))));
+        BufferedImage image = ImageUtil.width(ImageUtil.cropCenter(albumImage), albumImageWidth);
+        if (isDefault) image = ImageUtil.dye(image, currUIStyle.getTextColor());
+        albumImageLabel.setIcon(new ImageIcon(ImageUtil.borderShadow(ImageUtil.setRadius(image, LARGE_ARC))));
         // 切换面板专辑图片
-        changePaneButton.setIcon(new ImageIcon(ImageUtils.setRadius(ImageUtils.width(image, changePaneImageWidth), TINY_ARC)));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(image, changePaneImageWidth), TINY_ARC)));
         if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
         // 背景模糊
         if (blurType != BlurType.OFF) doBlur();
@@ -20283,7 +20283,7 @@ public class PlayerFrame extends JFrame {
         boolean isFile = netMusicInfo == null;
         try {
             if (isFile) {
-                lrcPath = FileUtils.getPathWithoutSuffix(file) + ".lrc";
+                lrcPath = FileUtil.getPathWithoutSuffix(file) + ".lrc";
                 lrcData = new LrcData(lrcPath, true);
                 // 获取 lrc 文件内容
                 lrcStr = null;
@@ -20309,14 +20309,14 @@ public class PlayerFrame extends JFrame {
                 throw new NoLyricException("歌词是一个空串");
             // 繁简切换，简体时不动
             if (currChineseType == ChineseType.TRADITIONAL) {
-                for (Statement stmt : statements) stmt.setLyric(StringUtils.toTraditionalChinese(stmt.getLyric()));
+                for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
             }
             // 日文/罗马音切换，日文时不动
             if (currJapaneseType == JapaneseType.ROMAJI && !loadTrans) {
                 // 使用已有的罗马音歌词
                 if (!isFile && netMusicInfo.hasRoma()) statements = romaData.getStatements();
                 else
-                    for (Statement stmt : statements) stmt.setLyric(StringUtils.toRomaji(stmt.getLyric()));
+                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
             }
             if (reload) lrcListModel.clear();
             // 添加空白充数
@@ -20338,12 +20338,12 @@ public class PlayerFrame extends JFrame {
                 f = new File(lrcPath);
                 fileExists = f.exists();
             }
-            boolean isBadFormat = fileExists || StringUtils.isNotEmpty(lrc);
+            boolean isBadFormat = fileExists || StringUtil.isNotEmpty(lrc);
             // 本地歌曲歌词不支持滚动时不需要写入 lrcStr
             lrcStr = isBadFormat && !fileExists ? lrc : null;
 //            lrcStr = isBadFormat ? (fileExists ? FileUtils.readAsStr(f) : lrc) : null;
 
-            statements = isBadFormat ? FileUtils.getBadFormatStatements(fileExists ? lrcPath : lrc, fileExists) : new Vector<>();
+            statements = isBadFormat ? FileUtil.getBadFormatStatements(fileExists ? lrcPath : lrc, fileExists) : new Vector<>();
             if (!reload) {
                 // 添加空白充数
                 Statement empty = new Statement(0, " ");
@@ -20404,9 +20404,9 @@ public class PlayerFrame extends JFrame {
                 // 重置标题
                 updateTitle("刷新 URL 中");
                 playExecutor.submit(() -> {
-                    String url = MusicServerUtils.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
-                    if (StringUtils.isNotEmpty(url)) netMusicInfo.setUrl(url);
-                    else MusicServerUtils.fillAvailableMusicUrl(netMusicInfo);
+                    String url = MusicServerUtil.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
+                    if (StringUtil.isNotEmpty(url)) netMusicInfo.setUrl(url);
+                    else MusicServerUtil.fillAvailableMusicUrl(netMusicInfo);
                     player.disposeMp();
                     player.initMp();
                     if (!player.isPlaying()) return;
@@ -20427,12 +20427,12 @@ public class PlayerFrame extends JFrame {
                 for (int i = 0; i < numBands; i++) {
                     int mult = i / barNum;
                     int n = mult % 2 == 0 ? (i - barNum * mult) : (barNum - (i - barNum * mult));
-                    int spectrum = n > nFactor ? 0 : (int) SpectrumUtils.handleMagnitude(magnitudes[n + 20]);
+                    int spectrum = n > nFactor ? 0 : (int) SpectrumUtil.handleMagnitude(magnitudes[n + 20]);
                     avg += spectrum * 1.2;
                 }
                 avg = avg / numBands * 1.4 / barNum + 0.42;
                 for (int i = 0; i < barNum; i++) {
-                    double h = Math.min(maxHeight, SpectrumUtils.handleMagnitude(magnitudes[i]) * avg);
+                    double h = Math.min(maxHeight, SpectrumUtil.handleMagnitude(magnitudes[i]) * avg);
                     specsOrigin[i] = h;
                     specsGap[i] = Math.abs(specsOrigin[i] - specs[i]);
                 }
@@ -20520,7 +20520,7 @@ public class PlayerFrame extends JFrame {
         if (replay) player.replay();
         else if (!player.play()) return;
         // 开始播放，若播放成功则更新 UI
-        playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PAUSE_TIP);
         if (miniDialog != null) {
             miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -20546,7 +20546,7 @@ public class PlayerFrame extends JFrame {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
                 return;
             }
-            MusicUtils.fillAudioFileInfo(audioFile);
+            MusicUtil.fillAudioFileInfo(audioFile);
             obj = audioFile;
         }
 
@@ -20598,7 +20598,7 @@ public class PlayerFrame extends JFrame {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
                 return false;
             }
-            MusicUtils.fillAudioFileInfo(audioFile);
+            MusicUtil.fillAudioFileInfo(audioFile);
             obj = audioFile;
         }
 
@@ -20670,14 +20670,14 @@ public class PlayerFrame extends JFrame {
                 return false;
             }
             // 如果歌曲信息不完整，获取歌曲文件的头信息
-            if (!file.isIntegrated()) MusicUtils.fillAudioFileInfo(file);
+            if (!file.isIntegrated()) MusicUtil.fillAudioFileInfo(file);
         }
         // 在线音乐
         else {
             try {
                 musicInfo = (NetMusicInfo) o;
                 // 如果歌曲信息不完整，获取歌曲额外的信息(除了 url)
-                MusicServerUtils.fillMusicInfo(musicInfo);
+                MusicServerUtil.fillMusicInfo(musicInfo);
                 updateRenderer(netMusicList);
             } catch (Exception e) {
                 if (e instanceof IORuntimeException) {
@@ -20706,7 +20706,7 @@ public class PlayerFrame extends JFrame {
                 globalExecutor.submit(() -> {
                     try {
                         if (!finalMusicInfo.hasLrc()) lrcLoading();
-                        MusicServerUtils.fillLrc(finalMusicInfo);
+                        MusicServerUtil.fillLrc(finalMusicInfo);
                     } catch (Exception e) {
 
                     } finally {
@@ -20715,27 +20715,27 @@ public class PlayerFrame extends JFrame {
                 });
 
                 // 加载在线音乐的 url
-                MusicServerUtils.fillMusicUrl(musicInfo);
+                MusicServerUtil.fillMusicUrl(musicInfo);
                 String url = musicInfo.getUrl();
                 // 歌曲无版权
-                if (StringUtils.isEmpty(url)) throw new NoPrivilegeException("歌曲无版权");
+                if (StringUtil.isEmpty(url)) throw new NoPrivilegeException("歌曲无版权");
                 // 酷狗的链接给的 wav，实际上是 mp3 格式，这种情况以 mp3 格式下载到本地再播放
                 // 另外 flac 格式文件先下载 flac 文件，转为 mp3 格式再播放
                 if (url.endsWith(Format.WAV) || musicInfo.isFlac()) {
                     String fileName = musicInfo.toFileName();
                     file = new AudioFile(SimplePath.CACHE_PATH + fileName);
-                    AudioFile tmpFile = new AudioFile(FileUtils.replaceSuffix(file, Format.MP3));
+                    AudioFile tmpFile = new AudioFile(FileUtil.replaceSuffix(file, Format.MP3));
                     if (!tmpFile.exists()) {
                         // 下载歌曲
-                        if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
+                        if (!file.exists() || FileUtil.startsWithLeftBrace(file)) {
                             loading.start();
                             loading.setText(LOADING_MSG);
-                            MusicServerUtils.download(loading, musicInfo.getUrl(), file.getPath());
+                            MusicServerUtil.download(loading, musicInfo.getUrl(), file.getPath());
                         }
                         // Flac 文件需要转换格式，并删除原来的文件
                         if (musicInfo.isFlac()) {
                             loading.setText("转换音频文件格式......");
-                            MusicUtils.convert(file, tmpFile);
+                            MusicUtil.convert(file, tmpFile);
                             file.delete();
                         }
                     }
@@ -20846,7 +20846,7 @@ public class PlayerFrame extends JFrame {
 
     // 改变到播完暂停
     private void changeToDisabled(boolean showDialog) {
-        playModeButton.setIcon(ImageUtils.dye(playModeDisabledIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(playModeDisabledIcon, currUIStyle.getIconColor()));
         playModeButton.setToolTipText(PLAY_MODE_DISABLED_TIP);
         currPlayMode = PlayMode.DISABLED;
         if (showDialog) new TipDialog(THIS, CHANGE_DISABLED_MSG).showDialog();
@@ -20854,7 +20854,7 @@ public class PlayerFrame extends JFrame {
 
     // 改变到单曲循环
     private void changeToSingle(boolean showDialog) {
-        playModeButton.setIcon(ImageUtils.dye(singleIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(singleIcon, currUIStyle.getIconColor()));
         playModeButton.setToolTipText(SINGLE_TIP);
         currPlayMode = PlayMode.SINGLE;
         if (showDialog) new TipDialog(THIS, CHANGE_SINGLE_MSG).showDialog();
@@ -20862,7 +20862,7 @@ public class PlayerFrame extends JFrame {
 
     // 改变到顺序播放
     private void changeToSequence(boolean showDialog) {
-        playModeButton.setIcon(ImageUtils.dye(sequenceIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(sequenceIcon, currUIStyle.getIconColor()));
         playModeButton.setToolTipText(SEQUENCE_TIP);
         currPlayMode = PlayMode.SEQUENCE;
         if (showDialog) new TipDialog(THIS, CHANGE_SEQUENCE_MSG).showDialog();
@@ -20870,7 +20870,7 @@ public class PlayerFrame extends JFrame {
 
     // 改变到列表循环
     private void changeToListCycle(boolean showDialog) {
-        playModeButton.setIcon(ImageUtils.dye(listCycleIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(listCycleIcon, currUIStyle.getIconColor()));
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
         currPlayMode = PlayMode.LIST_CYCLE;
         if (showDialog) new TipDialog(THIS, CHANGE_LIST_CYCLE_MSG).showDialog();
@@ -20878,7 +20878,7 @@ public class PlayerFrame extends JFrame {
 
     // 变为随机播放
     void changeToShuffle(boolean showDialog) {
-        playModeButton.setIcon(ImageUtils.dye(shuffleIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(shuffleIcon, currUIStyle.getIconColor()));
         playModeButton.setToolTipText(SHUFFLE_TIP);
         currPlayMode = PlayMode.SHUFFLE;
         if (showDialog) new TipDialog(THIS, CHANGE_SHUFFLE_MSG).showDialog();
@@ -20900,7 +20900,7 @@ public class PlayerFrame extends JFrame {
                         AudioFile f2 = (AudioFile) o2;
                         s2 = f2.toString();
                     } else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortMethod.ASCENDING ? StringUtils.compare(s1, s2) : StringUtils.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     e.printStackTrace();
                 }
@@ -20914,7 +20914,7 @@ public class PlayerFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getName();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getSongName();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortMethod.ASCENDING ? StringUtils.compare(s1, s2) : StringUtils.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     e.printStackTrace();
                 }
@@ -20928,7 +20928,7 @@ public class PlayerFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getArtist();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getArtist();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getArtist();
-                    return order == SortMethod.ASCENDING ? StringUtils.compare(s1, s2) : StringUtils.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     e.printStackTrace();
                 }
@@ -20942,7 +20942,7 @@ public class PlayerFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getAlbumName();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getAlbum();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getAlbumName();
-                    return order == SortMethod.ASCENDING ? StringUtils.compare(s1, s2) : StringUtils.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     e.printStackTrace();
                 }
@@ -20956,7 +20956,7 @@ public class PlayerFrame extends JFrame {
                 if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getName();
                 else if (o2 instanceof NetMusicInfo) s2 = o2.toString();
                 try {
-                    return order == SortMethod.ASCENDING ? StringUtils.compare(s1, s2) : StringUtils.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     e.printStackTrace();
                     return 0;
@@ -20989,16 +20989,16 @@ public class PlayerFrame extends JFrame {
         // 按创建时间排序只支持本地音乐
         else if (method == SortMethod.BY_CREATION_TIME && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
-                long t1 = FileUtils.getCreationTime((File) o1);
-                long t2 = FileUtils.getCreationTime((File) o2);
+                long t1 = FileUtil.getCreationTime((File) o1);
+                long t2 = FileUtil.getCreationTime((File) o2);
                 return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
         // 按访问时间排序只支持本地音乐
         else if (method == SortMethod.BY_LAST_ACCESS_TIME && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
-                long t1 = FileUtils.getAccessTime((File) o1);
-                long t2 = FileUtils.getAccessTime((File) o2);
+                long t1 = FileUtil.getAccessTime((File) o1);
+                long t2 = FileUtil.getAccessTime((File) o2);
                 return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
@@ -21041,11 +21041,11 @@ public class PlayerFrame extends JFrame {
         for (Component c : components) {
             if (c instanceof CustomRadioButtonMenuItem) {
                 CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-                if (mi.isSelected()) mi.setIcon(ImageUtils.dye(dotIcon, iconColor));
+                if (mi.isSelected()) mi.setIcon(ImageUtil.dye(dotIcon, iconColor));
                 else mi.setIcon(null);
             } else if (c instanceof CustomCheckMenuItem) {
                 CustomCheckMenuItem mi = (CustomCheckMenuItem) c;
-                if (mi.isSelected()) mi.setIcon(ImageUtils.dye(tickIcon, iconColor));
+                if (mi.isSelected()) mi.setIcon(ImageUtil.dye(tickIcon, iconColor));
                 else mi.setIcon(null);
             }
         }
@@ -21106,285 +21106,285 @@ public class PlayerFrame extends JFrame {
         Color highlightColor = style.getHighlightColor();
 
         // 托盘
-        trayIconImg.setImage(ImageUtils.dye(trayIcon, iconColor).getImage());
+        trayIconImg.setImage(ImageUtil.dye(trayIcon, iconColor).getImage());
 
         // 标题栏
         titleLabel.setForeground(textColor);
-        titleLabel.setIcon(ImageUtils.dye((ImageIcon) titleLabel.getIcon(), iconColor));
-        hideDetailButton.setIcon(ImageUtils.dye((ImageIcon) hideDetailButton.getIcon(), iconColor));
-        styleToolButton.setIcon(ImageUtils.dye((ImageIcon) styleToolButton.getIcon(), iconColor));
-        mainMenuButton.setIcon(ImageUtils.dye((ImageIcon) mainMenuButton.getIcon(), iconColor));
-        splitLabel.setIcon(ImageUtils.dye((ImageIcon) splitLabel.getIcon(), iconColor));
-        miniButton.setIcon(ImageUtils.dye((ImageIcon) miniButton.getIcon(), iconColor));
-        minimizeButton.setIcon(ImageUtils.dye((ImageIcon) minimizeButton.getIcon(), iconColor));
-        maximizeButton.setIcon(ImageUtils.dye((ImageIcon) maximizeButton.getIcon(), iconColor));
-        closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), iconColor));
+        titleLabel.setIcon(ImageUtil.dye((ImageIcon) titleLabel.getIcon(), iconColor));
+        hideDetailButton.setIcon(ImageUtil.dye((ImageIcon) hideDetailButton.getIcon(), iconColor));
+        styleToolButton.setIcon(ImageUtil.dye((ImageIcon) styleToolButton.getIcon(), iconColor));
+        mainMenuButton.setIcon(ImageUtil.dye((ImageIcon) mainMenuButton.getIcon(), iconColor));
+        splitLabel.setIcon(ImageUtil.dye((ImageIcon) splitLabel.getIcon(), iconColor));
+        miniButton.setIcon(ImageUtil.dye((ImageIcon) miniButton.getIcon(), iconColor));
+        minimizeButton.setIcon(ImageUtil.dye((ImageIcon) minimizeButton.getIcon(), iconColor));
+        maximizeButton.setIcon(ImageUtil.dye((ImageIcon) maximizeButton.getIcon(), iconColor));
+        closeButton.setIcon(ImageUtil.dye((ImageIcon) closeButton.getIcon(), iconColor));
 
         // 列表为空提示面板
-        emptyHintLabel.setIcon(ImageUtils.dye(emptyHintIcon, iconColor));
+        emptyHintLabel.setIcon(ImageUtil.dye(emptyHintIcon, iconColor));
         emptyHintLabel.setForeground(textColor);
 
         // 按钮被禁用时颜色
-        Color disabledColor = ColorUtils.darker(iconColor, 0.3f);
-        netMusicBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netMusicBackwardButton.getIcon(), disabledColor));
-        netPlaylistBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), disabledColor));
-        netAlbumBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netAlbumBackwardButton.getIcon(), disabledColor));
-        netArtistBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netArtistBackwardButton.getIcon(), disabledColor));
-        netRadioBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netRadioBackwardButton.getIcon(), disabledColor));
-        netMvBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netMvBackwardButton.getIcon(), disabledColor));
-        netRankingBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netRankingBackwardButton.getIcon(), disabledColor));
-        netUserBackwardButton.setDisabledIcon(ImageUtils.dye((ImageIcon) netUserBackwardButton.getIcon(), disabledColor));
-        mvButton.setDisabledIcon(ImageUtils.dye((ImageIcon) mvButton.getIcon(), disabledColor));
-        collectButton.setDisabledIcon(ImageUtils.dye((ImageIcon) collectButton.getIcon(), disabledColor));
-        downloadButton.setDisabledIcon(ImageUtils.dye((ImageIcon) downloadButton.getIcon(), disabledColor));
-        commentButton.setDisabledIcon(ImageUtils.dye((ImageIcon) commentButton.getIcon(), disabledColor));
-        sheetButton.setDisabledIcon(ImageUtils.dye((ImageIcon) sheetButton.getIcon(), disabledColor));
+        Color disabledColor = ColorUtil.darker(iconColor, 0.3f);
+        netMusicBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMusicBackwardButton.getIcon(), disabledColor));
+        netPlaylistBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), disabledColor));
+        netAlbumBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netAlbumBackwardButton.getIcon(), disabledColor));
+        netArtistBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netArtistBackwardButton.getIcon(), disabledColor));
+        netRadioBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), disabledColor));
+        netMvBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMvBackwardButton.getIcon(), disabledColor));
+        netRankingBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRankingBackwardButton.getIcon(), disabledColor));
+        netUserBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netUserBackwardButton.getIcon(), disabledColor));
+        mvButton.setDisabledIcon(ImageUtil.dye((ImageIcon) mvButton.getIcon(), disabledColor));
+        collectButton.setDisabledIcon(ImageUtil.dye((ImageIcon) collectButton.getIcon(), disabledColor));
+        downloadButton.setDisabledIcon(ImageUtil.dye((ImageIcon) downloadButton.getIcon(), disabledColor));
+        commentButton.setDisabledIcon(ImageUtil.dye((ImageIcon) commentButton.getIcon(), disabledColor));
+        sheetButton.setDisabledIcon(ImageUtil.dye((ImageIcon) sheetButton.getIcon(), disabledColor));
 
         // 右键菜单项禁用时颜色
         // 全局设置菜单项禁用颜色
-        UIManager.put("MenuItem.disabledForeground", ColorUtils.darker(textColor));
+        UIManager.put("MenuItem.disabledForeground", ColorUtil.darker(textColor));
 
-        disabledColor = ColorUtils.darker(iconColor, 0.3f);
+        disabledColor = ColorUtil.darker(iconColor, 0.3f);
 
         // 右键菜单项图标
-        copyMottoMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        nextMottoMenuItem.setIcon(ImageUtils.dye(nextMottoIcon, iconColor));
+        copyMottoMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        nextMottoMenuItem.setIcon(ImageUtil.dye(nextMottoIcon, iconColor));
 
-        openMainFrameMenuItem.setIcon(ImageUtils.dye(openMainFrameIcon, iconColor));
-        exitMenuItem.setIcon(ImageUtils.dye(exitIcon, iconColor));
+        openMainFrameMenuItem.setIcon(ImageUtil.dye(openMainFrameIcon, iconColor));
+        exitMenuItem.setIcon(ImageUtil.dye(exitIcon, iconColor));
 
-        manageStyleMenuItem.setIcon(ImageUtils.dye(changeStyleIcon, iconColor));
-        styleCustomMenuItem.setIcon(ImageUtils.dye(addCustomStyleIcon, iconColor));
+        manageStyleMenuItem.setIcon(ImageUtil.dye(changeStyleIcon, iconColor));
+        styleCustomMenuItem.setIcon(ImageUtil.dye(addCustomStyleIcon, iconColor));
 
-        closeSong.setIcon(ImageUtils.dye(closeSongIcon, iconColor));
-        closeSong.setDisabledIcon(ImageUtils.dye(closeSongIcon, disabledColor));
-        clearCache.setIcon(ImageUtils.dye(clearCacheIcon, iconColor));
-        settingMenuItem.setIcon(ImageUtils.dye(settingsIcon, iconColor));
-        donateMenuItem.setIcon(ImageUtils.dye(donateIcon, iconColor));
-        releaseMenuItem.setIcon(ImageUtils.dye(releaseIcon, iconColor));
-        updateMenuItem.setIcon(ImageUtils.dye(updateIcon, iconColor));
-        helpMenuItem.setIcon(ImageUtils.dye(helpIcon, iconColor));
-        aboutMenuItem.setIcon(ImageUtils.dye(aboutIcon, iconColor));
+        closeSong.setIcon(ImageUtil.dye(closeSongIcon, iconColor));
+        closeSong.setDisabledIcon(ImageUtil.dye(closeSongIcon, disabledColor));
+        clearCache.setIcon(ImageUtil.dye(clearCacheIcon, iconColor));
+        settingMenuItem.setIcon(ImageUtil.dye(settingsIcon, iconColor));
+        donateMenuItem.setIcon(ImageUtil.dye(donateIcon, iconColor));
+        releaseMenuItem.setIcon(ImageUtil.dye(releaseIcon, iconColor));
+        updateMenuItem.setIcon(ImageUtil.dye(updateIcon, iconColor));
+        helpMenuItem.setIcon(ImageUtil.dye(helpIcon, iconColor));
+        aboutMenuItem.setIcon(ImageUtil.dye(aboutIcon, iconColor));
 
-        addFileMenuItem.setIcon(ImageUtils.dye(fileIcon, iconColor));
-        addDirMenuItem.setIcon(ImageUtils.dye(folderIcon, iconColor));
+        addFileMenuItem.setIcon(ImageUtil.dye(fileIcon, iconColor));
+        addDirMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
 
-        playModeDisabledMenuItem.setIcon(ImageUtils.dye(playModeDisabledIcon, iconColor));
-        singleMenuItem.setIcon(ImageUtils.dye(singleIcon, iconColor));
-        sequenceMenuItem.setIcon(ImageUtils.dye(sequenceIcon, iconColor));
-        listCycleMenuItem.setIcon(ImageUtils.dye(listCycleIcon, iconColor));
-        shuffleMenuItem.setIcon(ImageUtils.dye(shuffleIcon, iconColor));
+        playModeDisabledMenuItem.setIcon(ImageUtil.dye(playModeDisabledIcon, iconColor));
+        singleMenuItem.setIcon(ImageUtil.dye(singleIcon, iconColor));
+        sequenceMenuItem.setIcon(ImageUtil.dye(sequenceIcon, iconColor));
+        listCycleMenuItem.setIcon(ImageUtil.dye(listCycleIcon, iconColor));
+        shuffleMenuItem.setIcon(ImageUtil.dye(shuffleIcon, iconColor));
 
-        if (gsOn) gsMenuItem.setIcon(ImageUtils.dye(tickIcon, iconColor));
-        if (darkerOn) darkerMenuItem.setIcon(ImageUtils.dye(tickIcon, iconColor));
-        blurOffMenuItem.setIcon(ImageUtils.dye(blurOffIcon, iconColor));
-        cvBlurMenuItem.setIcon(ImageUtils.dye(cvBlurIcon, iconColor));
-        mcBlurMenuItem.setIcon(ImageUtils.dye(mcBlurIcon, iconColor));
-        lgBlurMenuItem.setIcon(ImageUtils.dye(lgBlurIcon, iconColor));
+        if (gsOn) gsMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
+        if (darkerOn) darkerMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
+        blurOffMenuItem.setIcon(ImageUtil.dye(blurOffIcon, iconColor));
+        cvBlurMenuItem.setIcon(ImageUtil.dye(cvBlurIcon, iconColor));
+        mcBlurMenuItem.setIcon(ImageUtil.dye(mcBlurIcon, iconColor));
+        lgBlurMenuItem.setIcon(ImageUtil.dye(lgBlurIcon, iconColor));
 
-        saveDescCoverImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
-        saveDescBgImgMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
-        copyDescNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        copyDescTagMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        copyDescMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        saveDescCoverImgMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
+        saveDescBgImgMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
+        copyDescNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        copyDescTagMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        copyDescMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        playMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        nextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
-        playMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, iconColor));
-        playMvMenuItem.setDisabledIcon(ImageUtils.dye(playMvMenuItemIcon, disabledColor));
-        collectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        downloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
-        downloadMenuItem.setDisabledIcon(ImageUtils.dye(downloadMenuItemIcon, disabledColor));
-        commentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        commentMenuItem.setDisabledIcon(ImageUtils.dye(commentMenuItemIcon, disabledColor));
-        sheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, iconColor));
-        sheetMenuItem.setDisabledIcon(ImageUtils.dye(sheetMenuItemIcon, disabledColor));
-        searchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, iconColor));
-        similarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, iconColor));
-        similarSongMenuItem.setDisabledIcon(ImageUtils.dye(similarMenuItemIcon, disabledColor));
-        relatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
-        relatedPlaylistMenuItem.setDisabledIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, disabledColor));
-        authorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
-        authorMenuItem.setDisabledIcon(ImageUtils.dye(similarArtistMenuItemIcon, disabledColor));
-        albumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
-        albumMenuItem.setDisabledIcon(ImageUtils.dye(browseAlbumMenuItemIcon, disabledColor));
-        recRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
-        recRadioMenuItem.setDisabledIcon(ImageUtils.dye(radioMenuItemIcon, disabledColor));
-        relatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
-        relatedMvMenuItem.setDisabledIcon(ImageUtils.dye(similarMvMenuItemIcon, disabledColor));
-        copyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        locateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, iconColor));
-        locateFileMenuItem.setDisabledIcon(ImageUtils.dye(locateFileMenuItemIcon, disabledColor));
-        editInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, iconColor));
-        editInfoMenuItem.setDisabledIcon(ImageUtils.dye(editInfoMenuItemIcon, disabledColor));
-        removeMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, iconColor));
+        playMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        nextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
+        playMvMenuItem.setIcon(ImageUtil.dye(playMvMenuItemIcon, iconColor));
+        playMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, disabledColor));
+        collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        downloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
+        downloadMenuItem.setDisabledIcon(ImageUtil.dye(downloadMenuItemIcon, disabledColor));
+        commentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        commentMenuItem.setDisabledIcon(ImageUtil.dye(commentMenuItemIcon, disabledColor));
+        sheetMenuItem.setIcon(ImageUtil.dye(sheetMenuItemIcon, iconColor));
+        sheetMenuItem.setDisabledIcon(ImageUtil.dye(sheetMenuItemIcon, disabledColor));
+        searchSongMenuItem.setIcon(ImageUtil.dye(searchSongItemIcon, iconColor));
+        similarSongMenuItem.setIcon(ImageUtil.dye(similarMenuItemIcon, iconColor));
+        similarSongMenuItem.setDisabledIcon(ImageUtil.dye(similarMenuItemIcon, disabledColor));
+        relatedPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
+        relatedPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, disabledColor));
+        authorMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
+        authorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, disabledColor));
+        albumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
+        albumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, disabledColor));
+        recRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
+        recRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, disabledColor));
+        relatedMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
+        relatedMvMenuItem.setDisabledIcon(ImageUtil.dye(similarMvMenuItemIcon, disabledColor));
+        copyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        locateFileMenuItem.setIcon(ImageUtil.dye(locateFileMenuItemIcon, iconColor));
+        locateFileMenuItem.setDisabledIcon(ImageUtil.dye(locateFileMenuItemIcon, disabledColor));
+        editInfoMenuItem.setIcon(ImageUtil.dye(editInfoMenuItemIcon, iconColor));
+        editInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, disabledColor));
+        removeMenuItem.setIcon(ImageUtil.dye(removeMenuItemIcon, iconColor));
 
-        netMusicPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netMusicNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
-        netMusicPlayMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, iconColor));
-        netMusicPlayMvMenuItem.setDisabledIcon(ImageUtils.dye(playMvMenuItemIcon, disabledColor));
-        netMusicCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netMusicDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
-        netMusicCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        netMusicSheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, iconColor));
-        netMusicSearchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, iconColor));
-        netMusicSimilarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, iconColor));
-        netMusicRelatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
-        netMusicAuthorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
-        netMusicAuthorMenuItem.setDisabledIcon(ImageUtils.dye(similarArtistMenuItemIcon, disabledColor));
-        netMusicAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
-        netMusicAlbumMenuItem.setDisabledIcon(ImageUtils.dye(browseAlbumMenuItemIcon, disabledColor));
-        netMusicRecRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
-        netMusicRecRadioMenuItem.setDisabledIcon(ImageUtils.dye(radioMenuItemIcon, disabledColor));
-        netMusicRelatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
-        netMusicCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netMusicPlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netMusicNextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
+        netMusicPlayMvMenuItem.setIcon(ImageUtil.dye(playMvMenuItemIcon, iconColor));
+        netMusicPlayMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, disabledColor));
+        netMusicCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netMusicDownloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
+        netMusicCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        netMusicSheetMenuItem.setIcon(ImageUtil.dye(sheetMenuItemIcon, iconColor));
+        netMusicSearchSongMenuItem.setIcon(ImageUtil.dye(searchSongItemIcon, iconColor));
+        netMusicSimilarSongMenuItem.setIcon(ImageUtil.dye(similarMenuItemIcon, iconColor));
+        netMusicRelatedPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netMusicAuthorMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
+        netMusicAuthorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, disabledColor));
+        netMusicAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
+        netMusicAlbumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, disabledColor));
+        netMusicRecRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
+        netMusicRecRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, disabledColor));
+        netMusicRelatedMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
+        netMusicCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netPlaylistOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
-        netPlaylistPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netPlaylistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netPlaylistCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        netPlaylistSimilarPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
-        netPlaylistCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
-        netPlaylistSubscriberMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
-        netPlaylistCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netPlaylistOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
+        netPlaylistPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netPlaylistCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        netPlaylistSimilarPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netPlaylistCreatorMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
+        netPlaylistSubscriberMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netPlaylistCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netAlbumOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
-        netAlbumPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netAlbumCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netAlbumCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        netAlbumArtistMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
-        netAlbumSimilarMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
-        netAlbumPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
-        netAlbumCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netAlbumOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
+        netAlbumPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netAlbumCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netAlbumCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        netAlbumArtistMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
+        netAlbumSimilarMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
+        netAlbumPhotosMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
+        netAlbumCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netArtistOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
-        netArtistPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netArtistCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netArtistBrowseAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
-        netArtistBrowseMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
-        netArtistSimilarArtistMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
-        netArtistFansMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
-        netArtistBuddyMenuItem.setIcon(ImageUtils.dye(buddyMenuItemIcon, iconColor));
-        netArtistRadiosMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
-        netArtistPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
-        netArtistCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netArtistOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
+        netArtistPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netArtistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netArtistBrowseAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
+        netArtistBrowseMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
+        netArtistSimilarArtistMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
+        netArtistFansMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netArtistBuddyMenuItem.setIcon(ImageUtil.dye(buddyMenuItemIcon, iconColor));
+        netArtistRadiosMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
+        netArtistPhotosMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
+        netArtistCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netRadioOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
-        netRadioPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netRadioCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netRadioCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        netRadioDjMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
-        netRadioSubscriberMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
-        netRadioSimilarMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
-        netRadioArtistsMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
-        netRadioPhotosMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
-        netRadioPostersMenuItem.setIcon(ImageUtils.dye(posterMenuItemIcon, iconColor));
-        netRadioCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netRadioOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
+        netRadioPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netRadioCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netRadioCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        netRadioDjMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
+        netRadioSubscriberMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netRadioSimilarMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
+        netRadioArtistsMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
+        netRadioPhotosMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
+        netRadioPostersMenuItem.setIcon(ImageUtil.dye(posterMenuItemIcon, iconColor));
+        netRadioCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netMvPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netMvCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netMvDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
-        netMvSimilarMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
-        netMvVideoEpisodeMenuItem.setIcon(ImageUtils.dye(videoEpisodeMenuItemIcon, iconColor));
-        netMvCreatorMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
-        netMvCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        netMvCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netMvPlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netMvCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netMvDownloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
+        netMvSimilarMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
+        netMvVideoEpisodeMenuItem.setIcon(ImageUtil.dye(videoEpisodeMenuItemIcon, iconColor));
+        netMvCreatorMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
+        netMvCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        netMvCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netRankingOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
-        netRankingPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netRankingCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netRankingCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        netRankingCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netRankingOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
+        netRankingPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netRankingCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netRankingCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        netRankingCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netUserOpenMenuItem.setIcon(ImageUtils.dye(openMenuItemIcon, iconColor));
-        netUserPlayAllMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        netUserCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        netUserPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
-        netUserAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
-        netUserRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
-        netUserVideoMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
-        netUserFollowMenuItem.setIcon(ImageUtils.dye(userFollowMenuItemIcon, iconColor));
-        netUserFollowedMenuItem.setIcon(ImageUtils.dye(userFollowedMenuItemIcon, iconColor));
-        netUserCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netUserOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
+        netUserPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netUserCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netUserPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netUserAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
+        netUserRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
+        netUserVideoMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
+        netUserFollowMenuItem.setIcon(ImageUtil.dye(userFollowMenuItemIcon, iconColor));
+        netUserFollowedMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netUserCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netCommentCopyMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        netCommentSaveProfileMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
-        netCommentSaveProfileMenuItem.setDisabledIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, disabledColor));
-        netCommentUserMenuItem.setIcon(ImageUtils.dye(userMenuItemIcon, iconColor));
-        netCommentPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
-        netCommentAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
+        netCommentCopyMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        netCommentSaveProfileMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
+        netCommentSaveProfileMenuItem.setDisabledIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, disabledColor));
+        netCommentUserMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
+        netCommentPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
+        netCommentAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
 
-        netSheetBrowseMenuItem.setIcon(ImageUtils.dye(browseSheetMenuItemIcon, iconColor));
-        netSheetCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        netSheetBrowseMenuItem.setIcon(ImageUtil.dye(browseSheetMenuItemIcon, iconColor));
+        netSheetCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        locateLrcMenuItem.setIcon(ImageUtils.dye(locateLrcMenuItemIcon, iconColor));
-        locateLrcMenuItem.setDisabledIcon(ImageUtils.dye(locateLrcMenuItemIcon, disabledColor));
-        copyMenuItem.setIcon(ImageUtils.dye(copyLrcMenuItemIcon, iconColor));
-        browseLrcMenuItem.setIcon(ImageUtils.dye(browseLrcMenuItemIcon, iconColor));
-        browseLrcMenuItem.setDisabledIcon(ImageUtils.dye(browseLrcMenuItemIcon, disabledColor));
-        browseLrcTransMenuItem.setIcon(ImageUtils.dye(browseLrcMenuItemIcon, iconColor));
-        browseLrcTransMenuItem.setDisabledIcon(ImageUtils.dye(browseLrcMenuItemIcon, disabledColor));
-        downloadLrcMenuItem.setIcon(ImageUtils.dye(downloadIcon, iconColor));
-        downloadLrcMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
-        downloadLrcTransMenuItem.setIcon(ImageUtils.dye(downloadIcon, iconColor));
-        downloadLrcTransMenuItem.setDisabledIcon(ImageUtils.dye(downloadIcon, disabledColor));
-        spectrumOpacityMenuItem.setDisabledIcon(ImageUtils.dye(spectrumOpacityMenuItemIcon, disabledColor));
+        locateLrcMenuItem.setIcon(ImageUtil.dye(locateLrcMenuItemIcon, iconColor));
+        locateLrcMenuItem.setDisabledIcon(ImageUtil.dye(locateLrcMenuItemIcon, disabledColor));
+        copyMenuItem.setIcon(ImageUtil.dye(copyLrcMenuItemIcon, iconColor));
+        browseLrcMenuItem.setIcon(ImageUtil.dye(browseLrcMenuItemIcon, iconColor));
+        browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, disabledColor));
+        browseLrcTransMenuItem.setIcon(ImageUtil.dye(browseLrcMenuItemIcon, iconColor));
+        browseLrcTransMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, disabledColor));
+        downloadLrcMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
+        downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, disabledColor));
+        downloadLrcTransMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
+        downloadLrcTransMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, disabledColor));
+        spectrumOpacityMenuItem.setDisabledIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, disabledColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
-            mi.setIcon(ImageUtils.dye(spectrumOpacityMenuItemIcon, iconColor));
+            mi.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, iconColor));
         }
-        currLrcOffsetMenuItem.setDisabledIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, disabledColor));
+        currLrcOffsetMenuItem.setDisabledIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, disabledColor));
         for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
-            mi.setIcon(ImageUtils.dye(lrcOffsetMenuItemIcon, iconColor));
+            mi.setIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, iconColor));
         }
 
-        saveAlbumImageMenuItem.setIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, iconColor));
-        saveAlbumImageMenuItem.setDisabledIcon(ImageUtils.dye(saveAlbumImgMenuItemIcon, disabledColor));
-        copySongNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        copyArtistMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        copyAlbumMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
+        saveAlbumImageMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
+        saveAlbumImageMenuItem.setDisabledIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, disabledColor));
+        copySongNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        copyArtistMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        copyAlbumMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        downloadPlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        downloadNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
-        downloadNextPlayMenuItem.setDisabledIcon(ImageUtils.dye(nextPlayMenuItemIcon, disabledColor));
-        downloadLocateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, iconColor));
-        downloadEditInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, iconColor));
-        downloadEditInfoMenuItem.setDisabledIcon(ImageUtils.dye(editInfoMenuItemIcon, disabledColor));
-        cancelTaskMenuItem.setIcon(ImageUtils.dye(cancelTaskMenuItemIcon, iconColor));
-        cancelTaskMenuItem.setDisabledIcon(ImageUtils.dye(cancelTaskMenuItemIcon, disabledColor));
-        restartTaskMenuItem.setIcon(ImageUtils.dye(restartTaskMenuItemIcon, iconColor));
-        restartTaskMenuItem.setDisabledIcon(ImageUtils.dye(restartTaskMenuItemIcon, disabledColor));
-        removeTaskMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, iconColor));
+        downloadPlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        downloadNextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
+        downloadNextPlayMenuItem.setDisabledIcon(ImageUtil.dye(nextPlayMenuItemIcon, disabledColor));
+        downloadLocateFileMenuItem.setIcon(ImageUtil.dye(locateFileMenuItemIcon, iconColor));
+        downloadEditInfoMenuItem.setIcon(ImageUtil.dye(editInfoMenuItemIcon, iconColor));
+        downloadEditInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, disabledColor));
+        cancelTaskMenuItem.setIcon(ImageUtil.dye(cancelTaskMenuItemIcon, iconColor));
+        cancelTaskMenuItem.setDisabledIcon(ImageUtil.dye(cancelTaskMenuItemIcon, disabledColor));
+        restartTaskMenuItem.setIcon(ImageUtil.dye(restartTaskMenuItemIcon, iconColor));
+        restartTaskMenuItem.setDisabledIcon(ImageUtil.dye(restartTaskMenuItemIcon, disabledColor));
+        removeTaskMenuItem.setIcon(ImageUtil.dye(removeMenuItemIcon, iconColor));
 
-        playQueuePlayMenuItem.setIcon(ImageUtils.dye(playMenuItemIcon, iconColor));
-        playQueueNextPlayMenuItem.setIcon(ImageUtils.dye(nextPlayMenuItemIcon, iconColor));
-        playQueuePlayMvMenuItem.setIcon(ImageUtils.dye(playMvMenuItemIcon, iconColor));
-        playQueuePlayMvMenuItem.setDisabledIcon(ImageUtils.dye(playMvMenuItemIcon, disabledColor));
-        playQueueCollectMenuItem.setIcon(ImageUtils.dye(collectMenuItemIcon, iconColor));
-        playQueueDownloadMenuItem.setIcon(ImageUtils.dye(downloadMenuItemIcon, iconColor));
-        playQueueDownloadMenuItem.setDisabledIcon(ImageUtils.dye(downloadMenuItemIcon, disabledColor));
-        playQueueCommentMenuItem.setIcon(ImageUtils.dye(commentMenuItemIcon, iconColor));
-        playQueueCommentMenuItem.setDisabledIcon(ImageUtils.dye(commentMenuItemIcon, disabledColor));
-        playQueueSheetMenuItem.setIcon(ImageUtils.dye(sheetMenuItemIcon, iconColor));
-        playQueueSheetMenuItem.setDisabledIcon(ImageUtils.dye(sheetMenuItemIcon, disabledColor));
-        playQueueSearchSongMenuItem.setIcon(ImageUtils.dye(searchSongItemIcon, iconColor));
-        playQueueSimilarSongMenuItem.setIcon(ImageUtils.dye(similarMenuItemIcon, iconColor));
-        playQueueSimilarSongMenuItem.setDisabledIcon(ImageUtils.dye(similarMenuItemIcon, disabledColor));
-        playQueueRelatedPlaylistMenuItem.setIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, iconColor));
-        playQueueRelatedPlaylistMenuItem.setDisabledIcon(ImageUtils.dye(relatedPlaylistMenuItemIcon, disabledColor));
-        playQueueAuthorMenuItem.setIcon(ImageUtils.dye(similarArtistMenuItemIcon, iconColor));
-        playQueueAuthorMenuItem.setDisabledIcon(ImageUtils.dye(similarArtistMenuItemIcon, disabledColor));
-        playQueueAlbumMenuItem.setIcon(ImageUtils.dye(browseAlbumMenuItemIcon, iconColor));
-        playQueueAlbumMenuItem.setDisabledIcon(ImageUtils.dye(browseAlbumMenuItemIcon, disabledColor));
-        playQueueRecRadioMenuItem.setIcon(ImageUtils.dye(radioMenuItemIcon, iconColor));
-        playQueueRecRadioMenuItem.setDisabledIcon(ImageUtils.dye(radioMenuItemIcon, disabledColor));
-        playQueueRelatedMvMenuItem.setIcon(ImageUtils.dye(similarMvMenuItemIcon, iconColor));
-        playQueueRelatedMvMenuItem.setDisabledIcon(ImageUtils.dye(similarMvMenuItemIcon, disabledColor));
-        playQueueCopyNameMenuItem.setIcon(ImageUtils.dye(copyNameMenuItemIcon, iconColor));
-        playQueueLocateFileMenuItem.setIcon(ImageUtils.dye(locateFileMenuItemIcon, iconColor));
-        playQueueLocateFileMenuItem.setDisabledIcon(ImageUtils.dye(locateFileMenuItemIcon, disabledColor));
-        playQueueEditInfoMenuItem.setIcon(ImageUtils.dye(editInfoMenuItemIcon, iconColor));
-        playQueueEditInfoMenuItem.setDisabledIcon(ImageUtils.dye(editInfoMenuItemIcon, disabledColor));
-        playQueueRemoveMenuItem.setIcon(ImageUtils.dye(removeMenuItemIcon, iconColor));
+        playQueuePlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        playQueueNextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
+        playQueuePlayMvMenuItem.setIcon(ImageUtil.dye(playMvMenuItemIcon, iconColor));
+        playQueuePlayMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, disabledColor));
+        playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        playQueueDownloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
+        playQueueDownloadMenuItem.setDisabledIcon(ImageUtil.dye(downloadMenuItemIcon, disabledColor));
+        playQueueCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        playQueueCommentMenuItem.setDisabledIcon(ImageUtil.dye(commentMenuItemIcon, disabledColor));
+        playQueueSheetMenuItem.setIcon(ImageUtil.dye(sheetMenuItemIcon, iconColor));
+        playQueueSheetMenuItem.setDisabledIcon(ImageUtil.dye(sheetMenuItemIcon, disabledColor));
+        playQueueSearchSongMenuItem.setIcon(ImageUtil.dye(searchSongItemIcon, iconColor));
+        playQueueSimilarSongMenuItem.setIcon(ImageUtil.dye(similarMenuItemIcon, iconColor));
+        playQueueSimilarSongMenuItem.setDisabledIcon(ImageUtil.dye(similarMenuItemIcon, disabledColor));
+        playQueueRelatedPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
+        playQueueRelatedPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, disabledColor));
+        playQueueAuthorMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
+        playQueueAuthorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, disabledColor));
+        playQueueAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
+        playQueueAlbumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, disabledColor));
+        playQueueRecRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
+        playQueueRecRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, disabledColor));
+        playQueueRelatedMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
+        playQueueRelatedMvMenuItem.setDisabledIcon(ImageUtil.dye(similarMvMenuItemIcon, disabledColor));
+        playQueueCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        playQueueLocateFileMenuItem.setIcon(ImageUtil.dye(locateFileMenuItemIcon, iconColor));
+        playQueueLocateFileMenuItem.setDisabledIcon(ImageUtil.dye(locateFileMenuItemIcon, disabledColor));
+        playQueueEditInfoMenuItem.setIcon(ImageUtil.dye(editInfoMenuItemIcon, iconColor));
+        playQueueEditInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, disabledColor));
+        playQueueRemoveMenuItem.setIcon(ImageUtil.dye(removeMenuItemIcon, iconColor));
 
         // 菜单项文字颜色
         updateMenuItemStyle(mottoPopupMenu);
@@ -21419,31 +21419,31 @@ public class PlayerFrame extends JFrame {
 
         // 关键词面板
         netMusicSearchSuggestionLabel.setForeground(style.getTextColor());
-        netMusicRefreshSearchSuggestionButton.setIcon(ImageUtils.dye((ImageIcon) netMusicRefreshSearchSuggestionButton.getIcon(), iconColor));
+        netMusicRefreshSearchSuggestionButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRefreshSearchSuggestionButton.getIcon(), iconColor));
 
         netMusicHotSearchLabel.setForeground(style.getTextColor());
-        netMusicRefreshHotSearchButton.setIcon(ImageUtils.dye((ImageIcon) netMusicRefreshHotSearchButton.getIcon(), iconColor));
+        netMusicRefreshHotSearchButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRefreshHotSearchButton.getIcon(), iconColor));
 
         netMusicHistorySearchLabel.setForeground(style.getTextColor());
-        netMusicClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netMusicClearHistorySearchButton.getIcon(), iconColor));
+        netMusicClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netMusicClearHistorySearchButton.getIcon(), iconColor));
 
         netPlaylistHistorySearchLabel.setForeground(style.getTextColor());
-        netPlaylistClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistClearHistorySearchButton.getIcon(), iconColor));
+        netPlaylistClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistClearHistorySearchButton.getIcon(), iconColor));
 
         netAlbumHistorySearchLabel.setForeground(style.getTextColor());
-        netAlbumClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumClearHistorySearchButton.getIcon(), iconColor));
+        netAlbumClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumClearHistorySearchButton.getIcon(), iconColor));
 
         netArtistHistorySearchLabel.setForeground(style.getTextColor());
-        netArtistClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netArtistClearHistorySearchButton.getIcon(), iconColor));
+        netArtistClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netArtistClearHistorySearchButton.getIcon(), iconColor));
 
         netRadioHistorySearchLabel.setForeground(style.getTextColor());
-        netRadioClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netRadioClearHistorySearchButton.getIcon(), iconColor));
+        netRadioClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netRadioClearHistorySearchButton.getIcon(), iconColor));
 
         netMvHistorySearchLabel.setForeground(style.getTextColor());
-        netMvClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netMvClearHistorySearchButton.getIcon(), iconColor));
+        netMvClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netMvClearHistorySearchButton.getIcon(), iconColor));
 
         netUserHistorySearchLabel.setForeground(style.getTextColor());
-        netUserClearHistorySearchButton.setIcon(ImageUtils.dye((ImageIcon) netUserClearHistorySearchButton.getIcon(), iconColor));
+        netUserClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netUserClearHistorySearchButton.getIcon(), iconColor));
 
         Component[] components = netMusicSearchSuggestionInnerPanel2.getComponents();
         for (Component c : components) {
@@ -21513,20 +21513,20 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        filterTextField.setForeground(filterTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        filterTextField.setForeground(filterTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         filterTextField.setCaretColor(textColor);
         // 在线音乐搜索栏透明
         focusListeners = searchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        searchTextField.setForeground(searchTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        searchTextField.setForeground(searchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         searchTextField.setCaretColor(textColor);
         netMusicSourceComboBox.setUI(new ComboBoxUI(netMusicSourceComboBox, THIS));
         netMusicSearchTypeComboBox.setUI(new ComboBoxUI(netMusicSearchTypeComboBox, THIS));
@@ -21535,16 +21535,16 @@ public class PlayerFrame extends JFrame {
         netMusicPageTextField.setCaretColor(textColor);
         // 歌单搜索栏透明
         netPlaylistIdCheckBox.setForeground(textColor);
-        netPlaylistIdCheckBox.setIcon(ImageUtils.dye(uncheckedIcon, iconColor));
-        netPlaylistIdCheckBox.setSelectedIcon(ImageUtils.dye(checkedIcon, iconColor));
+        netPlaylistIdCheckBox.setIcon(ImageUtil.dye(uncheckedIcon, iconColor));
+        netPlaylistIdCheckBox.setSelectedIcon(ImageUtil.dye(checkedIcon, iconColor));
         focusListeners = netPlaylistSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         netPlaylistSearchTextField.setCaretColor(textColor);
         netPlaylistSourceComboBox.setUI(new ComboBoxUI(netPlaylistSourceComboBox, THIS));
         netPlaylistPageTextField.setForeground(textColor);
@@ -21555,10 +21555,10 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         netAlbumSearchTextField.setCaretColor(textColor);
         netAlbumSourceComboBox.setUI(new ComboBoxUI(netAlbumSourceComboBox, THIS));
         netAlbumPageTextField.setForeground(textColor);
@@ -21569,10 +21569,10 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         netArtistSearchTextField.setCaretColor(textColor);
         netArtistSourceComboBox.setUI(new ComboBoxUI(netArtistSourceComboBox, THIS));
         netArtistPageTextField.setForeground(textColor);
@@ -21583,10 +21583,10 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         netRadioSearchTextField.setCaretColor(textColor);
         netRadioSourceComboBox.setUI(new ComboBoxUI(netRadioSourceComboBox, THIS));
         netRadioPageTextField.setForeground(textColor);
@@ -21597,10 +21597,10 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         netMvSearchTextField.setCaretColor(textColor);
         netMvSourceComboBox.setUI(new ComboBoxUI(netMvSourceComboBox, THIS));
         netMvPageTextField.setForeground(textColor);
@@ -21614,10 +21614,10 @@ public class PlayerFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtils.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
             }
         }
-        netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? textColor : ColorUtils.darker(textColor));
+        netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
         netUserSearchTextField.setCaretColor(textColor);
         netUserSourceComboBox.setUI(new ComboBoxUI(netUserSourceComboBox, THIS));
         netUserRecordTypeComboBox.setUI(new ComboBoxUI(netUserRecordTypeComboBox, THIS));
@@ -21660,163 +21660,163 @@ public class PlayerFrame extends JFrame {
         historyButton.setForeground(textColor);
         collectionButton.setForeground(textColor);
         // 工具栏按钮颜色
-        localMusicButton.setIcon(ImageUtils.dye((ImageIcon) localMusicButton.getIcon(), iconColor));
-        historyButton.setIcon(ImageUtils.dye((ImageIcon) historyButton.getIcon(), iconColor));
-        collectionButton.setIcon(ImageUtils.dye((ImageIcon) collectionButton.getIcon(), iconColor));
-        addToolButton.setIcon(ImageUtils.dye((ImageIcon) addToolButton.getIcon(), iconColor));
-        reimportToolButton.setIcon(ImageUtils.dye((ImageIcon) reimportToolButton.getIcon(), iconColor));
-        manageCatalogToolButton.setIcon(ImageUtils.dye((ImageIcon) manageCatalogToolButton.getIcon(), iconColor));
-        removeToolButton.setIcon(ImageUtils.dye((ImageIcon) removeToolButton.getIcon(), iconColor));
-        clearToolButton.setIcon(ImageUtils.dye((ImageIcon) clearToolButton.getIcon(), iconColor));
-        duplicateToolButton.setIcon(ImageUtils.dye((ImageIcon) duplicateToolButton.getIcon(), iconColor));
-        reverseToolButton.setIcon(ImageUtils.dye((ImageIcon) reverseToolButton.getIcon(), iconColor));
-        sortToolButton.setIcon(ImageUtils.dye((ImageIcon) sortToolButton.getIcon(), iconColor));
-        moveUpToolButton.setIcon(ImageUtils.dye((ImageIcon) moveUpToolButton.getIcon(), iconColor));
-        moveDownToolButton.setIcon(ImageUtils.dye((ImageIcon) moveDownToolButton.getIcon(), iconColor));
-        clearInputToolButton.setIcon(ImageUtils.dye((ImageIcon) clearInputToolButton.getIcon(), iconColor));
+        localMusicButton.setIcon(ImageUtil.dye((ImageIcon) localMusicButton.getIcon(), iconColor));
+        historyButton.setIcon(ImageUtil.dye((ImageIcon) historyButton.getIcon(), iconColor));
+        collectionButton.setIcon(ImageUtil.dye((ImageIcon) collectionButton.getIcon(), iconColor));
+        addToolButton.setIcon(ImageUtil.dye((ImageIcon) addToolButton.getIcon(), iconColor));
+        reimportToolButton.setIcon(ImageUtil.dye((ImageIcon) reimportToolButton.getIcon(), iconColor));
+        manageCatalogToolButton.setIcon(ImageUtil.dye((ImageIcon) manageCatalogToolButton.getIcon(), iconColor));
+        removeToolButton.setIcon(ImageUtil.dye((ImageIcon) removeToolButton.getIcon(), iconColor));
+        clearToolButton.setIcon(ImageUtil.dye((ImageIcon) clearToolButton.getIcon(), iconColor));
+        duplicateToolButton.setIcon(ImageUtil.dye((ImageIcon) duplicateToolButton.getIcon(), iconColor));
+        reverseToolButton.setIcon(ImageUtil.dye((ImageIcon) reverseToolButton.getIcon(), iconColor));
+        sortToolButton.setIcon(ImageUtil.dye((ImageIcon) sortToolButton.getIcon(), iconColor));
+        moveUpToolButton.setIcon(ImageUtil.dye((ImageIcon) moveUpToolButton.getIcon(), iconColor));
+        moveDownToolButton.setIcon(ImageUtil.dye((ImageIcon) moveDownToolButton.getIcon(), iconColor));
+        clearInputToolButton.setIcon(ImageUtil.dye((ImageIcon) clearInputToolButton.getIcon(), iconColor));
         // 在线音乐搜索栏按钮颜色
-        netMusicBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netMusicBackwardButton.getIcon(), iconColor));
-        netMusicClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netMusicClearInputButton.getIcon(), iconColor));
-        searchButton.setIcon(ImageUtils.dye((ImageIcon) searchButton.getIcon(), iconColor));
-        netMusicRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netMusicRefreshButton.getIcon(), iconColor));
-        netMusicStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicStartPageButton.getIcon(), iconColor));
-        netMusicLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicLastPageButton.getIcon(), iconColor));
-        netMusicGoButton.setIcon(ImageUtils.dye((ImageIcon) netMusicGoButton.getIcon(), iconColor));
-        netMusicNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicNextPageButton.getIcon(), iconColor));
-        netMusicEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netMusicEndPageButton.getIcon(), iconColor));
+        netMusicBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netMusicBackwardButton.getIcon(), iconColor));
+        netMusicClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netMusicClearInputButton.getIcon(), iconColor));
+        searchButton.setIcon(ImageUtil.dye((ImageIcon) searchButton.getIcon(), iconColor));
+        netMusicRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRefreshButton.getIcon(), iconColor));
+        netMusicStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicStartPageButton.getIcon(), iconColor));
+        netMusicLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicLastPageButton.getIcon(), iconColor));
+        netMusicGoButton.setIcon(ImageUtil.dye((ImageIcon) netMusicGoButton.getIcon(), iconColor));
+        netMusicNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicNextPageButton.getIcon(), iconColor));
+        netMusicEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicEndPageButton.getIcon(), iconColor));
         // 歌单搜索栏按钮颜色
-        netPlaylistBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), iconColor));
-        netPlaylistClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistClearInputButton.getIcon(), iconColor));
-        netPlaylistSearchButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistSearchButton.getIcon(), iconColor));
-        netPlaylistPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistPlayAllButton.getIcon(), iconColor));
-        netPlaylistRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistRefreshButton.getIcon(), iconColor));
-        netPlaylistStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistStartPageButton.getIcon(), iconColor));
-        netPlaylistLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistLastPageButton.getIcon(), iconColor));
-        netPlaylistGoButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistGoButton.getIcon(), iconColor));
-        netPlaylistNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistNextPageButton.getIcon(), iconColor));
-        netPlaylistEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netPlaylistEndPageButton.getIcon(), iconColor));
+        netPlaylistBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), iconColor));
+        netPlaylistClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistClearInputButton.getIcon(), iconColor));
+        netPlaylistSearchButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistSearchButton.getIcon(), iconColor));
+        netPlaylistPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistPlayAllButton.getIcon(), iconColor));
+        netPlaylistRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistRefreshButton.getIcon(), iconColor));
+        netPlaylistStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistStartPageButton.getIcon(), iconColor));
+        netPlaylistLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistLastPageButton.getIcon(), iconColor));
+        netPlaylistGoButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistGoButton.getIcon(), iconColor));
+        netPlaylistNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistNextPageButton.getIcon(), iconColor));
+        netPlaylistEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistEndPageButton.getIcon(), iconColor));
         // 专辑搜索栏按钮颜色
-        netAlbumBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumBackwardButton.getIcon(), iconColor));
-        netAlbumClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumClearInputButton.getIcon(), iconColor));
-        netAlbumSearchButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumSearchButton.getIcon(), iconColor));
-        netAlbumPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumPlayAllButton.getIcon(), iconColor));
-        netAlbumRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumRefreshButton.getIcon(), iconColor));
-        netAlbumStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumStartPageButton.getIcon(), iconColor));
-        netAlbumLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumLastPageButton.getIcon(), iconColor));
-        netAlbumGoButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumGoButton.getIcon(), iconColor));
-        netAlbumNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumNextPageButton.getIcon(), iconColor));
-        netAlbumEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netAlbumEndPageButton.getIcon(), iconColor));
+        netAlbumBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumBackwardButton.getIcon(), iconColor));
+        netAlbumClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumClearInputButton.getIcon(), iconColor));
+        netAlbumSearchButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumSearchButton.getIcon(), iconColor));
+        netAlbumPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumPlayAllButton.getIcon(), iconColor));
+        netAlbumRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumRefreshButton.getIcon(), iconColor));
+        netAlbumStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumStartPageButton.getIcon(), iconColor));
+        netAlbumLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumLastPageButton.getIcon(), iconColor));
+        netAlbumGoButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumGoButton.getIcon(), iconColor));
+        netAlbumNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumNextPageButton.getIcon(), iconColor));
+        netAlbumEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumEndPageButton.getIcon(), iconColor));
         // 歌手搜索栏按钮颜色
-        netArtistBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netArtistBackwardButton.getIcon(), iconColor));
-        netArtistClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netArtistClearInputButton.getIcon(), iconColor));
-        netArtistSearchButton.setIcon(ImageUtils.dye((ImageIcon) netArtistSearchButton.getIcon(), iconColor));
-        netArtistPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netArtistPlayAllButton.getIcon(), iconColor));
-        netArtistRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netArtistRefreshButton.getIcon(), iconColor));
-        netArtistStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistStartPageButton.getIcon(), iconColor));
-        netArtistLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistLastPageButton.getIcon(), iconColor));
-        netArtistGoButton.setIcon(ImageUtils.dye((ImageIcon) netArtistGoButton.getIcon(), iconColor));
-        netArtistNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistNextPageButton.getIcon(), iconColor));
-        netArtistEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netArtistEndPageButton.getIcon(), iconColor));
+        netArtistBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netArtistBackwardButton.getIcon(), iconColor));
+        netArtistClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netArtistClearInputButton.getIcon(), iconColor));
+        netArtistSearchButton.setIcon(ImageUtil.dye((ImageIcon) netArtistSearchButton.getIcon(), iconColor));
+        netArtistPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netArtistPlayAllButton.getIcon(), iconColor));
+        netArtistRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netArtistRefreshButton.getIcon(), iconColor));
+        netArtistStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistStartPageButton.getIcon(), iconColor));
+        netArtistLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistLastPageButton.getIcon(), iconColor));
+        netArtistGoButton.setIcon(ImageUtil.dye((ImageIcon) netArtistGoButton.getIcon(), iconColor));
+        netArtistNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistNextPageButton.getIcon(), iconColor));
+        netArtistEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistEndPageButton.getIcon(), iconColor));
         // 电台搜索栏按钮颜色
-        netRadioBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netRadioBackwardButton.getIcon(), iconColor));
-        netRadioClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netRadioClearInputButton.getIcon(), iconColor));
-        netRadioSearchButton.setIcon(ImageUtils.dye((ImageIcon) netRadioSearchButton.getIcon(), iconColor));
-        netRadioPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netRadioPlayAllButton.getIcon(), iconColor));
-        netRadioRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netRadioRefreshButton.getIcon(), iconColor));
-        netRadioStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioStartPageButton.getIcon(), iconColor));
-        netRadioLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioLastPageButton.getIcon(), iconColor));
-        netRadioGoButton.setIcon(ImageUtils.dye((ImageIcon) netRadioGoButton.getIcon(), iconColor));
-        netRadioNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioNextPageButton.getIcon(), iconColor));
-        netRadioEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netRadioEndPageButton.getIcon(), iconColor));
+        netRadioBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), iconColor));
+        netRadioClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netRadioClearInputButton.getIcon(), iconColor));
+        netRadioSearchButton.setIcon(ImageUtil.dye((ImageIcon) netRadioSearchButton.getIcon(), iconColor));
+        netRadioPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netRadioPlayAllButton.getIcon(), iconColor));
+        netRadioRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netRadioRefreshButton.getIcon(), iconColor));
+        netRadioStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioStartPageButton.getIcon(), iconColor));
+        netRadioLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioLastPageButton.getIcon(), iconColor));
+        netRadioGoButton.setIcon(ImageUtil.dye((ImageIcon) netRadioGoButton.getIcon(), iconColor));
+        netRadioNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioNextPageButton.getIcon(), iconColor));
+        netRadioEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioEndPageButton.getIcon(), iconColor));
         // MV 搜索栏按钮颜色
         netMvSortTypeComboBox.setUI(new ComboBoxUI(netMvSortTypeComboBox, THIS));
-        netMvBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netMvBackwardButton.getIcon(), iconColor));
-        netMvClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netMvClearInputButton.getIcon(), iconColor));
-        netMvSearchButton.setIcon(ImageUtils.dye((ImageIcon) netMvSearchButton.getIcon(), iconColor));
-        netMvRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netMvRefreshButton.getIcon(), iconColor));
-        netMvStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvStartPageButton.getIcon(), iconColor));
-        netMvLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvLastPageButton.getIcon(), iconColor));
-        netMvGoButton.setIcon(ImageUtils.dye((ImageIcon) netMvGoButton.getIcon(), iconColor));
-        netMvNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvNextPageButton.getIcon(), iconColor));
-        netMvEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netMvEndPageButton.getIcon(), iconColor));
+        netMvBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netMvBackwardButton.getIcon(), iconColor));
+        netMvClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netMvClearInputButton.getIcon(), iconColor));
+        netMvSearchButton.setIcon(ImageUtil.dye((ImageIcon) netMvSearchButton.getIcon(), iconColor));
+        netMvRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netMvRefreshButton.getIcon(), iconColor));
+        netMvStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvStartPageButton.getIcon(), iconColor));
+        netMvLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvLastPageButton.getIcon(), iconColor));
+        netMvGoButton.setIcon(ImageUtil.dye((ImageIcon) netMvGoButton.getIcon(), iconColor));
+        netMvNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvNextPageButton.getIcon(), iconColor));
+        netMvEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvEndPageButton.getIcon(), iconColor));
         // 榜单搜索栏按钮颜色
-        netRankingBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netRankingBackwardButton.getIcon(), iconColor));
-        netRankingPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netRankingPlayAllButton.getIcon(), iconColor));
-        netRankingRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netRankingRefreshButton.getIcon(), iconColor));
-        netRankingStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingStartPageButton.getIcon(), iconColor));
-        netRankingLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingLastPageButton.getIcon(), iconColor));
-        netRankingGoButton.setIcon(ImageUtils.dye((ImageIcon) netRankingGoButton.getIcon(), iconColor));
-        netRankingNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingNextPageButton.getIcon(), iconColor));
-        netRankingEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netRankingEndPageButton.getIcon(), iconColor));
+        netRankingBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netRankingBackwardButton.getIcon(), iconColor));
+        netRankingPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netRankingPlayAllButton.getIcon(), iconColor));
+        netRankingRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netRankingRefreshButton.getIcon(), iconColor));
+        netRankingStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingStartPageButton.getIcon(), iconColor));
+        netRankingLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingLastPageButton.getIcon(), iconColor));
+        netRankingGoButton.setIcon(ImageUtil.dye((ImageIcon) netRankingGoButton.getIcon(), iconColor));
+        netRankingNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingNextPageButton.getIcon(), iconColor));
+        netRankingEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingEndPageButton.getIcon(), iconColor));
         // 用户搜索栏按钮颜色
-        netUserBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netUserBackwardButton.getIcon(), iconColor));
-        netUserClearInputButton.setIcon(ImageUtils.dye((ImageIcon) netUserClearInputButton.getIcon(), iconColor));
-        netUserSearchButton.setIcon(ImageUtils.dye((ImageIcon) netUserSearchButton.getIcon(), iconColor));
-        netUserPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netUserPlayAllButton.getIcon(), iconColor));
-        netUserRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netUserRefreshButton.getIcon(), iconColor));
-        netUserStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserStartPageButton.getIcon(), iconColor));
-        netUserLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserLastPageButton.getIcon(), iconColor));
-        netUserGoButton.setIcon(ImageUtils.dye((ImageIcon) netUserGoButton.getIcon(), iconColor));
-        netUserNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserNextPageButton.getIcon(), iconColor));
-        netUserEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netUserEndPageButton.getIcon(), iconColor));
+        netUserBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netUserBackwardButton.getIcon(), iconColor));
+        netUserClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netUserClearInputButton.getIcon(), iconColor));
+        netUserSearchButton.setIcon(ImageUtil.dye((ImageIcon) netUserSearchButton.getIcon(), iconColor));
+        netUserPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netUserPlayAllButton.getIcon(), iconColor));
+        netUserRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netUserRefreshButton.getIcon(), iconColor));
+        netUserStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserStartPageButton.getIcon(), iconColor));
+        netUserLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserLastPageButton.getIcon(), iconColor));
+        netUserGoButton.setIcon(ImageUtil.dye((ImageIcon) netUserGoButton.getIcon(), iconColor));
+        netUserNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserNextPageButton.getIcon(), iconColor));
+        netUserEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserEndPageButton.getIcon(), iconColor));
         // 评论栏按钮颜色
-        netCommentBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netCommentBackwardButton.getIcon(), iconColor));
-        netCommentRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netCommentRefreshButton.getIcon(), iconColor));
-        netCommentStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentStartPageButton.getIcon(), iconColor));
-        netCommentLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentLastPageButton.getIcon(), iconColor));
-        netCommentGoButton.setIcon(ImageUtils.dye((ImageIcon) netCommentGoButton.getIcon(), iconColor));
-        netCommentNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentNextPageButton.getIcon(), iconColor));
-        netCommentEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netCommentEndPageButton.getIcon(), iconColor));
+        netCommentBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netCommentBackwardButton.getIcon(), iconColor));
+        netCommentRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netCommentRefreshButton.getIcon(), iconColor));
+        netCommentStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentStartPageButton.getIcon(), iconColor));
+        netCommentLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentLastPageButton.getIcon(), iconColor));
+        netCommentGoButton.setIcon(ImageUtil.dye((ImageIcon) netCommentGoButton.getIcon(), iconColor));
+        netCommentNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentNextPageButton.getIcon(), iconColor));
+        netCommentEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentEndPageButton.getIcon(), iconColor));
         // 乐谱栏按钮颜色
-        netSheetBackwardButton.setIcon(ImageUtils.dye((ImageIcon) netSheetBackwardButton.getIcon(), iconColor));
-        netSheetRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netSheetRefreshButton.getIcon(), iconColor));
-        netSheetStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetStartPageButton.getIcon(), iconColor));
-        netSheetLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetLastPageButton.getIcon(), iconColor));
-        netSheetGoButton.setIcon(ImageUtils.dye((ImageIcon) netSheetGoButton.getIcon(), iconColor));
-        netSheetNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetNextPageButton.getIcon(), iconColor));
-        netSheetEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netSheetEndPageButton.getIcon(), iconColor));
+        netSheetBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netSheetBackwardButton.getIcon(), iconColor));
+        netSheetRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netSheetRefreshButton.getIcon(), iconColor));
+        netSheetStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetStartPageButton.getIcon(), iconColor));
+        netSheetLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetLastPageButton.getIcon(), iconColor));
+        netSheetGoButton.setIcon(ImageUtil.dye((ImageIcon) netSheetGoButton.getIcon(), iconColor));
+        netSheetNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetNextPageButton.getIcon(), iconColor));
+        netSheetEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetEndPageButton.getIcon(), iconColor));
         // 推荐工具栏按钮颜色
-        playlistRecommendButton.setIcon(ImageUtils.dye((ImageIcon) playlistRecommendButton.getIcon(), iconColor));
-        highQualityPlaylistButton.setIcon(ImageUtils.dye((ImageIcon) highQualityPlaylistButton.getIcon(), iconColor));
-        hotMusicButton.setIcon(ImageUtils.dye((ImageIcon) hotMusicButton.getIcon(), iconColor));
-        netMusicRecommendButton.setIcon(ImageUtils.dye((ImageIcon) netMusicRecommendButton.getIcon(), iconColor));
-        newAlbumRecommendButton.setIcon(ImageUtils.dye((ImageIcon) newAlbumRecommendButton.getIcon(), iconColor));
-        artistListRecommendButton.setIcon(ImageUtils.dye((ImageIcon) artistListRecommendButton.getIcon(), iconColor));
-        newRadioRecommendButton.setIcon(ImageUtils.dye((ImageIcon) newRadioRecommendButton.getIcon(), iconColor));
-        hotRadioRecommendButton.setIcon(ImageUtils.dye((ImageIcon) hotRadioRecommendButton.getIcon(), iconColor));
-        programRecommendButton.setIcon(ImageUtils.dye((ImageIcon) programRecommendButton.getIcon(), iconColor));
-        mvRecommendButton.setIcon(ImageUtils.dye((ImageIcon) mvRecommendButton.getIcon(), iconColor));
-        recommendBackwardButton.setIcon(ImageUtils.dye((ImageIcon) recommendBackwardButton.getIcon(), iconColor));
-        netRecommendPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendPlayAllButton.getIcon(), iconColor));
-        netRecommendRefreshButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendRefreshButton.getIcon(), iconColor));
-        netRecommendStartPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendStartPageButton.getIcon(), iconColor));
-        netRecommendLastPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendLastPageButton.getIcon(), iconColor));
-        netRecommendGoButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendGoButton.getIcon(), iconColor));
-        netRecommendNextPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendNextPageButton.getIcon(), iconColor));
-        netRecommendEndPageButton.setIcon(ImageUtils.dye((ImageIcon) netRecommendEndPageButton.getIcon(), iconColor));
+        playlistRecommendButton.setIcon(ImageUtil.dye((ImageIcon) playlistRecommendButton.getIcon(), iconColor));
+        highQualityPlaylistButton.setIcon(ImageUtil.dye((ImageIcon) highQualityPlaylistButton.getIcon(), iconColor));
+        hotMusicButton.setIcon(ImageUtil.dye((ImageIcon) hotMusicButton.getIcon(), iconColor));
+        netMusicRecommendButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRecommendButton.getIcon(), iconColor));
+        newAlbumRecommendButton.setIcon(ImageUtil.dye((ImageIcon) newAlbumRecommendButton.getIcon(), iconColor));
+        artistListRecommendButton.setIcon(ImageUtil.dye((ImageIcon) artistListRecommendButton.getIcon(), iconColor));
+        newRadioRecommendButton.setIcon(ImageUtil.dye((ImageIcon) newRadioRecommendButton.getIcon(), iconColor));
+        hotRadioRecommendButton.setIcon(ImageUtil.dye((ImageIcon) hotRadioRecommendButton.getIcon(), iconColor));
+        programRecommendButton.setIcon(ImageUtil.dye((ImageIcon) programRecommendButton.getIcon(), iconColor));
+        mvRecommendButton.setIcon(ImageUtil.dye((ImageIcon) mvRecommendButton.getIcon(), iconColor));
+        recommendBackwardButton.setIcon(ImageUtil.dye((ImageIcon) recommendBackwardButton.getIcon(), iconColor));
+        netRecommendPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendPlayAllButton.getIcon(), iconColor));
+        netRecommendRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendRefreshButton.getIcon(), iconColor));
+        netRecommendStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendStartPageButton.getIcon(), iconColor));
+        netRecommendLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendLastPageButton.getIcon(), iconColor));
+        netRecommendGoButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendGoButton.getIcon(), iconColor));
+        netRecommendNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendNextPageButton.getIcon(), iconColor));
+        netRecommendEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendEndPageButton.getIcon(), iconColor));
         // 收藏工具栏按钮颜色
-        collectionBackwardButton.setIcon(ImageUtils.dye((ImageIcon) collectionBackwardButton.getIcon(), iconColor));
-        collectionPlayAllButton.setIcon(ImageUtils.dye((ImageIcon) collectionPlayAllButton.getIcon(), iconColor));
-        collectionRefreshButton.setIcon(ImageUtils.dye((ImageIcon) collectionRefreshButton.getIcon(), iconColor));
-        collectionStartPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionStartPageButton.getIcon(), iconColor));
-        collectionLastPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionLastPageButton.getIcon(), iconColor));
-        collectionGoButton.setIcon(ImageUtils.dye((ImageIcon) collectionGoButton.getIcon(), iconColor));
-        collectionNextPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionNextPageButton.getIcon(), iconColor));
-        collectionEndPageButton.setIcon(ImageUtils.dye((ImageIcon) collectionEndPageButton.getIcon(), iconColor));
+        collectionBackwardButton.setIcon(ImageUtil.dye((ImageIcon) collectionBackwardButton.getIcon(), iconColor));
+        collectionPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) collectionPlayAllButton.getIcon(), iconColor));
+        collectionRefreshButton.setIcon(ImageUtil.dye((ImageIcon) collectionRefreshButton.getIcon(), iconColor));
+        collectionStartPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionStartPageButton.getIcon(), iconColor));
+        collectionLastPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionLastPageButton.getIcon(), iconColor));
+        collectionGoButton.setIcon(ImageUtil.dye((ImageIcon) collectionGoButton.getIcon(), iconColor));
+        collectionNextPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionNextPageButton.getIcon(), iconColor));
+        collectionEndPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionEndPageButton.getIcon(), iconColor));
         // 下载工具栏按钮颜色
-        restartSelectedTasksButton.setIcon(ImageUtils.dye((ImageIcon) restartSelectedTasksButton.getIcon(), iconColor));
-        cancelSelectedTasksButton.setIcon(ImageUtils.dye((ImageIcon) cancelSelectedTasksButton.getIcon(), iconColor));
-        removeSelectedTasksButton.setIcon(ImageUtils.dye((ImageIcon) removeSelectedTasksButton.getIcon(), iconColor));
-        restartAllTasksButton.setIcon(ImageUtils.dye((ImageIcon) restartAllTasksButton.getIcon(), iconColor));
-        cancelAllTasksButton.setIcon(ImageUtils.dye((ImageIcon) cancelAllTasksButton.getIcon(), iconColor));
-        removeAllTasksButton.setIcon(ImageUtils.dye((ImageIcon) removeAllTasksButton.getIcon(), iconColor));
+        restartSelectedTasksButton.setIcon(ImageUtil.dye((ImageIcon) restartSelectedTasksButton.getIcon(), iconColor));
+        cancelSelectedTasksButton.setIcon(ImageUtil.dye((ImageIcon) cancelSelectedTasksButton.getIcon(), iconColor));
+        removeSelectedTasksButton.setIcon(ImageUtil.dye((ImageIcon) removeSelectedTasksButton.getIcon(), iconColor));
+        restartAllTasksButton.setIcon(ImageUtil.dye((ImageIcon) restartAllTasksButton.getIcon(), iconColor));
+        cancelAllTasksButton.setIcon(ImageUtil.dye((ImageIcon) cancelAllTasksButton.getIcon(), iconColor));
+        removeAllTasksButton.setIcon(ImageUtil.dye((ImageIcon) removeAllTasksButton.getIcon(), iconColor));
         // 播放队列工具栏按钮颜色
-        playQueueRemoveToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueRemoveToolButton.getIcon(), iconColor));
-        playQueueClearToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueClearToolButton.getIcon(), iconColor));
-        playQueueDuplicateToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueDuplicateToolButton.getIcon(), iconColor));
-        playQueueReverseToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueReverseToolButton.getIcon(), iconColor));
-        playQueueMoveUpToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueMoveUpToolButton.getIcon(), iconColor));
-        playQueueMoveDownToolButton.setIcon(ImageUtils.dye((ImageIcon) playQueueMoveDownToolButton.getIcon(), iconColor));
+        playQueueRemoveToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueRemoveToolButton.getIcon(), iconColor));
+        playQueueClearToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueClearToolButton.getIcon(), iconColor));
+        playQueueDuplicateToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueDuplicateToolButton.getIcon(), iconColor));
+        playQueueReverseToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueReverseToolButton.getIcon(), iconColor));
+        playQueueMoveUpToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueMoveUpToolButton.getIcon(), iconColor));
+        playQueueMoveDownToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueMoveDownToolButton.getIcon(), iconColor));
 
         // 工具栏下面的标签颜色
         countLabel.setForeground(textColor);
@@ -22093,14 +22093,14 @@ public class PlayerFrame extends JFrame {
         changePaneButton.setUI(cui);
         changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton, cui, THIS));
 
-        mvButton.setIcon(ImageUtils.dye((ImageIcon) mvButton.getIcon(), iconColor));
-        collectButton.setIcon(ImageUtils.dye((ImageIcon) collectButton.getIcon(), iconColor));
-        downloadButton.setIcon(ImageUtils.dye((ImageIcon) downloadButton.getIcon(), iconColor));
-        commentButton.setIcon(ImageUtils.dye((ImageIcon) commentButton.getIcon(), iconColor));
-        sheetButton.setIcon(ImageUtils.dye((ImageIcon) sheetButton.getIcon(), iconColor));
-        lastButton.setIcon(ImageUtils.dye((ImageIcon) lastButton.getIcon(), iconColor));
-        playOrPauseButton.setIcon(ImageUtils.dye((ImageIcon) playOrPauseButton.getIcon(), iconColor));
-        nextButton.setIcon(ImageUtils.dye((ImageIcon) nextButton.getIcon(), iconColor));
+        mvButton.setIcon(ImageUtil.dye((ImageIcon) mvButton.getIcon(), iconColor));
+        collectButton.setIcon(ImageUtil.dye((ImageIcon) collectButton.getIcon(), iconColor));
+        downloadButton.setIcon(ImageUtil.dye((ImageIcon) downloadButton.getIcon(), iconColor));
+        commentButton.setIcon(ImageUtil.dye((ImageIcon) commentButton.getIcon(), iconColor));
+        sheetButton.setIcon(ImageUtil.dye((ImageIcon) sheetButton.getIcon(), iconColor));
+        lastButton.setIcon(ImageUtil.dye((ImageIcon) lastButton.getIcon(), iconColor));
+        playOrPauseButton.setIcon(ImageUtil.dye((ImageIcon) playOrPauseButton.getIcon(), iconColor));
+        nextButton.setIcon(ImageUtil.dye((ImageIcon) nextButton.getIcon(), iconColor));
         // 迷你窗口样式改变
 //        if (miniDialog != null) {
 //            miniDialog.infoLabel.setForeground(textColor);
@@ -22109,29 +22109,29 @@ public class PlayerFrame extends JFrame {
 //            miniDialog.playNextButton.setIcon(nextButton.getIcon());
 //            miniDialog.closeButton.setIcon(closeButton.getIcon());
 //        }
-        playModeButton.setIcon(ImageUtils.dye((ImageIcon) playModeButton.getIcon(), iconColor));
-        backwardButton.setIcon(ImageUtils.dye((ImageIcon) backwardButton.getIcon(), iconColor));
-        forwardButton.setIcon(ImageUtils.dye((ImageIcon) forwardButton.getIcon(), iconColor));
-        muteButton.setIcon(ImageUtils.dye((ImageIcon) muteButton.getIcon(), iconColor));
-        rateButton.setIcon(ImageUtils.dye((ImageIcon) rateButton.getIcon(), iconColor));
-        switchSpectrumButton.setIcon(ImageUtils.dye((ImageIcon) switchSpectrumButton.getIcon(), iconColor));
-        blurButton.setIcon(ImageUtils.dye((ImageIcon) blurButton.getIcon(), iconColor));
-        soundEffectButton.setIcon(ImageUtils.dye((ImageIcon) soundEffectButton.getIcon(), iconColor));
-        goToPlayQueueButton.setIcon(ImageUtils.dye((ImageIcon) goToPlayQueueButton.getIcon(), iconColor));
-        desktopLyricButton.setIcon(ImageUtils.dye((ImageIcon) desktopLyricButton.getIcon(), iconColor));
-        switchChineseButton.setIcon(ImageUtils.dye((ImageIcon) switchChineseButton.getIcon(), iconColor));
-        switchJapaneseButton.setIcon(ImageUtils.dye((ImageIcon) switchJapaneseButton.getIcon(), iconColor));
-        switchLrcTypeButton.setIcon(ImageUtils.dye((ImageIcon) switchLrcTypeButton.getIcon(), iconColor));
+        playModeButton.setIcon(ImageUtil.dye((ImageIcon) playModeButton.getIcon(), iconColor));
+        backwardButton.setIcon(ImageUtil.dye((ImageIcon) backwardButton.getIcon(), iconColor));
+        forwardButton.setIcon(ImageUtil.dye((ImageIcon) forwardButton.getIcon(), iconColor));
+        muteButton.setIcon(ImageUtil.dye((ImageIcon) muteButton.getIcon(), iconColor));
+        rateButton.setIcon(ImageUtil.dye((ImageIcon) rateButton.getIcon(), iconColor));
+        switchSpectrumButton.setIcon(ImageUtil.dye((ImageIcon) switchSpectrumButton.getIcon(), iconColor));
+        blurButton.setIcon(ImageUtil.dye((ImageIcon) blurButton.getIcon(), iconColor));
+        soundEffectButton.setIcon(ImageUtil.dye((ImageIcon) soundEffectButton.getIcon(), iconColor));
+        goToPlayQueueButton.setIcon(ImageUtil.dye((ImageIcon) goToPlayQueueButton.getIcon(), iconColor));
+        desktopLyricButton.setIcon(ImageUtil.dye((ImageIcon) desktopLyricButton.getIcon(), iconColor));
+        switchChineseButton.setIcon(ImageUtil.dye((ImageIcon) switchChineseButton.getIcon(), iconColor));
+        switchJapaneseButton.setIcon(ImageUtil.dye((ImageIcon) switchJapaneseButton.getIcon(), iconColor));
+        switchLrcTypeButton.setIcon(ImageUtil.dye((ImageIcon) switchLrcTypeButton.getIcon(), iconColor));
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
         // 按钮图标颜色
         if (!player.loadedMusic() || player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
-            changePaneButton.setIcon(ImageUtils.dye(new ImageIcon(
-                    ImageUtils.setRadius(ImageUtils.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), iconColor));
+            changePaneButton.setIcon(ImageUtil.dye(new ImageIcon(
+                    ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), iconColor));
         }
         // 默认专辑图颜色
         if (player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
-            BufferedImage albumImage = ImageUtils.borderShadow(ImageUtils.dye(ImageUtils.setRadius(ImageUtils.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), textColor));
+            BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), textColor));
             albumImageLabel.setIcon(new ImageIcon(albumImage));
         }
         // 其他标签颜色
@@ -22143,7 +22143,7 @@ public class PlayerFrame extends JFrame {
             doStyleBlur(style);
         }
         // 标题图标
-        setIconImage(ImageUtils.dye(titleIcon, textColor).getImage());
+        setIconImage(ImageUtil.dye(titleIcon, textColor).getImage());
 
         // 更新单选菜单项和标签按钮样式
         updateMenuItemIcon(sortPopupMenu);
@@ -22203,12 +22203,12 @@ public class PlayerFrame extends JFrame {
             CustomLabel label = (CustomLabel) (panel.getComponent(0));
             Rectangle rect = panel.getVisibleRect();
             if (i == index) {
-                label.setIcon(ImageUtils.dye((ImageIcon) label.getIcon(), iconColor));
+                label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
                 label.setForeground(textColor);
                 panel.setForeground(selectedColor);
                 panel.setDrawBg(true);
             } else {
-                label.setIcon(ImageUtils.dye((ImageIcon) label.getIcon(), iconColor));
+                label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
                 label.setForeground(textColor);
                 panel.setForeground(foreColor);
                 panel.setDrawBg(p != null && rect.contains(SwingUtilities.convertPoint(tabbedPane, p, panel)));
@@ -22237,7 +22237,7 @@ public class PlayerFrame extends JFrame {
             // 暂停状态
             case PlayerStatus.PAUSED:
                 player.play();
-                playOrPauseButton.setIcon(ImageUtils.dye(pauseIcon, currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
                 if (miniDialog != null) {
                     miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -22253,7 +22253,7 @@ public class PlayerFrame extends JFrame {
                     player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
                 });
                 timeline.play();
-                playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 if (miniDialog != null) {
                     miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -22272,7 +22272,7 @@ public class PlayerFrame extends JFrame {
     private void stopPlayback() {
         updateTitle("已停止");
         player.stop();
-        playOrPauseButton.setIcon(ImageUtils.dye(playIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
         if (miniDialog != null) {
             miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -22293,7 +22293,7 @@ public class PlayerFrame extends JFrame {
         Platform.runLater(() -> {
             File outputFile = fileChooser.showSaveDialog(null);
             if (outputFile != null) {
-                ImageUtils.toFile(albumImage, outputFile);
+                ImageUtil.toFile(albumImage, outputFile);
             }
         });
     }
@@ -22302,8 +22302,8 @@ public class PlayerFrame extends JFrame {
     private void downloadLrc(NetMusicInfo musicInfo) {
         globalExecutor.submit(() -> {
             try {
-                FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-                FileUtils.writeStr(lrcStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName(), false);
+                FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+                FileUtil.writeStr(lrcStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName(), false);
                 new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
             } catch (Exception e) {
                 if (e instanceof IORuntimeException) {
@@ -22320,8 +22320,8 @@ public class PlayerFrame extends JFrame {
     // 下载歌词翻译
     private void downloadLrcTrans(NetMusicInfo musicInfo) {
         globalExecutor.submit(() -> {
-            FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-            FileUtils.writeStr(transStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcTransFileName(), false);
+            FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+            FileUtil.writeStr(transStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcTransFileName(), false);
             new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
         });
     }
@@ -22336,10 +22336,10 @@ public class PlayerFrame extends JFrame {
         task.setInvokeLater(() -> {
             // 写入歌曲信息
             try {
-                if (musicInfo.isMp3()) MusicUtils.writeMP3Info(destMusicPath, musicInfo);
+                if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
                 // 自动下载歌词
-                if (isAutoDownloadLrc && StringUtils.isNotEmpty(musicInfo.getLrc()))
-                    FileUtils.writeStr(musicInfo.getLrc(), destLrcPath, false);
+                if (isAutoDownloadLrc && StringUtil.isNotEmpty(musicInfo.getLrc()))
+                    FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -22367,10 +22367,10 @@ public class PlayerFrame extends JFrame {
             task.setInvokeLater(() -> {
                 // 写入歌曲信息
                 try {
-                    if (musicInfo.isMp3()) MusicUtils.writeMP3Info(destMusicPath, musicInfo);
+                    if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
                     // 自动下载歌词
-                    if (isAutoDownloadLrc && StringUtils.isNotEmpty(musicInfo.getLrc()))
-                        FileUtils.writeStr(musicInfo.getLrc(), destLrcPath, false);
+                    if (isAutoDownloadLrc && StringUtil.isNotEmpty(musicInfo.getLrc()))
+                        FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -22447,9 +22447,9 @@ public class PlayerFrame extends JFrame {
 
             // 加载 MV url
             try {
-                MusicServerUtils.fillMvInfo(netMvInfo);
+                MusicServerUtil.fillMvInfo(netMvInfo);
                 String url = netMvInfo.getUrl();
-                if (StringUtils.isEmpty(url)) {
+                if (StringUtil.isEmpty(url)) {
                     new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                     return;
                 }
@@ -22480,9 +22480,9 @@ public class PlayerFrame extends JFrame {
             else if (mvType == MvType.MV_RECOMMEND_LIST) mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             else if (mvType == MvType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
             try {
-                MusicServerUtils.fillMvInfo(mvInfo);
+                MusicServerUtil.fillMvInfo(mvInfo);
                 String url = mvInfo.getUrl();
-                if (StringUtils.isEmpty(url)) {
+                if (StringUtil.isEmpty(url)) {
                     new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                     return;
                 }
@@ -22492,10 +22492,10 @@ public class PlayerFrame extends JFrame {
                     String fileName = mvInfo.toFileName();
                     file = new File(SimplePath.CACHE_PATH + fileName);
                     // 转为 mp4 再播放
-                    File tmpFile = FileUtils.replaceSuffix(file, Format.MP4);
+                    File tmpFile = FileUtil.replaceSuffix(file, Format.MP4);
                     if (!tmpFile.exists()) {
                         // 下载 MV
-                        if (!file.exists() || FileUtils.startsWithLeftBrace(file)) {
+                        if (!file.exists() || FileUtil.startsWithLeftBrace(file)) {
                             dialog.setMessage("加载视频文件......");
                             dialog.updateSize();
                             dialog.setLocationRelativeTo(null);
@@ -22504,12 +22504,12 @@ public class PlayerFrame extends JFrame {
                                 headers = new HashMap<>();
                                 headers.put("referer", "https://www.bilibili.com/");
                             }
-                            MusicServerUtils.download(null, mvInfo.getUrl(), file.getPath(), headers);
+                            MusicServerUtil.download(null, mvInfo.getUrl(), file.getPath(), headers);
                         }
                         dialog.setMessage("转换视频文件格式......");
                         dialog.updateSize();
                         dialog.setLocationRelativeTo(null);
-                        VideoUtils.convert(file, tmpFile);
+                        VideoUtil.convert(file, tmpFile);
                         // 转换成功后删除原文件
                         file.delete();
                     }
@@ -22639,11 +22639,11 @@ public class PlayerFrame extends JFrame {
         }
         blurExecutor.submit(() -> {
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
-            if (albumImage == defaultAlbumImage) albumImage = ImageUtils.eraseTranslucency(defaultAlbumImage);
+            if (albumImage == defaultAlbumImage) albumImage = ImageUtil.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurType.MC)
-                albumImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(albumImage));
+                albumImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(albumImage));
             else if (blurType == BlurType.LG)
-                albumImage = ImageUtils.toGradient(albumImage);
+                albumImage = ImageUtil.toGradient(albumImage);
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
                 gw = windowWidth;
@@ -22657,18 +22657,18 @@ public class PlayerFrame extends JFrame {
                 }
                 BufferedImage bufferedImage = albumImage;
                 // 截取中间的一部分(有的图片是长方形)
-                bufferedImage = ImageUtils.cropCenter(bufferedImage);
+                bufferedImage = ImageUtil.cropCenter(bufferedImage);
                 if (gsOn) {
                     // 处理成 100 * 100 大小
-                    bufferedImage = ImageUtils.width(bufferedImage, 100);
+                    bufferedImage = ImageUtil.width(bufferedImage, 100);
                     // 高斯模糊
-                    bufferedImage = ImageUtils.doBlur(bufferedImage);
+                    bufferedImage = ImageUtil.doBlur(bufferedImage);
                 }
-                if (darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
+                if (darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
                 // 放大至窗口大小
-                bufferedImage = ImageUtils.width(bufferedImage, gw);
+                bufferedImage = ImageUtil.width(bufferedImage, gw);
                 if (gh > bufferedImage.getHeight())
-                    bufferedImage = ImageUtils.height(bufferedImage, gh);
+                    bufferedImage = ImageUtil.height(bufferedImage, gh);
                 // 裁剪中间的一部分
                 if (blurType == BlurType.CV) {
                     int ih = bufferedImage.getHeight();
@@ -22695,19 +22695,19 @@ public class PlayerFrame extends JFrame {
             BufferedImage styleImage = style.getImg();
             if (gsOn) {
                 // 缩小
-                styleImage = ImageUtils.width(styleImage, 100);
+                styleImage = ImageUtil.width(styleImage, 100);
                 // 高斯模糊
-                styleImage = ImageUtils.doBlur(styleImage);
+                styleImage = ImageUtil.doBlur(styleImage);
             }
-            styleImage = ImageUtils.eraseTranslucency(styleImage);
+            styleImage = ImageUtil.eraseTranslucency(styleImage);
             // 放大至窗口大小
-            styleImage = ImageUtils.width(styleImage, getWidth());
+            styleImage = ImageUtil.width(styleImage, getWidth());
             if (darkerOn) {
                 // 亮度
-                styleImage = ImageUtils.darker(styleImage);
+                styleImage = ImageUtil.darker(styleImage);
             }
             // 质量
-            styleImage = ImageUtils.quality(styleImage, 0.1f);
+            styleImage = ImageUtil.quality(styleImage, 0.1f);
             // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
             globalPanel.setBackgroundImage(styleImage);
             updateUpperComp();
@@ -22818,7 +22818,7 @@ public class PlayerFrame extends JFrame {
         synchronized (netMusicSearchSuggestionInnerPanel2) {
             try {
                 String part = searchTextField.getText();
-                Set<String> suggestions = MusicServerUtils.getSearchSuggestion(part);
+                Set<String> suggestions = MusicServerUtil.getSearchSuggestion(part);
                 if (!suggestions.isEmpty()) {
                     if (!netMusicSearchSuggestionPanel.isShowing()) {
                         SwingUtilities.updateComponentTreeUI(netMusicRefreshSearchSuggestionButton);
@@ -22878,7 +22878,7 @@ public class PlayerFrame extends JFrame {
     private void updateHotSearch() {
         synchronized (netMusicHotSearchInnerPanel2) {
             try {
-                Set<String> hotSearch = MusicServerUtils.getHotSearch();
+                Set<String> hotSearch = MusicServerUtil.getHotSearch();
                 // 显示 “热门搜索” 面板
                 if (!hotSearch.isEmpty() && !netMusicHotSearchPanel.isShowing()) {
                     netMusicKeywordsPanel.add(netMusicHotSearchPanel, 0);
@@ -22994,7 +22994,7 @@ public class PlayerFrame extends JFrame {
             // 先暂停播放
             player.pause();
             // 缓存超出最大值时清理
-            if (FileUtils.getDirOrFileSize(new File(SimplePath.CACHE_PATH)) > maxCacheSize * 1024 * 1024)
+            if (FileUtil.getDirOrFileSize(new File(SimplePath.CACHE_PATH)) > maxCacheSize * 1024 * 1024)
                 clearCache();
             SystemTray.getSystemTray().remove(trayIconImg);
             saveConfig();
@@ -23006,7 +23006,7 @@ public class PlayerFrame extends JFrame {
 
     // 清除缓存
     private void clearCache() {
-        FileUtils.deepDeleteFiles(SimplePath.CACHE_PATH);
+        FileUtil.deepDeleteFiles(SimplePath.CACHE_PATH);
     }
 
     // 弹出加载面板并执行
@@ -23034,9 +23034,9 @@ public class PlayerFrame extends JFrame {
     private static boolean validateHash() {
         File f1 = new File(SimplePath.ICON_PATH + "weixin.png");
         File f2 = new File(SimplePath.ICON_PATH + "alipay.png");
-        if (!f1.exists() || !"254dd3cda4ac3b7f56505b097029afd6a9f2f450e91ee3a476b0c451391ab891".equals(FileUtils.getHash(f1)))
+        if (!f1.exists() || !"254dd3cda4ac3b7f56505b097029afd6a9f2f450e91ee3a476b0c451391ab891".equals(FileUtil.getHash(f1)))
             return false;
-        if (!f2.exists() || !"2646a9347bd43e2f5c9a15683de498e00f83ab74cd98f07522b23d58ed6e8cf7".equals(FileUtils.getHash(f2)))
+        if (!f2.exists() || !"2646a9347bd43e2f5c9a15683de498e00f83ab74cd98f07522b23d58ed6e8cf7".equals(FileUtil.getHash(f2)))
             return false;
         return true;
     }

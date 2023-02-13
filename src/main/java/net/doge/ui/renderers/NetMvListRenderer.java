@@ -10,9 +10,9 @@ import net.doge.constants.SimplePath;
 import net.doge.models.entity.NetMvInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
+import net.doge.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,11 +35,11 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon mvIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "mvItem.png"), ImageConstants.profileWidth));
+    private ImageIcon mvIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "mvItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        mvIcon = ImageUtils.dye(mvIcon, iconColor);
+        mvIcon = ImageUtil.dye(mvIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -89,11 +89,11 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
         outerPanel.add(pubTimeLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netMvInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netMvInfo.getName(), maxWidth));
-        String artist = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netMvInfo.getArtist(), maxWidth));
-        String duration = netMvInfo.hasDuration() ? TimeUtils.format(netMvInfo.getDuration()) : "--:--";
-        String playCount = netMvInfo.hasPlayCount() ? StringUtils.formatNumber(netMvInfo.getPlayCount()) : "";
+        String source = StringUtil.textToHtml(NetMusicSource.names[netMvInfo.getSource()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getName(), maxWidth));
+        String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getArtist(), maxWidth));
+        String duration = netMvInfo.hasDuration() ? TimeUtil.format(netMvInfo.getDuration()) : "--:--";
+        String playCount = netMvInfo.hasPlayCount() ? StringUtil.formatNumber(netMvInfo.getPlayCount()) : "";
         String pubTime = netMvInfo.hasPubTime() ? netMvInfo.getPubTime() : "";
 
         iconLabel.setText(source);

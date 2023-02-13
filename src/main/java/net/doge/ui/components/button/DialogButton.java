@@ -2,8 +2,8 @@ package net.doge.ui.components.button;
 
 import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
-import net.doge.utils.ColorUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ColorUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ public class DialogButton extends JButton implements MouseListener {
 
     // 关键词按钮，需显示多种字符
     public DialogButton(String text) {
-        super(StringUtils.textToHtml(text));
+        super(StringUtil.textToHtml(text));
         setForeColor(Colors.WHITE);
         init();
     }
@@ -57,7 +57,7 @@ public class DialogButton extends JButton implements MouseListener {
     }
 
     public String getPlainText() {
-        return StringUtils.removeHTMLLabel(getText());
+        return StringUtil.removeHTMLLabel(getText());
     }
 
     @Override
@@ -132,7 +132,7 @@ public class DialogButton extends JButton implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        foreColor = ColorUtils.darker(foreColor);
+        foreColor = ColorUtil.darker(foreColor);
     }
 
     @Override

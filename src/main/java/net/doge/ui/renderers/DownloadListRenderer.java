@@ -6,12 +6,12 @@ import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.CustomSlider;
 import net.doge.ui.componentui.slider.MuteSliderUI;
-import net.doge.utils.FileUtils;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.FileUtil;
+import net.doge.utils.ImageUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,11 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon taskIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.smallWidth));
+    private ImageIcon taskIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.smallWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        taskIcon = ImageUtils.dye(taskIcon, iconColor);
+        taskIcon = ImageUtil.dye(taskIcon, iconColor);
     }
 
     @Override
@@ -86,13 +86,13 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.add(statusLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String type = StringUtils.textToHtml(TaskType.s[task.getType()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(task.getName(), maxWidth));
+        String type = StringUtil.textToHtml(TaskType.s[task.getType()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(task.getName(), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
-        String percentStr = StringUtils.textToHtml(String.format("%.2f %%", percent));
-        String size = StringUtils.textToHtml(StringUtils.wrapLineByWidth(
-                String.format("%s / %s", FileUtils.getUnitString(task.getFinished()), FileUtils.getUnitString(task.getTotal())), maxWidth));
-        String status = StringUtils.textToHtml(TaskStatus.s[task.getStatus()]);
+        String percentStr = StringUtil.textToHtml(String.format("%.2f %%", percent));
+        String size = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                String.format("%s / %s", FileUtil.getUnitString(task.getFinished()), FileUtil.getUnitString(task.getTotal())), maxWidth));
+        String status = StringUtil.textToHtml(TaskStatus.s[task.getStatus()]);
 
         nameLabel.setText(name);
         typeLabel.setText(type);

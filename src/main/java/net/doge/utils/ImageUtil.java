@@ -21,7 +21,7 @@ import java.util.List;
  * @Description
  * @Date 2020/12/9
  */
-public class ImageUtils {
+public class ImageUtil {
     // 毛玻璃(高斯模糊)过滤器
     private static final GaussianFilter gaussianFilter = new GaussianFilter();
     // 对比度过滤器
@@ -579,7 +579,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage toGradient(BufferedImage img) {
-        List<Color> colors = ColorThiefUtils.getPalette(img, 3);
+        List<Color> colors = ColorThiefUtil.getPalette(img, 3);
         return linearGradient(img.getWidth(), img.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
     }
 

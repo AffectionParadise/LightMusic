@@ -12,9 +12,9 @@ import net.doge.models.MusicPlayer;
 import net.doge.models.entity.NetMusicInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
+import net.doge.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,10 +38,10 @@ public class MusicListRenderer extends DefaultListCellRenderer {
     private int hoverIndex = -1;
 
     private MusicPlayer player;
-    private ImageIcon musicIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "musicItem.png"), ImageConstants.smallWidth));
-    private ImageIcon musicMvIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "musicMvItem.png"), ImageConstants.smallWidth));
-    private ImageIcon programIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.smallWidth));
-    private ImageIcon playingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.smallWidth));
+    private ImageIcon musicIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicItem.png"), ImageConstants.smallWidth));
+    private ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicMvItem.png"), ImageConstants.smallWidth));
+    private ImageIcon programIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.smallWidth));
+    private ImageIcon playingIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.smallWidth));
 
     public MusicListRenderer(MusicPlayer player) {
         this.player = player;
@@ -49,10 +49,10 @@ public class MusicListRenderer extends DefaultListCellRenderer {
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        musicIcon = ImageUtils.dye(musicIcon, iconColor);
-        musicMvIcon = ImageUtils.dye(musicMvIcon, iconColor);
-        programIcon = ImageUtils.dye(programIcon, iconColor);
-        playingIcon = ImageUtils.dye(playingIcon, iconColor);
+        musicIcon = ImageUtil.dye(musicIcon, iconColor);
+        musicMvIcon = ImageUtil.dye(musicMvIcon, iconColor);
+        programIcon = ImageUtil.dye(programIcon, iconColor);
+        playingIcon = ImageUtil.dye(playingIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -116,14 +116,14 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         outerPanel.add(durationLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(isFile ? "  " : NetMusicSource.names[netMusicInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : netMusicInfo.getName(), maxWidth));
-        String artist = StringUtils.textToHtml(StringUtils.wrapLineByWidth(isFile ? file.hasArtist() ? file.getArtist() : ""
+        String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.names[netMusicInfo.getSource()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : netMusicInfo.getName(), maxWidth));
+        String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasArtist() ? file.getArtist() : ""
                 : netMusicInfo.hasArtist() ? netMusicInfo.getArtist() : "", maxWidth));
-        String albumName = StringUtils.textToHtml(StringUtils.wrapLineByWidth(isFile ? (file.hasAlbum() ? file.getAlbum() : "")
+        String albumName = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? (file.hasAlbum() ? file.getAlbum() : "")
                 : netMusicInfo.hasAlbumName() ? netMusicInfo.getAlbumName() : "", maxWidth));
-        String duration = StringUtils.textToHtml(isFile ? file.hasDuration() ? TimeUtils.format(file.getDuration()) : "--:--"
-                : netMusicInfo.hasDuration() ? TimeUtils.format(netMusicInfo.getDuration()) : "--:--");
+        String duration = StringUtil.textToHtml(isFile ? file.hasDuration() ? TimeUtil.format(file.getDuration()) : "--:--"
+                : netMusicInfo.hasDuration() ? TimeUtil.format(netMusicInfo.getDuration()) : "--:--");
 
         iconLabel.setText(source);
         nameLabel.setText(name);

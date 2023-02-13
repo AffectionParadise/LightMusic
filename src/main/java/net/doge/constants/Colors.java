@@ -34,7 +34,7 @@ public class Colors {
     public static final Color DEEP_SKY_BLUE_1 = new Color(0, 191, 255);
 
     public static final Color DAY2 = new Color(255, 219, 235);
-    public static final Color DAY3 = new Color(166, 149, 201);
+    public static final Color DAY3 = new Color(183, 165, 229);
 
     public static final Color NIGHT1 = new Color(255, 249, 226);
     public static final Color NIGHT2 = new Color(201, 188, 139);
@@ -65,19 +65,19 @@ public class Colors {
 
     public static final Color AL1 = new Color(255, 240, 249);
     public static final Color AL2 = new Color(212, 162, 220);
-    public static final Color AL3 = new Color(178, 136, 215);
+    public static final Color AL3 = new Color(203, 155, 248);
 
     public static final Color SUNSET_OCEAN1 = new Color(236, 255, 255);
     public static final Color SUNSET_OCEAN2 = new Color(254, 206, 95);
-    public static final Color SUNSET_OCEAN3 = new Color(42, 152, 182);
+    public static final Color SUNSET_OCEAN3 = new Color(54, 146, 178);
 
     public static final Color STARRY_SUNSET1 = new Color(233, 255, 255);
     public static final Color STARRY_SUNSET2 = new Color(125, 238, 212);
-    public static final Color STARRY_SUNSET3 = new Color(56, 172, 173);
+    public static final Color STARRY_SUNSET3 = new Color(64, 202, 203);
 
     public static final Color CONIFEROUS_FOREST1 = new Color(241, 253, 241);
     public static final Color CONIFEROUS_FOREST2 = new Color(182, 231, 141);
-    public static final Color CONIFEROUS_FOREST3 = new Color(136, 178, 10);
+    public static final Color CONIFEROUS_FOREST3 = new Color(159, 206, 12);
 
     public static final Color SHE1 = new Color(252, 240, 234);
     public static final Color SHE2 = new Color(238, 213, 183);
@@ -85,19 +85,19 @@ public class Colors {
 
     public static final Color LUMING1 = new Color(234, 255, 249);
     public static final Color LUMING2 = new Color(102, 205, 170);
-    public static final Color LUMING3 = new Color(60, 179, 113);
+    public static final Color LUMING3 = new Color(69, 208, 130);
 
     public static final Color YOUR_NAME1 = new Color(255, 239, 255);
     public static final Color YOUR_NAME2 = new Color(239, 152, 233);
-    public static final Color YOUR_NAME3 = new Color(204, 127, 200);
+    public static final Color YOUR_NAME3 = new Color(220, 138, 216);
 
     public static final Color DEEP_SEA1 = new Color(224, 244, 255);
-    public static final Color DEEP_SEA2 = new Color(0, 191, 255);
-    public static final Color DEEP_SEA3 = new Color(0, 154, 205);
+    public static final Color DEEP_SEA2 = new Color(146, 224, 253);
+    public static final Color DEEP_SEA3 = new Color(0, 193, 255);
 
     public static final Color BROOK1 = new Color(255, 251, 243);
     public static final Color BROOK2 = new Color(255, 198, 104);
-    public static final Color BROOK3 = new Color(206, 134, 0);
+    public static final Color BROOK3 = new Color(243, 156, 1);
 
     public static final Color HAPPY_NEW_YEAR1 = new Color(255, 240, 240);
     public static final Color HAPPY_NEW_YEAR2 = new Color(255, 180, 180);

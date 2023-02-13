@@ -10,8 +10,8 @@ import net.doge.constants.SimplePath;
 import net.doge.models.entity.NetArtistInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,11 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon artistIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "artistItem.png"), ImageConstants.profileWidth));
+    private ImageIcon artistIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "artistItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        artistIcon = ImageUtils.dye(artistIcon, iconColor);
+        artistIcon = ImageUtil.dye(artistIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -84,8 +84,8 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(mvNumLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netArtistInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netArtistInfo.getName(), maxWidth));
+        String source = StringUtil.textToHtml(NetMusicSource.names[netArtistInfo.getSource()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netArtistInfo.getName(), maxWidth));
         String songNum = netArtistInfo.hasSongNum() ? netArtistInfo.fromME() ? netArtistInfo.getSongNum() + " 电台" : netArtistInfo.getSongNum() + " 歌曲" : "";
         String albumNum = netArtistInfo.hasAlbumNum() ? netArtistInfo.getAlbumNum() + " 专辑" : "";
         String mvNum = netArtistInfo.hasMvNum() ? netArtistInfo.getMvNum() + " MV" : "";

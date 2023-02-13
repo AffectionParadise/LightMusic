@@ -6,7 +6,7 @@ import net.doge.models.lyric.Statement;
 import net.doge.ui.components.StringTwoColor;
 import net.doge.ui.componentui.LabelUI;
 import net.doge.ui.componentui.list.ListUI;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +73,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 其他行的样式
         else {
             label.setFont(defaultFont);
-            label.setText(StringUtils.textToHtml(StringUtils.wrapLineByWidth(lyric, maxWidth)));
+            label.setText(StringUtil.textToHtml(StringUtil.wrapLineByWidth(lyric, maxWidth)));
             label.setIcon(null);
         }
         // 设置 list 对应行的高度

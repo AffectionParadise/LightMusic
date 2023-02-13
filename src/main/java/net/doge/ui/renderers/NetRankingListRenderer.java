@@ -10,8 +10,8 @@ import net.doge.constants.SimplePath;
 import net.doge.models.entity.NetRankingInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,11 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon rankingIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "rankingItem.png"), ImageConstants.profileWidth));
+    private ImageIcon rankingIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "rankingItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        rankingIcon = ImageUtils.dye(rankingIcon, iconColor);
+        rankingIcon = ImageUtil.dye(rankingIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -84,9 +84,9 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         outerPanel.add(updateTimeLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netRankingInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRankingInfo.getName(), maxWidth));
-        String playCount = netRankingInfo.hasPlayCount() ? StringUtils.formatNumber(netRankingInfo.getPlayCount()) : "";
+        String source = StringUtil.textToHtml(NetMusicSource.names[netRankingInfo.getSource()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRankingInfo.getName(), maxWidth));
+        String playCount = netRankingInfo.hasPlayCount() ? StringUtil.formatNumber(netRankingInfo.getPlayCount()) : "";
         String updateFre = netRankingInfo.hasUpdateFre() ? netRankingInfo.getUpdateFre() : "";
         String updateTime = netRankingInfo.hasUpdateTime() ? netRankingInfo.getUpdateTime() + " 更新" : "";
 

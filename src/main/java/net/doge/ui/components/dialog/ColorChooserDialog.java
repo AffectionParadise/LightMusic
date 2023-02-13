@@ -12,9 +12,9 @@ import net.doge.ui.components.textfield.CustomTextField;
 import net.doge.ui.components.textfield.SafeDocument;
 import net.doge.ui.componentui.slider.ColorSliderUI;
 import net.doge.ui.componentui.ComboBoxUI;
-import net.doge.utils.ColorUtils;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ColorUtil;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -103,7 +103,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         this.r = color.getRed();
         this.g = color.getGreen();
         this.b = color.getBlue();
-        HSV hsv = ColorUtils.colorToHsv(color);
+        HSV hsv = ColorUtil.colorToHsv(color);
         this.h = hsv.h;
         this.s = hsv.s;
         this.v = hsv.v;
@@ -223,7 +223,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         prePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         for (Color c : preColors) {
             CustomLabel l = new CustomLabel();
-            l.setIcon(ImageUtils.dyeCircle(50, c));
+            l.setIcon(ImageUtil.dyeCircle(50, c));
             l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             l.addMouseListener(new MouseAdapter() {
                 @Override
@@ -341,7 +341,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     }
 
     public Color makeColor(float h, float s, float v) {
-        return ColorUtils.hsvToColor(h, s, v);
+        return ColorUtil.hsvToColor(h, s, v);
     }
 
     public Color makeColor() {
@@ -395,14 +395,14 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         rSlider.repaint();
         gSlider.repaint();
         bSlider.repaint();
-        view.setIcon(ImageUtils.dyeCircle(80, makeColor()));
+        view.setIcon(ImageUtil.dyeCircle(80, makeColor()));
 //        paletteLabel.setIcon(ImageUtils.palette(h, 400));
         try {
             boolean rgb = isRGB();
             rTextField.setText(String.valueOf(rgb ? r : (int) h));
             gTextField.setText(String.valueOf(rgb ? g : (int) s));
             bTextField.setText(String.valueOf(rgb ? b : (int) v));
-            hexTextField.setText(ColorUtils.toHex(makeColor()));
+            hexTextField.setText(ColorUtil.toHex(makeColor()));
         } catch (Exception e) {
 
         }
@@ -421,7 +421,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         boolean rgb = isRGB();
         // 针对 HSV 防止因转换误差带来的滑动条调整
         if (rgb || !sliderRequest) {
-            HSV hsv = ColorUtils.colorToHsv(color);
+            HSV hsv = ColorUtil.colorToHsv(color);
             h = hsv.h;
             s = hsv.s;
             v = hsv.v;
@@ -452,20 +452,20 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         else if (d4) {
             tf = hexTextField;
             String text = tf.getText();
-            Color color = ColorUtils.hexToColor(text);
+            Color color = ColorUtil.hexToColor(text);
             if (color != null) updateColor(color);
             return;
         }
 
         String text = tf.getText();
-        if (StringUtils.isEmpty(text)) return;
+        if (StringUtil.isEmpty(text)) return;
         int i = Integer.parseInt(text);
         boolean rgb = isRGB();
         if (d1) rSlider.setValue(rgb ? (r = i) : (int) (h = i));
         else if (d2) gSlider.setValue(rgb ? (g = i) : (int) (s = i));
         else if (d3) bSlider.setValue(rgb ? (b = i) : (int) (v = i));
 
-        if (!d4) hexTextField.setText(ColorUtils.toHex(makeColor(r, g, b)));
+        if (!d4) hexTextField.setText(ColorUtil.toHex(makeColor(r, g, b)));
         else updateUI();
     }
 

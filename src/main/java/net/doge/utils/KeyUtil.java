@@ -8,7 +8,7 @@ import java.util.*;
  * @Description 快捷键工具类
  * @Date 2020/12/15
  */
-public class KeyUtils {
+public class KeyUtil {
     /**
      * KeyEvent 转为字符串
      *

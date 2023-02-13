@@ -4,8 +4,8 @@ import lombok.Data;
 import net.doge.constants.GlobalExecutors;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.UIStyleConstants;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -74,14 +74,14 @@ public class UIStyle {
 
     public void setStyleImgPath(String styleImgPath) {
         this.styleImgPath = styleImgPath;
-        if (StringUtils.isEmpty(styleImgPath)) return;
+        if (StringUtil.isEmpty(styleImgPath)) return;
         GlobalExecutors.imageExecutor.execute(() -> {
-            img = ImageUtils.read(styleImgPath);
+            img = ImageUtil.read(styleImgPath);
             if (img == null) return;
-            imgThumb = ImageUtils.setRadius(ImageUtils.width(img, ImageConstants.mvCoverWidth), 10);
+            imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.mvCoverWidth), 10);
             // 控制高度不超过阈值
             if (imgThumb != null && imgThumb.getHeight() > ImageConstants.mvCoverMaxHeight)
-                imgThumb = ImageUtils.height(imgThumb, ImageConstants.mvCoverMaxHeight);
+                imgThumb = ImageUtil.height(imgThumb, ImageConstants.mvCoverMaxHeight);
             callback();
         });
     }
@@ -90,8 +90,8 @@ public class UIStyle {
         this.bgColor = bgColor;
         if (bgColor == null) return;
         GlobalExecutors.imageExecutor.execute(() -> {
-            img = ImageUtils.dyeRect(2, 1, bgColor);
-            imgThumb = ImageUtils.setRadius(ImageUtils.width(img, ImageConstants.mvCoverWidth), 10);
+            img = ImageUtil.dyeRect(2, 1, bgColor);
+            imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.mvCoverWidth), 10);
             callback();
         });
     }

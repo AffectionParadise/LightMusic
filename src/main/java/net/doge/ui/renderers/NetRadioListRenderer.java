@@ -10,8 +10,8 @@ import net.doge.constants.SimplePath;
 import net.doge.models.entity.NetRadioInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,11 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon radioIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "radioItem.png"), ImageConstants.profileWidth));
+    private ImageIcon radioIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "radioItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        radioIcon = ImageUtils.dye(radioIcon, iconColor);
+        radioIcon = ImageUtil.dye(radioIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -92,12 +92,12 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
 //        outerPanel.add(createTimeLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netRadioInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.getName(), maxWidth));
-        String dj = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", maxWidth));
+        String source = StringUtil.textToHtml(NetMusicSource.names[netRadioInfo.getSource()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.getName(), maxWidth));
+        String dj = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", maxWidth));
         String category = netRadioInfo.hasCategory() ? netRadioInfo.getCategory() : "";
         String trackCount = netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() + " 节目" : "";
-        String playCount = netRadioInfo.hasPlayCount() ? StringUtils.formatNumber(netRadioInfo.getPlayCount()) : "";
+        String playCount = netRadioInfo.hasPlayCount() ? StringUtil.formatNumber(netRadioInfo.getPlayCount()) : "";
 //        String createTime = netRadioInfo.hasCreateTime() ? netRadioInfo.getCreateTime() : "";
 
         iconLabel.setText(source);

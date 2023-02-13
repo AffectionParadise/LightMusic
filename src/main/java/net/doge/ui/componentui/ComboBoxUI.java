@@ -7,7 +7,7 @@ import net.doge.ui.components.combobox.CustomComboBox;
 import net.doge.ui.components.combobox.CustomComboPopup;
 import net.doge.ui.listeners.ButtonMouseListener;
 import net.doge.ui.renderers.ComboBoxRenderer;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -38,7 +38,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
         textColor = f.currUIStyle.getTextColor();
         iconColor = f.currUIStyle.getIconColor();
 
-        arrowIcon = ImageUtils.dye(arrowIcon, iconColor);
+        arrowIcon = ImageUtil.dye(arrowIcon, iconColor);
 
         // 下拉列表渲染
         comboBox.setRenderer(new ComboBoxRenderer(f));

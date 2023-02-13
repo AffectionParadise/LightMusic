@@ -1,11 +1,5 @@
 package net.doge.ui.componentui.slider;
 
-import javafx.scene.media.MediaPlayer;
-import net.doge.models.MusicPlayer;
-import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.dialog.TipDialog;
-import net.doge.utils.TimeUtils;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;

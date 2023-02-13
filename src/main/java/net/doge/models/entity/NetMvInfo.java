@@ -4,8 +4,8 @@ import net.doge.constants.Format;
 import net.doge.constants.MvInfoType;
 import net.doge.constants.NetMusicSource;
 import lombok.Data;
-import net.doge.utils.FileUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.FileUtil;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -58,11 +58,11 @@ public class NetMvInfo {
     }
 
     public boolean hasCreatorId() {
-        return StringUtils.isNotEmpty(creatorId);
+        return StringUtil.isNotEmpty(creatorId);
     }
 
     public boolean hasPubTime() {
-        return StringUtils.isNotEmpty(pubTime);
+        return StringUtil.isNotEmpty(pubTime);
     }
 
     public boolean hasPlayCount() {
@@ -92,7 +92,7 @@ public class NetMvInfo {
     }
 
     public void setFormat(String format) {
-        this.format = StringUtils.isNotEmpty(format) && !"null".equals(format) ? format : Format.MP4;
+        this.format = StringUtil.isNotEmpty(format) && !"null".equals(format) ? format : Format.MP4;
     }
 
     public boolean isFlv() {
@@ -131,16 +131,16 @@ public class NetMvInfo {
     }
 
     public String toFileName() {
-        return FileUtils.filterFileName(String.format("%s - %s - %s.%s", name, artist, id, format));
+        return FileUtil.filterFileName(String.format("%s - %s - %s.%s", name, artist, id, format));
     }
 
     public String toSimpleFileName() {
-        return FileUtils.filterFileName(String.format("%s - %s.%s", name, artist, format));
+        return FileUtil.filterFileName(String.format("%s - %s.%s", name, artist, format));
     }
 
     public String toString() {
         return NetMusicSource.names[source] + " - " + toSimpleString()
-                + (playCount == null ? "" : "\n\n" + StringUtils.formatNumber(playCount));
+                + (playCount == null ? "" : "\n\n" + StringUtil.formatNumber(playCount));
     }
 
     public String toSimpleString() {

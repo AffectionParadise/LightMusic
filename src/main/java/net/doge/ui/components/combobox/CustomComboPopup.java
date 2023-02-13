@@ -4,7 +4,7 @@ import net.doge.constants.Colors;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.list.CustomScrollPane;
 import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -55,7 +55,7 @@ public class CustomComboPopup extends BasicComboPopup {
 
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(ImageUtils.getAvgRGB(f.globalPanel.getBackgroundImage()));
+        g2d.setColor(ImageUtil.getAvgRGB(f.globalPanel.getBackgroundImage()));
         g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 8, 8);
 
         // 画边框阴影

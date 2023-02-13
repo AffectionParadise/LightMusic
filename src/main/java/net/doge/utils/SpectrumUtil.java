@@ -7,7 +7,7 @@ import net.doge.constants.SpectrumConstants;
  * @Description
  * @Date 2020/12/9
  */
-public class SpectrumUtils {
+public class SpectrumUtil {
     private final static int p = Math.abs(SpectrumConstants.THRESHOLD);
 
     /**

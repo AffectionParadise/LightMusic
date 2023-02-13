@@ -5,7 +5,7 @@ import net.doge.constants.BlurType;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.panel.GlobalPanel;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -42,11 +42,11 @@ public abstract class AbstractMiniDialog extends JDialog {
         BufferedImage bufferedImage;
         if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
             bufferedImage = f.player.getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtil.eraseTranslucency(bufferedImage);
             if (f.blurType == BlurType.MC)
-                bufferedImage = ImageUtils.dyeRect(1, 1, ImageUtils.getAvgRGB(bufferedImage));
+                bufferedImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(bufferedImage));
             else if (f.blurType == BlurType.LG)
-                bufferedImage = ImageUtils.toGradient(bufferedImage);
+                bufferedImage = ImageUtil.toGradient(bufferedImage);
         } else {
             UIStyle style = f.currUIStyle;
             bufferedImage = style.getImg();
@@ -59,18 +59,18 @@ public abstract class AbstractMiniDialog extends JDialog {
         try {
             boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
-            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtils.cropCenter(bufferedImage);
+            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtil.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小
-            if (f.gsOn) bufferedImage = ImageUtils.width(bufferedImage, 100);
+            if (f.gsOn) bufferedImage = ImageUtil.width(bufferedImage, 100);
             // 消除透明度
-            bufferedImage = ImageUtils.eraseTranslucency(bufferedImage);
+            bufferedImage = ImageUtil.eraseTranslucency(bufferedImage);
             // 高斯模糊并暗化
-            if (f.gsOn) bufferedImage = ImageUtils.doBlur(bufferedImage);
-            if (f.darkerOn) bufferedImage = ImageUtils.darker(bufferedImage);
+            if (f.gsOn) bufferedImage = ImageUtil.doBlur(bufferedImage);
+            if (f.darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
             // 放大至窗口大小
-            bufferedImage = ImageUtils.width(bufferedImage, dw);
+            bufferedImage = ImageUtil.width(bufferedImage, dw);
             if (dh > bufferedImage.getHeight())
-                bufferedImage = ImageUtils.height(bufferedImage, dh);
+                bufferedImage = ImageUtil.height(bufferedImage, dh);
             // 裁剪中间的一部分
             if (!loadedMusic || f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
@@ -80,10 +80,10 @@ public abstract class AbstractMiniDialog extends JDialog {
                         .outputQuality(0.1)
                         .asBufferedImage();
             } else {
-                bufferedImage = ImageUtils.forceSize(bufferedImage, dw, dh);
+                bufferedImage = ImageUtil.forceSize(bufferedImage, dw, dh);
             }
             // 设置圆角
-            bufferedImage = ImageUtils.setRadius(bufferedImage, 10);
+            bufferedImage = ImageUtil.setRadius(bufferedImage, 10);
             globalPanel.setBackgroundImage(bufferedImage);
             globalPanelTimer.start();
         } catch (IOException ioException) {

@@ -10,7 +10,7 @@ import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.StringTwoColor;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -179,14 +179,14 @@ public class DesktopLyricDialog extends JDialog {
         UIStyle st = f.currUIStyle;
         Color bc = st.getIconColor();
 
-        unlockIcon = ImageUtils.dye(unlockIcon, bc);
-        lockIcon = ImageUtils.dye(lockIcon, bc);
-        restoreIcon = ImageUtils.dye(restoreIcon, bc);
-        descendTransIcon = ImageUtils.dye(descendTransIcon, bc);
-        ascendTransIcon = ImageUtils.dye(ascendTransIcon, bc);
-        onTopIcon = ImageUtils.dye(onTopIcon, bc);
-        cancelOnTopIcon = ImageUtils.dye(cancelOnTopIcon, bc);
-        closeIcon = ImageUtils.dye(closeIcon, bc);
+        unlockIcon = ImageUtil.dye(unlockIcon, bc);
+        lockIcon = ImageUtil.dye(lockIcon, bc);
+        restoreIcon = ImageUtil.dye(restoreIcon, bc);
+        descendTransIcon = ImageUtil.dye(descendTransIcon, bc);
+        ascendTransIcon = ImageUtil.dye(ascendTransIcon, bc);
+        onTopIcon = ImageUtil.dye(onTopIcon, bc);
+        cancelOnTopIcon = ImageUtil.dye(cancelOnTopIcon, bc);
+        closeIcon = ImageUtil.dye(closeIcon, bc);
 
         restore.setIcon(restoreIcon);
         descendTrans.setIcon(descendTransIcon);

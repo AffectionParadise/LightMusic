@@ -4,9 +4,9 @@ import lombok.Data;
 import net.doge.constants.Format;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
-import net.doge.utils.FileUtils;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.FileUtil;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -61,7 +61,7 @@ public class NetMusicInfo {
 
     public BufferedImage getAlbumImage() {
         File imgFile = new File(SimplePath.IMG_CACHE_PATH + toAlbumImageFileName());
-        return ImageUtils.read(imgFile);
+        return ImageUtil.read(imgFile);
     }
 
     public void callback() {
@@ -82,7 +82,7 @@ public class NetMusicInfo {
     }
 
     public boolean hasProgramId() {
-        return StringUtils.isNotEmpty(programId);
+        return StringUtil.isNotEmpty(programId);
     }
 
     /**
@@ -100,23 +100,23 @@ public class NetMusicInfo {
      * @return
      */
     public boolean hasHash() {
-        return StringUtils.isNotEmpty(hash);
+        return StringUtil.isNotEmpty(hash);
     }
 
     public boolean hasArtist() {
-        return StringUtils.isNotEmpty(artist);
+        return StringUtil.isNotEmpty(artist);
     }
 
     public boolean hasArtistId() {
-        return StringUtils.isNotEmpty(artistId);
+        return StringUtil.isNotEmpty(artistId);
     }
 
     public boolean hasAlbumName() {
-        return StringUtils.isNotEmpty(albumName);
+        return StringUtil.isNotEmpty(albumName);
     }
 
     public boolean hasAlbumId() {
-        return StringUtils.isNotEmpty(albumId);
+        return StringUtil.isNotEmpty(albumId);
     }
 
     public boolean hasAlbumImage() {
@@ -125,11 +125,11 @@ public class NetMusicInfo {
     }
 
     public boolean hasMv() {
-        return StringUtils.isNotEmpty(mvId) && !"0".equals(mvId);
+        return StringUtil.isNotEmpty(mvId) && !"0".equals(mvId);
     }
 
     public boolean hasUrl() {
-        return StringUtils.isNotEmpty(url);
+        return StringUtil.isNotEmpty(url);
     }
 
     // 判断歌词 + 翻译 + 罗马音是否完整
@@ -142,15 +142,15 @@ public class NetMusicInfo {
     }
 
     public boolean hasTrans() {
-        return StringUtils.isNotEmpty(trans);
+        return StringUtil.isNotEmpty(trans);
     }
 
     public boolean hasRoma() {
-        return StringUtils.isNotEmpty(roma);
+        return StringUtil.isNotEmpty(roma);
     }
 
     public boolean hasLrcMatch() {
-        return StringUtils.isNotEmpty(lrcMatch);
+        return StringUtil.isNotEmpty(lrcMatch);
     }
 
     public boolean hasDuration() {
@@ -181,31 +181,31 @@ public class NetMusicInfo {
     }
 
     public String toAlbumImageFileName() {
-        return FileUtils.filterFileName(toSimpleString() + separator + id + "." + Format.JPG);
+        return FileUtil.filterFileName(toSimpleString() + separator + id + "." + Format.JPG);
     }
 
     public String toFileName() {
-        return FileUtils.filterFileName(toSimpleString() + separator + id + "." + format);
+        return FileUtil.filterFileName(toSimpleString() + separator + id + "." + format);
     }
 
     public String toSimpleFileName() {
-        return FileUtils.filterFileName(toSimpleString() + "." + format);
+        return FileUtil.filterFileName(toSimpleString() + "." + format);
     }
 
     public String toLrcFileName() {
-        return FileUtils.filterFileName(toSimpleString() + separator + id + ".lrc");
+        return FileUtil.filterFileName(toSimpleString() + separator + id + ".lrc");
     }
 
     public String toSimpleLrcFileName() {
-        return FileUtils.filterFileName(toSimpleString() + ".lrc");
+        return FileUtil.filterFileName(toSimpleString() + ".lrc");
     }
 
     public String toLrcTransFileName() {
-        return FileUtils.filterFileName(toSimpleString() + separator + id + separator + "trans.lrc");
+        return FileUtil.filterFileName(toSimpleString() + separator + id + separator + "trans.lrc");
     }
 
     public String toSimpleLrcTransFileName() {
-        return FileUtils.filterFileName(toSimpleString() + separator + "trans.lrc");
+        return FileUtil.filterFileName(toSimpleString() + separator + "trans.lrc");
     }
 
     public String toString() {
@@ -214,11 +214,11 @@ public class NetMusicInfo {
 
     public String toSimpleString() {
         return name
-                + (StringUtils.isNotEmpty(artist) ? separator + artist : "");
+                + (StringUtil.isNotEmpty(artist) ? separator + artist : "");
     }
 
     public String toKeywords() {
         return name
-                + (StringUtils.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
+                + (StringUtil.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
     }
 }

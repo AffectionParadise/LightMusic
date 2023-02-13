@@ -8,7 +8,7 @@ package net.doge.ui.listeners;
 
 import lombok.Data;
 import net.doge.ui.components.textfield.CustomTextField;
-import net.doge.utils.ColorUtils;
+import net.doge.utils.ColorUtil;
 
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -25,7 +25,7 @@ public class TextFieldHintListener implements FocusListener {
         this.tf = tf;
         this.hintText = hintText;
         this.inputColor = inputColor;
-        this.placeholderColor = ColorUtils.darker(inputColor);
+        this.placeholderColor = ColorUtil.darker(inputColor);
         tf.setText(hintText);
         tf.setForeground(placeholderColor);
     }

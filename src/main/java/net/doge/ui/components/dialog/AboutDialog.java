@@ -5,17 +5,14 @@ import net.doge.constants.SimplePath;
 import net.doge.constants.SoftInfo;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
-import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.button.DialogButton;
 import net.doge.ui.components.dialog.factory.AbstractTitledDialog;
-import net.doge.utils.ImageUtils;
+import net.doge.ui.components.panel.CustomPanel;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 
 /**
  * @Author yzx
@@ -49,31 +46,13 @@ public class AboutDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         Color textColor = f.currUIStyle.getTextColor();
-        // 解决 setUndecorated(true) 后窗口不能拖动的问题
-        Point origin = new Point();
-        topPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1) return;
-                origin.x = e.getX();
-                origin.y = e.getY();
-            }
-        });
-        topPanel.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                // mouseDragged 不能正确返回 button 值，需要借助此方法
-                if (!SwingUtilities.isLeftMouseButton(e)) return;
-                Point p = getLocation();
-                setLocation(p.x + e.getX() - origin.x, p.y + e.getY() - origin.y);
-            }
-        });
+
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
 
         appLabel.setText(f.TITLE);
-        appLabel.setIcon(ImageUtils.dye(appIcon, textColor));
+        appLabel.setIcon(ImageUtil.dye(appIcon, textColor));
         appLabel.setIconTextGap(15);
 
         appLabel.setForeground(textColor);

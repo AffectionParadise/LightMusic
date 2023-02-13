@@ -5,7 +5,7 @@ import net.doge.constants.Fonts;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class TipDialog extends AbstractShadowDialog {
     private Timer closeTimer;
 
     public boolean isNotEmpty() {
-        return StringUtils.isNotEmpty(StringUtils.removeHTMLLabel(message));
+        return StringUtil.isNotEmpty(StringUtil.removeHTMLLabel(message));
     }
 
     public void setMessage(String message) {
@@ -70,7 +70,7 @@ public class TipDialog extends AbstractShadowDialog {
 
     public void updateSize() {
         FontMetrics metrics = messageLabel.getFontMetrics(font);
-        int sw = metrics.stringWidth(StringUtils.removeHTMLLabel(message)), sh = metrics.getHeight();
+        int sw = metrics.stringWidth(StringUtil.removeHTMLLabel(message)), sh = metrics.getHeight();
         setSize(new Dimension(sw + 60 + 2 * pixels, sh + 40 + 2 * pixels));
     }
 

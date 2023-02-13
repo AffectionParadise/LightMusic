@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
  * @Description 编码工具类
  * @Date 2020/12/9
  */
-public class CharsetUtils {
+public class CharsetUtil {
     /**
      * 获取文件编码字符串
      *

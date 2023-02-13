@@ -3,7 +3,7 @@ package net.doge.models.entity;
 import lombok.Data;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.RadioType;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -64,7 +64,7 @@ public class NetRadioInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtils.isNotEmpty(coverImgUrl);
+        return StringUtil.isNotEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -80,27 +80,27 @@ public class NetRadioInfo {
     }
 
     public boolean hasName() {
-        return StringUtils.isNotEmpty(name);
+        return StringUtil.isNotEmpty(name);
     }
 
     public boolean hasTag() {
-        return StringUtils.isNotEmpty(tag);
+        return StringUtil.isNotEmpty(tag);
     }
 
     public boolean hasDescription() {
-        return StringUtils.isNotEmpty(description);
+        return StringUtil.isNotEmpty(description);
     }
 
     public boolean hasDj() {
-        return StringUtils.isNotEmpty(dj);
+        return StringUtil.isNotEmpty(dj);
     }
 
     public boolean hasDjId() {
-        return StringUtils.isNotEmpty(djId);
+        return StringUtil.isNotEmpty(djId);
     }
 
     public boolean hasCategory() {
-        return StringUtils.isNotEmpty(category);
+        return StringUtil.isNotEmpty(category);
     }
 
 //    public boolean hasCreateTime() {
@@ -159,7 +159,7 @@ public class NetRadioInfo {
 
     public String toSimpleString() {
         return name
-                + (StringUtils.isEmpty(dj) ? "" : " - " + dj);
+                + (StringUtil.isEmpty(dj) ? "" : " - " + dj);
     }
 
 //    public String toString() {

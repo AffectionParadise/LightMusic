@@ -2,8 +2,8 @@ package net.doge.models.lyric;
 
 import cn.hutool.core.util.ReUtil;
 import lombok.Data;
-import net.doge.utils.CharsetUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.CharsetUtil;
+import net.doge.utils.StringUtil;
 
 import java.io.*;
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class WordLrcData {
             File f = new File(fileNameOrStr);
             FileInputStream fis = new FileInputStream(f);
             // 获取文件编码并读取歌词
-            bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtils.getCharsetName(f)));
+            bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtil.getCharsetName(f)));
         } else {
             bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
         }
@@ -63,11 +63,11 @@ public class WordLrcData {
         while (null != (strLine = bufferReader.readLine())) {
             sb.append(strLine + "\n");
             // 把 tab 先移除，去掉两边空格(包含特殊空格)
-            strLine = StringUtils.trimStringWith(strLine.replace("\t", "").trim(), ' ');
+            strLine = StringUtil.trimStringWith(strLine.replace("\t", "").trim(), ' ');
 
             String startTimeStr = ReUtil.get("\\[(\\d+),\\d+\\]", strLine, 1);
             // 不是有效的歌词行
-            if (StringUtils.isEmpty(startTimeStr)) continue;
+            if (StringUtil.isEmpty(startTimeStr)) continue;
 
             double startTime = toSeconds(startTimeStr);
 
@@ -107,7 +107,7 @@ public class WordLrcData {
      */
     public boolean isTime(String string) {
         // 可能有 [] 的情况，先判空
-        if (StringUtils.isEmpty(string)) return false;
+        if (StringUtil.isEmpty(string)) return false;
         String str[] = string.split(":|\\.");
         if (3 != str.length && 2 != str.length) {
             return false;

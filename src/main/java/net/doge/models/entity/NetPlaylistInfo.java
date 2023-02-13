@@ -2,7 +2,7 @@ package net.doge.models.entity;
 
 import net.doge.constants.NetMusicSource;
 import lombok.Data;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -47,19 +47,19 @@ public class NetPlaylistInfo {
     private Runnable invokeLater;
 
     public boolean hasName() {
-        return StringUtils.isNotEmpty(name);
+        return StringUtil.isNotEmpty(name);
     }
 
     public boolean hasCreator() {
-        return StringUtils.isNotEmpty(creator);
+        return StringUtil.isNotEmpty(creator);
     }
 
     public boolean hasCreatorId() {
-        return StringUtils.isNotEmpty(creatorId);
+        return StringUtil.isNotEmpty(creatorId);
     }
 
     public boolean hasTag() {
-        return StringUtils.isNotEmpty(tag);
+        return StringUtil.isNotEmpty(tag);
     }
 
     public boolean hasTrackCount() {
@@ -71,7 +71,7 @@ public class NetPlaylistInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtils.isNotEmpty(coverImgUrl);
+        return StringUtil.isNotEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -137,7 +137,7 @@ public class NetPlaylistInfo {
 
     public String toSimpleString() {
         return name
-                + (StringUtils.isEmpty(creator) ? "" : " - " + creator);
+                + (StringUtil.isEmpty(creator) ? "" : " - " + creator);
     }
 
 //    public String toString() {

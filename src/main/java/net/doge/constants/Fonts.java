@@ -1,6 +1,6 @@
 package net.doge.constants;
 
-import net.doge.utils.FontUtils;
+import net.doge.utils.FontUtil;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -23,11 +23,11 @@ public class Fonts {
     public static final String NORMAL_BOLD_NAME = "normal.ttf";
 
     // 中英文
-    public static final Font NORMAL_TINY = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, TINY_SIZE);
-    public static final Font NORMAL = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, FONT_SIZE);
-    public static final Font NORMAL_MEDIUM = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, MEDIUM_SIZE);
-    public static final Font NORMAL_BIG = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, BIG_SIZE);
-    public static final Font NORMAL_HUGE = FontUtils.loadFont(SimplePath.FONT_PATH + NORMAL_BOLD_NAME, HUGE_SIZE);
+    public static final Font NORMAL_TINY = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, TINY_SIZE);
+    public static final Font NORMAL = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, FONT_SIZE);
+    public static final Font NORMAL_MEDIUM = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, MEDIUM_SIZE);
+    public static final Font NORMAL_BIG = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, BIG_SIZE);
+    public static final Font NORMAL_HUGE = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_BOLD_NAME, HUGE_SIZE);
 
 //    public static final Font NORMAL = new Font("微软雅黑", Font.PLAIN, FONT_SIZE);
 //    public static final Font NORMAL_MEDIUM = new Font("微软雅黑", Font.PLAIN, MEDIUM_SIZE);

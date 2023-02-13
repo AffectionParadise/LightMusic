@@ -6,7 +6,7 @@ import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,9 +67,9 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         outerPanel.add(inUseLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(style.getStyleName(), maxWidth));
-        String type = StringUtils.textToHtml(style.isCustom() ? "自定义" : "预设");
-        String inUse = StringUtils.textToHtml(f.currUIStyle == style ? "使用中" : "");
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(style.getStyleName(), maxWidth));
+        String type = StringUtil.textToHtml(style.isCustom() ? "自定义" : "预设");
+        String inUse = StringUtil.textToHtml(f.currUIStyle == style ? "使用中" : "");
 
         nameLabel.setText(name);
         typeLabel.setText(type);

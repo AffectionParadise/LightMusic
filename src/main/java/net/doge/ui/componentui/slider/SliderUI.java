@@ -4,9 +4,9 @@ import javafx.scene.media.MediaPlayer;
 import net.doge.models.MusicPlayer;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.dialog.TipDialog;
-import net.doge.utils.ColorUtils;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.ColorUtil;
+import net.doge.utils.StringUtil;
+import net.doge.utils.TimeUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -42,7 +42,7 @@ public class SliderUI extends BasicSliderUI {
         super(slider);
         this.thumbColor = thumbColor;
         this.trackColor = trackColor;
-        this.trackBgColor = ColorUtils.darker(trackColor);
+        this.trackBgColor = ColorUtil.darker(trackColor);
         this.f = f;
         this.player = player;
         dialog = new TipDialog(f, 0);
@@ -57,7 +57,7 @@ public class SliderUI extends BasicSliderUI {
         super(slider);
         this.thumbColor = thumbColor;
         this.trackColor = trackColor;
-        this.trackBgColor = ColorUtils.darker(trackColor);
+        this.trackBgColor = ColorUtil.darker(trackColor);
         this.f = f;
         this.mp = mp;
         dialog = new TipDialog(f, 0);
@@ -152,13 +152,13 @@ public class SliderUI extends BasicSliderUI {
                 if (!showDialog) return;
                 if (isTimeBar) {
                     boolean isMusic = mp == null;
-                    String dStr = isMusic ? player.getDurationString() : TimeUtils.format(mp.getMedia().getDuration().toSeconds());
+                    String dStr = isMusic ? player.getDurationString() : TimeUtil.format(mp.getMedia().getDuration().toSeconds());
                     double dSec = isMusic ? player.getDurationSeconds() : mp.getMedia().getDuration().toSeconds();
                     double cSec = (double) slider.getValue() / slider.getMaximum() * dSec;
                     String lrc = isMusic ? f.getTimeLrc(cSec) : "";
-                    dialog.setMessage(String.format("%s / %s", TimeUtils.format(cSec), dStr));
+                    dialog.setMessage(String.format("%s / %s", TimeUtil.format(cSec), dStr));
                     if (lrcDialog != null) {
-                        lrcDialog.setMessage(StringUtils.textToHtml(lrc));
+                        lrcDialog.setMessage(StringUtil.textToHtml(lrc));
                         lrcDialog.updateSize();
                         // 将把手坐标转为屏幕上的坐标，确定歌词对话框位置
                         Point p = new Point(thumbRect.x, thumbRect.y);

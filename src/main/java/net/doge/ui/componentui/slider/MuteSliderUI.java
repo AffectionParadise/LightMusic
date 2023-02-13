@@ -1,6 +1,6 @@
 package net.doge.ui.componentui.slider;
 
-import net.doge.utils.ColorUtils;
+import net.doge.utils.ColorUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -18,7 +18,7 @@ public class MuteSliderUI extends BasicSliderUI {
     public MuteSliderUI(JSlider slider, Color trackColor) {
         super(slider);
         this.trackColor = trackColor;
-        this.trackBgColor = ColorUtils.darker(trackColor);
+        this.trackBgColor = ColorUtil.darker(trackColor);
     }
 
     /**

@@ -2,7 +2,7 @@ package net.doge.ui.components.panel;
 
 import net.doge.constants.Fonts;
 import net.doge.ui.PlayerFrame;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +116,7 @@ public class LoadingPanel extends JComponent implements MouseListener {
             Graphics2D g2 = (Graphics2D) g;
             g2.setRenderingHints(hints);
 
-            g2.setColor(ImageUtils.getAvgRGB(f.globalPanel.getBackgroundImage(), shield));
+            g2.setColor(ImageUtil.getAvgRGB(f.globalPanel.getBackgroundImage(), shield));
             g2.fillRect(0, 0, width, height);
 
             for (int i = 0; i < ticker.length; i++) {

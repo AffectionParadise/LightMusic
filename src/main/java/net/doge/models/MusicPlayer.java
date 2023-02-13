@@ -13,9 +13,9 @@ import net.doge.models.entity.AudioFile;
 import net.doge.models.entity.NetMusicInfo;
 import net.doge.models.entity.SimpleMusicInfo;
 import net.doge.ui.PlayerFrame;
-import net.doge.utils.MusicUtils;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.MusicUtil;
+import net.doge.utils.StringUtil;
+import net.doge.utils.TimeUtil;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
@@ -177,11 +177,11 @@ public class MusicPlayer {
             String albumName = netMusicInfo.getAlbumName();
 
             // 歌曲名称
-            musicInfo.setName(StringUtils.isEmpty(name) ? "未知" : name);
+            musicInfo.setName(StringUtil.isEmpty(name) ? "未知" : name);
             // 艺术家
-            musicInfo.setArtist(StringUtils.isEmpty(artist) ? "未知" : artist);
+            musicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
             // 专辑名称
-            musicInfo.setAlbumName(StringUtils.isEmpty(albumName) ? "未知" : albumName);
+            musicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
             // 专辑图片
             GlobalExecutors.imageExecutor.submit(() -> {
                 if (!netMusicInfo.hasAlbumImage()) {
@@ -204,13 +204,13 @@ public class MusicPlayer {
             // 歌曲名称
             musicInfo.setName(source.hasSongName() ? source.getSongName() : source.getNameWithoutSuffix());
             // 艺术家
-            musicInfo.setArtist(StringUtils.isEmpty(artist) ? "未知" : artist);
+            musicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
             // 专辑
-            musicInfo.setAlbumName(StringUtils.isEmpty(albumName) ? "未知" : albumName);
+            musicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
 
             // 获取 MP3 专辑图片
             GlobalExecutors.imageExecutor.submit(() -> {
-                BufferedImage albumImage = MusicUtils.getAlbumImage(source);
+                BufferedImage albumImage = MusicUtil.getAlbumImage(source);
                 musicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
                 f.showAlbumImage();
             });
@@ -354,7 +354,7 @@ public class MusicPlayer {
 
     // 获取当前进度字符串
     public String getCurrTimeString() {
-        return TimeUtils.format(getCurrTimeSeconds());
+        return TimeUtil.format(getCurrTimeSeconds());
     }
 
     // 获取总时间秒
@@ -364,7 +364,7 @@ public class MusicPlayer {
 
     // 获取总时间字符串
     public String getDurationString() {
-        return TimeUtils.format(getDurationSeconds());
+        return TimeUtil.format(getDurationSeconds());
     }
 
     // 获取当前进度比例

@@ -10,7 +10,7 @@ import java.util.Set;
  * @Description
  * @Date 2020/12/15
  */
-public class ListUtils {
+public class ListUtil {
 
     /**
      * 搜索元素位置，找不到返回 -1

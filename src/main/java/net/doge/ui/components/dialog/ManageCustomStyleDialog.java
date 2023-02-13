@@ -12,7 +12,7 @@ import net.doge.ui.components.list.CustomScrollPane;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.componentui.list.ScrollBarUI;
 import net.doge.ui.renderers.StyleListRenderer;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,8 +109,8 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         customOnlyCheckBox.setSelected(f.customOnly);
         customOnlyCheckBox.setForeground(textColor);
         customOnlyCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, iconColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, iconColor));
+        customOnlyCheckBox.setIcon(ImageUtil.dye(f.uncheckedIcon, iconColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));
         customOnlyCheckBox.addActionListener(e -> {
             f.customOnly = customOnlyCheckBox.isSelected();
             initStyles();
@@ -347,11 +347,11 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         Color scrollBarColor = st.getScrollBarColor();
 
         titleLabel.setForeground(textColor);
-        closeButton.setIcon(ImageUtils.dye((ImageIcon) closeButton.getIcon(), iconColor));
+        closeButton.setIcon(ImageUtil.dye((ImageIcon) closeButton.getIcon(), iconColor));
         tipLabel.setForeground(textColor);
         customOnlyCheckBox.setForeground(textColor);
-        customOnlyCheckBox.setIcon(ImageUtils.dye(f.uncheckedIcon, iconColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, iconColor));
+        customOnlyCheckBox.setIcon(ImageUtil.dye(f.uncheckedIcon, iconColor));
+        customOnlyCheckBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));
         allSelectButton.setForeColor(textColor);
         nonSelectButton.setForeColor(textColor);
         applyButton.setForeColor(textColor);

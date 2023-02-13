@@ -1,6 +1,5 @@
 package net.doge.utils;
 
-import cn.hutool.core.img.ColorUtil;
 import net.doge.models.HSV;
 
 import java.awt.*;
@@ -10,7 +9,7 @@ import java.awt.*;
  * @Description 颜色工具类
  * @Date 2020/12/15
  */
-public class ColorUtils {
+public class ColorUtil {
     /**
      * Color 转为 RGB 字符串，格式 xxx,xxx,xxx
      *
@@ -29,7 +28,7 @@ public class ColorUtils {
      * @return
      */
     public static Color RGBStringToColor(String rgbStr) {
-        if (StringUtils.isEmpty(rgbStr)) return null;
+        if (StringUtil.isEmpty(rgbStr)) return null;
         String[] split = rgbStr.split(",");
         return new Color(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
     }
@@ -41,9 +40,9 @@ public class ColorUtils {
      * @return
      */
     public static Color hexToColor(String hex) {
-        if (StringUtils.isEmpty(hex)) return null;
+        if (StringUtil.isEmpty(hex)) return null;
         try {
-            return ColorUtil.hexToColor(hex);
+            return cn.hutool.core.img.ColorUtil.hexToColor(hex);
         } catch (Exception e) {
             return null;
         }
@@ -57,7 +56,7 @@ public class ColorUtils {
      */
     public static String toHex(Color color) {
         if (color == null) return null;
-        return ColorUtil.toHex(color);
+        return cn.hutool.core.img.ColorUtil.toHex(color);
     }
 
     /**

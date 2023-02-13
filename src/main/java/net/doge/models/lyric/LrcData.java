@@ -1,8 +1,8 @@
 package net.doge.models.lyric;
 
 import lombok.Data;
-import net.doge.utils.CharsetUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.CharsetUtil;
+import net.doge.utils.StringUtil;
 
 import java.io.*;
 import java.util.Collections;
@@ -48,7 +48,7 @@ public class LrcData {
             File f = new File(fileNameOrStr);
             FileInputStream fis = new FileInputStream(f);
             // 获取文件编码并读取歌词
-            bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtils.getCharsetName(f)));
+            bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtil.getCharsetName(f)));
         } else {
             bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
         }
@@ -78,7 +78,7 @@ public class LrcData {
         while (null != (strLine = bufferReader.readLine())) {
             sb.append(strLine + "\n");
             // 把 tab 先移除，去掉两边空格(包含特殊空格)
-            strLine = StringUtils.trimStringWith(strLine.replace("\t", "").trim(), ' ');
+            strLine = StringUtil.trimStringWith(strLine.replace("\t", "").trim(), ' ');
             // 判断该行是否为有效行
             if (!isValidLine(strLine)) continue;
             // 判断该行数据是否表示歌名
@@ -156,7 +156,7 @@ public class LrcData {
      */
     public boolean isTime(String string) {
         // 可能有 [] 的情况，先判空
-        if (StringUtils.isEmpty(string)) return false;
+        if (StringUtil.isEmpty(string)) return false;
         String str[] = string.split(":|\\.");
         if (3 != str.length && 2 != str.length) {
             return false;

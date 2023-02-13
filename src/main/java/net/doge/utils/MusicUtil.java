@@ -23,7 +23,7 @@ import java.io.IOException;
  * @Description 音乐工具类
  * @Date 2020/12/11
  */
-public class MusicUtils {
+public class MusicUtil {
     /**
      * 获取音频文件时长
      *
@@ -107,16 +107,16 @@ public class MusicUtils {
         // 创建临时文件
         File destFile = new File(sourcePath);
         File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
-        FileUtils.copy(sourcePath, tempFile.getAbsolutePath());
+        FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
         // 将 tag 设置进 MP3 并保存文件
         Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
         ID3v2 tag = mp3file.getId3v2Tag();
         // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
         if (tag == null) tag = new ID3v24Tag();
         if (albumImg != null) tag.setAlbumImage(baos.toByteArray(), "image/jpeg");
-        if (StringUtils.isNotEmpty(name)) tag.setTitle(name);
-        if (StringUtils.isNotEmpty(artist)) tag.setArtist(artist);
-        if (StringUtils.isNotEmpty(albumName)) tag.setAlbum(albumName);
+        if (StringUtil.isNotEmpty(name)) tag.setTitle(name);
+        if (StringUtil.isNotEmpty(artist)) tag.setArtist(artist);
+        if (StringUtil.isNotEmpty(albumName)) tag.setAlbum(albumName);
         mp3file.setId3v2Tag(tag);
         mp3file.save(destFile.getAbsolutePath());
         // 退出时将临时文件删除
@@ -145,7 +145,7 @@ public class MusicUtils {
         // 创建临时文件
         File destFile = new File(sourcePath);
         File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
-        FileUtils.copy(sourcePath, tempFile.getAbsolutePath());
+        FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
         // 将 tag 设置进 MP3 并保存文件
         Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
         ID3v2 tag = mp3file.getId3v2Tag();
@@ -155,7 +155,7 @@ public class MusicUtils {
         tag.setTitle(title);
         tag.setArtist(artist);
         tag.setAlbum(albumName);
-        if (StringUtils.isNotEmpty(genre)) tag.setGenreDescription(genre);
+        if (StringUtil.isNotEmpty(genre)) tag.setGenreDescription(genre);
         tag.setComment(comment);
         tag.setCopyright(copyright);
         mp3file.setId3v2Tag(tag);
@@ -172,7 +172,7 @@ public class MusicUtils {
         // 歌曲信息完整时跳出
 //        if (source.isIntegrated()) return;
         try {
-            source.setFormat(FileUtils.getSuffix(source));
+            source.setFormat(FileUtil.getSuffix(source));
             if (!source.isMp3()) {
                 source.setDuration(getDuration(source));
                 return;
@@ -271,7 +271,7 @@ public class MusicUtils {
                 byte[] imageBytes = id3v2Tag.getAlbumImage();
                 if (imageBytes != null) {
                     Image image = Toolkit.getDefaultToolkit().createImage(imageBytes, 0, imageBytes.length);
-                    albumImage = ImageUtils.imageToBufferedImage(image);
+                    albumImage = ImageUtil.imageToBufferedImage(image);
                 }
             }
             return albumImage;
@@ -344,7 +344,7 @@ public class MusicUtils {
      * @return
      */
     public static void convert(AudioFile source, AudioFile dest) {
-        TerminateUtils.exec(String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
+        TerminateUtil.exec(String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
     }
 
 //    /**

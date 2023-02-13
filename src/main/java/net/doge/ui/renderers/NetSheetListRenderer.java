@@ -10,8 +10,8 @@ import net.doge.constants.SimplePath;
 import net.doge.models.entity.NetSheetInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +34,11 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon sheetIcon = new ImageIcon(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "sheetItem.png"), ImageConstants.profileWidth));
+    private ImageIcon sheetIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "sheetItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        sheetIcon = ImageUtils.dye(sheetIcon, iconColor);
+        sheetIcon = ImageUtil.dye(sheetIcon, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -96,14 +96,14 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         outerPanel.add(pageSizeLabel);
 
         final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtils.textToHtml(NetMusicSource.names[netSheetInfo.getSource()]);
-        String name = StringUtils.textToHtml(StringUtils.wrapLineByWidth(netSheetInfo.getName(), maxWidth));
-        String difficulty = netSheetInfo.hasDifficulty() ? StringUtils.textToHtml(netSheetInfo.getDifficulty() + "难度") : "";
-        String musicKey = netSheetInfo.hasMusicKey() ? StringUtils.textToHtml(netSheetInfo.getMusicKey() + "调") : "";
-        String playVersion = netSheetInfo.hasPlayVersion() ? StringUtils.textToHtml(netSheetInfo.getPlayVersion()) : "";
-        String chordName = netSheetInfo.hasChordName() ? StringUtils.textToHtml(netSheetInfo.getChordName()) : "";
-        String bpm = netSheetInfo.hasBpm() ? StringUtils.textToHtml(netSheetInfo.getBpm() + " 拍/分钟") : "";
-        String pageSize = netSheetInfo.hasPageSize() ? StringUtils.textToHtml(netSheetInfo.getPageSize() + " 页") : "";
+        String source = StringUtil.textToHtml(NetMusicSource.names[netSheetInfo.getSource()]);
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netSheetInfo.getName(), maxWidth));
+        String difficulty = netSheetInfo.hasDifficulty() ? StringUtil.textToHtml(netSheetInfo.getDifficulty() + "难度") : "";
+        String musicKey = netSheetInfo.hasMusicKey() ? StringUtil.textToHtml(netSheetInfo.getMusicKey() + "调") : "";
+        String playVersion = netSheetInfo.hasPlayVersion() ? StringUtil.textToHtml(netSheetInfo.getPlayVersion()) : "";
+        String chordName = netSheetInfo.hasChordName() ? StringUtil.textToHtml(netSheetInfo.getChordName()) : "";
+        String bpm = netSheetInfo.hasBpm() ? StringUtil.textToHtml(netSheetInfo.getBpm() + " 拍/分钟") : "";
+        String pageSize = netSheetInfo.hasPageSize() ? StringUtil.textToHtml(netSheetInfo.getPageSize() + " 页") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

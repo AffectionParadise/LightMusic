@@ -3,8 +3,8 @@ package net.doge.ui.components;
 import lombok.Data;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.Fonts;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class StringTwoColor {
      * @param widthThreshold 文字最大宽度
      */
     public StringTwoColor(JLabel label, String text, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
-        if (StringUtils.isEmpty(text)) return;
+        if (StringUtil.isEmpty(text)) return;
 
         this.text = text;
         this.c1 = c1;
@@ -177,8 +177,8 @@ public class StringTwoColor {
             }
 
             // 文字阴影
-            buffImg1 = ImageUtils.shadow(buffImg1);
-            buffImg2 = ImageUtils.shadow(buffImg2);
+            buffImg1 = ImageUtil.shadow(buffImg1);
+            buffImg2 = ImageUtil.shadow(buffImg2);
         }
 
         g1.dispose();

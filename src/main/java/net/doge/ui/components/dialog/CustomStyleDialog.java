@@ -15,9 +15,9 @@ import net.doge.ui.components.list.CustomScrollPane;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.textfield.CustomTextField;
 import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.utils.FileUtils;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.FileUtil;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -140,7 +140,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                     try {
                         // 文件夹不存在就创建
                         File dir = new File(SimplePath.CUSTOM_STYLE_IMG_PATH);
-                        FileUtils.makeSureDir(dir);
+                        FileUtil.makeSureDir(dir);
                         String newPath = SimplePath.CUSTOM_STYLE_IMG_PATH + imgFile.getName();
                         Files.copy(
                                 Paths.get(imgFile.getPath()),
@@ -151,7 +151,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                         results[1] = newPath;
                         // 更新时删除原来的图片
                         String imgPath = f.currUIStyle.getStyleImgPath();
-                        if (StringUtils.isNotEmpty(imgPath)) {
+                        if (StringUtil.isNotEmpty(imgPath)) {
                             File sf = new File(imgPath);
                             File df = new File(newPath);
                             if (f.currUIStyle == showedStyle && !sf.equals(df) && sf.getParentFile().equals(dir))
@@ -192,7 +192,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         // 获得传入的界面样式
         results[0] = showedStyle.getStyleName();
         String styleImgPath = showedStyle.getStyleImgPath();
-        results[1] = StringUtils.isEmpty(styleImgPath) ? showedStyle.getBgColor() : styleImgPath;
+        results[1] = StringUtil.isEmpty(styleImgPath) ? showedStyle.getBgColor() : styleImgPath;
         results[2] = showedStyle.getForeColor();
         results[3] = showedStyle.getSelectedColor();
         results[4] = showedStyle.getLrcColor();
@@ -231,14 +231,14 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 // 加载当前样式背景图(显示一个缩略图)
                 if (results[i] != null) {
                     if (results[i] instanceof String) {
-                        BufferedImage image = ImageUtils.read((String) results[i]);
+                        BufferedImage image = ImageUtil.read((String) results[i]);
                         if (image != null) {
                             if (image.getWidth() >= image.getHeight())
-                                labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
-                            else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
+                                labels[i].setIcon(new ImageIcon(ImageUtil.width(image, imgWidth)));
+                            else labels[i].setIcon(new ImageIcon(ImageUtil.height(image, imgHeight)));
                         }
                     } else {
-                        labels[i].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, (Color) results[i]), imgWidth)));
+                        labels[i].setIcon(new ImageIcon(ImageUtil.width(ImageUtil.dyeRect(2, 1, (Color) results[i]), imgWidth)));
                     }
                 }
                 int finalI = i;
@@ -258,14 +258,14 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                         File file = fileChooser.showOpenDialog(null);
                         if (file != null) {
                             results[finalI] = file.getPath();
-                            BufferedImage img = ImageUtils.read((String) results[finalI]);
+                            BufferedImage img = ImageUtil.read((String) results[finalI]);
                             if (img == null) {
                                 new TipDialog(f, IMG_NOT_VALID_MSG).showDialog();
                                 return;
                             }
                             if (img.getWidth() >= img.getHeight())
-                                labels[finalI].setIcon(new ImageIcon(ImageUtils.width(img, imgWidth)));
-                            else labels[finalI].setIcon(new ImageIcon(ImageUtils.height(img, imgHeight)));
+                                labels[finalI].setIcon(new ImageIcon(ImageUtil.width(img, imgWidth)));
+                            else labels[finalI].setIcon(new ImageIcon(ImageUtil.height(img, imgHeight)));
                             setLocationRelativeTo(null);
                         }
                     });
@@ -275,7 +275,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 // 鼠标光标
                 component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 // 获取风格颜色并显示成小方格
-                component.setIcon(ImageUtils.dyeRoundRect(rectWidth, rectHeight, ((Color) results[i])));
+                component.setIcon(ImageUtil.dyeRoundRect(rectWidth, rectHeight, ((Color) results[i])));
                 int finalI = i;
                 // 颜色选择
                 component.addMouseListener(new MouseAdapter() {
@@ -287,7 +287,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                             if (!d.isConfirmed()) return;
                             Color color = d.getResult();
                             // 更改方框内颜色并保存
-                            component.setIcon(ImageUtils.dyeRoundRect(rectWidth, rectHeight, color));
+                            component.setIcon(ImageUtil.dyeRoundRect(rectWidth, rectHeight, color));
                             results[finalI] = color;
                         }
                     }
@@ -311,7 +311,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
             if (!d.isConfirmed()) return;
             Color color = d.getResult();
             // 更改方框内颜色并保存
-            labels[1].setIcon(new ImageIcon(ImageUtils.width(ImageUtils.dyeRect(2, 1, color), imgWidth)));
+            labels[1].setIcon(new ImageIcon(ImageUtil.width(ImageUtil.dyeRect(2, 1, color), imgWidth)));
             results[1] = color;
             setLocationRelativeTo(null);
         });

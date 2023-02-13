@@ -2,8 +2,8 @@ package net.doge.models.entity;
 
 import net.doge.constants.NetMusicSource;
 import lombok.Data;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.StringUtil;
+import net.doge.utils.TimeUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -65,9 +65,9 @@ public class NetArtistInfo {
             isShort = s.length < 3;
         }
         return (hasGender() ? "性别：" + gender + "\n" : "")
-                + (hasBirth ? "生日：" + birthday + (isShort ? "" : TimeUtils.yearToAge(Integer.parseInt(s[0]))) + "\n"
-                + "星座：" + (isShort ? TimeUtils.getConstellation(Integer.parseInt(s[0]), Integer.parseInt(s[1]))
-                : TimeUtils.getConstellation(Integer.parseInt(s[1]), Integer.parseInt(s[2]))) + "\n" : "")
+                + (hasBirth ? "生日：" + birthday + (isShort ? "" : TimeUtil.yearToAge(Integer.parseInt(s[0]))) + "\n"
+                + "星座：" + (isShort ? TimeUtil.getConstellation(Integer.parseInt(s[0]), Integer.parseInt(s[1]))
+                : TimeUtil.getConstellation(Integer.parseInt(s[1]), Integer.parseInt(s[2]))) + "\n" : "")
                 + (hasCareer() ? "职业：" + career + "\n" : "")
                 + (hasBloodType() ? "血型：" + bloodType + "\n" : "")
                 + (hasAlias() ? "别名：" + alias + "\n" : "")
@@ -87,7 +87,7 @@ public class NetArtistInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtils.isNotEmpty(coverImgUrl);
+        return StringUtil.isNotEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -95,7 +95,7 @@ public class NetArtistInfo {
     }
 
     public boolean hasName() {
-        return StringUtils.isNotEmpty(name);
+        return StringUtil.isNotEmpty(name);
     }
 
     public boolean hasSongNum() {
@@ -111,31 +111,31 @@ public class NetArtistInfo {
     }
 
     public boolean hasGender() {
-        return StringUtils.isNotEmpty(gender);
+        return StringUtil.isNotEmpty(gender);
     }
 
     public boolean hasBirthday() {
-        return StringUtils.isNotEmpty(birthday);
+        return StringUtil.isNotEmpty(birthday);
     }
 
     public boolean hasCareer() {
-        return StringUtils.isNotEmpty(career);
+        return StringUtil.isNotEmpty(career);
     }
 
     public boolean hasBloodType() {
-        return StringUtils.isNotEmpty(bloodType);
+        return StringUtil.isNotEmpty(bloodType);
     }
 
     public boolean hasAlias() {
-        return StringUtils.isNotEmpty(alias);
+        return StringUtil.isNotEmpty(alias);
     }
 
     public boolean hasGroup() {
-        return StringUtils.isNotEmpty(group);
+        return StringUtil.isNotEmpty(group);
     }
 
     public boolean hasDescription() {
-        return StringUtils.isNotEmpty(description);
+        return StringUtil.isNotEmpty(description);
     }
 
     public void setCoverImgThumb(BufferedImage coverImgThumb) {

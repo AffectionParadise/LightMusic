@@ -1,29 +1,23 @@
 package net.doge.utils;
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ReUtil;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.SimpleFormatter;
-import java.util.regex.Pattern;
 
 /**
  * @Author yzx
  * @Description 音频时长格式转换工具类
  * @Date 2020/12/15
  */
-public class TimeUtils {
+public class TimeUtil {
     private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static DateFormat dateShortTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private static DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");

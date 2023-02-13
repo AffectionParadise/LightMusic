@@ -1,7 +1,7 @@
 package net.doge.models.entity;
 
 import lombok.Data;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 
@@ -46,19 +46,19 @@ public class NetSheetInfo {
     }
 
     public boolean hasDifficulty() {
-        return StringUtils.isNotEmpty(difficulty);
+        return StringUtil.isNotEmpty(difficulty);
     }
 
     public boolean hasMusicKey() {
-        return StringUtils.isNotEmpty(musicKey);
+        return StringUtil.isNotEmpty(musicKey);
     }
 
     public boolean hasPlayVersion() {
-        return StringUtils.isNotEmpty(playVersion);
+        return StringUtil.isNotEmpty(playVersion);
     }
 
     public boolean hasChordName() {
-        return StringUtils.isNotEmpty(chordName);
+        return StringUtil.isNotEmpty(chordName);
     }
 
     public boolean hasPageSize() {

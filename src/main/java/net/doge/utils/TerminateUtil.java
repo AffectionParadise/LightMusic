@@ -10,7 +10,7 @@ import java.io.*;
  * @Description cmd 工具类
  * @Date 2020/12/15
  */
-public class TerminateUtils {
+public class TerminateUtil {
 //    private static String[] dirs = {"MiguMusicApi", "NeteaseCloudMusicApi", "QQMusicApi", "kuwoMusicApi"};
 //    private static String[] cmds = {"npm start", "npm start", "npm start", "npm run dev"};
 //

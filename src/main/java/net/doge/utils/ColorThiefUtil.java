@@ -6,7 +6,7 @@ import java.awt.image.DataBufferByte;
 import java.util.*;
 import java.util.List;
 
-public class ColorThiefUtils {
+public class ColorThiefUtil {
     private static final int DEFAULT_QUALITY = 10;
     private static final boolean DEFAULT_IGNORE_WHITE = false;
 

@@ -1,6 +1,6 @@
 package net.doge.models.lyric;
 
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 /**
  * @Author yzx
@@ -82,7 +82,7 @@ public class Statement {
      * @return
      */
     public boolean isEmpty() {
-        return StringUtils.isEmpty(lyric.trim());
+        return StringUtil.isEmpty(lyric.trim());
     }
 
     @Override

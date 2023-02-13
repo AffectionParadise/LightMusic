@@ -7,8 +7,8 @@ import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.button.DialogButton;
 import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -79,14 +79,14 @@ public class ConfirmDialog extends AbstractShadowDialog {
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         checkBox.setForeground(textColor);
-        checkBox.setIcon(ImageUtils.dye(f.uncheckedIcon, iconColor));
-        checkBox.setSelectedIcon(ImageUtils.dye(f.checkedIcon, iconColor));
+        checkBox.setIcon(ImageUtil.dye(f.uncheckedIcon, iconColor));
+        checkBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
         Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);
         checkPanel.setBorder(eb);
 
-        messageLabel.setText(StringUtils.textToHtml(message));
+        messageLabel.setText(StringUtil.textToHtml(message));
         messageLabel.setForeground(textColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);
@@ -94,9 +94,9 @@ public class ConfirmDialog extends AbstractShadowDialog {
         fl.setHgap(20);
         buttonPanel.setLayout(fl);
 
-        if (StringUtils.isNotEmpty(yes.getPlainText())) buttonPanel.add(yes);
-        if (StringUtils.isNotEmpty(no.getPlainText())) buttonPanel.add(no);
-        if (StringUtils.isNotEmpty(cancel.getPlainText())) buttonPanel.add(cancel);
+        if (StringUtil.isNotEmpty(yes.getPlainText())) buttonPanel.add(yes);
+        if (StringUtil.isNotEmpty(no.getPlainText())) buttonPanel.add(no);
+        if (StringUtil.isNotEmpty(cancel.getPlainText())) buttonPanel.add(cancel);
         globalPanel.setLayout(new BorderLayout());
         globalPanel.add(messagePanel, BorderLayout.NORTH);
         globalPanel.add(checkPanel, BorderLayout.CENTER);

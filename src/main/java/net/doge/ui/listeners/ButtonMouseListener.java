@@ -3,8 +3,8 @@ package net.doge.ui.listeners;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.components.button.TabButton;
-import net.doge.utils.ColorUtils;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ColorUtil;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,9 +30,9 @@ public class ButtonMouseListener extends MouseAdapter {
         if(!b.isEnabled()) return;
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
-        Color btc = ColorUtils.brighter(textColor);
-        Color bic = ColorUtils.brighter(iconColor);
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), bic));
+        Color btc = ColorUtil.brighter(textColor);
+        Color bic = ColorUtil.brighter(iconColor);
+        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), bic));
         b.setForeground(btc);
 //        if (b instanceof TabButton) return;
         b.setDrawBg(true);
@@ -43,7 +43,7 @@ public class ButtonMouseListener extends MouseAdapter {
         if(!b.isEnabled()) return;
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), iconColor));
+        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), iconColor));
         b.setForeground(textColor);
 //        if (b instanceof TabButton) return;
         b.setDrawBg(b instanceof TabButton && ((TabButton) b).isActive());
@@ -54,9 +54,9 @@ public class ButtonMouseListener extends MouseAdapter {
         if (e.getButton() != MouseEvent.BUTTON1) return;
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
-        Color dtc = ColorUtils.darker(textColor);
-        Color dic = ColorUtils.darker(iconColor);
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), dic));
+        Color dtc = ColorUtil.darker(textColor);
+        Color dic = ColorUtil.darker(iconColor);
+        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), dic));
         b.setForeground(dtc);
     }
 
@@ -64,10 +64,10 @@ public class ButtonMouseListener extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
-        Color btc = ColorUtils.brighter(textColor);
-        Color bic = ColorUtils.brighter(iconColor);
+        Color btc = ColorUtil.brighter(textColor);
+        Color bic = ColorUtil.brighter(iconColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());
-        if (b.getIcon() != null) b.setIcon(ImageUtils.dye((ImageIcon) b.getIcon(), bic));
+        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), bic));
         b.setForeground(c ? btc : textColor);
     }
 }

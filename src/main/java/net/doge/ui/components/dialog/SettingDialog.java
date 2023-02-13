@@ -15,10 +15,10 @@ import net.doge.ui.components.textfield.CustomTextField;
 import net.doge.ui.components.textfield.SafeDocument;
 import net.doge.ui.componentui.ComboBoxUI;
 import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.JsonUtils;
-import net.doge.utils.KeyUtils;
-import net.doge.utils.ListUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.JsonUtil;
+import net.doge.utils.KeyUtil;
+import net.doge.utils.ListUtil;
 import net.sf.json.JSONObject;
 
 import javax.swing.*;
@@ -334,7 +334,7 @@ public class SettingDialog extends AbstractTitledDialog {
                             videoFullScreenTextField.setText("");
                         }
                     }
-                    tf.setText(KeyUtils.join(currKeys));
+                    tf.setText(KeyUtil.join(currKeys));
                     if (tf == playOrPauseTextField) {
                         playOrPauseKeys.clear();
                         playOrPauseKeys.addAll(currKeys);
@@ -359,12 +359,12 @@ public class SettingDialog extends AbstractTitledDialog {
 
             // 检查是否有重复按键
             private Object checkKeyDuplicated() {
-                if (ListUtils.equals(currKeys, playOrPauseKeys)) return playOrPauseKeys;
-                if (ListUtils.equals(currKeys, playLastKeys)) return playLastKeys;
-                if (ListUtils.equals(currKeys, playNextKeys)) return playNextKeys;
-                if (ListUtils.equals(currKeys, backwardKeys)) return backwardKeys;
-                if (ListUtils.equals(currKeys, forwardKeys)) return forwardKeys;
-                if (ListUtils.equals(currKeys, videoFullScreenKeys)) return videoFullScreenKeys;
+                if (ListUtil.equals(currKeys, playOrPauseKeys)) return playOrPauseKeys;
+                if (ListUtil.equals(currKeys, playLastKeys)) return playLastKeys;
+                if (ListUtil.equals(currKeys, playNextKeys)) return playNextKeys;
+                if (ListUtil.equals(currKeys, backwardKeys)) return backwardKeys;
+                if (ListUtil.equals(currKeys, forwardKeys)) return forwardKeys;
+                if (ListUtil.equals(currKeys, videoFullScreenKeys)) return videoFullScreenKeys;
                 return null;
             }
         };
@@ -514,7 +514,7 @@ public class SettingDialog extends AbstractTitledDialog {
                     f.saveLocalMusicList(config);
                     f.saveCollectedMusicList(config);
                     try {
-                        JsonUtils.saveJson(config, output);
+                        JsonUtil.saveJson(config, output);
                         new TipDialog(f, "备份成功").showDialog();
                     } catch (IOException ex) {
                         new TipDialog(f, "备份失败").showDialog();
@@ -528,7 +528,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 fileChooser.setTitle("选择文件");
                 File input = fileChooser.showOpenDialog(null);
                 if (input != null) {
-                    JSONObject config = JsonUtils.readJson(input);
+                    JSONObject config = JsonUtil.readJson(input);
                     f.loadLocalMusicList(config);
                     f.loadCollectedMusicList(config);
                     new TipDialog(f, "恢复成功").showDialog();
@@ -538,8 +538,8 @@ public class SettingDialog extends AbstractTitledDialog {
 
         // 复选框图标
         Color iconColor = f.currUIStyle.getIconColor();
-        ImageIcon icon = ImageUtils.dye(f.uncheckedIcon, iconColor);
-        ImageIcon selectedIcon = ImageUtils.dye(f.checkedIcon, iconColor);
+        ImageIcon icon = ImageUtil.dye(f.uncheckedIcon, iconColor);
+        ImageIcon selectedIcon = ImageUtil.dye(f.checkedIcon, iconColor);
         autoUpdateCheckBox.setIcon(icon);
         autoUpdateCheckBox.setSelectedIcon(selectedIcon);
         autoDownloadLrcCheckBox.setIcon(icon);
@@ -676,17 +676,17 @@ public class SettingDialog extends AbstractTitledDialog {
 
         enableKeyCheckBox.setSelected(f.keyEnabled);
         playOrPauseKeys.addAll(f.playOrPauseKeys);
-        playOrPauseTextField.setText(KeyUtils.join(f.playOrPauseKeys));
+        playOrPauseTextField.setText(KeyUtil.join(f.playOrPauseKeys));
         playLastKeys.addAll(f.playLastKeys);
-        playLastTextField.setText(KeyUtils.join(f.playLastKeys));
+        playLastTextField.setText(KeyUtil.join(f.playLastKeys));
         playNextKeys.addAll(f.playNextKeys);
-        playNextTextField.setText(KeyUtils.join(f.playNextKeys));
+        playNextTextField.setText(KeyUtil.join(f.playNextKeys));
         backwardKeys.addAll(f.backwardKeys);
-        backwardTextField.setText(KeyUtils.join(f.backwardKeys));
+        backwardTextField.setText(KeyUtil.join(f.backwardKeys));
         forwardKeys.addAll(f.forwardKeys);
-        forwardTextField.setText(KeyUtils.join(f.forwardKeys));
+        forwardTextField.setText(KeyUtil.join(f.forwardKeys));
         videoFullScreenKeys.addAll(f.videoFullScreenKeys);
-        videoFullScreenTextField.setText(KeyUtils.join(f.videoFullScreenKeys));
+        videoFullScreenTextField.setText(KeyUtil.join(f.videoFullScreenKeys));
     }
 
     // 应用设置

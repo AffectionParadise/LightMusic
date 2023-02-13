@@ -2,8 +2,8 @@ package net.doge.models.entity;
 
 import lombok.Data;
 import net.doge.constants.NetMusicSource;
-import net.doge.utils.StringUtils;
-import net.doge.utils.TimeUtils;
+import net.doge.utils.StringUtil;
+import net.doge.utils.TimeUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -71,9 +71,9 @@ public class NetUserInfo {
         return (hasLevel() ? "等级：Lv. " + level + "\n" : "")
                 + (hasAccAge() ? "号龄：" + accAge + "\n" : "")
                 + (hasGender() ? "性别：" + gender + "\n" : "")
-                + (hasBirth ? "生日：" + birthday + (isShort ? "" : TimeUtils.yearToAge(Integer.parseInt(s[0]))) + "\n"
-                + "星座：" + (isShort ? TimeUtils.getConstellation(Integer.parseInt(s[0]), Integer.parseInt(s[1]))
-                : TimeUtils.getConstellation(Integer.parseInt(s[1]), Integer.parseInt(s[2]))) + "\n" : "")
+                + (hasBirth ? "生日：" + birthday + (isShort ? "" : TimeUtil.yearToAge(Integer.parseInt(s[0]))) + "\n"
+                + "星座：" + (isShort ? TimeUtil.getConstellation(Integer.parseInt(s[0]), Integer.parseInt(s[1]))
+                : TimeUtil.getConstellation(Integer.parseInt(s[1]), Integer.parseInt(s[2]))) + "\n" : "")
                 + (hasArea() ? "地区：" + area : "");
     }
 
@@ -94,7 +94,7 @@ public class NetUserInfo {
     }
 
     public boolean hasAvatarUrl() {
-        return StringUtils.isNotEmpty(avatarUrl);
+        return StringUtil.isNotEmpty(avatarUrl);
     }
 
     public boolean hasAvatar() {
@@ -102,7 +102,7 @@ public class NetUserInfo {
     }
 
     public boolean hasBgImgUrl() {
-        return StringUtils.isNotEmpty(bgImgUrl);
+        return StringUtil.isNotEmpty(bgImgUrl);
     }
 
     public boolean hasBgImg() {
@@ -110,23 +110,23 @@ public class NetUserInfo {
     }
 
     public boolean hasName() {
-        return StringUtils.isNotEmpty(name);
+        return StringUtil.isNotEmpty(name);
     }
 
     public boolean hasGender() {
-        return StringUtils.isNotEmpty(gender);
+        return StringUtil.isNotEmpty(gender);
     }
 
     public boolean hasBirthday() {
-        return StringUtils.isNotEmpty(birthday);
+        return StringUtil.isNotEmpty(birthday);
     }
 
     public boolean hasAccAge() {
-        return StringUtils.isNotEmpty(accAge);
+        return StringUtil.isNotEmpty(accAge);
     }
 
     public boolean hasArea() {
-        return StringUtils.isNotEmpty(area);
+        return StringUtil.isNotEmpty(area);
     }
 
     public boolean hasLevel() {
@@ -154,7 +154,7 @@ public class NetUserInfo {
     }
 
     public boolean hasSign() {
-        return StringUtils.isNotEmpty(sign);
+        return StringUtil.isNotEmpty(sign);
     }
 
     public void setAvatarThumb(BufferedImage avatarThumb) {

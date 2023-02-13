@@ -2,7 +2,7 @@ package net.doge.models.entity;
 
 import net.doge.constants.NetMusicSource;
 import lombok.Data;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -47,7 +47,7 @@ public class NetAlbumInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtils.isNotEmpty(coverImgUrl);
+        return StringUtil.isNotEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -55,19 +55,19 @@ public class NetAlbumInfo {
     }
 
     public boolean hasName() {
-        return StringUtils.isNotEmpty(name);
+        return StringUtil.isNotEmpty(name);
     }
 
     public boolean hasArtist() {
-        return StringUtils.isNotEmpty(artist);
+        return StringUtil.isNotEmpty(artist);
     }
 
     public boolean hasArtistId() {
-        return StringUtils.isNotEmpty(artistId);
+        return StringUtil.isNotEmpty(artistId);
     }
 
     public boolean hasPublishTime() {
-        return StringUtils.isNotEmpty(publishTime);
+        return StringUtil.isNotEmpty(publishTime);
     }
 
     public boolean hasSongNum() {
@@ -125,7 +125,7 @@ public class NetAlbumInfo {
 
     public String toSimpleString() {
         return name
-                + (StringUtils.isEmpty(artist) ? "" : " - " + artist);
+                + (StringUtil.isEmpty(artist) ? "" : " - " + artist);
     }
 
 //    public String toString() {

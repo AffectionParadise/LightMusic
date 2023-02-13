@@ -4,8 +4,8 @@ import lombok.Data;
 import net.doge.constants.*;
 import net.doge.models.entity.NetMusicInfo;
 import net.doge.models.entity.NetMvInfo;
-import net.doge.utils.FileUtils;
-import net.doge.utils.MusicServerUtils;
+import net.doge.utils.FileUtil;
+import net.doge.utils.MusicServerUtil;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -94,7 +94,7 @@ public class Task {
                 dirCheck();
                 prepareInfo();
                 setStatus(TaskStatus.RUNNING);
-                MusicServerUtils.download(this, getHeaders());
+                MusicServerUtil.download(this, getHeaders());
                 if (isInterrupted()) return;
                 if (invokeLater != null) invokeLater.run();
                 setStatus(TaskStatus.FINISHED);
@@ -143,20 +143,20 @@ public class Task {
     private void prepareInfo() {
         if (type == TaskType.MUSIC) {
             // 先补全音乐信息、url
-            MusicServerUtils.fillMusicInfo(netMusicInfo);
-            MusicServerUtils.fillMusicUrl(netMusicInfo);
+            MusicServerUtil.fillMusicInfo(netMusicInfo);
+            MusicServerUtil.fillMusicUrl(netMusicInfo);
             url = netMusicInfo.getUrl();
             dest = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleFileName();
         } else if (type == TaskType.MV) {
-            MusicServerUtils.fillMvInfo(netMvInfo);
+            MusicServerUtil.fillMvInfo(netMvInfo);
             url = netMvInfo.getUrl();
             dest = SimplePath.DOWNLOAD_MV_PATH + netMvInfo.toSimpleFileName();
         }
     }
 
     private void dirCheck() {
-        FileUtils.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-        FileUtils.makeSureDir(SimplePath.DOWNLOAD_MV_PATH);
+        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MV_PATH);
     }
 
     @Override

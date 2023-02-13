@@ -3,7 +3,7 @@ package net.doge.ui.componentui;
 import net.doge.constants.Colors;
 import net.doge.constants.SimplePath;
 import net.doge.ui.PlayerFrame;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -17,12 +17,12 @@ import java.awt.image.BufferedImage;
  */
 public class ChangePaneButtonUI extends BasicButtonUI {
     private boolean drawMask = false;
-    public BufferedImage frameImg = ImageUtils.read(SimplePath.ICON_PATH + "frame.png");
+    public BufferedImage frameImg = ImageUtil.read(SimplePath.ICON_PATH + "frame.png");
     private PlayerFrame f;
 
     public ChangePaneButtonUI(PlayerFrame f) {
         this.f = f;
-        frameImg = ImageUtils.dye(frameImg, f.currUIStyle.getIconColor());
+        frameImg = ImageUtil.dye(frameImg, f.currUIStyle.getIconColor());
     }
 
     public void setDrawMask(boolean drawMask) {

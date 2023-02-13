@@ -132,9 +132,9 @@ public class EditInfoDialog extends AbstractTitledDialog {
                             (String) results[11],
                             (BufferedImage) results[12]
                     );
-                    MusicUtils.writeMP3Info(file.getAbsolutePath(), mediaInfo);
+                    MusicUtil.writeMP3Info(file.getAbsolutePath(), mediaInfo);
                     // 歌曲信息更改后重新填充
-                    MusicUtils.fillAudioFileInfo(file);
+                    MusicUtil.fillAudioFileInfo(file);
                 } catch (InvalidDataException ex) {
                     ex.printStackTrace();
                 } catch (UnsupportedTagException ex) {
@@ -170,19 +170,19 @@ public class EditInfoDialog extends AbstractTitledDialog {
         centerPanel.setLayout(new GridLayout(7, 2));
 
         // 获得传入的歌曲信息
-        String fileName = StringUtils.wrapLineByWidth(file.getName(), 300);
-        String fileSize = FileUtils.getUnitString(FileUtils.getDirOrFileSize(file));
-        String creationTime = TimeUtils.msToDatetime(FileUtils.getCreationTime(file));
-        String lastModifiedTime = TimeUtils.msToDatetime(file.lastModified());
-        String lastAccessTime = TimeUtils.msToDatetime(FileUtils.getAccessTime(file));
-        String duration = TimeUtils.format(file.getDuration());
+        String fileName = StringUtil.wrapLineByWidth(file.getName(), 300);
+        String fileSize = FileUtil.getUnitString(FileUtil.getDirOrFileSize(file));
+        String creationTime = TimeUtil.msToDatetime(FileUtil.getCreationTime(file));
+        String lastModifiedTime = TimeUtil.msToDatetime(file.lastModified());
+        String lastAccessTime = TimeUtil.msToDatetime(FileUtil.getAccessTime(file));
+        String duration = TimeUtil.format(file.getDuration());
         String title = file.getSongName();
         String artist = file.getArtist();
         String album = file.getAlbum();
-        String genre = MusicUtils.getGenre(file);
-        String comment = MusicUtils.getComment(file);
-        String copyright = MusicUtils.getCopyright(file);
-        BufferedImage albumImage = MusicUtils.getAlbumImage(file);
+        String genre = MusicUtil.getGenre(file);
+        String comment = MusicUtil.getComment(file);
+        String copyright = MusicUtil.getCopyright(file);
+        BufferedImage albumImage = MusicUtil.getAlbumImage(file);
 
         results[0] = fileName;
         results[1] = fileSize;
@@ -212,7 +212,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
             if (components[i] instanceof CustomLabel) {
                 CustomLabel component = (CustomLabel) components[i];
                 component.setForeground(textColor);
-                component.setText(StringUtils.textToHtml((String) results[i]));
+                component.setText(StringUtil.textToHtml((String) results[i]));
             } else if (components[i] instanceof CustomTextField) {
                 CustomTextField component = (CustomTextField) components[i];
                 component.setForeground(textColor);
@@ -236,8 +236,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 if (results[i] != null) {
                     BufferedImage image = (BufferedImage) results[i];
                     if (image.getWidth() >= image.getHeight())
-                        labels[i].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
-                    else labels[i].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
+                        labels[i].setIcon(new ImageIcon(ImageUtil.width(image, imgWidth)));
+                    else labels[i].setIcon(new ImageIcon(ImageUtil.height(image, imgHeight)));
                 }
                 int finalI = i;
                 // 图片文件选择
@@ -255,11 +255,11 @@ public class EditInfoDialog extends AbstractTitledDialog {
                     Platform.runLater(() -> {
                         File file = fileChooser.showOpenDialog(null);
                         if (file != null) {
-                            BufferedImage image = ImageUtils.read(file);
+                            BufferedImage image = ImageUtil.read(file);
                             results[finalI] = image;
                             if (image.getWidth() >= image.getHeight())
-                                labels[finalI].setIcon(new ImageIcon(ImageUtils.width(image, imgWidth)));
-                            else labels[finalI].setIcon(new ImageIcon(ImageUtils.height(image, imgHeight)));
+                                labels[finalI].setIcon(new ImageIcon(ImageUtil.width(image, imgWidth)));
+                            else labels[finalI].setIcon(new ImageIcon(ImageUtil.height(image, imgHeight)));
                             setLocationRelativeTo(null);
                         }
                     });

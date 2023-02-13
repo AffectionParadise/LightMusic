@@ -3,14 +3,13 @@ package net.doge.utils;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Arrays;
 
 /**
  * @Author yzx
  * @Description 字体工具类
  * @Date 2020/12/15
  */
-public class FontUtils {
+public class FontUtil {
     /**
      * 加载外部字体
      *

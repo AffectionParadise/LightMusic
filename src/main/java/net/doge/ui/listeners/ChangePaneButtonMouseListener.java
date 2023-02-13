@@ -3,7 +3,7 @@ package net.doge.ui.listeners;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.componentui.ChangePaneButtonUI;
-import net.doge.utils.ColorUtils;
+import net.doge.utils.ColorUtil;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,7 +39,7 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        b.setForeground(ColorUtils.darker(f.currUIStyle.getTextColor()));
+        b.setForeground(ColorUtil.darker(f.currUIStyle.getTextColor()));
     }
 
     @Override

@@ -8,8 +8,8 @@ import net.doge.constants.ImageConstants;
 import net.doge.constants.SimplePath;
 import net.doge.models.entity.NetCommentInfo;
 import net.doge.ui.components.CustomLabel;
-import net.doge.utils.ImageUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.ImageUtil;
+import net.doge.utils.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,11 +33,11 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
     private boolean drawBg;
     private int hoverIndex = -1;
 
-    private ImageIcon defaultProfile = new ImageIcon(ImageUtils.setRadius(ImageUtils.width(ImageUtils.read(SimplePath.ICON_PATH + "profile.png"), ImageConstants.profileWidth), 0.1));
+    private ImageIcon defaultProfile = new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "profile.png"), ImageConstants.profileWidth), 0.1));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        defaultProfile = ImageUtils.dye(defaultProfile, iconColor);
+        defaultProfile = ImageUtil.dye(defaultProfile, iconColor);
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -59,7 +59,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         // 使图标靠上
         label.setVerticalTextPosition(TOP);
         label.setHorizontalAlignment(LEFT);
-        label.setText(StringUtils.textToHtmlWithSpace(StringUtils.wrapLineByWidth(netCommentInfo.toString(), lw - (sub ? 235 : 160))));
+        label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(netCommentInfo.toString(), lw - (sub ? 235 : 160))));
         label.setIconTextGap(15);
         label.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
         label.setFont(customFont);

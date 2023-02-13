@@ -5,7 +5,7 @@ import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +57,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         titleLabel.setForeground(f.currUIStyle.getTextColor());
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));
-        closeButton.setIcon(ImageUtils.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
+        closeButton.setIcon(ImageUtil.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
         closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 10, f.closeWindowIcon.getIconHeight() + 10));
         // 关闭窗口
         closeButton.addActionListener(e -> close());

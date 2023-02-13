@@ -2,7 +2,7 @@ package net.doge.models.entity;
 
 import lombok.Data;
 import net.doge.constants.NetMusicSource;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -43,15 +43,15 @@ public class NetRankingInfo {
     }
 
     public boolean hasUpdateFre() {
-        return StringUtils.isNotEmpty(updateFre);
+        return StringUtil.isNotEmpty(updateFre);
     }
 
     public boolean hasUpdateTime() {
-        return StringUtils.isNotEmpty(updateTime);
+        return StringUtil.isNotEmpty(updateTime);
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtils.isNotEmpty(coverImgUrl);
+        return StringUtil.isNotEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -106,7 +106,7 @@ public class NetRankingInfo {
 
     public String toString() {
         return NetMusicSource.names[source] + " - " + toSimpleString()
-                + (playCount == null ? "" : "\n\n" + StringUtils.formatNumber(playCount));
+                + (playCount == null ? "" : "\n\n" + StringUtil.formatNumber(playCount));
     }
 
     public String toSimpleString() {

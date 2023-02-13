@@ -11,7 +11,7 @@ import java.io.*;
  * @Description Json 解析工具类
  * @Date 2020/12/15
  */
-public class JsonUtils {
+public class JsonUtil {
     /**
      * 读取 Json 文件，返回 JSONObject
      *
@@ -76,7 +76,7 @@ public class JsonUtils {
      * @throws IOException
      */
     public static String prettyJson(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) return jsonStr;
+        if (StringUtil.isEmpty(jsonStr)) return jsonStr;
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(jsonStr);
         return JSON.toJSONString(jsonObject, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteDateUseDateFormat);
     }

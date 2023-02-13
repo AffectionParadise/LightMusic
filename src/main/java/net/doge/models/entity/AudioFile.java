@@ -1,8 +1,8 @@
 package net.doge.models.entity;
 
 import net.doge.constants.Format;
-import net.doge.utils.FileUtils;
-import net.doge.utils.StringUtils;
+import net.doge.utils.FileUtil;
+import net.doge.utils.StringUtil;
 
 import java.io.File;
 
@@ -42,7 +42,7 @@ public class AudioFile extends File {
     }
 
     public String getNameWithoutSuffix() {
-        return FileUtils.getNameWithoutSuffix(this);
+        return FileUtil.getNameWithoutSuffix(this);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class AudioFile extends File {
     }
 
     public boolean hasSongName() {
-        return StringUtils.isNotEmpty(songName);
+        return StringUtil.isNotEmpty(songName);
     }
 
     public boolean isMp3() {
@@ -72,11 +72,11 @@ public class AudioFile extends File {
     }
 
     public boolean hasArtist() {
-        return StringUtils.isNotEmpty(artist);
+        return StringUtil.isNotEmpty(artist);
     }
 
     public boolean hasAlbum() {
-        return StringUtils.isNotEmpty(album);
+        return StringUtil.isNotEmpty(album);
     }
 
     public boolean hasDuration() {
@@ -141,6 +141,6 @@ public class AudioFile extends File {
 
     public String toKeywords() {
         return songName
-                + (StringUtils.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
+                + (StringUtil.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
     }
 }

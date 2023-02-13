@@ -1,6 +1,6 @@
 package net.doge.ui.components.textfield;
 
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -23,7 +23,7 @@ public class SafeDocument extends PlainDocument {
     }
 
     public SafeDocument(int min, int max) {
-        this(StringUtils.bit(max));
+        this(StringUtil.bit(max));
         this.min = min;
         this.max = max;
         numberRequired = ranged = true;
@@ -31,16 +31,16 @@ public class SafeDocument extends PlainDocument {
 
     @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-        if (StringUtils.isEmpty(str)) return;
+        if (StringUtil.isEmpty(str)) return;
 
         String text = getText(0, getLength());
-        String ns = StringUtils.insert(text, offs, str);
+        String ns = StringUtil.insert(text, offs, str);
 
         // 数字
-        if (numberRequired && !StringUtils.isNumber(ns)) return;
+        if (numberRequired && !StringUtil.isNumber(ns)) return;
         // 数值范围
         if (ranged) {
-            int number = StringUtils.toNumber(ns);
+            int number = StringUtil.toNumber(ns);
             if (min > number || max < number) return;
         }
         // 长度

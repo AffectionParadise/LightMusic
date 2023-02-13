@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * @Description 字符串工具类
  * @Date 2020/12/15
  */
-public class StringUtils {
+public class StringUtil {
     private static final Map<Character, String> cMap = new HashMap<>();
 
     static {

@@ -1,7 +1,7 @@
 package net.doge.models.entity;
 
 import lombok.Data;
-import net.doge.utils.StringUtils;
+import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
 
@@ -37,11 +37,11 @@ public class NetCommentInfo {
     private Runnable invokeLater;
 
     public boolean hasTime() {
-        return StringUtils.isNotEmpty(time);
+        return StringUtil.isNotEmpty(time);
     }
 
     public boolean hasProfileUrl() {
-        return StringUtils.isNotEmpty(profileUrl);
+        return StringUtil.isNotEmpty(profileUrl);
     }
 
     public boolean hasLikedCount() {
@@ -68,9 +68,9 @@ public class NetCommentInfo {
     public String toString() {
         return username
                 + (hasTime() ? "    " + time : "")
-                + (hasScore() ? "    " + StringUtils.genStar(score) + " " + score + " 分" : "") + "\n"
+                + (hasScore() ? "    " + StringUtil.genStar(score) + " " + score + " 分" : "") + "\n"
                 + content + "\n"
-                + (hasLikedCount() ? "❤ " + StringUtils.formatNumberWithoutSuffix(likedCount) : "");
+                + (hasLikedCount() ? "❤ " + StringUtil.formatNumberWithoutSuffix(likedCount) : "");
     }
 
     public String toSimpleString() {

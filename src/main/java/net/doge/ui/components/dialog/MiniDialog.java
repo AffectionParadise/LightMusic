@@ -8,7 +8,7 @@ import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.dialog.factory.AbstractMiniDialog;
 import net.doge.ui.listeners.ButtonMouseListener;
-import net.doge.utils.ImageUtils;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -212,7 +212,7 @@ public class MiniDialog extends AbstractMiniDialog {
         playLastButton.setIcon(f.lastButton.getIcon());
         playOrPauseButton.setIcon(f.playOrPauseButton.getIcon());
         playNextButton.setIcon(f.nextButton.getIcon());
-        closeButton.setIcon(ImageUtils.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
+        closeButton.setIcon(ImageUtil.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
 
         // 按钮大小
         playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth() + 10, playLastButton.getIcon().getIconHeight() + 10));
