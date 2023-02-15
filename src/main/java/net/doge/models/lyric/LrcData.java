@@ -146,6 +146,9 @@ public class LrcData {
         // 清洗歌词，删除空行并设置结束时间
         clean();
 
+        // 添加歌词排头的等待点
+        if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "•••"));
+
         // 分离出歌词翻译
 //        parseTrans();
     }

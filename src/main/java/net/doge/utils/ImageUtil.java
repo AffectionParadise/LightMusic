@@ -5,6 +5,7 @@ import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
 import com.jhlabs.image.ShadowFilter;
 import net.coobird.thumbnailator.Thumbnails;
+import net.doge.constants.BlurConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -383,7 +384,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage doBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / 16));
+        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
         return gaussianFilter.filter(bufferedImage, null);
     }
 
@@ -394,7 +395,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage darker(BufferedImage bufferedImage) {
-        contrastFilter.setBrightness(0.65f);
+        contrastFilter.setBrightness(BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex]);
         return contrastFilter.filter(bufferedImage, null);
     }
 

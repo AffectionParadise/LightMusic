@@ -651,7 +651,7 @@ public class PlayerFrame extends JFrame {
     public int forwardOrBackwardTime;
     public int videoForwardOrBackwardTime;
     // 播放视频时是否关闭主界面
-    public boolean videoOnly = true;
+    public boolean videoOnly;
     // 当前播放速率
     public double currRate;
     public double currVideoRate;
@@ -2386,7 +2386,7 @@ public class PlayerFrame extends JFrame {
 //                        lrcAndSpecBox.setVisible(false);
 //                        lrcAndSpecBox.setVisible(true);
                     }
-                    if (blurType == BlurType.OFF) doBlur();
+                    if (blurType == BlurConstants.OFF) doBlur();
                 });
             }
         });
@@ -2930,6 +2930,10 @@ public class PlayerFrame extends JFrame {
         setSize(windowWidth, windowHeight);
         // 载入播放视频是否关闭主界面
         videoOnly = config.optBoolean(ConfigConstants.VIDEO_ONLY, true);
+        // 载入高斯模糊因子
+        BlurConstants.gsFactorIndex = config.optInt(ConfigConstants.GS_FACTOR_INDEX, 3);
+        // 载入暗角滤镜因子
+        BlurConstants.darkerFactorIndex = config.optInt(ConfigConstants.DARKER_FACTOR_INDEX, 2);
         // 载入歌曲下载路径
         String musicDownPath = config.optString(ConfigConstants.MUSIC_DOWN_PATH);
         if (!musicDownPath.isEmpty()) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
@@ -2963,9 +2967,9 @@ public class PlayerFrame extends JFrame {
         // 载入是否暗化
         darkerOn = config.optBoolean(ConfigConstants.DARKER_ON, true);
         // 载入模糊类型
-        blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurType.OFF);
-        blurButton.setIcon(ImageUtil.dye(blurType == BlurType.CV ? cvBlurIcon : blurType == BlurType.MC ? mcBlurIcon :
-                blurType == BlurType.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getIconColor()));
+        blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurConstants.OFF);
+        blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon : blurType == BlurConstants.MC ? mcBlurIcon :
+                blurType == BlurConstants.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入歌词偏移
@@ -3693,6 +3697,10 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.WINDOW_SIZE, windowSize);
         // 存入播放视频是否隐藏主界面
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
+        // 存入高斯模糊因子
+        config.put(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
+        // 存入暗角滤镜因子
+        config.put(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
         // 存入歌曲下载路径
         config.put(ConfigConstants.MUSIC_DOWN_PATH, SimplePath.DOWNLOAD_MUSIC_PATH);
         // 存入 MV 下载路径
@@ -19885,22 +19893,22 @@ public class PlayerFrame extends JFrame {
             darkerMenuItem.setIcon(darkerOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
         blurOffMenuItem.addActionListener(e -> {
-            blurType = BlurType.OFF;
+            blurType = BlurConstants.OFF;
             doBlur();
             blurButton.setIcon(ImageUtil.dye(blurOffIcon, currUIStyle.getIconColor()));
         });
         cvBlurMenuItem.addActionListener(e -> {
-            blurType = BlurType.CV;
+            blurType = BlurConstants.CV;
             doBlur();
             blurButton.setIcon(ImageUtil.dye(cvBlurIcon, currUIStyle.getIconColor()));
         });
         mcBlurMenuItem.addActionListener(e -> {
-            blurType = BlurType.MC;
+            blurType = BlurConstants.MC;
             doBlur();
             blurButton.setIcon(ImageUtil.dye(mcBlurIcon, currUIStyle.getIconColor()));
         });
         lgBlurMenuItem.addActionListener(e -> {
-            blurType = BlurType.LG;
+            blurType = BlurConstants.LG;
             doBlur();
             blurButton.setIcon(ImageUtil.dye(lgBlurIcon, currUIStyle.getIconColor()));
         });
@@ -20194,7 +20202,7 @@ public class PlayerFrame extends JFrame {
             miniDialog.infoLabel.setText(changePaneButton.getText());
         }
         // 恢复背景
-        if (blurType != BlurType.OFF) doBlur();
+        if (blurType != BlurConstants.OFF) doBlur();
         // 禁止 MV、收藏、下载、评论、乐谱
         mvButton.setEnabled(false);
         collectButton.setEnabled(false);
@@ -20243,7 +20251,7 @@ public class PlayerFrame extends JFrame {
         changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(image, changePaneImageWidth), TINY_ARC)));
         if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
         // 背景模糊
-        if (blurType != BlurType.OFF) doBlur();
+        if (blurType != BlurConstants.OFF) doBlur();
     }
 
     // 清空歌词
@@ -22139,7 +22147,7 @@ public class PlayerFrame extends JFrame {
         artistLabel.setForeground(textColor);
         albumLabel.setForeground(textColor);
         // 切换风格，包含背景图，模糊状态并载入了音乐就不换
-        if (blurType == BlurType.OFF || !player.loadedMusic()) {
+        if (blurType == BlurConstants.OFF || !player.loadedMusic()) {
             doStyleBlur(style);
         }
         // 标题图标
@@ -22631,18 +22639,18 @@ public class PlayerFrame extends JFrame {
     }
 
     // 模糊碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化
-    private void doBlur() {
+    public void doBlur() {
         // 未加载歌曲，转为主题模糊
-        if (blurType == BlurType.OFF || !player.loadedMusic()) {
+        if (blurType == BlurConstants.OFF || !player.loadedMusic()) {
             doStyleBlur(currUIStyle);
             return;
         }
         blurExecutor.submit(() -> {
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
             if (albumImage == defaultAlbumImage) albumImage = ImageUtil.eraseTranslucency(defaultAlbumImage);
-            if (blurType == BlurType.MC)
+            if (blurType == BlurConstants.MC)
                 albumImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(albumImage));
-            else if (blurType == BlurType.LG)
+            else if (blurType == BlurConstants.LG)
                 albumImage = ImageUtil.toGradient(albumImage);
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
@@ -22670,7 +22678,7 @@ public class PlayerFrame extends JFrame {
                 if (gh > bufferedImage.getHeight())
                     bufferedImage = ImageUtil.height(bufferedImage, gh);
                 // 裁剪中间的一部分
-                if (blurType == BlurType.CV) {
+                if (blurType == BlurConstants.CV) {
                     int ih = bufferedImage.getHeight();
                     bufferedImage = Thumbnails.of(bufferedImage)
                             .scale(1f)

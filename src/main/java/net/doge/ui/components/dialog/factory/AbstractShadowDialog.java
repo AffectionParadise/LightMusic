@@ -1,7 +1,7 @@
 package net.doge.ui.components.dialog.factory;
 
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constants.BlurType;
+import net.doge.constants.BlurConstants;
 import net.doge.models.UIStyle;
 import net.doge.ui.PlayerFrame;
 import net.doge.utils.ImageUtil;
@@ -39,12 +39,12 @@ public abstract class AbstractShadowDialog extends JDialog {
 
     public void updateBlur() {
         BufferedImage bufferedImage;
-        if (f.blurType != BlurType.OFF && f.player.loadedMusic()) {
+        if (f.blurType != BlurConstants.OFF && f.player.loadedMusic()) {
             bufferedImage = f.player.getMusicInfo().getAlbumImage();
             if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtil.eraseTranslucency(bufferedImage);
-            if (f.blurType == BlurType.MC)
+            if (f.blurType == BlurConstants.MC)
                 bufferedImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(bufferedImage));
-            else if (f.blurType == BlurType.LG)
+            else if (f.blurType == BlurConstants.LG)
                 bufferedImage = ImageUtil.toGradient(bufferedImage);
         } else {
             UIStyle style = f.currUIStyle;
@@ -58,7 +58,7 @@ public abstract class AbstractShadowDialog extends JDialog {
         try {
             boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
-            if (loadedMusic && f.blurType == BlurType.CV) bufferedImage = ImageUtil.cropCenter(bufferedImage);
+            if (loadedMusic && f.blurType == BlurConstants.CV) bufferedImage = ImageUtil.cropCenter(bufferedImage);
             // 处理成 100 * 100 大小
             if (f.gsOn) bufferedImage = ImageUtil.width(bufferedImage, 100);
             // 消除透明度
@@ -71,7 +71,7 @@ public abstract class AbstractShadowDialog extends JDialog {
             if (dh > bufferedImage.getHeight())
                 bufferedImage = ImageUtil.height(bufferedImage, dh);
             // 裁剪中间的一部分
-            if (!loadedMusic || f.blurType == BlurType.CV || f.blurType == BlurType.OFF) {
+            if (!loadedMusic || f.blurType == BlurConstants.CV || f.blurType == BlurConstants.OFF) {
                 int iw = bufferedImage.getWidth(), ih = bufferedImage.getHeight();
                 bufferedImage = Thumbnails.of(bufferedImage)
                         .scale(1f)

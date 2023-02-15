@@ -35,6 +35,10 @@ public class ConfigConstants {
     public final static String WINDOW_SIZE = "windowSize";
     // 播放视频是否关闭主界面
     public final static String VIDEO_ONLY = "videoOnly";
+    // 高斯模糊因子
+    public final static String GS_FACTOR_INDEX = "gsFactorIndex";
+    // 暗角滤镜因子
+    public final static String DARKER_FACTOR_INDEX = "darkerFactorIndex";
     // 播放模式
     public final static String PLAY_MODE = "playMode";
     // 歌曲下载路径
