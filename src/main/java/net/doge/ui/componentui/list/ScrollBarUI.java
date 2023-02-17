@@ -78,4 +78,18 @@ public class ScrollBarUI extends BasicScrollBarUI {
     protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
 
     }
+
+//    /**
+//     * 创建自定义把手拖动策略
+//     * @return
+//     */
+//    @Override
+//    protected TrackListener createTrackListener() {
+//        return new TrackListener() {
+//            @Override
+//            public void mouseDragged(MouseEvent e) {
+//
+//            }
+//        };
+//    }
 }

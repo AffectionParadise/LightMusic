@@ -16417,7 +16417,6 @@ public class PlayerFrame extends JFrame {
         // 评论最佳大小
         netCommentScrollPane.setPreferredSize(new Dimension(200, 600));
         // 评论滚动速度
-//        netCommentScrollPane.setVUnitIncrement(20);
         netCommentBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         netCommentBox.add(netCommentScrollPane);
     }
@@ -16653,7 +16652,6 @@ public class PlayerFrame extends JFrame {
         // 乐谱最佳大小
         netSheetScrollPane.setPreferredSize(new Dimension(200, 600));
         // 乐谱滚动速度
-//        netSheetScrollPane.setVUnitIncrement(20);
         netSheetBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         netSheetBox.add(netSheetScrollPane);
     }
@@ -19493,6 +19491,16 @@ public class PlayerFrame extends JFrame {
             lrcScrollWaiting = true;
             swActionTimer.start();
         };
+        // 歌词面板拖动时上下滚动
+        Point dragFrom = new Point();
+        lrcList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1) return;
+                dragFrom.x = e.getX();
+                dragFrom.y = e.getY();
+            }
+        });
         // 歌词面板大小变化后对齐高亮歌词
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
@@ -19501,11 +19509,16 @@ public class PlayerFrame extends JFrame {
                 lrcScrollAnimation = true;
             }
         });
-        // 歌词列表左键上下拖拽触发延时动画
+        // 歌词列表左键上下拖拽上下滚动，触发延时动画
         lrcList.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
+                Point p = e.getPoint();
+                int yOffset = (dragFrom.y - p.y) * 2;
+                lrcScrollPane.setVValue(lrcScrollPane.getVValue() + yOffset);
+                dragFrom.x = p.x;
+                dragFrom.y = p.y + yOffset;
                 swAction.run();
             }
         });
