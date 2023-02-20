@@ -2314,6 +2314,12 @@ public class PlayerFrame extends JFrame {
         });
     }
 
+    // 初始化 UI 管理器配置
+    private void UIManagerInit() {
+        // 列表不按照行块为单位滚动，提升动画流畅性
+        UIManager.put("List.lockToPositionOnScroll", false);
+    }
+
     private void initUI() {
         // 主界面
         setTitle(TITLE);
@@ -2433,6 +2439,9 @@ public class PlayerFrame extends JFrame {
         // 初始化 JavaFX 组件
         Platform.setImplicitExit(false);
         add(new JFXPanel());
+
+        // 初始化 UI 管理器配置
+        UIManagerInit();
 
         // 初始化标题栏
         titleBarInit();
@@ -18687,17 +18696,11 @@ public class PlayerFrame extends JFrame {
         removeAllTasksButton.addMouseListener(new ButtonMouseListener(removeAllTasksButton, THIS));
 
         // 重新开始选中任务
-        restartSelectedTasksButton.addActionListener(e -> {
-            restartTaskMenuItem.doClick();
-        });
+        restartSelectedTasksButton.addActionListener(e -> restartTaskMenuItem.doClick());
         // 取消选中任务
-        cancelSelectedTasksButton.addActionListener(e -> {
-            cancelTaskMenuItem.doClick();
-        });
+        cancelSelectedTasksButton.addActionListener(e -> cancelTaskMenuItem.doClick());
         // 删除选中任务
-        removeSelectedTasksButton.addActionListener(e -> {
-            removeTaskMenuItem.doClick();
-        });
+        removeSelectedTasksButton.addActionListener(e -> removeTaskMenuItem.doClick());
         // 重新开始全部任务
         restartAllTasksButton.addActionListener(e -> {
             ConfirmDialog dialog = new ConfirmDialog(this, ASK_RESTART_ALL_TASKS_MSG, "是", "否");
@@ -18912,6 +18915,9 @@ public class PlayerFrame extends JFrame {
                 downloadListModel.removeElement(task);
                 if (!checked) continue;
                 FileUtil.delete(task.getDest());
+                // 顺便删除歌词文件
+                if (!task.isMusic()) continue;
+                FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + task.getNetMusicInfo().toSimpleLrcFileName());
             }
             downloadList.setModel(downloadListModel);
             new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
@@ -22164,7 +22170,7 @@ public class PlayerFrame extends JFrame {
             doStyleBlur(style);
         }
         // 标题图标
-        setIconImage(ImageUtil.dye(titleIcon, textColor).getImage());
+        setIconImage(ImageUtil.dye(titleIcon, iconColor).getImage());
 
         // 更新单选菜单项和标签按钮样式
         updateMenuItemIcon(sortPopupMenu);

@@ -44,6 +44,18 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
     private CustomPanel buttonPanel = new CustomPanel();
 
+    // 标题
+    private CustomPanel generalPanel = new CustomPanel();
+    private CustomLabel generalLabel = new CustomLabel("常规");
+    private CustomPanel appearancePanel = new CustomPanel();
+    private CustomLabel appearanceLabel = new CustomLabel("外观");
+    private CustomPanel downloadAndCachePanel = new CustomPanel();
+    private CustomLabel downloadAndCacheLabel = new CustomLabel("下载与缓存");
+    private CustomPanel playbackPanel = new CustomPanel();
+    private CustomLabel playbackLabel = new CustomLabel("播放与历史");
+    private CustomPanel hotKeyPanel = new CustomPanel();
+    private CustomLabel hotKeyLabel = new CustomLabel("快捷键");
+
     // 设置项
     private CustomPanel autoUpdatePanel = new CustomPanel();
     private CustomCheckBox autoUpdateCheckBox = new CustomCheckBox("启动时自动检查更新");
@@ -156,7 +168,7 @@ public class SettingDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(700, 750);
+        setSize(720, 750);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -202,6 +214,12 @@ public class SettingDialog extends AbstractTitledDialog {
         // 对齐
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
         fl.setVgap(7);
+        generalPanel.setLayout(fl);
+        appearancePanel.setLayout(fl);
+        downloadAndCachePanel.setLayout(fl);
+        playbackPanel.setLayout(fl);
+        hotKeyPanel.setLayout(fl);
+
         autoUpdatePanel.setLayout(fl);
         autoDownloadLrcPanel.setLayout(fl);
         videoOnlyPanel.setLayout(fl);
@@ -228,8 +246,18 @@ public class SettingDialog extends AbstractTitledDialog {
         forwardPanel.setLayout(fl);
         videoFullScreenPanel.setLayout(fl);
 
+        generalLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+        // 标题边框
+        Border tb = BorderFactory.createEmptyBorder(10, 20, 0, 0);
+        generalPanel.setBorder(tb);
+        appearancePanel.setBorder(tb);
+        downloadAndCachePanel.setBorder(tb);
+        playbackPanel.setBorder(tb);
+        hotKeyPanel.setBorder(tb);
+
         // 边框
-        Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+        Border b = BorderFactory.createEmptyBorder(0, 50, 0, 20);
         autoUpdatePanel.setBorder(b);
         autoDownloadLrcPanel.setBorder(b);
         videoOnlyPanel.setBorder(b);
@@ -258,6 +286,12 @@ public class SettingDialog extends AbstractTitledDialog {
 
         // 字体颜色
         Color textColor = f.currUIStyle.getTextColor();
+        generalLabel.setForeground(textColor);
+        appearanceLabel.setForeground(textColor);
+        downloadAndCacheLabel.setForeground(textColor);
+        playbackLabel.setForeground(textColor);
+        hotKeyLabel.setForeground(textColor);
+
         autoUpdateCheckBox.setForeground(textColor);
         autoDownloadLrcCheckBox.setForeground(textColor);
         videoOnlyCheckBox.setForeground(textColor);
@@ -273,7 +307,6 @@ public class SettingDialog extends AbstractTitledDialog {
         closeOptionLabel.setForeground(textColor);
         windowSizeLabel.setForeground(textColor);
         fobLabel.setForeground(textColor);
-//        specStyleLabel.setForeground(textColor);
         balanceLabel.setForeground(textColor);
         backupLabel.setForeground(textColor);
         keyLabel.setForeground(textColor);
@@ -563,6 +596,13 @@ public class SettingDialog extends AbstractTitledDialog {
         enableKeyCheckBox.setIcon(icon);
         enableKeyCheckBox.setSelectedIcon(selectedIcon);
 
+        // 标题
+        generalPanel.add(generalLabel);
+        appearancePanel.add(appearanceLabel);
+        downloadAndCachePanel.add(downloadAndCacheLabel);
+        playbackPanel.add(playbackLabel);
+        hotKeyPanel.add(hotKeyLabel);
+
         autoUpdatePanel.add(autoUpdateCheckBox);
 
         autoDownloadLrcPanel.add(autoDownloadLrcCheckBox);
@@ -649,24 +689,32 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenPanel.add(videoFullScreenLabel);
         videoFullScreenPanel.add(videoFullScreenTextField);
 
+        centerPanel.add(generalPanel);
         centerPanel.add(autoUpdatePanel);
         centerPanel.add(autoDownloadLrcPanel);
         centerPanel.add(videoOnlyPanel);
+        centerPanel.add(closeOptionPanel);
+        centerPanel.add(windowSizePanel);
+
+        centerPanel.add(appearancePanel);
         centerPanel.add(gsFactorPanel);
         centerPanel.add(darkerFactorPanel);
+
+        centerPanel.add(downloadAndCachePanel);
         centerPanel.add(musicDownPanel);
         centerPanel.add(mvDownPanel);
         centerPanel.add(cachePanel);
         centerPanel.add(maxCacheSizePanel);
+        centerPanel.add(maxConcurrentTaskCountPanel);
+
+        centerPanel.add(playbackPanel);
+        centerPanel.add(fobPanel);
+        centerPanel.add(balancePanel);
         centerPanel.add(maxHistoryCountPanel);
         centerPanel.add(maxSearchHistoryCountPanel);
-        centerPanel.add(maxConcurrentTaskCountPanel);
-        centerPanel.add(closeOptionPanel);
-        centerPanel.add(windowSizePanel);
-        centerPanel.add(fobPanel);
-//        centerPanel.add(specStylePanel);
-        centerPanel.add(balancePanel);
         centerPanel.add(backupPanel);
+
+        centerPanel.add(hotKeyPanel);
         centerPanel.add(keyPanel);
         centerPanel.add(playOrPausePanel);
         centerPanel.add(playLastPanel);

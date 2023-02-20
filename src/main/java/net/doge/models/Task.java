@@ -145,6 +145,7 @@ public class Task {
             // 先补全音乐信息、url
             MusicServerUtil.fillMusicInfo(netMusicInfo);
             MusicServerUtil.fillMusicUrl(netMusicInfo);
+            MusicServerUtil.fillLrc(netMusicInfo);
             url = netMusicInfo.getUrl();
             dest = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleFileName();
         } else if (type == TaskType.MV) {

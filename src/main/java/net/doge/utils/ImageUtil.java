@@ -273,31 +273,26 @@ public class ImageUtil {
      * @return
      */
     public static ImageIcon dye(ImageIcon icon, Color color) {
-        int w = icon.getIconWidth();
-        int h = icon.getIconHeight();
-        BufferedImage dyed = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = dyed.createGraphics();
-        g.drawImage(icon.getImage(), 0, 0, null);
-        g.setComposite(AlphaComposite.SrcAtop);
-        g.setColor(color);
-        g.fillRect(0, 0, w, h);
-        g.dispose();
-        return new ImageIcon(dyed);
+        return new ImageIcon(dye(icon.getImage(), color));
     }
 
     /**
-     * 给 BufferedImage 着色，保留透明部分
+     * 给 Image 着色，保留透明部分
      *
      * @param img
      * @return
      */
-    public static BufferedImage dye(BufferedImage img, Color color) {
-        int w = img.getWidth(), h = img.getHeight();
-        BufferedImage dyed = createTranslucentImage(w, h);
+    public static BufferedImage dye(Image img, Color color) {
+        int w = img.getWidth(null), h = img.getHeight(null);
+        BufferedImage dyed = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = dyed.createGraphics();
         g.drawImage(img, 0, 0, null);
         g.setComposite(AlphaComposite.SrcAtop);
-        g.setColor(color);
+        final float diff = 15;
+        final float[] fractions = {0.333f, 0.667f, 1};
+        final Color[] colors = {ColorUtil.hsvDiffPick(color, -diff), color, ColorUtil.hsvDiffPick(color, diff)};
+        LinearGradientPaint lgp = new LinearGradientPaint(0, 0, w, h, fractions, colors);
+        g.setPaint(lgp);
         g.fillRect(0, 0, w, h);
         g.dispose();
         return dyed;

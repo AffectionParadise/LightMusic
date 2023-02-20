@@ -114,7 +114,7 @@ public class SliderUI extends BasicSliderUI {
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(trackBgColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, isTimeBar ? 0.2f : 0.3f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, isTimeBar ? 0.1f : 0.3f));
         int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (bigThumb ? 7 : 8), height = trackRect.height - (bigThumb ? 14 : 16),
                 arc = bigThumb ? 6 : 4;
         // 画未填充部分
@@ -123,7 +123,7 @@ public class SliderUI extends BasicSliderUI {
         if (isTimeBar) {
             int w = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
                     : (int) (mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width + 0.5);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
             g2d.fillRoundRect(
                     thx,
                     thy,

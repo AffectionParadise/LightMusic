@@ -11,7 +11,7 @@ public class Colors {
     public static final Color TRANSLUCENT = new Color(0, 0, 0, 0);
     public static final Color BLACK = new Color(0, 0, 0);
     public static final Color WHITE = new Color(255, 255, 255);
-    public static final Color LIGHT_GRAY = new Color(220, 220, 220);
+    public static final Color LIGHT_GRAY = new Color(230, 230, 230);
     public static final Color GRAY = new Color(210, 210, 210);
     public static final Color THEME = new Color(18, 150, 219);
     public static final Color SPRING_GREEN = new Color(60, 179, 113);
@@ -42,7 +42,7 @@ public class Colors {
 
     public static final Color SPRING1 = new Color(241, 255, 240);
     public static final Color SPRING2 = new Color(172, 243, 162);
-    public static final Color SPRING3 = new Color(110, 208, 98);
+    public static final Color SPRING3 = new Color(122, 229, 108);
 
     public static final Color SUMMER1 = new Color(234, 243, 255);
     public static final Color SUMMER2 = new Color(152, 196, 229);
@@ -61,7 +61,7 @@ public class Colors {
 
     public static final Color MINIMALISM1 = new Color(255, 243, 233);
     public static final Color MINIMALISM2 = new Color(207, 157, 159);
-    public static final Color MINIMALISM3 = new Color(255, 106, 98);
+    public static final Color MINIMALISM3 = new Color(255, 133, 127);
 
     public static final Color AL1 = new Color(255, 240, 249);
     public static final Color AL2 = new Color(212, 162, 220);
@@ -84,8 +84,8 @@ public class Colors {
     public static final Color SHE3 = new Color(0, 205, 205);
 
     public static final Color LUMING1 = new Color(234, 255, 249);
-    public static final Color LUMING2 = new Color(102, 205, 170);
-    public static final Color LUMING3 = new Color(69, 208, 130);
+    public static final Color LUMING2 = new Color(130, 222, 185);
+    public static final Color LUMING3 = new Color(81, 196, 163);
 
     public static final Color YOUR_NAME1 = new Color(255, 239, 255);
     public static final Color YOUR_NAME2 = new Color(239, 152, 233);
@@ -97,7 +97,7 @@ public class Colors {
 
     public static final Color BROOK1 = new Color(255, 251, 243);
     public static final Color BROOK2 = new Color(255, 198, 104);
-    public static final Color BROOK3 = new Color(243, 156, 1);
+    public static final Color BROOK3 = new Color(238, 173, 72);
 
     public static final Color HAPPY_NEW_YEAR1 = new Color(255, 240, 240);
     public static final Color HAPPY_NEW_YEAR2 = new Color(255, 180, 180);

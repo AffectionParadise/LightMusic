@@ -171,13 +171,33 @@ public class ColorUtil {
     }
 
     /**
+     * 通过 HSV 模型选取更亮或更暗的颜色
+     *
+     * @param color
+     * @return
+     */
+    public static Color hsvDiffPick(Color color, float diff) {
+        HSV hsv = colorToHsv(color);
+        return hsvToColor((hsv.h + diff) % 360, hsv.s, hsv.v);
+    }
+
+    /**
      * 更亮的颜色
      *
      * @param color
      * @return
      */
     public static Color brighter(Color color) {
-        final float factor = 0.15f;
+        return brighter(color, 0.15f);
+    }
+
+    /**
+     * 更亮的颜色，带因子
+     *
+     * @param color
+     * @return
+     */
+    public static Color brighter(Color color, float factor) {
         int red = (int) ((color.getRed() * (1 - factor) / 255 + factor) * 255);
         int green = (int) ((color.getGreen() * (1 - factor) / 255 + factor) * 255);
         int blue = (int) ((color.getBlue() * (1 - factor) / 255 + factor) * 255);

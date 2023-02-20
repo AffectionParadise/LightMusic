@@ -57,6 +57,7 @@ public class CustomScrollPane extends JScrollPane {
     }
 
     public void setVValue(int value) {
+        if (value < getVMin() || value > getVMax()) return;
         verticalScrollBar.setValue(value);
     }
 
