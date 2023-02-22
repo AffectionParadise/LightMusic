@@ -7,9 +7,11 @@ import java.awt.*;
 
 public class CustomButton extends JButton {
     protected boolean drawBg;
+    protected Timer drawBgTimer;
+    protected float alpha;
+    protected final float destAlpha = 0.2f;
 
     public CustomButton() {
-        super();
         init();
     }
 
@@ -28,11 +30,6 @@ public class CustomButton extends JButton {
         init();
     }
 
-    public void setDrawBg(boolean drawBg) {
-        this.drawBg = drawBg;
-        repaint();
-    }
-
     private void init() {
         setOpaque(false);
         setContentAreaFilled(false);
@@ -40,6 +37,20 @@ public class CustomButton extends JButton {
         setFocusPainted(false);
         setFont(Fonts.NORMAL);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        drawBgTimer = new Timer(1, e -> {
+            if (drawBg) alpha = Math.min(destAlpha, alpha + 0.002f);
+            else alpha = Math.max(0, alpha - 0.002f);
+            if (alpha <= 0 || alpha >= destAlpha) drawBgTimer.stop();
+            repaint();
+        });
+    }
+
+    public void setDrawBg(boolean drawBg) {
+        if (this.drawBg == drawBg) return;
+        this.drawBg = drawBg;
+        if (drawBgTimer.isRunning()) return;
+        drawBgTimer.start();
     }
 
     @Override
@@ -57,12 +68,12 @@ public class CustomButton extends JButton {
 
     @Override
     public void paintComponent(Graphics g) {
-        if (drawBg && !(this instanceof TabButton)) {
+        if (!(this instanceof TabButton)) {
             Graphics2D g2d = (Graphics2D) g;
             // 画背景
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }

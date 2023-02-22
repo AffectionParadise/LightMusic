@@ -65,7 +65,7 @@ public class Statement {
     }
 
     public boolean hasEndTime() {
-        return Double.valueOf(endTime).intValue() != 0;
+        return endTime != 0;
     }
 
     public String getLyric() {

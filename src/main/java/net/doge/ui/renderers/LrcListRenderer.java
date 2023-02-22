@@ -30,7 +30,6 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private double ratio;
     private int row;
     private int hoverIndex = -1;
-//    private boolean drawBg;
 
     private LabelUI highlightLabelUI;
     private LabelUI normalLabelUI;

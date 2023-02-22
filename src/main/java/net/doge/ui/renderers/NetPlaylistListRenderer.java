@@ -31,7 +31,6 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     private Color selectedColor;
     private Color textColor;
     private Color iconColor;
-    private boolean drawBg;
     private int hoverIndex = -1;
 
     private ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playlistItem.png"), ImageConstants.profileWidth));
@@ -39,10 +38,6 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         playlistIcon = ImageUtil.dye(playlistIcon, iconColor);
-    }
-
-    public void setDrawBg(boolean drawBg) {
-        this.drawBg = drawBg;
     }
 
     @Override
@@ -104,24 +99,9 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
+        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;
     }
-
-//    @Override
-//    public void paintComponent(Graphics g) {
-//        // 画背景
-//        if (drawBg) {
-//            Graphics2D g2d = (Graphics2D) g;
-//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//            g2d.setColor(getForeground());
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
-//            // 注意这里不能用 getVisibleRect ！！！
-//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-//        }
-//
-//        super.paintComponent(g);
-//    }
 }

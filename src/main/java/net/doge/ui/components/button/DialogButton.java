@@ -18,9 +18,13 @@ import java.awt.event.MouseListener;
 public class DialogButton extends JButton implements MouseListener {
     private Color foreColor;
     private Color foreColorBk;
-    private float alpha = 0.2f;
+    private Timer drawBgTimer;
+    private boolean entered;
+    private final float startAlpha = 0.2f;
+    private final float destAlpha = 0.4f;
+    private float alpha = startAlpha;
 
-    void init() {
+    private void init() {
         addMouseListener(this);
         setOpaque(false);
         setContentAreaFilled(false);
@@ -28,6 +32,13 @@ public class DialogButton extends JButton implements MouseListener {
         setFocusPainted(false);
         setFont(Fonts.NORMAL);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        drawBgTimer = new Timer(1, e -> {
+            if (entered) alpha = Math.min(destAlpha, alpha + 0.002f);
+            else alpha = Math.max(startAlpha, alpha - 0.002f);
+            if (alpha <= startAlpha || alpha >= destAlpha) drawBgTimer.stop();
+            repaint();
+        });
     }
 
     public DialogButton() {
@@ -125,6 +136,13 @@ public class DialogButton extends JButton implements MouseListener {
 //        }
     }
 
+    public void setEntered(boolean entered) {
+        if (this.entered == entered) return;
+        this.entered = entered;
+        if (drawBgTimer.isRunning()) return;
+        drawBgTimer.start();
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -142,11 +160,11 @@ public class DialogButton extends JButton implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        alpha = 0.4f;
+        setEntered(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        alpha = 0.2f;
+        setEntered(false);
     }
 }

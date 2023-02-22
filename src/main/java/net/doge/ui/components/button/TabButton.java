@@ -38,7 +38,7 @@ public class TabButton extends CustomButton {
             // 画背景
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, active ? 0.1f : 0.2f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, active ? 0.1f : alpha));
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }

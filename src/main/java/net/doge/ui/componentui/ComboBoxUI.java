@@ -74,7 +74,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(f.currUIStyle.getTextColor());
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, comboBox.isEntered() ? 0.3f : 0.15f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, comboBox.getAlpha()));
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 10, 10);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }

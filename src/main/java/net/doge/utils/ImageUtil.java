@@ -4,9 +4,14 @@ import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
 import com.jhlabs.image.ShadowFilter;
+import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurConstants;
+import net.doge.constants.Format;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.MemoryCacheImageInputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -57,39 +62,33 @@ public class ImageUtil {
         }
     }
 
-//    /**
-//     * 从 url 读取 Webp 图像
-//     *
-//     * @param url 图片 url
-//     * @return
-//     */
-//    public static BufferedImage readWebp(String url) {
-//        try {
-//            // Obtain a WebP ImageReader instance
-//            ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
-//
-//            // Configure decoding parameters
-//            WebPReadParam readParam = new WebPReadParam();
-//            readParam.setBypassFiltering(true);
-//
-//            // Configure the input on the ImageReader
-//            reader.setInput(
-//                    // 读取网络流用 MemoryCacheImageInputStream
-//                    new MemoryCacheImageInputStream(
-//                            HttpRequest.get(url)
-//                            .setFollowRedirects(true)
-//                            .setReadTimeout(20000)
-//                            .execute()
-//                            .bodyStream()
-//                    )
-//            );
-//
-//            // Decode the image
-//            return reader.read(0, readParam);
-//        } catch (IOException e) {
-//            return null;
-//        }
-//    }
+    /**
+     * 从 url 读取 Webp 图像
+     *
+     * @param imgUrl 图片 url
+     * @return
+     */
+    public static BufferedImage readWebp(String imgUrl) {
+        try {
+            // Obtain a WebP ImageReader instance
+            ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
+
+            // Configure decoding parameters
+            WebPReadParam readParam = new WebPReadParam();
+            readParam.setBypassFiltering(true);
+
+            // Configure the input on the ImageReader
+            reader.setInput(
+                    // 读取网络流用 MemoryCacheImageInputStream
+                    new MemoryCacheImageInputStream(getImgStream(imgUrl))
+            );
+
+            // Decode the image
+            return reader.read(0, readParam);
+        } catch (IOException e) {
+            return null;
+        }
+    }
 
     /**
      * 从 URL 读取图片
@@ -99,13 +98,7 @@ public class ImageUtil {
      */
     public static BufferedImage read(URL url) {
         try {
-            return Thumbnails.of(
-                    HttpRequest.get(url.toString())
-                            .setFollowRedirects(true)
-                            .setReadTimeout(20000)
-                            .execute()
-                            .bodyStream()
-            ).scale(1).asBufferedImage();
+            return Thumbnails.of(getImgStream(url.toString())).scale(1).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -140,21 +133,29 @@ public class ImageUtil {
     }
 
     /**
-     * 导出为图片文件
+     * 根据图片 url 获取图片流
      *
-     * @param imageUrl 图像 url
-     * @param dest     导出文件路径
+     * @param imgUrl 图像 url
      * @return
      */
-    public static void toFile(String imageUrl, String dest) {
+    public static InputStream getImgStream(String imgUrl) {
+        return HttpRequest.get(imgUrl)
+                .setFollowRedirects(true)
+                .setReadTimeout(20000)
+                .execute()
+                .bodyStream();
+    }
+
+    /**
+     * 导出为图片文件
+     *
+     * @param imgUrl 图像 url
+     * @param dest   导出文件路径
+     * @return
+     */
+    public static void toFile(String imgUrl, String dest) {
         try {
-            Thumbnails.of(
-                    HttpRequest.get(imageUrl)
-                            .setFollowRedirects(true)
-                            .setReadTimeout(20000)
-                            .execute()
-                            .bodyStream()
-            ).scale(1).toFile(dest);
+            Thumbnails.of(getImgStream(imgUrl)).scale(1).toFile(dest);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -163,13 +164,13 @@ public class ImageUtil {
     /**
      * 导出为图片文件
      *
-     * @param imageUrl   图像 url
+     * @param imgUrl     图像 url
      * @param outputFile 导出文件
      * @return
      */
-    public static void toFile(String imageUrl, File outputFile) {
+    public static void toFile(String imgUrl, File outputFile) {
         try {
-            Thumbnails.of(new URL(imageUrl)).scale(1).toFile(outputFile);
+            Thumbnails.of(getImgStream(imgUrl)).scale(1).toFile(outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -178,13 +179,13 @@ public class ImageUtil {
     /**
      * 导出为图片文件
      *
-     * @param image 图像
-     * @param dest  导出文件路径
+     * @param img  图像
+     * @param dest 导出文件路径
      * @return
      */
-    public static void toFile(BufferedImage image, String dest) {
+    public static void toFile(BufferedImage img, String dest) {
         try {
-            Thumbnails.of(image).scale(1).toFile(dest);
+            Thumbnails.of(img).scale(1).toFile(dest);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -193,14 +194,14 @@ public class ImageUtil {
     /**
      * 导出为图片文件
      *
-     * @param image      图像
+     * @param img        图像
      * @param outputFile 导出文件
      * @return
      */
-    public static void toFile(BufferedImage image, File outputFile) {
-        if (image == null) return;
+    public static void toFile(BufferedImage img, File outputFile) {
+        if (img == null) return;
         try {
-            Thumbnails.of(image).scale(1).toFile(outputFile);
+            Thumbnails.of(img).scale(1).toFile(outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -288,11 +289,12 @@ public class ImageUtil {
         Graphics2D g = dyed.createGraphics();
         g.drawImage(img, 0, 0, null);
         g.setComposite(AlphaComposite.SrcAtop);
-        final float diff = 15;
-        final float[] fractions = {0.333f, 0.667f, 1};
-        final Color[] colors = {ColorUtil.hsvDiffPick(color, -diff), color, ColorUtil.hsvDiffPick(color, diff)};
-        LinearGradientPaint lgp = new LinearGradientPaint(0, 0, w, h, fractions, colors);
-        g.setPaint(lgp);
+//        final float diff = 15;
+//        final float[] fractions = {0.333f, 0.667f, 1};
+//        final Color[] colors = {ColorUtil.hsvDiffPick(color, -diff), color, ColorUtil.hsvDiffPick(color, diff)};
+//        LinearGradientPaint lgp = new LinearGradientPaint(0, 0, w, h, fractions, colors);
+//        g.setPaint(lgp);
+        g.setColor(color);
         g.fillRect(0, 0, w, h);
         g.dispose();
         return dyed;
@@ -429,14 +431,14 @@ public class ImageUtil {
     /**
      * 改变图像质量
      *
-     * @param image
+     * @param img
      * @param q
      * @return
      */
-    public static BufferedImage quality(BufferedImage image, float q) {
-        if (image == null) return null;
+    public static BufferedImage quality(BufferedImage img, float q) {
+        if (img == null) return null;
         try {
-            return Thumbnails.of(image).scale(1f).outputQuality(q).asBufferedImage();
+            return Thumbnails.of(img).scale(1f).outputQuality(q).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -445,15 +447,15 @@ public class ImageUtil {
     /**
      * 等比例设置图片宽度，返回新的 BufferedImage
      *
-     * @param image
+     * @param img
      * @param width
      * @return
      * @throws IOException
      */
-    public static BufferedImage width(BufferedImage image, int width) {
-        if (image == null) return null;
+    public static BufferedImage width(BufferedImage img, int width) {
+        if (img == null) return null;
         try {
-            return Thumbnails.of(image).width(width).asBufferedImage();
+            return Thumbnails.of(img).width(width).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -462,20 +464,18 @@ public class ImageUtil {
     /**
      * 等比例设置图片宽度，返回新的 BufferedImage
      *
-     * @param imageUrl
+     * @param imgUrl
      * @param width
      * @return
      * @throws IOException
      */
-    public static BufferedImage width(String imageUrl, int width) {
+    public static BufferedImage width(String imgUrl, int width) {
         try {
-            // 允许重定向请求图片
-            return Thumbnails.of(
-                    HttpRequest.get(imageUrl)
-                            .setFollowRedirects(true)
-                            .execute()
-                            .bodyStream()
-            ).width(width).asBufferedImage();
+            BufferedImage img = null;
+            // 先处理 webp 图像
+            if (imgUrl.endsWith(Format.WEBP)) img = readWebp(imgUrl);
+            if (img == null) return Thumbnails.of(getImgStream(imgUrl)).width(width).asBufferedImage();
+            return Thumbnails.of(img).width(width).asBufferedImage();
         } catch (Exception e) {
             return null;
         }
@@ -484,14 +484,14 @@ public class ImageUtil {
     /**
      * 等比例设置图片高度，返回新的 BufferedImage
      *
-     * @param image
+     * @param img
      * @param height
      * @return
      * @throws IOException
      */
-    public static BufferedImage height(BufferedImage image, int height) {
+    public static BufferedImage height(BufferedImage img, int height) {
         try {
-            return Thumbnails.of(image).height(height).asBufferedImage();
+            return Thumbnails.of(img).height(height).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -500,15 +500,15 @@ public class ImageUtil {
     /**
      * 设置图片宽度和高度，返回新的 BufferedImage
      *
-     * @param image
+     * @param img
      * @param width
      * @param height
      * @return
      * @throws IOException
      */
-    public static BufferedImage forceSize(BufferedImage image, int width, int height) {
+    public static BufferedImage forceSize(BufferedImage img, int width, int height) {
         try {
-            return Thumbnails.of(image).forceSize(width, height).asBufferedImage();
+            return Thumbnails.of(img).forceSize(width, height).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -517,22 +517,22 @@ public class ImageUtil {
     /**
      * 将宽高不相等的图片剪成正方形，保留中间部分
      *
-     * @param image
+     * @param img
      * @return
      * @throws IOException
      */
-    public static BufferedImage cropCenter(BufferedImage image) {
-        if (image == null) return null;
-        int w = image.getWidth(), h = image.getHeight();
+    public static BufferedImage cropCenter(BufferedImage img) {
+        if (img == null) return null;
+        int w = img.getWidth(), h = img.getHeight();
         try {
             if (w < h)
-                return Thumbnails.of(image).scale(1f).sourceRegion(0, (h - w) / 2, w, w).asBufferedImage();
+                return Thumbnails.of(img).scale(1f).sourceRegion(0, (h - w) / 2, w, w).asBufferedImage();
             else if (w > h)
-                return Thumbnails.of(image).scale(1f).sourceRegion((w - h) / 2, 0, h, h).asBufferedImage();
+                return Thumbnails.of(img).scale(1f).sourceRegion((w - h) / 2, 0, h, h).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
-        return image;
+        return img;
     }
 
     /**
@@ -625,14 +625,14 @@ public class ImageUtil {
     /**
      * 改变图片比例
      *
-     * @param image
+     * @param img
      * @param scale
      * @return
      */
-    public static BufferedImage scale(BufferedImage image, float scale) {
-        if (image == null) return null;
+    public static BufferedImage scale(BufferedImage img, float scale) {
+        if (img == null) return null;
         try {
-            return Thumbnails.of(image).scale(scale).asBufferedImage();
+            return Thumbnails.of(img).scale(scale).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -641,14 +641,14 @@ public class ImageUtil {
     /**
      * 旋转图像
      *
-     * @param image
+     * @param img
      * @param angle
      * @return
      */
-    public static BufferedImage rotate(BufferedImage image, double angle) {
-        if (image == null) return null;
+    public static BufferedImage rotate(BufferedImage img, double angle) {
+        if (img == null) return null;
         try {
-            return Thumbnails.of(image).scale(1f).rotate(angle).asBufferedImage();
+            return Thumbnails.of(img).scale(1f).rotate(angle).asBufferedImage();
         } catch (IOException e) {
             return null;
         }

@@ -45,11 +45,11 @@
         </dependency>
 
         <!-- 读取 Webp 图像 -->
-<!--        <dependency>-->
-<!--            <groupId>org.sejda.imageio</groupId>-->
-<!--            <artifactId>webp-imageio</artifactId>-->
-<!--            <version>0.1.6</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.sejda.imageio</groupId>
+            <artifactId>webp-imageio</artifactId>
+            <version>0.1.6</version>
+        </dependency>
 
         <!-- 读取 jpeg 图像 -->
         <dependency>

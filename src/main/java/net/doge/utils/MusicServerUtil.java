@@ -105,7 +105,7 @@ public class MusicServerUtil {
                         "; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1623339982; kw_token=3E7JFQ7MRPL; _gid=GA1.2.747985028.1623339179; _gat=1")
                 .header("csrf", "3E7JFQ7MRPL")
                 .header(Header.HOST, "www.kuwo.cn")
-                .header(Header.REFERER, "http://www.kuwo.cn/")
+                .header(Header.REFERER, "https://www.kuwo.cn/")
                 .header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36");
     }
 
@@ -6167,6 +6167,7 @@ public class MusicServerUtil {
                     rankingInfo.setName(rankingName);
                     rankingInfo.setCoverImgUrl(coverImgUrl);
                     rankingInfo.setUpdateTime(updateTime);
+                    rankingInfo.setDescription("");
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = extractProfile(coverImgUrl);
                         rankingInfo.setCoverImgThumb(coverImgThumb);
@@ -17515,7 +17516,7 @@ public class MusicServerUtil {
 
         // 酷我(接口分页)
         else if (source == NetMusicSource.KW) {
-            String rankingInfoBody = kwRequest(String.format(RANKING_DETAIL_KW_API, rankingId, page, limit))
+            String rankingInfoBody = kwRequest(String.format(RANKING_DETAIL_KW_API, rankingId, page, Math.min(30, limit)))
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
@@ -21408,8 +21409,8 @@ public class MusicServerUtil {
      * 根据为 NetMusicInfo 填充歌词字符串（包括原文、翻译、罗马音），没有的部分填充 ""
      */
     public static void fillLrc(NetMusicInfo netMusicInfo) {
-        if(netMusicInfo.isLrcIntegrated()) return;
-        
+        if (netMusicInfo.isLrcIntegrated()) return;
+
         int source = netMusicInfo.getSource();
         String id = netMusicInfo.getId();
 //        String hash = netMusicInfo.getHash();
@@ -21513,6 +21514,15 @@ public class MusicServerUtil {
                 }
                 netMusicInfo.setTrans(sb.toString());
             } else netMusicInfo.setTrans(null);
+        }
+
+        // 咪咕
+        else if (source == NetMusicSource.MG) {
+//            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
+//                    .execute()
+//                    .body();
+//            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+//            netMusicInfo.setLrc(data.getString("lyric"));
         }
 
         // 千千

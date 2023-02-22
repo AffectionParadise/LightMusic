@@ -2623,11 +2623,7 @@ public class PlayerFrame extends JFrame {
         });
 
         // 复制格言
-        copyMottoMenuItem.addActionListener(e -> {
-            StringSelection stringSelection = new StringSelection(motto);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        });
+        copyMottoMenuItem.addActionListener(e -> copyToClipboard(motto));
         // 下一条格言
         nextMottoMenuItem.addActionListener(e -> updateMotto());
 
@@ -6080,24 +6076,9 @@ public class PlayerFrame extends JFrame {
         saveAlbumImageMenuItem.addActionListener(e -> {
             saveImg(player.getMusicInfo().getAlbumImage());
         });
-        copySongNameMenuItem.addActionListener(e -> {
-            StringSelection stringSelection
-                    = new StringSelection(StringUtil.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, "")));
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        });
-        copyArtistMenuItem.addActionListener(e -> {
-            StringSelection stringSelection
-                    = new StringSelection(StringUtil.removeHTMLLabel(artistLabel.getText().replaceFirst(ARTIST_LABEL, "")));
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        });
-        copyAlbumMenuItem.addActionListener(e -> {
-            StringSelection stringSelection
-                    = new StringSelection(StringUtil.removeHTMLLabel(albumLabel.getText().replaceFirst(ALBUM_NAME_LABEL, "")));
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        });
+        copySongNameMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, ""))));
+        copyArtistMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(artistLabel.getText().replaceFirst(ARTIST_LABEL, ""))));
+        copyAlbumMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(albumLabel.getText().replaceFirst(ALBUM_NAME_LABEL, ""))));
         leftInfoPopupMenu.add(saveAlbumImageMenuItem);
         leftInfoPopupMenu.add(copySongNameMenuItem);
         leftInfoPopupMenu.add(copyArtistMenuItem);
@@ -7038,9 +7019,7 @@ public class PlayerFrame extends JFrame {
             String s = null;
             if (o instanceof AudioFile) s = o.toString();
             else if (o instanceof NetMusicInfo) s = ((NetMusicInfo) o).toSimpleString();
-            StringSelection stringSelection = new StringSelection(s);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(s);
         });
 
         musicPopupMenu.add(playMenuItem);
@@ -8063,9 +8042,7 @@ public class PlayerFrame extends JFrame {
         // 右键菜单复制名称
         netMusicCopyNameMenuItem.addActionListener(e -> {
             Object o = netMusicList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(((NetMusicInfo) o).toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(((NetMusicInfo) o).toSimpleString());
         });
 
         netMusicPopupMenu.add(netMusicPlayMenuItem);
@@ -8870,9 +8847,7 @@ public class PlayerFrame extends JFrame {
             else if (si == TabIndex.NET_RANKING) l = rankingCoverAndNameLabel;
             else if (si == TabIndex.NET_USER) l = userCoverAndNameLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemCoverAndNameLabel;
-            StringSelection stringSelection = new StringSelection(StringUtil.removeHTMLLabel(l.getText()));
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(StringUtil.removeHTMLLabel(l.getText()));
         });
         copyDescTagMenuItem.addActionListener(e -> {
             CustomLabel l = null;
@@ -8884,9 +8859,7 @@ public class PlayerFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userTagLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemTagLabel;
             if (l == null || l.getText().isEmpty()) return;
-            StringSelection stringSelection = new StringSelection(StringUtil.removeHTMLLabel(l.getText()));
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(StringUtil.removeHTMLLabel(l.getText()));
         });
         copyDescMenuItem.addActionListener(e -> {
             CustomLabel l = null;
@@ -8900,9 +8873,7 @@ public class PlayerFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userDescriptionLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemDescriptionLabel;
             if (l.getText().isEmpty()) return;
-            StringSelection stringSelection = new StringSelection(StringUtil.removeHTMLLabel(l.getText()));
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(StringUtil.removeHTMLLabel(l.getText()));
         });
 
         playlistListBox.add(playlistDescriptionScrollPane);
@@ -9861,9 +9832,7 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == TabIndex.NET_PLAYLIST) o = netPlaylistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
             else o = itemRecommendList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(((NetPlaylistInfo) o).toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(((NetPlaylistInfo) o).toSimpleString());
         });
         // 歌单列表右键菜单项
         netPlaylistPopupMenu.add(netPlaylistOpenMenuItem);
@@ -10866,9 +10835,7 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == TabIndex.NET_ALBUM) o = netAlbumList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
             else o = itemRecommendList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(((NetAlbumInfo) o).toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(((NetAlbumInfo) o).toSimpleString());
         });
         // 专辑列表右键菜单项
         netAlbumPopupMenu.add(netAlbumOpenMenuItem);
@@ -12106,9 +12073,7 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == TabIndex.NET_ARTIST) o = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
             else o = itemRecommendList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(((NetArtistInfo) o).toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(((NetArtistInfo) o).toSimpleString());
         });
         // 歌手右键菜单项
         netArtistPopupMenu.add(netArtistOpenMenuItem);
@@ -13238,9 +13203,7 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == TabIndex.NET_RADIO) o = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
             else o = itemRecommendList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(((NetRadioInfo) o).toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(((NetRadioInfo) o).toSimpleString());
         });
         // 电台列表右键菜单项
         netRadioPopupMenu.add(netRadioOpenMenuItem);
@@ -14017,9 +13980,7 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == TabIndex.NET_MV) o = netMvList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
             else o = itemRecommendList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(((NetMvInfo) o).toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(((NetMvInfo) o).toSimpleString());
         });
         // MV 列表右键菜单项
         netMvPopupMenu.add(netMvPlayMenuItem);
@@ -14191,9 +14152,9 @@ public class PlayerFrame extends JFrame {
         netRankingPlayAllButton.addActionListener(e -> netRankingPlayAllMenuItem.doClick());
         // 刷新按钮事件
         netRankingRefreshButton.addActionListener(e -> {
+            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，刷新榜单
-            if (netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1)
-                    == netRankingScrollPane) {
+            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
                 getRankingAction.run();
             }
             // 当前显示的是某榜单的歌曲，刷新歌曲
@@ -14291,9 +14252,9 @@ public class PlayerFrame extends JFrame {
         });
         // 跳页按钮事件
         netRankingGoButton.addActionListener(e -> {
+            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳页榜单
-            if (netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1)
-                    == netRankingScrollPane) {
+            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
                 String text = netRankingPageTextField.getText();
                 netRankingPageTextField.setText("");
                 if (text.isEmpty()) return;
@@ -14620,9 +14581,7 @@ public class PlayerFrame extends JFrame {
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.NET_RANKING) netRankingInfo = netRankingList.getSelectedValue();
             else netRankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(netRankingInfo.toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(netRankingInfo.toSimpleString());
         });
         // 榜单列表右键菜单项
         netRankingPopupMenu.add(netRankingOpenMenuItem);
@@ -15805,9 +15764,7 @@ public class PlayerFrame extends JFrame {
             if (selectedIndex == TabIndex.NET_USER) o = netUserList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
             else o = itemRecommendList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(((NetUserInfo) o).toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(((NetUserInfo) o).toSimpleString());
         });
         // 用户列表右键菜单项
         netUserPopupMenu.add(netUserOpenMenuItem);
@@ -16191,9 +16148,7 @@ public class PlayerFrame extends JFrame {
         // 复制评论
         netCommentCopyMenuItem.addActionListener(e -> {
             NetCommentInfo netCommentInfo = netCommentList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(netCommentInfo.toSimpleString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(netCommentInfo.toSimpleString());
         });
         // 导出用户头像
         netCommentSaveProfileMenuItem.addActionListener(e -> {
@@ -16650,9 +16605,7 @@ public class PlayerFrame extends JFrame {
         // 复制乐谱名称
         netSheetCopyNameMenuItem.addActionListener(e -> {
             NetSheetInfo netSheetInfo = netSheetList.getSelectedValue();
-            StringSelection stringSelection = new StringSelection(netSheetInfo.toString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(netSheetInfo.toString());
         });
         // 乐谱列表右键菜单项
         netSheetPopupMenu.add(netSheetBrowseMenuItem);
@@ -19287,9 +19240,7 @@ public class PlayerFrame extends JFrame {
             String s = null;
             if (o instanceof AudioFile) s = o.toString();
             else if (o instanceof NetMusicInfo) s = ((NetMusicInfo) o).toSimpleString();
-            StringSelection stringSelection = new StringSelection(s);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(s);
         });
         // 打开文件所在位置菜单项
         playQueueLocateFileMenuItem.addActionListener(e -> {
@@ -19346,9 +19297,7 @@ public class PlayerFrame extends JFrame {
         copyMenuItem.addActionListener(e -> {
             Statement stmt = lrcList.getSelectedValue();
             if (stmt == null) return;
-            StringSelection stringSelection = new StringSelection(stmt.toString());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            copyToClipboard(stmt.toString());
         });
         // 定位歌词时间
         locateLrcMenuItem.addActionListener(e -> {
@@ -22170,7 +22119,9 @@ public class PlayerFrame extends JFrame {
             doStyleBlur(style);
         }
         // 标题图标
-        setIconImage(ImageUtil.dye(titleIcon, iconColor).getImage());
+        Image titleImg = ImageUtil.dye(titleIcon, iconColor).getImage();
+        setIconImage(titleImg);
+        desktopLyricDialog.setIconImage(titleImg);
 
         // 更新单选菜单项和标签按钮样式
         updateMenuItemIcon(sortPopupMenu);
@@ -23015,6 +22966,13 @@ public class PlayerFrame extends JFrame {
         currSubscriberRadioInfo = null;
     }
 
+    // 复制字符串到剪贴板
+    private void copyToClipboard(String s) {
+        StringSelection stringSelection = new StringSelection(s);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+    }
+
     // 退出播放器
     private void exit() {
         try {
@@ -23058,6 +23016,7 @@ public class PlayerFrame extends JFrame {
         System.setProperty("swing.aatext", "true");
     }
 
+    // 验证文件哈希值
     private static boolean validateHash() {
         File f1 = new File(SimplePath.ICON_PATH + "weixin.png");
         File f2 = new File(SimplePath.ICON_PATH + "alipay.png");
@@ -23070,7 +23029,8 @@ public class PlayerFrame extends JFrame {
 
     public static void main(String[] args) {
         GlobalExecutors.requestExecutor.execute(() -> {
-            if (!validateHash()) System.exit(-1);
+            if (validateHash()) return;
+            System.exit(-1);
         });
         enableAntiAliasing();
         new PlayerFrame().initUI();

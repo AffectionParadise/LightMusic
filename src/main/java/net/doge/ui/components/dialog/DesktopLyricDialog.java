@@ -113,6 +113,7 @@ public class DesktopLyricDialog extends JDialog {
         this.style = f.currUIStyle;
         foreColor = style.getHighlightColor();
 
+        setTitle("桌面歌词");
         // 将桌面歌词窗口设置为固定大小与固定位置
 //        FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
         FontMetrics metrics = tempLabel.getFontMetrics(font);

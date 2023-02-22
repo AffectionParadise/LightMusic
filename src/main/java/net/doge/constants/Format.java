@@ -29,6 +29,7 @@ public class Format {
     public static final String BMP = "bmp";
     public static final String WBMP = "wbmp";
     public static final String JFIF = "jfif";
+    public static final String WEBP = "webp";
 
     public static final String[] READ_IMAGE_TYPE_SUPPORTED = {JPG, JPEG, PNG, GIF, BMP, WBMP, JFIF};
     public static final String[] WRITE_IMAGE_TYPE_SUPPORTED = {JPG, JPEG, PNG, GIF, BMP};
