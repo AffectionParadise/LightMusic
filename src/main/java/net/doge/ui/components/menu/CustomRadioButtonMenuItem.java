@@ -54,9 +54,9 @@ public class CustomRadioButtonMenuItem extends JRadioButtonMenuItem {
 
         addMouseWheelListener(e -> setDrawBg(false));
 
-        drawBgTimer = new Timer(1, e -> {
-            if (drawBg) alpha = Math.min(destAlpha, alpha + 0.002f);
-            else alpha = Math.max(0, alpha - 0.002f);
+        drawBgTimer = new Timer(2, e -> {
+            if (drawBg) alpha = Math.min(destAlpha, alpha + 0.005f);
+            else alpha = Math.max(0, alpha - 0.005f);
             if (alpha <= 0 || alpha >= destAlpha) drawBgTimer.stop();
             repaint();
         });

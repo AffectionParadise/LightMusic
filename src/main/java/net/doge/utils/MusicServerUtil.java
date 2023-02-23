@@ -15907,7 +15907,7 @@ public class MusicServerUtil {
                 if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
                 GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(avatarUrl)));
 
-                String bgUrl = ReUtil.get("style=\"background-image:url\\((.*?)\\)\"", userInfoBody, 1);
+                String bgUrl = ReUtil.get("background-image: url\\([\"'](.*?)[\"']\\)", userInfoBody, 1);
                 String bgImgUrl = (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl;
                 if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
                 GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgImgUrl)));

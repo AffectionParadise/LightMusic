@@ -17,38 +17,46 @@ import java.awt.image.BufferedImage;
  */
 public class ChangePaneButtonUI extends BasicButtonUI {
     private boolean drawMask = false;
+    protected Timer drawMaskTimer;
+    protected float alpha;
+    protected final float destAlpha = 0.3f;
     public BufferedImage frameImg = ImageUtil.read(SimplePath.ICON_PATH + "frame.png");
     private PlayerFrame f;
 
     public ChangePaneButtonUI(PlayerFrame f) {
         this.f = f;
         frameImg = ImageUtil.dye(frameImg, f.currUIStyle.getIconColor());
+
+        drawMaskTimer = new Timer(2, e -> {
+            if (drawMask) alpha = Math.min(destAlpha, alpha + 0.005f);
+            else alpha = Math.max(0, alpha - 0.005f);
+            if (alpha <= 0 || alpha >= destAlpha) drawMaskTimer.stop();
+            f.changePaneButton.repaint();
+        });
     }
 
     public void setDrawMask(boolean drawMask) {
+        if (this.drawMask == drawMask) return;
         this.drawMask = drawMask;
+        if (drawMaskTimer.isRunning()) return;
+        drawMaskTimer.start();
     }
 
     @Override
     protected void paintIcon(Graphics g, JComponent c, Rectangle iconRect) {
         super.paintIcon(g, c, iconRect);
 
-        if (drawMask) {
-            // 画遮罩
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-//            Color originColor = g2d.getColor();
-            g2d.setColor(Colors.BLACK);
-            g2d.fillRoundRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height, 10, 10);
+        // 画遮罩
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        g2d.setColor(Colors.BLACK);
+        g2d.fillRoundRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height, 10, 10);
 
-            // 画框图
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-            g2d.drawImage(frameImg, iconRect.x, iconRect.y, null);
+        // 画框图
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.min(1, alpha * 3)));
+        g2d.drawImage(frameImg, iconRect.x, iconRect.y, null);
 
-//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-//            g2d.setColor(originColor);
-        }
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
     }
 }

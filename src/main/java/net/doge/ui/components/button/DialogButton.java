@@ -33,9 +33,9 @@ public class DialogButton extends JButton implements MouseListener {
         setFont(Fonts.NORMAL);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        drawBgTimer = new Timer(1, e -> {
-            if (entered) alpha = Math.min(destAlpha, alpha + 0.002f);
-            else alpha = Math.max(startAlpha, alpha - 0.002f);
+        drawBgTimer = new Timer(2, e -> {
+            if (entered) alpha = Math.min(destAlpha, alpha + 0.005f);
+            else alpha = Math.max(startAlpha, alpha - 0.005f);
             if (alpha <= startAlpha || alpha >= destAlpha) drawBgTimer.stop();
             repaint();
         });
