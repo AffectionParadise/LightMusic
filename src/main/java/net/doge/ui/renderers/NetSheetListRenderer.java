@@ -33,7 +33,7 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private ImageIcon sheetIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "sheetItem.png"), ImageConstants.profileWidth));
+    private static ImageIcon sheetIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "sheetItem.png"), ImageConstants.profileWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;

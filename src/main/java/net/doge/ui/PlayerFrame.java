@@ -772,14 +772,9 @@ public class PlayerFrame extends JFrame {
     private int lastPane;
 
     // 默认专辑图片
-    public BufferedImage defaultAlbumImage;
+    public BufferedImage defaultAlbumImage = ImageUtil.read(SimplePath.ICON_PATH + "album.png");
     // 加载中图片
-    private BufferedImage loadingImage;
-
-    {
-        defaultAlbumImage = ImageUtil.read(SimplePath.ICON_PATH + "album.png");
-        loadingImage = ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
-    }
+    private BufferedImage loadingImage = ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
 
     // 全局字体
     private Font globalFont = Fonts.NORMAL;

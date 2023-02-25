@@ -20,7 +20,7 @@ public class ChangePaneButtonUI extends BasicButtonUI {
     protected Timer drawMaskTimer;
     protected float alpha;
     protected final float destAlpha = 0.3f;
-    public BufferedImage frameImg = ImageUtil.read(SimplePath.ICON_PATH + "frame.png");
+    public static BufferedImage frameImg = ImageUtil.read(SimplePath.ICON_PATH + "frame.png");
     private PlayerFrame f;
 
     public ChangePaneButtonUI(PlayerFrame f) {

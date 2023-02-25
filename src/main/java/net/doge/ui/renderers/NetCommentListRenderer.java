@@ -32,7 +32,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private ImageIcon defaultProfile = new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "profile.png"), ImageConstants.profileWidth), 0.1));
+    private static ImageIcon defaultProfile = new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "profile.png"), ImageConstants.profileWidth), 0.1));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;

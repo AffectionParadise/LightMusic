@@ -36,10 +36,10 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
     private int hoverIndex = -1;
 
     private MusicPlayer player;
-    private ImageIcon musicIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicItem.png"), ImageConstants.smallWidth));
-    private ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicMvItem.png"), ImageConstants.smallWidth));
-    private ImageIcon programIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.smallWidth));
-    private ImageIcon playingIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.smallWidth));
+    private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicItem.png"), ImageConstants.smallWidth));
+    private static ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicMvItem.png"), ImageConstants.smallWidth));
+    private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.smallWidth));
+    private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.smallWidth));
 
     public NetMusicListRenderer(MusicPlayer player) {
         this.player = player;

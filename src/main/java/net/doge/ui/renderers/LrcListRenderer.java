@@ -19,7 +19,8 @@ import java.awt.*;
 @Data
 public class LrcListRenderer extends DefaultListCellRenderer {
     private final Font defaultFont = Fonts.NORMAL;
-    private final Font highlightFont = Fonts.NORMAL_BIG;
+    private Font shrinkFont = Fonts.NORMAL;
+    private Font highlightFont = Fonts.NORMAL_BIG;
     // 走过的歌词颜色
     private Color highlightColor;
     // 未走的歌词颜色
@@ -31,17 +32,28 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private int row;
     private int hoverIndex = -1;
 
-    private LabelUI highlightLabelUI;
-    private LabelUI normalLabelUI;
+    private LabelUI highlightLabelUI = new LabelUI(1);
+    private LabelUI normalLabelUI = new LabelUI(0.5f);
+    private Timer fontTimer;
 
     public LrcListRenderer() {
-        highlightLabelUI = new LabelUI(1);
-        normalLabelUI = new LabelUI(0.5f);
+        fontTimer = new Timer(20, e -> {
+            // 高亮行字体增大
+            highlightFont = highlightFont.deriveFont(highlightFont.getSize() + 1f);
+
+            // 经过行字体减小
+            shrinkFont = shrinkFont.deriveFont(shrinkFont.getSize() - 1f);
+
+            if (highlightFont.getSize() == Fonts.NORMAL_BIG.getSize()) fontTimer.stop();
+        });
     }
 
     public void setRow(int row) {
         this.ratio = 0;
         this.row = row;
+        highlightFont = Fonts.NORMAL;
+        shrinkFont = Fonts.NORMAL_BIG;
+        if (!fontTimer.isRunning()) fontTimer.start();
     }
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -62,7 +74,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 高亮的行的样式
         if (index == row) {
             label.setFont(highlightFont);
-            if (stc == null || stc.getWidthThreshold() != maxWidth
+            if (stc == null || stc.getWidthThreshold() != maxWidth || !stc.getLabelFont().equals(highlightFont)
                     || !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
                 stc = new StringTwoColor(label, lyric, highlightColor, bgColor, ratio, false, maxWidth);
             else stc.setRatio(ratio);
@@ -71,7 +83,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         }
         // 其他行的样式
         else {
-            label.setFont(defaultFont);
+            label.setFont(index == row - 2 ? shrinkFont : defaultFont);
             label.setText(StringUtil.textToHtml(StringUtil.wrapLineByWidth(lyric, maxWidth)));
             label.setIcon(null);
         }

@@ -1,15 +1,20 @@
 package net.doge.ui.components.button;
 
 import net.doge.constants.Fonts;
+import net.doge.constants.SimplePath;
+import net.doge.utils.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class CustomButton extends JButton {
     protected boolean drawBg;
     protected Timer drawBgTimer;
     protected float alpha;
     protected final float destAlpha = 0.2f;
+
+    private static BufferedImage maskImg = ImageUtil.read(SimplePath.ICON_PATH + "mask.png");
 
     public CustomButton() {
         init();
@@ -67,14 +72,24 @@ public class CustomButton extends JButton {
     }
 
     @Override
+    public void setForeground(Color fg) {
+        maskImg = ImageUtil.dye(maskImg, fg);
+        super.setForeground(fg);
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
         if (!(this instanceof TabButton)) {
             Graphics2D g2d = (Graphics2D) g;
             // 画背景
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setColor(getForeground());
+            BufferedImage img = ImageUtil.width(maskImg, getWidth());
+
+//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//            g2d.setColor(getForeground());
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+
+//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+            g2d.drawImage(img, 0, 0, getWidth(), getHeight(), null);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
         super.paintComponent(g);

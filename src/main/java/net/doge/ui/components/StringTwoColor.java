@@ -16,6 +16,7 @@ public class StringTwoColor {
     private int width;
     private int height;
     private String text;
+    private Font labelFont;
     private boolean isDesktopLyric;
     private Color c1;
     private Color c2;
@@ -43,14 +44,15 @@ public class StringTwoColor {
         this.isDesktopLyric = isDesktopLyric;
         this.widthThreshold = widthThreshold;
 
-        //获取字符串的宽（显示在屏幕上所占的像素px）
-        Font labelFont = label.getFont();
+        // 获取字符串的宽（显示在屏幕上所占的像素 px）
+        labelFont = label.getFont();
+        float fontSize = labelFont.getSize();
 
         FontMetrics metrics = label.getFontMetrics(labelFont);
         FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
         FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
         for (int i = 0, len = metricsBig.length; i < len; i++)
-            metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i));
+            metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i).deriveFont(fontSize));
         for (int i = 0, len = metricsHuge.length; i < len; i++)
             metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i));
 
@@ -64,18 +66,21 @@ public class StringTwoColor {
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
 
-            for (int j = 0, l = metricsBig.length; j < l; j++) {
-                if (labelFont == Fonts.NORMAL_BIG && Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) {
-                    width += metricsBig[j].stringWidth(str);
-                    i += chars.length - 1;
-                    break;
+            if (!isDesktopLyric) {
+                for (int j = 0, l = metricsBig.length; j < l; j++) {
+                    if (Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) {
+                        width += metricsBig[j].stringWidth(str);
+                        i += chars.length - 1;
+                        break;
+                    }
                 }
-            }
-            for (int j = 0, l = metricsHuge.length; j < l; j++) {
-                if (labelFont == Fonts.NORMAL_HUGE && Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) {
-                    width += metricsHuge[j].stringWidth(str);
-                    i += chars.length - 1;
-                    break;
+            } else {
+                for (int j = 0, l = metricsHuge.length; j < l; j++) {
+                    if (Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) {
+                        width += metricsHuge[j].stringWidth(str);
+                        i += chars.length - 1;
+                        break;
+                    }
                 }
             }
         }
@@ -83,7 +88,7 @@ public class StringTwoColor {
         final int shadowHOffset = 3;
         if (isDesktopLyric) width += 2 * shadowHOffset;
         height = metrics.getHeight();
-        height += label.getFont().getSize();
+        height += fontSize;
 
         // 部分字体显示不出来，留白
         width = Math.max(1, width);
@@ -100,7 +105,7 @@ public class StringTwoColor {
         g1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int dy = height - labelFont.getSize();
+        int dy = height - (int) fontSize;
 
         g1.setColor(c1);
         g2.setColor(c2);
@@ -121,11 +126,13 @@ public class StringTwoColor {
                 int codePoint = text.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
+
                 for (int j = 0, l = metricsBig.length; j < l; j++) {
                     Font font = Fonts.TYPES_BIG.get(j);
                     if (font.canDisplay(codePoint)) {
-                        g1.setFont(font);
-                        g2.setFont(font);
+                        Font nf = font.deriveFont(fontSize);
+                        g1.setFont(nf);
+                        g2.setFont(nf);
                         g1.drawString(str, widthDrawn, dy);
                         g2.drawString(str, widthDrawn, dy);
                         widthDrawn += metricsBig[j].stringWidth(str);
@@ -140,6 +147,7 @@ public class StringTwoColor {
                 int codePoint = text.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
+
                 for (int j = 0, l = metricsHuge.length; j < l; j++) {
                     Font font = Fonts.TYPES_HUGE.get(j);
                     if (font.canDisplay(codePoint)) {

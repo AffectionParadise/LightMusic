@@ -33,7 +33,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private ImageIcon taskIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.smallWidth));
+    private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.smallWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
