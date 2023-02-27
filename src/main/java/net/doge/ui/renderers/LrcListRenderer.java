@@ -37,7 +37,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private Timer fontTimer;
 
     public LrcListRenderer() {
-        fontTimer = new Timer(20, e -> {
+        fontTimer = new Timer(10, e -> {
             // 高亮行字体增大
             highlightFont = highlightFont.deriveFont(highlightFont.getSize() + 1f);
 

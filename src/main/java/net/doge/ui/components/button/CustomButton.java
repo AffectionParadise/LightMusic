@@ -79,17 +79,23 @@ public class CustomButton extends JButton {
 
     @Override
     public void paintComponent(Graphics g) {
-        if (!(this instanceof TabButton)) {
+        if (!(this instanceof TabButton) && !(this instanceof ChangePaneButton)) {
             Graphics2D g2d = (Graphics2D) g;
+            int w = getWidth(), h = getHeight();
             // 画背景
-            BufferedImage img = ImageUtil.width(maskImg, getWidth());
+            BufferedImage img = ImageUtil.width(maskImg, w);
 
-//            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//            g2d.setColor(getForeground());
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 
-//            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-            g2d.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+            if (w / h >= 2) {
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(getForeground());
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+            } else {
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                g2d.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+            }
+
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
         super.paintComponent(g);

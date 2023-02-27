@@ -187,6 +187,8 @@ public class MusicPlayer {
                 if (!netMusicInfo.hasAlbumImage()) {
                     netMusicInfo.setInvokeLater(() -> {
                         BufferedImage albumImage = netMusicInfo.getAlbumImage();
+                        // 处理切换歌曲时封面图片混淆的情况
+                        if (!netMusicInfo.equals(this.netMusicInfo)) return;
                         musicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
                         f.showAlbumImage();
                     });
@@ -211,6 +213,8 @@ public class MusicPlayer {
             // 获取 MP3 专辑图片
             GlobalExecutors.imageExecutor.submit(() -> {
                 BufferedImage albumImage = MusicUtil.getAlbumImage(source);
+                // 处理切换歌曲时封面图片混淆的情况
+                if (!source.equals(audioFile)) return;
                 musicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
                 f.showAlbumImage();
             });

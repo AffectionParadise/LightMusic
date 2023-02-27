@@ -28,6 +28,7 @@ import net.doge.models.entity.*;
 import net.doge.models.lyric.LrcData;
 import net.doge.models.lyric.Statement;
 import net.doge.ui.components.*;
+import net.doge.ui.components.button.ChangePaneButton;
 import net.doge.ui.components.button.CustomButton;
 import net.doge.ui.components.button.DialogButton;
 import net.doge.ui.components.button.TabButton;
@@ -876,7 +877,7 @@ public class PlayerFrame extends JFrame {
     private String transStr;
     private int nextLrc = NextLrc.NOT_EXISTS;
 
-    public CustomButton changePaneButton = new CustomButton();
+    public ChangePaneButton changePaneButton = new ChangePaneButton();
     private CustomButton mvButton = new CustomButton(mvIcon);
     private CustomButton collectButton = new CustomButton(collectIcon);
     private CustomButton downloadButton = new CustomButton(downloadIcon);
@@ -2692,24 +2693,18 @@ public class PlayerFrame extends JFrame {
                 boolean checked = confirmDialog.isChecked();
                 if (response == JOptionPane.YES_OPTION) {
                     if (checked) currCloseWindowOption = CloseWindowOptions.DISPOSE;
-                    // 关闭频谱
-                    closeSpectrum();
-                    dispose();
+                    hideWindow();
                 } else if (response == JOptionPane.NO_OPTION) {
                     if (checked) currCloseWindowOption = CloseWindowOptions.EXIT;
-                    // 移除托盘图标、保存配置并退出
                     exit();
                 }
             }
             // 隐藏到托盘
             else if (currCloseWindowOption == CloseWindowOptions.DISPOSE) {
-                // 关闭频谱
-                closeSpectrum();
-                dispose();
+                hideWindow();
             }
             // 退出程序
             else if (currCloseWindowOption == CloseWindowOptions.EXIT) {
-                // 移除托盘图标、保存配置并退出
                 exit();
             }
         });
@@ -22966,6 +22961,13 @@ public class PlayerFrame extends JFrame {
         StringSelection stringSelection = new StringSelection(s);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
+    }
+
+    // 隐藏界面
+    private void hideWindow() {
+        closeButton.setDrawBg(false);
+        closeSpectrum();
+        dispose();
     }
 
     // 退出播放器
