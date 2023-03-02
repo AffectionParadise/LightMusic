@@ -19586,10 +19586,11 @@ public class PlayerFrame extends JFrame {
 //                });
             }
         });
-        globalPanelTimer = new Timer(10, e -> {
+        globalPanelTimer = new Timer(1, e -> {
             globalPanelExecutor.submit(() -> {
-                globalPanel.setOpacity((float) Math.min(1, globalPanel.getOpacity() + 0.05));
-                if (globalPanel.getOpacity() >= 1) globalPanelTimer.stop();
+                float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
+                globalPanel.setOpacity(opacity);
+                if (opacity >= 1) globalPanelTimer.stop();
             });
         });
         searchSuggestionTimer = new Timer(100, e -> {
@@ -22679,7 +22680,7 @@ public class PlayerFrame extends JFrame {
             // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
             globalPanel.setBackgroundImage(styleImage);
             updateUpperComp();
-            globalPanelTimer.start();
+            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
         });
     }
 

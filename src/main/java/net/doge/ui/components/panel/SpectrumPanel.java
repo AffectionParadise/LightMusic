@@ -1,15 +1,15 @@
 package net.doge.ui.components.panel;
 
-import javafx.embed.swing.JFXPanel;
 import net.doge.constants.SpectrumConstants;
 import net.doge.ui.PlayerFrame;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.GeneralPath;
 
-public class SpectrumPanel extends JFXPanel {
+public class SpectrumPanel extends JPanel {
     private boolean drawSpectrum;
 
     private final Stroke stroke = new BasicStroke(3);
