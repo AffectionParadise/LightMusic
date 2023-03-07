@@ -6060,12 +6060,8 @@ public class PlayerFrame extends JFrame {
 
     // 初始化标签
     private void labelInit() {
-        // 居中图片
-        albumImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         // 导出专辑图片事件
-        saveAlbumImageMenuItem.addActionListener(e -> {
-            saveImg(player.getMusicInfo().getAlbumImage());
-        });
+        saveAlbumImageMenuItem.addActionListener(e -> saveImg(player.getMusicInfo().getAlbumImage()));
         copySongNameMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, ""))));
         copyArtistMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(artistLabel.getText().replaceFirst(ARTIST_LABEL, ""))));
         copyAlbumMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(albumLabel.getText().replaceFirst(ALBUM_NAME_LABEL, ""))));
@@ -6076,8 +6072,55 @@ public class PlayerFrame extends JFrame {
         leftInfoBox.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON3) return;
+                leftInfoPopupMenu.show(leftInfoBox, e.getX(), e.getY());
+            }
+        });
+
+        final float alpha = 0.7f;
+        artistLabel.setAlpha(alpha);
+        albumLabel.setAlpha(alpha);
+        artistLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                artistLabel.setAlpha(1f);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                artistLabel.setAlpha(alpha);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    leftInfoPopupMenu.show(leftInfoBox, e.getX(), e.getY());
+                    leftInfoPopupMenu.show(artistLabel, e.getX(), e.getY());
+                } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
+                    artistLabel.setAlpha(alpha);
+                    netMusicAuthorMenuItem.doClick();
+                    changePaneButton.doClick();
+                }
+            }
+        });
+        albumLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                albumLabel.setAlpha(1f);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                albumLabel.setAlpha(alpha);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    leftInfoPopupMenu.show(albumLabel, e.getX(), e.getY());
+                } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
+                    albumLabel.setAlpha(alpha);
+                    netMusicAlbumMenuItem.doClick();
+                    changePaneButton.doClick();
                 }
             }
         });
@@ -7641,13 +7684,17 @@ public class PlayerFrame extends JFrame {
         // 查看歌手/作者
         netMusicAuthorMenuItem.addActionListener(e -> {
             NetMusicInfo netMusicInfo;
-            int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                    && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
-            } else if (selectedIndex == TabIndex.PLAY_QUEUE) netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-            else netMusicInfo = netMusicList.getSelectedValue();
+            if (currPane == MusicPane.LYRIC) netMusicInfo = player.getNetMusicInfo();
+            else {
+                int selectedIndex = tabbedPane.getSelectedIndex();
+                if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
+                        || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
+                        && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                    netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
+                } else if (selectedIndex == TabIndex.PLAY_QUEUE)
+                    netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+                else netMusicInfo = netMusicList.getSelectedValue();
+            }
             loadingAndRun(() -> {
                 try {
                     if (netMusicInfo.isProgram()) {
@@ -7764,13 +7811,17 @@ public class PlayerFrame extends JFrame {
         // 查看专辑/电台
         netMusicAlbumMenuItem.addActionListener(e -> {
             NetMusicInfo netMusicInfo;
-            int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                    && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
-            } else if (selectedIndex == TabIndex.PLAY_QUEUE) netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-            else netMusicInfo = netMusicList.getSelectedValue();
+            if (currPane == MusicPane.LYRIC) netMusicInfo = player.getNetMusicInfo();
+            else {
+                int selectedIndex = tabbedPane.getSelectedIndex();
+                if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
+                        || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
+                        && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                    netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
+                } else if (selectedIndex == TabIndex.PLAY_QUEUE)
+                    netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+                else netMusicInfo = netMusicList.getSelectedValue();
+            }
             loadingAndRun(() -> {
                 try {
                     if (netMusicInfo.isProgram()) {
@@ -20096,20 +20147,22 @@ public class PlayerFrame extends JFrame {
         // 开启歌词动画
         if (!lrcTimer.isRunning()) lrcTimer.start();
 
+        boolean isNetMusic = netMusicInfo != null;
+
         // 设置切换面板文字
         final int maxLen = 34;
-        if (netMusicInfo != null)
+        if (isNetMusic)
             changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(netMusicInfo.toSimpleString(), maxLen)));
         else
             changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(file.toString(), maxLen)));
         if (miniDialog != null) miniDialog.infoLabel.setText(changePaneButton.getText());
         // 设置 MV、收藏、下载、评论、乐谱按钮
-        mvButton.setEnabled(netMusicInfo != null && netMusicInfo.hasMv());
+        mvButton.setEnabled(isNetMusic && netMusicInfo.hasMv());
         collectButton.setEnabled(true);
-        downloadButton.setEnabled(netMusicInfo != null);
-        commentButton.setEnabled(netMusicInfo != null);
-        sheetButton.setEnabled(netMusicInfo != null);
-        if (netMusicInfo != null && hasBeenCollected(netMusicInfo) || hasBeenCollected(file))
+        downloadButton.setEnabled(isNetMusic);
+        commentButton.setEnabled(isNetMusic);
+        sheetButton.setEnabled(isNetMusic);
+        if (isNetMusic && hasBeenCollected(netMusicInfo) || hasBeenCollected(file))
             collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
         else
             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
@@ -20121,10 +20174,12 @@ public class PlayerFrame extends JFrame {
         songNameLabel.setVisible(true);
         // 设置艺术家
         artistLabel.setText(StringUtil.textToHtml(ARTIST_LABEL + simpleMusicInfo.getArtist()));
+        artistLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         artistLabel.setVisible(false);
         artistLabel.setVisible(true);
         // 设置专辑名称
         albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + simpleMusicInfo.getAlbumName()));
+        albumLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         albumLabel.setVisible(false);
         albumLabel.setVisible(true);
     }
@@ -20172,8 +20227,10 @@ public class PlayerFrame extends JFrame {
         songNameLabel.setText("");
         // 设置艺术家
         artistLabel.setText("");
+        artistLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         // 设置专辑名称
         albumLabel.setText("");
+        albumLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     // 加载专辑图片
