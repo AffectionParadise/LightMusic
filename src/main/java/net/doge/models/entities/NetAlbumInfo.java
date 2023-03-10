@@ -1,8 +1,7 @@
-package net.doge.models.entity;
+package net.doge.models.entities;
 
-import lombok.Data;
 import net.doge.constants.NetMusicSource;
-import net.doge.constants.RadioType;
+import lombok.Data;
 import net.doge.utils.StringUtil;
 
 import java.awt.image.BufferedImage;
@@ -10,57 +9,41 @@ import java.util.Objects;
 
 /**
  * @Author yzx
- * @Description 电台
+ * @Description 专辑
  * @Date 2020/12/7
  */
 @Data
-public class NetRadioInfo {
-    // 电台来源
+public class NetAlbumInfo {
+    // 专辑来源
     private int source = NetMusicSource.NET_CLOUD;
-    // 类型 (豆瓣)
-    private int type;
-    // 电台 id
+    // 专辑 id
     private String id;
-    // 电台名称
+    // 专辑名称
     private String name;
-    // 电台 DJ
-    private String dj;
-    // 电台 DJ id
-    private String djId;
+    // 艺术家
+    private String artist;
+    // 艺术家 id
+    private String artistId;
     // 封面图片
     private BufferedImage coverImg;
-    // 封面图片 url (QQ / 喜马拉雅 需要)
+    // 封面图片 url
     private String coverImgUrl;
     // 封面图片缩略图
     private BufferedImage coverImgThumb;
     // 封面图片缩略图 url
     private String coverImgThumbUrl;
-    // 标签
-    private String tag;
     // 描述
     private String description;
-    // 播放量
-    private Long playCount;
-    // 节目数
-    private Integer trackCount;
-    // 类别
-    private String category;
-//    // 创建时间
-//    private String createTime;
+    // 发行日期
+    private String publishTime;
+    // 歌曲数量
+    private Integer songNum;
 
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
 
-    public boolean fromME() {
-        return source == NetMusicSource.ME;
-    }
-
-    public boolean isBook() {
-        return type == RadioType.BOOK;
-    }
-
-    public boolean isGame() {
-        return type == RadioType.GAME;
+    public boolean isPhoto() {
+        return source == NetMusicSource.DT;
     }
 
     public boolean hasCoverImgUrl() {
@@ -71,41 +54,25 @@ public class NetRadioInfo {
         return coverImg != null;
     }
 
-    public boolean hasTrackCount() {
-        return trackCount != null && trackCount >= 0;
-    }
-
-    public boolean hasPlayCount() {
-        return playCount != null && playCount >= 0;
-    }
-
     public boolean hasName() {
         return StringUtil.isNotEmpty(name);
     }
 
-    public boolean hasTag() {
-        return StringUtil.isNotEmpty(tag);
+    public boolean hasArtist() {
+        return StringUtil.isNotEmpty(artist);
     }
 
-    public boolean hasDescription() {
-        return StringUtil.isNotEmpty(description);
+    public boolean hasArtistId() {
+        return StringUtil.isNotEmpty(artistId);
     }
 
-    public boolean hasDj() {
-        return StringUtil.isNotEmpty(dj);
+    public boolean hasPublishTime() {
+        return StringUtil.isNotEmpty(publishTime);
     }
 
-    public boolean hasDjId() {
-        return StringUtil.isNotEmpty(djId);
+    public boolean hasSongNum() {
+        return songNum != null && songNum >= 0;
     }
-
-    public boolean hasCategory() {
-        return StringUtil.isNotEmpty(category);
-    }
-
-//    public boolean hasCreateTime() {
-//        return StringUtils.isNotEmpty(createTime);
-//    }
 
     public void setCoverImgThumb(BufferedImage coverImgThumb) {
         this.coverImgThumb = coverImgThumb;
@@ -126,7 +93,7 @@ public class NetRadioInfo {
     }
 
     /**
-     * 判断电台信息是否完整
+     * 判断专辑信息是否完整
      *
      * @return
      */
@@ -140,14 +107,13 @@ public class NetRadioInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof NetRadioInfo) {
-            NetRadioInfo netRadioInfo = (NetRadioInfo) o;
-            return hashCode() == netRadioInfo.hashCode();
+        if (o instanceof NetAlbumInfo) {
+            NetAlbumInfo netAlbumInfo = (NetAlbumInfo) o;
+            return hashCode() == netAlbumInfo.hashCode();
         }
         return false;
     }
 
-    // 必须重写 hashCode 和 equals 方法才能在 Set 判断是否重复！
     @Override
     public int hashCode() {
         return Objects.hash(source, id);
@@ -159,7 +125,7 @@ public class NetRadioInfo {
 
     public String toSimpleString() {
         return name
-                + (StringUtil.isEmpty(dj) ? "" : " - " + dj);
+                + (StringUtil.isEmpty(artist) ? "" : " - " + artist);
     }
 
 //    public String toString() {

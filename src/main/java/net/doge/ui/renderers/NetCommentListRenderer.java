@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
 import net.doge.constants.SimplePath;
-import net.doge.models.entity.NetCommentInfo;
+import net.doge.models.entities.NetCommentInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.utils.ImageUtil;
 import net.doge.utils.StringUtil;

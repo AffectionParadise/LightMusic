@@ -10,7 +10,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import net.doge.constants.*;
-import net.doge.models.entity.NetMvInfo;
+import net.doge.models.entities.NetMvInfo;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.components.button.CustomButton;
@@ -153,7 +153,7 @@ public class VideoDialog extends AbstractTitledDialog {
     private NetMvInfo netMvInfo;
 
     public VideoDialog(NetMvInfo netMvInfo, String dest, PlayerFrame f) {
-        super(f, StringUtil.textToHtml(netMvInfo.toSimpleString()));
+        super(f, StringUtil.textToHtml(StringUtil.shorten(netMvInfo.toSimpleString(), 60)));
         this.isLocal = dest != null;
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();

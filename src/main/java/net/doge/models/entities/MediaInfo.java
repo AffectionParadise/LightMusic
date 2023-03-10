@@ -1,9 +1,8 @@
-package net.doge.models.entity;
+package net.doge.models.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**

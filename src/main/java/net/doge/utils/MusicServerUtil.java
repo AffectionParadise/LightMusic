@@ -7,7 +7,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import net.doge.constants.*;
 import net.doge.models.*;
-import net.doge.models.entity.*;
+import net.doge.models.entities.*;
 import net.doge.ui.components.panel.LoadingPanel;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

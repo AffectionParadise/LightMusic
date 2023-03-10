@@ -1,4 +1,4 @@
-package net.doge.models.entity;
+package net.doge.models.entities;
 
 import lombok.Data;
 import net.doge.constants.Format;
@@ -213,8 +213,8 @@ public class NetMusicInfo {
     }
 
     public String toSimpleString() {
-        return name
-                + (StringUtil.isNotEmpty(artist) ? separator + artist : "");
+        return StringUtil.shorten(name
+                + (StringUtil.isNotEmpty(artist) ? separator + artist : ""), 230);
     }
 
     public String toKeywords() {

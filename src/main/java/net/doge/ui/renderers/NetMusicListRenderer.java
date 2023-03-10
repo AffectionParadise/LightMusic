@@ -8,7 +8,7 @@ import net.doge.constants.ImageConstants;
 import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.MusicPlayer;
-import net.doge.models.entity.NetMusicInfo;
+import net.doge.models.entities.NetMusicInfo;
 import net.doge.ui.components.CustomLabel;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.utils.ImageUtil;

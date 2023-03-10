@@ -24,7 +24,7 @@ import net.doge.models.CommonResult;
 import net.doge.models.MusicPlayer;
 import net.doge.models.Task;
 import net.doge.models.UIStyle;
-import net.doge.models.entity.*;
+import net.doge.models.entities.*;
 import net.doge.models.lyric.LrcData;
 import net.doge.models.lyric.Statement;
 import net.doge.ui.components.*;
@@ -20112,7 +20112,7 @@ public class PlayerFrame extends JFrame {
             statusText = st;
             String title = String.format(TITLE + "（%s：%s）", st,
                     player.loadedNetMusic() ? player.getNetMusicInfo().toSimpleString() : player.getAudioFile());
-            titleLabel.setText(StringUtil.textToHtml(title));
+            titleLabel.setText(StringUtil.textToHtml(StringUtil.shorten(title, 80)));
             setTitle(title);
         }
     }
@@ -20173,7 +20173,7 @@ public class PlayerFrame extends JFrame {
         songNameLabel.setVisible(false);
         songNameLabel.setVisible(true);
         // 设置艺术家
-        artistLabel.setText(StringUtil.textToHtml(ARTIST_LABEL + simpleMusicInfo.getArtist()));
+        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + simpleMusicInfo.getArtist(), 50)));
         artistLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         artistLabel.setVisible(false);
         artistLabel.setVisible(true);
@@ -22434,7 +22434,6 @@ public class PlayerFrame extends JFrame {
         if (mvType == MvType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
             NetMvInfo mvInfo = task.getNetMvInfo();
-//            String path = SimplePath.DOWNLOAD_MV_PATH + mvInfo.toSimpleFileName();
             String dest = task.getDest();
             if (!new File(dest).exists()) {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();

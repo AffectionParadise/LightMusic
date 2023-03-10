@@ -1,4 +1,4 @@
-package net.doge.models.entity;
+package net.doge.models.entities;
 
 import net.doge.constants.Format;
 import net.doge.constants.MvInfoType;
@@ -131,11 +131,11 @@ public class NetMvInfo {
     }
 
     public String toFileName() {
-        return FileUtil.filterFileName(String.format("%s - %s - %s.%s", name, artist, id, format));
+        return FileUtil.filterFileName(String.format("%s - %s.%s", toSimpleString(), id, format));
     }
 
     public String toSimpleFileName() {
-        return FileUtil.filterFileName(String.format("%s - %s.%s", name, artist, format));
+        return FileUtil.filterFileName(String.format("%s.%s", toSimpleString(), format));
     }
 
     public String toString() {
@@ -144,6 +144,6 @@ public class NetMvInfo {
     }
 
     public String toSimpleString() {
-        return name + " - " + artist;
+        return StringUtil.shorten(name + " - " + artist, 230);
     }
 }

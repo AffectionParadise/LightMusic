@@ -1,4 +1,4 @@
-package net.doge.models.entity;
+package net.doge.models.entities;
 
 import lombok.Data;
 import net.doge.constants.NetMusicSource;
