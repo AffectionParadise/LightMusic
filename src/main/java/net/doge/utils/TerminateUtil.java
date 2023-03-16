@@ -93,7 +93,7 @@ public class TerminateUtil {
         @Override
         public void run() {
             try (BufferedReader bufr = new BufferedReader(new InputStreamReader(in))) {
-                String line;
+                String line = null;
                 while ((line = bufr.readLine()) != null) {
                     if (error) {
                         System.out.println(line);
