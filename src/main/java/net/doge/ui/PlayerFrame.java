@@ -22193,23 +22193,21 @@ public class PlayerFrame extends JFrame {
     private void customStyle() {
         CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, "添加并应用", currUIStyle);
         customStyleDialog.showDialog();
-        if (customStyleDialog.getConfirmed()) {
-            // 创建自定义样式并更换
-            Object[] results = customStyleDialog.getResults();
-            UIStyle customStyle = new UIStyle(
-                    UIStyleConstants.CUSTOM,
-                    ((String) results[0]),
-                    "", ((Color) results[2]), ((Color) results[3]),
-                    ((Color) results[4]), ((Color) results[5]), ((Color) results[6]),
-                    ((Color) results[7]), ((Color) results[8]), ((Color) results[9]),
-                    ((Color) results[10]), ((Color) results[11])
-            );
-            if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
-            else customStyle.setStyleImgPath((String) results[1]);
-            // 添加风格菜单项、按钮组，并切换风格
-            addStyle(customStyle);
-            changeUIStyle(customStyle);
-        }
+        if (!customStyleDialog.getConfirmed()) return;
+        // 创建自定义样式并更换
+        Object[] results = customStyleDialog.getResults();
+        UIStyle customStyle = new UIStyle(
+                UIStyleConstants.CUSTOM, (String) results[0],
+                "", (Color) results[2], (Color) results[3],
+                (Color) results[4], (Color) results[5], (Color) results[6],
+                (Color) results[7], (Color) results[8], (Color) results[9],
+                (Color) results[10], (Color) results[11]
+        );
+        if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
+        else customStyle.setStyleImgPath((String) results[1]);
+        // 添加风格菜单项、按钮组，并切换风格
+        addStyle(customStyle);
+        customStyle.setInvokeLater(() -> changeUIStyle(customStyle));
     }
 
     private void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style) {
@@ -22225,8 +22223,8 @@ public class PlayerFrame extends JFrame {
 
         int index = tabbedPane.getSelectedIndex();
         for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
-            CustomPanel panel = (CustomPanel) (tabbedPane.getTabComponentAt(i));
-            CustomLabel label = (CustomLabel) (panel.getComponent(0));
+            CustomPanel panel = (CustomPanel) tabbedPane.getTabComponentAt(i);
+            CustomLabel label = (CustomLabel) panel.getComponent(0);
             Rectangle rect = panel.getVisibleRect();
             if (i == index) {
                 label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));

@@ -36,7 +36,7 @@ public class CustomScrollPane extends JScrollPane {
         setWheelScrollingEnabled(false);
         addMouseWheelListener(e -> {
             // 单位滚动长度
-            final int scrollAmount = 150;
+            final int scrollAmount = 200;
             scrollingFrom = getVValue();
             scrollingTo = e.getWheelRotation() > 0 ? Math.min(getVMax(), scrollingFrom + scrollAmount) : Math.max(getVMin(), scrollingFrom - scrollAmount);
             if (scrollingFrom == scrollingTo || wheelScrollingTimer.isRunning()) return;
