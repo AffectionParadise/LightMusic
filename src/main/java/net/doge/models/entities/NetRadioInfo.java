@@ -55,6 +55,10 @@ public class NetRadioInfo {
         return source == NetMusicSource.ME;
     }
 
+    public boolean fromXM() {
+        return source == NetMusicSource.XM;
+    }
+
     public boolean isBook() {
         return type == RadioType.BOOK;
     }

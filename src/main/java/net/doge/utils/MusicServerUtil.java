@@ -2737,7 +2737,7 @@ public class MusicServerUtil {
     // 简短电台信息 API (喜马拉雅)
     private static final String BRIEF_RADIO_DETAIL_XM_API = "https://www.ximalaya.com/tdk-web/seo/search/albumInfo?albumId=%s";
     // 电台节目 API (喜马拉雅)
-    private static final String RADIO_PROGRAM_XM_API = "http://www.ximalaya.com/revision/album/v1/getTracksList?albumId=%s&pageNum=%s&pageSize=%s";
+    private static final String RADIO_PROGRAM_XM_API = "http://www.ximalaya.com/revision/album/v1/getTracksList?albumId=%s&sort=%s&&pageNum=%s&pageSize=%s";
     // 电台信息 API (猫耳)
     private static final String RADIO_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
     // 电台节目 API (猫耳)
@@ -17273,7 +17273,7 @@ public class MusicServerUtil {
     /**
      * 根据电台 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int limit, int page) {
+    public static CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int sortType, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
@@ -17353,7 +17353,7 @@ public class MusicServerUtil {
 
         // 喜马拉雅(接口分页)
         else if (source == NetMusicSource.XM) {
-            String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_XM_API, radioId, page, limit))
+            String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_XM_API, radioId, sortType, page, limit))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);

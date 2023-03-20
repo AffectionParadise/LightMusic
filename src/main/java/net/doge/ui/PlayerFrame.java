@@ -1046,6 +1046,7 @@ public class PlayerFrame extends JFrame {
     private CustomComboBox<String> collectionRecordTypeComboBox = new CustomComboBox();
     private DefaultComboBoxModel<String> collectionRecordTypeComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> collectionOrderComboBoxModel = new DefaultComboBoxModel<>();
+    private DefaultComboBoxModel<String> collectionSortTypeComboBoxModel = new DefaultComboBoxModel<>();
     // 收藏播放全部按钮
     private CustomButton collectionPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 收藏刷新按钮
@@ -1540,6 +1541,8 @@ public class PlayerFrame extends JFrame {
     private CustomButton netRadioClearInputButton = new CustomButton(clearInputIcon);
     // 电台搜索按钮
     private CustomButton netRadioSearchButton = new CustomButton(searchIcon);
+    // 电台排序类型下拉框
+    private CustomComboBox<String> netRadioSortTypeComboBox = new CustomComboBox();
     // 电台播放全部按钮
     private CustomButton netRadioPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 电台刷新按钮
@@ -1822,6 +1825,8 @@ public class PlayerFrame extends JFrame {
     private CustomPanel recommendCountPanel = new CustomPanel();
     // 推荐源
     private CustomComboBox<String> netRecommendSourceComboBox = new CustomComboBox();
+    // 推荐排序
+    private CustomComboBox<String> netRecommendSortTypeComboBox = new CustomComboBox();
     // 推荐数量标签
     private CustomLabel recommendCountLabel = new CustomLabel("");
     // 推荐歌单/专辑/歌手/电台音乐工具栏
@@ -5140,7 +5145,7 @@ public class PlayerFrame extends JFrame {
                         // 这是电台里的歌
                         else if (o instanceof NetRadioInfo) {
                             NetRadioInfo radioInfo = (NetRadioInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInCollectionCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5224,6 +5229,8 @@ public class PlayerFrame extends JFrame {
         collectionRecordTypeComboBoxModel.addElement("所有时间");
         collectionOrderComboBoxModel.addElement("最新发布");
         collectionOrderComboBoxModel.addElement("最多播放");
+        collectionSortTypeComboBoxModel.addElement("正序");
+        collectionSortTypeComboBoxModel.addElement("倒序");
         collectionRecordTypeComboBox.setModel(collectionRecordTypeComboBoxModel);
         // 用户听歌记录类型
         collectionRecordTypeComboBox.addItemListener(e -> {
@@ -5719,7 +5726,9 @@ public class PlayerFrame extends JFrame {
                     // 得到电台的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInCollectionCurrPage = 1);
+                            collectionRecordTypeComboBox.setModel(collectionSortTypeComboBoxModel);
+
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5738,6 +5747,7 @@ public class PlayerFrame extends JFrame {
                             collectionLeftBox.add(musicCollectionToolBar, 0);
                             SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
                             collectionRecordTypeComboBox.setUI(ui);
+                            collectionRecordTypeComboBox.setVisible(radioInfo.fromXM());
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRadioCollectionModel.clear();
@@ -7844,6 +7854,7 @@ public class PlayerFrame extends JFrame {
                         netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
                         netRadioLeftBox.add(netRadioCountPanel);
                         netRadioSourceComboBox.setVisible(false);
+                        netRadioSortTypeComboBox.setVisible(false);
                         netRadioPlayAllButton.setVisible(false);
                         netRadioCountPanel.setVisible(true);
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -7967,6 +7978,7 @@ public class PlayerFrame extends JFrame {
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioSourceComboBox.setVisible(false);
+                    netRadioSortTypeComboBox.setVisible(false);
                     netRadioPlayAllButton.setVisible(false);
                     netRadioCountPanel.setVisible(true);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -12030,6 +12042,7 @@ public class PlayerFrame extends JFrame {
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioSourceComboBox.setVisible(false);
+                    netRadioSortTypeComboBox.setVisible(false);
                     netRadioPlayAllButton.setVisible(false);
                     netRadioCountPanel.setVisible(true);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -12226,6 +12239,7 @@ public class PlayerFrame extends JFrame {
                     netRadioToolBar.add(netRadioClearInputButton);
                     netRadioToolBar.add(netRadioSearchButton);
                     netRadioSourceComboBox.setVisible(true);
+                    netRadioSortTypeComboBox.setVisible(false);
                 } else {
                     netRadioToolBar.add(Box.createHorizontalGlue());
                     netRadioToolBar.add(netRadioTitleLabel);
@@ -12412,7 +12426,7 @@ public class PlayerFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetRadioInfo radioInfo = netRadioList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInRadioCurrPage);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), limit, netMusicInRadioCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12584,6 +12598,7 @@ public class PlayerFrame extends JFrame {
         netRadioBackwardButton.setEnabled(false);
         // 按钮初始不可见
         netRadioClearInputButton.setVisible(false);
+        netRadioSortTypeComboBox.setVisible(false);
         netRadioPlayAllButton.setVisible(false);
         // 按钮大小限制
         Dimension dimension = new Dimension(30, 30);
@@ -12629,8 +12644,19 @@ public class PlayerFrame extends JFrame {
             netRadioSearchButton.doClick();
         });
 
+        netRadioSortTypeComboBox.addItem("正序");
+        netRadioSortTypeComboBox.addItem("倒序");
+        // 电台排序类型切换事件
+        netRadioSortTypeComboBox.addItemListener(e -> {
+            // 避免事件被处理 2 次！
+            if (e.getStateChange() != ItemEvent.SELECTED) return;
+            netMusicInRadioCurrPage = 1;
+            netRadioRefreshButton.doClick();
+        });
+
         // 电台数量和当前歌曲标签
         netRadioCountPanel.add(netRadioSourceComboBox);
+        netRadioCountPanel.add(netRadioSortTypeComboBox);
         netRadioCountPanel.add(netRadioPlayAllButton);
         netRadioCountPanel.add(netRadioStartPageButton);
         netRadioCountPanel.add(netRadioLastPageButton);
@@ -12719,7 +12745,7 @@ public class PlayerFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到电台的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, limit, netMusicInRadioCurrPage = 1);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), limit, netMusicInRadioCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12751,6 +12777,7 @@ public class PlayerFrame extends JFrame {
                         netMusicScrollPane.setVValue(0);
                         netRadioBackwardButton.setEnabled(true);
                         netRadioSourceComboBox.setVisible(false);
+                        netRadioSortTypeComboBox.setVisible(radioInfo.fromXM());
                         netRadioPlayAllButton.setVisible(true);
                         if (netMusicListForRadioModel.isEmpty()) {
                             radioListCountBox.remove(netMusicScrollPane);
@@ -12836,7 +12863,7 @@ public class PlayerFrame extends JFrame {
             else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                        netRadioInfo, netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() : 10000, 1);
+                        netRadioInfo, netRadioSortTypeComboBox.getSelectedIndex(), netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -13062,6 +13089,7 @@ public class PlayerFrame extends JFrame {
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioSourceComboBox.setVisible(false);
+                    netRadioSortTypeComboBox.setVisible(false);
                     netRadioPlayAllButton.setVisible(false);
                     netRadioCountPanel.setVisible(true);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -15552,6 +15580,7 @@ public class PlayerFrame extends JFrame {
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
                     netRadioLeftBox.add(netRadioCountPanel);
                     netRadioSourceComboBox.setVisible(false);
+                    netRadioSortTypeComboBox.setVisible(false);
                     netRadioPlayAllButton.setVisible(false);
                     netRadioCountPanel.setVisible(true);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16687,6 +16716,7 @@ public class PlayerFrame extends JFrame {
             recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
             recommendBackwardButton.setEnabled(false);
             netRecommendSourceComboBox.setVisible(true);
+            netRecommendSortTypeComboBox.setVisible(false);
             // 切换后一定要刷新！
             recommendLeftBox.repaint();
         });
@@ -16786,7 +16816,7 @@ public class PlayerFrame extends JFrame {
                         else if (o instanceof NetRadioInfo) {
                             NetRadioInfo radioInfo = (NetRadioInfo) o;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                                    radioInfo, limit, netMusicInRecommendCurrPage);
+                                    radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18016,6 +18046,7 @@ public class PlayerFrame extends JFrame {
         recommendBackwardButton.setEnabled(false);
         // 按钮不可见
         netRecommendTagComboBox.setVisible(false);
+        netRecommendSortTypeComboBox.setVisible(false);
         netRecommendPlayAllButton.setVisible(false);
         // 控制按钮大小
         Dimension dimension = new Dimension(30, 30);
@@ -18163,9 +18194,20 @@ public class PlayerFrame extends JFrame {
             netRecommendRefreshButton.doClick();
         });
 
+        netRecommendSortTypeComboBox.addItem("正序");
+        netRecommendSortTypeComboBox.addItem("倒序");
+        // 电台排序类型切换事件
+        netRecommendSortTypeComboBox.addItemListener(e -> {
+            // 避免事件被处理 2 次！
+            if (e.getStateChange() != ItemEvent.SELECTED) return;
+            netMusicInRecommendCurrPage = 1;
+            netRecommendRefreshButton.doClick();
+        });
+
         // 数量标签
         recommendCountPanel.add(netRecommendSourceComboBox);
         recommendCountPanel.add(netRecommendTagComboBox);
+        recommendCountPanel.add(netRecommendSortTypeComboBox);
         recommendCountPanel.add(netRecommendPlayAllButton);
         recommendCountPanel.add(netRecommendStartPageButton);
         recommendCountPanel.add(netRecommendLastPageButton);
@@ -18291,6 +18333,7 @@ public class PlayerFrame extends JFrame {
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
+                            netRecommendSortTypeComboBox.setVisible(false);
                             netRecommendPlayAllButton.setVisible(true);
                             netRecommendTagComboBox.setVisible(false);
                             if (netMusicListForPlaylistRecommendModel.isEmpty()) {
@@ -18383,6 +18426,7 @@ public class PlayerFrame extends JFrame {
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
+                            netRecommendSortTypeComboBox.setVisible(false);
                             netRecommendPlayAllButton.setVisible(true);
                             netRecommendTagComboBox.setVisible(false);
                             if (netMusicListForAlbumRecommendModel.isEmpty()) {
@@ -18478,6 +18522,7 @@ public class PlayerFrame extends JFrame {
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
+                            netRecommendSortTypeComboBox.setVisible(false);
                             netRecommendPlayAllButton.setVisible(true);
                             netRecommendTagComboBox.setVisible(false);
                             if (netMusicListForArtistRecommendModel.isEmpty()) {
@@ -18544,7 +18589,7 @@ public class PlayerFrame extends JFrame {
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                                    radioInfo, limit, netMusicInRecommendCurrPage = 1);
+                                    radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), limit, netMusicInRecommendCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18573,6 +18618,7 @@ public class PlayerFrame extends JFrame {
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
+                            netRecommendSortTypeComboBox.setVisible(radioInfo.fromXM());
                             netRecommendPlayAllButton.setVisible(true);
                             netRecommendTagComboBox.setVisible(false);
                             if (netMusicListForRadioRecommendModel.isEmpty()) {
@@ -20413,13 +20459,18 @@ public class PlayerFrame extends JFrame {
         mp.setOnError(() -> {
             MediaException.Type type = mp.getError().getType();
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
-            // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
-            if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
+
+            Runnable reload = () -> {
                 player.disposeMp();
                 player.initMp();
                 if (!player.isPlaying()) return;
                 playLoaded(false);
                 seekLrc(0);
+            };
+
+            // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
+            if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
+                reload.run();
             }
             // 歌曲 url 过期后重新加载 url 再播放
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE
@@ -20431,11 +20482,7 @@ public class PlayerFrame extends JFrame {
                     String url = MusicServerUtil.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
                     if (StringUtil.isNotEmpty(url)) netMusicInfo.setUrl(url);
                     else MusicServerUtil.fillAvailableMusicUrl(netMusicInfo);
-                    player.disposeMp();
-                    player.initMp();
-                    if (!player.isPlaying()) return;
-                    playLoaded(false);
-                    seekLrc(0);
+                    reload.run();
                 });
             }
         });
@@ -21659,6 +21706,7 @@ public class PlayerFrame extends JFrame {
         netSheetPageTextField.setCaretColor(textColor);
         // 推荐页码文本框
         netRecommendSourceComboBox.setUI(new ComboBoxUI(netRecommendSourceComboBox, THIS));
+        netRecommendSortTypeComboBox.setUI(new ComboBoxUI(netRecommendSortTypeComboBox, THIS));
         netRecommendPageTextField.setForeground(textColor);
         netRecommendPageTextField.setCaretColor(textColor);
         netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, 240));
@@ -21742,6 +21790,7 @@ public class PlayerFrame extends JFrame {
         netArtistNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistNextPageButton.getIcon(), iconColor));
         netArtistEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistEndPageButton.getIcon(), iconColor));
         // 电台搜索栏按钮颜色
+        netRadioSortTypeComboBox.setUI(new ComboBoxUI(netRadioSortTypeComboBox, THIS));
         netRadioBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), iconColor));
         netRadioClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netRadioClearInputButton.getIcon(), iconColor));
         netRadioSearchButton.setIcon(ImageUtil.dye((ImageIcon) netRadioSearchButton.getIcon(), iconColor));
