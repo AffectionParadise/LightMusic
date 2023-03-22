@@ -85,6 +85,10 @@ public class NetUserInfo {
         return source == NetMusicSource.ME;
     }
 
+    public boolean fromXM() {
+        return source == NetMusicSource.XM;
+    }
+
     public boolean fromDt() {
         return source == NetMusicSource.DT;
     }

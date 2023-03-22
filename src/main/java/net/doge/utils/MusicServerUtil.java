@@ -2803,7 +2803,7 @@ public class MusicServerUtil {
     // 用户信息 API (喜马拉雅)
     private static final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic?uid=%s";
     // 用户节目 API (喜马拉雅)
-    private static final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&page=%s&pageSize=%s&keyWord=";
+    private static final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&orderType=%s&page=%s&pageSize=%s&keyWord=";
     // 用户信息 API (猫耳)
     private static final String USER_DETAIL_ME_API = "https://www.missevan.com/%s/";
     // CV 信息 API (猫耳)
@@ -3935,7 +3935,7 @@ public class MusicServerUtil {
                         .body();
                 JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
                 // 时长是毫秒，转为秒
-                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("timelength") / 1000);
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.optDouble("timelength") / 1000);
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(parseArtists(data, NetMusicSource.KG));
                 if (!musicInfo.hasArtistId()) {
                     JSONArray artistArray = data.optJSONArray("authors");
@@ -3946,7 +3946,7 @@ public class MusicServerUtil {
                 if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.optString("album_id"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
-                        BufferedImage albumImage = getImageFromUrl(data.getString("img"));
+                        BufferedImage albumImage = getImageFromUrl(data.optString("img"));
                         ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
                     });
@@ -3957,7 +3957,7 @@ public class MusicServerUtil {
 //                    if (StringUtils.isNotEmpty(url) && data.getInt("is_free_part") == 0) musicInfo.setUrl(url);
 //                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
 //                }
-                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
+                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.optString("lyrics"));
             }));
 //            // 填充歌词、翻译、罗马音
 //            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
@@ -17699,7 +17699,7 @@ public class MusicServerUtil {
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
-            String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_XM_API, userId, page, limit))
+            String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_XM_API, userId, recordType + 1, page, limit))
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
@@ -20999,16 +20999,17 @@ public class MusicServerUtil {
             artistsArray = json.optJSONArray("singer");
             if (artistsArray == null) artistsArray = json.optJSONArray("singer_list");
             if (artistsArray == null) artistsArray = json.optJSONArray("singers");
-            if (artistsArray == null) artistsArray = json.getJSONArray("ar");
+            if (artistsArray == null) artistsArray = json.optJSONArray("ar");
         } else if (source == NetMusicSource.KG) {
-            artistsArray = json.getJSONArray("authors");
+            artistsArray = json.optJSONArray("authors");
         } else {
             artistsArray = json.optJSONArray("artists");
             if (artistsArray == null) artistsArray = json.optJSONArray("ar");
             if (artistsArray == null) artistsArray = json.optJSONArray("artist");
             if (artistsArray == null) artistsArray = json.optJSONArray("actors");
-            if (artistsArray == null) return "";
         }
+        if (artistsArray == null) return "";
+
         StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = artistsArray.size(); i < len; i++) {
             JSONObject artistJson = artistsArray.getJSONObject(i);
@@ -21098,7 +21099,7 @@ public class MusicServerUtil {
      * @return
      */
     public static void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
-        CommonResult<NetMusicInfo> result = searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 5, 1);
+        CommonResult<NetMusicInfo> result = searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 10, 1);
         List<NetMusicInfo> data = result.data;
         for (NetMusicInfo info : data) {
             // 部分歌曲没有时长，先填充时长，准备判断
@@ -21155,7 +21156,7 @@ public class MusicServerUtil {
                     .body();
             JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
             String url = data.optString("play_url");
-            if (StringUtil.isNotEmpty(url) && data.getInt("is_free_part") == 0) return url;
+            if (data.optInt("is_free_part") == 0) return url;
         }
 
         // QQ

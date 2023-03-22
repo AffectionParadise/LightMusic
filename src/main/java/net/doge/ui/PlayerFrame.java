@@ -1732,6 +1732,7 @@ public class PlayerFrame extends JFrame {
     private CustomComboBox<String> netUserRecordTypeComboBox = new CustomComboBox();
     private DefaultComboBoxModel<String> recordTypeComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> orderComboBoxModel = new DefaultComboBoxModel<>();
+    private DefaultComboBoxModel<String> sortTypeComboBoxModel = new DefaultComboBoxModel<>();
     // 返回用户按钮
     private CustomButton netUserBackwardButton = new CustomButton(backwardIcon);
     // 用户搜索框
@@ -5932,6 +5933,8 @@ public class PlayerFrame extends JFrame {
                                 collectionRecordTypeComboBox.setModel(collectionRecordTypeComboBoxModel);
                             else if (userInfo.fromME() || userInfo.fromBI())
                                 collectionRecordTypeComboBox.setModel(collectionOrderComboBoxModel);
+                            else if (userInfo.fromXM())
+                                collectionRecordTypeComboBox.setModel(collectionSortTypeComboBoxModel);
 
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
                                     collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage = 1);
@@ -5952,7 +5955,7 @@ public class PlayerFrame extends JFrame {
                             collectionLeftBox.add(musicCollectionToolBar, 0);
                             SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
                             collectionRecordTypeComboBox.setUI(ui);
-                            collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromBI());
+                            collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromXM() || userInfo.fromBI());
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForUserCollectionModel.clear();
@@ -14955,6 +14958,8 @@ public class PlayerFrame extends JFrame {
         recordTypeComboBoxModel.addElement("所有时间");
         orderComboBoxModel.addElement("最新发布");
         orderComboBoxModel.addElement("最多播放");
+        sortTypeComboBoxModel.addElement("正序");
+        sortTypeComboBoxModel.addElement("倒序");
         netUserRecordTypeComboBox.setModel(recordTypeComboBoxModel);
         // 用户播放记录类型
         netUserRecordTypeComboBox.addItemListener(e -> {
@@ -15253,6 +15258,8 @@ public class PlayerFrame extends JFrame {
                         if (userInfo.fromNetCloud()) netUserRecordTypeComboBox.setModel(recordTypeComboBoxModel);
                         else if (userInfo.fromME() || userInfo.fromBI())
                             netUserRecordTypeComboBox.setModel(orderComboBoxModel);
+                        else if (userInfo.fromXM())
+                            netUserRecordTypeComboBox.setModel(sortTypeComboBoxModel);
 
                         // 得到用户的音乐信息
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
@@ -15260,7 +15267,7 @@ public class PlayerFrame extends JFrame {
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromBI());
+                        netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromXM() || userInfo.fromBI());
                         // 更新用户歌曲数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netMusicInUserCurrPage, netMusicInUserMaxPage));
                         userListCountBox.add(netUserCountPanel);
@@ -20440,6 +20447,14 @@ public class PlayerFrame extends JFrame {
         }
     }
 
+    private void resetMp() {
+        player.disposeMp();
+        player.initMp();
+        if (!player.isPlaying()) return;
+        playLoaded(false);
+        seekLrc(0);
+    }
+
     // 初始化播放器设置
     public void initPlayer() {
         player.setMute(isMute);
@@ -20460,17 +20475,9 @@ public class PlayerFrame extends JFrame {
             MediaException.Type type = mp.getError().getType();
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
 
-            Runnable reload = () -> {
-                player.disposeMp();
-                player.initMp();
-                if (!player.isPlaying()) return;
-                playLoaded(false);
-                seekLrc(0);
-            };
-
             // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
             if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
-                reload.run();
+                resetMp();
             }
             // 歌曲 url 过期后重新加载 url 再播放
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE
@@ -20482,7 +20489,7 @@ public class PlayerFrame extends JFrame {
                     String url = MusicServerUtil.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
                     if (StringUtil.isNotEmpty(url)) netMusicInfo.setUrl(url);
                     else MusicServerUtil.fillAvailableMusicUrl(netMusicInfo);
-                    reload.run();
+                    resetMp();
                 });
             }
         });
