@@ -168,7 +168,7 @@ public class MusicPlayer {
         // 音频格式(以 source 文件为准)
         musicInfo.setFormat(source == null ? netMusicInfo.getFormat() : source.getFormat());
         // 时长(优先考虑 NetMusicInfo 的 duration 属性，有时 getDuration 方法返回的时长不准确)
-        musicInfo.setDuration(netMusicInfo != null ? netMusicInfo.getDuration() : source.getDuration());
+        musicInfo.setDuration(netMusicInfo != null ? netMusicInfo.hasDuration() ? netMusicInfo.getDuration() : 0 : source.getDuration());
 
         // 在线音乐的信息
         if (netMusicInfo != null) {
@@ -245,7 +245,8 @@ public class MusicPlayer {
     }
 
     private void initRequestHeaders(NetMusicInfo netMusicInfo, Media media) {
-        if (netMusicInfo == null || netMusicInfo.getSource() != NetMusicSource.BI) return;
+        int source = netMusicInfo.getSource();
+        if (netMusicInfo == null || source != NetMusicSource.BI) return;
         try {
             // 由于 Media 类不能重写，只能通过反射机制设置请求头
             Field field = Media.class.getDeclaredField("jfxLocator");

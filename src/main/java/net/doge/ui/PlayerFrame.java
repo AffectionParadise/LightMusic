@@ -20471,6 +20471,21 @@ public class PlayerFrame extends JFrame {
         // 设置频谱阈值，默认是 -60
         mp.setAudioSpectrumThreshold(SpectrumConstants.THRESHOLD);
 
+        // 部分无法提前获取时长的歌曲，等待播放时更新时长
+        mp.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
+            SimpleMusicInfo musicInfo = player.getMusicInfo();
+            if(musicInfo.hasDuration()) return;
+            musicInfo.setDuration(newValue.toSeconds());
+            // 重置总时间
+            durationLabel.setText(player.getDurationString());
+            // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
+            String t = durationLabel.getText().replaceAll("[1-9]", "0");
+            FontMetrics m = durationLabel.getFontMetrics(globalFont);
+            Dimension d = new Dimension(m.stringWidth(t) + 2, durationLabel.getHeight());
+            currTimeLabel.setPreferredSize(d);
+            durationLabel.setPreferredSize(d);
+        });
+
         mp.setOnError(() -> {
             MediaException.Type type = mp.getError().getType();
             NetMusicInfo netMusicInfo = player.getNetMusicInfo();
@@ -20840,6 +20855,7 @@ public class PlayerFrame extends JFrame {
             retry = 0;
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             updateTitle("加载失败");
             if (e instanceof MediaException) new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
             else if (e instanceof IllegalArgumentException || e instanceof IllegalMediaException)

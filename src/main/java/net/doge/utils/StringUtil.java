@@ -447,6 +447,7 @@ public class StringUtil {
      * @return
      */
     public static String trimStringWith(String str, char c) {
+        if (str == null) return null;
         char[] chars = str.toCharArray();
         int len = chars.length;
         int st = 0;

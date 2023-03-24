@@ -34,7 +34,7 @@ public class NetMusicInfo {
     // 音频格式
     private String format = Format.MP3;
     // 时长(秒)
-    private Double duration;
+    private double duration;
     // 歌曲名称
     private String name;
     // 艺术家
@@ -91,7 +91,7 @@ public class NetMusicInfo {
      * @return
      */
     public boolean isProgram() {
-        return source == NetMusicSource.XM || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
+        return source == NetMusicSource.XM || source == NetMusicSource.HF || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
     }
 
     /**
@@ -154,7 +154,7 @@ public class NetMusicInfo {
     }
 
     public boolean hasDuration() {
-        return duration != null && !Double.isNaN(duration) && !Double.isInfinite(duration) && duration != 0;
+        return duration != 0;
     }
 
     public boolean isMp3() {

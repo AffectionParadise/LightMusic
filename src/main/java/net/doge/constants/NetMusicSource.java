@@ -6,7 +6,7 @@ package net.doge.constants;
  * @Date 2020/12/7
  */
 public class NetMusicSource {
-    public static final String[] names = new String[]{"网易", "酷狗", "腾讯", "酷我", "咪咕", "喜马", "千千", "猫耳", "好看", "豆瓣", "堆糖", "哔哩", "全部"};
+    public static final String[] names = new String[]{"网易", "酷狗", "腾讯", "酷我", "咪咕", "喜马", "千千", "猫耳", "好看", "豆瓣", "堆糖", "哔哩", "音磁", "全部"};
 
     public static final int NET_CLOUD = 0;
     public static final int KG = 1;
@@ -20,6 +20,7 @@ public class NetMusicSource {
     public static final int DB = 9;
     public static final int DT = 10;
     public static final int BI = 11;
+    public static final int HF = 12;
 
-    public static final int ALL = 12;
+    public static final int ALL = 13;
 }
