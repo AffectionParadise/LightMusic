@@ -3748,13 +3748,14 @@ public class MusicServerUtil {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(musicInfoBody);
-            String ts = ReUtil.get("\\[(.*?)\\]", doc.select("a.nav-link").text(), 1);
-            if (StringUtil.isEmpty(ts)) t = limit;
-            else {
-                int tn = Integer.parseInt(ts.replaceAll(" |,", ""));
-                t = (tn % 20 == 0 ? tn / 20 : tn / 20 + 1) * limit;
-            }
             Elements songs = doc.select(".media-body");
+            Elements ap = doc.select("a.page-link");
+            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            if (StringUtil.isEmpty(ts))
+                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+            boolean hasTs = StringUtil.isNotEmpty(ts);
+            if (hasTs) t = Integer.parseInt(ts) * limit;
+            else t = songs.size();
             for (int i = 0, len = songs.size(); i < len; i++) {
                 Element song = songs.get(i);
 
@@ -7345,19 +7346,22 @@ public class MusicServerUtil {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(commentInfoBody);
-            String ts = doc.select("span.posts").text();
-            if (StringUtil.isEmpty(ts)) total = limit;
-            else {
-                int tn = Integer.parseInt(ts);
-                total = (tn % 10 == 0 ? tn / 10 : tn / 10 + 1) * limit;
-            }
             Elements comments = doc.select("li.media.post");
+            Elements ap = doc.select("a.page-link");
+            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            if (StringUtil.isEmpty(ts))
+                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+            boolean hasTs = StringUtil.isNotEmpty(ts);
+            if (hasTs) total = Integer.parseInt(ts) * limit;
+            else total = comments.size();
             for (int i = 0, len = comments.size(); i < len; i++) {
                 Element comment = comments.get(i);
 
+                Element msg = comment.select(".message.mt-1.break-all").first();
+
                 String username = comment.select(".username").text();
                 String profileUrl = "https://www.hifini.com/" + comment.select("img").attr("src");
-                String content = comment.select(".message.mt-1.break-all").text().trim();
+                String content = msg.ownText().trim();
                 String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
@@ -7366,12 +7370,36 @@ public class MusicServerUtil {
                 commentInfo.setProfileUrl(profileUrl);
                 commentInfo.setContent(content);
                 commentInfo.setTime(time);
+                String finalProfileUrl1 = profileUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage profile = extractProfile(profileUrl);
+                    BufferedImage profile = extractProfile(finalProfileUrl1);
                     commentInfo.setProfile(profile);
                 });
 
                 commentInfos.add(commentInfo);
+
+                // 被回复的评论
+                Elements bq = msg.select("blockquote");
+                if (bq.isEmpty()) continue;
+
+                username = bq.select("a").text().trim();
+                profileUrl = "https://www.hifini.com/" + bq.select("img").attr("src");
+                content = bq.first().ownText();
+
+                NetCommentInfo ci = new NetCommentInfo();
+                ci.setSource(NetMusicSource.HF);
+                ci.setSub(true);
+                ci.setUsername(username);
+                ci.setProfileUrl(profileUrl);
+                ci.setContent(content);
+                String finalProfileUrl = profileUrl;
+
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage profile = extractProfile(finalProfileUrl);
+                    ci.setProfile(profile);
+                });
+
+                commentInfos.add(ci);
             }
         }
 
@@ -12192,7 +12220,9 @@ public class MusicServerUtil {
                 Document doc = Jsoup.parse(musicInfoBody);
                 Elements songs = doc.select(".media-body");
                 Elements ap = doc.select("a.page-link");
-                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+                if (StringUtil.isEmpty(ts))
+                    ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
                 boolean hasTs = StringUtil.isNotEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();
@@ -12614,7 +12644,9 @@ public class MusicServerUtil {
                 Document doc = Jsoup.parse(musicInfoBody);
                 Elements songs = doc.select(".media-body");
                 Elements ap = doc.select("a.page-link");
-                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+                if (StringUtil.isEmpty(ts))
+                    ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
                 boolean hasTs = StringUtil.isNotEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();

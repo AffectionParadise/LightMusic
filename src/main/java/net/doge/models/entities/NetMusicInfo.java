@@ -154,7 +154,7 @@ public class NetMusicInfo {
     }
 
     public boolean hasDuration() {
-        return duration != 0;
+        return duration != 0 && Double.isFinite(duration);
     }
 
     public boolean isMp3() {

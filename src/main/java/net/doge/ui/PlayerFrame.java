@@ -2706,13 +2706,9 @@ public class PlayerFrame extends JFrame {
                 }
             }
             // 隐藏到托盘
-            else if (currCloseWindowOption == CloseWindowOptions.DISPOSE) {
-                hideWindow();
-            }
+            else if (currCloseWindowOption == CloseWindowOptions.DISPOSE) hideWindow();
             // 退出程序
-            else if (currCloseWindowOption == CloseWindowOptions.EXIT) {
-                exit();
-            }
+            else if (currCloseWindowOption == CloseWindowOptions.EXIT) exit();
         });
         // 隐藏详情暂时不可见
         hideDetailButton.setVisible(false);
