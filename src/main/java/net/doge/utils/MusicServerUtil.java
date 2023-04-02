@@ -2840,6 +2840,10 @@ public class MusicServerUtil {
     private static final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic?uid=%s";
     // 用户节目 API (喜马拉雅)
     private static final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&orderType=%s&page=%s&pageSize=%s&keyWord=";
+    // 用户信息 API (音乐磁场)
+    private static final String USER_DETAIL_HF_API = "https://www.hifini.com/user-%s.htm";
+    // 用户节目 API (音乐磁场)
+    private static final String USER_PROGRAMS_HF_API = "https://www.hifini.com/user-thread-%s-%s.htm";
     // 用户信息 API (猫耳)
     private static final String USER_DETAIL_ME_API = "https://www.missevan.com/%s/";
     // CV 信息 API (猫耳)
@@ -3748,7 +3752,7 @@ public class MusicServerUtil {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(musicInfoBody);
-            Elements songs = doc.select(".media-body");
+            Elements songs = doc.select(".media.thread.tap");
             Elements ap = doc.select("a.page-link");
             String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
             if (StringUtil.isEmpty(ts))
@@ -3760,16 +3764,19 @@ public class MusicServerUtil {
                 Element song = songs.get(i);
 
                 Elements a = song.select(".subject.break-all a");
+                Elements ua = song.select(".ml-1.mt-1.mr-3");
 
                 String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
                 String songName = a.text();
                 String artist = song.select(".username.text-grey.mr-1").first().text();
+                String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.HF);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
 
                 res.add(musicInfo);
             }
@@ -4209,8 +4216,11 @@ public class MusicServerUtil {
                 String dataStr = ReUtil.get("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
                 JSONObject data = JSONObject.fromObject(dataStr);
 
+                Elements a = doc.select(".m-3.text-center h5 a");
+
 //                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
-                if (!musicInfo.hasArtist()) musicInfo.setArtist(doc.select(".m-3.text-center h5 a").text());
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(a.text());
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
                         String picUrl = data.getString("pic");
@@ -7358,8 +7368,10 @@ public class MusicServerUtil {
                 Element comment = comments.get(i);
 
                 Element msg = comment.select(".message.mt-1.break-all").first();
+                if (msg == null) continue;
 
                 String username = comment.select(".username").text();
+                String userId = ReUtil.get("user-(\\d+)\\.htm", comment.select(".username a").attr("href"), 1);
                 String profileUrl = "https://www.hifini.com/" + comment.select("img").attr("src");
                 String content = msg.ownText().trim();
                 String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
@@ -7367,6 +7379,7 @@ public class MusicServerUtil {
                 NetCommentInfo commentInfo = new NetCommentInfo();
                 commentInfo.setSource(NetMusicSource.HF);
                 commentInfo.setUsername(username);
+                commentInfo.setUserId(userId);
                 commentInfo.setProfileUrl(profileUrl);
                 commentInfo.setContent(content);
                 commentInfo.setTime(time);
@@ -7383,6 +7396,7 @@ public class MusicServerUtil {
                 if (bq.isEmpty()) continue;
 
                 username = bq.select("a").text().trim();
+                userId = ReUtil.get("user-(\\d+)\\.htm", comment.select("a").attr("href"), 1);
                 profileUrl = "https://www.hifini.com/" + bq.select("img").attr("src");
                 content = bq.first().ownText();
 
@@ -7390,6 +7404,7 @@ public class MusicServerUtil {
                 ci.setSource(NetMusicSource.HF);
                 ci.setSub(true);
                 ci.setUsername(username);
+                ci.setUserId(userId);
                 ci.setProfileUrl(profileUrl);
                 ci.setContent(content);
                 String finalProfileUrl = profileUrl;
@@ -12230,16 +12245,19 @@ public class MusicServerUtil {
                     Element song = songs.get(i);
 
                     Elements a = song.select(".subject.break-all a");
+                    Elements ua = song.select(".ml-1.mt-1.mr-3");
 
                     String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
                     String songName = a.text();
                     String artist = song.select(".username.text-grey.mr-1").first().text();
+                    String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.HF);
                     musicInfo.setId(songId);
                     musicInfo.setName(songName);
                     musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
 
                     res.add(musicInfo);
                 }
@@ -12654,16 +12672,19 @@ public class MusicServerUtil {
                     Element song = songs.get(i);
 
                     Elements a = song.select(".subject.break-all a");
+                    Elements ua = song.select(".ml-1.mt-1.mr-3");
 
                     String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
                     String songName = a.text();
                     String artist = song.select(".username.text-grey.mr-1").first().text();
+                    String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.HF);
                     musicInfo.setId(songId);
                     musicInfo.setName(songName);
                     musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
 
                     res.add(musicInfo);
                 }
@@ -16153,6 +16174,12 @@ public class MusicServerUtil {
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(getImageFromUrl(bgImgUrl)));
         }
 
+        // 音乐磁场
+        else if (source == NetMusicSource.HF) {
+            userInfo.setSign("");
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+        }
+
         // 猫耳
         else if (source == NetMusicSource.ME) {
             Runnable getProgramCount = () -> {
@@ -18006,6 +18033,45 @@ public class MusicServerUtil {
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
+                musicInfos.add(musicInfo);
+            }
+        }
+
+        // 音乐磁场
+        else if (source == NetMusicSource.HF) {
+            String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_HF_API, userId, page))
+                    .cookie(HF_COOKIE)
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(userInfoBody);
+            Elements songs = doc.select(".media.thread.tap");
+            Elements ap = doc.select("a.page-link");
+            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            if (StringUtil.isEmpty(ts))
+                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+            boolean hasTs = StringUtil.isNotEmpty(ts);
+            if (hasTs) total.set(Integer.parseInt(ts) * limit);
+            else total.set(songs.size());
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+
+                Elements a = song.select(".subject.break-all a");
+                // 用户没有帖子直接跳过
+                if (a.isEmpty()) continue;
+                Elements ua = song.select(".ml-1.mt-1.mr-3");
+
+                String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                String songName = a.text();
+                String artist = song.select(".username.text-grey.mr-1").first().text();
+                String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.HF);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+
                 musicInfos.add(musicInfo);
             }
         }
@@ -20709,6 +20775,43 @@ public class MusicServerUtil {
                 res.add(userInfo);
             }
 
+            // 音乐磁场
+            else if (source == NetMusicSource.HF) {
+                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HF_API, id))
+                        .cookie(HF_COOKIE)
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+
+                Elements tc = doc.select(".col-md-2.col-sm-12.text-center");
+                Elements b = tc.select("b");
+                Elements sm = doc.select(".col-4.col-sm-5");
+
+                String userId = id;
+                String userName = b.text().trim();
+                String gender = "保密";
+                String avatarThumbUrl = "https://www.hifini.com/" + tc.select("img").attr("src");
+                String avatarUrl = avatarThumbUrl;
+                Integer programCount = Integer.parseInt(ReUtil.get("主题数：(\\d+)", sm.text(), 1));
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.HF);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+                userInfo.setProgramCount(programCount);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+
             // 猫耳
             else if (source == NetMusicSource.ME) {
                 NetUserInfo userInfo = new NetUserInfo();
@@ -21412,7 +21515,7 @@ public class MusicServerUtil {
             // 匹配依据：歌名、歌手相似度，时长之差绝对值
             if (info.equals(musicInfo)
                     || StringUtil.similar(info.getName(), musicInfo.getName()) == 0
-                    || StringUtil.similar(info.getArtist(), musicInfo.getArtist()) < 0.5
+                    || StringUtil.similar(info.getArtist(), musicInfo.getArtist()) == 0
                     || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
                 continue;
             String url = fetchMusicUrl(info.getId(), info.getSource());

@@ -2707,7 +2707,7 @@ public class PlayerFrame extends JFrame {
             }
             // 隐藏到托盘
             else if (currCloseWindowOption == CloseWindowOptions.DISPOSE) hideWindow();
-            // 退出程序
+                // 退出程序
             else if (currCloseWindowOption == CloseWindowOptions.EXIT) exit();
         });
         // 隐藏详情暂时不可见
@@ -2824,7 +2824,7 @@ public class PlayerFrame extends JFrame {
                         else if (ListUtil.equals(backwardKeys, currKeys)) backwardButton.doClick();
                         else if (ListUtil.equals(forwardKeys, currKeys)) forwardButton.doClick();
                     }
-                } else if (currDialogs.isEmpty() && code == KeyEvent.VK_ENTER && released) {
+                } else if (currDialogs.isEmpty() && code == KeyEvent.VK_ENTER && !loading.isShowing() && released) {
                     // 回车跳页
                     if (collectionPageTextField.hasFocus()) collectionGoButton.doClick();
                     else if (netMusicPageTextField.hasFocus()) netMusicGoButton.doClick();
@@ -4379,51 +4379,39 @@ public class PlayerFrame extends JFrame {
         // 组装标签面板
         int gap = 10;
         personalMusicLabel.setIconTextGap(gap);
-        personalMusicLabel.setVerticalAlignment(SwingConstants.CENTER);
         personalMusicPanel.add(personalMusicLabel);
 
         netMusicLabel.setIconTextGap(gap);
-        netMusicLabel.setVerticalAlignment(SwingConstants.CENTER);
         netMusicPanel.add(netMusicLabel);
 
         netPlaylistLabel.setIconTextGap(gap);
-        netPlaylistLabel.setVerticalAlignment(SwingConstants.CENTER);
         netPlaylistPanel.add(netPlaylistLabel);
 
         netAlbumLabel.setIconTextGap(gap);
-        netAlbumLabel.setVerticalAlignment(SwingConstants.CENTER);
         netAlbumPanel.add(netAlbumLabel);
 
         netArtistLabel.setIconTextGap(gap);
-        netArtistLabel.setVerticalAlignment(SwingConstants.CENTER);
         netArtistPanel.add(netArtistLabel);
 
         netRadioLabel.setIconTextGap(gap);
-        netRadioLabel.setVerticalAlignment(SwingConstants.CENTER);
         netRadioPanel.add(netRadioLabel);
 
         netMvLabel.setIconTextGap(gap);
-        netMvLabel.setVerticalAlignment(SwingConstants.CENTER);
         netMvPanel.add(netMvLabel);
 
         netRankingLabel.setIconTextGap(gap);
-        netRankingLabel.setVerticalAlignment(SwingConstants.CENTER);
         netRankingPanel.add(netRankingLabel);
 
         netUserLabel.setIconTextGap(gap);
-        netUserLabel.setVerticalAlignment(SwingConstants.CENTER);
         netUserPanel.add(netUserLabel);
 
         recommendLabel.setIconTextGap(gap);
-        recommendLabel.setVerticalAlignment(SwingConstants.CENTER);
         recommendPanel.add(recommendLabel);
 
         downloadManagementLabel.setIconTextGap(gap);
-        downloadManagementLabel.setVerticalAlignment(SwingConstants.CENTER);
         downloadManagementPanel.add(downloadManagementLabel);
 
         playQueueLabel.setIconTextGap(gap);
-        playQueueLabel.setVerticalAlignment(SwingConstants.CENTER);
         playQueuePanel.add(playQueueLabel);
 
         // 标签大小统一
@@ -20470,7 +20458,7 @@ public class PlayerFrame extends JFrame {
         // 部分无法提前获取时长的歌曲，等待播放时更新时长
         mp.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
             SimpleMusicInfo musicInfo = player.getMusicInfo();
-            if(musicInfo.hasDuration()) return;
+            if (musicInfo.hasDuration()) return;
             musicInfo.setDuration(newValue.toSeconds());
             // 重置总时间
             durationLabel.setText(player.getDurationString());

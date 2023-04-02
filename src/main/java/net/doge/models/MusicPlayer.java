@@ -245,8 +245,7 @@ public class MusicPlayer {
     }
 
     private void initRequestHeaders(NetMusicInfo netMusicInfo, Media media) {
-        int source = netMusicInfo.getSource();
-        if (netMusicInfo == null || source != NetMusicSource.BI) return;
+        if (netMusicInfo == null || netMusicInfo.getSource() != NetMusicSource.BI) return;
         try {
             // 由于 Media 类不能重写，只能通过反射机制设置请求头
             Field field = Media.class.getDeclaredField("jfxLocator");
