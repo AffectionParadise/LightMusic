@@ -80,6 +80,8 @@ public class ConfigConstants {
     public final static String DESKTOP_LYRIC_ON_TOP = "desktopLyricOnTop";
     // 桌面歌词透明度
     public final static String DESKTOP_LYRIC_ALPHA = "desktopLyricAlpha";
+    // 桌面歌词字体大小
+    public final static String DESKTOP_LYRIC_FONT_SIZE = "desktopLyricFontSize";
     // 快进/快退时间
     public final static String FOB_TIME = "fobTime";
     // 视频快进/快退时间

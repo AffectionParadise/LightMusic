@@ -227,6 +227,16 @@ public class ColorUtil {
         return new Color(red, green, blue, color.getAlpha());
     }
 
+    /**
+     * 获取颜色亮度
+     *
+     * @param color
+     * @return
+     */
+    public static double lightness(Color color) {
+        return Math.pow(Math.pow(color.getRed() / 255.0f, 2.2f) + Math.pow(color.getGreen() / 170.0f, 2.2f) + Math.pow(color.getBlue() / 425.0f, 2.2f), 1 / 2.2f) * 0.547373141f;
+    }
+
 //    /**
 //     * Color 转为十六进制字符串
 //     *

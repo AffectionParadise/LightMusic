@@ -8,7 +8,7 @@ import java.awt.*;
 public class CustomLabel extends JLabel {
     private boolean drawBg;
     private Color bgColor;
-    private float alpha = 1f;
+    protected float alpha = 1f;
     private float destAlpha = 1f;
     private Timer alphaTimer;
 

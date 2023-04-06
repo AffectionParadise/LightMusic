@@ -3764,12 +3764,12 @@ public class MusicServerUtil {
                 Element song = songs.get(i);
 
                 Elements a = song.select(".subject.break-all a");
-                Elements ua = song.select(".ml-1.mt-1.mr-3");
+                Element span = song.select(".username.text-grey.mr-1").first();
 
                 String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
                 String songName = a.text();
-                String artist = song.select(".username.text-grey.mr-1").first().text();
-                String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
+                String artist = span.text();
+                String artistId = span.attr("uid");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.HF);
@@ -12245,12 +12245,12 @@ public class MusicServerUtil {
                     Element song = songs.get(i);
 
                     Elements a = song.select(".subject.break-all a");
-                    Elements ua = song.select(".ml-1.mt-1.mr-3");
+                    Element span = song.select(".username.text-grey.mr-1").first();
 
                     String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
                     String songName = a.text();
-                    String artist = song.select(".username.text-grey.mr-1").first().text();
-                    String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
+                    String artist = span.text();
+                    String artistId = span.attr("uid");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.HF);
@@ -12672,12 +12672,12 @@ public class MusicServerUtil {
                     Element song = songs.get(i);
 
                     Elements a = song.select(".subject.break-all a");
-                    Elements ua = song.select(".ml-1.mt-1.mr-3");
+                    Element span = song.select(".username.text-grey.mr-1").first();
 
                     String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
                     String songName = a.text();
-                    String artist = song.select(".username.text-grey.mr-1").first().text();
-                    String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
+                    String artist = span.text();
+                    String artistId = span.attr("uid");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.HF);
@@ -18058,12 +18058,12 @@ public class MusicServerUtil {
                 Elements a = song.select(".subject.break-all a");
                 // 用户没有帖子直接跳过
                 if (a.isEmpty()) continue;
-                Elements ua = song.select(".ml-1.mt-1.mr-3");
+                Element span = song.select(".username.text-grey.mr-1").first();
 
                 String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
                 String songName = a.text();
-                String artist = song.select(".username.text-grey.mr-1").first().text();
-                String artistId = ReUtil.get("user-(\\d+)\\.htm", ua.attr("href"), 1);
+                String artist = span.text();
+                String artistId = span.attr("uid");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.HF);

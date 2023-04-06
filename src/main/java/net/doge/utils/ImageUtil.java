@@ -377,23 +377,45 @@ public class ImageUtil {
     /**
      * 对 BufferedImage 进行毛玻璃化(高斯模糊)处理，用于专辑背景
      *
-     * @param bufferedImage
+     * @param img
      * @return
      */
-    public static BufferedImage doBlur(BufferedImage bufferedImage) {
-        gaussianFilter.setRadius(Math.max(1, bufferedImage.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
-        return gaussianFilter.filter(bufferedImage, null);
+    public static BufferedImage doBlur(BufferedImage img) {
+        gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
+        return gaussianFilter.filter(img, null);
     }
 
     /**
      * 对 BufferedImage 进行暗化处理
      *
-     * @param bufferedImage
+     * @param img
      * @return
      */
-    public static BufferedImage darker(BufferedImage bufferedImage) {
-        contrastFilter.setBrightness(BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex]);
-        return contrastFilter.filter(bufferedImage, null);
+    public static BufferedImage darker(BufferedImage img) {
+//        contrastFilter.setBrightness(BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex]);
+        double lightness = getLightness(img);
+        // 自适应亮度
+        contrastFilter.setBrightness(lightness > 0.3f ? BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex] : lightness > 0.14f ? 1 : lightness > 0.1f ? 1.5f : 2);
+        return contrastFilter.filter(img, null);
+    }
+
+    /**
+     * 获取 BufferedImage 亮度
+     *
+     * @param img
+     * @return
+     */
+    public static double getLightness(BufferedImage img) {
+        if (img == null) return 0;
+        double t = 0;
+        int w = img.getWidth(), h = img.getHeight();
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                t += ColorUtil.lightness(new Color(img.getRGB(i, j)));
+            }
+        }
+        t /= w * h;
+        return t;
     }
 
     /**

@@ -24,6 +24,8 @@ import java.awt.event.*;
 public class DesktopLyricDialog extends JDialog {
     private int width;
     private Font font = Fonts.NORMAL_HUGE;
+    private final int MIN_FONT_SIZE = Fonts.HUGE_SIZE - 20;
+    private final int MAX_FONT_SIZE = Fonts.HUGE_SIZE + 20;
     private Color bgColor;
     private String lyric;
     private double ratio;
@@ -41,8 +43,10 @@ public class DesktopLyricDialog extends JDialog {
     private String LOCK_TIP = "锁定桌面歌词";
     private String UNLOCK_TIP = "解锁桌面歌词";
     private String RESTORE_TIP = "还原桌面歌词位置";
-    private String ASCEND_TRANS_TIP = "增加透明度";
     private String DESCEND_TRANS_TIP = "减少透明度";
+    private String ASCEND_TRANS_TIP = "增加透明度";
+    private String DECREASE_FONT_TIP = "缩小字体";
+    private String INCREASE_FONT_TIP = "放大字体";
     private String ON_TOP_TIP = "置顶桌面歌词";
     private String CANCEL_ON_TOP_TIP = "取消置顶桌面歌词";
     private String CLOSE_TIP = "关闭桌面歌词";
@@ -51,6 +55,8 @@ public class DesktopLyricDialog extends JDialog {
     private ImageIcon restoreIcon = new ImageIcon(SimplePath.ICON_PATH + "restoreLocation.png");
     private ImageIcon descendTransIcon = new ImageIcon(SimplePath.ICON_PATH + "descendTrans.png");
     private ImageIcon ascendTransIcon = new ImageIcon(SimplePath.ICON_PATH + "ascendTrans.png");
+    private ImageIcon decreaseFontIcon = new ImageIcon(SimplePath.ICON_PATH + "decreaseFont.png");
+    private ImageIcon increaseFontIcon = new ImageIcon(SimplePath.ICON_PATH + "increaseFont.png");
     private ImageIcon onTopIcon = new ImageIcon(SimplePath.ICON_PATH + "onTop.png");
     private ImageIcon cancelOnTopIcon = new ImageIcon(SimplePath.ICON_PATH + "cancelOnTop.png");
     private ImageIcon closeIcon = new ImageIcon(SimplePath.ICON_PATH + "closeMedium.png");
@@ -59,6 +65,8 @@ public class DesktopLyricDialog extends JDialog {
     private CustomButton restore = new CustomButton();
     private CustomButton descendTrans = new CustomButton();
     private CustomButton ascendTrans = new CustomButton();
+    private CustomButton decreaseFont = new CustomButton();
+    private CustomButton increaseFont = new CustomButton();
     private CustomButton onTop = new CustomButton();
     private CustomButton close = new CustomButton();
 
@@ -100,12 +108,27 @@ public class DesktopLyricDialog extends JDialog {
         this.ratio = ratio;
 
         tempLabel.setText(lyric);
-        if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(bgColor))
+        if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(bgColor)
+                || !stc.getLabelFont().equals(tempLabel.getFont()))
             stc = new StringTwoColor(tempLabel, lyric, foreColor, bgColor, ratio, true, width);
         else stc.setRatio(ratio);
         lyricLabel.setIcon(stc.getImageIcon());
         // Icon 对象可能不变，一定要手动重绘刷新！
         lyricLabel.repaint();
+    }
+
+    // 更新大小
+    private void updateSize() {
+        FontMetrics metrics = tempLabel.getFontMetrics(font);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(new Dimension(width = (int) (screenSize.width * 0.5), metrics.getHeight() + 50));
+    }
+
+    // 更新位置
+    private void updateLocation() {
+        Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 15);
     }
 
     public DesktopLyricDialog(PlayerFrame f) {
@@ -116,11 +139,8 @@ public class DesktopLyricDialog extends JDialog {
         setTitle("桌面歌词");
         // 将桌面歌词窗口设置为固定大小与固定位置
 //        FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
-        FontMetrics metrics = tempLabel.getFontMetrics(font);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
-        setSize(new Dimension(width = (int) (screenSize.width * 0.5), metrics.getHeight() + 50));
-        setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 15);
+        updateSize();
+        updateLocation();
 
         // 设置主题色
         bgColor = f.currUIStyle.getLrcColor();
@@ -140,12 +160,16 @@ public class DesktopLyricDialog extends JDialog {
         buttonPanel.add(restore);
         buttonPanel.add(descendTrans);
         buttonPanel.add(ascendTrans);
+        buttonPanel.add(decreaseFont);
+        buttonPanel.add(increaseFont);
         buttonPanel.add(onTop);
         buttonPanel.add(close);
 
         restore.setVisible(false);
         descendTrans.setVisible(false);
         ascendTrans.setVisible(false);
+        decreaseFont.setVisible(false);
+        increaseFont.setVisible(false);
         onTop.setVisible(false);
         close.setVisible(false);
 
@@ -185,6 +209,8 @@ public class DesktopLyricDialog extends JDialog {
         restoreIcon = ImageUtil.dye(restoreIcon, bc);
         descendTransIcon = ImageUtil.dye(descendTransIcon, bc);
         ascendTransIcon = ImageUtil.dye(ascendTransIcon, bc);
+        decreaseFontIcon = ImageUtil.dye(decreaseFontIcon, bc);
+        increaseFontIcon = ImageUtil.dye(increaseFontIcon, bc);
         onTopIcon = ImageUtil.dye(onTopIcon, bc);
         cancelOnTopIcon = ImageUtil.dye(cancelOnTopIcon, bc);
         closeIcon = ImageUtil.dye(closeIcon, bc);
@@ -192,6 +218,8 @@ public class DesktopLyricDialog extends JDialog {
         restore.setIcon(restoreIcon);
         descendTrans.setIcon(descendTransIcon);
         ascendTrans.setIcon(ascendTransIcon);
+        decreaseFont.setIcon(decreaseFontIcon);
+        increaseFont.setIcon(increaseFontIcon);
         close.setIcon(closeIcon);
     }
 
@@ -209,6 +237,8 @@ public class DesktopLyricDialog extends JDialog {
         restore.setVisible(unlocked);
         descendTrans.setVisible(unlocked);
         ascendTrans.setVisible(unlocked);
+        decreaseFont.setVisible(unlocked);
+        increaseFont.setVisible(unlocked);
         onTop.setVisible(unlocked);
         close.setVisible(unlocked);
         // 设置为不穿透，防止鼠标退出事件监听过早
@@ -220,6 +250,8 @@ public class DesktopLyricDialog extends JDialog {
         restore.setVisible(false);
         descendTrans.setVisible(false);
         ascendTrans.setVisible(false);
+        decreaseFont.setVisible(false);
+        increaseFont.setVisible(false);
         onTop.setVisible(false);
         close.setVisible(false);
         mainPanel.setDrawBg(false);
@@ -300,15 +332,19 @@ public class DesktopLyricDialog extends JDialog {
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
         descendTrans.addMouseListener(new ButtonMouseListener(descendTrans, f));
         descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth() + 10, descendTransIcon.getIconHeight() + 10));
-        descendTrans.addActionListener(e -> {
-            lyricLabel.decreaseAlpha();
-        });
+        descendTrans.addActionListener(e -> lyricLabel.decreaseAlpha());
         ascendTrans.setToolTipText(ASCEND_TRANS_TIP);
         ascendTrans.addMouseListener(new ButtonMouseListener(ascendTrans, f));
         ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth() + 10, ascendTransIcon.getIconHeight() + 10));
-        ascendTrans.addActionListener(e -> {
-            lyricLabel.increaseAlpha();
-        });
+        ascendTrans.addActionListener(e -> lyricLabel.increaseAlpha());
+        decreaseFont.setToolTipText(DECREASE_FONT_TIP);
+        decreaseFont.addMouseListener(new ButtonMouseListener(decreaseFont, f));
+        decreaseFont.setPreferredSize(new Dimension(decreaseFontIcon.getIconWidth() + 10, decreaseFontIcon.getIconHeight() + 10));
+        decreaseFont.addActionListener(e -> decreaseFont());
+        increaseFont.setToolTipText(INCREASE_FONT_TIP);
+        increaseFont.addMouseListener(new ButtonMouseListener(increaseFont, f));
+        increaseFont.setPreferredSize(new Dimension(increaseFontIcon.getIconWidth() + 10, increaseFontIcon.getIconHeight() + 10));
+        increaseFont.addActionListener(e -> increaseFont());
         onTop.addMouseListener(new ButtonMouseListener(onTop, f));
         onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth() + 10, onTopIcon.getIconHeight() + 10));
         onTop.addActionListener(e -> {
@@ -325,12 +361,25 @@ public class DesktopLyricDialog extends JDialog {
         updateStyle();
     }
 
+    private void decreaseFont() {
+        updateFontSize(f.desktopLyricFontSize = Math.max(MIN_FONT_SIZE, f.desktopLyricFontSize - 1));
+    }
+
+    private void increaseFont() {
+        updateFontSize(f.desktopLyricFontSize = Math.min(MAX_FONT_SIZE, f.desktopLyricFontSize + 1));
+    }
+
+    public void updateFontSize(int fontSize) {
+        font = font.deriveFont((float) fontSize);
+        tempLabel.setFont(font);
+        updateSize();
+    }
+
     public void setAlpha(float alpha) {
         lyricLabel.setAlpha(alpha);
     }
 
     private class LyricLabel extends CustomLabel {
-        private float alpha = 1;
         private final float min = 0.2f;
         private final float max = 1f;
         private final float step = 0.1f;
@@ -350,15 +399,8 @@ public class DesktopLyricDialog extends JDialog {
         public void setAlpha(float alpha) {
             if (alpha < min) alpha = min;
             else if (alpha > max) alpha = max;
-            f.desktopLyricAlpha = this.alpha = alpha;
-            repaint();
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            super.paintComponent(g);
+            super.setAlpha(alpha);
+            f.desktopLyricAlpha = alpha;
         }
     }
 

@@ -761,6 +761,8 @@ public class PlayerFrame extends JFrame {
     public boolean desktopLyricOnTop;
     // 桌面歌词透明度
     public double desktopLyricAlpha;
+    // 桌面歌词字体大小
+    public int desktopLyricFontSize;
     // 专辑图片宽/高
     private int albumImageWidth;
     // 封面图片宽/高
@@ -2992,6 +2994,9 @@ public class PlayerFrame extends JFrame {
         // 载入桌面歌词透明度
         desktopLyricAlpha = config.optDouble(ConfigConstants.DESKTOP_LYRIC_ALPHA, 1);
         desktopLyricDialog.setAlpha((float) desktopLyricAlpha);
+        // 载入桌面歌词字体大小
+        desktopLyricFontSize = config.optInt(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, Fonts.HUGE_SIZE);
+        desktopLyricDialog.updateFontSize(desktopLyricFontSize);
         // 载入播放模式
         switch (config.optInt(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
             case PlayMode.DISABLED:
@@ -3741,6 +3746,8 @@ public class PlayerFrame extends JFrame {
         config.put(ConfigConstants.DESKTOP_LYRIC_ON_TOP, desktopLyricOnTop);
         // 存入桌面歌词透明度
         config.put(ConfigConstants.DESKTOP_LYRIC_ALPHA, desktopLyricAlpha);
+        // 存入桌面歌词字体大小
+        config.put(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, desktopLyricFontSize);
         // 存入快进/快退时间
         config.put(ConfigConstants.FOB_TIME, forwardOrBackwardTime);
         // 存入视频快进/快退时间

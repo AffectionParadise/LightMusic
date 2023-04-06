@@ -54,7 +54,7 @@ public class StringTwoColor {
         for (int i = 0, len = metricsBig.length; i < len; i++)
             metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i).deriveFont(fontSize));
         for (int i = 0, len = metricsHuge.length; i < len; i++)
-            metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i));
+            metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i).deriveFont(fontSize));
 
 //        Color borderColor = ColorUtils.darker(ColorUtils.darker(c2));
 //        int shadowXOffset = 2, shadowYOffset = 2;
@@ -171,8 +171,9 @@ public class StringTwoColor {
 //                        g2.setColor(borderColor);
 //                        g1.draw(shape);
 //                        g2.draw(shape);
-                        g1.setFont(font);
-                        g2.setFont(font);
+                        Font nf = font.deriveFont(fontSize);
+                        g1.setFont(nf);
+                        g2.setFont(nf);
                         g1.drawString(str, widthDrawn, dy);
                         g2.drawString(str, widthDrawn, dy);
                         widthDrawn += metricsHuge[j].stringWidth(str);
