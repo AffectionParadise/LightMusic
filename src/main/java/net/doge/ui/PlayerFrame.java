@@ -19556,9 +19556,10 @@ public class PlayerFrame extends JFrame {
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
                 Point p = e.getPoint();
                 int yOffset = (dragFrom.y - p.y) * 2;
-                lrcScrollPane.setVValue(lrcScrollPane.getVValue() + yOffset);
+                boolean ok = lrcScrollPane.setVValue(lrcScrollPane.getVValue() + yOffset);
                 dragFrom.x = p.x;
-                dragFrom.y = p.y + yOffset;
+                // 拖动时超出滚动条范围后不再叠加参数
+                dragFrom.y = ok ? p.y + yOffset : p.y;
                 swAction.run();
             }
         });
@@ -20466,7 +20467,15 @@ public class PlayerFrame extends JFrame {
         mp.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
             SimpleMusicInfo musicInfo = player.getMusicInfo();
             if (musicInfo.hasDuration()) return;
-            musicInfo.setDuration(newValue.toSeconds());
+            double duration = newValue.toSeconds();
+            musicInfo.setDuration(duration);
+            // 填充音乐时长
+            if (player.loadedNetMusic()) player.getNetMusicInfo().setDuration(duration);
+            else player.getAudioFile().setDuration(duration);
+            // 刷新列表时长显示
+            if (musicList.isShowing()) musicList.repaint();
+            else if (netMusicList.isShowing()) netMusicList.repaint();
+            else if (playQueue.isShowing()) playQueue.repaint();
             // 重置总时间
             durationLabel.setText(player.getDurationString());
             // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
@@ -20610,7 +20619,7 @@ public class PlayerFrame extends JFrame {
             miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
             miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
         }
-        // 重绘歌单，刷新播放中的图标
+        // 刷新播放中的图标
         if (musicList.isShowing()) musicList.repaint();
         else if (netMusicList.isShowing()) netMusicList.repaint();
         else if (playQueue.isShowing()) playQueue.repaint();

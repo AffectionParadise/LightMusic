@@ -4223,11 +4223,12 @@ public class MusicServerUtil {
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
-                        String picUrl = data.getString("pic");
+                        String picUrl = data.optString("pic");
                         if (picUrl.contains("music.126.net"))
                             picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
                         else if (picUrl.contains("y.gtimg.cn"))
                             picUrl = picUrl.replaceFirst("300x300", "500x500");
+                        if (!picUrl.startsWith("http")) picUrl = "https://www.hifini.com/" + picUrl;
                         BufferedImage albumImage = getImageFromUrl(picUrl);
                         ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();

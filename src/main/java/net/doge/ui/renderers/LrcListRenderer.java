@@ -84,7 +84,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 其他行的样式
         else {
             label.setFont(index == row - 2 ? shrinkFont : defaultFont);
-            label.setText(StringUtil.textToHtml(StringUtil.wrapLineByWidth(lyric, maxWidth)));
+            label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth)));
             label.setIcon(null);
         }
         // 设置 list 对应行的高度

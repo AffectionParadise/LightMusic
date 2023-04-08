@@ -230,11 +230,12 @@ public class ColorUtil {
     /**
      * 获取颜色亮度
      *
-     * @param color
+     * @param rgb
      * @return
      */
-    public static double lightness(Color color) {
-        return Math.pow(Math.pow(color.getRed() / 255.0f, 2.2f) + Math.pow(color.getGreen() / 170.0f, 2.2f) + Math.pow(color.getBlue() / 425.0f, 2.2f), 1 / 2.2f) * 0.547373141f;
+    public static double lightness(int rgb) {
+        int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
+        return Math.pow(Math.pow(r / 255.0f, 2.2f) + Math.pow(g / 170.0f, 2.2f) + Math.pow(b / 425.0f, 2.2f), 1 / 2.2f) * 0.547373141f;
     }
 
 //    /**

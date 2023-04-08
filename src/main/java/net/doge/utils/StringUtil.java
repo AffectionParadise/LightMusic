@@ -272,21 +272,21 @@ public class StringUtil {
      */
     public static String getPrettyText(Element parentElement) {
         if (parentElement == null) return "";
-        StringBuffer working = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
         for (Node child : parentElement.childNodes()) {
             if (child instanceof TextNode) {
-                working.append(((TextNode) child).text());
+                sb.append(((TextNode) child).text());
             }
             if (child instanceof Element) {
                 Element childElement = (Element) child;
-                working.append(getPrettyText(childElement));
+                sb.append(getPrettyText(childElement));
                 String s = childElement.tag().getName().toLowerCase();
                 if (s.equals("br") || s.equals("li") || s.equals("p") || s.equals("dd")) {
-                    working.append("\n");
+                    sb.append("\n");
                 }
             }
         }
-        return working.toString();
+        return sb.toString();
     }
 
     /**

@@ -392,10 +392,17 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage darker(BufferedImage img) {
-//        contrastFilter.setBrightness(BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex]);
         double lightness = getLightness(img);
+        float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
+        if (lightness > 0.6f) bn = param;
+        else if (lightness > 0.3f) bn = param + 0.1f;
+        else if (lightness > 0.25f) bn = param + 0.18f;
+        else if (lightness > 0.2f) bn = param + 0.26f;
+        else if (lightness > 0.1f) bn = param + 0.35f;
+        else bn = param + 0.95f;
         // 自适应亮度
-        contrastFilter.setBrightness(lightness > 0.3f ? BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex] : lightness > 0.14f ? 1 : lightness > 0.1f ? 1.5f : 2);
+        contrastFilter.setBrightness(bn);
+//        System.out.println(lightness + " " + bn);
         return contrastFilter.filter(img, null);
     }
 
@@ -411,7 +418,7 @@ public class ImageUtil {
         int w = img.getWidth(), h = img.getHeight();
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                t += ColorUtil.lightness(new Color(img.getRGB(i, j)));
+                t += ColorUtil.lightness(img.getRGB(i, j));
             }
         }
         t /= w * h;
