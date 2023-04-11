@@ -28,7 +28,7 @@ public class CustomScrollPane extends JScrollPane {
             int vValue = getVValue();
             if (vValue == scrollingTo) wheelScrollingTimer.stop();
 
-            int gap = scrollingTo - scrollingFrom, piece = Math.max(1, Math.abs(gap) / 10);
+            int gap = scrollingTo - scrollingFrom, piece = Math.max(1, Math.abs(gap) / 20);
             setVValue(gap > 0 ? Math.min(scrollingTo, vValue + piece) : Math.max(scrollingTo, vValue - piece));
 
             if (getVValue() == vValue) wheelScrollingTimer.stop();

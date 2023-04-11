@@ -228,8 +228,9 @@ public class MusicServerUtil {
     private static final String SEARCH_MUSIC_QI_API
             = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=1&word=%s";
     // 关键词搜索歌曲 API (音乐磁场)
-    private static final String SEARCH_MUSIC_HF_API
-            = "https://www.hifini.com/search-%s-1-%s.htm";
+    private static final String SEARCH_MUSIC_HF_API = "https://www.hifini.com/search-%s-1-%s.htm";
+    // 关键词搜索歌曲 API (咕咕咕音乐)
+    private static final String SEARCH_MUSIC_GG_API = "http://www.gggmusic.com/search-%s-1-%s.htm";
     // 关键词搜索节目 API (喜马拉雅)
     private static final String SEARCH_MUSIC_XM_API
             = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&device=iPhone&core=track&fq=&paidFilter=false";
@@ -416,11 +417,11 @@ public class MusicServerUtil {
     private static final String GET_NEW_RADIO_COMMENTS_XM_API
             = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=time-desc&pageId=%s&pageSize=%s";
     // 获取节目评论 API (喜马拉雅)
-    private static final String GET_COMMENTS_XM_API
-            = "https://www.ximalaya.com/revision/comment/queryComments?trackId=%s&page=%s&pageSize=%s";
+    private static final String GET_COMMENTS_XM_API = "https://www.ximalaya.com/revision/comment/queryComments?trackId=%s&page=%s&pageSize=%s";
     // 获取评论 API (音乐磁场)
-    private static final String GET_COMMENTS_HF_API
-            = "https://www.hifini.com/thread-%s-%s.htm?sort=desc";
+    private static final String GET_COMMENTS_HF_API = "https://www.hifini.com/thread-%s-%s.htm?sort=desc";
+    // 获取评论 API (咕咕咕音乐)
+    private static final String GET_COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm?sort=desc";
     // 获取节目评论 API (猫耳)
     private static final String GET_COMMENTS_ME_API
             = "https://www.missevan.com/site/getcomment?type=%s&order=%s&eId=%s&p=%s&pagesize=%s";
@@ -955,24 +956,33 @@ public class MusicServerUtil {
      * @return
      */
     public static void initHotSongTag() {
-        Tags.hotSongTag.put("默认", new String[]{"", "index"});
+        Tags.hotSongTag.put("默认", new String[]{"", "index", "index"});
 
         // 音乐磁场
-        Tags.hotSongTag.put("热门", new String[]{"", "index-0-2"});
-        Tags.hotSongTag.put("月榜", new String[]{"", "index-0-3"});
-        Tags.hotSongTag.put("周榜", new String[]{"", "index-0-4"});
-        Tags.hotSongTag.put("日榜", new String[]{"", "index-0-5"});
-        Tags.hotSongTag.put("华语", new String[]{"", "forum-1"});
-        Tags.hotSongTag.put("日韩", new String[]{"", "forum-15"});
-        Tags.hotSongTag.put("欧美", new String[]{"", "forum-10"});
-        Tags.hotSongTag.put("Remix", new String[]{"", "forum-11"});
-        Tags.hotSongTag.put("纯音乐", new String[]{"", "forum-12"});
-        Tags.hotSongTag.put("异次元", new String[]{"", "forum-13"});
-        Tags.hotSongTag.put("特供", new String[]{"", "forum-17"});
-        Tags.hotSongTag.put("百科", new String[]{"", "forum-18"});
-        Tags.hotSongTag.put("站务", new String[]{"", "forum-9"});
+        Tags.hotSongTag.put("热门", new String[]{"", "index-0-2", "index-0-hot"});
+        Tags.hotSongTag.put("月榜", new String[]{"", "index-0-3", ""});
+        Tags.hotSongTag.put("周榜", new String[]{"", "index-0-4", ""});
+        Tags.hotSongTag.put("日榜", new String[]{"", "index-0-5", ""});
+        Tags.hotSongTag.put("华语", new String[]{"", "forum-1", "forum-1"});
+        Tags.hotSongTag.put("日韩", new String[]{"", "forum-15", "forum-7"});
+        Tags.hotSongTag.put("欧美", new String[]{"", "forum-10", "forum-3"});
+        Tags.hotSongTag.put("Remix", new String[]{"", "forum-11", ""});
+        Tags.hotSongTag.put("纯音乐", new String[]{"", "forum-12", "forum-6"});
+        Tags.hotSongTag.put("异次元", new String[]{"", "forum-13", ""});
+        Tags.hotSongTag.put("特供", new String[]{"", "forum-17", ""});
+        Tags.hotSongTag.put("百科", new String[]{"", "forum-18", ""});
+        Tags.hotSongTag.put("站务", new String[]{"", "forum-9", ""});
 
-        final int c = 2;
+        // 咕咕咕音乐
+        Tags.hotSongTag.put("音乐分享区", new String[]{"", "", "forum-12"});
+        Tags.hotSongTag.put("伤感", new String[]{"", "", "forum-8"});
+        Tags.hotSongTag.put("粤语", new String[]{"", "", "forum-2"});
+        Tags.hotSongTag.put("青春", new String[]{"", "", "forum-5"});
+        Tags.hotSongTag.put("分享", new String[]{"", "", "forum-11"});
+        Tags.hotSongTag.put("温柔男友音", new String[]{"", "", "forum-10"});
+        Tags.hotSongTag.put("DJ", new String[]{"", "", "forum-9"});
+
+        final int c = 3;
         // 网易云曲风
         Runnable initHotSongTag = () -> {
             String tagBody = HttpRequest.get(String.format(STYLE_API))
@@ -1052,6 +1062,8 @@ public class MusicServerUtil {
     private static final String HOT_MUSIC_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=27186466";
     // 热歌 API (音乐磁场)
     private static final String HOT_MUSIC_HF_API = "https://www.hifini.com/%s-%s.htm";
+    // 热歌 API (咕咕咕音乐)
+    private static final String HOT_MUSIC_GG_API = "http://www.gggmusic.com/%s-%s.htm";
 
     // 曲风 API
     private static final String STYLE_API = prefix + "/style/list";
@@ -1062,26 +1074,35 @@ public class MusicServerUtil {
      * @return
      */
     public static void initNewSongTag() {
-        // 网易云 网易云 酷狗 QQ 音乐磁场
-        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "0", ""});
+        // 网易云 网易云 酷狗 QQ 音乐磁场 咕咕咕音乐
+        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "0", "", ""});
 
-        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "0", "forum-1"});
-        Tags.newSongTag.put("内地", new String[]{"", "", "", "1", ""});
-        Tags.newSongTag.put("港台", new String[]{"", "", "", "2", ""});
-        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "3", "forum-10"});
-        Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "4", ""});
-        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "5", ""});
-        Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "forum-15"});
+        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "0", "forum-1", "forum-1"});
+        Tags.newSongTag.put("内地", new String[]{"", "", "", "1", "", ""});
+        Tags.newSongTag.put("港台", new String[]{"", "", "", "2", "", ""});
+        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "3", "forum-10", "forum-3"});
+        Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "4", "", ""});
+        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "5", "", ""});
+        Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "forum-15", "forum-7"});
 
         // 音乐磁场
-        Tags.newSongTag.put("Remix", new String[]{"", "", "", "", "forum-11"});
-        Tags.newSongTag.put("纯音乐", new String[]{"", "", "", "", "forum-12"});
-        Tags.newSongTag.put("异次元", new String[]{"", "", "", "", "forum-13"});
-        Tags.newSongTag.put("特供", new String[]{"", "", "", "", "forum-17"});
-        Tags.newSongTag.put("百科", new String[]{"", "", "", "", "forum-18"});
-        Tags.newSongTag.put("站务", new String[]{"", "", "", "", "forum-9"});
+        Tags.newSongTag.put("Remix", new String[]{"", "", "", "", "forum-11", ""});
+        Tags.newSongTag.put("纯音乐", new String[]{"", "", "", "", "forum-12", ""});
+        Tags.newSongTag.put("异次元", new String[]{"", "", "", "", "forum-13", ""});
+        Tags.newSongTag.put("特供", new String[]{"", "", "", "", "forum-17", ""});
+        Tags.newSongTag.put("百科", new String[]{"", "", "", "", "forum-18", ""});
+        Tags.newSongTag.put("站务", new String[]{"", "", "", "", "forum-9", ""});
 
-        final int c = 5;
+        // 咕咕咕音乐
+        Tags.newSongTag.put("音乐分享区", new String[]{"", "", "", "", "", "forum-12"});
+        Tags.newSongTag.put("伤感", new String[]{"", "", "", "", "", "forum-8"});
+        Tags.newSongTag.put("粤语", new String[]{"", "", "", "", "", "forum-2"});
+        Tags.newSongTag.put("青春", new String[]{"", "", "", "", "", "forum-5"});
+        Tags.newSongTag.put("分享", new String[]{"", "", "", "", "", "forum-11"});
+        Tags.newSongTag.put("温柔男友音", new String[]{"", "", "", "", "", "forum-10"});
+        Tags.newSongTag.put("DJ", new String[]{"", "", "", "", "", "forum-9"});
+
+        final int c = 6;
         // 网易云曲风
         Runnable initNewSongTag = () -> {
             String tagBody = HttpRequest.get(String.format(STYLE_API))
@@ -1165,6 +1186,8 @@ public class MusicServerUtil {
             = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
     // 推荐新歌 API (音乐磁场)
     private static final String RECOMMEND_NEW_MUSIC_HF_API = "https://www.hifini.com/%s-%s.htm?orderby=tid";
+    // 推荐新歌 API (咕咕咕音乐)
+    private static final String RECOMMEND_NEW_MUSIC_GG_API = "http://www.gggmusic.com/%s-%s.htm?orderby=tid";
 
     // 专辑标签 API (豆瓣)
     private static final String ALBUM_TAG_DB_API
@@ -2619,6 +2642,8 @@ public class MusicServerUtil {
     private static final String SINGLE_SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲信息 API (音乐磁场)
     private static final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
+    // 歌曲信息 API (咕咕咕音乐)
+    private static final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
     // 歌曲信息 API (猫耳)
     private static final String SINGLE_SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
     // 歌曲专辑信息 API (猫耳)
@@ -2844,6 +2869,10 @@ public class MusicServerUtil {
     private static final String USER_DETAIL_HF_API = "https://www.hifini.com/user-%s.htm";
     // 用户节目 API (音乐磁场)
     private static final String USER_PROGRAMS_HF_API = "https://www.hifini.com/user-thread-%s-%s.htm";
+    // 用户信息 API (咕咕咕音乐)
+    private static final String USER_DETAIL_GG_API = "http://www.gggmusic.com/user-%s.htm";
+    // 用户节目 API (咕咕咕音乐)
+    private static final String USER_PROGRAMS_GG_API = "http://www.gggmusic.com/user-thread-%s-%s.htm";
     // 用户信息 API (猫耳)
     private static final String USER_DETAIL_ME_API = "https://www.missevan.com/%s/";
     // CV 信息 API (猫耳)
@@ -3783,6 +3812,41 @@ public class MusicServerUtil {
             return new CommonResult<>(res, t);
         };
 
+        // 咕咕咕音乐
+        Callable<CommonResult<NetMusicInfo>> searchMusicGg = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_GG_API, encodedKeyword.replace("%", "_"), page))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select(".media.thread.tap");
+            Elements ap = doc.select("a.page-link");
+            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            if (StringUtil.isEmpty(ts))
+                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+            boolean hasTs = StringUtil.isNotEmpty(ts);
+            if (hasTs) t = Integer.parseInt(ts) * limit;
+            else t = songs.size();
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+
+                Elements a = song.select(".subject.break-all a");
+
+                String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                String songName = a.text();
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.GG);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+
+                res.add(musicInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         // 喜马拉雅
         Callable<CommonResult<NetMusicInfo>> searchMusicXm = () -> {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
@@ -3876,6 +3940,8 @@ public class MusicServerUtil {
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicXm));
                     if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicHf));
+                    if (src == NetMusicSource.GG || src == NetMusicSource.ALL)
+                        taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicGg));
                 }
                 if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchProgramMe));
@@ -4218,7 +4284,6 @@ public class MusicServerUtil {
 
                 Elements a = doc.select(".m-3.text-center h5 a");
 
-//                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(a.text());
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
                 if (!musicInfo.hasAlbumImage()) {
@@ -4235,18 +4300,36 @@ public class MusicServerUtil {
                     });
                 }
             }));
-//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-//                if (!musicInfo.hasUrl()) {
-//                    // 无链接，直接换源
-//                    String url = fetchMusicUrl(songId, NetMusicSource.KW);
-//                    if (StringUtils.isNotEmpty(url)) musicInfo.setUrl(url);
-//                    else MusicServerUtils.fillAvailableMusicUrl(musicInfo);
-//                }
-//            }));
-            // 填充歌词、翻译、罗马音
-//            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-//                fillLrc(musicInfo);
-//            }));
+        }
+
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+                String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, songId))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(songBody);
+                String dataStr = ReUtil.get("audio: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+                JSONObject data = JSONObject.fromObject(dataStr);
+
+                Elements a = doc.select(".m-3.text-center h5 a");
+
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(a.text());
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
+                if (!musicInfo.hasAlbumImage()) {
+                    GlobalExecutors.imageExecutor.submit(() -> {
+                        String picUrl = data.getString("cover");
+                        if (picUrl.contains("music.126.net"))
+                            picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
+                        else if (picUrl.contains("y.gtimg.cn"))
+                            picUrl = picUrl.replaceFirst("300x300", "500x500");
+                        if (!picUrl.startsWith("http")) picUrl = "http://www.gggmusic.com/" + picUrl;
+                        BufferedImage albumImage = getImageFromUrl(picUrl);
+                        ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                        musicInfo.callback();
+                    });
+                }
+            }));
         }
 
         // 喜马拉雅
@@ -4430,6 +4513,14 @@ public class MusicServerUtil {
         else if (source == NetMusicSource.HF) {
             // 无链接或试听，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.HF);
+            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            else MusicServerUtil.fillAvailableMusicUrl(musicInfo);
+        }
+
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            // 无链接或试听，直接换源
+            String url = fetchMusicUrl(songId, NetMusicSource.GG);
             if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
             else MusicServerUtil.fillAvailableMusicUrl(musicInfo);
         }
@@ -7403,6 +7494,74 @@ public class MusicServerUtil {
 
                 NetCommentInfo ci = new NetCommentInfo();
                 ci.setSource(NetMusicSource.HF);
+                ci.setSub(true);
+                ci.setUsername(username);
+                ci.setUserId(userId);
+                ci.setProfileUrl(profileUrl);
+                ci.setContent(content);
+                String finalProfileUrl = profileUrl;
+
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage profile = extractProfile(finalProfileUrl);
+                    ci.setProfile(profile);
+                });
+
+                commentInfos.add(ci);
+            }
+        }
+
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_GG_API, id, page))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(commentInfoBody);
+            Elements comments = doc.select("li.media.post");
+            Elements ap = doc.select("a.page-link");
+            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            if (StringUtil.isEmpty(ts))
+                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+            boolean hasTs = StringUtil.isNotEmpty(ts);
+            if (hasTs) total = Integer.parseInt(ts) * limit;
+            else total = comments.size();
+            for (int i = 0, len = comments.size(); i < len; i++) {
+                Element comment = comments.get(i);
+
+                Element msg = comment.select(".message.mt-1.break-all").first();
+                if (msg == null) continue;
+
+                String username = comment.select(".username").text();
+                String userId = ReUtil.get("user-(\\d+)\\.htm", comment.select(".username a").attr("href"), 1);
+                String profileUrl = "http://www.gggmusic.com/" + comment.select("img").attr("src");
+                String content = msg.ownText().trim();
+                String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
+
+                NetCommentInfo commentInfo = new NetCommentInfo();
+                commentInfo.setSource(NetMusicSource.GG);
+                commentInfo.setUsername(username);
+                commentInfo.setUserId(userId);
+                commentInfo.setProfileUrl(profileUrl);
+                commentInfo.setContent(content);
+                commentInfo.setTime(time);
+                String finalProfileUrl1 = profileUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage profile = extractProfile(finalProfileUrl1);
+                    commentInfo.setProfile(profile);
+                });
+
+                commentInfos.add(commentInfo);
+
+                // 被回复的评论
+                Elements bq = msg.select("blockquote");
+                if (bq.isEmpty()) continue;
+
+                username = bq.select("a").text().trim();
+                userId = ReUtil.get("user-(\\d+)\\.htm", comment.select("a").attr("href"), 1);
+                profileUrl = "http://www.gggmusic.com/" + bq.select("img").attr("src");
+                content = bq.first().ownText();
+
+                NetCommentInfo ci = new NetCommentInfo();
+                ci.setSource(NetMusicSource.GG);
                 ci.setSub(true);
                 ci.setUsername(username);
                 ci.setUserId(userId);
@@ -12234,7 +12393,7 @@ public class MusicServerUtil {
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(musicInfoBody);
-                Elements songs = doc.select(".media-body");
+                Elements songs = doc.select(".media.thread.tap");
                 Elements ap = doc.select("a.page-link");
                 String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
                 if (StringUtil.isEmpty(ts))
@@ -12259,6 +12418,43 @@ public class MusicServerUtil {
                     musicInfo.setName(songName);
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
+
+                    res.add(musicInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+
+        // 咕咕咕音乐
+        Callable<CommonResult<NetMusicInfo>> getHotMusicGg = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.isNotEmpty(s[2])) {
+                String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_GG_API, s[2], page))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(musicInfoBody);
+                Elements songs = doc.select(".media.thread.tap");
+                Elements ap = doc.select("a.page-link");
+                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+                if (StringUtil.isEmpty(ts))
+                    ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                boolean hasTs = StringUtil.isNotEmpty(ts);
+                if (hasTs) t = Integer.parseInt(ts) * limit;
+                else t = songs.size();
+                for (int i = hasTs ? 0 : (page - 1) * limit, len = hasTs ? songs.size() : Math.min(songs.size(), page * limit); i < len; i++) {
+                    Element song = songs.get(i);
+
+                    Elements a = song.select(".subject.break-all a");
+
+                    String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                    String songName = a.text();
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.GG);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(songName);
 
                     res.add(musicInfo);
                 }
@@ -12298,11 +12494,17 @@ public class MusicServerUtil {
             if (src == NetMusicSource.HF || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicHf));
             }
+
+            if (src == NetMusicSource.GG || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicGg));
+            }
         } else {
             if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
                 taskList.add(GlobalExecutors.requestExecutor.submit(getStyleHotSong));
             if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicHf));
+            if (src == NetMusicSource.GG || src == NetMusicSource.ALL)
+                taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicGg));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
@@ -12661,7 +12863,7 @@ public class MusicServerUtil {
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(musicInfoBody);
-                Elements songs = doc.select(".media-body");
+                Elements songs = doc.select(".media.thread.tap");
                 Elements ap = doc.select("a.page-link");
                 String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
                 if (StringUtil.isEmpty(ts))
@@ -12686,6 +12888,43 @@ public class MusicServerUtil {
                     musicInfo.setName(songName);
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
+
+                    res.add(musicInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+
+        // 咕咕咕音乐
+        Callable<CommonResult<NetMusicInfo>> getRecommendNewSongGg = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.isNotEmpty(s[5])) {
+                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_GG_API, s[5], page))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(musicInfoBody);
+                Elements songs = doc.select(".media.thread.tap");
+                Elements ap = doc.select("a.page-link");
+                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+                if (StringUtil.isEmpty(ts))
+                    ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                boolean hasTs = StringUtil.isNotEmpty(ts);
+                if (hasTs) t = Integer.parseInt(ts) * limit;
+                else t = songs.size();
+                for (int i = hasTs ? 0 : (page - 1) * limit, len = hasTs ? songs.size() : Math.min(songs.size(), page * limit); i < len; i++) {
+                    Element song = songs.get(i);
+
+                    Elements a = song.select(".subject.break-all a");
+
+                    String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                    String songName = a.text();
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.GG);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(songName);
 
                     res.add(musicInfo);
                 }
@@ -12725,6 +12964,10 @@ public class MusicServerUtil {
 
         if (src == NetMusicSource.HF || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongHf));
+        }
+
+        if (src == NetMusicSource.GG || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongGg));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
@@ -16181,6 +16424,12 @@ public class MusicServerUtil {
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
         }
 
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            userInfo.setSign("");
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(getImageFromUrl(userInfo.getAvatarUrl())));
+        }
+
         // 猫耳
         else if (source == NetMusicSource.ME) {
             Runnable getProgramCount = () -> {
@@ -18077,6 +18326,39 @@ public class MusicServerUtil {
             }
         }
 
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_GG_API, userId, page))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(userInfoBody);
+            Elements songs = doc.select(".media.thread.tap");
+            Elements ap = doc.select("a.page-link");
+            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            if (StringUtil.isEmpty(ts))
+                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+            boolean hasTs = StringUtil.isNotEmpty(ts);
+            if (hasTs) total.set(Integer.parseInt(ts) * limit);
+            else total.set(songs.size());
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+
+                Elements a = song.select(".subject.break-all a");
+                // 用户没有帖子直接跳过
+                if (a.isEmpty()) continue;
+
+                String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                String songName = a.text();
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.GG);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+
+                musicInfos.add(musicInfo);
+            }
+        }
+
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, recordType, userId, page, limit))
@@ -18245,6 +18527,30 @@ public class MusicServerUtil {
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.HF);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+
+                res.add(musicInfo);
+            }
+            return new CommonResult<>(res, t);
+        }
+
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select("ul.text-middle.break-all li a");
+            t = songs.size();
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+
+                String songId = ReUtil.get("thread-(.*?)\\.htm", song.attr("href"), 1);
+                String songName = song.text();
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.GG);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
 
@@ -20813,6 +21119,42 @@ public class MusicServerUtil {
                 res.add(userInfo);
             }
 
+            // 咕咕咕音乐
+            else if (source == NetMusicSource.GG) {
+                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_GG_API, id))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+
+                Elements tc = doc.select(".col-md-2.col-sm-12.text-center");
+                Elements b = tc.select("b");
+                Elements sm = doc.select(".col-4.col-sm-5");
+
+                String userId = id;
+                String userName = b.text().trim();
+                String gender = "保密";
+                String avatarThumbUrl = "http://www.gggmusic.com/" + tc.select("img").attr("src");
+                String avatarUrl = avatarThumbUrl;
+                Integer programCount = Integer.parseInt(ReUtil.get("主题数：(\\d+)", sm.text(), 1));
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.GG);
+                userInfo.setId(userId);
+                userInfo.setName(userName);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setAvatarUrl(avatarUrl);
+                userInfo.setProgramCount(programCount);
+
+                String finalAvatarThumbUrl = avatarThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    userInfo.setAvatarThumb(avatarThumb);
+                });
+
+                res.add(userInfo);
+            }
+
             // 猫耳
             else if (source == NetMusicSource.ME) {
                 NetUserInfo userInfo = new NetUserInfo();
@@ -21647,6 +21989,32 @@ public class MusicServerUtil {
             }
         }
 
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, songId))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(songBody);
+            String dataStr = ReUtil.get("audio: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+            if (StringUtil.isEmpty(dataStr)) return "";
+            JSONObject data = JSONObject.fromObject(dataStr);
+            String url = data.getString("url").replace(" ", "%20");
+            if (url.startsWith("http")) return url;
+            else {
+                try {
+                    // 获取重定向之后的 url
+                    String startUrl = "http://www.gggmusic.com" + url;
+                    HttpURLConnection conn = (HttpURLConnection) new URL(startUrl).openConnection();
+                    conn.setInstanceFollowRedirects(false);
+                    conn.setConnectTimeout(5000);
+                    String newUrl = conn.getHeaderField("Location");
+                    return StringUtil.isEmpty(newUrl) ? startUrl : newUrl;
+                } catch (IOException e) {
+                    return "";
+                }
+            }
+        }
+
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_XM_API, songId))
@@ -21980,6 +22348,25 @@ public class MusicServerUtil {
                     .body();
             Document doc = Jsoup.parse(songBody);
             Elements ps = doc.select("p:not(.text-center)");
+            StringBuffer sb = new StringBuffer();
+            for (Element p : ps) {
+                String lrc = p.text().trim();
+                if (StringUtil.isEmpty(lrc)) continue;
+                sb.append(lrc);
+                sb.append('\n');
+            }
+            netMusicInfo.setLrc(sb.toString());
+            netMusicInfo.setTrans("");
+            netMusicInfo.setRoma("");
+        }
+
+        // 咕咕咕音乐
+        else if (source == NetMusicSource.GG) {
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(songBody);
+            Elements ps = doc.select(".message.break-all p");
             StringBuffer sb = new StringBuffer();
             for (Element p : ps) {
                 String lrc = p.text().trim();

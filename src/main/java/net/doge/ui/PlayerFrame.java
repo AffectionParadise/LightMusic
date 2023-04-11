@@ -2310,7 +2310,7 @@ public class PlayerFrame extends JFrame {
                 motto = MusicServerUtil.getMotto();
                 if (player.loadedMusic()) return;
                 titleLabel.setVisible(false);
-                titleLabel.setText(StringUtil.textToHtmlWithSpace(TITLE + "\n" + motto));
+                titleLabel.setText(StringUtil.textToHtml(TITLE + "\n" + motto));
                 titleLabel.setVisible(true);
             } catch (Exception e) {
                 titleLabel.setText(TITLE);
@@ -7564,7 +7564,7 @@ public class PlayerFrame extends JFrame {
                     List<NetMusicInfo> netMusicInfos = result.data;
                     netMusicCurrPage = netMusicMaxPage = 1;
                     // 标题
-                    netMusicTitleLabel.setText(netMusicInfo.toSimpleString() + " 的相似歌曲");
+                    netMusicTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的相似歌曲"));
                     netMusicToolBar.removeAll();
                     netMusicToolBar.add(netMusicBackwardButton);
                     netMusicToolBar.add(Box.createHorizontalGlue());
@@ -7632,7 +7632,7 @@ public class PlayerFrame extends JFrame {
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(netMusicInfo.toSimpleString() + " 的相关歌单");
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的相关歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -7709,7 +7709,7 @@ public class PlayerFrame extends JFrame {
                         List<NetUserInfo> netUserInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(netMusicInfo.toSimpleString() + " 的作者");
+                        netUserTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的作者"));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -7758,7 +7758,7 @@ public class PlayerFrame extends JFrame {
                         List<NetArtistInfo> netArtistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(currArtistMusicInfo.toSimpleString() + " 的歌手");
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(currArtistMusicInfo.toSimpleString() + " 的歌手"));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -7837,7 +7837,7 @@ public class PlayerFrame extends JFrame {
                         int total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netRadioTitleLabel.setText(netMusicInfo.toSimpleString() + " 的电台");
+                        netRadioTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的电台"));
                         netRadioToolBar.removeAll();
                         netRadioToolBar.add(netRadioBackwardButton);
                         netRadioToolBar.add(Box.createHorizontalGlue());
@@ -7887,7 +7887,7 @@ public class PlayerFrame extends JFrame {
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netAlbumTitleLabel.setText(netMusicInfo.toSimpleString() + " 的专辑");
+                        netAlbumTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的专辑"));
                         netAlbumToolBar.removeAll();
                         netAlbumToolBar.add(netAlbumBackwardButton);
                         netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -7961,7 +7961,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(netMusicInfo.toSimpleString() + " 的推荐电台");
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的推荐电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -8034,7 +8034,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(netMusicInfo.toSimpleString() + " 的相关 MV");
+                    netMvTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的相关 MV"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -9680,7 +9680,7 @@ public class PlayerFrame extends JFrame {
                     List<NetPlaylistInfo> netPlaylistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(netPlaylistInfo.getName() + " 的相似歌单");
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netPlaylistInfo.getName() + " 的相似歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -9749,7 +9749,7 @@ public class PlayerFrame extends JFrame {
                     List<NetUserInfo> netUserInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(netPlaylistInfo.getName() + " 的创建者");
+                    netUserTitleLabel.setText(StringUtil.textToHtml(netPlaylistInfo.getName() + " 的创建者"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -9819,7 +9819,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(netPlaylistInfo.getName() + " 的收藏者");
+                    netUserTitleLabel.setText(StringUtil.textToHtml(netPlaylistInfo.getName() + " 的收藏者"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -10668,7 +10668,7 @@ public class PlayerFrame extends JFrame {
                         List<NetUserInfo> netUserInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(netAlbumInfo.toSimpleString() + " 的作者");
+                        netUserTitleLabel.setText(StringUtil.textToHtml(netAlbumInfo.toSimpleString() + " 的作者"));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -10717,7 +10717,7 @@ public class PlayerFrame extends JFrame {
                         List<NetArtistInfo> netArtistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(netAlbumInfo.toSimpleString() + " 的歌手");
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(netAlbumInfo.toSimpleString() + " 的歌手"));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -10787,7 +10787,7 @@ public class PlayerFrame extends JFrame {
                     List<NetAlbumInfo> netAlbumInfos = result.data;
                     netAlbumCurrPage = netAlbumMaxPage = 1;
                     // 标题
-                    netAlbumTitleLabel.setText(netAlbumInfo.getName() + " 的相似专辑");
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netAlbumInfo.getName() + " 的相似专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -11679,7 +11679,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(netArtistInfo.getName() + " 的专辑");
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -11750,7 +11750,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(netArtistInfo.getName() + " 的 MV");
+                    netMvTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的 MV"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -11816,7 +11816,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(netArtistInfo.getName() + " 的相似歌手");
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的相似歌手"));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -11886,7 +11886,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(netArtistInfo.getName() + " 的粉丝");
+                    netUserTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的粉丝"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -11956,7 +11956,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(netArtistInfo.getName() + " 的合作人");
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的合作人"));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -12025,7 +12025,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(netArtistInfo.getName() + " 的电台");
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -12932,7 +12932,7 @@ public class PlayerFrame extends JFrame {
                     List<NetUserInfo> netUserInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(netRadioInfo.getName() + " 的主播");
+                    netUserTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的主播"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13002,7 +13002,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(netRadioInfo.getName() + " 的订阅者");
+                    netUserTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的订阅者"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13072,7 +13072,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRadioCurrPage = netRadioMaxPage = 1;
                     // 标题
-                    netRadioTitleLabel.setText(netRadioInfo.getName() + " 的相似电台");
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的相似电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -13141,7 +13141,7 @@ public class PlayerFrame extends JFrame {
                     List<NetArtistInfo> netArtistInfos = result.data;
                     netArtistCurrPage = netArtistMaxPage = 1;
                     // 标题
-                    netArtistTitleLabel.setText(netRadioInfo.getName() + " 的演职员");
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的演职员"));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -13787,7 +13787,7 @@ public class PlayerFrame extends JFrame {
                     List<NetMvInfo> netMvInfos = result.data;
                     netMvCurrPage = netMvMaxPage = 1;
                     // 标题
-                    netMvTitleLabel.setText(netMvInfo.toSimpleString() + " 的相似 MV");
+                    netMvTitleLabel.setText(StringUtil.textToHtml(netMvInfo.toSimpleString() + " 的相似 MV"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -13856,7 +13856,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(netMvInfo.toSimpleString() + " 的分集");
+                    netMvTitleLabel.setText(StringUtil.textToHtml(netMvInfo.toSimpleString() + " 的分集"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -13926,7 +13926,7 @@ public class PlayerFrame extends JFrame {
                         List<NetArtistInfo> netArtistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(netMvInfo.toSimpleString() + " 的歌手");
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(netMvInfo.toSimpleString() + " 的歌手"));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -13973,7 +13973,7 @@ public class PlayerFrame extends JFrame {
                         List<NetUserInfo> netUserInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(netMvInfo.getName() + " 的发布者");
+                        netUserTitleLabel.setText(StringUtil.textToHtml(netMvInfo.getName() + " 的发布者"));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -15434,7 +15434,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(netUserInfo.getName() + " 的歌单");
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -15501,7 +15501,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(netUserInfo.getName() + " 的专辑");
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -15567,7 +15567,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(netUserInfo.getName() + " 的电台");
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -15637,7 +15637,7 @@ public class PlayerFrame extends JFrame {
                     cursor = result.cursor;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(netUserInfo.getName() + " 的视频");
+                    netMvTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的视频"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -15704,7 +15704,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(netUserInfo.getName() + " 的关注");
+                    netUserTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的关注"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -15772,7 +15772,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(netUserInfo.getName() + " 的粉丝");
+                    netUserTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的粉丝"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -15914,7 +15914,7 @@ public class PlayerFrame extends JFrame {
                 else if (info instanceof NetRadioInfo) s = ((NetRadioInfo) info).toSimpleString();
                 else if (info instanceof NetMvInfo) s = ((NetMvInfo) info).toSimpleString();
                 else if (info instanceof NetRankingInfo) s = ((NetRankingInfo) info).toSimpleString();
-                netCommentTitleLabel.setText(s + " 的评论");
+                netCommentTitleLabel.setText(StringUtil.textToHtml(s + " 的评论"));
                 netCommentCountLabel.setText(String.format(PAGINATION_MSG, netCommentCurrPage, netCommentMaxPage));
                 netCommentCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -15977,7 +15977,7 @@ public class PlayerFrame extends JFrame {
                 List<NetSheetInfo> netSheetInfos = result.data;
                 netSheetCurrPage = netSheetMaxPage = 1;
                 // 更新标题和数量显示
-                netSheetTitleLabel.setText(info.toSimpleString() + " 的乐谱");
+                netSheetTitleLabel.setText(StringUtil.textToHtml(info.toSimpleString() + " 的乐谱"));
                 netSheetCountLabel.setText(String.format(PAGINATION_MSG, netSheetCurrPage, netSheetMaxPage));
                 netSheetCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16317,7 +16317,7 @@ public class PlayerFrame extends JFrame {
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(netCommentInfo.getUsername() + " 的歌单");
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netCommentInfo.getUsername() + " 的歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -16384,7 +16384,7 @@ public class PlayerFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(netCommentInfo.getUsername() + " 的专辑");
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netCommentInfo.getUsername() + " 的专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -19454,6 +19454,7 @@ public class PlayerFrame extends JFrame {
 
         // 焦点(不画焦点框)
         lrcList.setFocusable(false);
+        lrcList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         // 悬停框
 //        lrcList.addMouseMotionListener(new MouseAdapter() {
 //            @Override
@@ -19525,7 +19526,7 @@ public class PlayerFrame extends JFrame {
             lrcScrollWaiting = false;
         });
         Runnable swAction = () -> {
-            swActionTimer.stop();
+            if (swActionTimer.isRunning()) swActionTimer.stop();
             currScrollVal = vs.getValue();
             ((ScrollBarUI) vs.getUI()).setActive(true);
             lrcScrollWaiting = true;
@@ -20447,6 +20448,8 @@ public class PlayerFrame extends JFrame {
         seekLrc(0);
     }
 
+    private Timer lrcDelayScrollTimer;
+
     // 初始化播放器设置
     public void initPlayer() {
         player.setMute(isMute);
@@ -20543,6 +20546,10 @@ public class PlayerFrame extends JFrame {
         });
         // 缓冲时间改变后刷新时间条
         mp.bufferProgressTimeProperty().addListener((observable, oldValue, newValue) -> timeBar.repaint());
+        lrcDelayScrollTimer = new Timer(200, e -> {
+            lrcScrollAnimation = true;
+            lrcDelayScrollTimer.stop();
+        });
         mp.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
             // 随着播放，设置进度条和时间标签的值
             try {
@@ -20557,7 +20564,7 @@ public class PlayerFrame extends JFrame {
                     row = LRC_INDEX + 1 + nextLrc * 2;
                     if (!lrcScrollAnimation && !lrcScrollWaiting) {
                         currScrollVal = lrcScrollPane.getVValue();
-                        lrcScrollAnimation = true;
+                        if (!lrcDelayScrollTimer.isRunning()) lrcDelayScrollTimer.start();
                     }
                     LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
                     renderer.setRow(row);

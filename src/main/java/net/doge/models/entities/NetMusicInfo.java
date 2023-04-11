@@ -91,7 +91,8 @@ public class NetMusicInfo {
      * @return
      */
     public boolean isProgram() {
-        return source == NetMusicSource.XM || source == NetMusicSource.HF || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
+        return source == NetMusicSource.XM || source == NetMusicSource.HF || source == NetMusicSource.GG
+                || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
     }
 
     /**

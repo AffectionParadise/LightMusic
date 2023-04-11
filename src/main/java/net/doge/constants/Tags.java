@@ -20,10 +20,10 @@ public class Tags {
             NetMusicSource.KW, NetMusicSource.MG, NetMusicSource.QI, NetMusicSource.ME, NetMusicSource.ME};
 
     public static Map<String, String[]> hotSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] hotSongMap = {NetMusicSource.NET_CLOUD, NetMusicSource.HF};
+    public static int[] hotSongMap = {NetMusicSource.NET_CLOUD, NetMusicSource.HF, NetMusicSource.GG};
 
     public static Map<String, String[]> newSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] newSongMap = {NetMusicSource.NET_CLOUD, NetMusicSource.NET_CLOUD, NetMusicSource.KG, NetMusicSource.QQ, NetMusicSource.HF};
+    public static int[] newSongMap = {NetMusicSource.NET_CLOUD, NetMusicSource.NET_CLOUD, NetMusicSource.KG, NetMusicSource.QQ, NetMusicSource.HF, NetMusicSource.GG};
 
     public static Map<String, String[]> newAlbumTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static int[] newAlbumMap = {NetMusicSource.NET_CLOUD, NetMusicSource.NET_CLOUD, NetMusicSource.NET_CLOUD,

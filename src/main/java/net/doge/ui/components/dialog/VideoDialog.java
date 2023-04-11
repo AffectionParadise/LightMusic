@@ -153,7 +153,7 @@ public class VideoDialog extends AbstractTitledDialog {
     private NetMvInfo netMvInfo;
 
     public VideoDialog(NetMvInfo netMvInfo, String dest, PlayerFrame f) {
-        super(f, StringUtil.textToHtmlWithSpace(StringUtil.shorten(netMvInfo.toSimpleString(), 60)));
+        super(f, StringUtil.textToHtml(StringUtil.shorten(netMvInfo.toSimpleString(), 60)));
         this.isLocal = dest != null;
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();

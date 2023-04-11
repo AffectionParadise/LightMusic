@@ -32,8 +32,10 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private int row;
     private int hoverIndex = -1;
 
+//    private boolean drawBg;
+
     private LabelUI highlightLabelUI = new LabelUI(1);
-    private LabelUI normalLabelUI = new LabelUI(0.5f);
+    private LabelUI normalLabelUI = new LabelUI(0.4f);
     private Timer fontTimer;
 
     public LrcListRenderer() {
@@ -115,16 +117,16 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //        // 高亮的行的样式
 //        if (index == row) {
 //            lyricLabel.setFont(highlightFont);
-//            if (stc == null || stc.getWidthThreshold() != maxWidth ||
-//                    !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
+//            if (stc == null || stc.getWidthThreshold() != maxWidth || !stc.getLabelFont().equals(highlightFont)
+//                    || !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
 //                stc = new StringTwoColor(lyricLabel, lyric, highlightColor, bgColor, ratio, false, maxWidth);
 //            else stc.setRatio(ratio);
 //            lyricLabel.setIcon(stc.getImageIcon());
 //        }
 //        // 其他行的样式
 //        else {
-//            lyricLabel.setFont(defaultFont);
-//            lyricLabel.setText(StringUtils.textToHtml(StringUtils.wrapLineByWidth(lyric, maxWidth)));
+//            lyricLabel.setFont(index == row - 2 ? shrinkFont : defaultFont);
+//            lyricLabel.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth)));
 //        }
 //
 //        Dimension ps = lyricLabel.getPreferredSize();
