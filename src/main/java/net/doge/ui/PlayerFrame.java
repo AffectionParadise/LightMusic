@@ -6081,7 +6081,7 @@ public class PlayerFrame extends JFrame {
             }
         });
 
-        final float alpha = 0.7f;
+        final float alpha = 0.5f;
         artistLabel.setAlpha(alpha);
         albumLabel.setAlpha(alpha);
         artistLabel.addMouseListener(new MouseAdapter() {

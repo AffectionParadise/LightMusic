@@ -617,7 +617,7 @@ public class ImageUtil {
         BufferedImage img = createTranslucentImage(w, h);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gp = new GradientPaint(0, 0, c1, 0, h, c2);
+        GradientPaint gp = new GradientPaint(0, 0, c1, w, h, c2);
         g.setPaint(gp);
         g.fillRect(0, 0, w, h);
         g.dispose();

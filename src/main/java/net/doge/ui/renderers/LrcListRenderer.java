@@ -18,8 +18,8 @@ import java.awt.*;
  */
 @Data
 public class LrcListRenderer extends DefaultListCellRenderer {
-    private final Font defaultFont = Fonts.NORMAL;
-    private Font shrinkFont = Fonts.NORMAL;
+    private final Font defaultFont = Fonts.NORMAL.deriveFont(18f);
+    private Font shrinkFont = defaultFont;
     private Font highlightFont = Fonts.NORMAL_BIG;
     // 走过的歌词颜色
     private Color highlightColor;
@@ -30,7 +30,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     // 比例
     private double ratio;
     private int row;
-    private int hoverIndex = -1;
+//    private int hoverIndex = -1;
 
 //    private boolean drawBg;
 
@@ -53,7 +53,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     public void setRow(int row) {
         this.ratio = 0;
         this.row = row;
-        highlightFont = Fonts.NORMAL;
+        highlightFont = defaultFont;
         shrinkFont = Fonts.NORMAL_BIG;
         if (!fontTimer.isRunning()) fontTimer.start();
     }
@@ -70,8 +70,10 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
         // 标签
         label.setOpaque(false);
-        label.setUI(index != row ? normalLabelUI : highlightLabelUI);
         label.setForeground(bgColor);
+
+        LabelUI labelUI = index != row ? normalLabelUI : highlightLabelUI;
+        label.setUI(labelUI);
 
         // 高亮的行的样式
         if (index == row) {
@@ -82,11 +84,14 @@ public class LrcListRenderer extends DefaultListCellRenderer {
             else stc.setRatio(ratio);
             label.setIcon(stc.getImageIcon());
             label.setText("");
+//            labelUI.setDrawBg(index == hoverIndex);
         }
         // 其他行的样式
         else {
             label.setFont(index == row - 2 ? shrinkFont : defaultFont);
-            label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth)));
+            String text = StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth));
+            label.setText(text);
+//            labelUI.setDrawBg(index == hoverIndex && StringUtil.isNotEmpty(text.trim()));
             label.setIcon(null);
         }
         // 设置 list 对应行的高度
