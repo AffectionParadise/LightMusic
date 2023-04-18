@@ -3,6 +3,7 @@ package net.doge.ui.componentui.list;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * @Author yzx
@@ -11,6 +12,8 @@ import java.awt.*;
  */
 public class ScrollBarUI extends BasicScrollBarUI {
     private boolean active;
+    private boolean entered;
+    private boolean adjusting;
     private Color thumbColor;
 
     public ScrollBarUI(Color thumbColor) {
@@ -63,7 +66,7 @@ public class ScrollBarUI extends BasicScrollBarUI {
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // 透明滚动条
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, entered ? 0.5f : 0.3f));
         g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, 10, 10);
     }
 
@@ -79,17 +82,38 @@ public class ScrollBarUI extends BasicScrollBarUI {
 
     }
 
-//    /**
-//     * 创建自定义把手拖动策略
-//     * @return
-//     */
-//    @Override
-//    protected TrackListener createTrackListener() {
-//        return new TrackListener() {
-//            @Override
-//            public void mouseDragged(MouseEvent e) {
-//
-//            }
-//        };
-//    }
+    /**
+     * 创建自定义把手拖动策略
+     *
+     * @return
+     */
+    @Override
+    protected TrackListener createTrackListener() {
+        return new TrackListener() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!adjusting) entered = false;
+                super.mouseExited(e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                adjusting = true;
+                super.mousePressed(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!thumbRect.contains(e.getPoint())) entered = false;
+                adjusting = false;
+                super.mouseReleased(e);
+            }
+        };
+    }
 }

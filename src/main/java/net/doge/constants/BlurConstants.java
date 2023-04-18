@@ -17,8 +17,8 @@ public class BlurConstants {
 
     // 高斯模糊因子
     public static int gsFactorIndex;
-    public static final String[] gaussianFactorName = {"较小", "小", "中", "大", "较大"};
-    public static final int[] gaussianFactor = {32, 16, 8, 4, 2};
+    public static final String[] gaussianFactorName = {"较小", "小", "中", "大", "较大", "极大"};
+    public static final int[] gaussianFactor = {32, 16, 8, 4, 2, 1};
 
     // 暗角滤镜因子
     public static int darkerFactorIndex;

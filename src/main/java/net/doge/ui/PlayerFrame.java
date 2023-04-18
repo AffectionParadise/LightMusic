@@ -20810,6 +20810,7 @@ public class PlayerFrame extends JFrame {
                     } catch (Exception e) {
 
                     } finally {
+                        if (!finalMusicInfo.equals(player.getNetMusicInfo())) return;
                         loadLrc(null, finalMusicInfo, false, currLrcType == LyricType.TRANSLATION);
                     }
                 });
