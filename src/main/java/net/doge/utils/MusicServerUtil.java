@@ -4513,6 +4513,7 @@ public class MusicServerUtil {
         else if (source == NetMusicSource.HF) {
             // 无链接或试听，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.HF);
+            if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
             if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
             else MusicServerUtil.fillAvailableMusicUrl(musicInfo);
         }
@@ -4521,6 +4522,7 @@ public class MusicServerUtil {
         else if (source == NetMusicSource.GG) {
             // 无链接或试听，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.GG);
+            if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
             if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
             else MusicServerUtil.fillAvailableMusicUrl(musicInfo);
         }
@@ -21863,6 +21865,7 @@ public class MusicServerUtil {
                 continue;
             String url = fetchMusicUrl(info.getId(), info.getSource());
             if (StringUtil.isNotEmpty(url)) {
+                if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
                 musicInfo.setUrl(url);
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDuration());
                 return;

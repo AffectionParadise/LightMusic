@@ -114,6 +114,12 @@ public class ScrollBarUI extends BasicScrollBarUI {
                 adjusting = false;
                 super.mouseReleased(e);
             }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                entered = thumbRect.contains(e.getPoint());
+                super.mouseMoved(e);
+            }
         };
     }
 }
