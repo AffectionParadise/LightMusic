@@ -8812,6 +8812,15 @@ public class PlayerFrame extends JFrame {
         userDescriptionScrollPane.addMouseListener(new ScrollPaneListener(userDescriptionScrollPane, THIS));
         recommendItemDescriptionScrollPane.addMouseListener(new ScrollPaneListener(recommendItemDescriptionScrollPane, THIS));
         collectionItemDescriptionScrollPane.addMouseListener(new ScrollPaneListener(collectionItemDescriptionScrollPane, THIS));
+        // 水平滚动条
+        playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        albumDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        artistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        radioDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        rankingDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        userDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        recommendItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        collectionItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         // 描述面板更新
         playlistDescriptionPanel.setLayout(new BoxLayout(playlistDescriptionPanel, BoxLayout.Y_AXIS));
         albumDescriptionPanel.setLayout(new BoxLayout(albumDescriptionPanel, BoxLayout.Y_AXIS));
