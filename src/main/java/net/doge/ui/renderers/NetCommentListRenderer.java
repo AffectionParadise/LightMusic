@@ -8,6 +8,7 @@ import net.doge.constants.ImageConstants;
 import net.doge.constants.SimplePath;
 import net.doge.models.entities.NetCommentInfo;
 import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.panel.CustomPanel;
 import net.doge.utils.ImageUtil;
 import net.doge.utils.StringUtil;
 
@@ -41,9 +42,14 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        CustomPanel outerPanel = new CustomPanel();
         CustomLabel label = new CustomLabel();
+
         label.setForeground(textColor);
-        label.setDrawBg(isSelected || index == hoverIndex);
+
+        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+        outerPanel.setLayout(new GridLayout(1, 1));
+        outerPanel.add(label);
 
         NetCommentInfo netCommentInfo = (NetCommentInfo) value;
         boolean sub = netCommentInfo.isSub();
@@ -61,9 +67,12 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         label.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
 
         Dimension ps = label.getPreferredSize();
-        label.setPreferredSize(new Dimension(ps.width, ps.height + 12));
+        outerPanel.setPreferredSize(new Dimension(ps.width, ps.height + 12));
         list.setFixedCellWidth(lw);
 
-        return label;
+        outerPanel.setBluntDrawBg(true);
+        outerPanel.setDrawBg(isSelected || hoverIndex == index);
+
+        return outerPanel;
     }
 }

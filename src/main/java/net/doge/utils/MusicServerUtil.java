@@ -340,7 +340,7 @@ public class MusicServerUtil {
 //    private static final String SEARCH_MV_KW_API = prefixKw + "/kuwo/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s";
     private static final String SEARCH_MV_KW_API = "http://www.kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索 MV API (好看)
-    private static final String SEARCH_MV_HK_API = "https://haokan.baidu.com/web/search/api?query=%s&pn=%s&rn=%s&type=video";
+    private static final String SEARCH_MV_HK_API = "https://haokan.baidu.com/haokan/ui-search/pc/search/video?query=%s&pn=%s&rn=%s&type=video";
     // 关键词搜索 MV API (哔哩哔哩)
     private static final String SEARCH_MV_BI_API
             = "http://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%s&page=%s";
@@ -383,7 +383,7 @@ public class MusicServerUtil {
             = "https://www.missevan.com/sound/getsearch?s=%s&type=1&p=%s&page_size=%s";
     // 关键词搜索用户 API (好看)
     private static final String SEARCH_USER_HK_API
-            = "https://haokan.baidu.com/web/search/api?query=%s&pn=%s&rn=%s&type=author";
+            = "https://haokan.baidu.com/haokan/ui-search/pc/search/author?pn=%s&query=%s&rn=%s&timestamp=1683718494563&type=author&version=1";
     // 关键词搜索用户 API (豆瓣)
     private static final String SEARCH_USER_DB_API
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1005";
@@ -2934,7 +2934,7 @@ public class MusicServerUtil {
     // 用户小视频 API (好看)
     private static final String USER_SMALL_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20&video_type=haokan|tabhubVideo";
     // 用户视频 API (哔哩哔哩)
-    private static final String USER_VIDEO_BI_API = "http://api.bilibili.com/x/space/arc/search?order=%s&mid=%s&pn=%s&ps=%s";
+    private static final String USER_VIDEO_BI_API = "https://api.bilibili.com/x/space/wbi/arc/search?order=%s&mid=%s&pn=%s&ps=%s";
 
     // 歌曲相关歌单 API
     private static final String RELATED_PLAYLIST_API = prefix + "/simi/playlist?id=%s";
@@ -4309,7 +4309,8 @@ public class MusicServerUtil {
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(songBody);
-                String dataStr = ReUtil.get("audio: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+                String dataStr = ReUtil.get("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+                dataStr = dataStr.replaceFirst("base64_decode\\(\"(.*?)\"\\)", "\"\"");
                 JSONObject data = JSONObject.fromObject(dataStr);
 
                 Elements a = doc.select(".m-3.text-center h5 a");
@@ -4318,7 +4319,8 @@ public class MusicServerUtil {
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
-                        String picUrl = data.getString("cover");
+                        String picUrl = data.optString("cover");
+                        if (StringUtil.isEmpty(picUrl)) picUrl = data.optString("pic");
                         if (picUrl.contains("music.126.net"))
                             picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
                         else if (picUrl.contains("y.gtimg.cn"))
@@ -6804,7 +6806,7 @@ public class MusicServerUtil {
             LinkedList<NetUserInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_HK_API, encodedKeyword, page, limit))
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_HK_API, page, encodedKeyword, limit))
                     .header(Header.COOKIE, HK_COOKIE)
                     .execute()
                     .body();
@@ -7468,6 +7470,7 @@ public class MusicServerUtil {
                 String userId = ReUtil.get("user-(\\d+)\\.htm", comment.select(".username a").attr("href"), 1);
                 String profileUrl = "https://www.hifini.com/" + comment.select("img").attr("src");
                 String content = msg.ownText().trim();
+                if (StringUtil.isEmpty(content)) content = msg.text().trim();
                 String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
@@ -21998,8 +22001,14 @@ public class MusicServerUtil {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(songBody);
-            String dataStr = ReUtil.get("audio: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+            String dataStr = ReUtil.get("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+
             if (StringUtil.isEmpty(dataStr)) return "";
+            String base64Pattern = "base64_decode\\(\"(.*?)\"\\)";
+            String base64Str = ReUtil.get(base64Pattern, dataStr, 1);
+            if (StringUtil.isNotEmpty(base64Str))
+                dataStr = dataStr.replaceFirst(base64Pattern, String.format("\"%s\"", StringUtil.base64Decode(base64Str)));
+
             JSONObject data = JSONObject.fromObject(dataStr);
             String url = data.getString("url").replace(" ", "%20");
             if (url.startsWith("http")) return url;

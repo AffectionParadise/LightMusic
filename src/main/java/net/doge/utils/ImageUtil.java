@@ -416,12 +416,16 @@ public class ImageUtil {
         if (img == null) return 0;
         double t = 0;
         int w = img.getWidth(), h = img.getHeight();
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                t += ColorUtil.lightness(img.getRGB(i, j));
+        List<Float> dots = new LinkedList<>();
+        for (float i = 0.05f; i < 1; i += 0.05f) dots.add(i);
+        for (float dw : dots) {
+            for (float dh : dots) {
+                int rgb = img.getRGB((int) (w * dw), (int) (h * dh));
+                t += ColorUtil.lightness(rgb);
             }
         }
-        t /= w * h;
+        int s = dots.size();
+        t /= s * s;
         return t;
     }
 
@@ -446,11 +450,11 @@ public class ImageUtil {
      */
     public static BufferedImage setRadius(BufferedImage image, int radius) {
         if (image == null) return null;
-        int width = image.getWidth(), height = image.getHeight(), cornerRadius = radius;
+        int width = image.getWidth(), height = image.getHeight();
         BufferedImage outputImage = createTranslucentImage(width, height);
         Graphics2D g = outputImage.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.fillRoundRect(0, 0, width, height, cornerRadius, cornerRadius);
+        g.fillRoundRect(0, 0, width, height, radius, radius);
         g.setComposite(AlphaComposite.SrcIn);
         g.drawImage(image, 0, 0, width, height, null);
         g.dispose();
