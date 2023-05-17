@@ -7,7 +7,7 @@ import net.doge.constants.Colors;
 import net.doge.constants.Format;
 import net.doge.constants.GlobalExecutors;
 import net.doge.constants.SimplePath;
-import net.doge.models.CommonResult;
+import net.doge.models.server.CommonResult;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.*;
 import net.doge.ui.components.button.CustomButton;

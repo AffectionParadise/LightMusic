@@ -8,6 +8,8 @@ import cn.hutool.http.HttpStatus;
 import net.doge.constants.*;
 import net.doge.models.*;
 import net.doge.models.entities.*;
+import net.doge.models.server.CommonResult;
+import net.doge.models.server.MusicCandidate;
 import net.doge.ui.components.panel.LoadingPanel;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -125,7 +127,7 @@ public class MusicServerUtil {
             "&source=kwplayer_ar_9.3.0.1_40.apk&p2p=1&notrace=0&uid=0&plat=kwplayer_ar&rformat=json&encoding=utf8&tabid=1";
     // 热搜 API (咪咕)
     private static final String HOT_SEARCH_MG_API
-            = "http://jadeite.migu.cn:7090/music_search/v2/search/hotword";
+            = "http://jadeite.migu.cn:7090/music_search/v3/search/hotword";
 
     // 搜索建议(简单) API
     private static final String SIMPLE_SEARCH_SUGGESTION_API
@@ -3125,7 +3127,12 @@ public class MusicServerUtil {
 
             HttpResponse resp = HttpRequest.get(String.format(HOT_SEARCH_MG_API)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
-                JSONArray hotkeys = JSONObject.fromObject(resp.body()).getJSONArray("data");
+                JSONObject data = JSONObject.fromObject(resp.body()).getJSONObject("data");
+                JSONArray hotkeys = data.getJSONArray("hotwords").getJSONObject(0).getJSONArray("hotwordList");
+                for (int i = 0, len = hotkeys.size(); i < len; i++) {
+                    res.add(hotkeys.getJSONObject(i).getString("word"));
+                }
+                hotkeys = data.getJSONArray("discovery");
                 for (int i = 0, len = hotkeys.size(); i < len; i++) {
                     res.add(hotkeys.getJSONObject(i).getString("word"));
                 }
@@ -21857,15 +21864,25 @@ public class MusicServerUtil {
     public static void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
         CommonResult<NetMusicInfo> result = searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 10, 1);
         List<NetMusicInfo> data = result.data;
+        List<MusicCandidate> candidates = new LinkedList<>();
         for (NetMusicInfo info : data) {
             // 部分歌曲没有时长，先填充时长，准备判断
             if (!info.hasDuration()) fillDuration(info);
             // 匹配依据：歌名、歌手相似度，时长之差绝对值
+            double nameSimi = StringUtil.similar(info.getName(), musicInfo.getName());
+            double artistSimi = StringUtil.similar(info.getArtist(), musicInfo.getArtist());
             if (info.equals(musicInfo)
-                    || StringUtil.similar(info.getName(), musicInfo.getName()) == 0
-                    || StringUtil.similar(info.getArtist(), musicInfo.getArtist()) == 0
+                    || nameSimi == 0
+                    || artistSimi == 0
                     || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
                 continue;
+            double weight = nameSimi + artistSimi;
+            candidates.add(new MusicCandidate(info, weight));
+        }
+        // 将所有候选的匹配按照相关度排序
+        candidates.sort((c1, c2) -> (int) (c2.weight - c1.weight));
+        for (MusicCandidate candidate : candidates) {
+            NetMusicInfo info = candidate.musicInfo;
             String url = fetchMusicUrl(info.getId(), info.getSource());
             if (StringUtil.isNotEmpty(url)) {
                 if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);

@@ -4,6 +4,7 @@ import net.doge.constants.Colors;
 import net.doge.constants.Fonts;
 import net.doge.ui.PlayerFrame;
 import net.doge.ui.components.CustomLabel;
+import net.doge.ui.components.button.DialogButton;
 import net.doge.ui.components.panel.CustomPanel;
 import net.doge.ui.components.CustomSlider;
 import net.doge.ui.components.dialog.factory.AbstractShadowDialog;
@@ -27,6 +28,7 @@ public class RateDialog extends AbstractShadowDialog {
     private CustomPanel centerPanel = new CustomPanel();
     private CustomLabel valLabel = new CustomLabel();
     private CustomSlider slider = new CustomSlider();
+    private DialogButton reset;
 
     private VideoDialog d;
     private JComponent comp;
@@ -36,6 +38,9 @@ public class RateDialog extends AbstractShadowDialog {
         this.f = f;
         this.d = d;
         this.comp = comp;
+
+        Color textColor = f.currUIStyle.getTextColor();
+        reset = new DialogButton("重置", textColor);
     }
 
     public void close() {
@@ -110,6 +115,10 @@ public class RateDialog extends AbstractShadowDialog {
             else d.mp.setRate(f.currVideoRate = newVal);
         });
 
+        // 重置按钮
+        reset.addActionListener(e -> slider.setValue(10));
+
         centerPanel.add(slider, BorderLayout.CENTER);
+        centerPanel.add(reset, BorderLayout.SOUTH);
     }
 }

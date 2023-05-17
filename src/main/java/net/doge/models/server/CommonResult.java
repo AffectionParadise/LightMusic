@@ -1,4 +1,4 @@
-package net.doge.models;
+package net.doge.models.server;
 
 import java.util.List;
 

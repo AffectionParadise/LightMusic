@@ -20,7 +20,7 @@ import net.doge.constants.*;
 import net.doge.exceptions.IllegalMediaException;
 import net.doge.exceptions.NoLyricException;
 import net.doge.exceptions.NoPrivilegeException;
-import net.doge.models.CommonResult;
+import net.doge.models.server.CommonResult;
 import net.doge.models.MusicPlayer;
 import net.doge.models.Task;
 import net.doge.models.UIStyle;
@@ -6324,6 +6324,8 @@ public class PlayerFrame extends JFrame {
                 return;
             }
             ListModel model = musicList.getModel();
+            // 修复重新导入时程序假死问题
+            if (model.getSize() > 0) musicList.setSelectedIndex(0);
             musicList.setModel(emptyListModel);
             musicListModel.clear();
             int audioFileCount = 0;
@@ -6345,7 +6347,7 @@ public class PlayerFrame extends JFrame {
                 }
             }
             musicList.setModel(model);
-            boolean f = musicList.getModel() == filterModel;
+            boolean f = model == filterModel;
             filterPersonalMusic();
             if (!f) {
                 musicList.setModel(musicListModel);
@@ -20555,7 +20557,7 @@ public class PlayerFrame extends JFrame {
         });
         // 缓冲时间改变后刷新时间条
         mp.bufferProgressTimeProperty().addListener((observable, oldValue, newValue) -> timeBar.repaint());
-        lrcDelayScrollTimer = new Timer(200, e -> {
+        lrcDelayScrollTimer = new Timer(300, e -> {
             lrcScrollAnimation = true;
             lrcDelayScrollTimer.stop();
         });
