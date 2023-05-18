@@ -7,4 +7,9 @@ import net.doge.models.entities.NetMusicInfo;
 public class MusicCandidate {
     public NetMusicInfo musicInfo;
     public double weight;
+
+    @Override
+    public String toString() {
+        return musicInfo + "：" + weight;
+    }
 }

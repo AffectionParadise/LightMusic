@@ -12130,8 +12130,8 @@ public class MusicServerUtil {
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
-                String mvHash = songJson.getString("mvhash");
-                String mvId = StringUtil.isEmpty(mvHash) ? "" : songJson.getJSONArray("mvdata").getJSONObject(0).getString("hash");
+                JSONArray mvdata = songJson.optJSONArray("mvdata");
+                String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -12173,8 +12173,8 @@ public class MusicServerUtil {
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
-                String mvHash = songJson.getString("mvhash");
-                String mvId = StringUtil.isEmpty(mvHash) ? "" : songJson.getJSONArray("mvdata").getJSONObject(0).getString("hash");
+                JSONArray mvdata = songJson.optJSONArray("mvdata");
+                String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -16685,7 +16685,7 @@ public class MusicServerUtil {
                 String songId = songJson.getString("album_audio_id");
                 String[] s = songJson.getString("filename").split(" - ");
                 String name = s[1];
-                String artists = s[0];
+                String artist = s[0];
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
@@ -16696,7 +16696,7 @@ public class MusicServerUtil {
                 netMusicInfo.setHash(hash);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
 //                netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(albumId);
                 netMusicInfo.setDuration(duration);
@@ -17194,8 +17194,8 @@ public class MusicServerUtil {
                 String albumName = songJson.getString("album_name");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
-                String mvHash = songJson.getString("mvhash");
-                String mvId = StringUtil.isEmpty(mvHash) ? "" : songJson.getJSONArray("mvdata").getJSONObject(0).getString("hash");
+                JSONArray mvdata = songJson.optJSONArray("mvdata");
+                String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
                 netMusicInfo.setSource(NetMusicSource.KG);
@@ -18028,8 +18028,8 @@ public class MusicServerUtil {
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
-                String mvHash = songJson.getString("mvhash");
-                String mvId = StringUtil.isEmpty(mvHash) ? "" : songJson.getJSONArray("mvdata").getJSONObject(0).getString("hash");
+                JSONArray mvdata = songJson.optJSONArray("mvdata");
+                String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -21880,7 +21880,7 @@ public class MusicServerUtil {
             candidates.add(new MusicCandidate(info, weight));
         }
         // 将所有候选的匹配按照相关度排序
-        candidates.sort((c1, c2) -> (int) (c2.weight - c1.weight));
+        candidates.sort((c1, c2) -> Double.compare(c2.weight, c1.weight));
         for (MusicCandidate candidate : candidates) {
             NetMusicInfo info = candidate.musicInfo;
             String url = fetchMusicUrl(info.getId(), info.getSource());
