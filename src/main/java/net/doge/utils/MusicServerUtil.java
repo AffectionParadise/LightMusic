@@ -21865,18 +21865,20 @@ public class MusicServerUtil {
         CommonResult<NetMusicInfo> result = searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 10, 1);
         List<NetMusicInfo> data = result.data;
         List<MusicCandidate> candidates = new LinkedList<>();
-        for (NetMusicInfo info : data) {
+        for (int i = 0, size = data.size(); i < size; i++) {
+            NetMusicInfo info = data.get(i);
             // 部分歌曲没有时长，先填充时长，准备判断
             if (!info.hasDuration()) fillDuration(info);
-            // 匹配依据：歌名、歌手相似度，时长之差绝对值
             double nameSimi = StringUtil.similar(info.getName(), musicInfo.getName());
             double artistSimi = StringUtil.similar(info.getArtist(), musicInfo.getArtist());
+            double albumSimi = StringUtil.similar(info.getAlbumName(), musicInfo.getAlbumName());
+            // 匹配依据：歌名、歌手相似度，时长之差绝对值。如果合适，纳入候选者
             if (info.equals(musicInfo)
                     || nameSimi == 0
                     || artistSimi == 0
                     || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
                 continue;
-            double weight = nameSimi + artistSimi;
+            double weight = nameSimi + artistSimi + albumSimi;
             candidates.add(new MusicCandidate(info, weight));
         }
         // 将所有候选的匹配按照相关度排序

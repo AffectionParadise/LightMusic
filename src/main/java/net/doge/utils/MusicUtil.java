@@ -11,7 +11,6 @@ import net.doge.models.entities.AudioFile;
 import net.doge.models.entities.MediaInfo;
 import net.doge.models.entities.NetMusicInfo;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -28,10 +27,6 @@ public class MusicUtil {
      * 获取音频文件时长
      *
      * @param source
-     * @return
-     * @throws IOException
-     * @throws UnsupportedAudioFileException
-     * @throws EncoderException
      */
     public static double getDuration(File source) {
         try {

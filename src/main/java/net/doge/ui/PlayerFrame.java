@@ -22968,8 +22968,8 @@ public class PlayerFrame extends JFrame {
                             Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + 50);
                             netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
                             netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
-                            netMusicSearchSuggestionInnerPanel2.setVisible(false);
-                            netMusicSearchSuggestionInnerPanel2.setVisible(true);
+                            netMusicSearchSuggestionPanel.setVisible(false);
+                            netMusicSearchSuggestionPanel.setVisible(true);
                         }
                     });
                 }
@@ -23022,8 +23022,8 @@ public class PlayerFrame extends JFrame {
                             Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + 50);
                             netMusicHotSearchInnerPanel2.setMinimumSize(d);
                             netMusicHotSearchInnerPanel2.setPreferredSize(d);
-                            netMusicHotSearchInnerPanel2.setVisible(false);
-                            netMusicHotSearchInnerPanel2.setVisible(true);
+                            netMusicHotSearchPanel.setVisible(false);
+                            netMusicHotSearchPanel.setVisible(true);
                         }
                     });
                 }

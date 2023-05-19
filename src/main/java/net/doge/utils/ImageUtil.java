@@ -254,14 +254,14 @@ public class ImageUtil {
     /**
      * 消去图片透明度，换成黑底
      *
-     * @param image
+     * @param img
      * @return
      */
-    public static BufferedImage eraseTranslucency(BufferedImage image) {
-        int w = image.getWidth(), h = image.getHeight();
+    public static BufferedImage eraseTranslucency(BufferedImage img) {
+        int w = img.getWidth(), h = img.getHeight();
         BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = bufferedImage.createGraphics();
-        g.drawImage(image, 0, 0, w, h, null);
+        g.drawImage(img, 0, 0, w, h, null);
         g.dispose();
         return bufferedImage;
     }
