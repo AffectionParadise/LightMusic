@@ -5196,10 +5196,10 @@ public class MusicServerUtil {
             taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsQi));
         if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDb));
-        if (src == NetMusicSource.DT || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDt));
-        if (src == NetMusicSource.DT || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsDt2));
+        }
 
         List<List<NetAlbumInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -22001,17 +22001,7 @@ public class MusicServerUtil {
             JSONObject data = JSONObject.fromObject(dataStr);
             String url = data.getString("url").replace(" ", "%20");
             if (url.startsWith("http")) return url;
-            else {
-                try {
-                    // 获取重定向之后的 url
-                    HttpURLConnection conn = (HttpURLConnection) new URL("https://www.hifini.com/" + url).openConnection();
-                    conn.setInstanceFollowRedirects(false);
-                    conn.setConnectTimeout(5000);
-                    return conn.getHeaderField("Location");
-                } catch (IOException e) {
-                    return "";
-                }
-            }
+            return getRedirectUrl("https://www.hifini.com/" + url);
         }
 
         // 咕咕咕音乐
@@ -22037,7 +22027,7 @@ public class MusicServerUtil {
                     String startUrl = "http://www.gggmusic.com" + url;
                     HttpURLConnection conn = (HttpURLConnection) new URL(startUrl).openConnection();
                     conn.setInstanceFollowRedirects(false);
-                    conn.setConnectTimeout(5000);
+                    conn.setConnectTimeout(TIME_OUT);
                     String newUrl = conn.getHeaderField("Location");
                     return StringUtil.isEmpty(newUrl) ? startUrl : newUrl;
                 } catch (IOException e) {
@@ -22584,4 +22574,21 @@ public class MusicServerUtil {
         fis.close();
     }
 
+    /**
+     * 获取重定向之后的 url
+     *
+     * @param url
+     * @return
+     */
+    public static String getRedirectUrl(String url) {
+        try {
+            // 获取重定向之后的 url
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setInstanceFollowRedirects(false);
+            conn.setConnectTimeout(TIME_OUT);
+            return conn.getHeaderField("Location");
+        } catch (IOException e) {
+            return "";
+        }
+    }
 }
