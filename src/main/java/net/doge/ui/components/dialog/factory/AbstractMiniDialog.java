@@ -39,19 +39,20 @@ public abstract class AbstractMiniDialog extends JDialog {
     }
 
     public void updateBlur() {
-        BufferedImage bufferedImage;
+        BufferedImage img;
         if (f.blurType != BlurConstants.OFF && f.player.loadedMusic()) {
-            bufferedImage = f.player.getMusicInfo().getAlbumImage();
-            if (bufferedImage == f.defaultAlbumImage) bufferedImage = ImageUtil.eraseTranslucency(bufferedImage);
+            img = f.player.getMusicInfo().getAlbumImage();
+            if (img == null) img = f.defaultAlbumImage;
+            if (img == f.defaultAlbumImage) img = ImageUtil.eraseTranslucency(img);
             if (f.blurType == BlurConstants.MC)
-                bufferedImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(bufferedImage));
+                img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
             else if (f.blurType == BlurConstants.LG)
-                bufferedImage = ImageUtil.toGradient(bufferedImage);
+                img = ImageUtil.toGradient(img);
         } else {
             UIStyle style = f.currUIStyle;
-            bufferedImage = style.getImg();
+            img = style.getImg();
         }
-        doBlur(bufferedImage);
+        doBlur(img);
     }
 
     public void doBlur(BufferedImage bufferedImage) {

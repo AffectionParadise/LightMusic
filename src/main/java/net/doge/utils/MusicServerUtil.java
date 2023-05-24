@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  */
 public class MusicServerUtil {
     public static void main(String[] args) {
-        String body = HttpRequest.get("http://api.bilibili.com/x/web-interface/search/type?keyword=%E2%91%A8%E2%91%A8%E2%91%A8%EF%BC%8C%E5%A4%A9%E9%95%BF%E5%9C%B0%E4%B9%85%E8%88%AC%E7%9A%84%E5%85%B1%E8%8D%A3&search_type=video")
+        String body = HttpRequest.get("https://api.bilibili.com/x/web-interface/search/type?keyword=%E2%91%A8%E2%91%A8%E2%91%A8%EF%BC%8C%E5%A4%A9%E9%95%BF%E5%9C%B0%E4%B9%85%E8%88%AC%E7%9A%84%E5%85%B1%E8%8D%A3&search_type=video")
                 .cookie("buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7")
                 .execute()
                 .body();
@@ -87,9 +87,9 @@ public class MusicServerUtil {
     // 请求头
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75";
     private static final String COOKIE = "kg_mid=eb822d765480e1e3e6b8c6f2322019c8; kg_dfid=11TWHr0cp8jq4YKe9P3fosEo; kg_dfid_collect=d41d8cd98f00b204e9800998ecf8427e; musicwo17=kugou";
-    static final String HK_COOKIE = "BIDUPSID=BE696A0D51D343798228BD61F26D5647; PSTM=1658997928; BAIDUID=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; Hm_lvt_4aadd610dfd2f5972f1efee2653a2bc5=1659086001; BAIDUID_BFESS=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; delPer=0; PSINO=1; BA_HECTOR=20ag2g0ha42galagaga7ko601hgorth16; ZFY=gy2NQKWk6ZhA6AuDxoMpPQs6Og5GSSS7oA7XUkOHKeg:C; PC_TAB_LOG=video_details_page; COMMON_LID=2c19ef6811cbc39c8bbfaafcfcaeba64; BDRCVFR[fb3VbsUruOn]=I67x6TjHwwYf0; hkpcSearch=%u7FDF%u8000%24%24%24hello; H_PS_PSSID=36561_36461_36979_36885_37267_37135_26350_37205; ariaDefaultTheme=undefined; RT=\"z=1&dm=baidu.com&si=fxuvi7wxq45&ss=l7egnei6&sl=17&tt=19ph&bcn=https%3A%2F%2Ffclog.baidu.com%2Flog%2Fweirwood%3Ftype%3Dperf&ld=1xs54&cl=1xt27&ul=1xt6x&hd=1xtb4\"";
-    static final String HF_COOKIE = "bbs_sid=b49bvrs3efj99kui5ogaipp1gv";
-    private static final String BI_COOKIE = "buvid3=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; b_nut=1664112813; i-wanna-go-back=-1; _uuid=2446C104D-D6DB-47CE-6CA6-B1A6510C76A5676353infoc; rpdid=|(um~Rkm||lR0J'uYYRuuk)l); nostalgia_conf=-1; fingerprint3=c37218800089711141f536512b0d4abf; hit-dyn-v2=1; PVID=2; fingerprint=a6b332179ad74583e2899679560168f7; buvid_fp=1F81D80F-98ED-1A44-D019-B5B98D4A91B713086infoc; buvid_fp_plain=undefined; buvid4=417866CC-0EF2-FC4F-C4FD-275ED105CFD814423-022092521-wTMxKM%2BXYt90NrLH2h7Mow%3D%3D; blackside_state=1; sid=7osld2ei; CURRENT_FNVAL=4048; theme_style=light; b_lsid=AD6B642F_183AD5B12FD; innersign=0; bp_video_offset_381984701=713920738394898400; b_ut=7";
+    private static final String HK_COOKIE = "BIDUPSID=BE696A0D51D343798228BD61F26D5647; PSTM=1658997928; BAIDUID=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; Hm_lvt_4aadd610dfd2f5972f1efee2653a2bc5=1659086001; BAIDUID_BFESS=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; delPer=0; PSINO=1; BA_HECTOR=20ag2g0ha42galagaga7ko601hgorth16; ZFY=gy2NQKWk6ZhA6AuDxoMpPQs6Og5GSSS7oA7XUkOHKeg:C; PC_TAB_LOG=video_details_page; COMMON_LID=2c19ef6811cbc39c8bbfaafcfcaeba64; BDRCVFR[fb3VbsUruOn]=I67x6TjHwwYf0; hkpcSearch=%u7FDF%u8000%24%24%24hello; H_PS_PSSID=36561_36461_36979_36885_37267_37135_26350_37205; ariaDefaultTheme=undefined; RT=\"z=1&dm=baidu.com&si=fxuvi7wxq45&ss=l7egnei6&sl=17&tt=19ph&bcn=https%3A%2F%2Ffclog.baidu.com%2Flog%2Fweirwood%3Ftype%3Dperf&ld=1xs54&cl=1xt27&ul=1xt6x&hd=1xtb4\"";
+    private static final String HF_COOKIE = "bbs_sid=b49bvrs3efj99kui5ogaipp1gv";
+    private static final String BI_COOKIE = "buvid3=F51EB532-B946-AA99-7E6B-3F0766C74A0129044infoc; i-wanna-go-back=-1; b_ut=5; CURRENT_PID=073ebfd0-eb4f-11ed-a6e3-637f2da26e5c; rpdid=|(um~RRuY|R)0J'uY)JkmY|u~; _uuid=7EB1D5C2-A8410-BD5D-B1110-2510576A922F948945infoc; PVID=1; nostalgia_conf=-1; CURRENT_QUALITY=0; hit-new-style-dyn=1; hit-dyn-v2=1; b_nut=1683549091; CURRENT_BLACKGAP=0; CURRENT_FNVAL=4048; buvid_fp_plain=undefined; home_feed_column=5; fingerprint=14bce2332e84dd17597b30c7d6ed223d; browser_resolution=1920-961; buvid_fp=00d877eac672973524025e3d7f9a7502; sid=533w6lki; FEED_LIVE_VERSION=V8; header_theme_version=CLOSE; bp_video_offset_381984701=798561839388557300; b_lsid=ED381E96_1884408FEBB; innersign=1; buvid4=DF7111A0-432B-2B2D-EFE0-145ACFD72A0C51011-023050609-OERiKVBwTOo/uOaoDaaP2Q%3D%3D";
 
     // 域名
     private static final String host = "localhost";
@@ -345,7 +345,7 @@ public class MusicServerUtil {
     private static final String SEARCH_MV_HK_API = "https://haokan.baidu.com/haokan/ui-search/pc/search/video?query=%s&pn=%s&rn=%s&type=video";
     // 关键词搜索 MV API (哔哩哔哩)
     private static final String SEARCH_MV_BI_API
-            = "http://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%s&page=%s";
+            = "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%s&page=%s";
 
     // 获取榜单 API
     private static final String GET_RANKING_API
@@ -394,7 +394,7 @@ public class MusicServerUtil {
             = "https://www.duitang.com/napi/people/list/by_search/?kw=%s&start=%s&limit=%s&type=people&_type=&_=%s";
     // 关键词搜索用户 API (哔哩哔哩)
     private static final String SEARCH_USER_BI_API
-            = "http://api.bilibili.com/x/web-interface/search/type?search_type=bili_user&keyword=%s&page=%s";
+            = "https://api.bilibili.com/x/web-interface/search/type?search_type=bili_user&keyword=%s&page=%s";
 
     // 获取评论 API
     private static final String GET_COMMENTS_API = prefix + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=%s&cursor=%s";
@@ -444,10 +444,10 @@ public class MusicServerUtil {
             = "https://music.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
     // 获取视频评论 API (哔哩哔哩)
     private static final String GET_VIDEO_COMMENTS_BI_API
-            = "http://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
+            = "https://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
     // 获取音频评论 API (哔哩哔哩)
     private static final String GET_SONG_COMMENTS_BI_API
-            = "http://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
+            = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
 
     // 获取乐谱 API
     private static final String GET_SHEETS_API = prefix + "/sheet/list?id=%s";
@@ -2618,10 +2618,10 @@ public class MusicServerUtil {
             = "https://api.bilibili.com/x/web-interface/popular?pn=%s&ps=%s";
     // 分区排行榜视频 API (哔哩哔哩)
     private static final String CAT_RANK_VIDEO_BI_API
-            = "http://api.bilibili.com/x/web-interface/ranking/region?rid=%s";
+            = "https://api.bilibili.com/x/web-interface/ranking/region?rid=%s";
     // 分区最新视频 API (哔哩哔哩)
     private static final String CAT_NEW_VIDEO_BI_API
-            = "http://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
+            = "https://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
 
     // 歌曲信息 API (单首)
     private static final String SINGLE_SONG_DETAIL_API = prefix + "/song/detail?ids=%s";
@@ -2654,7 +2654,7 @@ public class MusicServerUtil {
     private static final String SINGLE_SONG_DETAIL_BI_API = "http://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
 
     // 歌曲 URL 获取 API
-    private static final String GET_SONG_URL_API_NEW = prefix + "/song/url/v1?id=%s&level=hires";
+    private static final String GET_SONG_URL_API_NEW = prefix + "/song/url/v1?id=%s&level=jymaster";
     private static final String GET_SONG_URL_API = prefix + "/song/url?id=%s";
     // 歌曲 URL 获取 API (QQ)
 //    private static final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
@@ -2841,9 +2841,9 @@ public class MusicServerUtil {
     // MV 视频链接获取 API (好看)
     private static final String MV_URL_HK_API = "https://haokan.baidu.com/v?vid=%s&_format=json";
     // 视频 bvid 获取 cid (哔哩哔哩)
-    private static final String VIDEO_CID_BI_API = "http://api.bilibili.com/x/player/pagelist?bvid=%s";
+    private static final String VIDEO_CID_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
     // MV 视频链接获取 API (哔哩哔哩)
-    private static final String VIDEO_URL_BI_API = "http://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=64";
+    private static final String VIDEO_URL_BI_API = "https://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=64";
 
     // 榜单信息 API (酷狗)
     private static final String RANKING_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
@@ -2894,7 +2894,7 @@ public class MusicServerUtil {
     // 用户信息 API (堆糖)
     private static final String USER_DETAIL_DT_API = "https://www.duitang.com/people/?id=%s";
     // 用户信息 API (哔哩哔哩)
-    private static final String USER_DETAIL_BI_API = "http://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
+    private static final String USER_DETAIL_BI_API = "https://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
     // 用户音频 API (猫耳)
     private static final String USER_AUDIO_BI_API = "https://api.bilibili.com/audio/music-service/web/song/upper?order=%s&uid=%s&pn=%s&ps=%s";
 
@@ -2971,9 +2971,9 @@ public class MusicServerUtil {
     // 相似视频 API (好看)
     private static final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec?title=%s&vid=%s&act=pcRec&pd=pc";
     // 相似视频 API (哔哩哔哩)
-    private static final String SIMILAR_VIDEO_BI_API = "http://api.bilibili.com/x/web-interface/archive/related?bvid=%s";
+    private static final String SIMILAR_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/archive/related?bvid=%s";
     // 视频分集 API (哔哩哔哩)
-    private static final String VIDEO_EPISODES_BI_API = "http://api.bilibili.com/x/player/pagelist?bvid=%s";
+    private static final String VIDEO_EPISODES_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
 
     // 用户关注 API
     private static final String USER_FOLLOWS_API = prefix + "/user/follows?uid=%s&limit=1000";

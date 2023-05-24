@@ -239,6 +239,18 @@ public class ColorUtil {
     }
 
 //    /**
+//     * 判断颜色是否适合用于渐变
+//     *
+//     * @param color
+//     * @return
+//     */
+//    public static boolean isGradientFriendly(Color color) {
+//        double grayLevel = color.getRed() * 0.299 + color.getGreen() * 0.578 + color.getBlue() * 0.114;
+//        System.out.println(grayLevel);
+//        return grayLevel > 60;
+//    }
+
+//    /**
 //     * Color 转为十六进制字符串
 //     *
 //     * @param color

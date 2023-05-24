@@ -258,6 +258,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage eraseTranslucency(BufferedImage img) {
+        if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
         BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = bufferedImage.createGraphics();
@@ -381,6 +382,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage doBlur(BufferedImage img) {
+        if (img == null) return null;
         gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
         return gaussianFilter.filter(img, null);
     }
@@ -392,6 +394,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage darker(BufferedImage img) {
+        if (img == null) return null;
         double lightness = getLightness(img);
         float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
         if (lightness > 0.6f) bn = param;
@@ -608,8 +611,9 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage toGradient(BufferedImage img) {
-        List<Color> colors = ColorThiefUtil.getPalette(img, 3);
-        return linearGradient(img.getWidth(), img.getHeight(), colors.get(0), colors.get(colors.size() > 1 ? 1 : 0));
+        List<Color> colors = ColorThiefUtil.getPalette(img, 6);
+        Color ca = colors.get(0), cb = colors.get(colors.size() > 1 ? 1 : 0);
+        return linearGradient(img.getWidth(), img.getHeight(), ca, cb);
     }
 
     /**
@@ -621,7 +625,7 @@ public class ImageUtil {
         BufferedImage img = createTranslucentImage(w, h);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gp = new GradientPaint(0, 0, c1, w, h, c2);
+        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2);
         g.setPaint(gp);
         g.fillRect(0, 0, w, h);
         g.dispose();

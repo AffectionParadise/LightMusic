@@ -2260,6 +2260,7 @@ public class PlayerFrame extends JFrame {
     // 频谱/歌词/背景图切换/滚动条流畅动画 Timer
     private Timer spectrumTimer;
     private Timer lrcTimer;
+    private Timer lrcDelayScrollTimer;
     public boolean lrcScrollAnimation;
     public Timer swActionTimer;
     private boolean lrcScrollWaiting;
@@ -8257,6 +8258,14 @@ public class PlayerFrame extends JFrame {
         collectionItemDescriptionLabel.setIconTextGap(gap);
 
         // 显示大图
+//        JScrollBar vs = playlistDescriptionScrollPane.getVerticalScrollBar();
+//        vs.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseReleased(MouseEvent e) {
+//                if (playlistDescriptionScrollPane.getViewport().contains(e.getPoint())) return;
+//                ((ScrollBarUI) vs.getUI()).setActive(false);
+//            }
+//        });
         playlistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -8265,6 +8274,7 @@ public class PlayerFrame extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
+//                if (vs.getValueIsAdjusting()) return;
                 ((ScrollBarUI) playlistDescriptionScrollPane.getVUI()).setActive(false);
             }
 
@@ -19531,9 +19541,9 @@ public class PlayerFrame extends JFrame {
         // 滚动条调整事件（鼠标滚轮滑动、滚动条拖动）
         JScrollBar vs = lrcScrollPane.getVerticalScrollBar();
         swActionTimer = new Timer(2500, e -> {
+            swActionTimer.stop();
             if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
             ((ScrollBarUI) vs.getUI()).setActive(false);
-            swActionTimer.stop();
             lrcScrollWaiting = false;
         });
         Runnable swAction = () -> {
@@ -19693,6 +19703,10 @@ public class PlayerFrame extends JFrame {
                 if (nv == dVal || lrcScrollPane.getVValue() == val) lrcScrollAnimation = false;
 //                });
             }
+        });
+        lrcDelayScrollTimer = new Timer(300, e -> {
+            lrcDelayScrollTimer.stop();
+            lrcScrollAnimation = true;
         });
         globalPanelTimer = new Timer(1, e -> {
             globalPanelExecutor.submit(() -> {
@@ -20314,6 +20328,7 @@ public class PlayerFrame extends JFrame {
     public void showAlbumImage() {
         SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
         BufferedImage albumImage = simpleMusicInfo.getAlbumImage();
+        if (albumImage == null) albumImage = defaultAlbumImage;
         boolean isDefault = albumImage == defaultAlbumImage;
         saveAlbumImageMenuItem.setEnabled(!isDefault);
         // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
@@ -20459,8 +20474,6 @@ public class PlayerFrame extends JFrame {
         seekLrc(0);
     }
 
-    private Timer lrcDelayScrollTimer;
-
     // 初始化播放器设置
     public void initPlayer() {
         player.setMute(isMute);
@@ -20557,10 +20570,6 @@ public class PlayerFrame extends JFrame {
         });
         // 缓冲时间改变后刷新时间条
         mp.bufferProgressTimeProperty().addListener((observable, oldValue, newValue) -> timeBar.repaint());
-        lrcDelayScrollTimer = new Timer(300, e -> {
-            lrcScrollAnimation = true;
-            lrcDelayScrollTimer.stop();
-        });
         mp.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
             // 随着播放，设置进度条和时间标签的值
             try {
@@ -22240,12 +22249,12 @@ public class PlayerFrame extends JFrame {
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
         // 按钮图标颜色
-        if (!player.loadedMusic() || player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
+        if (!player.loadedMusic() || player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
             changePaneButton.setIcon(ImageUtil.dye(new ImageIcon(
                     ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), iconColor));
         }
         // 默认专辑图颜色
-        if (player.loadedMusic() && player.getMusicInfo().getAlbumImage() == defaultAlbumImage) {
+        if (player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
             BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), textColor));
             albumImageLabel.setIcon(new ImageIcon(albumImage));
         }
@@ -22753,6 +22762,7 @@ public class PlayerFrame extends JFrame {
         }
         blurExecutor.submit(() -> {
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
+            if (albumImage == null) albumImage = defaultAlbumImage;
             if (albumImage == defaultAlbumImage) albumImage = ImageUtil.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurConstants.MC)
                 albumImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(albumImage));
