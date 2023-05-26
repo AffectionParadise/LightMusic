@@ -62,7 +62,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         JLabel label = (JLabel) component;
 
-        final int maxWidth = list.getVisibleRect().width - 10;
+        final int maxWidth = list.getVisibleRect().width - 20;
         if (maxWidth <= 0) return label;
 
         Statement statement = (Statement) value;

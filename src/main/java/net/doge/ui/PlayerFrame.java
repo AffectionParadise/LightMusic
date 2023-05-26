@@ -22902,8 +22902,11 @@ public class PlayerFrame extends JFrame {
             else if (selectedIndex == CollectionTabIndex.USER) listModel = userCollectionModel;
         }
         // 解决选中第一项重新筛选的性能问题
-        if (useMusicList) musicList.setModel(emptyListModel);
-        else collectionList.setModel(emptyListModel);
+        if (useMusicList) {
+            // 修复筛选时程序假死问题
+            if (!listModel.isEmpty()) musicList.setSelectedIndex(0);
+            musicList.setModel(emptyListModel);
+        } else collectionList.setModel(emptyListModel);
         for (int i = 0, size = listModel.size(); i < size; i++) {
             Object o = listModel.get(i);
             if (o.toString().toLowerCase().contains(keyword)) filterModel.addElement(o);

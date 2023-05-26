@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ColorThiefUtil {
     private static final int DEFAULT_QUALITY = 10;
-    private static final boolean DEFAULT_IGNORE_WHITE = false;
+    private static final boolean DEFAULT_FILTER_COLOR = true;
 
     /**
      * Use the median cut algorithm to cluster similar colors and return the base color from the
@@ -19,9 +19,7 @@ public class ColorThiefUtil {
      */
     public static Color getColor(BufferedImage sourceImage) {
         List<Color> palette = getPalette(sourceImage, 5);
-        if (palette == null) {
-            return null;
-        }
+        if (palette == null) return null;
         return palette.get(0);
     }
 
@@ -33,15 +31,13 @@ public class ColorThiefUtil {
      * @param quality     1 is the highest quality settings. 10 is the default. There is a trade-off between
      *                    quality and speed. The bigger the number, the faster a color will be returned but
      *                    the greater the likelihood that it will not be the visually most dominant color.
-     * @param ignoreWhite if <code>true</code>, white pixels are ignored
+     * @param filterColor if <code>true</code>, incompatible pixels are ignored
      * @return the dominant color as RGB array
      * @throws IllegalArgumentException if quality is &lt; 1
      */
-    public static Color getColor(BufferedImage sourceImage, int quality, boolean ignoreWhite) {
-        List<Color> palette = getPalette(sourceImage, 5, quality, ignoreWhite);
-        if (palette == null) {
-            return null;
-        }
+    public static Color getColor(BufferedImage sourceImage, int quality, boolean filterColor) {
+        List<Color> palette = getPalette(sourceImage, 5, quality, filterColor);
+        if (palette == null) return null;
         return palette.get(0);
     }
 
@@ -54,9 +50,9 @@ public class ColorThiefUtil {
      */
     public static List<Color> getPalette(BufferedImage sourceImage, int colorCount) {
         CMap cmap = getColorMap(sourceImage, colorCount);
-        if (cmap == null) return null;
-        int[][] palette = cmap.palette();
         List<Color> res = new LinkedList<>();
+        if (cmap == null) return res;
+        int[][] palette = cmap.palette();
         for (int[] p : palette) res.add(new Color(p[0], p[1], p[2]));
         return res;
     }
@@ -69,15 +65,15 @@ public class ColorThiefUtil {
      * @param quality     1 is the highest quality settings. 10 is the default. There is a trade-off between
      *                    quality and speed. The bigger the number, the faster the palette generation but
      *                    the greater the likelihood that colors will be missed.
-     * @param ignoreWhite if <code>true</code>, white pixels are ignored
+     * @param filterColor if <code>true</code>, incompatible pixels are ignored
      * @return the palette as array of RGB arrays
      * @throws IllegalArgumentException if quality is &lt; 1
      */
-    public static List<Color> getPalette(BufferedImage sourceImage, int colorCount, int quality, boolean ignoreWhite) {
-        CMap cmap = getColorMap(sourceImage, colorCount, quality, ignoreWhite);
+    public static List<Color> getPalette(BufferedImage sourceImage, int colorCount, int quality, boolean filterColor) {
+        CMap cmap = getColorMap(sourceImage, colorCount, quality, filterColor);
+        List<Color> res = new LinkedList<>();
         if (cmap == null) return null;
         int[][] palette = cmap.palette();
-        List<Color> res = new LinkedList<>();
         for (int[] p : palette) res.add(new Color(p[0], p[1], p[2]));
         return res;
     }
@@ -90,7 +86,7 @@ public class ColorThiefUtil {
      * @return the color map
      */
     public static CMap getColorMap(BufferedImage sourceImage, int colorCount) {
-        return getColorMap(sourceImage, colorCount, DEFAULT_QUALITY, DEFAULT_IGNORE_WHITE);
+        return getColorMap(sourceImage, colorCount, DEFAULT_QUALITY, DEFAULT_FILTER_COLOR);
     }
 
     /**
@@ -101,7 +97,7 @@ public class ColorThiefUtil {
      * @param quality     1 is the highest quality settings. 10 is the default. There is a trade-off between
      *                    quality and speed. The bigger the number, the faster the palette generation but
      *                    the greater the likelihood that colors will be missed.
-     * @param ignoreWhite if <code>true</code>, white pixels are ignored
+     * @param filterColor if <code>true</code>, incompatible pixels are ignored
      * @return the color map
      * @throws IllegalArgumentException if quality is &lt; 1
      */
@@ -109,7 +105,7 @@ public class ColorThiefUtil {
             BufferedImage sourceImage,
             int colorCount,
             int quality,
-            boolean ignoreWhite) {
+            boolean filterColor) {
         if (colorCount < 2 || colorCount > 256) {
             throw new IllegalArgumentException("Specified colorCount must be between 2 and 256.");
         }
@@ -122,16 +118,33 @@ public class ColorThiefUtil {
         switch (sourceImage.getType()) {
             case BufferedImage.TYPE_3BYTE_BGR:
             case BufferedImage.TYPE_4BYTE_ABGR:
-                pixelArray = getPixelsFast(sourceImage, quality, ignoreWhite);
+                pixelArray = getPixelsFast(sourceImage, quality, filterColor);
                 break;
 
             default:
-                pixelArray = getPixelsSlow(sourceImage, quality, ignoreWhite);
+                pixelArray = getPixelsSlow(sourceImage, quality, filterColor);
         }
 
         // Send array to quantize function which clusters values using median cut algorithm
         CMap cmap = quantize(pixelArray, colorCount);
         return cmap;
+    }
+
+    /**
+     * 判断颜色是否合适
+     *
+     * @param r
+     * @param g
+     * @param b
+     * @return
+     */
+    private static boolean isCompatibleColor(boolean filterColor, int r, int g, int b) {
+        final int gMax = 220, gMin = 80;
+//        int th = 20, avg = (r + g + b) / 3;
+        boolean white = r > gMax && g > gMax && b > gMax;
+        boolean black = r < gMin && g < gMin & b < gMin;
+//        boolean gray = Math.abs(r - avg) < th && Math.abs(g - avg) < th && Math.abs(b - avg) < th;
+        return !(filterColor && (white || black));
     }
 
     /**
@@ -142,13 +155,13 @@ public class ColorThiefUtil {
      * @param quality     1 is the highest quality settings. 10 is the default. There is a trade-off between
      *                    quality and speed. The bigger the number, the faster the palette generation but
      *                    the greater the likelihood that colors will be missed.
-     * @param ignoreWhite if <code>true</code>, white pixels are ignored
+     * @param filterColor if <code>true</code>, incompatible pixels are ignored
      * @return an array of pixels (each an RGB int array)
      */
     private static int[][] getPixelsFast(
             BufferedImage sourceImage,
             int quality,
-            boolean ignoreWhite) {
+            boolean filterColor) {
         DataBufferByte imageData = (DataBufferByte) sourceImage.getRaster().getDataBuffer();
         byte[] pixels = imageData.getData();
         int pixelCount = sourceImage.getWidth() * sourceImage.getHeight();
@@ -194,8 +207,8 @@ public class ColorThiefUtil {
                     g = pixels[offset + 1] & 0xFF;
                     r = pixels[offset + 2] & 0xFF;
 
-                    // If pixel is not white
-                    if (!(ignoreWhite && r > 250 && g > 250 && b > 250)) {
+                    // If pixel is compatible
+                    if (isCompatibleColor(filterColor, r, g, b)) {
                         pixelArray[numUsedPixels] = new int[]{r, g, b};
                         numUsedPixels++;
                     }
@@ -210,8 +223,8 @@ public class ColorThiefUtil {
                     g = pixels[offset + 2] & 0xFF;
                     r = pixels[offset + 3] & 0xFF;
 
-                    // If pixel is mostly opaque and not white
-                    if (a >= 125 && !(ignoreWhite && r > 250 && g > 250 && b > 250)) {
+                    // If pixel is mostly opaque and compatible
+                    if (a >= 125 && isCompatibleColor(filterColor, r, g, b)) {
                         pixelArray[numUsedPixels] = new int[]{r, g, b};
                         numUsedPixels++;
                     }
@@ -234,13 +247,13 @@ public class ColorThiefUtil {
      * @param quality     1 is the highest quality settings. 10 is the default. There is a trade-off between
      *                    quality and speed. The bigger the number, the faster the palette generation but
      *                    the greater the likelihood that colors will be missed.
-     * @param ignoreWhite if <code>true</code>, white pixels are ignored
+     * @param filterColor if <code>true</code>, white pixels are ignored
      * @return an array of pixels (each an RGB int array)
      */
     private static int[][] getPixelsSlow(
             BufferedImage sourceImage,
             int quality,
-            boolean ignoreWhite) {
+            boolean filterColor) {
         int width = sourceImage.getWidth();
         int height = sourceImage.getHeight();
 
@@ -263,7 +276,7 @@ public class ColorThiefUtil {
             r = (rgb >> 16) & 0xFF;
             g = (rgb >> 8) & 0xFF;
             b = (rgb) & 0xFF;
-            if (!(ignoreWhite && r > 250 && g > 250 && b > 250)) {
+            if (isCompatibleColor(filterColor, r, g, b)) {
                 res[numUsedPixels] = new int[]{r, g, b};
                 numUsedPixels++;
             }
@@ -272,7 +285,8 @@ public class ColorThiefUtil {
         return Arrays.copyOfRange(res, 0, numUsedPixels);
     }
 
-    private static final int SIGBITS = 5;
+    // 各种颜色之间的容差值
+    private static final int SIGBITS = 6;
     private static final int RSHIFT = 8 - SIGBITS;
     private static final int MULT = 1 << RSHIFT;
     private static final int HISTOSIZE = 1 << (3 * SIGBITS);

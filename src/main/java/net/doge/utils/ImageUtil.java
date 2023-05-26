@@ -3,10 +3,12 @@ package net.doge.utils;
 import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
+import com.jhlabs.image.GradientFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurConstants;
+import net.doge.constants.Colors;
 import net.doge.constants.Format;
 
 import javax.imageio.ImageIO;
@@ -395,13 +397,13 @@ public class ImageUtil {
      */
     public static BufferedImage darker(BufferedImage img) {
         if (img == null) return null;
-        double lightness = getLightness(img);
+        double ln = getLightness(img);
         float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
-        if (lightness > 0.6f) bn = param;
-        else if (lightness > 0.3f) bn = param + 0.1f;
-        else if (lightness > 0.25f) bn = param + 0.18f;
-        else if (lightness > 0.2f) bn = param + 0.26f;
-        else if (lightness > 0.1f) bn = param + 0.35f;
+        if (ln > 0.6f) bn = param;
+        else if (ln > 0.3f) bn = param + 0.1f;
+        else if (ln > 0.25f) bn = param + 0.18f;
+        else if (ln > 0.2f) bn = param + 0.26f;
+        else if (ln > 0.1f) bn = param + 0.35f;
         else bn = param + 0.95f;
         // 自适应亮度
         contrastFilter.setBrightness(bn);
@@ -611,7 +613,8 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage toGradient(BufferedImage img) {
-        List<Color> colors = ColorThiefUtil.getPalette(img, 6);
+        List<Color> colors = ColorThiefUtil.getPalette(img, 5);
+        if (colors.isEmpty()) colors.add(Colors.LIGHT_GRAY);
         Color ca = colors.get(0), cb = colors.get(colors.size() > 1 ? 1 : 0);
         return linearGradient(img.getWidth(), img.getHeight(), ca, cb);
     }
@@ -623,13 +626,14 @@ public class ImageUtil {
      */
     public static BufferedImage linearGradient(int w, int h, Color c1, Color c2) {
         BufferedImage img = createTranslucentImage(w, h);
-        Graphics2D g = img.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2);
-        g.setPaint(gp);
-        g.fillRect(0, 0, w, h);
-        g.dispose();
-        return img;
+        GradientFilter gf = new GradientFilter(new Point(0, 0), new Point(w, h), c1.getRGB(), c2.getRGB(), false, GradientFilter.LINEAR, GradientFilter.INT_LINEAR);
+//        Graphics2D g = img.createGraphics();
+//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2);
+//        g.setPaint(gp);
+//        g.fillRect(0, 0, w, h);
+//        g.dispose();
+        return gf.filter(img, null);
     }
 
     /**
