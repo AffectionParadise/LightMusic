@@ -3,8 +3,8 @@ package net.doge.utils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class ColorThiefUtil {
     private static final int DEFAULT_QUALITY = 10;
@@ -50,11 +50,8 @@ public class ColorThiefUtil {
      */
     public static List<Color> getPalette(BufferedImage sourceImage, int colorCount) {
         CMap cmap = getColorMap(sourceImage, colorCount);
-        List<Color> res = new LinkedList<>();
-        if (cmap == null) return res;
-        int[][] palette = cmap.palette();
-        for (int[] p : palette) res.add(new Color(p[0], p[1], p[2]));
-        return res;
+        if (cmap == null) return null;
+        return cmap.palette();
     }
 
     /**
@@ -71,11 +68,8 @@ public class ColorThiefUtil {
      */
     public static List<Color> getPalette(BufferedImage sourceImage, int colorCount, int quality, boolean filterColor) {
         CMap cmap = getColorMap(sourceImage, colorCount, quality, filterColor);
-        List<Color> res = new LinkedList<>();
         if (cmap == null) return null;
-        int[][] palette = cmap.palette();
-        for (int[] p : palette) res.add(new Color(p[0], p[1], p[2]));
-        return res;
+        return cmap.palette();
     }
 
     /**
@@ -139,12 +133,9 @@ public class ColorThiefUtil {
      * @return
      */
     private static boolean isCompatibleColor(boolean filterColor, int r, int g, int b) {
-        final int gMax = 220, gMin = 80;
-//        int th = 20, avg = (r + g + b) / 3;
-        boolean white = r > gMax && g > gMax && b > gMax;
-        boolean black = r < gMin && g < gMin & b < gMin;
-//        boolean gray = Math.abs(r - avg) < th && Math.abs(g - avg) < th && Math.abs(b - avg) < th;
-        return !(filterColor && (white || black));
+        if (!filterColor) return true;
+        double ln = ColorUtil.lightness(ColorUtil.merge(r, g, b));
+        return ln >= 0.2 && ln <= 0.9;
     }
 
     /**
@@ -285,7 +276,6 @@ public class ColorThiefUtil {
         return Arrays.copyOfRange(res, 0, numUsedPixels);
     }
 
-    // 各种颜色之间的容差值
     private static final int SIGBITS = 6;
     private static final int RSHIFT = 8 - SIGBITS;
     private static final int MULT = 1 << RSHIFT;
@@ -429,11 +419,11 @@ public class ColorThiefUtil {
             vboxes.add(box);
         }
 
-        public int[][] palette() {
+        public List<Color> palette() {
             int numVBoxes = vboxes.size();
-            int[][] palette = new int[numVBoxes][];
+            List<Color> palette = new LinkedList<>();
             for (int i = 0; i < numVBoxes; i++) {
-                palette[i] = vboxes.get(i).avg(false);
+                palette.add(ColorUtil.intArrayToColor(vboxes.get(i).avg(false)));
             }
             return palette;
         }
@@ -442,18 +432,19 @@ public class ColorThiefUtil {
             return vboxes.size();
         }
 
-        public int[] map(int[] color) {
+        public Color map(Color color) {
+            int[] c = ColorUtil.colorToIntArray(color);
             int numVBoxes = vboxes.size();
             for (int i = 0; i < numVBoxes; i++) {
                 VBox vbox = vboxes.get(i);
-                if (vbox.contains(color)) {
-                    return vbox.avg(false);
+                if (vbox.contains(c)) {
+                    return ColorUtil.intArrayToColor(vbox.avg(false));
                 }
             }
-            return nearest(color);
+            return nearest(ColorUtil.intArrayToColor(c));
         }
 
-        public int[] nearest(int[] color) {
+        public Color nearest(Color color) {
             double d1 = Double.MAX_VALUE;
             double d2;
             int[] pColor = null;
@@ -463,15 +454,15 @@ public class ColorThiefUtil {
                 int[] vbColor = vboxes.get(i).avg(false);
                 d2 = Math
                         .sqrt(
-                                Math.pow(color[0] - vbColor[0], 2)
-                                        + Math.pow(color[1] - vbColor[1], 2)
-                                        + Math.pow(color[2] - vbColor[2], 2));
+                                Math.pow(color.getRed() - vbColor[0], 2)
+                                        + Math.pow(color.getGreen() - vbColor[1], 2)
+                                        + Math.pow(color.getBlue() - vbColor[2], 2));
                 if (d2 < d1) {
                     d1 = d2;
                     pColor = vbColor;
                 }
             }
-            return pColor;
+            return ColorUtil.intArrayToColor(pColor);
         }
 
     }

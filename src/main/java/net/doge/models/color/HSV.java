@@ -1,4 +1,4 @@
-package net.doge.models;
+package net.doge.models.color;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;

@@ -52,11 +52,14 @@ public class ColorSliderUI extends BasicSliderUI {
         if (d.isRGB()) {
             c1 = slider == d.rSlider ? d.makeColor(0, d.g, d.b) : slider == d.gSlider ? d.makeColor(d.r, 0, d.b) : d.makeColor(d.r, d.g, 0);
             c2 = slider == d.rSlider ? d.makeColor(d.max1, d.g, d.b) : slider == d.gSlider ? d.makeColor(d.r, d.max2, d.b) : d.makeColor(d.r, d.g, d.max3);
-        } else {
+        } else if (d.isHSV()) {
             c1 = slider == d.rSlider ? d.makeColor(0, d.s, d.v) : slider == d.gSlider ? d.makeColor(d.h, 0, d.v) : d.makeColor(d.h, d.s, 0);
             c2 = slider == d.rSlider ? d.makeColor(d.max1, d.s, d.v) : slider == d.gSlider ? d.makeColor(d.h, d.max2, d.v) : d.makeColor(d.h, d.s, d.max3);
+        } else {
+            c1 = slider == d.rSlider ? d.makeColor(0, d.ns, d.nl) : slider == d.gSlider ? d.makeColor(d.nh, 0, d.nl) : d.makeColor(d.nh, d.ns, 0);
+            c2 = slider == d.rSlider ? d.makeColor(d.max1, d.ns, d.nl) : slider == d.gSlider ? d.makeColor(d.nh, d.max2, d.nl) : d.makeColor(d.nh, d.ns, d.max3);
         }
-        if (d.isHSV() && slider == d.rSlider) {
+        if (!d.isRGB() && slider == d.rSlider) {
             LinearGradientPaint lgp = new LinearGradientPaint(trackRect.x, trackRect.y, trackRect.x + trackRect.width, trackRect.y, ratios, colors);
             g2d.setPaint(lgp);
         } else {

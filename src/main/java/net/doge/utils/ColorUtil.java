@@ -1,6 +1,7 @@
 package net.doge.utils;
 
-import net.doge.models.HSV;
+import net.doge.models.color.HSL;
+import net.doge.models.color.HSV;
 
 import java.awt.*;
 
@@ -80,13 +81,13 @@ public class ColorUtil {
     }
 
     /**
-     * Color 转 HSV
+     * RGB 值转 HSV
      *
      * @param
      * @return
      */
-    public static HSV colorToHsv(Color color) {
-        int R = color.getRed(), G = color.getGreen(), B = color.getBlue();
+    public static HSV intColorToHsv(int rgb) {
+        int R = (rgb >> 16) & 0xFF, G = (rgb >> 8) & 0xFF, B = rgb & 0xFF;
         float R_1 = R / 255f, G_1 = G / 255f, B_1 = B / 255f;
         float max = Math.max(R_1, Math.max(G_1, B_1)), min = Math.min(R_1, Math.min(G_1, B_1));
         float C_max = max, C_min = min;
@@ -110,6 +111,16 @@ public class ColorUtil {
         else saturation = diff / C_max;
         float value = C_max;
         return new HSV(hue, saturation * 100, value * 100);
+    }
+
+    /**
+     * Color 转 HSV
+     *
+     * @param
+     * @return
+     */
+    public static HSV colorToHsv(Color color) {
+        return intColorToHsv(color.getRGB());
     }
 
 //    public static void main(String[] args) {
@@ -170,16 +181,26 @@ public class ColorUtil {
         return new Color(hsvToIntColor(h, s, v));
     }
 
-    /**
-     * 通过 HSV 模型选取更亮或更暗的颜色
-     *
-     * @param color
-     * @return
-     */
-    public static Color hsvDiffPick(Color color, float diff) {
-        HSV hsv = colorToHsv(color);
-        return hsvToColor((hsv.h + diff) % 360, hsv.s, hsv.v);
-    }
+//    /**
+//     * HSV 转 Color
+//     *
+//     * @param
+//     * @return
+//     */
+//    public static Color hsvToColor(HSV hsv) {
+//        return new Color(hsvToIntColor(hsv.h, hsv.s, hsv.v));
+//    }
+
+//    /**
+//     * 通过 HSV 模型选取更亮或更暗的颜色
+//     *
+//     * @param color
+//     * @return
+//     */
+//    public static Color hsvDiffPick(Color color, float diff) {
+//        HSV hsv = colorToHsv(color);
+//        return hsvToColor((hsv.h + diff) % 360, hsv.s, hsv.v);
+//    }
 
     /**
      * 更亮的颜色
@@ -188,7 +209,7 @@ public class ColorUtil {
      * @return
      */
     public static Color brighter(Color color) {
-        return brighter(color, 0.15f);
+        return brighter(color, 0.153f);
     }
 
     /**
@@ -202,6 +223,11 @@ public class ColorUtil {
         int green = (int) ((color.getGreen() * (1 - factor) / 255 + factor) * 255);
         int blue = (int) ((color.getBlue() * (1 - factor) / 255 + factor) * 255);
         return new Color(red, green, blue, color.getAlpha());
+//        HSL hsl = colorToHsl(color);
+//        hsl.l *= 1 + factor;
+//        if (hsl.l < 0) hsl.l = 0;
+//        else if (hsl.l > 100) hsl.l = 100;
+//        return hslToColor(hsl);
     }
 
     /**
@@ -225,6 +251,61 @@ public class ColorUtil {
         int green = (int) ((color.getGreen() * (1 - factor)));
         int blue = (int) ((color.getBlue() * (1 - factor)));
         return new Color(red, green, blue, color.getAlpha());
+//        HSL hsl = colorToHsl(color);
+//        hsl.l *= 1 - factor;
+//        if (hsl.l < 0) hsl.l = 0;
+//        else if (hsl.l > 100) hsl.l = 100;
+//        return hslToColor(hsl);
+    }
+
+//    /**
+//     * 调整颜色亮度使之成为较暗较柔和的颜色
+//     *
+//     * @param color
+//     * @return
+//     */
+//    public static Color darkMuted(Color color, double sMin, double sMax, double lMin, double lMax) {
+//        HSL hsl = colorToHsl(color);
+//        if (hsl.s < sMin) hsl.s = sMin;
+//        else if (hsl.s > sMax) hsl.s = sMax;
+//        if (hsl.l < lMin) hsl.l = lMin;
+//        else if (hsl.l > lMax) hsl.l = lMax;
+//        return hslToColor(hsl);
+//    }
+
+//    /**
+//     * 旋转颜色，改变颜色色相
+//     *
+//     * @param color
+//     * @return
+//     */
+//    public static Color rotate(Color color, float deg) {
+//        HSL hsl = colorToHsl(color);
+//        double d = hsl.h + deg;
+//        hsl.h = d >= 0 ? d % 360 : 360 + d;
+//        return hslToColor(hsl);
+//    }
+
+    /**
+     * Color 转 int[]
+     *
+     * @param color
+     * @return
+     */
+    public static int[] colorToIntArray(Color color) {
+        if (color == null) return null;
+        return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
+    }
+
+    /**
+     * int[] 转 Color
+     *
+     * @param a
+     * @return
+     */
+    public static Color intArrayToColor(int[] a) {
+        if (a == null) return null;
+        return new Color(a[0], a[1], a[2]);
     }
 
     /**
@@ -236,67 +317,130 @@ public class ColorUtil {
     public static double lightness(int rgb) {
         int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
         return Math.pow(Math.pow(r / 255.0f, 2.2f) + Math.pow(g / 170.0f, 2.2f) + Math.pow(b / 425.0f, 2.2f), 1 / 2.2f) * 0.547373141f;
+//        return intColorToHsv(rgb).v / 100;
     }
 
-//    /**
-//     * 判断颜色是否适合用于渐变
-//     *
-//     * @param color
-//     * @return
-//     */
-//    public static boolean isGradientFriendly(Color color) {
-//        double grayLevel = color.getRed() * 0.299 + color.getGreen() * 0.578 + color.getBlue() * 0.114;
-//        System.out.println(grayLevel);
-//        return grayLevel > 60;
-//    }
+    /**
+     * Color 转 HSL
+     *
+     * @param red
+     * @param green
+     * @param blue
+     * @return
+     */
+    public static HSL colorToHsl(int red, int green, int blue) {
+        double b, delta, g, max, min, r;
 
-//    /**
-//     * Color 转为十六进制字符串
-//     *
-//     * @param color
-//     * @return
-//     */
-//    public static String colorToHexString(Color color) {
-//        String r = Integer.toHexString(color.getRed());
-//        r = r.length() < 2 ? ('0' + r) : r;
-//        String g = Integer.toHexString(color.getGreen());
-//        g = g.length() < 2 ? ('0' + g) : g;
-//        String b = Integer.toHexString(color.getBlue());
-//        b = b.length() < 2 ? ('0' + b) : b;
-//        return '#' + r + g + b;
-//    }
-//
-//    /**
-//     * 十六进制字符串转为 Color
-//     *
-//     * @param str
-//     * @return
-//     */
-//    public static Color hexStringToColor(String str) {
-//        return new Color(
-//                Integer.parseInt(str.substring(1, 3), 16),
-//                Integer.parseInt(str.substring(3, 5), 16),
-//                Integer.parseInt(str.substring(5), 16)
-//        );
-//    }
+        double hue, saturation, luminosity;
+        /*
+         * Convert RGB to HSL colorspace.
+         */
+        r = (double) red / 255;
+        g = (double) green / 255;
+        b = (double) blue / 255;
+        max = Math.max(r, Math.max(g, b));
+        min = Math.min(r, Math.min(g, b));
 
-//    /**
-//     * awt 的 Color 转为 JavaFx 的 Color
-//     *
-//     * @param color
-//     * @return
-//     */
-//    public static javafx.scene.paint.Color javaFxColor(Color color) {
-//        return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), (double) color.getAlpha() / 255);
-//    }
+        hue = 0.0;
+        saturation = 0.0;
+        luminosity = (min + max) / 2.0;
+        delta = max - min;
+        if (delta == 0.0) {
+            return new HSL(hue * 360, saturation * 100, luminosity * 100);
+        }
+        saturation = delta / ((luminosity <= 0.5) ? (min + max) : (2.0 - max - min));
+        if (r == max)
+            hue = (g == min ? 5.0 + (max - b) / delta : 1.0 - (max - g) / delta);
+        else if (g == max)
+            hue = (b == min ? 1.0 + (max - r) / delta : 3.0 - (max - b) / delta);
+        else
+            hue = (r == min ? 3.0 + (max - g) / delta : 5.0 - (max - r) / delta);
+        hue /= 6.0;
 
-//    /**
-//     * JavaFx 的 Color 转为 awt 的 Color
-//     *
-//     * @param color
-//     * @return
-//     */
-//    public static Color awtColor(javafx.scene.paint.Color color) {
-//        return new Color((int) (255 * color.getRed()), (int) (255 * color.getGreen()), (int) (255 * color.getBlue()), (int) (255 * color.getOpacity()));
-//    }
+        return new HSL(hue * 360, saturation * 100, luminosity * 100);
+    }
+
+    /**
+     * Color 转 HSL
+     *
+     * @param color
+     * @return
+     */
+    public static HSL colorToHsl(Color color) {
+        return colorToHsl(color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    /**
+     * HSL 转 Color
+     *
+     * @param hsl
+     * @return
+     */
+    public static Color hslToColor(HSL hsl) {
+        return hslToColor(hsl.h, hsl.s, hsl.l);
+    }
+
+    /**
+     * HSL 转 Color
+     *
+     * @param h
+     * @param s
+     * @param l
+     * @return
+     */
+    public static Color hslToColor(double h, double s, double l) {
+        double hue = h / 360, saturation = s / 100, luminosity = l / 100;
+        // int red, green, blue;
+        double b, g, r, v, x, y, z;
+
+        /*
+         * Convert HSL to RGB colorspace.
+         */
+        v = (luminosity <= 0.5) ? (luminosity * (1.0 + saturation))
+                : (luminosity + saturation - luminosity * saturation);
+        if (saturation == 0.0) {
+            return new Color((int) (255 * luminosity + 0.5), (int) (255 * luminosity + 0.5), (int) (255 * luminosity + 0.5));
+        }
+        y = 2.0 * luminosity - v;
+        x = y + (v - y) * (6.0 * hue - Math.floor(6.0 * hue));
+        z = v - (v - y) * (6.0 * hue - Math.floor(6.0 * hue));
+        switch ((int) (6.0 * hue)) {
+            case 0:
+                r = v;
+                g = x;
+                b = y;
+                break;
+            case 1:
+                r = z;
+                g = v;
+                b = y;
+                break;
+            case 2:
+                r = y;
+                g = v;
+                b = x;
+                break;
+            case 3:
+                r = y;
+                g = z;
+                b = v;
+                break;
+            case 4:
+                r = x;
+                g = y;
+                b = v;
+                break;
+            case 5:
+                r = v;
+                g = y;
+                b = z;
+                break;
+            default:
+                r = v;
+                g = x;
+                b = y;
+                break;
+        }
+        return new Color((int) (255 * r + 0.5), (int) (255 * g + 0.5), (int) (255 * b + 0.5));
+    }
 }

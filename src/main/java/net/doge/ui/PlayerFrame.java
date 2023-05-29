@@ -307,6 +307,10 @@ public class PlayerFrame extends JFrame {
     private ImageIcon collectIcon = new ImageIcon(SimplePath.ICON_PATH + "collect.png");
     // 已收藏图标
     private ImageIcon hasCollectedIcon = new ImageIcon(SimplePath.ICON_PATH + "hasCollected.png");
+    // 未收藏图标
+    private ImageIcon collectItemIcon = new ImageIcon(SimplePath.ICON_PATH + "collectItem.png");
+    // 已收藏图标
+    private ImageIcon collectedItemIcon = new ImageIcon(SimplePath.ICON_PATH + "collectedItem.png");
     // MV 图标
     private ImageIcon mvIcon = new ImageIcon(SimplePath.ICON_PATH + "mv.png");
     // 下载图标
@@ -560,6 +564,7 @@ public class PlayerFrame extends JFrame {
     private final String CHANGE_TO_LYRIC_PANE_TIP = "切换到歌曲详情页";
     private final String CHANGE_TO_MUSIC_PANE_TIP = "切换到列表页";
     private final String COLLECT_TIP = "收藏";
+    private final String COLLECTED_TIP = "已收藏";
     private final String DOWNLOAD_TIP = "下载";
     private final String COMMENT_TIP = "评论";
     private final String MV_TIP = "播放 MV";
@@ -1994,7 +1999,7 @@ public class PlayerFrame extends JFrame {
     private CustomLabel userDescriptionLabel = new CustomLabel("");
     private CustomLabel recommendItemDescriptionLabel = new CustomLabel("");
     private CustomLabel collectionItemDescriptionLabel = new CustomLabel("");
-    // 描述部分滚动条
+    // 描述部分滚动面板
     private CustomScrollPane playlistDescriptionScrollPane = new CustomScrollPane(playlistDescriptionPanel);
     private CustomScrollPane albumDescriptionScrollPane = new CustomScrollPane(albumDescriptionPanel);
     private CustomScrollPane artistDescriptionScrollPane = new CustomScrollPane(artistDescriptionPanel);
@@ -2003,6 +2008,33 @@ public class PlayerFrame extends JFrame {
     private CustomScrollPane userDescriptionScrollPane = new CustomScrollPane(userDescriptionPanel);
     private CustomScrollPane recommendItemDescriptionScrollPane = new CustomScrollPane(recommendItemDescriptionPanel);
     private CustomScrollPane collectionItemDescriptionScrollPane = new CustomScrollPane(collectionItemDescriptionPanel);
+    // 描述部分总面板
+    private CustomPanel playlistDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel albumDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel artistDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel radioDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel rankingDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel userDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel recommendItemDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel collectionItemDescriptionOuterPanel = new CustomPanel();
+    // 描述部分收藏面板
+    private CustomPanel playlistDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel albumDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel artistDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel radioDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel rankingDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel userDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel recommendItemDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel collectionItemDescriptionCollectionPanel = new CustomPanel();
+    // 描述部分收藏按钮
+    private CustomButton playlistDescriptionCollectionButton = new CustomButton();
+    private CustomButton albumDescriptionCollectionButton = new CustomButton();
+    private CustomButton artistDescriptionCollectionButton = new CustomButton();
+    private CustomButton radioDescriptionCollectionButton = new CustomButton();
+    private CustomButton rankingDescriptionCollectionButton = new CustomButton();
+    private CustomButton userDescriptionCollectionButton = new CustomButton();
+    private CustomButton recommendItemDescriptionCollectionButton = new CustomButton();
+    private CustomButton collectionItemDescriptionCollectionButton = new CustomButton();
 
     // 全局 Panel
     public GlobalPanel globalPanel = new GlobalPanel();
@@ -4573,6 +4605,7 @@ public class PlayerFrame extends JFrame {
                         // 显示收藏用户的歌曲列表
                         netMusicList.setModel(netMusicListForUserCollectionModel);
                     }
+                    checkDescriptionCollectionStatus(collectionItemDescriptionCollectionButton, collectionList.getSelectedValue());
                     if (netMusicList.getModel().getSize() == 0) {
                         collectionItemListCountBox.remove(netMusicScrollPane);
                         collectionItemListCountBox.add(emptyHintPanel);
@@ -4614,6 +4647,7 @@ public class PlayerFrame extends JFrame {
                 if (netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1) == playlistListBox) {
                     updateRenderer(netMusicList);
                     netMusicList.setModel(netMusicListForPlaylistModel);
+                    checkDescriptionCollectionStatus(playlistDescriptionCollectionButton, netPlaylistList.getSelectedValue());
                     if (netMusicListForPlaylistModel.isEmpty()) playlistListCountBox.add(emptyHintPanel);
                     else playlistListCountBox.add(netMusicScrollPane);
                     playlistListBox.add(playlistListCountBox);
@@ -4637,6 +4671,7 @@ public class PlayerFrame extends JFrame {
                 if (netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1) == albumListBox) {
                     updateRenderer(netMusicList);
                     netMusicList.setModel(netMusicListForAlbumModel);
+                    checkDescriptionCollectionStatus(albumDescriptionCollectionButton, netAlbumList.getSelectedValue());
                     if (netMusicListForAlbumModel.isEmpty()) albumListCountBox.add(emptyHintPanel);
                     else albumListCountBox.add(netMusicScrollPane);
                     albumListBox.add(albumListCountBox);
@@ -4660,6 +4695,7 @@ public class PlayerFrame extends JFrame {
                 if (netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1) == artistListBox) {
                     updateRenderer(netMusicList);
                     netMusicList.setModel(netMusicListForArtistModel);
+                    checkDescriptionCollectionStatus(artistDescriptionCollectionButton, netArtistList.getSelectedValue());
                     if (netMusicListForArtistModel.isEmpty()) artistListCountBox.add(emptyHintPanel);
                     else artistListCountBox.add(netMusicScrollPane);
                     artistListBox.add(artistListCountBox);
@@ -4683,6 +4719,7 @@ public class PlayerFrame extends JFrame {
                 if (netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1) == radioListBox) {
                     updateRenderer(netMusicList);
                     netMusicList.setModel(netMusicListForRadioModel);
+                    checkDescriptionCollectionStatus(radioDescriptionCollectionButton, netRadioList.getSelectedValue());
                     if (netMusicListForRadioModel.isEmpty()) radioListCountBox.add(emptyHintPanel);
                     else radioListCountBox.add(netMusicScrollPane);
                     radioListBox.add(radioListCountBox);
@@ -4716,15 +4753,16 @@ public class PlayerFrame extends JFrame {
                     getRankingAction.run();
                     return;
                 }
-                // 显示电台的歌曲列表
+                // 显示榜单的歌曲列表
                 if (netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1) == rankingListBox) {
                     netMusicList.setModel(netMusicListForRankingModel);
+                    checkDescriptionCollectionStatus(rankingDescriptionCollectionButton, netRankingList.getSelectedValue());
                     if (netMusicListForRankingModel.isEmpty()) rankingListCountBox.add(emptyHintPanel);
                     else rankingListCountBox.add(netMusicScrollPane);
                     rankingListBox.add(rankingListCountBox);
                     netRankingLeftBox.add(rankingListBox);
                 }
-                // 显示电台列表
+                // 显示榜单列表
                 else {
                     netRankingLeftBox.remove(rankingListBox);
                     if (netRankingListModel.isEmpty()) netRankingLeftBox.add(emptyHintPanel);
@@ -4737,6 +4775,7 @@ public class PlayerFrame extends JFrame {
                 if (netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1) == userListBox) {
                     updateRenderer(netMusicList);
                     netMusicList.setModel(netMusicListForUserModel);
+                    checkDescriptionCollectionStatus(userDescriptionCollectionButton, netUserList.getSelectedValue());
                     if (netMusicListForUserModel.isEmpty()) userListCountBox.add(emptyHintPanel);
                     else userListCountBox.add(netMusicScrollPane);
                     userListBox.add(userListCountBox);
@@ -4783,6 +4822,7 @@ public class PlayerFrame extends JFrame {
                                 || currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) {
                             netMusicList.setModel(netMusicListForRadioRecommendModel);
                         }
+                        checkDescriptionCollectionStatus(recommendItemDescriptionCollectionButton, itemRecommendList.getSelectedValue());
                         if (netMusicList.getModel().getSize() == 0) recommendItemListCountBox.add(emptyHintPanel);
                         else recommendItemListCountBox.add(netMusicScrollPane);
                         recommendItemListBox.add(recommendItemListCountBox);
@@ -5344,6 +5384,8 @@ public class PlayerFrame extends JFrame {
         collectionLeftBox.add(collectionCountPanel);
     }
 
+    private Object collectionOpenObj;
+
     // 初始化收藏列表
     private void collectionListInit() {
         collectionList.setModel(playlistCollectionModel);
@@ -5389,6 +5431,9 @@ public class PlayerFrame extends JFrame {
                 playMv(MvType.COLLECTION);
                 return;
             }
+            collectionOpenObj = o;
+            // 检查收藏按钮
+            checkDescriptionCollectionStatus(collectionItemDescriptionCollectionButton, o);
             loadingAndRun(() -> {
                 LinkedList<Future<?>> taskList = new LinkedList<>();
                 // 打开的是歌单
@@ -8798,14 +8843,23 @@ public class PlayerFrame extends JFrame {
         collectionItemDescriptionLabel.setMaximumSize(size);
         // 滚动面板宽度
         size = new Dimension(width + 10, Integer.MAX_VALUE);
-        albumDescriptionScrollPane.setPreferredSize(size);
         playlistDescriptionScrollPane.setPreferredSize(size);
+        albumDescriptionScrollPane.setPreferredSize(size);
         artistDescriptionScrollPane.setPreferredSize(size);
         radioDescriptionScrollPane.setPreferredSize(size);
         rankingDescriptionScrollPane.setPreferredSize(size);
         userDescriptionScrollPane.setPreferredSize(size);
         recommendItemDescriptionScrollPane.setPreferredSize(size);
         collectionItemDescriptionScrollPane.setPreferredSize(size);
+
+        playlistDescriptionOuterPanel.setPreferredSize(size);
+        albumDescriptionOuterPanel.setPreferredSize(size);
+        artistDescriptionOuterPanel.setPreferredSize(size);
+        radioDescriptionOuterPanel.setPreferredSize(size);
+        rankingDescriptionOuterPanel.setPreferredSize(size);
+        userDescriptionOuterPanel.setPreferredSize(size);
+        recommendItemDescriptionOuterPanel.setPreferredSize(size);
+        collectionItemDescriptionOuterPanel.setPreferredSize(size);
         // 滚动条最大大小
         playlistDescriptionScrollPane.setMaximumSize(size);
         albumDescriptionScrollPane.setMaximumSize(size);
@@ -8815,6 +8869,15 @@ public class PlayerFrame extends JFrame {
         userDescriptionScrollPane.setMaximumSize(size);
         recommendItemDescriptionScrollPane.setMaximumSize(size);
         collectionItemDescriptionScrollPane.setMaximumSize(size);
+
+        playlistDescriptionOuterPanel.setMaximumSize(size);
+        albumDescriptionOuterPanel.setMaximumSize(size);
+        artistDescriptionOuterPanel.setMaximumSize(size);
+        radioDescriptionOuterPanel.setMaximumSize(size);
+        rankingDescriptionOuterPanel.setMaximumSize(size);
+        userDescriptionOuterPanel.setMaximumSize(size);
+        recommendItemDescriptionOuterPanel.setMaximumSize(size);
+        collectionItemDescriptionOuterPanel.setMaximumSize(size);
         // 滚动条监听器
         playlistDescriptionScrollPane.addMouseListener(new ScrollPaneListener(playlistDescriptionScrollPane, THIS));
         albumDescriptionScrollPane.addMouseListener(new ScrollPaneListener(albumDescriptionScrollPane, THIS));
@@ -8944,14 +9007,117 @@ public class PlayerFrame extends JFrame {
             copyToClipboard(StringUtil.removeHTMLLabel(l.getText()));
         });
 
-        playlistListBox.add(playlistDescriptionScrollPane);
-        albumListBox.add(albumDescriptionScrollPane);
-        artistListBox.add(artistDescriptionScrollPane);
-        radioListBox.add(radioDescriptionScrollPane);
-        rankingListBox.add(rankingDescriptionScrollPane);
-        userListBox.add(userDescriptionScrollPane);
-        recommendItemListBox.add(recommendItemDescriptionScrollPane);
-        collectionItemListBox.add(collectionItemDescriptionScrollPane);
+        // 描述收藏按钮
+        playlistDescriptionCollectionButton.addActionListener(e -> {
+            netPlaylistCollectMenuItem.doClick();
+            switchDescriptionCollectionStatus(playlistDescriptionCollectionButton);
+        });
+        albumDescriptionCollectionButton.addActionListener(e -> {
+            netAlbumCollectMenuItem.doClick();
+            switchDescriptionCollectionStatus(albumDescriptionCollectionButton);
+        });
+        artistDescriptionCollectionButton.addActionListener(e -> {
+            netArtistCollectMenuItem.doClick();
+            switchDescriptionCollectionStatus(artistDescriptionCollectionButton);
+        });
+        radioDescriptionCollectionButton.addActionListener(e -> {
+            netRadioCollectMenuItem.doClick();
+            switchDescriptionCollectionStatus(radioDescriptionCollectionButton);
+        });
+        rankingDescriptionCollectionButton.addActionListener(e -> {
+            netRankingCollectMenuItem.doClick();
+            switchDescriptionCollectionStatus(rankingDescriptionCollectionButton);
+        });
+        userDescriptionCollectionButton.addActionListener(e -> {
+            netUserCollectMenuItem.doClick();
+            switchDescriptionCollectionStatus(userDescriptionCollectionButton);
+        });
+        recommendItemDescriptionCollectionButton.addActionListener(e -> {
+            Object o = itemRecommendList.getSelectedValue();
+            CustomMenuItem menuItem = null;
+            if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
+            else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
+            else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
+            else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
+            menuItem.doClick();
+            switchDescriptionCollectionStatus(recommendItemDescriptionCollectionButton);
+        });
+        collectionItemDescriptionCollectionButton.addActionListener(e -> {
+            Object o = collectionList.getSelectedValue();
+            if (o == null) o = collectionOpenObj;
+            CustomMenuItem menuItem = null;
+            if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
+            else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
+            else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
+            else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
+            else if (o instanceof NetRankingInfo) menuItem = netRankingCollectMenuItem;
+            else if (o instanceof NetUserInfo) menuItem = netUserCollectMenuItem;
+            menuItem.doClick();
+            switchDescriptionCollectionStatus(collectionItemDescriptionCollectionButton);
+        });
+        // 描述收藏按钮鼠标事件
+        playlistDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(playlistDescriptionCollectionButton, THIS));
+        albumDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(albumDescriptionCollectionButton, THIS));
+        artistDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(artistDescriptionCollectionButton, THIS));
+        radioDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(radioDescriptionCollectionButton, THIS));
+        rankingDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(rankingDescriptionCollectionButton, THIS));
+        userDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(userDescriptionCollectionButton, THIS));
+        recommendItemDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(recommendItemDescriptionCollectionButton, THIS));
+        collectionItemDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(collectionItemDescriptionCollectionButton, THIS));
+        // 描述收藏按钮面板
+        playlistDescriptionCollectionPanel.add(playlistDescriptionCollectionButton);
+        albumDescriptionCollectionPanel.add(albumDescriptionCollectionButton);
+        artistDescriptionCollectionPanel.add(artistDescriptionCollectionButton);
+        radioDescriptionCollectionPanel.add(radioDescriptionCollectionButton);
+        rankingDescriptionCollectionPanel.add(rankingDescriptionCollectionButton);
+        userDescriptionCollectionPanel.add(userDescriptionCollectionButton);
+        recommendItemDescriptionCollectionPanel.add(recommendItemDescriptionCollectionButton);
+        collectionItemDescriptionCollectionPanel.add(collectionItemDescriptionCollectionButton);
+
+        Dimension ms = new Dimension(Integer.MAX_VALUE, 30);
+        playlistDescriptionCollectionPanel.setMaximumSize(ms);
+        albumDescriptionCollectionPanel.setMaximumSize(ms);
+        artistDescriptionCollectionPanel.setMaximumSize(ms);
+        radioDescriptionCollectionPanel.setMaximumSize(ms);
+        rankingDescriptionCollectionPanel.setMaximumSize(ms);
+        userDescriptionCollectionPanel.setMaximumSize(ms);
+        recommendItemDescriptionCollectionPanel.setMaximumSize(ms);
+        collectionItemDescriptionCollectionPanel.setMaximumSize(ms);
+        // 描述收藏面板布局
+        playlistDescriptionOuterPanel.setLayout(new BorderLayout());
+        albumDescriptionOuterPanel.setLayout(new BorderLayout());
+        artistDescriptionOuterPanel.setLayout(new BorderLayout());
+        radioDescriptionOuterPanel.setLayout(new BorderLayout());
+        rankingDescriptionOuterPanel.setLayout(new BorderLayout());
+        userDescriptionOuterPanel.setLayout(new BorderLayout());
+        recommendItemDescriptionOuterPanel.setLayout(new BorderLayout());
+        collectionItemDescriptionOuterPanel.setLayout(new BorderLayout());
+        // 描述收藏面板
+        playlistDescriptionOuterPanel.add(playlistDescriptionScrollPane, BorderLayout.CENTER);
+        playlistDescriptionOuterPanel.add(playlistDescriptionCollectionPanel, BorderLayout.SOUTH);
+        albumDescriptionOuterPanel.add(albumDescriptionScrollPane, BorderLayout.CENTER);
+        albumDescriptionOuterPanel.add(albumDescriptionCollectionPanel, BorderLayout.SOUTH);
+        artistDescriptionOuterPanel.add(artistDescriptionScrollPane, BorderLayout.CENTER);
+        artistDescriptionOuterPanel.add(artistDescriptionCollectionPanel, BorderLayout.SOUTH);
+        radioDescriptionOuterPanel.add(radioDescriptionScrollPane, BorderLayout.CENTER);
+        radioDescriptionOuterPanel.add(radioDescriptionCollectionPanel, BorderLayout.SOUTH);
+        rankingDescriptionOuterPanel.add(rankingDescriptionScrollPane, BorderLayout.CENTER);
+        rankingDescriptionOuterPanel.add(rankingDescriptionCollectionPanel, BorderLayout.SOUTH);
+        userDescriptionOuterPanel.add(userDescriptionScrollPane, BorderLayout.CENTER);
+        userDescriptionOuterPanel.add(userDescriptionCollectionPanel, BorderLayout.SOUTH);
+        recommendItemDescriptionOuterPanel.add(recommendItemDescriptionScrollPane, BorderLayout.CENTER);
+        recommendItemDescriptionOuterPanel.add(recommendItemDescriptionCollectionPanel, BorderLayout.SOUTH);
+        collectionItemDescriptionOuterPanel.add(collectionItemDescriptionScrollPane, BorderLayout.CENTER);
+        collectionItemDescriptionOuterPanel.add(collectionItemDescriptionCollectionPanel, BorderLayout.SOUTH);
+
+        playlistListBox.add(playlistDescriptionOuterPanel);
+        albumListBox.add(albumDescriptionOuterPanel);
+        artistListBox.add(artistDescriptionOuterPanel);
+        radioListBox.add(radioDescriptionOuterPanel);
+        rankingListBox.add(rankingDescriptionOuterPanel);
+        userListBox.add(userDescriptionOuterPanel);
+        recommendItemListBox.add(recommendItemDescriptionOuterPanel);
+        collectionItemListBox.add(collectionItemDescriptionOuterPanel);
 
         // 设置一下列表盒子的最佳大小使其自动填充满
         Dimension d = new Dimension(300, 100);
@@ -8963,6 +9129,32 @@ public class PlayerFrame extends JFrame {
         userListBox.setPreferredSize(d);
         recommendItemListBox.setPreferredSize(d);
         collectionItemListBox.setPreferredSize(d);
+    }
+
+    // 切换描述收藏按钮状态
+    private void switchDescriptionCollectionStatus(CustomButton btn) {
+        if (btn.getText().equals(COLLECT_TIP)) {
+            btn.setIcon(ImageUtil.dye(collectedItemIcon, currUIStyle.getIconColor()));
+            btn.setText(COLLECTED_TIP);
+            btn.setToolTipText(COLLECTED_TIP);
+        } else {
+            btn.setIcon(ImageUtil.dye(collectItemIcon, currUIStyle.getIconColor()));
+            btn.setText(COLLECT_TIP);
+            btn.setToolTipText(COLLECTED_TIP);
+        }
+    }
+
+    // 检查描述收藏按钮状态
+    private void checkDescriptionCollectionStatus(CustomButton btn, Object o) {
+        if (hasBeenCollected(o)) {
+            btn.setIcon(ImageUtil.dye(collectedItemIcon, currUIStyle.getIconColor()));
+            btn.setText(COLLECTED_TIP);
+            btn.setToolTipText(COLLECTED_TIP);
+        } else {
+            btn.setIcon(ImageUtil.dye(collectItemIcon, currUIStyle.getIconColor()));
+            btn.setText(COLLECT_TIP);
+            btn.setToolTipText(COLLECTED_TIP);
+        }
     }
 
     // 初始化在线歌单工具栏
@@ -9473,6 +9665,10 @@ public class PlayerFrame extends JFrame {
             List<Future<?>> taskList = new LinkedList<>();
             loadingAndRun(() -> {
                 NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
+
+                // 检查收藏按钮
+                checkDescriptionCollectionStatus(playlistDescriptionCollectionButton, playlistInfo);
+
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
@@ -9653,15 +9849,25 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == playlistCollectionModel;
-            if (netPlaylistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+            if (netPlaylistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netPlaylistCollectMenuItem.isShowing()
+                    || list == netPlaylistList && playlistDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    playlistCollectionModel.add(0, o);
+                // 描述面板取消收藏之后，使用之前保存的对象
+                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
+                if (useOpenObj) {
+                    playlistCollectionModel.add(0, collectionOpenObj);
+                } else {
+                    for (int i = values.size() - 1; i >= 0; i--) {
+                        Object o = values.get(i);
+                        if (hasBeenCollected(o)) continue;
+                        playlistCollectionModel.add(0, o);
+                    }
                 }
                 if (needRefresh) collectionList.setModel(model);
+                if (useOpenObj) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
@@ -10461,6 +10667,10 @@ public class PlayerFrame extends JFrame {
             List<Future<?>> taskList = new LinkedList<>();
             loadingAndRun(() -> {
                 NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
+
+                // 检查收藏按钮
+                checkDescriptionCollectionStatus(albumDescriptionCollectionButton, albumInfo);
+
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
@@ -10639,15 +10849,25 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == albumCollectionModel;
-            if (netAlbumCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+            if (netAlbumCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netAlbumCollectMenuItem.isShowing()
+                    || list == netAlbumList && albumDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    albumCollectionModel.add(0, o);
+                // 描述面板取消收藏之后，使用之前保存的对象
+                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
+                if (useOpenObj) {
+                    albumCollectionModel.add(0, collectionOpenObj);
+                } else {
+                    for (int i = values.size() - 1; i >= 0; i--) {
+                        Object o = values.get(i);
+                        if (hasBeenCollected(o)) continue;
+                        albumCollectionModel.add(0, o);
+                    }
                 }
                 if (needRefresh) collectionList.setModel(model);
+                if (useOpenObj) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
@@ -11475,6 +11695,10 @@ public class PlayerFrame extends JFrame {
             List<Future<?>> taskList = new LinkedList<>();
             loadingAndRun(() -> {
                 NetArtistInfo artistInfo = netArtistList.getSelectedValue();
+
+                // 检查收藏按钮
+                checkDescriptionCollectionStatus(artistDescriptionCollectionButton, artistInfo);
+
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
@@ -11661,15 +11885,25 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == artistCollectionModel;
-            if (netArtistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+            if (netArtistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netArtistCollectMenuItem.isShowing()
+                    || list == netArtistList && artistDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    artistCollectionModel.add(0, o);
+                // 描述面板取消收藏之后，使用之前保存的对象
+                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
+                if (useOpenObj) {
+                    artistCollectionModel.add(0, collectionOpenObj);
+                } else {
+                    for (int i = values.size() - 1; i >= 0; i--) {
+                        Object o = values.get(i);
+                        if (hasBeenCollected(o)) continue;
+                        artistCollectionModel.add(0, o);
+                    }
                 }
                 if (needRefresh) collectionList.setModel(model);
+                if (useOpenObj) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
@@ -12721,6 +12955,10 @@ public class PlayerFrame extends JFrame {
             List<Future<?>> taskList = new LinkedList<>();
             loadingAndRun(() -> {
                 NetRadioInfo radioInfo = netRadioList.getSelectedValue();
+
+                // 检查收藏按钮
+                checkDescriptionCollectionStatus(radioDescriptionCollectionButton, radioInfo);
+
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
@@ -12904,15 +13142,25 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == radioCollectionModel;
-            if (netRadioCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+            if (netRadioCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netRadioCollectMenuItem.isShowing()
+                    || list == netRadioList && radioDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    radioCollectionModel.add(0, o);
+                // 描述面板取消收藏之后，使用之前保存的对象
+                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
+                if (useOpenObj) {
+                    radioCollectionModel.add(0, collectionOpenObj);
+                } else {
+                    for (int i = values.size() - 1; i >= 0; i--) {
+                        Object o = values.get(i);
+                        if (hasBeenCollected(o)) continue;
+                        radioCollectionModel.add(0, o);
+                    }
                 }
                 if (needRefresh) collectionList.setModel(model);
+                if (useOpenObj) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
@@ -14457,6 +14705,10 @@ public class PlayerFrame extends JFrame {
             List<Future<?>> taskList = new LinkedList<>();
             loadingAndRun(() -> {
                 NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
+
+                // 检查收藏按钮
+                checkDescriptionCollectionStatus(rankingDescriptionCollectionButton, rankingInfo);
+
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
@@ -14629,15 +14881,25 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == rankingCollectionModel;
-            if (netRankingCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+            if (netRankingCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netRankingCollectMenuItem.isShowing()
+                    || list == netRankingList && rankingDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    rankingCollectionModel.add(0, o);
+                // 描述面板取消收藏之后，使用之前保存的对象
+                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
+                if (useOpenObj) {
+                    rankingCollectionModel.add(0, collectionOpenObj);
+                } else {
+                    for (int i = values.size() - 1; i >= 0; i--) {
+                        Object o = values.get(i);
+                        if (hasBeenCollected(o)) continue;
+                        rankingCollectionModel.add(0, o);
+                    }
                 }
                 if (needRefresh) collectionList.setModel(model);
+                if (useOpenObj) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
@@ -15216,6 +15478,10 @@ public class PlayerFrame extends JFrame {
             List<Future<?>> taskList = new LinkedList<>();
             loadingAndRun(() -> {
                 NetUserInfo userInfo = netUserList.getSelectedValue();
+
+                // 检查收藏按钮
+                checkDescriptionCollectionStatus(userDescriptionCollectionButton, userInfo);
+
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
@@ -15418,15 +15684,25 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == userCollectionModel;
-            if (netUserCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+            if (netUserCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netUserCollectMenuItem.isShowing()
+                    || list == netUserList && userDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+                    || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    userCollectionModel.add(0, o);
+                // 描述面板取消收藏之后，使用之前保存的对象
+                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
+                if (useOpenObj) {
+                    userCollectionModel.add(0, collectionOpenObj);
+                } else {
+                    for (int i = values.size() - 1; i >= 0; i--) {
+                        Object o = values.get(i);
+                        if (hasBeenCollected(o)) continue;
+                        userCollectionModel.add(0, o);
+                    }
                 }
                 if (needRefresh) collectionList.setModel(model);
+                if (useOpenObj) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
@@ -18278,6 +18554,8 @@ public class PlayerFrame extends JFrame {
                 playMv(MvType.MV_RECOMMEND_LIST);
                 return;
             }
+            // 检查收藏按钮
+            checkDescriptionCollectionStatus(recommendItemDescriptionCollectionButton, o);
             loadingAndRun(() -> {
                 List<Future<?>> taskList = new LinkedList<>();
                 // 打开的是歌单
@@ -19567,6 +19845,7 @@ public class PlayerFrame extends JFrame {
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
+                if (nextLrc < 0) return;
                 currScrollVal = vs.getValue();
                 lrcScrollAnimation = true;
             }
@@ -19796,7 +20075,6 @@ public class PlayerFrame extends JFrame {
         mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth() + 10, mvIcon.getIconHeight() + 10));
         mvButton.addActionListener(e -> playMv(MvType.PLAYING));
         // 收藏
-        collectButton.setToolTipText(COLLECT_TIP);
         collectButton.setEnabled(false);
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, THIS));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
@@ -19806,10 +20084,12 @@ public class PlayerFrame extends JFrame {
             if (!hasBeenCollected(o)) {
                 collectionModel.add(0, o);
                 collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+                collectButton.setToolTipText(COLLECTED_TIP);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 collectionModel.removeElement(o);
                 collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+                collectButton.setToolTipText(COLLECT_TIP);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
@@ -20233,10 +20513,13 @@ public class PlayerFrame extends JFrame {
         downloadButton.setEnabled(isNetMusic);
         commentButton.setEnabled(isNetMusic);
         sheetButton.setEnabled(isNetMusic);
-        if (isNetMusic && hasBeenCollected(netMusicInfo) || hasBeenCollected(file))
+        if (isNetMusic && hasBeenCollected(netMusicInfo) || hasBeenCollected(file)) {
             collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
-        else
+            collectButton.setToolTipText(COLLECTED_TIP);
+        } else {
             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+            collectButton.setToolTipText(COLLECT_TIP);
+        }
 
         SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
         // 设置歌曲名称
@@ -22099,6 +22382,25 @@ public class PlayerFrame extends JFrame {
 
         collectionItemDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
         collectionItemDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+
+        // 描述收藏按钮
+        playlistDescriptionCollectionButton.setForeground(textColor);
+        albumDescriptionCollectionButton.setForeground(textColor);
+        artistDescriptionCollectionButton.setForeground(textColor);
+        radioDescriptionCollectionButton.setForeground(textColor);
+        rankingDescriptionCollectionButton.setForeground(textColor);
+        userDescriptionCollectionButton.setForeground(textColor);
+        recommendItemDescriptionCollectionButton.setForeground(textColor);
+        collectionItemDescriptionCollectionButton.setForeground(textColor);
+
+        playlistDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) playlistDescriptionCollectionButton.getIcon(), iconColor));
+        albumDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) albumDescriptionCollectionButton.getIcon(), iconColor));
+        artistDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) artistDescriptionCollectionButton.getIcon(), iconColor));
+        radioDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) radioDescriptionCollectionButton.getIcon(), iconColor));
+        rankingDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) rankingDescriptionCollectionButton.getIcon(), iconColor));
+        userDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) userDescriptionCollectionButton.getIcon(), iconColor));
+        recommendItemDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) recommendItemDescriptionCollectionButton.getIcon(), iconColor));
+        collectionItemDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) collectionItemDescriptionCollectionButton.getIcon(), iconColor));
 
         playlistCoverAndNameLabel.setForeground(textColor);
         albumCoverAndNameLabel.setForeground(textColor);
