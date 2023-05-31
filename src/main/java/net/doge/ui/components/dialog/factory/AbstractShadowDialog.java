@@ -45,8 +45,6 @@ public abstract class AbstractShadowDialog extends JDialog {
             if (img == f.defaultAlbumImage) img = ImageUtil.eraseTranslucency(img);
             if (f.blurType == BlurConstants.MC)
                 img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
-            else if (f.blurType == BlurConstants.LG)
-                img = ImageUtil.toGradient(img);
         } else {
             UIStyle style = f.currUIStyle;
             img = style.getImg();
@@ -57,6 +55,7 @@ public abstract class AbstractShadowDialog extends JDialog {
     private void doBlur(BufferedImage bufferedImage) {
         int dw = getWidth() - 2 * pixels, dh = getHeight() - 2 * pixels;
         try {
+            BufferedImage bgImg = bufferedImage;
             boolean loadedMusic = f.player.loadedMusic();
             // 截取中间的一部分(有的图片是长方形)
             if (loadedMusic && f.blurType == BlurConstants.CV) bufferedImage = ImageUtil.cropCenter(bufferedImage);
@@ -64,9 +63,8 @@ public abstract class AbstractShadowDialog extends JDialog {
             if (f.gsOn) bufferedImage = ImageUtil.width(bufferedImage, 100);
             // 消除透明度
             bufferedImage = ImageUtil.eraseTranslucency(bufferedImage);
-            // 高斯模糊并暗化
+            // 高斯模糊
             if (f.gsOn) bufferedImage = ImageUtil.doBlur(bufferedImage);
-            if (f.darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
             // 放大至窗口大小
             bufferedImage = ImageUtil.width(bufferedImage, dw);
             if (dh > bufferedImage.getHeight())
@@ -82,6 +80,8 @@ public abstract class AbstractShadowDialog extends JDialog {
             } else {
                 bufferedImage = ImageUtil.forceSize(bufferedImage, dw, dh);
             }
+            if (f.blurType == BlurConstants.LG) bufferedImage = ImageUtil.toGradient(bgImg, dw, dh);
+            if (f.darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
             // 设置圆角
             bufferedImage = ImageUtil.setRadius(bufferedImage, 10);
             globalPanel.setBackgroundImage(bufferedImage);

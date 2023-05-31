@@ -9849,7 +9849,7 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == playlistCollectionModel;
-            if (netPlaylistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netPlaylistCollectMenuItem.isShowing()
+            if (netPlaylistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
                     || list == netPlaylistList && playlistDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
@@ -10849,7 +10849,7 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == albumCollectionModel;
-            if (netAlbumCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netAlbumCollectMenuItem.isShowing()
+            if (netAlbumCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
                     || list == netAlbumList && albumDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
@@ -11885,7 +11885,7 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == artistCollectionModel;
-            if (netArtistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netArtistCollectMenuItem.isShowing()
+            if (netArtistCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
                     || list == netArtistList && artistDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
@@ -13142,7 +13142,7 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == radioCollectionModel;
-            if (netRadioCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netRadioCollectMenuItem.isShowing()
+            if (netRadioCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
                     || list == netRadioList && radioDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
@@ -14881,7 +14881,7 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == rankingCollectionModel;
-            if (netRankingCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netRankingCollectMenuItem.isShowing()
+            if (netRankingCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
                     || list == netRankingList && rankingDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
@@ -15684,7 +15684,7 @@ public class PlayerFrame extends JFrame {
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
             boolean needRefresh = model == userCollectionModel;
-            if (netUserCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && netUserCollectMenuItem.isShowing()
+            if (netUserCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
                     || list == netUserList && userDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
@@ -18969,39 +18969,38 @@ public class PlayerFrame extends JFrame {
 
                 // 右键推荐列表
                 else if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (itemRecommendList.getModel().getSize() != 0) {
-                        // 得到鼠标光标所在的选项并选中
-                        int index = itemRecommendList.locationToIndex(e.getPoint());
-                        if (index == -1) return;
-                        if (!itemRecommendList.isSelectedIndex(index)) itemRecommendList.setSelectedIndex(index);
-                        Object o = itemRecommendList.getSelectedValue();
-                        CustomMenuItem menuItem = null;
-                        if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
-                        else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
-                        else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
-                        else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
-                        else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
-                        if (hasBeenCollected(o)) {
-                            menuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
-                        } else {
-                            menuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
-                            menuItem.setText(COLLECT_MENU_ITEM_TEXT);
-                        }
+                    if (itemRecommendList.getModel().getSize() == 0) return;
+                    // 得到鼠标光标所在的选项并选中
+                    int index = itemRecommendList.locationToIndex(e.getPoint());
+                    if (index == -1) return;
+                    if (!itemRecommendList.isSelectedIndex(index)) itemRecommendList.setSelectedIndex(index);
+                    Object o = itemRecommendList.getSelectedValue();
+                    CustomMenuItem menuItem = null;
+                    if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
+                    else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
+                    else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
+                    else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
+                    else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
+                    if (hasBeenCollected(o)) {
+                        menuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                        menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                    } else {
+                        menuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                        menuItem.setText(COLLECT_MENU_ITEM_TEXT);
+                    }
 
-                        if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND
-                                || currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
-                            netPlaylistPopupMenu.show(itemRecommendList, e.getX(), e.getY());
-                        } else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
-                            netAlbumPopupMenu.show(itemRecommendList, e.getX(), e.getY());
-                        } else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
-                            netArtistPopupMenu.show(itemRecommendList, e.getX(), e.getY());
-                        } else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND
-                                || currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) {
-                            netRadioPopupMenu.show(itemRecommendList, e.getX(), e.getY());
-                        } else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
-                            netMvPopupMenu.show(itemRecommendList, e.getX(), e.getY());
-                        }
+                    if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND
+                            || currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
+                        netPlaylistPopupMenu.show(itemRecommendList, e.getX(), e.getY());
+                    } else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
+                        netAlbumPopupMenu.show(itemRecommendList, e.getX(), e.getY());
+                    } else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
+                        netArtistPopupMenu.show(itemRecommendList, e.getX(), e.getY());
+                    } else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND
+                            || currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) {
+                        netRadioPopupMenu.show(itemRecommendList, e.getX(), e.getY());
+                    } else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
+                        netMvPopupMenu.show(itemRecommendList, e.getX(), e.getY());
                     }
                 }
             }
@@ -20453,6 +20452,7 @@ public class PlayerFrame extends JFrame {
         player.unload();
         unloadUI();
         clearLrc();
+        currSong = -1;
     }
 
     private String statusText = "";
@@ -20682,7 +20682,7 @@ public class PlayerFrame extends JFrame {
                 if (netMusicInfo.hasRoma()) romaData = new LrcData(netMusicInfo.getRoma(), false);
             }
             if (!isFile)
-                statements = loadTrans && transData != null ? transData.getStatements() : lrcData.getStatements();
+                statements = loadTrans && transData != null && !transData.isEmpty() ? transData.getStatements() : lrcData.getStatements();
             else statements = loadTrans && lrcData.hasTrans() ? lrcData.getTransStatements() : lrcData.getStatements();
             if (statements.isEmpty())
                 throw new NoLyricException("歌词是一个空串");
@@ -20693,7 +20693,7 @@ public class PlayerFrame extends JFrame {
             // 日文/罗马音切换，日文时不动
             if (currJapaneseType == JapaneseType.ROMAJI && !loadTrans) {
                 // 使用已有的罗马音歌词
-                if (!isFile && netMusicInfo.hasRoma()) statements = romaData.getStatements();
+                if (!isFile && netMusicInfo.hasRoma() && !romaData.isEmpty()) statements = romaData.getStatements();
                 else
                     for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
             }
@@ -23068,8 +23068,6 @@ public class PlayerFrame extends JFrame {
             if (albumImage == defaultAlbumImage) albumImage = ImageUtil.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurConstants.MC)
                 albumImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(albumImage));
-            else if (blurType == BlurConstants.LG)
-                albumImage = ImageUtil.toGradient(albumImage);
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
                 gw = windowWidth;
@@ -23090,7 +23088,6 @@ public class PlayerFrame extends JFrame {
                     // 高斯模糊
                     bufferedImage = ImageUtil.doBlur(bufferedImage);
                 }
-                if (darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
                 // 放大至窗口大小
                 bufferedImage = ImageUtil.width(bufferedImage, gw);
                 if (gh > bufferedImage.getHeight())
@@ -23104,6 +23101,10 @@ public class PlayerFrame extends JFrame {
                             .outputQuality(0.1)
                             .asBufferedImage();
                 }
+                // 线性渐变
+                if (blurType == BlurConstants.LG) bufferedImage = ImageUtil.toGradient(albumImage, gw, gh);
+                // 暗角滤镜
+                if (darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
                 // 设置圆角
 //                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
                 globalPanel.setBackgroundImage(bufferedImage);

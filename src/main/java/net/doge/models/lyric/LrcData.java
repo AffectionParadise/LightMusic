@@ -39,6 +39,10 @@ public class LrcData {
         return !transStatements.isEmpty();
     }
 
+    public boolean isEmpty() {
+        return statements.isEmpty();
+    }
+
     /*
      * 实例化一个歌词数据. 歌词数据信息由指定的文件提供.
      * fileName: 指定的歌词文件.

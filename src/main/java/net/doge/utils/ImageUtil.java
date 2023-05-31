@@ -9,6 +9,8 @@ import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurConstants;
 import net.doge.constants.Format;
+import net.doge.models.color.HSL;
+import net.doge.models.color.Palette;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -607,44 +609,19 @@ public class ImageUtil {
     }
 
     /**
-     * 图像转为线性渐变
+     * 图像提取主色调，并生成指定宽高的线性渐变
      *
      * @return
      */
-    public static BufferedImage toGradient(BufferedImage img) {
-        ColorThiefUtil.CMap colorMap = ColorThiefUtil.getColorMap(img, 2);
-        List<Color> colors = colorMap.palette();
-        Color ca = colors.get(0), cb = colors.get(colors.size() > 1 ? 1 : 0);
-        if (ColorUtil.lightness(ca.getRGB()) < ColorUtil.lightness(cb.getRGB())) {
-            Color t = ca;
-            ca = cb;
-            cb = t;
-        }
-//        // 在调色盘中选择较暗较柔和的颜色
-//        Color mc = null;
-//        double maxWeight = 0;
-//        final double sMin = 30, sMax = 70, lMin = 50, lMax = 70, sTarget = 50, lTarget = 60, sWeight = 3, lWeight = 6.5;
-//        for (int i = 0, size = colors.size(); i < size; i++) {
-//            Color color = colors.get(i);
-//            HSL hsl = ColorUtil.colorToHsl(color);
-//            if (hsl.s >= sMin && hsl.s <= sMax && hsl.l >= lMin && hsl.l <= lMax) {
-//                // 根据饱和度、亮度、颜色分布范围对该颜色求一个加权平均值
-//                double weight = invertDiff(hsl.s, sTarget) * sWeight + invertDiff(hsl.l, lTarget) * lWeight;
-//                weight /= sWeight + lWeight;
-//                if (weight > maxWeight) {
-//                    mc = color;
-//                    maxWeight = weight;
-//                }
-//            }
-//        }
-//        if (mc == null) mc = colors.get(0);
-//        Color ca = ColorUtil.rotate(ColorUtil.brighter(mc, 0.28f), -30), cb = ColorUtil.darker(mc, 0.1f);
-        return linearGradient(img.getWidth(), img.getHeight(), ca, cb);
+    public static BufferedImage toGradient(BufferedImage img, int w, int h) {
+        Palette palette = ColorUtil.getPalette(img, 2);
+        Color mc = palette.darkMuted;
+        HSL hsl = ColorUtil.colorToHsl(mc);
+        if (hsl.l < 40) hsl.l = 40;
+        mc = ColorUtil.hslToColor(hsl);
+        Color ca = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.28f), -30), cb = ColorUtil.hslDarken(mc, 0.1f);
+        return linearGradient(w, h, ca, cb);
     }
-
-//    private static double invertDiff(double v1, double v2) {
-//        return 1 - Math.abs((v1 - v2) / 100);
-//    }
 
     /**
      * 生成两种颜色的渐变图像

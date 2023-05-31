@@ -134,8 +134,7 @@ public class ColorThiefUtil {
      */
     private static boolean isCompatibleColor(boolean filterColor, int r, int g, int b) {
         if (!filterColor) return true;
-        double ln = ColorUtil.lightness(ColorUtil.merge(r, g, b));
-        return ln >= 0.2 && ln <= 0.9;
+        return !(r > 250 && g > 250 && b > 250);
     }
 
     /**
@@ -276,7 +275,7 @@ public class ColorThiefUtil {
         return Arrays.copyOfRange(res, 0, numUsedPixels);
     }
 
-    private static final int SIGBITS = 6;
+    private static final int SIGBITS = 5;
     private static final int RSHIFT = 8 - SIGBITS;
     private static final int MULT = 1 << RSHIFT;
     private static final int HISTOSIZE = 1 << (3 * SIGBITS);
@@ -326,8 +325,18 @@ public class ColorThiefUtil {
 
         @Override
         public String toString() {
-            return "r1: " + r1 + " / r2: " + r2 + " / g1: " + g1 + " / g2: " + g2 + " / b1: " + b1
-                    + " / b2: " + b2;
+            return "VBox{" +
+                    "r1=" + r1 +
+                    ", r2=" + r2 +
+                    ", g1=" + g1 +
+                    ", g2=" + g2 +
+                    ", b1=" + b1 +
+                    ", b2=" + b2 +
+                    ", histo=" + Arrays.toString(histo) +
+                    ", _avg=" + Arrays.toString(_avg) +
+                    ", _volume=" + _volume +
+                    ", _count=" + _count +
+                    '}';
         }
 
         public int volume(boolean force) {
@@ -475,8 +484,7 @@ public class ColorThiefUtil {
         int[] histo = new int[HISTOSIZE];
         int index, rval, gval, bval;
 
-        int numPixels = pixels.length;
-        for (int i = 0; i < numPixels; i++) {
+        for (int i = 0, numPixels = pixels.length; i < numPixels; i++) {
             int[] pixel = pixels[i];
             rval = pixel[0] >> RSHIFT;
             gval = pixel[1] >> RSHIFT;
@@ -488,9 +496,9 @@ public class ColorThiefUtil {
     }
 
     private static VBox vboxFromPixels(int[][] pixels, int[] histo) {
-        int rmin = 1000000, rmax = 0;
-        int gmin = 1000000, gmax = 0;
-        int bmin = 1000000, bmax = 0;
+        int rmin = Integer.MAX_VALUE, rmax = 0;
+        int gmin = Integer.MAX_VALUE, gmax = 0;
+        int bmin = Integer.MAX_VALUE, bmax = 0;
 
         int rval, gval, bval;
 
