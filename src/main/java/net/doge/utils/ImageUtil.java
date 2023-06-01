@@ -10,7 +10,6 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurConstants;
 import net.doge.constants.Format;
 import net.doge.models.color.HSL;
-import net.doge.models.color.Palette;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -614,8 +613,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage toGradient(BufferedImage img, int w, int h) {
-        Palette palette = ColorUtil.getPalette(img, 2);
-        Color mc = palette.darkMuted;
+        Color mc = ColorUtil.getBestSwatch(img, 2);
         HSL hsl = ColorUtil.colorToHsl(mc);
         if (hsl.l < 40) hsl.l = 40;
         mc = ColorUtil.hslToColor(hsl);

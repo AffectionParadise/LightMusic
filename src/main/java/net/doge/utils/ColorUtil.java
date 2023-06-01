@@ -7,6 +7,8 @@ import net.doge.models.color.Palette;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -520,13 +522,13 @@ public class ColorUtil {
             targetNormalLuma = 50, maxNormalLuma = 70, targetMutesSaturation = 30, maxMutesSaturation = 40, targetVibrantSaturation = 100, minVibrantSaturation = 35;
 
     /**
-     * 根据图片和颜色数量生成 Palette
+     * 根据图片和颜色数量生成 Palette，并找到最佳色块返回
      *
      * @param img
      * @param colorCount
      * @return
      */
-    public static Palette getPalette(BufferedImage img, int colorCount) {
+    public static Color getBestSwatch(BufferedImage img, int colorCount) {
         ColorThiefUtil.CMap colorMap = ColorThiefUtil.getColorMap(img, colorCount);
         List<Color> colors = colorMap.palette();
         if (colors.isEmpty()) colors.add(Colors.GRAY);
@@ -540,7 +542,32 @@ public class ColorUtil {
         palette.darkMuted = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetMutesSaturation, 0, maxMutesSaturation);
 
         optimizePalette(palette);
-        return palette;
+
+        return findBestSwatch(palette, colors.get(0));
+    }
+
+    /**
+     * 找到最佳色块
+     *
+     * @param palette
+     * @param avg
+     * @return
+     */
+    private static Color findBestSwatch(Palette palette, Color avg) {
+        List<Color> swatches = Arrays.asList(palette.muted, palette.darkMuted);
+        swatches.sort(Comparator.comparingDouble(c -> distance(c, avg)));
+        return swatches.get(0);
+    }
+
+    /**
+     * 两种颜色的距离
+     *
+     * @param c1
+     * @param c2
+     * @return
+     */
+    private static double distance(Color c1, Color c2) {
+        return Math.sqrt(Math.pow(c1.getRed() - c2.getRed(), 2) + Math.pow(c1.getGreen() - c2.getGreen(), 2) + Math.pow(c1.getBlue() - c2.getBlue(), 2));
     }
 
     /**

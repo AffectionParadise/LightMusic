@@ -3257,13 +3257,13 @@ public class PlayerFrame extends JFrame {
 
         // 载入选项卡
         tabbedPane.setSelectedIndex(config.optInt(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
+        // 载入收藏选项卡
+        collectionTabbedPane.setSelectedIndex(config.optInt(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
         // 载入个人音乐选项卡
         currPersonalMusicTab = config.optInt(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
         if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) localMusicButton.doClick();
         else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) historyButton.doClick();
         else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) collectionButton.doClick();
-        // 载入收藏选项卡
-        collectionTabbedPane.setSelectedIndex(config.optInt(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
 
         // 载入在线音乐搜索历史关键词
         JSONArray historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
