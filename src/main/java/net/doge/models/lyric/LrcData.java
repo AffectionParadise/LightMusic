@@ -82,7 +82,7 @@ public class LrcData {
         while (null != (strLine = bufferReader.readLine())) {
             sb.append(strLine + "\n");
             // 把 tab 先移除，去掉两边空格(包含特殊空格)
-            strLine = StringUtil.trimStringWith(strLine.replace("\t", "").trim(), ' ');
+            strLine = StringUtil.trimStringWith(strLine.replace("\t", "").trim(), ' ', '　');
             // 判断该行是否为有效行
             if (!isValidLine(strLine)) continue;
             // 判断该行数据是否表示歌名

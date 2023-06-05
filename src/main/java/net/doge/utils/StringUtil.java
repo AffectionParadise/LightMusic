@@ -443,16 +443,16 @@ public class StringUtil {
      * 去除字符串前后指定字符
      *
      * @param str
-     * @param c
+     * @param cs
      * @return
      */
-    public static String trimStringWith(String str, char c) {
+    public static String trimStringWith(String str, char... cs) {
         if (str == null) return null;
         char[] chars = str.toCharArray();
         int len = chars.length;
         int st = 0;
-        while ((st < len) && (chars[st] == c)) st++;
-        while ((st < len) && (chars[len - 1] == c)) len--;
-        return (st > 0) || (len < chars.length) ? str.substring(st, len) : str;
+        while (st < len && ArrayUtil.inArray(cs, chars[st])) st++;
+        while (st < len && ArrayUtil.inArray(cs, chars[len - 1])) len--;
+        return st > 0 || len < chars.length ? str.substring(st, len) : str;
     }
 }

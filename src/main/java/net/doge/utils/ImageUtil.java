@@ -9,7 +9,6 @@ import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constants.BlurConstants;
 import net.doge.constants.Format;
-import net.doge.models.color.HSL;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -614,9 +613,6 @@ public class ImageUtil {
      */
     public static BufferedImage toGradient(BufferedImage img, int w, int h) {
         Color mc = ColorUtil.getBestSwatch(img, 2);
-        HSL hsl = ColorUtil.colorToHsl(mc);
-        if (hsl.l < 40) hsl.l = 40;
-        mc = ColorUtil.hslToColor(hsl);
         Color ca = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.28f), -30), cb = ColorUtil.hslDarken(mc, 0.1f);
         return linearGradient(w, h, ca, cb);
     }

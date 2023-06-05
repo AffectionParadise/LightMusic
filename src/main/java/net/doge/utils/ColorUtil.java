@@ -3,12 +3,9 @@ package net.doge.utils;
 import net.doge.constants.Colors;
 import net.doge.models.color.HSL;
 import net.doge.models.color.HSV;
-import net.doge.models.color.Palette;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -468,58 +465,58 @@ public class ColorUtil {
         return new Color((int) (255 * r + 0.5), (int) (255 * g + 0.5), (int) (255 * b + 0.5));
     }
 
-    /**
-     * 判断色块是否已经在调色板
-     *
-     * @param palette
-     * @param swatch
-     * @return
-     */
-    private static boolean isSwatchSelected(Palette palette, Color swatch) {
-        return swatch.equals(palette.vibrant)
-                || swatch.equals(palette.lightVibrant)
-                || swatch.equals(palette.darkVibrant)
-                || swatch.equals(palette.muted)
-                || swatch.equals(palette.lightMuted)
-                || swatch.equals(palette.darkMuted);
-    }
+//    /**
+//     * 判断色块是否已经在调色板
+//     *
+//     * @param palette
+//     * @param swatch
+//     * @return
+//     */
+//    private static boolean isSwatchSelected(Palette palette, Color swatch) {
+//        return swatch.equals(palette.vibrant)
+//                || swatch.equals(palette.lightVibrant)
+//                || swatch.equals(palette.darkVibrant)
+//                || swatch.equals(palette.muted)
+//                || swatch.equals(palette.lightMuted)
+//                || swatch.equals(palette.darkMuted);
+//    }
 
-    /**
-     * 根据参数返回色块
-     *
-     * @return
-     */
-    public static Color swatch(List<Color> colors, ColorThiefUtil.CMap colorMap, Palette palette,
-                               double lTarget, double lMin, double lMax,
-                               double sTarget, double sMin, double sMax) {
-        Color res = null;
-        double maxWeight = 0, maxPopulation = 0;
-        int size = colors.size();
-        int[] pop = new int[size];
-        // 找到最大的颜色分布
-        for (int i = 0; i < size; i++) {
-            pop[i] = colorMap.vboxes.get(i).count(false);
-            maxPopulation = Math.max(maxPopulation, pop[i]);
-        }
-        final double sWeight = 3, lWeight = 6.5, pWeight = 0.5, weightSum = sWeight + lWeight + pWeight;
-        for (int i = 0; i < size; i++) {
-            Color color = colors.get(i);
-            HSL hsl = colorToHsl(color);
-            if (hsl.s >= sMin && hsl.s <= sMax && hsl.l >= lMin && hsl.l <= lMax && !isSwatchSelected(palette, color)) {
-                // 根据饱和度、亮度、颜色分布范围对该颜色求一个加权平均值
-                double weight = invertDiff(hsl.s, sTarget) * sWeight + invertDiff(hsl.l, lTarget) * lWeight + pop[i] / maxPopulation * pWeight;
-                weight /= weightSum;
-                if (res == null || weight > maxWeight) {
-                    res = color;
-                    maxWeight = weight;
-                }
-            }
-        }
-        return res;
-    }
+//    /**
+//     * 根据参数返回色块
+//     *
+//     * @return
+//     */
+//    public static Color swatch(List<Color> colors, ColorThiefUtil.CMap colorMap, Palette palette,
+//                               double lTarget, double lMin, double lMax,
+//                               double sTarget, double sMin, double sMax) {
+//        Color res = null;
+//        double maxWeight = 0, maxPopulation = 0;
+//        int size = colors.size();
+//        int[] pop = new int[size];
+//        // 找到最大的颜色分布
+//        for (int i = 0; i < size; i++) {
+//            pop[i] = colorMap.vboxes.get(i).count(false);
+//            maxPopulation = Math.max(maxPopulation, pop[i]);
+//        }
+//        final double sWeight = 3, lWeight = 6.5, pWeight = 0.5, weightSum = sWeight + lWeight + pWeight;
+//        for (int i = 0; i < size; i++) {
+//            Color color = colors.get(i);
+//            HSL hsl = colorToHsl(color);
+//            if (hsl.s >= sMin && hsl.s <= sMax && hsl.l >= lMin && hsl.l <= lMax && !isSwatchSelected(palette, color)) {
+//                // 根据饱和度、亮度、颜色分布范围对该颜色求一个加权平均值
+//                double weight = invertDiff(hsl.s, sTarget) * sWeight + invertDiff(hsl.l, lTarget) * lWeight + pop[i] / maxPopulation * pWeight;
+//                weight /= weightSum;
+//                if (res == null || weight > maxWeight) {
+//                    res = color;
+//                    maxWeight = weight;
+//                }
+//            }
+//        }
+//        return res;
+//    }
 
-    private static final double targetDarkLuma = 26, maxDarkLuma = 45, minLightLuma = 55, targetLightLuma = 74, minNormalLuma = 30,
-            targetNormalLuma = 50, maxNormalLuma = 70, targetMutesSaturation = 30, maxMutesSaturation = 40, targetVibrantSaturation = 100, minVibrantSaturation = 35;
+//    private static final double targetDarkLuma = 26, maxDarkLuma = 45, minLightLuma = 55, targetLightLuma = 74, minNormalLuma = 30,
+//            targetNormalLuma = 50, maxNormalLuma = 70, targetMutesSaturation = 30, maxMutesSaturation = 40, targetVibrantSaturation = 100, minVibrantSaturation = 35;
 
     /**
      * 根据图片和颜色数量生成 Palette，并找到最佳色块返回
@@ -533,116 +530,140 @@ public class ColorUtil {
         List<Color> colors = colorMap.palette();
         if (colors.isEmpty()) colors.add(Colors.GRAY);
 
-        Palette palette = new Palette();
-        palette.vibrant = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetVibrantSaturation, minVibrantSaturation, 100);
-        palette.lightVibrant = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetVibrantSaturation, minVibrantSaturation, 100);
-        palette.darkVibrant = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetVibrantSaturation, minVibrantSaturation, 100);
-        palette.muted = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetMutesSaturation, 0, maxMutesSaturation);
-        palette.lightMuted = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetMutesSaturation, 0, maxMutesSaturation);
-        palette.darkMuted = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetMutesSaturation, 0, maxMutesSaturation);
+//        Palette palette = new Palette();
+//        palette.vibrant = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetVibrantSaturation, minVibrantSaturation, 100);
+//        palette.lightVibrant = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetVibrantSaturation, minVibrantSaturation, 100);
+//        palette.darkVibrant = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetVibrantSaturation, minVibrantSaturation, 100);
+//        palette.muted = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetMutesSaturation, 0, maxMutesSaturation);
+//        palette.lightMuted = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetMutesSaturation, 0, maxMutesSaturation);
+//        palette.darkMuted = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetMutesSaturation, 0, maxMutesSaturation);
 
-        optimizePalette(palette);
+//        optimizePalette(palette);
 
-        return findBestSwatch(palette, colors.get(0));
+//        return findBestSwatch(palette, colors.get(0));
+        return findBestSwatch(colors.get(0));
     }
 
     /**
      * 找到最佳色块
      *
-     * @param palette
-     * @param avg
+     * @param swatch
      * @return
      */
-    private static Color findBestSwatch(Palette palette, Color avg) {
-        List<Color> swatches = Arrays.asList(palette.muted, palette.darkMuted);
-        swatches.sort(Comparator.comparingDouble(c -> distance(c, avg)));
-        return swatches.get(0);
+    private static Color findBestSwatch(Color swatch) {
+        HSL hsl = ColorUtil.colorToHsl(swatch);
+        if (hsl.s > 40) hsl.s = 40;
+        if (hsl.l < 40) hsl.l = 40;
+        else if (hsl.l > 60) hsl.l = 60;
+        swatch = ColorUtil.hslToColor(hsl);
+        return swatch;
     }
 
-    /**
-     * 两种颜色的距离
-     *
-     * @param c1
-     * @param c2
-     * @return
-     */
-    private static double distance(Color c1, Color c2) {
-        return Math.sqrt(Math.pow(c1.getRed() - c2.getRed(), 2) + Math.pow(c1.getGreen() - c2.getGreen(), 2) + Math.pow(c1.getBlue() - c2.getBlue(), 2));
-    }
+//    /**
+//     * 找到最佳色块
+//     *
+//     * @param palette
+//     * @param avg
+//     * @return
+//     */
+//    private static Color findBestSwatch(Palette palette, Color avg) {
+//        List<Color> swatches = Arrays.asList(palette.lightVibrant, palette.vibrant, palette.darkVibrant, palette.lightMuted, palette.muted, palette.darkMuted);
+//        swatches.sort(Comparator.comparingDouble(c -> distance(c, avg)));
+//
+//        Color swatch = swatches.get(0);
+//        HSL hsl = ColorUtil.colorToHsl(swatch);
+//        if (hsl.s > 40) hsl.s = 40;
+//        if (hsl.l < 40) hsl.l = 40;
+//        else if (hsl.l > 60) hsl.l = 60;
+//        swatch = ColorUtil.hslToColor(hsl);
+//
+//        return swatch;
+//    }
 
-    /**
-     * 优化 Palette
-     *
-     * @param palette
-     * @return
-     */
-    private static void optimizePalette(Palette palette) {
-        HSL hsl;
-        if (palette.vibrant == null && palette.darkVibrant == null && palette.lightVibrant == null) {
-            if (palette.darkVibrant == null && palette.darkMuted != null) {
-                hsl = colorToHsl(palette.darkMuted);
-                hsl.l = targetDarkLuma;
-                palette.darkVibrant = hslToColor(hsl);
-            }
-            if (palette.lightVibrant == null && palette.lightMuted != null) {
-                hsl = colorToHsl(palette.lightMuted);
-                hsl.l = targetDarkLuma;
-                palette.darkVibrant = hslToColor(hsl);
-            }
-        }
-        if (palette.vibrant == null && palette.darkVibrant != null) {
-            hsl = colorToHsl(palette.darkVibrant);
-            hsl.l = targetNormalLuma;
-            palette.vibrant = hslToColor(hsl);
-        } else if (palette.vibrant == null && palette.lightVibrant != null) {
-            hsl = colorToHsl(palette.lightVibrant);
-            hsl.l = targetNormalLuma;
-            palette.vibrant = hslToColor(hsl);
-        }
-        if (palette.darkVibrant == null && palette.vibrant != null) {
-            hsl = colorToHsl(palette.vibrant);
-            hsl.l = targetDarkLuma;
-            palette.darkVibrant = hslToColor(hsl);
-        }
-        if (palette.lightVibrant == null && palette.vibrant != null) {
-            hsl = colorToHsl(palette.vibrant);
-            hsl.l = targetLightLuma;
-            palette.lightVibrant = hslToColor(hsl);
-        }
-        if (palette.muted == null && palette.vibrant != null) {
-            hsl = colorToHsl(palette.vibrant);
-            hsl.s = targetMutesSaturation;
-            palette.muted = hslToColor(hsl);
-        }
-        if (palette.darkMuted == null && palette.darkVibrant != null) {
-            hsl = colorToHsl(palette.darkVibrant);
-            hsl.s = targetMutesSaturation;
-            palette.darkMuted = hslToColor(hsl);
-        }
-        if (palette.lightMuted == null && palette.lightVibrant != null) {
-            hsl = colorToHsl(palette.lightVibrant);
-            hsl.s = targetMutesSaturation;
-            palette.lightMuted = hslToColor(hsl);
-        }
-    }
+//    /**
+//     * 两种颜色的距离
+//     *
+//     * @param c1
+//     * @param c2
+//     * @return
+//     */
+//    private static double distance(Color c1, Color c2) {
+//        return Math.sqrt(Math.pow(c1.getRed() - c2.getRed(), 2) + Math.pow(c1.getGreen() - c2.getGreen(), 2) + Math.pow(c1.getBlue() - c2.getBlue(), 2));
+//    }
+//
+//    /**
+//     * 优化 Palette
+//     *
+//     * @param palette
+//     * @return
+//     */
+//    private static void optimizePalette(Palette palette) {
+//        HSL hsl;
+//        if (palette.vibrant == null && palette.darkVibrant == null && palette.lightVibrant == null) {
+//            if (palette.darkVibrant == null && palette.darkMuted != null) {
+//                hsl = colorToHsl(palette.darkMuted);
+//                hsl.l = targetDarkLuma;
+//                palette.darkVibrant = hslToColor(hsl);
+//            }
+//            if (palette.lightVibrant == null && palette.lightMuted != null) {
+//                hsl = colorToHsl(palette.lightMuted);
+//                hsl.l = targetDarkLuma;
+//                palette.darkVibrant = hslToColor(hsl);
+//            }
+//        }
+//        if (palette.vibrant == null && palette.darkVibrant != null) {
+//            hsl = colorToHsl(palette.darkVibrant);
+//            hsl.l = targetNormalLuma;
+//            palette.vibrant = hslToColor(hsl);
+//        } else if (palette.vibrant == null && palette.lightVibrant != null) {
+//            hsl = colorToHsl(palette.lightVibrant);
+//            hsl.l = targetNormalLuma;
+//            palette.vibrant = hslToColor(hsl);
+//        }
+//        if (palette.darkVibrant == null && palette.vibrant != null) {
+//            hsl = colorToHsl(palette.vibrant);
+//            hsl.l = targetDarkLuma;
+//            palette.darkVibrant = hslToColor(hsl);
+//        }
+//        if (palette.lightVibrant == null && palette.vibrant != null) {
+//            hsl = colorToHsl(palette.vibrant);
+//            hsl.l = targetLightLuma;
+//            palette.lightVibrant = hslToColor(hsl);
+//        }
+//        if (palette.muted == null && palette.vibrant != null) {
+//            hsl = colorToHsl(palette.vibrant);
+//            hsl.l = targetMutesSaturation;
+//            palette.muted = hslToColor(hsl);
+//        }
+//        if (palette.darkMuted == null && palette.darkVibrant != null) {
+//            hsl = colorToHsl(palette.darkVibrant);
+//            hsl.l = targetMutesSaturation;
+//            palette.darkMuted = hslToColor(hsl);
+//        }
+//        if (palette.lightMuted == null && palette.lightVibrant != null) {
+//            hsl = colorToHsl(palette.lightVibrant);
+//            hsl.l = targetMutesSaturation;
+//            palette.lightMuted = hslToColor(hsl);
+//        }
+//    }
 
-    /**
-     * 混合多种颜色
-     *
-     * @param colors
-     * @return
-     */
-    public static Color mix(Color... colors) {
-        int rn = 0, gn = 0, bn = 0, s = colors.length;
-        for (Color color : colors) {
-            rn += color.getRed();
-            gn += color.getGreen();
-            bn += color.getBlue();
-        }
-        return new Color(rn / s, gn / s, bn / s);
-    }
+//    /**
+//     * 混合多种颜色
+//     *
+//     * @param colors
+//     * @return
+//     */
+//    public static Color mix(Color... colors) {
+//        int rn = 0, gn = 0, bn = 0, s = colors.length;
+//        for (Color color : colors) {
+//            rn += color.getRed();
+//            gn += color.getGreen();
+//            bn += color.getBlue();
+//        }
+//        return new Color(rn / s, gn / s, bn / s);
+//    }
 
-    private static double invertDiff(double v1, double v2) {
-        return 1 - Math.abs((v1 - v2) / 100);
-    }
+//    private static double invertDiff(double v1, double v2) {
+//        return 1 - Math.abs((v1 - v2) / 100);
+//    }
 }

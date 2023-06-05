@@ -277,6 +277,7 @@ public class MusicServerUtil {
     // 关键词搜索专辑 API (豆瓣)
     private static final String SEARCH_ALBUM_DB_API
             = "https://www.douban.com/j/search?q=%s&start=%s&cat=1003";
+//            = "https://search.douban.com/music/subject_search?search_text=%s&cat=1003&start=%s";
     // 关键词搜索专辑 API (堆糖)
     private static final String SEARCH_ALBUM_DT_API
             = "https://www.duitang.com/napi/album/list/by_search/?include_fields=is_root,source_link,item,buyable,root_id,status,like_count,sender,album,cover" +
@@ -2651,7 +2652,7 @@ public class MusicServerUtil {
     // 歌曲专辑信息 API (猫耳)
     private static final String SONG_ALBUM_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdramabysound?sound_id=%s";
     // 歌曲信息 API (哔哩哔哩)
-    private static final String SINGLE_SONG_DETAIL_BI_API = "http://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
+    private static final String SINGLE_SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
 
     // 歌曲 URL 获取 API
     private static final String GET_SONG_URL_API_NEW = prefix + "/song/url/v1?id=%s&level=jymaster";
@@ -2684,7 +2685,7 @@ public class MusicServerUtil {
     // 弹幕 API (猫耳)
     private static final String DM_ME_API = "https://www.missevan.com/sound/getdm?soundid=%s";
     // 歌词 API (哔哩哔哩)
-    private static final String LYRIC_BI_API = "http://www.bilibili.com/audio/music-service-c/web/song/lyric?sid=%s";
+    private static final String LYRIC_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/lyric?sid=%s";
 
     // 歌单信息 API
     private static final String PLAYLIST_DETAIL_API = prefix + "/playlist/detail?id=%s";
@@ -5098,6 +5099,35 @@ public class MusicServerUtil {
                     res.add(albumInfo);
                 }
             }
+//            String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_DB_API, encodedKeyword, (page - 1) * lim))
+//                    .execute()
+//                    .body();
+//            Document doc = Jsoup.parse(albumInfoBody);
+//            t = 4000 / lim * limit;
+//            Elements result = doc.select("div.sc-bZQynM.hrvolz.sc-bxivhb.hvEfwz");
+//            for (int i = 0, len = result.size(); i < len; i++) {
+//                Element album = result.get(i);
+//                Element a = album.select(".title a").first();
+//                Element img = album.select(".item-root img").first();
+//
+//                String albumId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+//                String albumName = a.text();
+//                String artist = album.select(".meta.abstract").text();
+//                String coverImgThumbUrl = img.attr("src");
+//
+//                NetAlbumInfo albumInfo = new NetAlbumInfo();
+//                albumInfo.setSource(NetMusicSource.DB);
+//                albumInfo.setId(albumId);
+//                albumInfo.setName(albumName);
+//                albumInfo.setArtist(artist);
+//                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                    albumInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//
+//                res.add(albumInfo);
+//            }
             return new CommonResult<>(res, t);
         };
 
@@ -7312,7 +7342,7 @@ public class MusicServerUtil {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
 
-                    String username = StringUtil.decode(commentJson.getString("u_name"));
+                    String username = commentJson.getString("u_name");
                     String profileUrl = commentJson.getString("u_pic");
                     String content = commentJson.getString("msg");
                     String time = TimeUtil.strToPhrase(commentJson.getString("time"));
@@ -7336,7 +7366,7 @@ public class MusicServerUtil {
                     // 被回复的评论
                     JSONObject reply = commentJson.optJSONObject("reply");
                     if (reply == null) continue;
-                    username = StringUtil.decode(reply.getString("u_name"));
+                    username = reply.getString("u_name");
                     profileUrl = reply.getString("u_pic");
                     content = reply.getString("msg");
                     time = TimeUtil.strToPhrase(reply.getString("time"));
