@@ -7,7 +7,7 @@ package net.doge.constants;
  */
 public class SoftInfo {
     // 版本
-    public static final String EDITION = "1.0.69";
+    public static final String EDITION = "1.0.70";
     // 网址
     public static final String WEBSITE = "https://github.com/AffectionParadise/LightMusic_release";
     // 更新

@@ -4603,7 +4603,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(playlistInfo);
@@ -4643,7 +4643,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(playlistInfo);
@@ -4683,7 +4683,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(playlistInfo);
@@ -4722,7 +4722,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(playlistInfo);
@@ -4763,7 +4763,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(playlistInfo);
@@ -4845,7 +4845,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -4886,7 +4886,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -4928,7 +4928,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -4967,7 +4967,7 @@ public class MusicServerUtil {
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(albumInfo);
@@ -5011,7 +5011,7 @@ public class MusicServerUtil {
                     albumInfo.setPublishTime("null".equals(publishTime) ? "" : publishTime);
                     albumInfo.setSongNum(songNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(albumInfo);
@@ -5054,7 +5054,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -5092,7 +5092,7 @@ public class MusicServerUtil {
                     albumInfo.setArtist(artist);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -5122,7 +5122,7 @@ public class MusicServerUtil {
 //                albumInfo.setArtist(artist);
 //                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                GlobalExecutors.imageExecutor.execute(() -> {
-//                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
 //                    albumInfo.setCoverImgThumb(coverImgThumb);
 //                });
 //
@@ -5163,7 +5163,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -5202,7 +5202,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -5288,7 +5288,7 @@ public class MusicServerUtil {
                         artistInfo.setAlbumNum(albumNum);
                         artistInfo.setMvNum(mvNum);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
                         res.add(artistInfo);
@@ -5330,7 +5330,7 @@ public class MusicServerUtil {
                 artistInfo.setMvNum(mvNum);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(artistInfo);
@@ -5366,7 +5366,7 @@ public class MusicServerUtil {
                     artistInfo.setSongNum(songNum);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(artistInfo);
@@ -5406,7 +5406,7 @@ public class MusicServerUtil {
                     artistInfo.setSongNum(songNum);
                     artistInfo.setAlbumNum(albumNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(artistInfo);
@@ -5442,7 +5442,7 @@ public class MusicServerUtil {
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 artistInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(artistInfo);
@@ -5476,7 +5476,7 @@ public class MusicServerUtil {
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -5512,7 +5512,7 @@ public class MusicServerUtil {
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(artistInfo);
@@ -5602,7 +5602,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
 //                radioInfo.setCreateTime(createTime);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -5635,7 +5635,7 @@ public class MusicServerUtil {
                 String coverImgThumbUrl = radioJson.getString("coverPath");
                 Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getInt("tracksCount");
-                String category = radioJson.getString("categoryTitle");
+                String category = radioJson.optString("categoryTitle");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setSource(NetMusicSource.XM);
@@ -5648,7 +5648,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -5688,7 +5688,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -5730,7 +5730,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -5773,7 +5773,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -5816,7 +5816,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -6255,7 +6255,7 @@ public class MusicServerUtil {
                 rankingInfo.setUpdateFre(updateFre);
                 rankingInfo.setUpdateTime(updateTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgUrl);
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -6293,7 +6293,7 @@ public class MusicServerUtil {
                 rankingInfo.setUpdateFre(updateFre);
                 rankingInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgUrl);
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -6331,7 +6331,7 @@ public class MusicServerUtil {
                     rankingInfo.setPlayCount(playCount);
                     rankingInfo.setUpdateTime(updateTime);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgUrl);
                         rankingInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -6364,7 +6364,7 @@ public class MusicServerUtil {
                 rankingInfo.setCoverImgUrl(coverImgUrl);
                 rankingInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgUrl);
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -6403,7 +6403,7 @@ public class MusicServerUtil {
                         rankingInfo.setUpdateFre(updateFre);
                         rankingInfo.setDescription(description);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgUrl);
                             rankingInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -6438,7 +6438,7 @@ public class MusicServerUtil {
                     rankingInfo.setUpdateTime(updateTime);
                     rankingInfo.setDescription("");
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgUrl);
                         rankingInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -6476,7 +6476,7 @@ public class MusicServerUtil {
 //                    rankingInfo.setUpdateTime(updateTime);
 //                    rankingInfo.setDescription(desc);
 //                    GlobalExecutors.imageExecutor.execute(() -> {
-//                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+//                        BufferedImage coverImgThumb = extractCover(coverImgUrl);
 //                        rankingInfo.setCoverImgThumb(coverImgThumb);
 //                    });
 //
@@ -6521,7 +6521,7 @@ public class MusicServerUtil {
 //                        rankingInfo.setPlayCount(playCount);
 //                        rankingInfo.setUpdateTime(updateTime);
                             GlobalExecutors.imageExecutor.execute(() -> {
-                                BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                                BufferedImage coverImgThumb = extractCover(coverImgUrl);
                                 rankingInfo.setCoverImgThumb(coverImgThumb);
                             });
 
@@ -6557,7 +6557,7 @@ public class MusicServerUtil {
                 rankingInfo.setCoverImgUrl(coverImgUrl);
                 rankingInfo.setDescription("");
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgUrl);
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -6593,7 +6593,7 @@ public class MusicServerUtil {
                 rankingInfo.setUpdateTime(updateTime);
                 rankingInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgUrl);
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -6685,7 +6685,7 @@ public class MusicServerUtil {
                     userInfo.setFollowed(followed);
                     userInfo.setPlaylistCount(playlistCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                        BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
@@ -6728,7 +6728,7 @@ public class MusicServerUtil {
                 userInfo.setFollowed(followed);
                 userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -6778,7 +6778,7 @@ public class MusicServerUtil {
 
                     String finalAvatarThumbUrl = avatarThumbUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                        BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
@@ -6829,7 +6829,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -6872,7 +6872,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -6916,7 +6916,7 @@ public class MusicServerUtil {
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setFollowed(followed);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(avatarThumbUrl);
                         userInfo.setAvatarThumb(coverImgThumb);
                     });
 
@@ -6960,7 +6960,7 @@ public class MusicServerUtil {
 
                     String finalAvatarThumbUrl = avatarThumbUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                        BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
@@ -7006,7 +7006,7 @@ public class MusicServerUtil {
 
                     String finalAvatarThumbUrl = avatarThumbUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                        BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
@@ -7973,7 +7973,7 @@ public class MusicServerUtil {
                     sheetInfo.setBpm(bpm);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImg = extractProfile(coverImgUrl);
+                        BufferedImage coverImg = extractCover(coverImgUrl);
                         sheetInfo.setCoverImg(coverImg);
                     });
 
@@ -8152,6 +8152,16 @@ public class MusicServerUtil {
     }
 
     /**
+     * 提取封面
+     *
+     * @param imgUrl
+     * @return
+     */
+    private static BufferedImage extractCover(String imgUrl) {
+        return ImageUtil.setRadius(ImageUtil.width(imgUrl, ImageConstants.mediumWidth), 0.1);
+    }
+
+    /**
      * 提取 MV 封面
      *
      * @param imgUrl
@@ -8212,7 +8222,7 @@ public class MusicServerUtil {
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8247,7 +8257,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8288,7 +8298,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -8330,7 +8340,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8367,7 +8377,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -8405,7 +8415,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -8444,7 +8454,7 @@ public class MusicServerUtil {
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8483,7 +8493,7 @@ public class MusicServerUtil {
 //                    playlistInfo.setPlayCount(playCount);
 //                    playlistInfo.setTrackCount(trackCount);
 //                    GlobalExecutors.imageExecutor.execute(() -> {
-//                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
 //                        playlistInfo.setCoverImgThumb(coverImgThumb);
 //                    });
 //
@@ -8547,7 +8557,7 @@ public class MusicServerUtil {
                         playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         playlistInfo.setPlayCount(playCount);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -8574,7 +8584,7 @@ public class MusicServerUtil {
                         playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         playlistInfo.setPlayCount(playCount);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -8616,7 +8626,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -8656,7 +8666,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -8697,7 +8707,7 @@ public class MusicServerUtil {
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8738,7 +8748,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8779,7 +8789,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8816,7 +8826,7 @@ public class MusicServerUtil {
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8859,7 +8869,7 @@ public class MusicServerUtil {
                 playlistInfo.setTrackCount(trackCount);
                 playlistInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -8898,7 +8908,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -8943,7 +8953,7 @@ public class MusicServerUtil {
                 playlistInfo.setTrackCount(trackCount);
                 playlistInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -9059,7 +9069,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9101,7 +9111,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9143,7 +9153,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9183,7 +9193,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9221,7 +9231,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9259,7 +9269,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9299,7 +9309,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -9364,7 +9374,7 @@ public class MusicServerUtil {
                         playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         playlistInfo.setPlayCount(playCount);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -9391,7 +9401,7 @@ public class MusicServerUtil {
                         playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         playlistInfo.setPlayCount(playCount);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -9436,7 +9446,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9476,7 +9486,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9514,7 +9524,7 @@ public class MusicServerUtil {
                                     playlistInfo.setName(playlistName);
                                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                                     GlobalExecutors.imageExecutor.execute(() -> {
-                                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                                         playlistInfo.setCoverImgThumb(coverImgThumb);
                                     });
 
@@ -9550,7 +9560,7 @@ public class MusicServerUtil {
                             playlistInfo.setPlayCount(playCount);
                             playlistInfo.setTrackCount(trackCount);
                             GlobalExecutors.imageExecutor.execute(() -> {
-                                BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                                BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                                 playlistInfo.setCoverImgThumb(coverImgThumb);
                             });
 
@@ -9593,7 +9603,7 @@ public class MusicServerUtil {
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -9634,7 +9644,7 @@ public class MusicServerUtil {
 //                playlistInfo.setPlayCount(playCount);
 //                playlistInfo.setTrackCount(trackCount);
 //                GlobalExecutors.imageExecutor.execute(() -> {
-//                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
 //                    playlistInfo.setCoverImgThumb(coverImgThumb);
 //                });
 //
@@ -9673,7 +9683,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9712,7 +9722,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9754,7 +9764,7 @@ public class MusicServerUtil {
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9795,7 +9805,7 @@ public class MusicServerUtil {
                     playlistInfo.setTrackCount(trackCount);
                     playlistInfo.setPlayCount(playCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9904,7 +9914,7 @@ public class MusicServerUtil {
                     artistInfo.setSongNum(songNum);
                     artistInfo.setAlbumNum(albumNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -9940,7 +9950,7 @@ public class MusicServerUtil {
                 artistInfo.setSongNum(songNum);
                 artistInfo.setAlbumNum(albumNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -9977,7 +9987,7 @@ public class MusicServerUtil {
                     artistInfo.setSongNum(songNum);
                     artistInfo.setAlbumNum(albumNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10015,7 +10025,7 @@ public class MusicServerUtil {
                     artistInfo.setSongNum(songNum);
                     artistInfo.setAlbumNum(albumNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10059,7 +10069,7 @@ public class MusicServerUtil {
 //            artistInfo.setMvNum(mvNum);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10101,7 +10111,7 @@ public class MusicServerUtil {
 //                    artistInfo.setMvNum(mvNum);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10139,7 +10149,7 @@ public class MusicServerUtil {
                     artistInfo.setName(artistName);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10182,7 +10192,7 @@ public class MusicServerUtil {
                         artistInfo.setMvNum(mvNum);
                         artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -10227,7 +10237,7 @@ public class MusicServerUtil {
                         artistInfo.setMvNum(mvNum);
                         artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -10264,7 +10274,7 @@ public class MusicServerUtil {
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10297,7 +10307,7 @@ public class MusicServerUtil {
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10337,8 +10347,8 @@ public class MusicServerUtil {
                 artistInfo.setAlbumNum(albumNum);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgUrl);
-                    if (coverImgThumb == null) coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgUrl);
+                    if (coverImgThumb == null) coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10376,8 +10386,8 @@ public class MusicServerUtil {
                     artistInfo.setName(artistName);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgUrl);
-                        if (coverImgThumb == null) coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgUrl);
+                        if (coverImgThumb == null) coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10415,7 +10425,7 @@ public class MusicServerUtil {
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10452,7 +10462,7 @@ public class MusicServerUtil {
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -10562,7 +10572,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 //            radioInfo.setCreateTime(createTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10608,7 +10618,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 //            radioInfo.setCreateTime(createTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10651,7 +10661,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 //            radioInfo.setCreateTime(createTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10692,7 +10702,7 @@ public class MusicServerUtil {
 //                radioInfo.setCategory(category);
 //            radioInfo.setCreateTime(createTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10733,7 +10743,7 @@ public class MusicServerUtil {
 //                radioInfo.setCategory(category);
 //            radioInfo.setCreateTime(createTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10773,7 +10783,7 @@ public class MusicServerUtil {
                         radioInfo.setCoverImgUrl(coverImgUrl);
                         radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             radioInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -10813,7 +10823,7 @@ public class MusicServerUtil {
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 radioInfo.setDescription(description);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -10849,7 +10859,7 @@ public class MusicServerUtil {
                         radioInfo.setDj(dj);
                         radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             radioInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -10886,7 +10896,7 @@ public class MusicServerUtil {
 //                radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                radioInfo.setDescription(description);
 //                GlobalExecutors.imageExecutor.execute(() -> {
-//                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
 //                    radioInfo.setCoverImgThumb(coverImgThumb);
 //                });
 //
@@ -10995,7 +11005,7 @@ public class MusicServerUtil {
 //                radioInfo.setCreateTime(createTime);
 //            }
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11037,7 +11047,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11079,7 +11089,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11121,7 +11131,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11164,7 +11174,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -11208,7 +11218,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -11259,7 +11269,7 @@ public class MusicServerUtil {
 
                     final String finalCoverImgThumbUrl = coverImgThumbUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(finalCoverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(finalCoverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -11302,7 +11312,7 @@ public class MusicServerUtil {
                     radioInfo.setTrackCount(trackCount);
                     radioInfo.setCategory(category);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -11347,7 +11357,7 @@ public class MusicServerUtil {
                     radioInfo.setTrackCount(trackCount);
                     radioInfo.setCategory(category);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -11387,7 +11397,7 @@ public class MusicServerUtil {
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 radioInfo.setDescription(description);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11424,7 +11434,7 @@ public class MusicServerUtil {
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 radioInfo.setDescription(description);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11461,7 +11471,7 @@ public class MusicServerUtil {
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 radioInfo.setDescription(description);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11498,7 +11508,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -11543,7 +11553,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -11579,7 +11589,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -11619,7 +11629,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -13075,7 +13085,7 @@ public class MusicServerUtil {
                     albumInfo.setPublishTime(publishTime);
                     albumInfo.setSongNum(songNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -13117,7 +13127,7 @@ public class MusicServerUtil {
 //                    albumInfo.setPublishTime(publishTime);
 //                    albumInfo.setSongNum(songNum);
 //                    GlobalExecutors.imageExecutor.execute(() -> {
-//                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
 //                        albumInfo.setCoverImgThumb(coverImgThumb);
 //                    });
 //
@@ -13158,7 +13168,7 @@ public class MusicServerUtil {
                     albumInfo.setPublishTime(publishTime);
                     albumInfo.setSongNum(songNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -13198,7 +13208,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -13233,7 +13243,7 @@ public class MusicServerUtil {
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setPublishTime(publishTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -13267,7 +13277,7 @@ public class MusicServerUtil {
                     albumInfo.setArtist(artist);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -13309,7 +13319,7 @@ public class MusicServerUtil {
                     albumInfo.setPublishTime(publishTime);
                     albumInfo.setSongNum(songNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -13352,7 +13362,7 @@ public class MusicServerUtil {
                     albumInfo.setPublishTime(publishTime);
 //            albumInfo.setSongNum(songNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -13396,7 +13406,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -13437,7 +13447,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -13483,7 +13493,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -13524,7 +13534,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -13565,7 +13575,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -13607,7 +13617,7 @@ public class MusicServerUtil {
 //                albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -13649,7 +13659,7 @@ public class MusicServerUtil {
                     albumInfo.setPublishTime(publishTime);
                     albumInfo.setSongNum(songNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(albumInfo);
@@ -13693,7 +13703,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(pubTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -13736,7 +13746,7 @@ public class MusicServerUtil {
                     albumInfo.setPublishTime(pubTime);
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -14595,7 +14605,7 @@ public class MusicServerUtil {
         // 信息完整直接跳过
         if (playlistInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImgThumb(extractProfile(playlistInfo.getCoverImgThumbUrl())));
+        GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImgThumb(extractCover(playlistInfo.getCoverImgThumbUrl())));
     }
 
     /**
@@ -14632,7 +14642,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -14672,7 +14682,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -14705,7 +14715,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -14737,7 +14747,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -14773,7 +14783,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -14801,7 +14811,7 @@ public class MusicServerUtil {
                 playlistInfo.setTrackCount(trackCount);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -14837,7 +14847,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -14873,7 +14883,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15059,7 +15069,7 @@ public class MusicServerUtil {
         // 信息完整直接跳过
         if (albumInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImgThumb(extractProfile(albumInfo.getCoverImgThumbUrl())));
+        GlobalExecutors.imageExecutor.submit(() -> albumInfo.setCoverImgThumb(extractCover(albumInfo.getCoverImgThumbUrl())));
     }
 
     /**
@@ -15095,7 +15105,7 @@ public class MusicServerUtil {
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15128,7 +15138,7 @@ public class MusicServerUtil {
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15161,7 +15171,7 @@ public class MusicServerUtil {
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15194,7 +15204,7 @@ public class MusicServerUtil {
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15227,7 +15237,7 @@ public class MusicServerUtil {
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15261,7 +15271,7 @@ public class MusicServerUtil {
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15438,13 +15448,13 @@ public class MusicServerUtil {
         // 酷我
         if (source == NetMusicSource.KW) {
             GlobalExecutors.imageExecutor.submit(() -> {
-                BufferedImage coverImgThumb = extractProfile(artistInfo.getCoverImgThumbUrl());
+                BufferedImage coverImgThumb = extractCover(artistInfo.getCoverImgThumbUrl());
                 if (coverImgThumb == null)
-                    coverImgThumb = extractProfile(artistInfo.getCoverImgUrl().replaceFirst("/300/", "/0/"));
+                    coverImgThumb = extractCover(artistInfo.getCoverImgUrl().replaceFirst("/300/", "/0/"));
                 artistInfo.setCoverImgThumb(coverImgThumb);
             });
         } else {
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImgThumb(extractProfile(artistInfo.getCoverImgThumbUrl())));
+            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImgThumb(extractCover(artistInfo.getCoverImgThumbUrl())));
         }
     }
 
@@ -15479,7 +15489,7 @@ public class MusicServerUtil {
                 artistInfo.setAlbumNum(albumNum);
                 artistInfo.setMvNum(mvNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15510,7 +15520,7 @@ public class MusicServerUtil {
                 artistInfo.setAlbumNum(albumNum);
                 artistInfo.setMvNum(mvNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15534,7 +15544,7 @@ public class MusicServerUtil {
                 artistInfo.setName(name);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15565,7 +15575,7 @@ public class MusicServerUtil {
                 artistInfo.setMvNum(mvNum);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15590,7 +15600,7 @@ public class MusicServerUtil {
                 artistInfo.setName(name);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15621,7 +15631,7 @@ public class MusicServerUtil {
                 artistInfo.setAlbumNum(albumNum);
                 artistInfo.setMvNum(mvNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15646,7 +15656,7 @@ public class MusicServerUtil {
 //                artistInfo.setName(name);
 //                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                GlobalExecutors.imageExecutor.execute(() -> {
-//                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+//                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
 //                    artistInfo.setCoverImgThumb(coverImgThumb);
 //                });
 //
@@ -15856,7 +15866,7 @@ public class MusicServerUtil {
         // 信息完整直接跳过
         if (radioInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImgThumb(extractProfile(radioInfo.getCoverImgThumbUrl())));
+        GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImgThumb(extractCover(radioInfo.getCoverImgThumbUrl())));
     }
 
     /**
@@ -15895,7 +15905,7 @@ public class MusicServerUtil {
                 radioInfo.setTrackCount(trackCount);
                 radioInfo.setCategory(category);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15929,7 +15939,7 @@ public class MusicServerUtil {
                 radioInfo.setPlayCount(playCount);
 //                radioInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -15971,7 +15981,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -16297,7 +16307,7 @@ public class MusicServerUtil {
         // 信息完整直接跳过
         if (rankingInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImgThumb(extractProfile(rankingInfo.getCoverImgUrl())));
+        GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImgThumb(extractCover(rankingInfo.getCoverImgUrl())));
     }
 
     /**
@@ -16381,7 +16391,7 @@ public class MusicServerUtil {
         // 信息完整直接跳过
         if (userInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatarThumb(extractProfile(userInfo.getAvatarThumbUrl())));
+        GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatarThumb(extractCover(userInfo.getAvatarThumbUrl())));
     }
 
     /**
@@ -17458,7 +17468,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 albumInfos.add(albumInfo);
@@ -17497,7 +17507,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 albumInfos.add(albumInfo);
@@ -17534,7 +17544,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 albumInfos.add(albumInfo);
@@ -17571,7 +17581,7 @@ public class MusicServerUtil {
                     albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     albumInfo.setPublishTime(publishTime);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
                     albumInfos.add(albumInfo);
@@ -17611,7 +17621,7 @@ public class MusicServerUtil {
 //                    albumInfo.setPublishTime(publishTime);
 //                    albumInfo.setSongNum(songNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
                     albumInfos.add(albumInfo);
@@ -17650,7 +17660,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 albumInfos.add(albumInfo);
@@ -18667,7 +18677,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -18707,7 +18717,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -18748,7 +18758,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -18823,7 +18833,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -18862,7 +18872,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(pubTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -18912,7 +18922,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -18952,7 +18962,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -18993,7 +19003,7 @@ public class MusicServerUtil {
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -19068,7 +19078,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -19107,7 +19117,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(pubTime);
                 albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -19145,7 +19155,7 @@ public class MusicServerUtil {
                 albumInfo.setPublishTime(publishTime);
                 albumInfo.setSongNum(songNum);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(albumInfo);
@@ -19200,7 +19210,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
 //                radioInfo.setCreateTime(createTime);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -19244,7 +19254,7 @@ public class MusicServerUtil {
                     radioInfo.setTrackCount(trackCount);
 //                radioInfo.setCategory(category);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -19289,7 +19299,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -19351,7 +19361,7 @@ public class MusicServerUtil {
                     radioInfo.setPlayCount(playCount);
 //                    radioInfo.setCategory(category);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -19388,7 +19398,7 @@ public class MusicServerUtil {
                         radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 //                    radioInfo.setCategory(category);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                             radioInfo.setCoverImgThumb(coverImgThumb);
                         });
 
@@ -19453,7 +19463,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
                     r.add(radioInfo);
@@ -19496,7 +19506,7 @@ public class MusicServerUtil {
                     radioInfo.setCategory(category);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
                     r.add(radioInfo);
@@ -19739,7 +19749,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -19781,7 +19791,7 @@ public class MusicServerUtil {
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -19832,7 +19842,7 @@ public class MusicServerUtil {
 //                playlistInfo.setPlayCount(playCount);
 //                playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -20257,7 +20267,7 @@ public class MusicServerUtil {
                 ai.setName(albumName);
                 ai.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     ai.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(ai);
@@ -20306,7 +20316,7 @@ public class MusicServerUtil {
                     artistInfo.setAlbumNum(albumNum);
 //                artistInfo.setMvNum(mvNum);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(artistInfo);
@@ -20338,7 +20348,7 @@ public class MusicServerUtil {
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(artistInfo);
@@ -20367,7 +20377,7 @@ public class MusicServerUtil {
                     artistInfo.setName(artistName);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
                     res.add(artistInfo);
@@ -20422,7 +20432,7 @@ public class MusicServerUtil {
 //                userInfo.setFollowed(followed);
 //                userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -20476,7 +20486,7 @@ public class MusicServerUtil {
 //                    userInfo.setFollowed(followed);
 //                    userInfo.setPlaylistCount(playlistCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                        BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
@@ -20533,7 +20543,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -20570,7 +20580,7 @@ public class MusicServerUtil {
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -20617,7 +20627,7 @@ public class MusicServerUtil {
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -20650,7 +20660,7 @@ public class MusicServerUtil {
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(artistInfo);
@@ -20698,7 +20708,7 @@ public class MusicServerUtil {
                     radioInfo.setDj(dj);
                     radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -20731,7 +20741,7 @@ public class MusicServerUtil {
                     radioInfo.setPlayCount(playCount);
                     radioInfo.setCategory(category);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
@@ -20771,7 +20781,7 @@ public class MusicServerUtil {
                 radioInfo.setCategory(category);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(radioInfo);
@@ -20824,7 +20834,7 @@ public class MusicServerUtil {
 //                userInfo.setFollowed(followed);
 //                userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -20871,7 +20881,7 @@ public class MusicServerUtil {
                 radioInfo.setPlayCount(playCount);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -20922,7 +20932,7 @@ public class MusicServerUtil {
                 ri.setName(radioName);
                 ri.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     ri.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(ri);
@@ -20953,7 +20963,7 @@ public class MusicServerUtil {
                 ri.setPlayCount(playCount);
                 ri.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     ri.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -21001,7 +21011,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     artistInfo.setCoverImgThumb(avatarThumb);
                 });
 
@@ -21032,7 +21042,7 @@ public class MusicServerUtil {
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
                 res.add(artistInfo);
@@ -21079,7 +21089,7 @@ public class MusicServerUtil {
                 userInfo.setFollowed(followed);
                 userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21117,7 +21127,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21154,7 +21164,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21190,7 +21200,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21231,7 +21241,7 @@ public class MusicServerUtil {
 
                         String finalAvatarThumbUrl = avaUrl;
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                            BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                             userInfo.setAvatarThumb(avatarThumb);
                         });
 
@@ -21281,7 +21291,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21311,7 +21321,7 @@ public class MusicServerUtil {
                         userInfo.setGender(gender);
                         userInfo.setAvatarThumbUrl(avatarThumbUrl);
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
+                            BufferedImage coverImgThumb = extractCover(avatarThumbUrl);
                             userInfo.setAvatarThumb(coverImgThumb);
                         });
 
@@ -21349,7 +21359,7 @@ public class MusicServerUtil {
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage coverImgThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(coverImgThumb);
                 });
 
@@ -21403,7 +21413,7 @@ public class MusicServerUtil {
                 userInfo.setFollowed(followed);
                 userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21446,7 +21456,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21486,7 +21496,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21524,7 +21534,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21557,7 +21567,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21611,7 +21621,7 @@ public class MusicServerUtil {
                 userInfo.setFollowed(followed);
                 userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(avatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21654,7 +21664,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21694,7 +21704,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21732,7 +21742,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -21765,7 +21775,7 @@ public class MusicServerUtil {
 
                 String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = extractProfile(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = extractCover(finalAvatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 

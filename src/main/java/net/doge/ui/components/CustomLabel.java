@@ -36,7 +36,7 @@ public class CustomLabel extends JLabel {
         setHorizontalAlignment(CENTER);
         setVerticalAlignment(CENTER);
 
-        alphaTimer = new Timer(1, e -> {
+        alphaTimer = new Timer(0, e -> {
             if (alpha < destAlpha) alpha = Math.min(destAlpha, alpha + 0.005f);
             else if (alpha > destAlpha) alpha = Math.max(destAlpha, alpha - 0.005f);
             else alphaTimer.stop();
@@ -52,6 +52,10 @@ public class CustomLabel extends JLabel {
         this.destAlpha = alpha;
         if (alphaTimer.isRunning()) return;
         alphaTimer.start();
+    }
+
+    public void setBluntAlpha(float alpha) {
+        this.alpha = alpha;
     }
 
     public void setBgColor(Color bgColor) {

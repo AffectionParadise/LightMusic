@@ -24,7 +24,7 @@ public class CustomScrollPane extends JScrollPane {
         viewport.setOpaque(false);
 
         // 滚轮滚动动画
-        wheelScrollingTimer = new Timer(1, e -> {
+        wheelScrollingTimer = new Timer(0, e -> {
             int vValue = getVValue();
             if (vValue == scrollingTo) wheelScrollingTimer.stop();
 

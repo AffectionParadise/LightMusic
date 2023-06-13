@@ -177,7 +177,7 @@ public class VideoDialog extends AbstractTitledDialog {
                 else setLocation(x, y);
                 currTimeLabel.setVisible(false);
                 currTimeLabel.setVisible(true);
-                timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 20 * 2, 12));
+                timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 20 * 2, 20));
                 setSize(mediaWidth + 2 * pixels, mediaHeight + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
             }
         });
@@ -398,7 +398,7 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         // 音量调节滑动条
         volumeSlider.setUI(new SliderUI(volumeSlider, sliderColor, sliderColor, f, mp, false));
-        volumeSlider.setPreferredSize(new Dimension(100, 12));
+        volumeSlider.setPreferredSize(new Dimension(100, 20));
         volumeSlider.setMaximum(MAX_VOLUME);
         volumeSlider.addChangeListener(e -> {
             mp.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);

@@ -34,13 +34,16 @@ public class SliderUI extends BasicSliderUI {
 //    private int originBufferedWidth;
 //    private Timer bufferTimer;
 
-    private boolean bigThumb;
+    private boolean drawThumb;
     private boolean cursorOnSlider;
+
+//    private final BufferedImage hxhImg = ImageUtil.read(SimplePath.ICON_PATH + "hxh.png");
 
     // 音频播放器
     public SliderUI(JSlider slider, Color thumbColor, Color trackColor, PlayerFrame f, MusicPlayer player, boolean isTimeBar) {
         super(slider);
         this.thumbColor = thumbColor;
+//        trackColor = Colors.HXH;
         this.trackColor = trackColor;
         this.trackBgColor = ColorUtil.darker(trackColor);
         this.f = f;
@@ -69,7 +72,7 @@ public class SliderUI extends BasicSliderUI {
 
 //    // 初始化动画 Timer
 //    private void initTimer() {
-//        bufferTimer = new Timer(1, e -> {
+//        bufferTimer = new Timer(0, e -> {
 //            if (currBufferedWidth < originBufferedWidth)
 //                currBufferedWidth = Math.min(currBufferedWidth + bufferedGap, originBufferedWidth);
 //            else if (currBufferedWidth > originBufferedWidth)
@@ -94,13 +97,14 @@ public class SliderUI extends BasicSliderUI {
      */
     @Override
     public void paintThumb(Graphics g) {
-        if (!bigThumb) return;
+        if (!drawThumb) return;
         Graphics2D g2d = (Graphics2D) g;
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.setColor(thumbColor);
-        g2d.fillOval(thumbRect.x, thumbRect.y + 4, thumbRect.width, thumbRect.width);
+        g2d.fillOval(thumbRect.x, thumbRect.y + 4, 12, 12);
+//        g2d.drawImage(hxhImg, thumbRect.x, thumbRect.y, null);
     }
 
     /**
@@ -115,8 +119,8 @@ public class SliderUI extends BasicSliderUI {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(trackBgColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, isTimeBar ? 0.1f : 0.3f));
-        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (bigThumb ? 7 : 8), height = trackRect.height - (bigThumb ? 14 : 16),
-                arc = bigThumb ? 6 : 4;
+        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (drawThumb ? 7 : 8), height = trackRect.height - (drawThumb ? 14 : 16),
+                arc = drawThumb ? 6 : 4;
         // 画未填充部分
         g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
         // 在时间条画出缓冲完成的部分
@@ -182,9 +186,9 @@ public class SliderUI extends BasicSliderUI {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                // 鼠标在滑动条之外且松开时把手变小
+                // 鼠标在滑动条之外且松开时不画把手
                 if (!cursorOnSlider) {
-                    bigThumb = false;
+                    drawThumb = false;
                     slider.repaint();
                 }
                 if (dialog.isShowing()) dialog.close();
@@ -195,17 +199,17 @@ public class SliderUI extends BasicSliderUI {
             @Override
             public void mouseEntered(MouseEvent e) {
                 cursorOnSlider = true;
-                // 鼠标进入时画出大把手
-                bigThumb = true;
+                // 鼠标进入时画出把手
+                drawThumb = true;
                 slider.repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 cursorOnSlider = false;
-                // 鼠标退出时且不在拖拽状态把手变小
+                // 鼠标退出时且不在拖拽状态不画把手
                 if (!slider.getValueIsAdjusting()) {
-                    bigThumb = false;
+                    drawThumb = false;
                     slider.repaint();
                 }
             }

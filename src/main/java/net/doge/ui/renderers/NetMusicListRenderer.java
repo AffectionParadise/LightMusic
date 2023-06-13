@@ -115,7 +115,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        int lw = list.getVisibleRect().width - 10;
+        int lw = list.getVisibleRect().width - 20;
         Dimension d = new Dimension(lw, Math.max(ph, 36));
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);

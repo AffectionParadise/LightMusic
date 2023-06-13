@@ -271,6 +271,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         r.setSelectedColor(selectedColor);
         r.setTextColor(textColor);
         styleList.setCellRenderer(r);
+        styleList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         styleList.setModel(styleListModel);
         styleList.addMouseMotionListener(new MouseAdapter() {
             @Override

@@ -2409,7 +2409,7 @@ public class PlayerFrame extends JFrame {
                     // 时间条
                     currTimeLabel.setVisible(false);
                     currTimeLabel.setVisible(true);
-                    timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 12));
+                    timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 20));
                     // 专辑图片
                     albumImageWidth = (int) (w * 0.33);
                     Dimension ad = new Dimension((int) (w * 0.4), Integer.MAX_VALUE);
@@ -5388,6 +5388,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化收藏列表
     private void collectionListInit() {
+        collectionList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         collectionList.setModel(playlistCollectionModel);
         collectionList.addKeyListener(new KeyAdapter() {
             @Override
@@ -5451,6 +5452,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillPlaylistInfo(playlistInfo);
+                                updateRenderer(collectionList);
                                 collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
                                     collectionItemTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
@@ -5547,6 +5549,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillAlbumInfo(albumInfo);
+                                updateRenderer(collectionList);
                                 collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
                                 if (albumInfo.getDescription() != null)
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
@@ -5640,6 +5643,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillArtistInfo(artistInfo);
+                                updateRenderer(collectionList);
                                 collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
                                     collectionItemTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
@@ -5736,6 +5740,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillRadioInfo(radioInfo);
+                                updateRenderer(collectionList);
                                 collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
                                     collectionItemTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
@@ -5834,6 +5839,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillRankingInfo(rankingInfo);
+                                updateRenderer(collectionList);
                                 collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(rankingInfo.getName()));
                                 if (rankingInfo.getDescription() != null)
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
@@ -5927,6 +5933,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillUserInfo(userInfo);
+                                updateRenderer(collectionList);
                                 collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(userInfo.getName()));
                                 collectionItemTagLabel.setText(StringUtil.textToHtml(userInfo.getTag()));
                                 if (userInfo.getSign() != null)
@@ -9632,6 +9639,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线歌单
     private void netPlaylistListInit() {
+        netPlaylistList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netPlaylistList.setModel(netPlaylistListModel);
         netPlaylistList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -9679,6 +9687,7 @@ public class PlayerFrame extends JFrame {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillPlaylistInfo(playlistInfo);
+                            updateRenderer(netPlaylistList);
                             playlistCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
                             if (playlistInfo.getTag() != null)
                                 playlistTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
@@ -10634,6 +10643,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线专辑列表
     private void netAlbumListInit() {
+        netAlbumList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netAlbumList.setModel(netAlbumListModel);
         netAlbumList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -10680,6 +10690,7 @@ public class PlayerFrame extends JFrame {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillAlbumInfo(albumInfo);
+                            updateRenderer(netAlbumList);
                             albumCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
                             if (albumInfo.getDescription() != null)
                                 albumDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
@@ -11662,6 +11673,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线歌手列表
     private void netArtistListInit() {
+        netArtistList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netArtistList.setModel(netArtistListModel);
         netArtistList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -11709,6 +11721,7 @@ public class PlayerFrame extends JFrame {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillArtistInfo(artistInfo);
+                            updateRenderer(netArtistList);
                             artistCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
                             if (artistInfo.getTag() != null)
                                 artistTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
@@ -12922,6 +12935,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线电台列表
     private void netRadioListInit() {
+        netRadioList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netRadioList.setModel(netRadioListModel);
         netRadioList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -12969,6 +12983,7 @@ public class PlayerFrame extends JFrame {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillRadioInfo(radioInfo);
+                            updateRenderer(netRadioList);
                             radioCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
                             if (radioInfo.getTag() != null)
                                 radioTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
@@ -13916,6 +13931,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线 MV 列表
     private void netMvListInit() {
+        netMvList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netMvList.setModel(netMvListModel);
         netMvList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -14672,6 +14688,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线榜单列表
     private void netRankingListInit() {
+        netRankingList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netRankingList.setModel(netRankingListModel);
         netRankingList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -14718,6 +14735,7 @@ public class PlayerFrame extends JFrame {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillRankingInfo(rankingInfo);
+                            updateRenderer(netRankingList);
                             rankingCoverAndNameLabel.setText(StringUtil.textToHtml(rankingInfo.getName()));
                             if (rankingInfo.getDescription() != null)
                                 rankingDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
@@ -15445,6 +15463,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线用户列表
     private void netUserListInit() {
+        netUserList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netUserList.setModel(netUserListModel);
         netUserList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -15494,6 +15513,7 @@ public class PlayerFrame extends JFrame {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillUserInfo(userInfo);
+                            updateRenderer(netUserList);
                             userCoverAndNameLabel.setText(StringUtil.textToHtml(userInfo.getName()));
                             userTagLabel.setText(StringUtil.textToHtml(userInfo.getTag()));
                             if (userInfo.getSign() != null)
@@ -16875,6 +16895,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化在线乐谱列表
     private void netSheetListInit() {
+        netSheetList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netSheetList.setModel(netSheetListModel);
         netSheetList.addKeyListener(new KeyAdapter() {
             @Override
@@ -18519,6 +18540,7 @@ public class PlayerFrame extends JFrame {
 
     // 初始化推荐歌单/专辑/歌手/电台列表
     private void itemRecommendListInit() {
+        itemRecommendList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         itemRecommendList.setModel(playlistRecommendListModel);
         itemRecommendList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -18572,6 +18594,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillPlaylistInfo(playlistInfo);
+                                updateRenderer(itemRecommendList);
                                 recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
                                     recommendItemTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
@@ -18668,6 +18691,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillAlbumInfo(albumInfo);
+                                updateRenderer(itemRecommendList);
                                 recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
                                 if (albumInfo.getDescription() != null)
                                     recommendItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
@@ -18761,6 +18785,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillArtistInfo(artistInfo);
+                                updateRenderer(itemRecommendList);
                                 recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
                                     recommendItemTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
@@ -18857,6 +18882,7 @@ public class PlayerFrame extends JFrame {
                         GlobalExecutors.imageExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillRadioInfo(radioInfo);
+                                updateRenderer(itemRecommendList);
                                 recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
                                     recommendItemTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
@@ -19986,7 +20012,7 @@ public class PlayerFrame extends JFrame {
             lrcDelayScrollTimer.stop();
             lrcScrollAnimation = true;
         });
-        globalPanelTimer = new Timer(1, e -> {
+        globalPanelTimer = new Timer(0, e -> {
             globalPanelExecutor.submit(() -> {
                 float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
                 globalPanel.setOpacity(opacity);
@@ -20018,8 +20044,6 @@ public class PlayerFrame extends JFrame {
             double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMusicInfo().getDuration();
             currTimeLabel.setText(TimeUtil.format(t));
         });
-        // 设置进度条最佳大小
-        timeBar.setPreferredSize(new Dimension(1100, 20));
 
         progressPanel.add(currTimeLabel);
         progressPanel.add(timeBar);
@@ -20207,7 +20231,7 @@ public class PlayerFrame extends JFrame {
             player.setMute(isMute);
         });
         // 音量调节滑动条
-        volumeSlider.setPreferredSize(new Dimension(100, 12));
+        volumeSlider.setPreferredSize(new Dimension(100, 20));
         volumeSlider.setMaximum(MAX_VOLUME);
         volumeSlider.setValue(DEFAULT_VOLUME);
         volumeSlider.addChangeListener(e -> {

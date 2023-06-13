@@ -151,7 +151,7 @@ public class MiniDialog extends AbstractMiniDialog {
         });
 
         // 窗口隐藏与显示动画
-        locationTimer = new Timer(1, e -> {
+        locationTimer = new Timer(0, e -> {
             locationExecutor.submit(() -> {
                 Point p = getLocation();
                 if (p.x == destX && p.y == destY) locationTimer.stop();

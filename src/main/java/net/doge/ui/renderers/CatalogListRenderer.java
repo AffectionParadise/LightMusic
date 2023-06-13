@@ -54,7 +54,7 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
         Dimension ps = nameLabel.getPreferredSize();
         Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ps.height + 16, 46));
         outerPanel.setPreferredSize(d);
-        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+//        list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
         outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);

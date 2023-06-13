@@ -8,10 +8,12 @@ package net.doge.constants;
 public class ImageConstants {
     // 小图标
     public static final int smallWidth = 30;
-    // 中等图标
+    // 头像图标
     public static final int profileWidth = 70;
+    // 中等图标
+    public static final int mediumWidth = 120;
     // MV 封面图标
-    public static final int mvCoverWidth = 90;
+    public static final int mvCoverWidth = 150;
     // MV 封面最大高度
     public static final int mvCoverMaxHeight = 110;
 }

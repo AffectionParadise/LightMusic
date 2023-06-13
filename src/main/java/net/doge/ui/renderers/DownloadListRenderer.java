@@ -105,7 +105,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         int ph = Math.max(ps.height, ps2.height);
         Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 46));
         outerPanel.setPreferredSize(d);
-        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+//        list.setFixedCellWidth(list.getVisibleRect().width - 10);
 
         outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || index == hoverIndex);

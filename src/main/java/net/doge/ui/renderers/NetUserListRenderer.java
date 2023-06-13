@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.doge.constants.Fonts;
 import net.doge.constants.ImageConstants;
-import net.doge.constants.NetMusicSource;
 import net.doge.constants.SimplePath;
 import net.doge.models.entities.NetUserInfo;
 import net.doge.ui.components.CustomLabel;
@@ -21,19 +20,126 @@ import java.awt.*;
  * @Description
  * @Date 2020/12/7
  */
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+//public class NetUserListRenderer extends DefaultListCellRenderer {
+//    // 属性不能用 font，不然重复！
+//    private Font customFont = Fonts.NORMAL;
+//    private Color foreColor;
+//    private Color selectedColor;
+//    private Color textColor;
+//    private Color iconColor;
+//    private int hoverIndex = -1;
+//
+//    private static ImageIcon userIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "userItem.png"), ImageConstants.mediumWidth));
+//
+//    public void setIconColor(Color iconColor) {
+//        this.iconColor = iconColor;
+//        userIcon = ImageUtil.dye(userIcon, iconColor);
+//    }
+//
+//    @Override
+//    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//        NetUserInfo netUserInfo = (NetUserInfo) value;
+//
+//        CustomPanel outerPanel = new CustomPanel();
+//        CustomLabel avatarLabel = new CustomLabel();
+//        CustomLabel nameLabel = new CustomLabel();
+//        CustomLabel genderLabel = new CustomLabel();
+////        CustomLabel birthdayLabel = new CustomLabel();
+////        CustomLabel areaLabel = new CustomLabel();
+//        CustomLabel followLabel = new CustomLabel();
+//        CustomLabel followedLabel = new CustomLabel();
+//        CustomLabel playlistCountLabel = new CustomLabel();
+//
+//        avatarLabel.setHorizontalTextPosition(LEFT);
+//        avatarLabel.setIconTextGap(25);
+//        avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : userIcon);
+//
+//        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+//        avatarLabel.setForeground(textColor);
+//        nameLabel.setForeground(textColor);
+//        genderLabel.setForeground(textColor);
+////        birthdayLabel.setForeground(textColor);
+////        areaLabel.setForeground(textColor);
+//        followLabel.setForeground(textColor);
+//        followedLabel.setForeground(textColor);
+//        playlistCountLabel.setForeground(textColor);
+//
+//        avatarLabel.setFont(customFont);
+//        nameLabel.setFont(customFont);
+//        genderLabel.setFont(customFont);
+////        birthdayLabel.setFont(customFont);
+////        areaLabel.setFont(customFont);
+//        followLabel.setFont(customFont);
+//        followedLabel.setFont(customFont);
+//        playlistCountLabel.setFont(customFont);
+//
+//        GridLayout layout = new GridLayout(1, 5);
+//        layout.setHgap(15);
+//        outerPanel.setLayout(layout);
+//
+//        outerPanel.add(avatarLabel);
+//        outerPanel.add(nameLabel);
+//        outerPanel.add(genderLabel);
+////        outerPanel.add(birthdayLabel);
+////        outerPanel.add(areaLabel);
+//        outerPanel.add(playlistCountLabel);
+//        outerPanel.add(followLabel);
+//        outerPanel.add(followedLabel);
+//
+//        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+//        String source = StringUtil.textToHtml(NetMusicSource.names[netUserInfo.getSource()]);
+//        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netUserInfo.getName(), maxWidth));
+//        String gender = netUserInfo.hasGender() ? netUserInfo.getGender() : "";
+////        String birthday = netUserInfo.hasBirthday() ? netUserInfo.getBirthday() : "";
+////        String area = netUserInfo.hasArea() ? netUserInfo.getArea() : "";
+//        boolean hasRadioCount = netUserInfo.hasRadioCount(), hasProgramCount = netUserInfo.hasProgramCount();
+//        String playlistCount = netUserInfo.hasPlaylistCount() ? netUserInfo.getPlaylistCount() + " 歌单"
+//                : hasRadioCount && hasProgramCount ? netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目"
+//                : hasRadioCount ? netUserInfo.getRadioCount() + " 电台"
+//                : hasProgramCount ? netUserInfo.getProgramCount() + (netUserInfo.fromDt() ? " 专辑" : netUserInfo.fromBI() ? " 视频" : " 节目")
+//                : "";
+//        String follow = netUserInfo.hasFollow() ? StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollow()) + " 关注" : "";
+//        String followed = netUserInfo.hasFollowed() ? StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollowed()) + " 粉丝" : "";
+//
+//        avatarLabel.setText(source);
+//        nameLabel.setText(name);
+//        genderLabel.setText(gender);
+////        birthdayLabel.setText(birthday);
+////        areaLabel.setText(area);
+//        playlistCountLabel.setText(playlistCount);
+//        followLabel.setText(follow);
+//        followedLabel.setText(followed);
+//
+//        Dimension ps = avatarLabel.getPreferredSize();
+//        Dimension ps2 = nameLabel.getPreferredSize();
+//        int ph = Math.max(ps.height, ps2.height);
+//        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
+//        outerPanel.setPreferredSize(d);
+//        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+//
+//        outerPanel.setBluntDrawBg(true);
+//        outerPanel.setDrawBg(isSelected || hoverIndex == index);
+//
+//        return outerPanel;
+//    }
+//}
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class NetUserListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
+    private Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private static ImageIcon userIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "userItem.png"), ImageConstants.profileWidth));
+    private static ImageIcon userIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "userItem.png"), ImageConstants.mediumWidth));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
@@ -54,8 +160,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         CustomLabel followedLabel = new CustomLabel();
         CustomLabel playlistCountLabel = new CustomLabel();
 
-        avatarLabel.setHorizontalTextPosition(LEFT);
-        avatarLabel.setIconTextGap(25);
+        avatarLabel.setIconTextGap(0);
         avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : userIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
@@ -70,56 +175,58 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
 
         avatarLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        genderLabel.setFont(customFont);
-//        birthdayLabel.setFont(customFont);
-//        areaLabel.setFont(customFont);
-        followLabel.setFont(customFont);
-        followedLabel.setFont(customFont);
-        playlistCountLabel.setFont(customFont);
+        genderLabel.setFont(tinyFont);
+//        birthdayLabel.setFont(tinyFont);
+//        areaLabel.setFont(tinyFont);
+        followLabel.setFont(tinyFont);
+        followedLabel.setFont(tinyFont);
+        playlistCountLabel.setFont(tinyFont);
 
-        GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
+        final float alpha = 0.5f;
+        genderLabel.setBluntAlpha(alpha);
+        followLabel.setBluntAlpha(alpha);
+        followedLabel.setBluntAlpha(alpha);
+        playlistCountLabel.setBluntAlpha(alpha);
+
+        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
+        final int sh = 10;
+        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(avatarLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
+        outerPanel.add(Box.createVerticalGlue());
         outerPanel.add(genderLabel);
-//        outerPanel.add(birthdayLabel);
-//        outerPanel.add(areaLabel);
-        outerPanel.add(playlistCountLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(followLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(followedLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(playlistCountLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtil.textToHtml(NetMusicSource.names[netUserInfo.getSource()]);
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netUserInfo.getName(), maxWidth));
-        String gender = netUserInfo.hasGender() ? netUserInfo.getGender() : "";
-//        String birthday = netUserInfo.hasBirthday() ? netUserInfo.getBirthday() : "";
-//        String area = netUserInfo.hasArea() ? netUserInfo.getArea() : "";
+        final int pw = 200, tw = pw - 20;
+        String source = "<html></html>";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netUserInfo.getName(), tw));
+        String gender = netUserInfo.hasGender() ? StringUtil.textToHtml(netUserInfo.getGender()) : "";
         boolean hasRadioCount = netUserInfo.hasRadioCount(), hasProgramCount = netUserInfo.hasProgramCount();
-        String playlistCount = netUserInfo.hasPlaylistCount() ? netUserInfo.getPlaylistCount() + " 歌单"
-                : hasRadioCount && hasProgramCount ? netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目"
-                : hasRadioCount ? netUserInfo.getRadioCount() + " 电台"
-                : hasProgramCount ? netUserInfo.getProgramCount() + (netUserInfo.fromDt() ? " 专辑" : netUserInfo.fromBI() ? " 视频" : " 节目")
+        String playlistCount = netUserInfo.hasPlaylistCount() ? StringUtil.textToHtml(netUserInfo.getPlaylistCount() + " 歌单")
+                : hasRadioCount && hasProgramCount ? StringUtil.textToHtml(netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目")
+                : hasRadioCount ? StringUtil.textToHtml(netUserInfo.getRadioCount() + " 电台")
+                : hasProgramCount ? StringUtil.textToHtml(netUserInfo.getProgramCount() + (netUserInfo.fromDt() ? " 专辑" : netUserInfo.fromBI() ? " 视频" : " 节目"))
                 : "";
-        String follow = netUserInfo.hasFollow() ? StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollow()) + " 关注" : "";
-        String followed = netUserInfo.hasFollowed() ? StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollowed()) + " 粉丝" : "";
+        String follow = netUserInfo.hasFollow() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollow()) + " 关注") : "";
+        String followed = netUserInfo.hasFollowed() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollowed()) + " 粉丝") : "";
 
         avatarLabel.setText(source);
         nameLabel.setText(name);
         genderLabel.setText(gender);
-//        birthdayLabel.setText(birthday);
-//        areaLabel.setText(area);
         playlistCountLabel.setText(playlistCount);
         followLabel.setText(follow);
         followedLabel.setText(followed);
 
-        Dimension ps = avatarLabel.getPreferredSize();
-        Dimension ps2 = nameLabel.getPreferredSize();
-        int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
-        outerPanel.setPreferredSize(d);
-        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+        list.setFixedCellWidth(pw);
 
         outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);

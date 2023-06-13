@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 public class StyleListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
+    private Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -44,6 +45,7 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
         BufferedImage img = style.getImgThumb();
         if (img != null) iconLabel.setIcon(new ImageIcon(img));
+        iconLabel.setIconTextGap(0);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -53,33 +55,39 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);
-        typeLabel.setFont(customFont);
-        inUseLabel.setFont(customFont);
+        typeLabel.setFont(tinyFont);
+        inUseLabel.setFont(tinyFont);
 
-        GridLayout layout = new GridLayout(1, 2);
-        layout.setHgap(15);
+        final float alpha = 0.5f;
+        typeLabel.setBluntAlpha(alpha);
+        inUseLabel.setBluntAlpha(alpha);
+
+        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
+        final int sh = 10;
+        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
+        outerPanel.add(Box.createVerticalGlue());
         outerPanel.add(typeLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(inUseLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(style.getStyleName(), maxWidth));
+        final int pw = 200, tw = pw - 20;
+        String source = "<html></html>";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(style.getStyleName(), tw));
         String type = StringUtil.textToHtml(style.isCustom() ? "自定义" : "预设");
         String inUse = StringUtil.textToHtml(f.currUIStyle == style ? "使用中" : "");
 
+        iconLabel.setText(source);
         nameLabel.setText(name);
         typeLabel.setText(type);
         inUseLabel.setText(inUse);
 
-        Dimension ps = iconLabel.getPreferredSize();
-        Dimension ps2 = nameLabel.getPreferredSize();
-        int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 12, 46));
-        outerPanel.setPreferredSize(d);
-        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+        list.setFixedCellWidth(pw);
 
         outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);

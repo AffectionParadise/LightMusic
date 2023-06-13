@@ -242,7 +242,7 @@ public class StringTwoColor {
     public void setRatio(double ratio) {
         if (width == 0 || height == 0) return;
 
-        int t = (int) (width * ratio);
+        int t = (int) (width * ratio + 0.5);
 //        CharBlock kcb = findKeyCharBlock(t);
 //        int dOff = dropOffset - (int) (((double) t - kcb.start) / kcb.duration * dropOffset);
         if (width > widthThreshold || buffImg == null) {
@@ -253,21 +253,21 @@ public class StringTwoColor {
 //            g2d.drawImage(buffImg2, t, dOff, kcb.start + kcb.duration, dOff + height - dropOffset, t, 0, kcb.start + kcb.duration, height - dropOffset, null);
 //            g2d.drawImage(buffImg2, kcb.start + kcb.duration, dropOffset, width, height, kcb.start + kcb.duration, 0, width, height - dropOffset, null);
             // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
-            g2d.drawImage(buffImg1, 0, 0, t, height, 0, 0, t, height , null);
+            g2d.drawImage(buffImg1, 0, 0, t, height, 0, 0, t, height, null);
 //            g2d.drawImage(buffImg1, 0, 0, t, height - dropOffset, 0, 0, t, height - dropOffset, null);
             // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
-            g2d.drawImage(buffImg2, t, 0, width, height, t, 0, width, height , null);
+            g2d.drawImage(buffImg2, t, 0, width, height, t, 0, width, height, null);
 //            g2d.drawImage(buffImg2, t, 0, width, height - dropOffset, t, 0, width, height - dropOffset, null);
             g2d.dispose();
             cropImg();
             makeIcon();
         } else {
-            int o = (int) (width * this.ratio);
+            int o = (int) (width * this.ratio + 0.5);
             Graphics2D g2d = buffImg.createGraphics();
             if (this.ratio < ratio) {
                 // 将 buffImg 的需要更新的部分用 buffImg1 的对应部分替换
                 clearRect(buffImg, o, 0, t - o, height);
-                g2d.drawImage(buffImg1, o, 0, t, height , o, 0, t, height , null);
+                g2d.drawImage(buffImg1, o, 0, t, height, o, 0, t, height, null);
 //                g2d.drawImage(buffImg1, o, 0, t, height - dropOffset, o, 0, t, height - dropOffset, null);
             } else if (this.ratio > ratio) {
                 // 将 buffImg 的需要更新的部分用 buffImg2 的对应部分替换
@@ -292,7 +292,7 @@ public class StringTwoColor {
     // 裁剪图片使之宽度不超过阈值
     private void cropImg() {
         if (width > widthThreshold) {
-            int foreWidth = (int) (width * ratio);
+            int foreWidth = (int) (width * ratio + 0.5);
             try {
                 if (foreWidth <= widthThreshold / 2)
                     buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(0, 0, widthThreshold, height)).asBufferedImage();
