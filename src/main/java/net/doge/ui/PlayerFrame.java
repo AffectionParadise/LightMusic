@@ -19880,6 +19880,8 @@ public class PlayerFrame extends JFrame {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
+                // 停止当前动画
+                lrcScrollAnimation = false;
                 Point p = e.getPoint();
                 int yOffset = (dragFrom.y - p.y) * 2;
                 boolean ok = lrcScrollPane.setVValue(lrcScrollPane.getVValue() + yOffset);

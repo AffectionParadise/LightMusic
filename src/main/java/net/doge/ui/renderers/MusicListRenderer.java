@@ -110,7 +110,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         outerPanel.add(albumNameLabel);
         outerPanel.add(durationLabel);
 
-        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.names[netMusicInfo.getSource()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : netMusicInfo.getName(), maxWidth));
         String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasArtist() ? file.getArtist() : ""
@@ -130,10 +130,10 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 46));
+        Dimension d = new Dimension(lw, Math.max(ph + 10, 46));
         outerPanel.setPreferredSize(d);
         // 设置 list 元素宽度防止 outerPanel 设置最佳大小时不改变大小！
-        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+        list.setFixedCellWidth(lw);
 
         outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);

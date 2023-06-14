@@ -98,7 +98,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         innerPanel.add(albumNameLabel);
         innerPanel.add(durationLabel);
 
-        final int maxWidth = (list.getVisibleRect().width - 10 - (innerPanel.getComponentCount() - 1) * layout.getHgap()) / innerPanel.getComponentCount();
+        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * layout.getHgap()) / innerPanel.getComponentCount();
         String source = StringUtil.textToHtml(NetMusicSource.names[musicInfo.getSource()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(musicInfo.getName(), maxWidth));
         String artist = musicInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(musicInfo.getArtist(), maxWidth)) : "";
@@ -115,7 +115,6 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        int lw = list.getVisibleRect().width - 20;
         Dimension d = new Dimension(lw, Math.max(ph, 36));
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);

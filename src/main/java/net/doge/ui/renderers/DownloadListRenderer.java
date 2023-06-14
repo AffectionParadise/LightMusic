@@ -84,7 +84,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.add(percentLabel);
         outerPanel.add(statusLabel);
 
-        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String type = StringUtil.textToHtml(TaskType.s[task.getType()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(task.getName(), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
@@ -103,9 +103,9 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         Dimension ps = nameLabel.getPreferredSize();
         Dimension ps2 = sizeLabel.getPreferredSize();
         int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ph + 10, 46));
+        Dimension d = new Dimension(lw, Math.max(ph + 10, 46));
         outerPanel.setPreferredSize(d);
-//        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+        list.setFixedCellWidth(lw);
 
         outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || index == hoverIndex);

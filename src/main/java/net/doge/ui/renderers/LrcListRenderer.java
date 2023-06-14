@@ -72,8 +72,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         label.setOpaque(false);
         label.setForeground(bgColor);
 
-        LabelUI labelUI = index != row ? normalLabelUI : highlightLabelUI;
-        label.setUI(labelUI);
+        label.setUI(index != row ? normalLabelUI : highlightLabelUI);
 
         // 高亮的行的样式
         if (index == row) {
@@ -89,8 +88,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 其他行的样式
         else {
             label.setFont(index == row - 2 ? shrinkFont : defaultFont);
-            String text = StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth));
-            label.setText(text);
+            label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth)));
 //            labelUI.setDrawBg(index == hoverIndex && StringUtil.isNotEmpty(text.trim()));
             label.setIcon(null);
         }

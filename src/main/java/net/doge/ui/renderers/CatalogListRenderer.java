@@ -46,15 +46,15 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
 
         outerPanel.add(nameLabel);
 
-        final int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(file.getAbsolutePath(), maxWidth));
 
         nameLabel.setText(name);
 
         Dimension ps = nameLabel.getPreferredSize();
-        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ps.height + 16, 46));
+        Dimension d = new Dimension(lw, Math.max(ps.height + 16, 46));
         outerPanel.setPreferredSize(d);
-//        list.setFixedCellWidth(list.getVisibleRect().width - 10);
+        list.setFixedCellWidth(lw);
 
         outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);

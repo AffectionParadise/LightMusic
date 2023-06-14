@@ -60,7 +60,7 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
         final float alpha = 0.5f;
         typeLabel.setBluntAlpha(alpha);
-        inUseLabel.setBluntAlpha(alpha);
+//        inUseLabel.setBluntAlpha(alpha);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
