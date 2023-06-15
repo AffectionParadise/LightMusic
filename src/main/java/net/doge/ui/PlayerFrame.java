@@ -2375,6 +2375,8 @@ public class PlayerFrame extends JFrame {
         addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
+                // 清除由于失去焦点未出队的按键，避免快捷键失效
+                currKeys.clear();
                 if (windowState == WindowState.MAXIMIZED) desktopLyricDialog.setVisible(false);
                 if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
             }
@@ -19973,7 +19975,7 @@ public class PlayerFrame extends JFrame {
                 double[] specs = player.specs;
                 double[] specsOrigin = player.specsOrigin;
                 double[] specsGap = player.specsGap;
-                for (int i = 0, len = specsOrigin.length; i < len; i++) {
+                for (int i = 0, len = SpectrumConstants.BAR_NUM; i < len; i++) {
                     if (specs[i] < specsOrigin[i])
                         specs[i] += Math.min(specsGap[i] / specPiece, specsOrigin[i] - specs[i]);
                     else if (specs[i] > specsOrigin[i])
@@ -20855,7 +20857,7 @@ public class PlayerFrame extends JFrame {
                 double avg = 0;
                 for (int i = 0; i < numBands; i++) {
                     int mult = i / barNum;
-                    int n = mult % 2 == 0 ? (i - barNum * mult) : (barNum - (i - barNum * mult));
+                    int n = mult % 2 == 0 ? i - barNum * mult : barNum - (i - barNum * mult);
                     int spectrum = n > nFactor ? 0 : (int) SpectrumUtil.handleMagnitude(magnitudes[n + 20]);
                     avg += spectrum * 1.2;
                 }

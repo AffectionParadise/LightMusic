@@ -7636,7 +7636,7 @@ public class MusicServerUtil {
                 String username = commentJson.getString("username");
                 String profileUrl = commentJson.getString("icon");
                 String content = commentJson.getString("comment_content");
-                String time = commentJson.getString("ctime");
+                String time = TimeUtil.msToPhrase(commentJson.getLong("ctime") * 1000);
                 Integer likedCount = commentJson.getInt("like_num");
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
@@ -7664,7 +7664,7 @@ public class MusicServerUtil {
                     username = cj.getString("username");
                     profileUrl = cj.getString("icon");
                     content = cj.getString("comment_content");
-                    time = cj.getString("ctime");
+                    time = TimeUtil.msToPhrase(cj.getLong("ctime") * 1000);
                     likedCount = cj.getInt("like_num");
 
                     NetCommentInfo ci = new NetCommentInfo();

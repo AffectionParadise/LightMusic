@@ -30,7 +30,7 @@ public class CustomList<E> extends JList<E> {
 
     @Override
     public void setFixedCellWidth(int width) {
-        if(getFixedCellWidth() == width) return;
+        if (getFixedCellWidth() == width) return;
         super.setFixedCellWidth(width);
     }
 }

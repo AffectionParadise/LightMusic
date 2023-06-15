@@ -21,7 +21,6 @@ public class CustomScrollPane extends JScrollPane {
 
     private void init() {
         setOpaque(false);
-        viewport.setOpaque(false);
 
         // 滚轮滚动动画
         wheelScrollingTimer = new Timer(0, e -> {
@@ -84,5 +83,10 @@ public class CustomScrollPane extends JScrollPane {
 
     public ScrollBarUI getVUI() {
         return verticalScrollBar.getUI();
+    }
+
+    @Override
+    protected JViewport createViewport() {
+        return new CustomViewport();
     }
 }
