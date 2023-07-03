@@ -8,8 +8,6 @@ import java.io.*;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @Author yzx
@@ -20,14 +18,14 @@ import java.util.regex.Pattern;
 public class LrcData {
     // 读取文件实例
     private BufferedReader bufferReader;
-    // 歌曲题目
-    private String title = "";
-    // 演唱者
-    private String artist = "";
-    // 专辑
-    private String album = "";
-    // 歌词制作者
-    private String lrcMaker = "";
+//    // 歌曲题目
+//    private String title = "";
+//    // 演唱者
+//    private String artist = "";
+//    // 专辑
+//    private String album = "";
+//    // 歌词制作者
+//    private String lrcMaker = "";
     // 歌词
     private Vector<Statement> statements = new Vector<>();
     // 翻译
@@ -85,42 +83,42 @@ public class LrcData {
             strLine = StringUtil.trimStringWith(strLine.replace("\t", "").trim(), ' ', '　');
             // 判断该行是否为有效行
             if (!isValidLine(strLine)) continue;
-            // 判断该行数据是否表示歌名
-            if (null == title || title.trim().isEmpty()) {
-                Pattern pattern = Pattern.compile("\\[ti:(.+?)\\]");
-                Matcher matcher = pattern.matcher(strLine);
-                if (matcher.find()) {
-                    title = matcher.group(1);
-                    continue;
-                }
-            }
-            // 判断该行数据是否表示演唱者
-            if (null == artist || artist.trim().isEmpty()) {
-                Pattern pattern = Pattern.compile("\\[ar:(.+?)\\]");
-                Matcher matcher = pattern.matcher(strLine);
-                if (matcher.find()) {
-                    artist = matcher.group(1);
-                    continue;
-                }
-            }
-            // 判断该行数据是否表示专辑
-            if (null == album || album.trim().isEmpty()) {
-                Pattern pattern = Pattern.compile("\\[al:(.+?)\\]");
-                Matcher matcher = pattern.matcher(strLine);
-                if (matcher.find()) {
-                    album = matcher.group(1);
-                    continue;
-                }
-            }
-            // 判断该行数据是否表示歌词制作者
-            if (null == lrcMaker || lrcMaker.trim().isEmpty()) {
-                Pattern pattern = Pattern.compile("\\[by:(.+?)\\]");
-                Matcher matcher = pattern.matcher(strLine);
-                if (matcher.find()) {
-                    lrcMaker = matcher.group(1);
-                    continue;
-                }
-            }
+//            // 判断该行数据是否表示歌名
+//            if (null == title || title.trim().isEmpty()) {
+//                Pattern pattern = Pattern.compile("\\[ti:(.+?)\\]");
+//                Matcher matcher = pattern.matcher(strLine);
+//                if (matcher.find()) {
+//                    title = matcher.group(1);
+//                    continue;
+//                }
+//            }
+//            // 判断该行数据是否表示演唱者
+//            if (null == artist || artist.trim().isEmpty()) {
+//                Pattern pattern = Pattern.compile("\\[ar:(.+?)\\]");
+//                Matcher matcher = pattern.matcher(strLine);
+//                if (matcher.find()) {
+//                    artist = matcher.group(1);
+//                    continue;
+//                }
+//            }
+//            // 判断该行数据是否表示专辑
+//            if (null == album || album.trim().isEmpty()) {
+//                Pattern pattern = Pattern.compile("\\[al:(.+?)\\]");
+//                Matcher matcher = pattern.matcher(strLine);
+//                if (matcher.find()) {
+//                    album = matcher.group(1);
+//                    continue;
+//                }
+//            }
+//            // 判断该行数据是否表示歌词制作者
+//            if (null == lrcMaker || lrcMaker.trim().isEmpty()) {
+//                Pattern pattern = Pattern.compile("\\[by:(.+?)\\]");
+//                Matcher matcher = pattern.matcher(strLine);
+//                if (matcher.find()) {
+//                    lrcMaker = matcher.group(1);
+//                    continue;
+//                }
+//            }
             // 读取并分析歌词
             int timeNum = 0;                                        // 本行含时间个数
             String str[] = strLine.split("\\]");              // 以 ] 分隔
@@ -132,8 +130,8 @@ public class LrcData {
                     ++timeNum;
                 }
             }
-            for (int i = 0; i < timeNum; ++i)                    // 处理歌词复用的情况
-            {
+            // 处理歌词复用的情况
+            for (int i = 0; i < timeNum; ++i) {
                 Statement sm = new Statement();
                 // 设置歌词，包含 ""
                 sm.setLyric(timeNum < str.length ? str[str.length - 1].trim() : "");
@@ -151,7 +149,7 @@ public class LrcData {
         clean();
 
         // 添加歌词排头的等待点
-        if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "•••"));
+        if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "..."));
 
         // 分离出歌词翻译
 //        parseTrans();

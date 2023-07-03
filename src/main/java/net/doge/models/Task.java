@@ -5,7 +5,7 @@ import net.doge.constants.*;
 import net.doge.models.entities.NetMusicInfo;
 import net.doge.models.entities.NetMvInfo;
 import net.doge.utils.FileUtil;
-import net.doge.utils.MusicServerUtil;
+import net.doge.sdk.util.MusicServerUtil;
 
 import javax.swing.*;
 import java.util.HashMap;

@@ -6,7 +6,7 @@ package net.doge.constants;
  * @Date 2020/12/7
  */
 public class NetMusicSource {
-    public static final String[] names = new String[]{"网易", "酷狗", "腾讯", "酷我", "咪咕", "喜马", "千千", "猫耳", "好看", "豆瓣", "堆糖", "哔哩", "音磁", "咕咕", "全部"};
+    public static final String[] names = new String[]{"小意", "小枸", "小丘", "小窝", "小蜜", "小希", "小倩", "小猫", "小看", "小豆", "小糖", "小哔", "小磁", "小咕", "全部"};
 
     public static final int NET_CLOUD = 0;
     public static final int KG = 1;
