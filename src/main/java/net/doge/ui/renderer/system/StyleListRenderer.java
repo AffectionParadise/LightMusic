@@ -6,7 +6,7 @@ import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

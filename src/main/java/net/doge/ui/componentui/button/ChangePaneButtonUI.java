@@ -3,7 +3,7 @@ package net.doge.ui.componentui.button;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.system.SimplePath;
 import net.doge.ui.MainFrame;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;

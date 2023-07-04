@@ -8,7 +8,7 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -7,7 +7,7 @@ import net.doge.ui.component.combobox.CustomComboBox;
 import net.doge.ui.component.combobox.CustomComboPopup;
 import net.doge.ui.listener.ButtonMouseListener;
 import net.doge.ui.renderer.system.ComboBoxRenderer;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxUI;

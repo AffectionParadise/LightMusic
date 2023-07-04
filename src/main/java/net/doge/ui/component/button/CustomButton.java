@@ -2,7 +2,7 @@ package net.doge.ui.component.button;
 
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.system.SimplePath;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;

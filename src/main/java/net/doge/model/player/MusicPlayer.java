@@ -16,9 +16,9 @@ import net.doge.constant.ui.SpectrumConstants;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.ui.MainFrame;
-import net.doge.util.MusicUtil;
-import net.doge.util.StringUtil;
-import net.doge.util.TimeUtil;
+import net.doge.util.media.MusicUtil;
+import net.doge.util.common.StringUtil;
+import net.doge.util.common.TimeUtil;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;

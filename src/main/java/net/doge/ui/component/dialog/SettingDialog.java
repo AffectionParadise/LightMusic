@@ -22,10 +22,10 @@ import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.componentui.combobox.ComboBoxUI;
 import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.util.ImageUtil;
-import net.doge.util.JsonUtil;
-import net.doge.util.KeyUtil;
-import net.doge.util.ListUtil;
+import net.doge.util.ui.ImageUtil;
+import net.doge.util.common.JsonUtil;
+import net.doge.util.system.KeyUtil;
+import net.doge.util.collection.ListUtil;
 import net.sf.json.JSONObject;
 
 import javax.swing.*;

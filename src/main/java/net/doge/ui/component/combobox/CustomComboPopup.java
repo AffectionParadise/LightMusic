@@ -4,7 +4,7 @@ import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.list.CustomScrollPane;
 import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

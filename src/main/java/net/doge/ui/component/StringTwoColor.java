@@ -3,8 +3,8 @@ package net.doge.ui.component;
 import lombok.Data;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.ui.Fonts;
-import net.doge.util.ImageUtil;
-import net.doge.util.StringUtil;
+import net.doge.util.ui.ImageUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

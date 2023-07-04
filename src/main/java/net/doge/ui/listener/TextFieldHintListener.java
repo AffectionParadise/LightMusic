@@ -8,7 +8,7 @@ package net.doge.ui.listener;
 
 import lombok.Data;
 import net.doge.ui.component.textfield.CustomTextField;
-import net.doge.util.ColorUtil;
+import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;
 import java.awt.event.FocusEvent;

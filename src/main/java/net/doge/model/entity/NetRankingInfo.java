@@ -2,7 +2,7 @@ package net.doge.model.entity;
 
 import lombok.Data;
 import net.doge.constant.system.NetMusicSource;
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;

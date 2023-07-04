@@ -10,7 +10,7 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.StringTwoColor;
 import net.doge.ui.listener.ButtonMouseListener;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;

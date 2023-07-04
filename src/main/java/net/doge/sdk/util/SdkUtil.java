@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 

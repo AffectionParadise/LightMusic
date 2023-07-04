@@ -1,6 +1,6 @@
 package net.doge.ui.component.textfield;
 
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

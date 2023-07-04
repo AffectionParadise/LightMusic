@@ -1,8 +1,8 @@
 package net.doge.model.entity;
 
 import net.doge.constant.player.Format;
-import net.doge.util.FileUtil;
-import net.doge.util.StringUtil;
+import net.doge.util.system.FileUtil;
+import net.doge.util.common.StringUtil;
 
 import java.io.File;
 

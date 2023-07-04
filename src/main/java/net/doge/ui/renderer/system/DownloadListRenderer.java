@@ -10,12 +10,12 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
 import net.doge.ui.componentui.slider.MuteSliderUI;
-import net.doge.util.FileUtil;
-import net.doge.util.ImageUtil;
+import net.doge.util.system.FileUtil;
+import net.doge.util.ui.ImageUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

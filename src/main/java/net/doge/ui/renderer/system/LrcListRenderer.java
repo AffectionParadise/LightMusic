@@ -6,7 +6,7 @@ import net.doge.model.lyric.Statement;
 import net.doge.ui.component.StringTwoColor;
 import net.doge.ui.componentui.label.LabelUI;
 import net.doge.ui.componentui.list.ListUI;
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

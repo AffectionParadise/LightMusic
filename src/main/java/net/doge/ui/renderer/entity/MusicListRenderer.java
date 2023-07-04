@@ -12,9 +12,9 @@ import net.doge.model.player.MusicPlayer;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ImageUtil;
-import net.doge.util.StringUtil;
-import net.doge.util.TimeUtil;
+import net.doge.util.ui.ImageUtil;
+import net.doge.util.common.StringUtil;
+import net.doge.util.common.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -4,9 +4,9 @@ import javafx.scene.media.MediaPlayer;
 import net.doge.model.player.MusicPlayer;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.dialog.TipDialog;
-import net.doge.util.ColorUtil;
-import net.doge.util.StringUtil;
-import net.doge.util.TimeUtil;
+import net.doge.util.ui.ColorUtil;
+import net.doge.util.common.StringUtil;
+import net.doge.util.common.TimeUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;

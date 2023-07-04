@@ -5,7 +5,7 @@ import net.doge.constant.ui.BlurConstants;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.panel.GlobalPanel;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;

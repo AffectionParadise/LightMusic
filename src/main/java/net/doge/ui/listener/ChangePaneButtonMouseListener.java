@@ -3,7 +3,7 @@ package net.doge.ui.listener;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
 import net.doge.ui.componentui.button.ChangePaneButtonUI;
-import net.doge.util.ColorUtil;
+import net.doge.util.ui.ColorUtil;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

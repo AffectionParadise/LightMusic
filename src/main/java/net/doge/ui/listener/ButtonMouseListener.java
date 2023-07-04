@@ -3,8 +3,8 @@ package net.doge.ui.listener;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
 import net.doge.ui.component.button.TabButton;
-import net.doge.util.ColorUtil;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;

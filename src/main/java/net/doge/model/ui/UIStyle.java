@@ -4,8 +4,8 @@ import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.UIStyleConstants;
-import net.doge.util.ImageUtil;
-import net.doge.util.StringUtil;
+import net.doge.util.ui.ImageUtil;
+import net.doge.util.common.StringUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

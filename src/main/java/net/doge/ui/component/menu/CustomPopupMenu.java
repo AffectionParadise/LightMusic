@@ -2,7 +2,7 @@ package net.doge.ui.component.menu;
 
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -15,9 +15,9 @@ import net.doge.ui.component.list.CustomScrollPane;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.util.FileUtil;
-import net.doge.util.ImageUtil;
-import net.doge.util.StringUtil;
+import net.doge.util.system.FileUtil;
+import net.doge.util.ui.ImageUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

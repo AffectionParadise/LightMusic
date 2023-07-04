@@ -1,6 +1,6 @@
 package net.doge.ui.componentui.slider;
 
-import net.doge.util.ColorUtil;
+import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;

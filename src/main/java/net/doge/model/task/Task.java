@@ -8,7 +8,7 @@ import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetMvInfo;
-import net.doge.util.FileUtil;
+import net.doge.util.system.FileUtil;
 import net.doge.sdk.util.MusicServerUtil;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package net.doge.constant.ui;
 
 import net.doge.constant.system.SimplePath;
-import net.doge.util.FontUtil;
+import net.doge.util.ui.FontUtil;
 
 import java.awt.*;
 import java.util.LinkedList;

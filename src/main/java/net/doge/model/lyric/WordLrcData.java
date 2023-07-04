@@ -2,8 +2,8 @@ package net.doge.model.lyric;
 
 import cn.hutool.core.util.ReUtil;
 import lombok.Data;
-import net.doge.util.CharsetUtil;
-import net.doge.util.StringUtil;
+import net.doge.util.system.CharsetUtil;
+import net.doge.util.common.StringUtil;
 
 import java.io.*;
 import java.util.Collections;

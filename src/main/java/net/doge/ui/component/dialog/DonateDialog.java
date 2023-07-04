@@ -7,7 +7,7 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

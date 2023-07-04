@@ -2,7 +2,7 @@ package net.doge.ui.component.panel;
 
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;
-import net.doge.util.ImageUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;

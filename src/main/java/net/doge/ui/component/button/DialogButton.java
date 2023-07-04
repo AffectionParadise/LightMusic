@@ -2,8 +2,8 @@ package net.doge.ui.component.button;
 
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
-import net.doge.util.ColorUtil;
-import net.doge.util.StringUtil;
+import net.doge.util.ui.ColorUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

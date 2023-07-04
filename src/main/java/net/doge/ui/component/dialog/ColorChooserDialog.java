@@ -14,9 +14,9 @@ import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.componentui.combobox.ComboBoxUI;
 import net.doge.ui.componentui.slider.ColorSliderUI;
-import net.doge.util.ColorUtil;
-import net.doge.util.ImageUtil;
-import net.doge.util.StringUtil;
+import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.ImageUtil;
+import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

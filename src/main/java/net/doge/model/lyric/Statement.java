@@ -1,6 +1,6 @@
 package net.doge.model.lyric;
 
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 /**
  * @Author yzx

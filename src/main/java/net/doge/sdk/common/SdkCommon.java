@@ -2,7 +2,7 @@ package net.doge.sdk.common;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import net.doge.util.StringUtil;
+import net.doge.util.common.StringUtil;
 
 public class SdkCommon {
     // 最大等待时间(ms)
