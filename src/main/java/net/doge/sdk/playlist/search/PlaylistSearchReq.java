@@ -3,14 +3,14 @@ package net.doge.sdk.playlist.search;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetPlaylistInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetPlaylistInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -31,7 +31,9 @@ public class PlaylistSearchReq {
     private final String SEARCH_PLAYLIST_KW_API = "http://www.kuwo.cn/api/www/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌单 API (咪咕)
     private final String SEARCH_PLAYLIST_MG_API = SdkCommon.prefixMg + "/search?type=playlist&keyword=%s&pageNo=%s&pageSize=%s";
-    
+    // 关键词搜索歌单 API (5sing)
+    private final String SEARCH_PLAYLIST_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=0&type=1";
+
     /**
      * 根据关键词获取歌单
      */
@@ -245,6 +247,48 @@ public class PlaylistSearchReq {
             return new CommonResult<>(res, t);
         };
 
+        // 5sing
+        Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsFs = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_FS_API, encodedKeyword, page))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(playlistInfoBody);
+            t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
+            JSONArray playlistArray = data.optJSONArray("list");
+            if (playlistArray != null) {
+                for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+                    String playlistId = playlistJson.getString("songListId");
+                    String playlistName = StringUtil.removeHTMLLabel(playlistJson.getString("title"));
+                    String creator = playlistJson.getString("userName");
+                    String creatorId = playlistJson.getString("userId");
+                    Long playCount = playlistJson.getLong("playCount");
+                    Integer trackCount = playlistJson.getInt("songCnt");
+                    String coverImgThumbUrl = playlistJson.getString("pictureUrl");
+
+                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                    playlistInfo.setSource(NetMusicSource.FS);
+                    playlistInfo.setId(playlistId);
+                    playlistInfo.setName(playlistName);
+                    playlistInfo.setCreator(creator);
+                    playlistInfo.setCreatorId(creatorId);
+                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    playlistInfo.setPlayCount(playCount);
+                    playlistInfo.setTrackCount(trackCount);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        playlistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+                    res.add(playlistInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
 
         if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
@@ -257,6 +301,8 @@ public class PlaylistSearchReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsKw));
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsMg));
+        if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsFs));
 
         List<List<NetPlaylistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {

@@ -1,8 +1,8 @@
 package net.doge.sdk.util;
 
-import net.doge.models.Task;
-import net.doge.models.entities.*;
-import net.doge.models.server.CommonResult;
+import net.doge.model.task.Task;
+import net.doge.model.entity.*;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.album.info.AlbumInfoReq;
 import net.doge.sdk.album.menu.AlbumMenuReq;
 import net.doge.sdk.album.rcmd.NewAlbumReq;
@@ -40,7 +40,7 @@ import net.doge.sdk.playlist.menu.PlaylistMenuReq;
 import net.doge.sdk.playlist.rcmd.HighQualityPlaylistReq;
 import net.doge.sdk.playlist.rcmd.RecommendPlaylistReq;
 import net.doge.sdk.playlist.search.PlaylistSearchReq;
-import net.doge.sdk.playlist.tag.PlaylistTagReq;
+import net.doge.sdk.playlist.tag.HotPlaylistTagReq;
 import net.doge.sdk.playlist.tag.RecPlaylistTagReq;
 import net.doge.sdk.radio.info.RadioInfoReq;
 import net.doge.sdk.radio.menu.RadioMenuReq;
@@ -54,7 +54,7 @@ import net.doge.sdk.sheet.SheetReq;
 import net.doge.sdk.user.info.UserInfoReq;
 import net.doge.sdk.user.menu.UserMenuReq;
 import net.doge.sdk.user.search.UserSearchReq;
-import net.doge.ui.components.panel.LoadingPanel;
+import net.doge.ui.component.panel.LoadingPanel;
 
 import java.awt.*;
 import java.util.Map;
@@ -90,7 +90,7 @@ public class MusicServerUtil {
      * @return
      */
     public static void initPlaylistTag() {
-        new PlaylistTagReq().initPlaylistTag();
+        new HotPlaylistTagReq().initHotPlaylistTag();
     }
 
     /**
@@ -188,13 +188,6 @@ public class MusicServerUtil {
      */
     public static CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int limit, int page) {
         return new MusicSearchReq().searchMusic(src, type, subType, keyword, limit, page);
-    }
-
-    /**
-     * 补充 NetMusicInfo 歌曲时长
-     */
-    public static void fillDuration(NetMusicInfo musicInfo) {
-        new MusicInfoReq().fillDuration(musicInfo);
     }
 
     /**
@@ -515,8 +508,8 @@ public class MusicServerUtil {
     /**
      * 根据歌单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInPlaylist(String playlistId, int source, int limit, int page) {
-        return new PlaylistInfoReq().getMusicInfoInPlaylist(playlistId, source, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int limit, int page) {
+        return new PlaylistInfoReq().getMusicInfoInPlaylist(playlistInfo, limit, page);
     }
 
     /**

@@ -3,15 +3,15 @@ package net.doge.sdk.music.info;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.Format;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.server.CommonResult;
-import net.doge.models.server.MusicCandidate;
+import net.doge.constant.player.Format;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.sdk.common.CommonResult;
+import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -30,7 +30,6 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API (QQ)
 //    private final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
     // 歌曲 URL 获取 API (酷我)
-//    private final String GET_SONG_URL_KW_API = prefixKw + "/kuwo/url?mid=%s";
 //    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&httpsStatus=1";
 //    private final String GET_SONG_URL_KW_API = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=%s";
     private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=convert_url3&br=320kmp3";
@@ -41,7 +40,7 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API (哔哩哔哩)
     private final String GET_SONG_URL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/url?sid=%s";
     // 歌曲 URL 获取 API (5sing)
-//    private final String GET_SONG_URL_FS_API = "http://service.5sing.kugou.com/song/getsongurl?songtype=%s&songid=%s";
+    private final String GET_SONG_URL_FS_API = "http://service.5sing.kugou.com/song/getsongurl?songtype=%s&songid=%s";
 
     // 歌曲信息 API (酷狗)
     private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
@@ -50,10 +49,10 @@ public class MusicUrlReq {
     // 歌曲信息 API (音乐磁场)
     private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
-    private static final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
+    private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
     // 歌曲信息 API (猫耳)
     private final String SINGLE_SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
-    
+
     /**
      * 补充 NetMusicInfo 的 url
      */
@@ -132,13 +131,13 @@ public class MusicUrlReq {
             else fillAvailableMusicUrl(musicInfo);
         }
 
-//        // 5sing
-//        else if (source == NetMusicSource.FS) {
-//            // 无链接或试听，直接换源
-//            String url = fetchMusicUrl(songId, NetMusicSource.FS);
-//            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
-//            else fillAvailableMusicUrl(musicInfo);
-//        }
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            // 无链接或试听，直接换源
+            String url = fetchMusicUrl(songId, NetMusicSource.FS);
+            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            else fillAvailableMusicUrl(musicInfo);
+        }
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
@@ -303,15 +302,18 @@ public class MusicUrlReq {
             }
         }
 
-//        // 5sing
-//        else if (source == NetMusicSource.FS) {
-//            String[] sp = songId.split("_");
-//            String songBody = HttpRequest.get(String.format(GET_SONG_URL_FS_API, sp[0], sp[1]))
-//                    .execute()
-//                    .body();
-//            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-//            return data.getString("squrl");
-//        }
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String[] sp = songId.split("_");
+            String songBody = HttpRequest.get(String.format(GET_SONG_URL_FS_API, sp[0], sp[1]))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+            String url = data.optString("squrl");
+            if (StringUtil.isEmpty(url)) url = data.optString("hqurl");
+            if (StringUtil.isEmpty(url)) url = data.optString("lqurl");
+            return url;
+        }
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {

@@ -2,8 +2,8 @@ package net.doge.sdk.radio.tag;
 
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.Tags;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -19,26 +19,19 @@ import java.util.concurrent.Future;
 
 public class HotRadioTag {
     // 分类热门电台标签 API
-    private final String HOT_RADIO_TAG_API
-            = SdkCommon.prefix + "/dj/category/recommend";
+    private final String HOT_RADIO_TAG_API = SdkCommon.prefix + "/dj/category/recommend";
     // 分类推荐电台标签 API
-    private final String REC_RADIO_TAG_API
-            = SdkCommon.prefix + "/dj/catelist";
+    private final String REC_RADIO_TAG_API = SdkCommon.prefix + "/dj/catelist";
     // 电台分类标签 API (喜马拉雅)
-    private final String RADIO_TAG_XM_API
-            = "https://www.ximalaya.com/revision/category/allCategoryInfo";
+    private final String RADIO_TAG_XM_API = "https://www.ximalaya.com/revision/category/allCategoryInfo";
     // 排行榜标签 API (喜马拉雅)
-    private final String RADIO_RANKING_TAG_XM_API
-            = "https://www.ximalaya.com/revision/rank/v3/cluster";
+    private final String RADIO_RANKING_TAG_XM_API = "https://www.ximalaya.com/revision/rank/v3/cluster";
     // 广播剧标签 API (猫耳)
-    private final String RADIO_TAG_ME_API
-            = "https://www.missevan.com/dramaapi/tag";
+    private final String RADIO_TAG_ME_API = "https://www.missevan.com/dramaapi/tag";
     // 电台标签 API (豆瓣)
-    private final String RADIO_TAG_DB_API
-            = "https://movie.douban.com/chart";
+    private final String RADIO_TAG_DB_API = "https://movie.douban.com/chart";
     // 游戏电台标签 API (豆瓣)
-    private final String GAME_RADIO_TAG_DB_API
-            = "https://www.douban.com/game/explore";
+    private final String GAME_RADIO_TAG_DB_API = "https://www.douban.com/game/explore";
 
     /**
      * 加载电台标签

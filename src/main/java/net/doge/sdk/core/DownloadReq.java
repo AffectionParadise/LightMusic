@@ -1,8 +1,8 @@
 package net.doge.sdk.core;
 
-import net.doge.models.Task;
+import net.doge.model.task.Task;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.ui.components.panel.LoadingPanel;
+import net.doge.ui.component.panel.LoadingPanel;
 
 import java.awt.*;
 import java.io.*;

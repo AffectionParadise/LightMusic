@@ -1,12 +1,13 @@
 package net.doge.sdk.mv.info;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.Format;
-import net.doge.constants.MvInfoType;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetMvInfo;
+import net.doge.constant.player.Format;
+import net.doge.constant.model.MvInfoType;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.utils.StringUtil;
+import net.doge.sdk.util.SdkUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -29,6 +30,8 @@ public class MvUrlReq {
     private final String MV_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=mv&httpsStatus=1";
     // MV 视频链接获取 API (千千)
     private final String MV_URL_QI_API = "https://music.91q.com/v1/video/info?appid=16073360&assetCode=%s&timestamp=%s";
+    // MV 视频链接获取 API (5sing)
+    private final String MV_URL_FS_API = "http://service.5sing.kugou.com/mv/play?mvId=%s&type=1";
     // MV 视频链接获取 API (好看)
     private final String MV_URL_HK_API = "https://haokan.baidu.com/v?vid=%s&_format=json";
     // 视频 bvid 获取 cid (哔哩哔哩)
@@ -157,6 +160,11 @@ public class MvUrlReq {
             JSONArray data = JSONObject.fromObject(mvBody).getJSONArray("data");
             JSONArray urls = data.getJSONObject(0).getJSONArray("allRate");
             return urls.getJSONObject(0).getString("path");
+        }
+
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            return SdkUtil.getRedirectUrl(String.format(MV_URL_FS_API, mvId));
         }
 
         // 好看

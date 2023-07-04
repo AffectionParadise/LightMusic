@@ -3,15 +3,15 @@ package net.doge.sdk.music.info;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.SimplePath;
-import net.doge.models.entities.NetMusicInfo;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.system.SimplePath;
+import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ImageUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.ImageUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -37,7 +37,6 @@ public class MusicInfoReq {
     // 歌曲封面信息 API (QQ)
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
     // 歌曲信息 API (酷我)
-//    private final String SINGLE_SONG_DETAIL_KW_API = prefixKw + "/kuwo/musicInfo?mid=%s";
     private final String SINGLE_SONG_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
     // 歌曲信息 API (咪咕)
     private final String SINGLE_SONG_DETAIL_MG_API = SdkCommon.prefixMg + "/song?cid=%s";
@@ -50,7 +49,7 @@ public class MusicInfoReq {
     // 歌曲信息 API (咕咕咕音乐)
     private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
     // 歌曲信息 API (5sing)
-//    private final String SINGLE_SONG_DETAIL_FS_API = "http://service.5sing.kugou.com/song/find?songinfo=%s";
+    private final String SINGLE_SONG_DETAIL_FS_API = "http://service.5sing.kugou.com/song/find?songinfo=%s";
     // 歌曲信息 API (猫耳)
     private final String SINGLE_SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
     // 歌曲专辑信息 API (猫耳)
@@ -70,6 +69,8 @@ public class MusicInfoReq {
     private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
+    // 歌词 API (5sing)
+    private final String LYRIC_FS_API = "http://5sing.kugou.com/fm/m/json/lrc?songType=%s&songId=%s";
     // 弹幕 API (猫耳)
     private final String DM_ME_API = "https://www.missevan.com/sound/getdm?soundid=%s";
     // 歌词 API (哔哩哔哩)
@@ -369,24 +370,23 @@ public class MusicInfoReq {
             }));
         }
 
-//        // 5sing
-//        else if (source == NetMusicSource.FS) {
-//            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.encode(songId.replace("_", "$"))))
-//                    .execute()
-//                    .body();
-//            JSONObject data = JSONObject.fromObject(songBody);
-//
-//            if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("nickname"));
-//            if (!musicInfo.hasArtistId()) musicInfo.setArtist(data.getString("userid"));
-//            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
-//            if (!musicInfo.hasAlbumImage()) {
-//                GlobalExecutors.imageExecutor.submit(() -> {
-//                    BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("pic"));
-//                    ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
-//                    musicInfo.callback();
-//                });
-//            }
-//        }
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.encode(songId.replace("_", "$"))))
+                    .execute()
+                    .body();
+            JSONObject data = JSONArray.fromObject(songBody).getJSONObject(0);
+
+            if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("nickname"));
+            if (!musicInfo.hasArtistId()) musicInfo.setArtist(data.getString("userid"));
+            if (!musicInfo.hasAlbumImage()) {
+                GlobalExecutors.imageExecutor.submit(() -> {
+                    BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("avatar"));
+                    ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                    musicInfo.callback();
+                });
+            }
+        }
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
@@ -651,6 +651,18 @@ public class MusicInfoReq {
             netMusicInfo.setRoma("");
         }
 
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String[] sp = id.split("_");
+            String lrcBody = HttpRequest.get(String.format(LYRIC_FS_API, sp[0], sp[1]))
+                    .execute()
+                    .body();
+            JSONObject lrcJson = JSONObject.fromObject(lrcBody);
+            netMusicInfo.setLrc(lrcJson.getString("txt"));
+            netMusicInfo.setTrans("");
+            netMusicInfo.setRoma("");
+        }
+
         // 猫耳(弹幕)
         else if (source == NetMusicSource.ME) {
             String dmBody = HttpRequest.get(String.format(DM_ME_API, id))
@@ -675,13 +687,13 @@ public class MusicInfoReq {
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String playUrlBody = HttpRequest.get(String.format(LYRIC_BI_API, id))
+            String lrcBody = HttpRequest.get(String.format(LYRIC_BI_API, id))
                     .setFollowRedirects(true)
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
-            netMusicInfo.setLrc(urlJson.getString("data"));
+            JSONObject lrcJson = JSONObject.fromObject(lrcBody);
+            netMusicInfo.setLrc(lrcJson.getString("data"));
             netMusicInfo.setTrans("");
             netMusicInfo.setRoma("");
         } else {

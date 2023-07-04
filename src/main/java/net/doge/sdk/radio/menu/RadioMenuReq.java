@@ -2,13 +2,13 @@ package net.doge.sdk.radio.menu;
 
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.RadioType;
-import net.doge.models.entities.NetArtistInfo;
-import net.doge.models.entities.NetRadioInfo;
-import net.doge.models.entities.NetUserInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.RadioType;
+import net.doge.model.entity.NetArtistInfo;
+import net.doge.model.entity.NetRadioInfo;
+import net.doge.model.entity.NetUserInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.sf.json.JSONArray;
@@ -29,9 +29,6 @@ public class RadioMenuReq {
     private final String RADIO_CVS_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
     // 电台演职员 API (豆瓣)
     private final String RADIO_ARTISTS_DB_API = "https://movie.douban.com/subject/%s/celebrities";
-    
-    // 歌曲推荐电台 API (猫耳)
-    private final String SONG_REC_RADIO_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
     
     // 相似电台 API (猫耳)
     private final String SIMILAR_RADIO_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";

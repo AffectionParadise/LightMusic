@@ -1,10 +1,7 @@
 package net.doge.ui.componentui.menu;
 
-import net.doge.constants.Colors;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicMenuItemUI;
-import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.awt.*;
 
 /**

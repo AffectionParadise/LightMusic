@@ -1,15 +1,15 @@
 package net.doge.sdk.ranking.info;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.entities.NetRankingInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.model.entity.NetRankingInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -22,7 +22,6 @@ public class RankingInfoReq {
     // 榜单信息 API (QQ)
     private final String RANKING_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/top?id=%s&pageSize=%s";
     // 榜单信息 API (酷我)
-//    private final String RANKING_DETAIL_KW_API = prefixKw + "/kuwo/rank/musicList?bangId=%s&pn=%s&rn=%s";
     private final String RANKING_DETAIL_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
     // 榜单信息 API (咪咕)
     private final String RANKING_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=%s";
@@ -30,7 +29,7 @@ public class RankingInfoReq {
     private final String RANKING_DETAIL_QI_API = "https://music.91q.com/v1/bd/list?appid=16073360&bdid=%s&pageNo=%s&pageSize=%s&timestamp=%s";
     // 榜单信息 API (猫耳)
     private final String RANKING_DETAIL_ME_API = "https://www.missevan.com/sound/soundalllist?albumid=%s";
-    
+
     /**
      * 根据榜单 id 预加载榜单信息(包括封面图)
      */
@@ -205,12 +204,14 @@ public class RankingInfoReq {
 
         // 酷我(接口分页)
         else if (source == NetMusicSource.KW) {
-            String rankingInfoBody = SdkCommon.kwRequest(String.format(RANKING_DETAIL_KW_API, rankingId, page, Math.min(30, limit)))
+            int lim = Math.min(30, limit);
+            String rankingInfoBody = SdkCommon.kwRequest(String.format(RANKING_DETAIL_KW_API, rankingId, page, lim))
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
-            total = data.getInt("num");
+            int to = data.getInt("num");
+            total = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
             JSONArray songArray = data.getJSONArray("musicList");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);

@@ -3,14 +3,14 @@ package net.doge.sdk.user.search;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetUserInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetUserInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -295,7 +295,8 @@ public class UserSearchReq {
             JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
             JSONArray userArray = userInfoJson.optJSONArray("items");
             if (userArray != null) {
-                t = userInfoJson.getInt("total");
+                int to = userInfoJson.getInt("total");
+                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(userArray.getString(i));
                     Elements result = doc.select("div.result");

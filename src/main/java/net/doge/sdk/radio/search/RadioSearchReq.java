@@ -3,15 +3,15 @@ package net.doge.sdk.radio.search;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.RadioType;
-import net.doge.models.entities.NetRadioInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.RadioType;
+import net.doge.model.entity.NetRadioInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -40,7 +40,7 @@ public class RadioSearchReq {
     private final String SEARCH_BOOK_RADIO_DB_API = "https://www.douban.com/j/search?q=%s&start=%s&cat=1001";
     // 关键词搜索游戏电台 API(豆瓣)
     private final String SEARCH_GAME_RADIO_DB_API = "https://www.douban.com/j/search?q=%s&start=%s&cat=3114";
-    
+
     /**
      * 根据关键词获取电台
      */
@@ -196,7 +196,8 @@ public class RadioSearchReq {
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.optJSONArray("items");
             if (radioArray != null) {
-                t = radioInfoJson.getInt("total");
+                int to = radioInfoJson.getInt("total");
+                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
                     Elements result = doc.select("div.result");
@@ -238,7 +239,8 @@ public class RadioSearchReq {
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.optJSONArray("items");
             if (radioArray != null) {
-                t = radioInfoJson.getInt("total");
+                int to = radioInfoJson.getInt("total");
+                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
                     Elements result = doc.select("div.result");
@@ -281,7 +283,8 @@ public class RadioSearchReq {
             JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.optJSONArray("items");
             if (radioArray != null) {
-                t = radioInfoJson.getInt("total");
+                int to = radioInfoJson.getInt("total");
+                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
                     Elements result = doc.select("div.result");

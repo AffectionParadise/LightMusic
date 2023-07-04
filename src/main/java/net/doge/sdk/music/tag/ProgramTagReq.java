@@ -1,8 +1,8 @@
 package net.doge.sdk.music.tag;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.Tags;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.Tags;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,11 +15,9 @@ import java.util.concurrent.Future;
 
 public class ProgramTagReq {
     // 探索节目标签 API (猫耳)
-    private final String EXP_PROGRAM_TAG_ME_API
-            = "https://www.missevan.com/explore";
+    private final String EXP_PROGRAM_TAG_ME_API = "https://www.missevan.com/explore";
     // 首页子标签 API (猫耳)
-    private final String PROGRAM_SUB_TAG_ME_API
-            = "https://www.missevan.com";
+    private final String PROGRAM_SUB_TAG_ME_API = "https://www.missevan.com";
 
     /**
      * 加载节目标签

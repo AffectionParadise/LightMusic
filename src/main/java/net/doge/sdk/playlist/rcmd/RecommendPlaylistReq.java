@@ -5,15 +5,15 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.Tags;
-import net.doge.models.entities.NetPlaylistInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.sdk.common.Tags;
+import net.doge.model.entity.NetPlaylistInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -68,18 +68,16 @@ public class RecommendPlaylistReq {
     private final String NEW_PLAYLIST_MG_API
             = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127272&startIndex=%s";
     // 推荐歌单 API (千千)
-    private final String REC_PLAYLIST_QI_API
-            = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
+    private final String REC_PLAYLIST_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
     // 推荐歌单 API (猫耳)
-    private final String REC_PLAYLIST_ME_API
-            = "https://www.missevan.com/site/homepage";
+    private final String REC_PLAYLIST_ME_API = "https://www.missevan.com/site/homepage";
     // 分类歌单(最新) API (猫耳)
-    private final String NEW_PLAYLIST_ME_API
-            = "https://www.missevan.com/explore/tagalbum?order=1&tid=%s&p=%s&pagesize=%s";
+    private final String NEW_PLAYLIST_ME_API = "https://www.missevan.com/explore/tagalbum?order=1&tid=%s&p=%s&pagesize=%s";
+    // 分类歌单(最新) API (5sing)
+    private final String NEW_PLAYLIST_FS_API = "http://5sing.kugou.com/gd/gdList?tagName=%s&page=%s&type=1";
     // 推荐歌单 API (哔哩哔哩)
-    private final String NEW_PLAYLIST_BI_API
-            = "https://www.bilibili.com/audio/music-service-c/web/menu/hit?pn=%s&ps=%s";
-    
+    private final String NEW_PLAYLIST_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/hit?pn=%s&ps=%s";
+
     /**
      * 获取推荐歌单
      */
@@ -822,6 +820,55 @@ public class RecommendPlaylistReq {
             return new CommonResult<>(res, t);
         };
 
+        // 5sing
+        // 分类歌单(最新)
+        Callable<CommonResult<NetPlaylistInfo>> getNewPlaylistsFs = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.isNotEmpty(s[4])) {
+                String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_FS_API, s[4].trim(), page))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(playlistInfoBody);
+                Elements as = doc.select("span.pagecon a");
+                if (!as.isEmpty()) {
+                    t = Integer.parseInt(as.last().text()) * limit;
+                } else t = limit;
+                Elements playlistArray = doc.select("li.item dl");
+                for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                    Element elem = playlistArray.get(i);
+                    Elements a = elem.select(".jx_name.ellipsis a");
+                    Elements author = elem.select(".author a");
+                    Elements img = elem.select(".imgbox img");
+                    Elements lc = elem.select(".lcount");
+
+                    String playlistId = ReUtil.get("dj/(.*?)\\.html", a.attr("href"), 1);
+                    String playlistName = a.text();
+                    String creator = author.text();
+                    String creatorId = ReUtil.get("/(\\d+)/dj", a.attr("href"), 1);
+                    Long playCount = Long.parseLong(lc.text());
+                    String coverImgThumbUrl = img.attr("src");
+
+                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                    playlistInfo.setSource(NetMusicSource.FS);
+                    playlistInfo.setId(playlistId);
+                    playlistInfo.setName(playlistName);
+                    playlistInfo.setCreator(creator);
+                    playlistInfo.setCreatorId(creatorId);
+                    playlistInfo.setPlayCount(playCount);
+                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        playlistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(playlistInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+
         // 哔哩哔哩
         // 推荐歌单
         Callable<CommonResult<NetPlaylistInfo>> getRecPlaylistsBi = () -> {
@@ -875,39 +922,35 @@ public class RecommendPlaylistReq {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylists));
             if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStylePlaylists));
         }
-
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendTagPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewTagPlaylistsKg));
         }
-
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsQqDaily));
 //        taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsQq));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsQq));
         }
-
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKw));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsKw));
         }
-
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecNewPlaylistsMg));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsMg));
         }
-
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsQi));
         }
-
         if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsMe));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsMe));
         }
-
+        if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getNewPlaylistsFs));
+        }
         if (src == NetMusicSource.BI || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecPlaylistsBi));
         }

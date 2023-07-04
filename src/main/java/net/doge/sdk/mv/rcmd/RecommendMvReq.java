@@ -4,16 +4,16 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.Tags;
-import net.doge.models.entities.NetMvInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.sdk.common.Tags;
+import net.doge.model.entity.NetMvInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -27,20 +27,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendMvReq {
     // MV 排行 API
-    private final String TOP_MV_API
-            = SdkCommon.prefix + "/top/mv?area=%s&offset=%s&limit=%s";
+    private final String TOP_MV_API = SdkCommon.prefix + "/top/mv?area=%s&offset=%s&limit=%s";
     // 最新 MV API
-    private final String NEW_MV_API
-            = SdkCommon.prefix + "/mv/first?area=%s&limit=100";
+    private final String NEW_MV_API = SdkCommon.prefix + "/mv/first?area=%s&limit=100";
     // 全部 MV API
-    private final String ALL_MV_API
-            = SdkCommon.prefix + "/mv/all?area=%s&type=%s&offset=%s&limit=%s";
+    private final String ALL_MV_API = SdkCommon.prefix + "/mv/all?area=%s&type=%s&offset=%s&limit=%s";
     // 推荐 MV API
-    private final String RECOMMEND_MV_API
-            = SdkCommon.prefix + "/personalized/mv?limit=100";
+    private final String RECOMMEND_MV_API = SdkCommon.prefix + "/personalized/mv?limit=100";
     // 网易出品 MV API
-    private final String EXCLUSIVE_MV_API
-            = SdkCommon.prefix + "/mv/exclusive/rcmd?offset=%s&limit=%s";
+    private final String EXCLUSIVE_MV_API = SdkCommon.prefix + "/mv/exclusive/rcmd?offset=%s&limit=%s";
     // 推荐 MV API (酷狗)
     private final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
     // 推荐 MV API (QQ)
@@ -50,27 +45,27 @@ public class RecommendMvReq {
     // 推荐 MV API (酷我)
     private final String RECOMMEND_MV_KW_API = "http://www.kuwo.cn/api/www/music/mvList?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 推荐 MV API (千千)
-    private final String RECOMMEND_MV_QI_API
-            = "https://music.91q.com/v1/video/list?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String RECOMMEND_MV_QI_API = "https://music.91q.com/v1/video/list?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s";
+    // 推荐 MV API (5sing)
+    private final String RECOMMEND_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew?type=3&sortType=2&pageIndex=%s&pageSize=%s";
+    // 最热 MV API (5sing)
+    private final String HOT_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew?type=2&sortType=2&pageIndex=%s&pageSize=%s";
+    // 最新 MV API (5sing)
+    private final String NEW_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew?type=2&sortType=1&pageIndex=%s&pageSize=%s";
     // 猜你喜欢视频 API (好看)
-    private final String GUESS_VIDEO_HK_API
-            = "https://haokan.baidu.com/videoui/api/Getvideolandfeed?time=%s";
+    private final String GUESS_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/Getvideolandfeed?time=%s";
     // 榜单视频 API (好看)
     private final String TOP_VIDEO_HK_API
             = "https://haokan.baidu.com/videoui/page/pc/toplist?type=hotvideo&sfrom=haokan_web_banner&page=%s&pageSize=%s&_format=json";
     // 推荐视频 API (好看)
-    private final String RECOMMEND_VIDEO_HK_API
-            = "https://haokan.baidu.com/web/video/feed?tab=%s&act=pcFeed&pd=pc&num=%s&shuaxin_id=1661766211525";
+    private final String RECOMMEND_VIDEO_HK_API = "https://haokan.baidu.com/web/video/feed?tab=%s&act=pcFeed&pd=pc&num=%s&shuaxin_id=1661766211525";
     // 热门视频 API (哔哩哔哩)
-    private final String HOT_VIDEO_BI_API
-            = "https://api.bilibili.com/x/web-interface/popular?pn=%s&ps=%s";
+    private final String HOT_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular?pn=%s&ps=%s";
     // 分区排行榜视频 API (哔哩哔哩)
-    private final String CAT_RANK_VIDEO_BI_API
-            = "https://api.bilibili.com/x/web-interface/ranking/region?rid=%s";
+    private final String CAT_RANK_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/ranking/region?rid=%s";
     // 分区最新视频 API (哔哩哔哩)
-    private final String CAT_NEW_VIDEO_BI_API
-            = "https://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
-    
+    private final String CAT_NEW_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
+
     /**
      * 获取 MV 排行 + 最新 MV + 推荐 MV
      */
@@ -506,6 +501,137 @@ public class RecommendMvReq {
             return new CommonResult<>(res, t);
         };
 
+        // 5sing
+        // 推荐 MV
+        Callable<CommonResult<NetMvInfo>> getRecommendMvFs = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_FS_API, page, limit))
+                    .execute()
+                    .body();
+            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject data = mvInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray mvArray = data.getJSONArray("list");
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String mvId = mvJson.getString("id");
+                String mvName = mvJson.getString("title");
+                String artistName = mvJson.getJSONObject("user").getString("NN");
+                String creatorId = mvJson.getJSONObject("user").getString("ID");
+                Long playCount = mvJson.getLong("play");
+                String coverImgUrl = mvJson.getString("cover_url");
+                Double duration = mvJson.getDouble("duration");
+                String pubTime = TimeUtil.msToDate(mvJson.getLong("create_time") * 1000);
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setSource(NetMusicSource.FS);
+                mvInfo.setId(mvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 最热 MV
+        Callable<CommonResult<NetMvInfo>> getHotMvFs = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String mvInfoBody = HttpRequest.get(String.format(HOT_MV_FS_API, page, limit))
+                    .execute()
+                    .body();
+            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject data = mvInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray mvArray = data.getJSONArray("list");
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String mvId = mvJson.getString("id");
+                String mvName = mvJson.getString("title");
+                String artistName = mvJson.getJSONObject("user").getString("NN");
+                String creatorId = mvJson.getJSONObject("user").getString("ID");
+                Long playCount = mvJson.getLong("play");
+                String coverImgUrl = mvJson.getString("cover_url");
+                Double duration = mvJson.getDouble("duration");
+                String pubTime = TimeUtil.msToDate(mvJson.getLong("create_time") * 1000);
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setSource(NetMusicSource.FS);
+                mvInfo.setId(mvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 最新 MV
+        Callable<CommonResult<NetMvInfo>> getNewMvFs = () -> {
+            LinkedList<NetMvInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String mvInfoBody = HttpRequest.get(String.format(NEW_MV_FS_API, page, limit))
+                    .execute()
+                    .body();
+            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject data = mvInfoJson.getJSONObject("data");
+            t = data.getInt("total");
+            JSONArray mvArray = data.getJSONArray("list");
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+
+                String mvId = mvJson.getString("id");
+                String mvName = mvJson.getString("title");
+                String artistName = mvJson.getJSONObject("user").getString("NN");
+                String creatorId = mvJson.getJSONObject("user").getString("ID");
+                Long playCount = mvJson.getLong("play");
+                String coverImgUrl = mvJson.getString("cover_url");
+                Double duration = mvJson.getDouble("duration");
+                String pubTime = TimeUtil.msToDate(mvJson.getLong("create_time") * 1000);
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setSource(NetMusicSource.FS);
+                mvInfo.setId(mvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                res.add(mvInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         // 好看
         // 猜你喜欢视频
         Callable<CommonResult<NetMvInfo>> getGuessVideoHk = () -> {
@@ -793,30 +919,29 @@ public class RecommendMvReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(getAllMv));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getExclusiveMv));
         }
-
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvKg));
         }
-
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQq));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewMvQq));
         }
-
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvKw));
         }
-
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQi));
         }
-
+        if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvFs));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotMvFs));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getNewMvFs));
+        }
         if (src == NetMusicSource.HK || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getGuessVideoHk));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getTopVideoHk));
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendVideoHk));
         }
-
         if (src == NetMusicSource.BI || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotVideoBi));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatRankVideoBi));

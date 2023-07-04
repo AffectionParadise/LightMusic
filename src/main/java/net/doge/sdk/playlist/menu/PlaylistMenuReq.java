@@ -1,11 +1,11 @@
 package net.doge.sdk.playlist.menu;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetPlaylistInfo;
-import net.doge.models.entities.NetUserInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetPlaylistInfo;
+import net.doge.model.entity.NetUserInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.sf.json.JSONArray;

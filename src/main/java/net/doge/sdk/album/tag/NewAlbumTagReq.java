@@ -1,8 +1,8 @@
 package net.doge.sdk.album.tag;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.Tags;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -20,8 +20,7 @@ public class NewAlbumTagReq {
     // 曲风 API
     private final String STYLE_API = SdkCommon.prefix + "/style/list";
     // 专辑标签 API (豆瓣)
-    private final String ALBUM_TAG_DB_API
-            = "https://music.douban.com/tag/";
+    private final String ALBUM_TAG_DB_API = "https://music.douban.com/tag/";
 
     /**
      * 加载新碟标签

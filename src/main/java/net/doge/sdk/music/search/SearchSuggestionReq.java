@@ -4,9 +4,9 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
+import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.utils.StringUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -22,24 +22,19 @@ import java.util.regex.Pattern;
 
 public class SearchSuggestionReq {
     // 搜索建议(简单) API
-    private final String SIMPLE_SEARCH_SUGGESTION_API
-            = SdkCommon.prefix + "/search/suggest?keywords=%s&type=mobile";
+    private final String SIMPLE_SEARCH_SUGGESTION_API = SdkCommon.prefix + "/search/suggest?keywords=%s&type=mobile";
     // 搜索建议 API
-    private final String SEARCH_SUGGESTION_API
-            = SdkCommon.prefix + "/search/suggest?keywords=%s";
+    private final String SEARCH_SUGGESTION_API = SdkCommon.prefix + "/search/suggest?keywords=%s";
     // 搜索建议 API (酷狗)
-    private final String SEARCH_SUGGESTION_KG_API
-            = "http://msearchcdn.kugou.com/new/app/i/search.php?cmd=302&keyword=%s";
+    private final String SEARCH_SUGGESTION_KG_API = "http://msearchcdn.kugou.com/new/app/i/search.php?cmd=302&keyword=%s";
     // 搜索建议 API (QQ)
     private final String SEARCH_SUGGESTION_QQ_API
             = "https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&format=json&key=%s" +
             "&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
     // 搜索建议 API (酷我)
-//    private final String SEARCH_SUGGESTION_KW_API = prefixKw + "/kuwo/search/searchKey?key=%s";
     private final String SEARCH_SUGGESTION_KW_API = "http://www.kuwo.cn/api/www/search/searchKey?key=%s&httpsStatus=1";
     // 搜索建议 API (千千)
-    private final String SEARCH_SUGGESTION_QI_API
-            = "https://music.91q.com/v1/search/sug?appid=16073360&timestamp=%s&type=&word=%s";
+    private final String SEARCH_SUGGESTION_QI_API = "https://music.91q.com/v1/search/sug?appid=16073360&timestamp=%s&type=&word=%s";
 
     /**
      * 获取搜索建议

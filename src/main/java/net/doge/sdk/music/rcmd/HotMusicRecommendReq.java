@@ -4,16 +4,16 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.Tags;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.sdk.common.Tags;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -38,11 +38,9 @@ public class HotMusicRecommendReq {
     private final String TOP500_KG_API
             = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=8888&page=%s&pagesize=%s";
     // 流行指数榜 API (QQ)
-    private final String POPULAR_MUSIC_QQ_API
-            = SdkCommon.prefixQQ33 + "/top?id=4&pageNo=%s&pageSize=%s";
+    private final String POPULAR_MUSIC_QQ_API = SdkCommon.prefixQQ33 + "/top?id=4&pageNo=%s&pageSize=%s";
     // 热歌榜 API (QQ)
-    private final String HOT_MUSIC_QQ_API
-            = SdkCommon.prefixQQ33 + "/top?id=26&pageNo=%s&pageSize=%s";
+    private final String HOT_MUSIC_QQ_API = SdkCommon.prefixQQ33 + "/top?id=26&pageNo=%s&pageSize=%s";
     // 飙升榜 API (酷我)
     private final String UP_MUSIC_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=93&pn=%s&rn=%s&httpsStatus=1";
     // 热歌榜 API (酷我)
@@ -53,6 +51,14 @@ public class HotMusicRecommendReq {
     private final String HOT_MUSIC_HF_API = "https://www.hifini.com/%s-%s.htm";
     // 热歌 API (咕咕咕音乐)
     private final String HOT_MUSIC_GG_API = "http://www.gggmusic.com/%s-%s.htm";
+    // 传播最快(原唱) API (5sing)
+    private final String SPREAD_YC_MUSIC_FS_API = "http://5sing.kugou.com/yc/spread/more_1.shtml";
+    // 分享最多(原唱) API (5sing)
+    private final String SHARE_YC_MUSIC_FS_API = "http://5sing.kugou.com/yc/share/more_1.shtml";
+    // 传播最快(翻唱) API (5sing)
+    private final String SPREAD_FC_MUSIC_FS_API = "http://5sing.kugou.com/fc/spread/more_1.shtml";
+    // 分享最多(翻唱) API (5sing)
+    private final String SHARE_FC_MUSIC_FS_API = "http://5sing.kugou.com/fc/share/more_1.shtml";
 
     /**
      * 获取飙升歌曲
@@ -480,6 +486,140 @@ public class HotMusicRecommendReq {
             return new CommonResult<>(res, t);
         };
 
+        // 5sing
+        // 传播最快(原唱)
+        Callable<CommonResult<NetMusicInfo>> getSpreadYcSongFs = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.get(String.format(SPREAD_YC_MUSIC_FS_API))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select(".lists dl dd.l_info");
+            Elements em = doc.select(".page_num em");
+            t = Integer.parseInt(em.text()) * limit;
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+                Elements a = song.select("h3 a");
+                Elements pa = song.select("p.m_z a");
+
+                String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                String songName = a.text();
+                String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
+                String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+
+                res.add(musicInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 分享最多(原唱)
+        Callable<CommonResult<NetMusicInfo>> getShareYcSongFs = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.get(String.format(SHARE_YC_MUSIC_FS_API))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select(".lists dl dd.l_info");
+            Elements em = doc.select(".page_num em");
+            t = Integer.parseInt(em.text()) * limit;
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+                Elements a = song.select("h3 a");
+                Elements pa = song.select("p.m_z a");
+
+                String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                String songName = a.text();
+                String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
+                String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+
+                res.add(musicInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 传播最快(翻唱)
+        Callable<CommonResult<NetMusicInfo>> getSpreadFcSongFs = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.get(String.format(SPREAD_FC_MUSIC_FS_API))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select(".lists dl dd.l_info");
+            Elements em = doc.select(".page_num em");
+            t = Integer.parseInt(em.text()) * limit;
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+                Elements a = song.select("h3 a");
+                Elements pa = song.select("p.m_z a");
+
+                String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                String songName = a.text();
+                String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
+                String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+
+                res.add(musicInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+        // 分享最多(翻唱)
+        Callable<CommonResult<NetMusicInfo>> getShareFcSongFs = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.get(String.format(SHARE_FC_MUSIC_FS_API))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select(".lists dl dd.l_info");
+            Elements em = doc.select(".page_num em");
+            t = Integer.parseInt(em.text()) * limit;
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+                Elements a = song.select("h3 a");
+                Elements pa = song.select("p.m_z a");
+
+                String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                String songName = a.text();
+                String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
+                String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+
+                res.add(musicInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
 
         boolean dt = defaultTag.equals(tag);
@@ -489,32 +629,32 @@ public class HotMusicRecommendReq {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusic));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusic));
             }
-
             if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKg));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getTop500Kg));
             }
-
             if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getPopularMusicQq));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicQq));
             }
-
             if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKw));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicKw));
             }
-
             if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicMg));
             }
-
             if (src == NetMusicSource.HF || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicHf));
             }
-
             if (src == NetMusicSource.GG || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicGg));
+            }
+            if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getSpreadYcSongFs));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getShareYcSongFs));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getSpreadFcSongFs));
+                taskList.add(GlobalExecutors.requestExecutor.submit(getShareFcSongFs));
             }
         } else {
             if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)

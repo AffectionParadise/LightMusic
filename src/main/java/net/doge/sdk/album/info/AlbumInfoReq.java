@@ -1,15 +1,15 @@
 package net.doge.sdk.album.info;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetAlbumInfo;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetAlbumInfo;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;

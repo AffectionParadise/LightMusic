@@ -3,7 +3,7 @@ package net.doge.sdk.music.search;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
+import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

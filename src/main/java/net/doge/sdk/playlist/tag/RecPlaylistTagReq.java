@@ -1,11 +1,15 @@
 package net.doge.sdk.playlist.tag;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.Tags;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,16 +20,16 @@ public class RecPlaylistTagReq {
     // 曲风 API
     private final String STYLE_API = SdkCommon.prefix + "/style/list";
     // 歌单标签 API (酷狗)
-    private final String PLAYLIST_TAG_KG_API
-            = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_smarty=1";
+    private final String PLAYLIST_TAG_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_smarty=1";
     // 歌单标签 API (QQ)
     private final String PLAYLIST_TAG_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8" +
             "&notice=0&platform=wk_v15.json&needNewCode=0&data=%7B%22tags%22%3A%7B%22method%22%3A%22get_all_categories" +
             "%22%2C%22param%22%3A%7B%22qq%22%3A%22%22%7D%2C%22module%22%3A%22playlist.PlaylistAllCategoriesServer%22%7D%7D";
     // 歌单标签 API (猫耳)
-    private final String PLAYLIST_TAG_ME_API
-            = "https://www.missevan.com/malbum/recommand";
+    private final String PLAYLIST_TAG_ME_API = "https://www.missevan.com/malbum/recommand";
+    // 歌单标签 API (5sing)
+    private final String PLAYLIST_TAG_FS_API = "http://5sing.kugou.com/gd/gdList";
 
     /**
      * 加载推荐歌单标签
@@ -33,10 +37,10 @@ public class RecPlaylistTagReq {
      * @return
      */
     public void initRecPlaylistTag() {
-        // 网易云 酷狗 QQ 猫耳
-        Tags.recPlaylistTag.put("默认", new String[]{"", " ", "10000000", " "});
+        // 网易云 酷狗 QQ 猫耳 5sing
+        Tags.recPlaylistTag.put("默认", new String[]{"", " ", "10000000", " ", " "});
 
-        final int c = 4;
+        final int c = 5;
         // 网易云曲风
         Runnable initRecPlaylistTag = () -> {
             String tagBody = HttpRequest.get(String.format(STYLE_API))
@@ -144,12 +148,31 @@ public class RecPlaylistTagReq {
             }
         };
 
+        // 5sing
+        Runnable initRecPlaylistTagFs = () -> {
+            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_FS_API))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(playlistTagBody);
+            Elements tags = doc.select("ul.flx li a");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                Element tag = tags.get(i);
+
+                String name = tag.text();
+                String id = tag.text();
+
+                if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
+                Tags.recPlaylistTag.get(name)[4] = id;
+            }
+        };
+
         List<Future<?>> taskList = new LinkedList<>();
 
         taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTag));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTagKg));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTagQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTagMe));
+        taskList.add(GlobalExecutors.requestExecutor.submit(initRecPlaylistTagFs));
 
         taskList.forEach(task -> {
             try {

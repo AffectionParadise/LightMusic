@@ -4,15 +4,15 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetAlbumInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetAlbumInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -47,7 +47,7 @@ public class AlbumSearchReq {
     private final String SEARCH_ALBUM_DT_API_2
             = "https://www.duitang.com/napi/blogv2/list/by_search/?include_fields=is_root,source_link,item,buyable,root_id,status,like_count,sender,album,cover" +
             "&kw=%s&start=%s&limit=%s&type=feed&_type=&_=%s";
-    
+
     /**
      * 根据关键词获取专辑
      */
@@ -320,7 +320,8 @@ public class AlbumSearchReq {
             JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.optJSONArray("items");
             if (albumArray != null) {
-                t = albumInfoJson.getInt("total");
+                int to = albumInfoJson.getInt("total");
+                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(albumArray.getString(i));
                     Elements result = doc.select("div.result");

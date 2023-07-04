@@ -1,6 +1,6 @@
 package net.doge.ui.componentui.slider;
 
-import net.doge.ui.components.dialog.ColorChooserDialog;
+import net.doge.ui.component.dialog.ColorChooserDialog;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;

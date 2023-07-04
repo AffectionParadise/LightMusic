@@ -3,16 +3,16 @@ package net.doge.sdk.user.info;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.entities.NetUserInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.model.entity.NetUserInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.AreaUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.AreaUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -29,43 +29,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserInfoReq {
     // 用户信息 API
-    private static final String USER_DETAIL_API = SdkCommon.prefix + "/user/detail?uid=%s";
+    private final String USER_DETAIL_API = SdkCommon.prefix + "/user/detail?uid=%s";
     // 用户歌曲 API
-    private static final String USER_SONGS_API = SdkCommon.prefix + "/user/record?type=%s&uid=%s";
+    private final String USER_SONGS_API = SdkCommon.prefix + "/user/record?type=%s&uid=%s";
     // 用户信息 API (喜马拉雅)
-    private static final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic?uid=%s";
+    private final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic?uid=%s";
     // 用户节目 API (喜马拉雅)
-    private static final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&orderType=%s&page=%s&pageSize=%s&keyWord=";
+    private final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&orderType=%s&page=%s&pageSize=%s&keyWord=";
     // 用户信息 API (音乐磁场)
-    private static final String USER_DETAIL_HF_API = "https://www.hifini.com/user-%s.htm";
+    private final String USER_DETAIL_HF_API = "https://www.hifini.com/user-%s.htm";
     // 用户节目 API (音乐磁场)
-    private static final String USER_PROGRAMS_HF_API = "https://www.hifini.com/user-thread-%s-%s.htm";
+    private final String USER_PROGRAMS_HF_API = "https://www.hifini.com/user-thread-%s-%s.htm";
     // 用户信息 API (咕咕咕音乐)
-    private static final String USER_DETAIL_GG_API = "http://www.gggmusic.com/user-%s.htm";
+    private final String USER_DETAIL_GG_API = "http://www.gggmusic.com/user-%s.htm";
     // 用户节目 API (咕咕咕音乐)
-    private static final String USER_PROGRAMS_GG_API = "http://www.gggmusic.com/user-thread-%s-%s.htm";
+    private final String USER_PROGRAMS_GG_API = "http://www.gggmusic.com/user-thread-%s-%s.htm";
     // 用户信息 API (猫耳)
-    private static final String USER_DETAIL_ME_API = "https://www.missevan.com/%s/";
-    // CV 信息 API (猫耳)
-    private static final String CV_DETAIL_ME_API = "https://www.missevan.com/dramaapi/cvinfo?cv_id=%s&page=%s&page_size=%s";
-    // 社团信息 API (猫耳)
-    private static final String ORGANIZATION_DETAIL_ME_API = "https://www.missevan.com/organization/profile?organization_id=%s";
-    // 社团电台 API (猫耳)
-    private static final String ORGANIZATION_RADIOS_ME_API = "https://www.missevan.com/organization/drama?organization_id=%s&page=%s";
+    private final String USER_DETAIL_ME_API = "https://www.missevan.com/%s/";
     // 用户节目 API (猫耳)
-    private static final String USER_PROGRAMS_ME_API = "https://www.missevan.com/person/getusersound?order=%s&user_id=%s&p=%s&page_size=%s";
-    // 声优节目 API (猫耳)
-    private static final String CV_PROGRAMS_ME_API = "https://www.missevan.com/seiy/%s";
+    private final String USER_PROGRAMS_ME_API = "https://www.missevan.com/person/getusersound?order=%s&user_id=%s&p=%s&page_size=%s";
     // 用户信息 API (好看)
-    private static final String USER_DETAIL_HK_API = "https://haokan.baidu.com/author/%s";
+    private final String USER_DETAIL_HK_API = "https://haokan.baidu.com/author/%s";
     // 用户信息 API (豆瓣)
-    private static final String USER_DETAIL_DB_API = "https://www.douban.com/people/%s/";
+    private final String USER_DETAIL_DB_API = "https://www.douban.com/people/%s/";
     // 用户信息 API (堆糖)
-    private static final String USER_DETAIL_DT_API = "https://www.duitang.com/people/?id=%s";
+    private final String USER_DETAIL_DT_API = "https://www.duitang.com/people/?id=%s";
     // 用户信息 API (哔哩哔哩)
-    private static final String USER_DETAIL_BI_API = "https://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
+    private final String USER_DETAIL_BI_API = "https://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
     // 用户音频 API (猫耳)
-    private static final String USER_AUDIO_BI_API = "https://api.bilibili.com/audio/music-service/web/song/upper?order=%s&uid=%s&pn=%s&ps=%s";
+    private final String USER_AUDIO_BI_API = "https://api.bilibili.com/audio/music-service/web/song/upper?order=%s&uid=%s&pn=%s&ps=%s";
 
     /**
      * 根据用户 id 预加载用户信息

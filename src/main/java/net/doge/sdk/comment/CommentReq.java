@@ -3,16 +3,16 @@ package net.doge.sdk.comment;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.MvInfoType;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.*;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.model.MvInfoType;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.*;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.BvAvConverter;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.BvAvConverter;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -34,11 +34,9 @@ public class CommentReq {
     private final String GET_COMMENTS_QQ_API
             = SdkCommon.prefixQQ33 + "/comment?type=%s&biztype=%s&id=%s&pageNo=%s&pageSize=%s";
     // 获取热门评论 API (酷我)
-//    private final String GET_HOT_COMMENTS_KW_API = prefixKw + "/kuwo/comment?digest=%s&sid=%s&type=get_rec_comment&page=%s&rows=%s";
     private final String GET_HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s" +
             "&uid=0&prod=newWeb&httpsStatus=1";
     // 获取最新评论 API (酷我)
-//    private final String GET_NEW_COMMENTS_KW_API = prefixKw + "/kuwo/comment?digest=%s&sid=%s&type=get_comment&page=%s&rows=%s";
     private final String GET_NEW_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s" +
             "&uid=0&prod=newWeb&httpsStatus=1";
     // 获取电台热门评论 API (喜马拉雅)
@@ -53,6 +51,10 @@ public class CommentReq {
     private final String GET_COMMENTS_HF_API = "https://www.hifini.com/thread-%s-%s.htm?sort=desc";
     // 获取评论 API (咕咕咕音乐)
     private final String GET_COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm?sort=desc";
+    // 获取评论 API (5sing)
+    private final String GET_COMMENTS_FS_API = "http://service.5sing.kugou.com/%s/comments/list1?rootId=%s&page=%s&limit=%s";
+    // 获取 MV 评论 API (5sing)
+    private final String GET_MV_COMMENTS_FS_API = "http://service.5sing.kugou.com/mv/CommentList?mvId=%s&page=%s";
     // 获取节目评论 API (猫耳)
     private final String GET_COMMENTS_ME_API
             = "https://www.missevan.com/site/getcomment?type=%s&order=%s&eId=%s&p=%s&pagesize=%s";
@@ -77,14 +79,14 @@ public class CommentReq {
     // 获取音频评论 API (哔哩哔哩)
     private final String GET_SONG_COMMENTS_BI_API
             = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
-    
+
     // mlog id 转视频 id API
     private final String MLOG_TO_VIDEO_API = SdkCommon.prefix + "/mlog/to/video?id=%s";
     // 歌曲信息 API (QQ)
     private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/song?songmid=%s";
     // 专辑信息 API (QQ)
     private final String ALBUM_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/album?albummid=%s";
-    
+
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
      */
@@ -280,14 +282,16 @@ public class CommentReq {
 
         // QQ
         else if (source == NetMusicSource.QQ && StringUtil.isNotEmpty(typeStr[1])) {
+            int lim = hotOnly ? limit : Math.min(25, limit);
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, hotOnly ? 1 : 0, typeStr[1],
-                            id, page, hotOnly ? limit : Math.min(25, limit)))
+                            id, page, lim))
                     .execute()
                     .body();
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             JSONObject commentJson = data.getJSONObject("comment");
-            total = commentJson.getInt("commenttotal");
+            int to = commentJson.getInt("commenttotal");
+            total = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
             JSONArray commentArray = commentJson.optJSONArray("commentlist");
             if (commentArray != null) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
@@ -650,6 +654,113 @@ public class CommentReq {
                 });
 
                 commentInfos.add(ci);
+            }
+        }
+
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            boolean isMv = info instanceof NetMvInfo;
+            String url = "";
+            if (info instanceof NetMusicInfo) {
+                String[] sp = id.split("_");
+                url = String.format(GET_COMMENTS_FS_API, sp[0], sp[1], page, limit);
+            } else if (info instanceof NetPlaylistInfo) {
+                url = String.format(GET_COMMENTS_FS_API, "dynamicSongList", id, page, limit);
+            } else if (isMv) {
+                url = String.format(GET_MV_COMMENTS_FS_API, id, page);
+            }
+            String commentInfoBody = HttpRequest.get(url)
+                    .execute()
+                    .body();
+            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+            JSONObject data = commentInfoJson.getJSONObject("data");
+            JSONArray commentArray = data.getJSONArray(hotOnly && isMv ? "hotList" : "comments");
+            total = isMv ? hotOnly ? commentArray.size() : data.getInt("count") : data.getJSONObject("page").getInt("totalCount");
+            if (isMv) {
+                for (int i = 0, len = commentArray.size(); i < len; i++) {
+                    JSONObject commentJson = commentArray.getJSONObject(i);
+                    JSONObject userJson = commentJson.getJSONObject("user");
+
+                    String userId = userJson.getString("ID");
+                    String username = userJson.getString("NN");
+                    String profileUrl = userJson.getString("I");
+                    String content = commentJson.getString("content");
+                    Integer likeCount = commentJson.getInt("like");
+                    String time = TimeUtil.strToPhrase(commentJson.getString("createTime"));
+
+                    NetCommentInfo commentInfo = new NetCommentInfo();
+                    commentInfo.setSource(NetMusicSource.FS);
+                    commentInfo.setUserId(userId);
+                    commentInfo.setUsername(username);
+                    commentInfo.setProfileUrl(profileUrl);
+                    commentInfo.setContent(content);
+                    commentInfo.setLikedCount(likeCount);
+                    commentInfo.setTime(time);
+
+                    String finalProfileUrl1 = profileUrl;
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = SdkUtil.extractProfile(finalProfileUrl1);
+                        commentInfo.setProfile(profile);
+                    });
+
+                    commentInfos.add(commentInfo);
+
+                    // 回复
+                    JSONArray replies = commentJson.getJSONArray("replys");
+                    for (int j = 0, s = replies.size(); j < s; j++) {
+                        JSONObject cj = replies.getJSONObject(j);
+                        JSONObject uj = cj.getJSONObject("user");
+
+                        userId = uj.getString("ID");
+                        username = uj.getString("NN");
+                        profileUrl = uj.getString("I");
+                        content = cj.getString("content");
+                        time = TimeUtil.strToPhrase(cj.getString("createTime"));
+
+                        NetCommentInfo ci = new NetCommentInfo();
+                        ci.setSource(NetMusicSource.FS);
+                        ci.setSub(true);
+                        ci.setUserId(userId);
+                        ci.setUsername(username);
+                        ci.setProfileUrl(profileUrl);
+                        ci.setContent(content);
+                        ci.setTime(time);
+
+                        String finalProfileUrl = profileUrl;
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage profile = SdkUtil.extractProfile(finalProfileUrl);
+                            ci.setProfile(profile);
+                        });
+
+                        commentInfos.add(ci);
+                    }
+                }
+            } else {
+                for (int i = 0, len = commentArray.size(); i < len; i++) {
+                    JSONObject commentJson = commentArray.getJSONObject(i);
+                    JSONObject userJson = commentJson.getJSONObject("user");
+
+                    String userId = userJson.getString("id");
+                    String username = userJson.getString("nickname");
+                    String profileUrl = userJson.getString("img");
+                    String content = commentJson.getString("content").trim();
+                    String time = TimeUtil.strToPhrase(commentJson.getString("createTime"));
+
+                    NetCommentInfo commentInfo = new NetCommentInfo();
+                    commentInfo.setSource(NetMusicSource.FS);
+                    commentInfo.setUserId(userId);
+                    commentInfo.setUsername(username);
+                    commentInfo.setProfileUrl(profileUrl);
+                    commentInfo.setContent(content);
+                    commentInfo.setTime(time);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = SdkUtil.extractProfile(profileUrl);
+                        commentInfo.setProfile(profile);
+                    });
+
+                    commentInfos.add(commentInfo);
+                }
             }
         }
 

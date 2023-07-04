@@ -1,24 +1,30 @@
 package net.doge.sdk.playlist.info;
 
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.entities.NetPlaylistInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.model.entity.NetPlaylistInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +41,6 @@ public class PlaylistInfoReq {
     // 歌单信息 API (QQ)
     private final String PLAYLIST_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/songlist?id=%s";
     // 歌单信息 API (酷我)
-//    private final String PLAYLIST_DETAIL_KW_API = prefixKw + "/kuwo/musicList?pid=%s";
     private final String PLAYLIST_DETAIL_KW_API = "http://www.kuwo.cn/api/www/playlist/playListInfo?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌单信息 API (咪咕)
 //    private final String PLAYLIST_DETAIL_MG_API = prefixMg + "/playlist?id=%s";
@@ -44,13 +49,15 @@ public class PlaylistInfoReq {
     private final String PLAYLIST_SONGS_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/user/queryMusicListSongs.do?musicListId=%s&pageNo=%s&pageSize=%s";
     // 歌单信息 API (千千)
     private final String PLAYLIST_DETAIL_QI_API = "https://music.91q.com/v1/tracklist/info?appid=16073360&id=%s&pageNo=%s&pageSize=%s&timestamp=%s";
+    // 歌单信息 API (5sing)
+    private final String PLAYLIST_DETAIL_FS_API = "http://5sing.kugou.com/%s/dj/%s.html";
     // 歌单信息 API (猫耳)
     private final String PLAYLIST_DETAIL_ME_API = "https://www.missevan.com/sound/soundAllList?albumid=%s";
     // 歌单信息 API (哔哩哔哩)
     private final String PLAYLIST_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=%s";
     // 歌单歌曲 API (哔哩哔哩)
     private final String PLAYLIST_SONGS_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/of-menu?sid=%s&pn=%s&ps=%s";
-    
+
     /**
      * 根据歌单 id 和 source 预加载歌单信息
      */
@@ -356,6 +363,7 @@ public class PlaylistInfoReq {
 
         int source = playlistInfo.getSource();
         String id = playlistInfo.getId();
+        String creatorId = playlistInfo.getCreatorId();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
@@ -477,6 +485,27 @@ public class PlaylistInfoReq {
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(playlistJson.getInt("trackCount"));
         }
 
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_FS_API, creatorId, id))
+                    .setFollowRedirects(true)
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(playlistInfoBody);
+
+            String coverImgUrl = doc.select(".lt.w_30 img").attr("src");
+            String description = doc.select("#normalIntro").first().ownText();
+            StringJoiner sj = new StringJoiner("、");
+            Elements elems = doc.select(".c_wap.tag_box label");
+            elems.forEach(elem -> sj.add(elem.text()));
+            String tag = sj.toString();
+
+            if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
+            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            playlistInfo.setDescription(description);
+            if (!playlistInfo.hasTag()) playlistInfo.setTag(tag);
+        }
+
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
@@ -515,19 +544,30 @@ public class PlaylistInfoReq {
         }
     }
 
+    public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(String id, int source, int limit, int page) {
+        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+        playlistInfo.setSource(source);
+        playlistInfo.setId(id);
+        return getMusicInfoInPlaylist(playlistInfo, limit, page);
+    }
+
     /**
      * 根据歌单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(String playlistId, int source, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> netMusicInfos = new LinkedList<>();
+
+        int source = playlistInfo.getSource();
+        String id = playlistInfo.getId();
+        String creatorId = playlistInfo.getCreatorId();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             LinkedList<Future<?>> taskList = new LinkedList<>();
 
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_API, playlistId, (page - 1) * limit, limit))
+                String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_API, id, (page - 1) * limit, limit))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -560,7 +600,7 @@ public class PlaylistInfoReq {
 
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 // 网易云获取歌单歌曲总数需要额外请求歌单详情接口！
-                String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_API, playlistId))
+                String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_API, id))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -580,9 +620,9 @@ public class PlaylistInfoReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_KG_API, playlistId, page, limit,
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_KG_API, id, page, limit,
                             StringUtil.toMD5("NVPh5oo715z5DIWAeQlhMDsWXXQV4hwtappid=1058clienttime=1586163263991" +
-                                    "clientver=20000dfid=-global_specialid=" + playlistId + "mid=1586163263991page=" + page + "pagesize=" + limit +
+                                    "clientver=20000dfid=-global_specialid=" + id + "mid=1586163263991page=" + page + "pagesize=" + limit +
                                     "plat=0specialid=0srcappid=2919uuid=1586163263991version=8000NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt")))
                     .header("mid", "1586163263991")
                     .header("Referer", "https://m3ws.kugou.com/share/index.php")
@@ -625,7 +665,7 @@ public class PlaylistInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, playlistId))
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -661,7 +701,7 @@ public class PlaylistInfoReq {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String playlistInfoBody = SdkCommon.kwRequest(String.format(PLAYLIST_DETAIL_KW_API, playlistId, page, limit))
+            String playlistInfoBody = SdkCommon.kwRequest(String.format(PLAYLIST_DETAIL_KW_API, id, page, limit))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -697,7 +737,7 @@ public class PlaylistInfoReq {
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_MG_API, playlistId, page, limit))
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_MG_API, id, page, limit))
                     .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
                     .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
@@ -735,7 +775,7 @@ public class PlaylistInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(PLAYLIST_DETAIL_QI_API, playlistId, page, limit, System.currentTimeMillis())))
+            String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(PLAYLIST_DETAIL_QI_API, id, page, limit, System.currentTimeMillis())))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -768,9 +808,39 @@ public class PlaylistInfoReq {
             }
         }
 
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_FS_API, creatorId, id))
+                    .setFollowRedirects(true)
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(playlistInfoBody);
+            total.set(Integer.parseInt(ReUtil.get("（(\\d+)）", doc.select("span.number").text(), 1)));
+            Elements songArray = doc.select("li.p_rel");
+            for (int i = 0, len = songArray.size(); i < len; i++) {
+                Element elem = songArray.get(i);
+                Elements na = elem.select(".s_title.lt a");
+                Elements aa = elem.select(".s_soner.lt a");
+
+                String songId = ReUtil.get("http://5sing.kugou.com/(.*?).html", na.attr("href"), 1).replaceFirst("/", "_");
+                String name = na.text();
+                String artists = aa.text();
+                String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", aa.attr("href"), 1);
+
+                NetMusicInfo netMusicInfo = new NetMusicInfo();
+                netMusicInfo.setSource(NetMusicSource.FS);
+                netMusicInfo.setId(songId);
+                netMusicInfo.setName(name);
+                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtistId(artistId);
+
+                netMusicInfos.add(netMusicInfo);
+            }
+        }
+
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, playlistId))
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
@@ -796,7 +866,7 @@ public class PlaylistInfoReq {
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_BI_API, playlistId, page, limit))
+            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_BI_API, id, page, limit))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);

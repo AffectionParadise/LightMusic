@@ -4,15 +4,15 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.Tags;
-import net.doge.models.entities.NetArtistInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.sdk.common.Tags;
+import net.doge.model.entity.NetArtistInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -40,10 +40,8 @@ public class ArtistListReq {
     // 推荐歌手 API (QQ)
     private final String ARTIST_LIST_QQ_API = SdkCommon.prefixQQ33 + "/singer/list?sex=%s&genre=%s&index=%s&area=%s&pageNo=%s";
     // 歌手推荐 API (酷我)
-//    private final String ARTIST_LIST_KW_API = prefixKw + "/kuwo/rec_singer?category=%s&pn=%s&rn=%s";
     private final String ARTIST_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
     // 全部歌手 API (酷我)
-//    private final String ALL_ARTISTS_LIST_KW_API = prefixKw + "/kuwo/singer?category=%s&pn=%s&rn=%s";
     private final String ALL_ARTISTS_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&prefix=%s&pn=%s&rn=%s&httpsStatus=1";
     // 来电新声榜 API (咪咕)
     private final String ARTIST_LIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=22425062";

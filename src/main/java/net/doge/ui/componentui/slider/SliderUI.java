@@ -1,12 +1,12 @@
 package net.doge.ui.componentui.slider;
 
 import javafx.scene.media.MediaPlayer;
-import net.doge.models.MusicPlayer;
-import net.doge.ui.PlayerFrame;
-import net.doge.ui.components.dialog.TipDialog;
-import net.doge.utils.ColorUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.model.player.MusicPlayer;
+import net.doge.ui.MainFrame;
+import net.doge.ui.component.dialog.TipDialog;
+import net.doge.util.ColorUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -23,7 +23,7 @@ public class SliderUI extends BasicSliderUI {
     private Color trackColor;
     private Color trackBgColor;
     private boolean isTimeBar;
-    private PlayerFrame f;
+    private MainFrame f;
     private MusicPlayer player;
     private MediaPlayer mp;
     private TipDialog dialog;
@@ -40,7 +40,7 @@ public class SliderUI extends BasicSliderUI {
 //    private final BufferedImage hxhImg = ImageUtil.read(SimplePath.ICON_PATH + "hxh.png");
 
     // 音频播放器
-    public SliderUI(JSlider slider, Color thumbColor, Color trackColor, PlayerFrame f, MusicPlayer player, boolean isTimeBar) {
+    public SliderUI(JSlider slider, Color thumbColor, Color trackColor, MainFrame f, MusicPlayer player, boolean isTimeBar) {
         super(slider);
         this.thumbColor = thumbColor;
 //        trackColor = Colors.HXH;
@@ -56,7 +56,7 @@ public class SliderUI extends BasicSliderUI {
     }
 
     // 视频播放器
-    public SliderUI(JSlider slider, Color thumbColor, Color trackColor, PlayerFrame f, MediaPlayer mp, boolean isTimeBar) {
+    public SliderUI(JSlider slider, Color thumbColor, Color trackColor, MainFrame f, MediaPlayer mp, boolean isTimeBar) {
         super(slider);
         this.thumbColor = thumbColor;
         this.trackColor = trackColor;

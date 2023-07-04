@@ -1,11 +1,16 @@
 package net.doge.sdk.music.tag;
 
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.Tags;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,42 +20,44 @@ import java.util.concurrent.Future;
 public class NewSongTagReq {
     // 曲风 API
     private final String STYLE_API = SdkCommon.prefix + "/style/list";
-    
+    // 歌曲标签 API (5sing)
+    private final String SONG_TAG_API_FS = "http://5sing.kugou.com/yc/list";
+
     /**
      * 加载新歌标签
      *
      * @return
      */
     public void initNewSongTag() {
-        // 网易云 网易云 酷狗 QQ 音乐磁场 咕咕咕音乐
-        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "0", "", ""});
+        // 网易云 网易云 酷狗 QQ 音乐磁场 咕咕咕音乐 5sing
+        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "0", "", "", " "});
 
-        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "0", "forum-1", "forum-1"});
-        Tags.newSongTag.put("内地", new String[]{"", "", "", "1", "", ""});
-        Tags.newSongTag.put("港台", new String[]{"", "", "", "2", "", ""});
-        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "3", "forum-10", "forum-3"});
-        Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "4", "", ""});
-        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "5", "", ""});
-        Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "forum-15", "forum-7"});
+        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "0", "forum-1", "forum-1", ""});
+        Tags.newSongTag.put("内地", new String[]{"", "", "", "1", "", "", ""});
+        Tags.newSongTag.put("港台", new String[]{"", "", "", "2", "", "", ""});
+        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "3", "forum-10", "forum-3", ""});
+        Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "4", "", "", ""});
+        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "5", "", "", ""});
+        Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "forum-15", "forum-7", ""});
 
         // 音乐磁场
-        Tags.newSongTag.put("Remix", new String[]{"", "", "", "", "forum-11", ""});
-        Tags.newSongTag.put("纯音乐", new String[]{"", "", "", "", "forum-12", ""});
-        Tags.newSongTag.put("异次元", new String[]{"", "", "", "", "forum-13", ""});
-        Tags.newSongTag.put("特供", new String[]{"", "", "", "", "forum-17", ""});
-        Tags.newSongTag.put("百科", new String[]{"", "", "", "", "forum-18", ""});
-        Tags.newSongTag.put("站务", new String[]{"", "", "", "", "forum-9", ""});
+        Tags.newSongTag.put("Remix", new String[]{"", "", "", "", "forum-11", "", ""});
+        Tags.newSongTag.put("纯音乐", new String[]{"", "", "", "", "forum-12", "", ""});
+        Tags.newSongTag.put("异次元", new String[]{"", "", "", "", "forum-13", "", ""});
+        Tags.newSongTag.put("特供", new String[]{"", "", "", "", "forum-17", "", ""});
+        Tags.newSongTag.put("百科", new String[]{"", "", "", "", "forum-18", "", ""});
+        Tags.newSongTag.put("站务", new String[]{"", "", "", "", "forum-9", "", ""});
 
         // 咕咕咕音乐
-        Tags.newSongTag.put("音乐分享区", new String[]{"", "", "", "", "", "forum-12"});
-        Tags.newSongTag.put("伤感", new String[]{"", "", "", "", "", "forum-8"});
-        Tags.newSongTag.put("粤语", new String[]{"", "", "", "", "", "forum-2"});
-        Tags.newSongTag.put("青春", new String[]{"", "", "", "", "", "forum-5"});
-        Tags.newSongTag.put("分享", new String[]{"", "", "", "", "", "forum-11"});
-        Tags.newSongTag.put("温柔男友音", new String[]{"", "", "", "", "", "forum-10"});
-        Tags.newSongTag.put("DJ", new String[]{"", "", "", "", "", "forum-9"});
+        Tags.newSongTag.put("音乐分享区", new String[]{"", "", "", "", "", "forum-12", ""});
+        Tags.newSongTag.put("伤感", new String[]{"", "", "", "", "", "forum-8", ""});
+        Tags.newSongTag.put("粤语", new String[]{"", "", "", "", "", "forum-2", ""});
+        Tags.newSongTag.put("青春", new String[]{"", "", "", "", "", "forum-5", ""});
+        Tags.newSongTag.put("分享", new String[]{"", "", "", "", "", "forum-11", ""});
+        Tags.newSongTag.put("温柔男友音", new String[]{"", "", "", "", "", "forum-10", ""});
+        Tags.newSongTag.put("DJ", new String[]{"", "", "", "", "", "forum-9", ""});
 
-        final int c = 6;
+        final int c = 7;
         // 网易云曲风
         Runnable initNewSongTag = () -> {
             String tagBody = HttpRequest.get(String.format(STYLE_API))
@@ -93,9 +100,43 @@ public class NewSongTagReq {
             }
         };
 
+        // 5sing
+        Runnable initNewSongTagFs = () -> {
+            String tagBody = HttpRequest.get(String.format(SONG_TAG_API_FS))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(tagBody);
+            Elements dds = doc.select("dl.song_sort dd");
+            // 语种
+            Elements tags = dds.first().select("a");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                Element a = tags.get(i);
+
+                String name = a.text();
+                if ("全部".equals(name)) continue;
+                String id = ReUtil.get("&l=(.*)", a.attr("href"), 1);
+
+                if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
+                Tags.newSongTag.get(name)[6] = " " + id;
+            }
+            // 曲风
+            tags = dds.last().select("a");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                Element a = tags.get(i);
+
+                String name = a.text();
+                if ("全部".equals(name)) continue;
+                String id = ReUtil.get("s=(.*?)&l=", a.attr("href"), 1);
+
+                if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
+                Tags.newSongTag.get(name)[6] = id + " ";
+            }
+        };
+
         List<Future<?>> taskList = new LinkedList<>();
 
         taskList.add(GlobalExecutors.requestExecutor.submit(initNewSongTag));
+        taskList.add(GlobalExecutors.requestExecutor.submit(initNewSongTagFs));
 
         taskList.forEach(task -> {
             try {

@@ -4,17 +4,21 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.Tags;
-import net.doge.models.entities.NetPlaylistInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.sdk.common.Tags;
+import net.doge.model.entity.NetPlaylistInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -68,15 +72,14 @@ public class HighQualityPlaylistReq {
     private final String CAT_PLAYLIST_MG_API
             = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?tagId=%s&pageNumber=%s&templateVersion=1";
     // 分类歌单 API (千千)
-    private final String CAT_PLAYLIST_QI_API
-            = "https://music.91q.com/v1/tracklist/list?appid=16073360&pageNo=%s&pageSize=%s&subCateId=%s&timestamp=%s";
+    private final String CAT_PLAYLIST_QI_API = "https://music.91q.com/v1/tracklist/list?appid=16073360&pageNo=%s&pageSize=%s&subCateId=%s&timestamp=%s";
     // 分类歌单 API (猫耳)
-    private final String CAT_PLAYLIST_ME_API
-            = "https://www.missevan.com/explore/tagalbum?order=0&tid=%s&p=%s&pagesize=%s";
+    private final String CAT_PLAYLIST_ME_API = "https://www.missevan.com/explore/tagalbum?order=0&tid=%s&p=%s&pagesize=%s";
     // 探索歌单 API (猫耳)
-    private final String EXP_PLAYLIST_ME_API
-            = "https://www.missevan.com/explore/getAlbumFromTag/%s";
-    
+    private final String EXP_PLAYLIST_ME_API = "https://www.missevan.com/explore/getAlbumFromTag/%s";
+    // 分类歌单(最热) API (5sing)
+    private final String HOT_PLAYLIST_FS_API = "http://5sing.kugou.com/gd/gdList?tagName=%s&page=%s&type=0";
+
     /**
      * 获取精品歌单 + 网友精选碟，分页
      */
@@ -85,7 +88,7 @@ public class HighQualityPlaylistReq {
         List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
 
         final String defaultTag = "默认";
-        String[] s = Tags.playlistTag.get(tag);
+        String[] s = Tags.hotPlaylistTag.get(tag);
 
         // 网易云
         // 精品歌单(程序分页)
@@ -867,6 +870,54 @@ public class HighQualityPlaylistReq {
             return new CommonResult<>(res, t);
         };
 
+        // 5sing
+        // 分类歌单(最热)
+        Callable<CommonResult<NetPlaylistInfo>> getHotPlaylistsFs = () -> {
+            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.isNotEmpty(s[9])) {
+                String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, s[9].trim(), page))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(playlistInfoBody);
+                Elements as = doc.select("span.pagecon a");
+                if (as.isEmpty()) t = limit;
+                else t = Integer.parseInt(as.last().text()) * limit;
+                Elements playlistArray = doc.select("li.item dl");
+                for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                    Element elem = playlistArray.get(i);
+                    Elements a = elem.select(".jx_name.ellipsis a");
+                    Elements author = elem.select(".author a");
+                    Elements img = elem.select(".imgbox img");
+                    Elements lc = elem.select(".lcount");
+
+                    String playlistId = ReUtil.get("dj/(.*?)\\.html", a.attr("href"), 1);
+                    String playlistName = a.text();
+                    String creator = author.text();
+                    String creatorId = ReUtil.get("/(\\d+)/dj", a.attr("href"), 1);
+                    Long playCount = Long.parseLong(lc.text());
+                    String coverImgThumbUrl = img.attr("src");
+
+                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                    playlistInfo.setSource(NetMusicSource.FS);
+                    playlistInfo.setId(playlistId);
+                    playlistInfo.setName(playlistName);
+                    playlistInfo.setCreator(creator);
+                    playlistInfo.setCreatorId(creatorId);
+                    playlistInfo.setPlayCount(playCount);
+                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        playlistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    res.add(playlistInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
+
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
 
         boolean dt = defaultTag.equals(tag);
@@ -876,39 +927,35 @@ public class HighQualityPlaylistReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(getHotPickedPlaylists));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewPickedPlaylists));
         }
-
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getTagPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getHotCollectedTagPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getUpTagPlaylistsKg));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotPlaylistsKg));
         }
-
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsQq));
         }
-
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotPlaylistsKw));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getDefaultPlaylistsKw));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsKw));
         }
-
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecHotPlaylistsMg));
 //            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsMg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsMg));
         }
-
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsQi));
         }
-
         if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsMe));
             taskList.add(GlobalExecutors.requestExecutor.submit(getExpPlaylistsMe));
         }
-
+        if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getHotPlaylistsFs));
+        }
         List<List<NetPlaylistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
             try {

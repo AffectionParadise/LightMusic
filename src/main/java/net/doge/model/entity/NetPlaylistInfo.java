@@ -1,0 +1,146 @@
+package net.doge.model.entity;
+
+import net.doge.constant.system.NetMusicSource;
+import lombok.Data;
+import net.doge.util.StringUtil;
+
+import java.awt.image.BufferedImage;
+import java.util.Objects;
+
+/**
+ * @Author yzx
+ * @Description 歌单
+ * @Date 2020/12/7
+ */
+@Data
+public class NetPlaylistInfo {
+    // 歌单来源
+    private int source = NetMusicSource.NET_CLOUD;
+    // 歌单 id
+    private String id;
+    // 歌单名称
+    private String name;
+    // 创建者
+    private String creator;
+    // 创建者 id
+    private String creatorId;
+    // 封面图片
+    private BufferedImage coverImg;
+    // 封面图片缩略图
+    private BufferedImage coverImgThumb;
+    // 封面图片 url
+    private String coverImgUrl;
+    // 封面图片缩略图 url
+    private String coverImgThumbUrl;
+    // 描述
+    private String description;
+    // 更新时间
+//    private String updateTime;
+    // 标签
+    private String tag;
+    // 播放量
+    private Long playCount;
+    // 歌曲数量
+    private Integer trackCount;
+
+    // 缩略图加载后的回调函数
+    private Runnable invokeLater;
+
+    public boolean hasName() {
+        return StringUtil.isNotEmpty(name);
+    }
+
+    public boolean hasCreator() {
+        return StringUtil.isNotEmpty(creator);
+    }
+
+    public boolean hasCreatorId() {
+        return StringUtil.isNotEmpty(creatorId);
+    }
+
+    public boolean hasTag() {
+        return StringUtil.isNotEmpty(tag);
+    }
+
+    public boolean hasTrackCount() {
+        return trackCount != null && trackCount >= 0;
+    }
+
+    public boolean hasPlayCount() {
+        return playCount != null && playCount >= 0;
+    }
+
+    public boolean hasCoverImgUrl() {
+        return StringUtil.isNotEmpty(coverImgUrl);
+    }
+
+    public boolean hasCoverImg() {
+        return coverImg != null;
+    }
+
+    public boolean hasCoverImgThumb() {
+        return coverImgThumb != null;
+    }
+
+    public void setCoverImgThumb(BufferedImage coverImgThumb) {
+        this.coverImgThumb = coverImgThumb;
+        callback();
+    }
+
+    public void setCoverImg(BufferedImage coverImg) {
+        this.coverImg = coverImg;
+        callback();
+    }
+
+    public void callback() {
+        if (invokeLater != null) {
+            invokeLater.run();
+            // 调用后丢弃
+            invokeLater = null;
+        }
+    }
+
+//    private String buildCoverImgThumbPath() {
+//        return SimplePath.IMG_CACHE_PATH + source + " - " + id + " - playlist - thumb.png";
+//    }
+//
+//    private String buildCoverImgPath() {
+//        return SimplePath.IMG_CACHE_PATH + source + " - " + id + " - playlist.png";
+//    }
+
+    /**
+     * 判断歌单信息是否完整
+     *
+     * @return
+     */
+    public boolean isIntegrated() {
+        return hasCoverImg();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof NetPlaylistInfo) {
+            NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) o;
+            return hashCode() == netPlaylistInfo.hashCode();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(source, id);
+    }
+
+    public String toString() {
+        return NetMusicSource.names[source] + " - " + toSimpleString();
+    }
+
+    public String toSimpleString() {
+        return name
+                + (StringUtil.isEmpty(creator) ? "" : " - " + creator);
+    }
+
+//    public String toString() {
+//        return name + " - " + id;
+//    }
+}

@@ -4,15 +4,15 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.Tags;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.sdk.common.Tags;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -49,7 +49,7 @@ public class MusicSearchReq {
     // 关键词搜索歌曲 API (咕咕咕音乐)
     private final String SEARCH_MUSIC_GG_API = "http://www.gggmusic.com/search-%s-1-%s.htm";
     // 关键词搜索歌曲 API (5sing)
-//    private final String SEARCH_MUSIC_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=0&type=0";
+    private final String SEARCH_MUSIC_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=0&type=0";
     // 关键词搜索节目 API (喜马拉雅)
     private final String SEARCH_MUSIC_XM_API
             = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&device=iPhone&core=track&fq=&paidFilter=false";
@@ -177,7 +177,8 @@ public class MusicSearchReq {
                     .body();
             JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getInt("totalCount");
+            int to = data.getInt("totalCount");
+            t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
             JSONArray songsArray = data.optJSONArray("resources");
             if (songsArray != null) {
                 for (int i = 0, len = songsArray.size(); i < len; i++) {
@@ -582,39 +583,39 @@ public class MusicSearchReq {
             return new CommonResult<>(res, t);
         };
 
-//        // 5sing
-//        Callable<CommonResult<NetMusicInfo>> searchMusicFs = () -> {
-//            LinkedList<NetMusicInfo> res = new LinkedList<>();
-//            Integer t = 0;
-//
-//            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_FS_API, encodedKeyword, page))
-//                    .execute()
-//                    .body();
-//            JSONObject data = JSONObject.fromObject(musicInfoBody);
-//            t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
-//            JSONArray songsArray = data.optJSONArray("list");
-//            if (songsArray != null) {
-//                for (int i = 0, len = songsArray.size(); i < len; i++) {
-//                    JSONObject songJson = songsArray.getJSONObject(i);
-//
-//                    String songId = songJson.getString("songId");
-//                    String songType = songJson.getString("typeEname");
-//                    String songName = StringUtil.removeHTMLLabel(songJson.getString("songName"));
-//                    String artist = songJson.getString("singer");
-//                    String artistId = songJson.getString("singerId");
-//
-//                    NetMusicInfo musicInfo = new NetMusicInfo();
-//                    musicInfo.setSource(NetMusicSource.FS);
-//                    musicInfo.setId(String.format("%s_%s", songType, songId));
-//                    musicInfo.setName(songName);
-//                    musicInfo.setArtist(artist);
-//                    musicInfo.setArtistId(artistId);
-//
-//                    res.add(musicInfo);
-//                }
-//            }
-//            return new CommonResult<>(res, t);
-//        };
+        // 5sing
+        Callable<CommonResult<NetMusicInfo>> searchMusicFs = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_FS_API, encodedKeyword, page))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(musicInfoBody);
+            t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
+            JSONArray songsArray = data.optJSONArray("list");
+            if (songsArray != null) {
+                for (int i = 0, len = songsArray.size(); i < len; i++) {
+                    JSONObject songJson = songsArray.getJSONObject(i);
+
+                    String songId = songJson.getString("songId");
+                    String songType = songJson.getString("typeEname");
+                    String songName = StringUtil.removeHTMLLabel(songJson.getString("songName"));
+                    String artist = songJson.getString("singer");
+                    String artistId = songJson.getString("singerId");
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.FS);
+                    musicInfo.setId(String.format("%s_%s", songType, songId));
+                    musicInfo.setName(songName);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+
+                    res.add(musicInfo);
+                }
+            }
+            return new CommonResult<>(res, t);
+        };
 
         // 喜马拉雅
         Callable<CommonResult<NetMusicInfo>> searchMusicXm = () -> {
@@ -728,8 +729,8 @@ public class MusicSearchReq {
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicMg));
                 if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicQi));
-//                if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
-//                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicFs));
+                if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicFs));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();

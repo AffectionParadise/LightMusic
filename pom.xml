@@ -191,7 +191,7 @@
                     <archive>
                         <!-- 主类 -->
                         <manifest>
-                            <mainClass>net.doge.ui.PlayerFrame</mainClass>
+                            <mainClass>net.doge.ui.MainFrame</mainClass>
                         </manifest>
                     </archive>
                     <!-- 配置文件路径 -->

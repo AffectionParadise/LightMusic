@@ -2,15 +2,15 @@ package net.doge.sdk.music.rcmd;
 
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.constants.Tags;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.sdk.common.Tags;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.utils.ListUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.ListUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -27,29 +27,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendProgramReq {
     // 推荐节目 API
-    private final String RECOMMEND_PROGRAM_API
-            = SdkCommon.prefix + "/program/recommend";
+    private final String RECOMMEND_PROGRAM_API = SdkCommon.prefix + "/program/recommend";
     // 推荐个性节目 API
-    private final String PERSONALIZED_PROGRAM_API
-            = SdkCommon.prefix + "/personalized/djprogram";
+    private final String PERSONALIZED_PROGRAM_API = SdkCommon.prefix + "/personalized/djprogram";
     // 24 小时节目榜 API
-    private final String PROGRAM_24_HOURS_TOPLIST_API
-            = SdkCommon.prefix + "/dj/program/toplist/hours";
+    private final String PROGRAM_24_HOURS_TOPLIST_API = SdkCommon.prefix + "/dj/program/toplist/hours";
     // 节目榜 API
-    private final String PROGRAM_TOPLIST_API
-            = SdkCommon.prefix + "/dj/program/toplist?limit=200";
+    private final String PROGRAM_TOPLIST_API = SdkCommon.prefix + "/dj/program/toplist?limit=200";
     // 推荐节目 API (猫耳)
-    private final String REC_PROGRAM_ME_API
-            = "https://www.missevan.com/site/homepage";
+    private final String REC_PROGRAM_ME_API = "https://www.missevan.com/site/homepage";
     // 探索节目 API (猫耳)
-    private final String EXP_PROGRAM_ME_API
-            = "https://www.missevan.com/explore/%s?p=%s&pagesize=%s";
+    private final String EXP_PROGRAM_ME_API = "https://www.missevan.com/explore/%s?p=%s&pagesize=%s";
     // 首页分类节目 API (猫耳)
-    private final String INDEX_CAT_PROGRAM_ME_API
-            = "https://www.missevan.com/sound/m?order=1&id=%s&p=%s&pagesize=%s";
+    private final String INDEX_CAT_PROGRAM_ME_API = "https://www.missevan.com/sound/m?order=1&id=%s&p=%s&pagesize=%s";
     // 首页分类节目 API (最新)(猫耳)
-    private final String INDEX_CAT_NEW_PROGRAM_ME_API
-            = "https://www.missevan.com/sound/m?order=0&id=%s&p=%s&pagesize=%s";
+    private final String INDEX_CAT_NEW_PROGRAM_ME_API = "https://www.missevan.com/sound/m?order=0&id=%s&p=%s&pagesize=%s";
     
     /**
      * 获取推荐节目

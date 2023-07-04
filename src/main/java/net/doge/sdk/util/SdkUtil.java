@@ -1,10 +1,10 @@
 package net.doge.sdk.util;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constants.ImageConstants;
-import net.doge.constants.NetMusicSource;
+import net.doge.constant.ui.ImageConstants;
+import net.doge.constant.system.NetMusicSource;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.utils.ImageUtil;
+import net.doge.util.ImageUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -70,7 +70,12 @@ public class SdkUtil {
      * @return
      */
     public static BufferedImage extractCover(String imgUrl) {
-        return ImageUtil.setRadius(ImageUtil.width(imgUrl, ImageConstants.mediumWidth), 0.1);
+        BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.mediumWidth);
+        if (img == null) return null;
+        // 控制封面高度不超过阈值
+        if (img.getHeight() > ImageConstants.mvCoverMaxHeight)
+            img = ImageUtil.height(img, ImageConstants.mvCoverMaxHeight);
+        return ImageUtil.setRadius(img, 0.1);
     }
 
     /**

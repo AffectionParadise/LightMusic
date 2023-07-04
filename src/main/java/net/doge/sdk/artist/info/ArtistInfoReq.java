@@ -5,17 +5,17 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constants.GlobalExecutors;
-import net.doge.constants.NetMusicSource;
-import net.doge.models.entities.NetAlbumInfo;
-import net.doge.models.entities.NetArtistInfo;
-import net.doge.models.entities.NetMusicInfo;
-import net.doge.models.entities.NetMvInfo;
-import net.doge.models.server.CommonResult;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.NetMusicSource;
+import net.doge.model.entity.NetAlbumInfo;
+import net.doge.model.entity.NetArtistInfo;
+import net.doge.model.entity.NetMusicInfo;
+import net.doge.model.entity.NetMvInfo;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.utils.StringUtil;
-import net.doge.utils.TimeUtil;
+import net.doge.util.StringUtil;
+import net.doge.util.TimeUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -65,13 +65,10 @@ public class ArtistInfoReq {
     // 歌手 MV API (QQ)
     private final String ARTIST_MVS_QQ_API = SdkCommon.prefixQQ33 + "/singer/mv?singermid=%s&pageNo=%s&pageSize=%s";
     // 歌手歌曲 API (酷我)
-//    private final String ARTIST_SONGS_KW_API = SdkCommon.prefixKw + "/kuwo/singer/music?artistid=%s&pn=%s&rn=%s";
     private final String ARTIST_SONGS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手专辑 API (酷我)
-//    private final String ARTIST_ALBUMS_KW_API = SdkCommon.prefixKw + "/kuwo/singer/album?artistid=%s&pn=%s&rn=%s";
     private final String ARTIST_ALBUMS_KW_API = "http://www.kuwo.cn/api/www/artist/artistAlbum?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手 MV API (酷我)
-//    private final String ARTIST_MVS_KW_API = SdkCommon.prefixKw + "/kuwo/singer/mv?artistid=%s&pn=%s&rn=%s";
     private final String ARTIST_MVS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMv?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手歌曲 API (咪咕)
     private final String ARTIST_SONGS_MG_API = SdkCommon.prefixMg + "/singer/songs?id=%s&pageNo=%s";
