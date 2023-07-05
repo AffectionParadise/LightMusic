@@ -265,9 +265,8 @@ public class ArtistMenuReq {
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 

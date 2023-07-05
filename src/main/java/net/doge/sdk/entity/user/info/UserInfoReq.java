@@ -9,8 +9,9 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.sdk.util.AreaUtil;
+import net.doge.sdk.util.SdkUtil;
+import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import net.sf.json.JSONArray;
@@ -23,6 +24,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,6 +60,14 @@ public class UserInfoReq {
     private final String USER_DETAIL_BI_API = "https://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
     // 用户音频 API (猫耳)
     private final String USER_AUDIO_BI_API = "https://api.bilibili.com/audio/music-service/web/song/upper?order=%s&uid=%s&pn=%s&ps=%s";
+    // 用户信息 API (5sing)
+    private final String USER_DETAIL_FS_API = "http://5sing.kugou.com/%s/default.html";
+    // 用户歌曲(原唱) API (5sing)
+    private final String USER_YC_SONGS_FS_API = "http://5sing.kugou.com/%s/yc/%s.html";
+    // 用户歌曲(翻唱) API (5sing)
+    private final String USER_FC_SONGS_FS_API = "http://5sing.kugou.com/%s/fc/%s.html";
+    // 用户歌曲(伴奏) API (5sing)
+    private final String USER_BZ_SONGS_FS_API = "http://5sing.kugou.com/%s/bz/%s.html";
 
     /**
      * 根据用户 id 预加载用户信息
@@ -211,6 +221,52 @@ public class UserInfoReq {
                     e.printStackTrace();
                 }
             });
+        }
+
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_FS_API, uid))
+                    .setFollowRedirects(true)
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(userInfoBody);
+
+            // 个人信息面板 ui 不同，需要分情况
+            // 签名
+            Elements intro = doc.select(".home_simpleTxt");
+            if (intro.isEmpty()) intro = doc.select(".rig.intro p");
+            if (intro.isEmpty()) intro = doc.select(".simpleTxt");
+            if (intro.isEmpty()) intro = doc.select(".resurm");
+            if (intro.isEmpty()) intro = doc.select(".intr_box");
+            // 头像
+            Elements img = doc.select(".m_about.lt dt img");
+            if (img.isEmpty()) img = doc.select(".user_pic img");
+            if (img.isEmpty()) img = doc.select(".photo img");
+            if (img.isEmpty()) img = doc.select(".b_con.c_wap dt img");
+            if (img.isEmpty()) img = doc.select(".my_pic img");
+            if (img.isEmpty()) img = doc.select(".p_abs img");
+            // 关注数
+            Elements followElem = doc.select("#totalfriend a");
+            if(followElem.isEmpty()) followElem = doc.select(".lt.w_20 a");
+            // 粉丝数
+            Elements followedElem = doc.select("#totalfans a");
+            // 背景图
+            Elements bgImgElem = doc.select("html > body");
+
+            String sign = intro.text();
+            String avatarUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+            Integer follow = Integer.parseInt(followElem.text());
+            Integer followed = Integer.parseInt(followedElem.text());
+
+            if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            userInfo.setSign(sign);
+            if (!userInfo.hasFollow()) userInfo.setFollow(follow);
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(followed);
+
+            String bgImgUrl = ReUtil.get("background-image:url\\((.*?)\\)", bgImgElem.attr("style"), 1);
+            if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
+            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
 
         // 好看
@@ -492,6 +548,279 @@ public class UserInfoReq {
             }
         }
 
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            // 原唱
+            Callable<CommonResult<NetMusicInfo>> getYc = () -> {
+                LinkedList<NetMusicInfo> res = new LinkedList<>();
+                Integer t = 0;
+
+                String userInfoBody = HttpRequest.get(String.format(USER_YC_SONGS_FS_API, userId, page))
+                        .setFollowRedirects(true)
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+
+                Elements pageElem = doc.select(".page_number em");
+                int pageType = 1;
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page_list span");
+                    pageType = 2;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page_message a");
+                    pageType = 3;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select("span.page_list a");
+                    pageType = 4;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page a");
+                    pageType = 5;
+                }
+                if (pageElem.isEmpty()) pageType = -1;
+                switch (pageType) {
+                    case 1:
+                        String pageText = pageElem.text();
+                        t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
+                        break;
+                    case 2:
+                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 3:
+                        pageText = pageElem.last().text();
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 4:
+                        pageText = pageElem.get(pageElem.size() - 1).text();
+                        if (!StringUtil.isNumber(pageText)) pageText = pageElem.get(pageElem.size() - 3).text();
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 5:
+                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    default:
+                        t = limit;
+                }
+
+                // 主页 ui 不同
+                Elements songArray = doc.select(".song_list li .song_name a");
+                if (songArray.isEmpty()) songArray = doc.select(".song tr td:nth-child(2) a");
+                if (songArray.isEmpty()) songArray = doc.select(".song_tb_a a");
+                if (songArray.isEmpty()) songArray = doc.select(".lt.list_name a");
+                if (songArray.isEmpty()) songArray = doc.select(".per_td a");
+                if (songArray.isEmpty()) songArray = doc.select(".s_title.list_name.lt a");
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    Element song = songArray.get(i);
+
+                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?)\\.html", song.attr("href"), 1).replaceFirst("/", "_");
+                    String name = song.text();
+                    String artist = userInfo.getName();
+                    String artistId = userId;
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.FS);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+
+                    res.add(musicInfo);
+                }
+
+                return new CommonResult<>(res, t);
+            };
+            // 翻唱
+            Callable<CommonResult<NetMusicInfo>> getFc = () -> {
+                LinkedList<NetMusicInfo> res = new LinkedList<>();
+                Integer t = 0;
+
+                String userInfoBody = HttpRequest.get(String.format(USER_FC_SONGS_FS_API, userId, page))
+                        .setFollowRedirects(true)
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+
+                Elements pageElem = doc.select(".page_number em");
+                int pageType = 1;
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page_list span");
+                    pageType = 2;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page_message a");
+                    pageType = 3;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select("span.page_list a");
+                    pageType = 4;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page span");
+                    pageType = 5;
+                }
+                if (pageElem.isEmpty()) pageType = -1;
+                switch (pageType) {
+                    case 1:
+                        String pageText = pageElem.text();
+                        t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
+                        break;
+                    case 2:
+                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 3:
+                        pageText = pageElem.last().text();
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 4:
+                        pageText = pageElem.get(pageElem.size() - 1).text();
+                        if (!StringUtil.isNumber(pageText)) pageText = pageElem.get(pageElem.size() - 3).text();
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 5:
+                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    default:
+                        t = limit;
+                }
+
+                // 主页 ui 不同
+                Elements songArray = doc.select(".song_list li .song_name a");
+                if (songArray.isEmpty()) songArray = doc.select(".song tr td:nth-child(2) a");
+                if (songArray.isEmpty()) songArray = doc.select(".song_tb_a a");
+                if (songArray.isEmpty()) songArray = doc.select(".lt.list_name a");
+                if (songArray.isEmpty()) songArray = doc.select(".per_td a");
+                if (songArray.isEmpty()) songArray = doc.select(".s_title.list_name.lt a");
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    Element song = songArray.get(i);
+
+                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?)\\.html", song.attr("href"), 1).replaceFirst("/", "_");
+                    String name = song.text();
+                    String artist = userInfo.getName();
+                    String artistId = userId;
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.FS);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+
+                    res.add(musicInfo);
+                }
+
+                return new CommonResult<>(res, t);
+            };
+            // 伴奏
+            Callable<CommonResult<NetMusicInfo>> getBz = () -> {
+                LinkedList<NetMusicInfo> res = new LinkedList<>();
+                Integer t = 0;
+
+                String userInfoBody = HttpRequest.get(String.format(USER_BZ_SONGS_FS_API, userId, page))
+                        .setFollowRedirects(true)
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+
+                Elements pageElem = doc.select(".page_number em");
+                int pageType = 1;
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page_list span");
+                    pageType = 2;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page_message a");
+                    pageType = 3;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select("span.page_list a");
+                    pageType = 4;
+                }
+                if (pageElem.isEmpty()) {
+                    pageElem = doc.select(".page span");
+                    pageType = 5;
+                }
+                if (pageElem.isEmpty()) pageType = -1;
+                switch (pageType) {
+                    case 1:
+                        String pageText = pageElem.text();
+                        t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
+                        break;
+                    case 2:
+                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 3:
+                        pageText = pageElem.last().text();
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 4:
+                        pageText = pageElem.get(pageElem.size() - 1).text();
+                        if (!StringUtil.isNumber(pageText)) pageText = pageElem.get(pageElem.size() - 3).text();
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    case 5:
+                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        break;
+                    default:
+                        t = limit;
+                }
+
+                // 主页 ui 不同
+                Elements songArray = doc.select(".song_list li .song_name a");
+                if (songArray.isEmpty()) songArray = doc.select(".song tr td:nth-child(2) a");
+                if (songArray.isEmpty()) songArray = doc.select(".song_tb_a a");
+                if (songArray.isEmpty()) songArray = doc.select(".lt.list_name a");
+                if (songArray.isEmpty()) songArray = doc.select(".per_td a");
+                if (songArray.isEmpty()) songArray = doc.select(".s_title.list_name.lt a");
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    Element song = songArray.get(i);
+
+                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?)\\.html", song.attr("href"), 1).replaceFirst("/", "_");
+                    String name = song.text();
+                    String artist = userInfo.getName();
+                    String artistId = userId;
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.FS);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+
+                    res.add(musicInfo);
+                }
+
+                return new CommonResult<>(res, t);
+            };
+
+            List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
+
+            taskList.add(GlobalExecutors.requestExecutor.submit(getYc));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getFc));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getBz));
+
+            List<List<NetMusicInfo>> rl = new LinkedList<>();
+            taskList.forEach(task -> {
+                try {
+                    CommonResult<NetMusicInfo> result = task.get();
+                    rl.add(result.data);
+                    total.set(Math.max(total.get(), result.total));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            });
+            musicInfos.addAll(ListUtil.joinAll(rl));
+        }
+
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String userInfoBody = HttpRequest.get(String.format(USER_AUDIO_BI_API, recordType + 1, userId, page, limit))
@@ -599,9 +928,8 @@ public class UserInfoReq {
                 userInfo.setRadioCount(radioCount);
                 userInfo.setProgramCount(programCount);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -636,9 +964,8 @@ public class UserInfoReq {
                 userInfo.setAvatarUrl(avatarUrl);
                 userInfo.setProgramCount(programCount);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -672,9 +999,8 @@ public class UserInfoReq {
                 userInfo.setAvatarUrl(avatarUrl);
                 userInfo.setProgramCount(programCount);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -713,9 +1039,8 @@ public class UserInfoReq {
                         userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
                         userInfo.setFollowed(Integer.parseInt(doc.select(".home-fans span").first().text()));
 
-                        String finalAvatarThumbUrl = avaUrl;
                         GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                            BufferedImage avatarThumb = SdkUtil.extractCover(avaUrl);
                             userInfo.setAvatarThumb(avatarThumb);
                         });
 
@@ -737,6 +1062,55 @@ public class UserInfoReq {
                         e.printStackTrace();
                     }
                 });
+            }
+
+            // 5sing
+            else if (source == NetMusicSource.FS) {
+                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_FS_API, id))
+                        .setFollowRedirects(true)
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(userInfoBody);
+
+                // 个人信息面板 ui 不同，需要分情况
+                // 用户名
+                Elements nameElem = doc.select("h1.lt");
+                if (nameElem.isEmpty()) nameElem = doc.select(".user_info h2");
+                if (nameElem.isEmpty()) nameElem = doc.select(".right h1");
+                if (nameElem.isEmpty()) nameElem = doc.select(".rank_ry.c_wap h1");
+                if (nameElem.isEmpty()) nameElem = doc.select(".per_info h1");
+                if (nameElem.isEmpty()) nameElem = doc.select(".user_name h3");
+                // 头像
+                Elements img = doc.select(".m_about.lt dt img");
+                if (img.isEmpty()) img = doc.select(".user_pic img");
+                if (img.isEmpty()) img = doc.select(".photo img");
+                if (img.isEmpty()) img = doc.select(".b_con.c_wap dt img");
+                if (img.isEmpty()) img = doc.select(".my_pic img");
+                if (img.isEmpty()) img = doc.select(".p_abs img");
+                // 关注数
+                Elements followElem = doc.select("#totalfriend a");
+                if(followElem.isEmpty()) followElem = doc.select(".lt.w_20 a");
+                // 粉丝数
+                Elements followedElem = doc.select("#totalfans a");
+
+                String name = nameElem.text().replaceFirst("音乐人：", "");
+                String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+                Integer follow = Integer.parseInt(followElem.text());
+                Integer followed = Integer.parseInt(followedElem.text());
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setId(id);
+                userInfo.setName(name);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setFollow(follow);
+                userInfo.setFollowed(followed);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractCover(avatarThumbUrl);
+                    userInfo.setAvatarThumb(coverImgThumb);
+                });
+
+                res.add(userInfo);
             }
 
             // 好看
@@ -763,9 +1137,8 @@ public class UserInfoReq {
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 

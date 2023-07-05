@@ -601,7 +601,7 @@ public class MusicSearchReq {
                     String songId = songJson.getString("songId");
                     String songType = songJson.getString("typeEname");
                     String songName = StringUtil.removeHTMLLabel(songJson.getString("songName"));
-                    String artist = songJson.getString("singer");
+                    String artist = StringUtil.removeHTMLLabel(songJson.getString("singer"));
                     String artistId = songJson.getString("singerId");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
@@ -712,6 +712,8 @@ public class MusicSearchReq {
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicHf));
                     if (src == NetMusicSource.GG || src == NetMusicSource.ALL)
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicGg));
+                    if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+                        taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicFs));
                 }
                 if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchProgramMe));
@@ -729,8 +731,6 @@ public class MusicSearchReq {
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicMg));
                 if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicQi));
-                if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
-                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicFs));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();

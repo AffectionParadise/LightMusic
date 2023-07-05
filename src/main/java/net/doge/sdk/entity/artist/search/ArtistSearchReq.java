@@ -35,8 +35,6 @@ public class ArtistSearchReq {
     private final String SEARCH_ARTIST_MG_API = SdkCommon.prefixMg + "/search?type=singer&keyword=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌手 API (千千)
     private final String SEARCH_ARTIST_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=2&word=%s";
-    // 关键词搜索歌手 API (5sing)
-    private final String SEARCH_ARTIST_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=1&type=2";
     // 关键词搜索声优 API (猫耳)
     private final String SEARCH_CV_ME_API = "https://www.missevan.com/sound/getsearch?s=%s&type=4&p=%s&page_size=%s";
     // 关键词搜索歌手 API (豆瓣)
@@ -249,40 +247,6 @@ public class ArtistSearchReq {
             return new CommonResult<>(res, t);
         };
 
-        // 5sing
-        Callable<CommonResult<NetArtistInfo>> searchArtistsFs = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
-            Integer t = 0;
-
-            String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_FS_API, encodedKeyword, page))
-                    .execute()
-                    .body();
-            JSONObject data = JSONObject.fromObject(artistInfoBody);
-            t = data.getJSONObject("pageInfo").getInt("totalPages")*limit;
-            JSONArray artistArray = data.getJSONArray("list");
-            for (int i = 0, len = artistArray.size(); i < len; i++) {
-                JSONObject artistJson = artistArray.getJSONObject(i);
-
-                String artistId = artistJson.getString("id");
-                String artistName = StringUtil.removeHTMLLabel(artistJson.getString("nickName"));
-                Integer songNum = artistJson.getInt("totalSong");
-                String coverImgThumbUrl = artistJson.getString("pictureUrl");
-
-                NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.FS);
-                artistInfo.setId(artistId);
-                artistInfo.setName(artistName);
-                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                artistInfo.setSongNum(songNum);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                    artistInfo.setCoverImgThumb(coverImgThumb);
-                });
-                res.add(artistInfo);
-            }
-            return new CommonResult<>(res, t);
-        };
-
         // 猫耳
         Callable<CommonResult<NetArtistInfo>> searchCVsMe = () -> {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
@@ -369,8 +333,6 @@ public class ArtistSearchReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(searchCVsMe));
         if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsDb));
-        if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
-            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsFs));
 
         List<List<NetArtistInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {

@@ -35,19 +35,15 @@ public class NewMusicReq {
     // 新歌速递 API
     private final String FAST_NEW_SONG_API = SdkCommon.prefix + "/top/song?type=%s";
     // 推荐新歌(华语) API (酷狗)
-    private final String RECOMMEND_NEW_SONG_KG_API
-            = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong?version=9108&type=%s&page=%s&pagesize=%s";
+    private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong?version=9108&type=%s&page=%s&pagesize=%s";
     // 推荐新歌 API (QQ)
-    private final String RECOMMEND_NEW_SONG_QQ_API
-            = SdkCommon.prefixQQ33 + "/new/songs?type=%s";
+    private final String RECOMMEND_NEW_SONG_QQ_API = SdkCommon.prefixQQ33 + "/new/songs?type=%s";
     // 新歌榜 API (酷我)
     private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)
-    private final String RECOMMEND_NEW_SONG_MG_API
-            = SdkCommon.prefixMg + "/new/songs?pageNo=%s&pageSize=%s";
+    private final String RECOMMEND_NEW_SONG_MG_API = SdkCommon.prefixMg + "/new/songs?pageNo=%s&pageSize=%s";
     // 推荐新歌 API (千千)
-    private final String RECOMMEND_NEW_SONG_QI_API
-            = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
+    private final String RECOMMEND_NEW_SONG_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
     // 推荐新歌 API (音乐磁场)
     private final String RECOMMEND_NEW_MUSIC_HF_API = "https://www.hifini.com/%s-%s.htm?orderby=tid";
     // 推荐新歌 API (咕咕咕音乐)
@@ -64,6 +60,8 @@ public class NewMusicReq {
     private final String WEBSITE_REC_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list?t=1&s=%s&l=%s&p=%s";
     // 候选推荐(翻唱) API (5sing)
     private final String CANDI_REC_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list?t=2&s=%s&l=%s&p=%s";
+    // 所有伴奏(伴奏) API (5sing)
+    private final String ALL_BZ_MUSIC_FS_API = "http://5sing.kugou.com/bz/bzsong/more_%s.shtml";
 
     /**
      * 获取推荐歌曲 + 新歌速递
@@ -690,6 +688,43 @@ public class NewMusicReq {
             }
             return new CommonResult<>(res, t);
         };
+        // 所有伴奏(伴奏)
+        Callable<CommonResult<NetMusicInfo>> getAllBzSongFs = () -> {
+            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.get(String.format(ALL_BZ_MUSIC_FS_API, page))
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select("tr");
+            Elements em = doc.select(".page_num em");
+            t = Integer.parseInt(ReUtil.get("\\d+/(\\d+)", em.text(), 1)) * limit;
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+                Elements td = song.select("td");
+                // 排除表头
+                if (td.isEmpty()) continue;
+
+                Elements a = song.select(".aleft a");
+                Elements pa = td.get(2).select("a");
+
+                String songId = ReUtil.get("http://5sing.kugou.com/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                String songName = a.text();
+                String artist = pa.text();
+                String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+
+                res.add(musicInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
 
         List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
 
@@ -728,6 +763,7 @@ public class NewMusicReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(getLatestFcSongFs));
             taskList.add(GlobalExecutors.requestExecutor.submit(getWebsiteRecFcSongFs));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCandiRecFcSongFs));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getAllBzSongFs));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();

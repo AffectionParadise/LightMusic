@@ -76,16 +76,21 @@ public class UserMenuReq {
     private final String USER_FOLLOWS_XM_API = "https://www.ximalaya.com/revision/user/following?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户关注 API (猫耳)
     private final String USER_FOLLOWS_ME_API = "https://www.missevan.com/person/getuserattention?type=0&user_id=%s&p=%s&page_size=%s";
+    // 用户关注 API (5sing)
+    private final String USER_FOLLOWS_FS_API = "http://5sing.kugou.com/%s/friend/%s.html";
     // 用户关注 API (堆糖)
     private final String USER_FOLLOWS_DT_API = "https://www.duitang.com/napi/friendship/follows/?user_id=%s&start=%s&limit=%s";
     // 用户关注 API (哔哩哔哩)
     private final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
+
     // 用户粉丝 API
     private final String USER_FOLLOWEDS_API = SdkCommon.prefix + "/user/followeds?uid=%s&offset=%s&limit=%s";
     // 用户粉丝 API (喜马拉雅)
     private final String USER_FOLLOWEDS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户粉丝 API (猫耳)
     private final String USER_FOLLOWEDS_ME_API = "https://www.missevan.com/person/getuserattention?type=1&user_id=%s&p=%s&page_size=%s";
+    // 用户粉丝 API (5sing)
+    private final String USER_FOLLOWEDS_FS_API = "http://5sing.kugou.com/%s/fans/%s.html";
     // 用户粉丝 API (堆糖)
     private final String USER_FOLLOWEDS_DT_API = "https://www.duitang.com/napi/friendship/fans/?user_id=%s&start=%s&limit=%s";
     // 用户粉丝 API (哔哩哔哩)
@@ -1454,9 +1459,8 @@ public class UserMenuReq {
                 userInfo.setRadioCount(radioCount);
                 userInfo.setProgramCount(programCount);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -1494,13 +1498,148 @@ public class UserMenuReq {
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
                 res.add(userInfo);
+            }
+        }
+
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_FS_API, id, page))
+                    .setFollowRedirects(true)
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(userInfoBody);
+
+            // 判断主页 ui 类型
+            int pageType = 1;
+            if (!doc.select(".mainnav").isEmpty()) pageType = 2;
+            else if (!doc.select(".right h1").isEmpty()) pageType = 3;
+            else if (!doc.select(".rank_ry.c_wap").isEmpty()) pageType = 4;
+            else if (!doc.select(".rank_ry h3").isEmpty()) pageType = 5;
+            else if (!doc.select(".user_name").isEmpty()) pageType = 6;
+
+            switch (pageType) {
+                case 1:
+                    Elements pageElem = doc.select(".page_number em");
+                    String pageText = pageElem.isEmpty() ? "" : pageElem.text();
+                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 28 + 1) * limit + 1 : limit;
+                    break;
+                case 2:
+                    pageElem = doc.select(".page_list span");
+                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+                case 3:
+                    pageElem = doc.select(".page_message a");
+                    pageText = pageElem.isEmpty() ? "" : pageElem.last().text();
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+                case 4:
+                case 6:
+                    pageElem = doc.select(".msg_page_list a");
+                    pageText = pageElem.isEmpty() ? "" : pageElem.get(pageElem.size() - 2).text();
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+                case 5:
+                    pageElem = doc.select(".page span");
+                    pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+            }
+
+            // 主页 ui 不同
+            Elements userArray;
+            if (pageType == 1) userArray = doc.select(".follow_list li a");
+            else if (pageType == 2) userArray = doc.select(".mid.friend_list li a");
+            else if (pageType == 3) userArray = doc.select(".fans_list li a");
+            else if (pageType == 4) userArray = doc.select("li dl.c_wap");
+            else if (pageType == 5) userArray = doc.select(".single_care li");
+            else userArray = doc.select("dl.c_ft");
+            if (pageType == 4 || pageType == 6) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    Element user = userArray.get(i);
+                    Element a = user.select(pageType == 6 ? "h2.c_ft a" : "h2.c_wap a").first();
+                    Elements img = user.select("dt.lt img");
+                    Elements la = user.select("label a");
+
+                    String userId = ReUtil.get("/(\\d+)", a.attr("href"), 1);
+                    String userName = a.text();
+                    String gender = "保密";
+                    String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+                    Integer follow = Integer.parseInt(la.first().text());
+                    Integer followed = Integer.parseInt(la.last().text());
+
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.FS);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    userInfo.setFollow(follow);
+                    userInfo.setFollowed(followed);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
+
+                    res.add(userInfo);
+                }
+            } else if (pageType == 5) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    Element user = userArray.get(i);
+                    Elements a = user.select("a");
+                    Elements span = user.select("span");
+                    Elements img = user.select("img");
+
+                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", a.attr("href"), 1);
+                    String userName = span.text();
+                    String gender = "保密";
+                    String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.FS);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
+
+                    res.add(userInfo);
+                }
+            } else {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    Element user = userArray.get(i);
+                    Elements img = user.select("img");
+
+                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", user.attr("href"), 1);
+                    String userName = user.text();
+                    String gender = "保密";
+                    String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.FS);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
+
+                    res.add(userInfo);
+                }
             }
         }
 
@@ -1532,9 +1671,8 @@ public class UserMenuReq {
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -1565,9 +1703,8 @@ public class UserMenuReq {
                 userInfo.setName(userName);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -1662,9 +1799,8 @@ public class UserMenuReq {
                 userInfo.setRadioCount(radioCount);
                 userInfo.setProgramCount(programCount);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -1702,13 +1838,148 @@ public class UserMenuReq {
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
                 res.add(userInfo);
+            }
+        }
+
+        // 5sing
+        else if (source == NetMusicSource.FS) {
+            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_FS_API, id, page))
+                    .setFollowRedirects(true)
+                    .execute()
+                    .body();
+            Document doc = Jsoup.parse(userInfoBody);
+
+            // 判断主页 ui 类型
+            int pageType = 1;
+            if (!doc.select(".mainnav").isEmpty()) pageType = 2;
+            else if (!doc.select(".right h1").isEmpty()) pageType = 3;
+            else if (!doc.select(".rank_ry.c_wap").isEmpty()) pageType = 4;
+            else if (!doc.select(".rank_ry h3").isEmpty()) pageType = 5;
+            else if (!doc.select(".user_name").isEmpty()) pageType = 6;
+
+            switch (pageType) {
+                case 1:
+                    Elements pageElem = doc.select(".page_number em");
+                    String pageText = pageElem.isEmpty() ? "" : pageElem.text();
+                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 28 + 1) * limit + 1 : limit;
+                    break;
+                case 2:
+                    pageElem = doc.select(".page_list span");
+                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+                case 3:
+                    pageElem = doc.select(".page_message a");
+                    pageText = pageElem.isEmpty() ? "" : pageElem.last().text();
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+                case 4:
+                case 6:
+                    pageElem = doc.select(".msg_page_list a");
+                    pageText = pageElem.isEmpty() ? "" : pageElem.get(pageElem.size() - 2).text();
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+                case 5:
+                    pageElem = doc.select(".page span");
+                    pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    break;
+            }
+
+            // 主页 ui 不同
+            Elements userArray;
+            if (pageType == 1) userArray = doc.select(".follow_list li a");
+            else if (pageType == 2) userArray = doc.select(".mid.friend_list li a");
+            else if (pageType == 3) userArray = doc.select(".fans_list li a");
+            else if (pageType == 4) userArray = doc.select("li dl.c_wap");
+            else if (pageType == 5) userArray = doc.select(".single_care li");
+            else userArray = doc.select("dl.c_ft");
+            if (pageType == 4 || pageType == 6) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    Element user = userArray.get(i);
+                    Element a = user.select(pageType == 6 ? "h2.c_ft a" : "h2.c_wap a").first();
+                    Elements img = user.select("dt.lt img");
+                    Elements la = user.select("label a");
+
+                    String userId = ReUtil.get("/(\\d+)", a.attr("href"), 1);
+                    String userName = a.text();
+                    String gender = "保密";
+                    String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+                    Integer follow = Integer.parseInt(la.first().text());
+                    Integer followed = Integer.parseInt(la.last().text());
+
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.FS);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    userInfo.setFollow(follow);
+                    userInfo.setFollowed(followed);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
+
+                    res.add(userInfo);
+                }
+            } else if (pageType == 5) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    Element user = userArray.get(i);
+                    Elements a = user.select("a");
+                    Elements span = user.select("span");
+                    Elements img = user.select("img");
+
+                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", a.attr("href"), 1);
+                    String userName = span.text();
+                    String gender = "保密";
+                    String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.FS);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
+
+                    res.add(userInfo);
+                }
+            } else {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    Element user = userArray.get(i);
+                    Elements img = user.select("img");
+
+                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", user.attr("href"), 1);
+                    String userName = user.text();
+                    String gender = "保密";
+                    String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
+
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.FS);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
+
+                    res.add(userInfo);
+                }
             }
         }
 
@@ -1740,9 +2011,8 @@ public class UserMenuReq {
                 userInfo.setFollow(follow);
                 userInfo.setFollowed(followed);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -1773,9 +2043,8 @@ public class UserMenuReq {
                 userInfo.setName(userName);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 

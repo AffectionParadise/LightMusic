@@ -33,6 +33,8 @@ public class UserSearchReq {
             = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&core=user&device=iPhone";
     // 关键词搜索用户 API (猫耳)
     private final String SEARCH_USER_ME_API = "https://www.missevan.com/sound/getsearch?s=%s&type=1&p=%s&page_size=%s";
+    // 关键词搜索用户 API (5sing)
+    private final String SEARCH_USER_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=1&type=2";
     // 关键词搜索用户 API (好看)
     private final String SEARCH_USER_HK_API
             = "https://haokan.baidu.com/haokan/ui-search/pc/search/author?pn=%s&query=%s&rn=%s&timestamp=1683718494563&type=author&version=1";
@@ -42,7 +44,7 @@ public class UserSearchReq {
     private final String SEARCH_USER_DT_API = "https://www.duitang.com/napi/people/list/by_search/?kw=%s&start=%s&limit=%s&type=people&_type=&_=%s";
     // 关键词搜索用户 API (哔哩哔哩)
     private final String SEARCH_USER_BI_API = "https://api.bilibili.com/x/web-interface/search/type?search_type=bili_user&keyword=%s&page=%s";
-    
+
     /**
      * 根据关键词获取用户
      */
@@ -229,12 +231,52 @@ public class UserSearchReq {
 //                userInfo.setSign(sign);
 //                userInfo.setBgImgUrl(bgImgUrl);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
+                res.add(userInfo);
+            }
+            return new CommonResult<>(res, t);
+        };
+
+        // 5sing
+        Callable<CommonResult<NetUserInfo>> searchUsersFs = () -> {
+            LinkedList<NetUserInfo> res = new LinkedList<>();
+            Integer t = 0;
+
+            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_FS_API, encodedKeyword, page))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.fromObject(userInfoBody);
+            t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
+            JSONArray userArray = data.getJSONArray("list");
+            for (int i = 0, len = userArray.size(); i < len; i++) {
+                JSONObject userJson = userArray.getJSONObject(i);
+
+                String userId = userJson.getString("id");
+                String name = StringUtil.removeHTMLLabel(userJson.getString("nickName"));
+                int sex = userJson.getInt("sex");
+                String gender = sex == 0 ? "男" : sex == 1 ? "女" : "保密";
+                String avatarThumbUrl = userJson.getString("pictureUrl");
+                Integer follow = userJson.getInt("follow");
+                Integer followed = userJson.getInt("fans");
+                Integer programCount = userJson.getInt("totalSong");
+
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setId(userId);
+                userInfo.setName(name);
+                userInfo.setGender(gender);
+                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                userInfo.setFollow(follow);
+                userInfo.setFollowed(followed);
+                userInfo.setProgramCount(programCount);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractCover(avatarThumbUrl);
+                    userInfo.setAvatarThumb(coverImgThumb);
+                });
                 res.add(userInfo);
             }
             return new CommonResult<>(res, t);
@@ -272,9 +314,8 @@ public class UserSearchReq {
                 userInfo.setFollowed(followed);
                 userInfo.setProgramCount(programCount);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
@@ -361,9 +402,8 @@ public class UserSearchReq {
                     userInfo.setFollow(follow);
                     userInfo.setFollowed(followed);
 
-                    String finalAvatarThumbUrl = avatarThumbUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
@@ -407,9 +447,8 @@ public class UserSearchReq {
                     userInfo.setProgramCount(programCount);
                     userInfo.setFollowed(followed);
 
-                    String finalAvatarThumbUrl = avatarThumbUrl;
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
@@ -429,6 +468,8 @@ public class UserSearchReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersXm));
         if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersMe));
+        if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersFs));
         if (src == NetMusicSource.HK || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersHk));
         if (src == NetMusicSource.DB || src == NetMusicSource.ALL)

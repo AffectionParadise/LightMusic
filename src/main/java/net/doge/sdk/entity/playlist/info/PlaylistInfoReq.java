@@ -817,7 +817,7 @@ public class PlaylistInfoReq {
             Document doc = Jsoup.parse(playlistInfoBody);
             total.set(Integer.parseInt(ReUtil.get("（(\\d+)）", doc.select("span.number").text(), 1)));
             Elements songArray = doc.select("li.p_rel");
-            for (int i = 0, len = songArray.size(); i < len; i++) {
+            for (int i = (page - 1) * limit, len = Math.min(page * limit, songArray.size()); i < len; i++) {
                 Element elem = songArray.get(i);
                 Elements na = elem.select(".s_title.lt a");
                 Elements aa = elem.select(".s_soner.lt a");

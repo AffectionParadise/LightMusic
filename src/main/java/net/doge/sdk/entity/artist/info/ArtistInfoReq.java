@@ -42,8 +42,6 @@ public class ArtistInfoReq {
     private final String ARTIST_DETAIL_MG_API = SdkCommon.prefixMg + "/singer/desc?id=%s";
     // 歌手信息 API (千千)
     private final String ARTIST_DETAIL_QI_API = "https://music.91q.com/v1/artist/info?appid=16073360&artistCode=%s&timestamp=%s";
-    // 歌手信息 API (5sing)
-    private final String ARTIST_DETAIL_FS_API = "http://5sing.kugou.com/%s/default.html";
     // 歌手信息 API (豆瓣)
     private final String ARTIST_DETAIL_DB_API = "https://movie.douban.com/celebrity/%s/";
 
@@ -81,12 +79,6 @@ public class ArtistInfoReq {
     private final String ARTIST_SONGS_QI_API = "https://music.91q.com/v1/artist/song?appid=16073360&artistCode=%s&pageNo=%s&pageSize=%s&timestamp=%s";
     // 歌手专辑 API (千千)
     private final String ARTIST_ALBUMS_QI_API = "https://music.91q.com/v1/artist/album?appid=16073360&artistCode=%s&pageNo=%s&pageSize=%s&timestamp=%s";
-    // 歌手歌曲(原唱) API (5sing)
-    private final String ARTIST_YC_SONGS_FS_API = "http://5sing.kugou.com/%s/yc/%s.html";
-    // 歌手歌曲(翻唱) API (5sing)
-    private final String ARTIST_FC_SONGS_FS_API = "http://5sing.kugou.com/%s/fc/%s.html";
-    // 歌手歌曲(伴奏) API (5sing)
-    private final String ARTIST_BZ_SONGS_FS_API = "http://5sing.kugou.com/%s/bz/%s.html";
 
     // 社团信息 API (猫耳)
     private final String ORGANIZATION_DETAIL_ME_API = "https://www.missevan.com/organization/profile?organization_id=%s";
@@ -304,42 +296,6 @@ public class ArtistInfoReq {
                 res.add(artistInfo);
             }
 
-            // 5sing
-            else if (source == NetMusicSource.FS) {
-                String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_FS_API, id))
-                        .setFollowRedirects(true)
-                        .execute()
-                        .body();
-                Document doc = Jsoup.parse(artistInfoBody);
-
-                // 个人信息面板 ui 不同，需要分情况
-                Elements nameElem = doc.select("h1.lt");
-                if (nameElem.isEmpty()) nameElem = doc.select(".user_info h2");
-                if (nameElem.isEmpty()) nameElem = doc.select(".right h1");
-                if (nameElem.isEmpty()) nameElem = doc.select(".per_info h1");
-
-                Elements img = doc.select(".m_about.lt dt img");
-                if (img.isEmpty()) img = doc.select(".user_pic img");
-                if (img.isEmpty()) img = doc.select(".photo img");
-                if (img.isEmpty()) img = doc.select(".b_con.c_wap dt img");
-                if (img.isEmpty()) img = doc.select(".my_pic img");
-
-                String name = nameElem.text().replaceFirst("音乐人：", "");
-                String coverImgThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
-
-                NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.FS);
-                artistInfo.setId(id);
-                artistInfo.setName(name);
-                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                    artistInfo.setCoverImgThumb(coverImgThumb);
-                });
-
-                res.add(artistInfo);
-            }
-
             // 豆瓣
 //            else if (source == NetMusicSource.DB) {
 //                String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_DB_API, id))
@@ -484,34 +440,6 @@ public class ArtistInfoReq {
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getInt("trackTotal"));
             if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(data.getInt("albumTotal"));
             if (!artistInfo.hasMvNum()) artistInfo.setMvNum(data.getInt("videoTotal"));
-        }
-
-        // 5sing
-        else if (source == NetMusicSource.FS) {
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_FS_API, id))
-                    .setFollowRedirects(true)
-                    .execute()
-                    .body();
-            Document doc = Jsoup.parse(artistInfoBody);
-
-            // 个人信息面板 ui 不同，需要分情况
-            Elements intro = doc.select(".home_simpleTxt");
-            if (intro.isEmpty()) intro = doc.select(".rig.intro p");
-            if (intro.isEmpty()) intro = doc.select(".simpleTxt");
-            if (intro.isEmpty()) intro = doc.select(".resurm");
-
-            Elements img = doc.select(".m_about.lt dt img");
-            if (img.isEmpty()) img = doc.select(".user_pic img");
-            if (img.isEmpty()) img = doc.select(".photo img");
-            if (img.isEmpty()) img = doc.select(".b_con.c_wap dt img");
-            if (img.isEmpty()) img = doc.select(".my_pic img");
-
-            String description = intro.text();
-            String coverImgUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
-
-            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
-            artistInfo.setDescription(description);
         }
 
         // 猫耳
@@ -813,36 +741,6 @@ public class ArtistInfoReq {
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(albumId);
                 netMusicInfo.setDuration(duration);
-
-                netMusicInfos.add(netMusicInfo);
-            }
-        }
-
-        // 5sing
-        else if (source == NetMusicSource.FS) {
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_YC_SONGS_FS_API, id, page))
-                    .setFollowRedirects(true)
-                    .execute()
-                    .body();
-            Document doc = Jsoup.parse(artistInfoBody);
-            String em = doc.select(".page_number em").text();
-            total = StringUtil.isNotEmpty(em) ? (Integer.parseInt(em) / 20 + 1) * limit + 1 : limit;
-            Elements songArray = doc.select(".song_list li .song_name");
-            for (int i = 0, len = songArray.size(); i < len; i++) {
-                Element song = songArray.get(i);
-                Elements a = song.select("a");
-
-                String songId = ReUtil.get("http://5sing.kugou.com/(.*?)\\.html", a.attr("href"), 1).replaceFirst("/", "_");
-                String name = a.text();
-                String artist = artistInfo.getName();
-                String artistId = id;
-
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.FS);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
 
                 netMusicInfos.add(netMusicInfo);
             }

@@ -7,6 +7,8 @@ import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -29,6 +31,8 @@ public class HotSearchReq {
             "&source=kwplayer_ar_9.3.0.1_40.apk&p2p=1&notrace=0&uid=0&plat=kwplayer_ar&rformat=json&encoding=utf8&tabid=1";
     // 热搜 API (咪咕)
     private final String HOT_SEARCH_MG_API = "http://jadeite.migu.cn:7090/music_search/v3/search/hotword";
+    // 热搜 API (5sing)
+    private final String HOT_SEARCH_FS_API = "http://search.5sing.kugou.com";
 
     /**
      * 获取热搜
@@ -125,6 +129,20 @@ public class HotSearchReq {
             return res;
         };
 
+        // 5sing
+        Callable<List<String>> getHotSearchFs = () -> {
+            LinkedList<String> res = new LinkedList<>();
+
+            String body = HttpRequest.get(String.format(HOT_SEARCH_FS_API))
+                    .execute()
+                    .body();
+            Elements hotkeys = Jsoup.parse(body).select(".hot_search a");
+            for (int i = 0, len = hotkeys.size(); i < len; i++) {
+                res.add(hotkeys.get(i).text());
+            }
+            return res;
+        };
+
         List<Future<List<String>>> taskList = new LinkedList<>();
 
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearch));
@@ -132,6 +150,7 @@ public class HotSearchReq {
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchKw));
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchMg));
+        taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchFs));
 
         taskList.forEach(task -> {
             try {

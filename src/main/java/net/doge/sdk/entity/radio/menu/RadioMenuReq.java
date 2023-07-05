@@ -210,9 +210,8 @@ public class RadioMenuReq {
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(avatarThumbUrl);
 
-                String finalAvatarThumbUrl = avatarThumbUrl;
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(finalAvatarThumbUrl);
+                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     artistInfo.setCoverImgThumb(avatarThumb);
                 });
 

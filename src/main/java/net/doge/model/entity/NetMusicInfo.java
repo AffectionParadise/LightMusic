@@ -92,7 +92,7 @@ public class NetMusicInfo {
      */
     public boolean isProgram() {
         return source == NetMusicSource.XM || source == NetMusicSource.HF || source == NetMusicSource.GG
-                || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
+                || source == NetMusicSource.FS || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
     }
 
     /**
