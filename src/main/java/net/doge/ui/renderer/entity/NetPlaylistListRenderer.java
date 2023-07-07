@@ -88,7 +88,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 200, tw = pw - 20;
+        final int pw = 180, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getName(), tw));
         String creator = netPlaylistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getCreator(), tw)) : "";

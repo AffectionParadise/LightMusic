@@ -95,7 +95,7 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
         outerPanel.add(pubTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 200, tw = pw - 20;
+        final int pw = 180, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getName(), tw));
         String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getArtist(), tw));

@@ -88,7 +88,7 @@ public class NetAlbumListRenderer extends DefaultListCellRenderer {
         outerPanel.add(publishTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 200, tw = pw - 20;
+        final int pw = 180, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netAlbumInfo.getName(), tw));
         String artist = netAlbumInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(netAlbumInfo.getArtist(), tw)) : "";

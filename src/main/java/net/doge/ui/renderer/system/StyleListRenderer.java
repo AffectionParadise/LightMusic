@@ -76,7 +76,7 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         outerPanel.add(inUseLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 200, tw = pw - 20;
+        final int pw = 180, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(style.getStyleName(), tw));
         String type = StringUtil.textToHtml(style.isCustom() ? "自定义" : "预设");

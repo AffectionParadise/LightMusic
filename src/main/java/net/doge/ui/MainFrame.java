@@ -696,6 +696,8 @@ public class MainFrame extends JFrame {
     public int videoForwardOrBackwardTime;
     // 播放视频时是否关闭主界面
     public boolean videoOnly;
+    // 显示侧边栏文字
+    public boolean showTabText;
     // 当前播放速率
     public double currRate;
     public double currVideoRate;
@@ -966,7 +968,7 @@ public class MainFrame extends JFrame {
     private CustomMenuItem lgBlurMenuItem = new CustomMenuItem("线性渐变");
 
     // 标签页
-    private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT, CustomTabbedPane.WRAP_TAB_LAYOUT);
+    private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT);
     // 个人音乐 Tab 面板
     private CustomPanel personalMusicPanel = new CustomPanel();
     private CustomLabel personalMusicLabel = new CustomLabel("个人音乐", personalMusicIcon);
@@ -1005,7 +1007,7 @@ public class MainFrame extends JFrame {
     private CustomLabel playQueueLabel = new CustomLabel("播放队列", playQueueIcon);
 
     // 收藏标签页
-    private CustomTabbedPane collectionTabbedPane = new CustomTabbedPane(CustomTabbedPane.TOP, CustomTabbedPane.WRAP_TAB_LAYOUT);
+    private CustomTabbedPane collectionTabbedPane = new CustomTabbedPane(CustomTabbedPane.TOP);
     // 音乐收藏 Tab 面板
     private CustomPanel musicCollectionPanel = new CustomPanel();
     private CustomLabel musicCollectionLabel = new CustomLabel("歌曲", netMusicIcon);
@@ -3002,6 +3004,9 @@ public class MainFrame extends JFrame {
         setSize(windowWidth, windowHeight);
         // 载入播放视频是否关闭主界面
         videoOnly = config.optBoolean(ConfigConstants.VIDEO_ONLY, true);
+        // 是否显示侧边栏文字
+        showTabText = config.optBoolean(ConfigConstants.SHOW_TAB_TEXT, true);
+        initTabSize();
         // 载入高斯模糊因子
         BlurConstants.gsFactorIndex = config.optInt(ConfigConstants.GS_FACTOR_INDEX, 3);
         // 载入暗角滤镜因子
@@ -3772,6 +3777,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.WINDOW_SIZE, windowSize);
         // 存入播放视频是否隐藏主界面
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
+        // 存入是否显示侧边栏文字
+        config.put(ConfigConstants.SHOW_TAB_TEXT, showTabText);
         // 存入高斯模糊因子
         config.put(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 存入暗角滤镜因子
@@ -4454,6 +4461,25 @@ public class MainFrame extends JFrame {
         });
     }
 
+    // 初始化侧边栏大小
+    public void initTabSize() {
+        Dimension d = new Dimension(showTabText ? 125 : 44, 42);
+        personalMusicPanel.setPreferredSize(d);
+        netMusicPanel.setPreferredSize(d);
+        netPlaylistPanel.setPreferredSize(d);
+        netAlbumPanel.setPreferredSize(d);
+        netArtistPanel.setPreferredSize(d);
+        netRadioPanel.setPreferredSize(d);
+        netMvPanel.setPreferredSize(d);
+        netRankingPanel.setPreferredSize(d);
+        netUserPanel.setPreferredSize(d);
+        recommendPanel.setPreferredSize(d);
+        downloadManagementPanel.setPreferredSize(d);
+        playQueuePanel.setPreferredSize(d);
+        tabbedPane.setVisible(false);
+        tabbedPane.setVisible(true);
+    }
+
     // 初始化标签页
     private void tabbedPaneInit() {
         // 组装标签面板
@@ -4493,21 +4519,6 @@ public class MainFrame extends JFrame {
 
         playQueueLabel.setIconTextGap(gap);
         playQueuePanel.add(playQueueLabel);
-
-        // 标签大小统一
-        Dimension d = new Dimension(130, 42);
-        personalMusicPanel.setPreferredSize(d);
-        netMusicPanel.setPreferredSize(d);
-        netPlaylistPanel.setPreferredSize(d);
-        netAlbumPanel.setPreferredSize(d);
-        netArtistPanel.setPreferredSize(d);
-        netRadioPanel.setPreferredSize(d);
-        netMvPanel.setPreferredSize(d);
-        netRankingPanel.setPreferredSize(d);
-        netUserPanel.setPreferredSize(d);
-        recommendPanel.setPreferredSize(d);
-        downloadManagementPanel.setPreferredSize(d);
-        playQueuePanel.setPreferredSize(d);
 
         // 标签布局
         FlowLayout fl = new FlowLayout(FlowLayout.LEFT);

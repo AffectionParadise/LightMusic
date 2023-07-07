@@ -283,8 +283,7 @@ public class CommentReq {
         // QQ
         else if (source == NetMusicSource.QQ && StringUtil.isNotEmpty(typeStr[1])) {
             int lim = hotOnly ? limit : Math.min(25, limit);
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, hotOnly ? 1 : 0, typeStr[1],
-                            id, page, lim))
+            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, hotOnly ? 1 : 0, typeStr[1], id, page, lim))
                     .execute()
                     .body();
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
@@ -360,7 +359,7 @@ public class CommentReq {
                     ref = "http://www.kuwo.cn/playlist_detail/" + StringUtil.encode(id);
                     break;
                 case 2:
-                    ref = "http://www.kuwo.cn/rankList" + StringUtil.encode(id);
+                    ref = "http://www.kuwo.cn/rankList/" + StringUtil.encode(id);
                     break;
             }
             String url = hotOnly ? GET_HOT_COMMENTS_KW_API : GET_NEW_COMMENTS_KW_API;

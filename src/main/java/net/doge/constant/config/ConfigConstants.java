@@ -35,6 +35,8 @@ public class ConfigConstants {
     public final static String WINDOW_SIZE = "windowSize";
     // 播放视频是否关闭主界面
     public final static String VIDEO_ONLY = "videoOnly";
+    // 是否显示侧边栏文字
+    public final static String SHOW_TAB_TEXT = "showTabText";
     // 高斯模糊因子
     public final static String GS_FACTOR_INDEX = "gsFactorIndex";
     // 暗角滤镜因子

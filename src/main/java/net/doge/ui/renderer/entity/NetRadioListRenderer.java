@@ -97,7 +97,7 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 200, tw = pw - 20;
+        final int pw = 180, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.getName(), tw));
         String dj = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", tw));

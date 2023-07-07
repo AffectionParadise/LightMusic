@@ -18,12 +18,7 @@ public class WindowSize {
             {1800, 1013},
     };
 
-    public static int SMALL = 0;
     public static int MIDDLE = 1;
-    public static int LARGE = 2;
-    public static int LARGER = 3;
-    public static int SUPER = 4;
-    public static int HUGE = 5;
 
     public static final String[] names = {"小 (95%)", "中 (100%)", "大 (105%)", "较大 (110%)", "超大 (130%)", "巨大 (150%)"};
 }

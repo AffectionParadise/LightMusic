@@ -114,7 +114,7 @@ public class MvMenuReq {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
                 String mvId = mvJson.getString("vid");
-                String mvName = mvJson.getString("title");
+                String mvName = mvJson.getString("title").trim();
                 String artistName = SdkUtil.parseArtists(mvJson, NetMusicSource.QQ);
                 String creatorId = mvJson.getJSONArray("singers").getJSONObject(0).getString("mid");
                 String coverImgUrl = mvJson.getString("picurl");
@@ -123,7 +123,7 @@ public class MvMenuReq {
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.QQ);
                 mvInfo.setId(mvId);
-                mvInfo.setName(mvName.trim());
+                mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
                 mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
@@ -180,7 +180,7 @@ public class MvMenuReq {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
                     String mvId = mvJson.getString("vid");
-                    String mvName = mvJson.getString("title");
+                    String mvName = mvJson.getString("title").trim();
                     String artistName = SdkUtil.parseCreators(mvJson);
                     String creatorId = mvJson.getJSONArray("creator").getJSONObject(0).getString("userId");
                     String coverImgUrl = mvJson.getString("coverUrl");
@@ -190,7 +190,7 @@ public class MvMenuReq {
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setType(MvInfoType.VIDEO);
                     mvInfo.setId(mvId);
-                    mvInfo.setName(mvName.trim());
+                    mvInfo.setName(mvName);
                     mvInfo.setArtist(artistName);
                     mvInfo.setCreatorId(creatorId);
                     mvInfo.setCoverImgUrl(coverImgUrl);

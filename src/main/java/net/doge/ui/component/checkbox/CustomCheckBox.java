@@ -3,6 +3,7 @@ package net.doge.ui.component.checkbox;
 import net.doge.constant.ui.Fonts;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CustomCheckBox extends JCheckBox {
     public CustomCheckBox() {
@@ -20,5 +21,6 @@ public class CustomCheckBox extends JCheckBox {
         setFocusPainted(false);
         setFont(Fonts.NORMAL);
         setIconTextGap(10);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 }

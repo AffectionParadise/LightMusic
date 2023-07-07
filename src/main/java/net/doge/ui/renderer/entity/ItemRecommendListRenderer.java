@@ -102,7 +102,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(playCountLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
 
-            final int pw = 200, tw = pw - 20;
+            final int pw = 180, tw = pw - 20;
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getName(), tw));
             String creator = netPlaylistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getCreator(), tw)) : "";
@@ -168,7 +168,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(publishTimeLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
 
-            final int pw = 200, tw = pw - 20;
+            final int pw = 180, tw = pw - 20;
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netAlbumInfo.getName(), tw));
             String artist = netAlbumInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(netAlbumInfo.getArtist(), tw)) : "";
@@ -234,7 +234,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(mvNumLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
 
-            final int pw = 200, tw = pw - 20;
+            final int pw = 180, tw = pw - 20;
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netArtistInfo.getName(), tw));
             String songNum = netArtistInfo.hasSongNum() ? StringUtil.textToHtml(netArtistInfo.fromME() ? netArtistInfo.getSongNum() + " 电台" : netArtistInfo.getSongNum() + " 歌曲") : "";
@@ -309,7 +309,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(playCountLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
 
-            final int pw = 200, tw = pw - 20;
+            final int pw = 180, tw = pw - 20;
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.getName(), tw));
             String dj = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", tw));
@@ -385,7 +385,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(pubTimeLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
 
-            final int pw = 200, tw = pw - 20;
+            final int pw = 180, tw = pw - 20;
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getName(), tw));
             String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getArtist(), tw));
@@ -453,7 +453,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(updateTimeLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
 
-            final int pw = 200, tw = pw - 20;
+            final int pw = 180, tw = pw - 20;
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRankingInfo.getName(), tw));
             String playCount = netRankingInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netRankingInfo.getPlayCount())) : "";
@@ -531,7 +531,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(playlistCountLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
 
-            final int pw = 200, tw = pw - 20;
+            final int pw = 180, tw = pw - 20;
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netUserInfo.getName(), tw));
             String gender = netUserInfo.hasGender() ? StringUtil.textToHtml(netUserInfo.getGender()) : "";

@@ -70,6 +70,8 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomCheckBox autoDownloadLrcCheckBox = new CustomCheckBox("下载歌曲时自动下载歌词");
     private CustomPanel videoOnlyPanel = new CustomPanel();
     private CustomCheckBox videoOnlyCheckBox = new CustomCheckBox("播放视频时隐藏主界面");
+    private CustomPanel showTabTextPanel = new CustomPanel();
+    private CustomCheckBox showTabTextCheckBox = new CustomCheckBox("显示侧边栏文字");
     private CustomPanel gsFactorPanel = new CustomPanel();
     private CustomLabel gsFactorLabel = new CustomLabel("高斯模糊半径（半径越大越模糊）：");
     private CustomComboBox<String> gsFactorComboBox = new CustomComboBox();
@@ -230,6 +232,7 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdatePanel.setLayout(fl);
         autoDownloadLrcPanel.setLayout(fl);
         videoOnlyPanel.setLayout(fl);
+        showTabTextPanel.setLayout(fl);
         gsFactorPanel.setLayout(fl);
         darkerFactorPanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
@@ -268,6 +271,7 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdatePanel.setBorder(b);
         autoDownloadLrcPanel.setBorder(b);
         videoOnlyPanel.setBorder(b);
+        showTabTextPanel.setBorder(b);
         gsFactorPanel.setBorder(b);
         darkerFactorPanel.setBorder(b);
         musicDownPanel.setBorder(b);
@@ -302,6 +306,7 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setForeground(textColor);
         autoDownloadLrcCheckBox.setForeground(textColor);
         videoOnlyCheckBox.setForeground(textColor);
+        showTabTextCheckBox.setForeground(textColor);
         gsFactorLabel.setForeground(textColor);
         darkerFactorLabel.setForeground(textColor);
         musicDownLabel.setForeground(textColor);
@@ -600,6 +605,8 @@ public class SettingDialog extends AbstractTitledDialog {
         autoDownloadLrcCheckBox.setSelectedIcon(selectedIcon);
         videoOnlyCheckBox.setIcon(icon);
         videoOnlyCheckBox.setSelectedIcon(selectedIcon);
+        showTabTextCheckBox.setIcon(icon);
+        showTabTextCheckBox.setSelectedIcon(selectedIcon);
         enableKeyCheckBox.setIcon(icon);
         enableKeyCheckBox.setSelectedIcon(selectedIcon);
 
@@ -615,6 +622,8 @@ public class SettingDialog extends AbstractTitledDialog {
         autoDownloadLrcPanel.add(autoDownloadLrcCheckBox);
 
         videoOnlyPanel.add(videoOnlyCheckBox);
+
+        showTabTextPanel.add(showTabTextCheckBox);
 
         for (String name : BlurConstants.darkerFactorName) darkerFactorComboBox.addItem(name);
         darkerFactorPanel.add(darkerFactorLabel);
@@ -704,6 +713,7 @@ public class SettingDialog extends AbstractTitledDialog {
         centerPanel.add(windowSizePanel);
 
         centerPanel.add(appearancePanel);
+        centerPanel.add(showTabTextPanel);
         centerPanel.add(gsFactorPanel);
         centerPanel.add(darkerFactorPanel);
 
@@ -741,6 +751,7 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setSelected(f.autoUpdate);
         autoDownloadLrcCheckBox.setSelected(f.isAutoDownloadLrc);
         videoOnlyCheckBox.setSelected(f.videoOnly);
+        showTabTextCheckBox.setSelected(f.showTabText);
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
         musicDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath());
@@ -792,6 +803,9 @@ public class SettingDialog extends AbstractTitledDialog {
         f.autoUpdate = autoUpdateCheckBox.isSelected();
         f.isAutoDownloadLrc = autoDownloadLrcCheckBox.isSelected();
         f.videoOnly = videoOnlyCheckBox.isSelected();
+
+        f.showTabText = showTabTextCheckBox.isSelected();
+        f.initTabSize();
 
         int gsFactorIndex = BlurConstants.gsFactorIndex;
         BlurConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();
