@@ -832,9 +832,8 @@ public class RecommendPlaylistReq {
                         .body();
                 Document doc = Jsoup.parse(playlistInfoBody);
                 Elements as = doc.select("span.pagecon a");
-                if (!as.isEmpty()) {
-                    t = Integer.parseInt(as.last().text()) * limit;
-                } else t = limit;
+                if (as.isEmpty()) t = limit;
+                else t = Integer.parseInt(as.last().text()) * limit;
                 Elements playlistArray = doc.select("li.item dl");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     Element elem = playlistArray.get(i);

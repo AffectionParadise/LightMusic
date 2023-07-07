@@ -1,8 +1,10 @@
 package net.doge.util.system;
 
+import info.monitorenter.cpdetector.io.*;
 import net.doge.model.lyric.Statement;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -311,6 +313,26 @@ public class FileUtil {
     }
 
     /**
+     * 获取文件编码字符串
+     *
+     * @param file
+     * @return
+     */
+    public static String getCharsetName(File file) throws IOException {
+        String charsetName = "UTF-8";
+        CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+        detector.add(new ParsingDetector(false));
+        detector.add(JChardetFacade.getInstance());
+        detector.add(ASCIIDetector.getInstance());
+        detector.add(UnicodeDetector.getInstance());
+        Charset charset = detector.detectCodepage(file.toURI().toURL());
+        if (charset != null) charsetName = charset.name();
+        if("windows-1252".equals(charsetName)) charsetName = "UTF-16";
+        else if("Big5".equals(charsetName)) charsetName = "GBK";
+        return charsetName;
+    }
+
+    /**
      * 从文件或歌词字符串读取歌词（不支持滚动时）
      *
      * @param fileNameOrStr
@@ -326,7 +348,7 @@ public class FileUtil {
                 File f = new File(fileNameOrStr);
                 FileInputStream fis = new FileInputStream(f);
                 // 获取文件编码并读取歌词
-                bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtil.getCharsetName(f)));
+                bufferReader = new BufferedReader(new InputStreamReader(fis, getCharsetName(f)));
             } else {
                 bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
             }

@@ -132,9 +132,7 @@ public class MvUrlReq {
             String mvBody = HttpRequest.get(String.format(MV_URL_QQ_API, mvId))
                     .execute()
                     .body();
-            JSONArray mp4Array = JSONObject.fromObject(mvBody)
-                    .getJSONObject("data")
-                    .getJSONArray(mvId);
+            JSONArray mp4Array = JSONObject.fromObject(mvBody).getJSONObject("data").getJSONArray(mvId);
             return mp4Array.getString(mp4Array.size() - 1);
         }
 
@@ -149,7 +147,7 @@ public class MvUrlReq {
 
         // 咪咕 (暂时没有 MV url 的获取方式)
         else if (source == NetMusicSource.MG) {
-            return null;
+
         }
 
         // 千千
@@ -200,6 +198,6 @@ public class MvUrlReq {
             return url;
         }
 
-        return null;
+        return "";
     }
 }

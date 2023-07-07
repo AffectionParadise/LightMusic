@@ -1527,7 +1527,7 @@ public class UserMenuReq {
                 case 1:
                     Elements pageElem = doc.select(".page_number em");
                     String pageText = pageElem.isEmpty() ? "" : pageElem.text();
-                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 28 + 1) * limit + 1 : limit;
+                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 42 + 1) * limit + 1 : limit;
                     break;
                 case 2:
                     pageElem = doc.select(".page_list span");
@@ -1535,14 +1535,14 @@ public class UserMenuReq {
                     t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 3:
-                    pageElem = doc.select(".page_message a");
-                    pageText = pageElem.isEmpty() ? "" : pageElem.last().text();
+                    pageElem = doc.select("a.page_t_next");
+                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.attr("href"), 1);
                     t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 4:
                 case 6:
                     pageElem = doc.select(".msg_page_list a");
-                    pageText = pageElem.isEmpty() ? "" : pageElem.get(pageElem.size() - 2).text();
+                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"), 1);
                     t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 5:
@@ -1568,7 +1568,7 @@ public class UserMenuReq {
                     Elements la = user.select("label a");
 
                     String userId = ReUtil.get("/(\\d+)", a.attr("href"), 1);
-                    String userName = a.text();
+                    String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
                     Integer follow = Integer.parseInt(la.first().text());
@@ -1594,11 +1594,10 @@ public class UserMenuReq {
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     Element user = userArray.get(i);
                     Elements a = user.select("a");
-                    Elements span = user.select("span");
                     Elements img = user.select("img");
 
                     String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", a.attr("href"), 1);
-                    String userName = span.text();
+                    String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 
@@ -1622,7 +1621,7 @@ public class UserMenuReq {
                     Elements img = user.select("img");
 
                     String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", user.attr("href"), 1);
-                    String userName = user.text();
+                    String userName = user.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 
@@ -1867,7 +1866,7 @@ public class UserMenuReq {
                 case 1:
                     Elements pageElem = doc.select(".page_number em");
                     String pageText = pageElem.isEmpty() ? "" : pageElem.text();
-                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 28 + 1) * limit + 1 : limit;
+                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 42 + 1) * limit + 1 : limit;
                     break;
                 case 2:
                     pageElem = doc.select(".page_list span");
@@ -1875,14 +1874,14 @@ public class UserMenuReq {
                     t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 3:
-                    pageElem = doc.select(".page_message a");
-                    pageText = pageElem.isEmpty() ? "" : pageElem.last().text();
+                    pageElem = doc.select("a.page_t_next");
+                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.attr("href"), 1);
                     t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 4:
                 case 6:
                     pageElem = doc.select(".msg_page_list a");
-                    pageText = pageElem.isEmpty() ? "" : pageElem.get(pageElem.size() - 2).text();
+                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"), 1);
                     t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 5:
@@ -1908,7 +1907,7 @@ public class UserMenuReq {
                     Elements la = user.select("label a");
 
                     String userId = ReUtil.get("/(\\d+)", a.attr("href"), 1);
-                    String userName = a.text();
+                    String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
                     Integer follow = Integer.parseInt(la.first().text());
@@ -1934,11 +1933,10 @@ public class UserMenuReq {
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     Element user = userArray.get(i);
                     Elements a = user.select("a");
-                    Elements span = user.select("span");
                     Elements img = user.select("img");
 
                     String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", a.attr("href"), 1);
-                    String userName = span.text();
+                    String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 
@@ -1962,7 +1960,7 @@ public class UserMenuReq {
                     Elements img = user.select("img");
 
                     String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", user.attr("href"), 1);
-                    String userName = user.text();
+                    String userName = user.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 

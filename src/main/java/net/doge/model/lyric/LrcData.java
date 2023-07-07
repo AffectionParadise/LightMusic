@@ -1,8 +1,8 @@
 package net.doge.model.lyric;
 
 import lombok.Data;
-import net.doge.util.system.CharsetUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.FileUtil;
 
 import java.io.*;
 import java.util.Collections;
@@ -50,7 +50,7 @@ public class LrcData {
             File f = new File(fileNameOrStr);
             FileInputStream fis = new FileInputStream(f);
             // 获取文件编码并读取歌词
-            bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtil.getCharsetName(f)));
+            bufferReader = new BufferedReader(new InputStreamReader(fis, FileUtil.getCharsetName(f)));
         } else {
             bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
         }
@@ -149,7 +149,7 @@ public class LrcData {
         clean();
 
         // 添加歌词排头的等待点
-        if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "..."));
+        if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "···"));
 
         // 分离出歌词翻译
 //        parseTrans();

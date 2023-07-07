@@ -40,10 +40,10 @@ public class CommentReq {
     private final String GET_NEW_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s" +
             "&uid=0&prod=newWeb&httpsStatus=1";
     // 获取电台热门评论 API (喜马拉雅)
-    private final String GET_HOT_RADIO_COMMENTS_XM_API
+    private final String GET_RADIO_HOT_COMMENTS_XM_API
             = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=content-score-desc&pageId=%s&pageSize=%s";
     // 获取电台最新评论 API (喜马拉雅)
-    private final String GET_NEW_RADIO_COMMENTS_XM_API
+    private final String GET_RADIO_NEW_COMMENTS_XM_API
             = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=time-desc&pageId=%s&pageSize=%s";
     // 获取节目评论 API (喜马拉雅)
     private final String GET_COMMENTS_XM_API = "https://www.ximalaya.com/revision/comment/queryComments?trackId=%s&page=%s&pageSize=%s";
@@ -432,7 +432,7 @@ public class CommentReq {
         else if (source == NetMusicSource.XM) {
             JSONArray commentArray;
             if (isRadio) {
-                String url = hotOnly ? GET_HOT_RADIO_COMMENTS_XM_API : GET_NEW_RADIO_COMMENTS_XM_API;
+                String url = hotOnly ? GET_RADIO_HOT_COMMENTS_XM_API : GET_RADIO_NEW_COMMENTS_XM_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
                         .execute()
                         .body();
@@ -457,7 +457,7 @@ public class CommentReq {
                     String userId = commentJson.getString("uid");
                     String username = commentJson.getString("nickname");
                     String smallHeader = commentJson.getString("smallHeader");
-                    String profileUrl = isRadio ? smallHeader : "http:" + smallHeader;
+                    String profileUrl = isRadio ? smallHeader.replaceFirst("http:", "https:") : "https:" + smallHeader;
                     String content = commentJson.getString("content");
                     String time = TimeUtil.msToPhrase(commentJson.getLong(isRadio ? "createdAt" : "commentTime"));
                     Integer likedCount = commentJson.getInt("likes");
@@ -490,7 +490,7 @@ public class CommentReq {
                         userId = cj.getString("uid");
                         username = cj.getString("nickname");
                         smallHeader = cj.getString("smallHeader");
-                        profileUrl = isRadio ? smallHeader : "http:" + smallHeader;
+                        profileUrl = isRadio ? smallHeader.replaceFirst("http:", "https:") : "https:" + smallHeader;
                         content = cj.getString("content");
                         time = isRadio ? TimeUtil.msToPhrase(cj.getLong("createdAt")) : cj.getString("createAt");
                         likedCount = cj.getInt("likes");
@@ -543,7 +543,7 @@ public class CommentReq {
                 String username = comment.select(".username").text();
                 String userId = ReUtil.get("user-(\\d+)\\.htm", comment.select(".username a").attr("href"), 1);
                 String profileUrl = "https://www.hifini.com/" + comment.select("img").attr("src");
-                String content = msg.ownText().trim();
+                String content = msg.ownText();
                 if (StringUtil.isEmpty(content)) content = msg.text().trim();
                 String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
 
@@ -612,7 +612,7 @@ public class CommentReq {
                 String username = comment.select(".username").text();
                 String userId = ReUtil.get("user-(\\d+)\\.htm", comment.select(".username a").attr("href"), 1);
                 String profileUrl = "http://www.gggmusic.com/" + comment.select("img").attr("src");
-                String content = msg.ownText().trim();
+                String content = msg.ownText();
                 String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
@@ -675,7 +675,13 @@ public class CommentReq {
             JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             JSONArray commentArray = data.getJSONArray(hotOnly && isMv ? "hotList" : "comments");
-            total = isMv ? hotOnly ? commentArray.size() : data.getInt("count") : data.getJSONObject("page").getInt("totalCount");
+            if (isMv) {
+                if (hotOnly) total = commentArray.size();
+                else {
+                    int count = data.getInt("count"), lim = 10;
+                    total = (count % lim == 0 ? count / lim : count / lim + 1) * limit;
+                }
+            } else total = data.getJSONObject("page").getInt("totalCount");
             if (isMv) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);

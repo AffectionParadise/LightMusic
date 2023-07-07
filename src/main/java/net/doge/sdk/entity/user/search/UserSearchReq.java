@@ -161,9 +161,7 @@ public class UserSearchReq {
                     String userName = userJson.getString("nickname");
                     Integer gen = userJson.getInt("gender");
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
-                    String avatarThumbUrl = userJson.getString("logoPic");
-                    int in = avatarThumbUrl.lastIndexOf('!');
-                    if (in > 0) avatarThumbUrl = avatarThumbUrl.substring(0, in);
+                    String avatarThumbUrl = userJson.getString("logoPic").replaceFirst("http:", "https:");
                     Integer follow = userJson.getInt("followingsCount");
                     Integer followed = userJson.getInt("followersCount");
                     Integer radioCount = userJson.getInt("albumCount");
@@ -251,33 +249,35 @@ public class UserSearchReq {
                     .body();
             JSONObject data = JSONObject.fromObject(userInfoBody);
             t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
-            JSONArray userArray = data.getJSONArray("list");
-            for (int i = 0, len = userArray.size(); i < len; i++) {
-                JSONObject userJson = userArray.getJSONObject(i);
+            JSONArray userArray = data.optJSONArray("list");
+            if (userArray != null) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    JSONObject userJson = userArray.getJSONObject(i);
 
-                String userId = userJson.getString("id");
-                String name = StringUtil.removeHTMLLabel(userJson.getString("nickName"));
-                int sex = userJson.getInt("sex");
-                String gender = sex == 0 ? "男" : sex == 1 ? "女" : "保密";
-                String avatarThumbUrl = userJson.getString("pictureUrl");
-                Integer follow = userJson.getInt("follow");
-                Integer followed = userJson.getInt("fans");
-                Integer programCount = userJson.getInt("totalSong");
+                    String userId = userJson.getString("id");
+                    String name = StringUtil.removeHTMLLabel(userJson.getString("nickName"));
+                    int sex = userJson.getInt("sex");
+                    String gender = sex == 0 ? "♂ 男" : sex == 1 ? "♀ 女" : "保密";
+                    String avatarThumbUrl = userJson.getString("pictureUrl");
+                    Integer follow = userJson.getInt("follow");
+                    Integer followed = userJson.getInt("fans");
+                    Integer programCount = userJson.getInt("totalSong");
 
-                NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
-                userInfo.setId(userId);
-                userInfo.setName(name);
-                userInfo.setGender(gender);
-                userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
-                userInfo.setProgramCount(programCount);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(avatarThumbUrl);
-                    userInfo.setAvatarThumb(coverImgThumb);
-                });
-                res.add(userInfo);
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.FS);
+                    userInfo.setId(userId);
+                    userInfo.setName(name);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    userInfo.setFollow(follow);
+                    userInfo.setFollowed(followed);
+                    userInfo.setProgramCount(programCount);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(coverImgThumb);
+                    });
+                    res.add(userInfo);
+                }
             }
             return new CommonResult<>(res, t);
         };

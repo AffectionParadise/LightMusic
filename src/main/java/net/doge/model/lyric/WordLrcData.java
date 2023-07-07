@@ -2,8 +2,8 @@ package net.doge.model.lyric;
 
 import cn.hutool.core.util.ReUtil;
 import lombok.Data;
-import net.doge.util.system.CharsetUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.FileUtil;
 
 import java.io.*;
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class WordLrcData {
             File f = new File(fileNameOrStr);
             FileInputStream fis = new FileInputStream(f);
             // 获取文件编码并读取歌词
-            bufferReader = new BufferedReader(new InputStreamReader(fis, CharsetUtil.getCharsetName(f)));
+            bufferReader = new BufferedReader(new InputStreamReader(fis, FileUtil.getCharsetName(f)));
         } else {
             bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
         }

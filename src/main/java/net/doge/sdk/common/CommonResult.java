@@ -8,9 +8,7 @@ public class CommonResult<E> {
     public String cursor;
 
     public CommonResult(List<E> data, Integer total) {
-        this.data = data;
-        this.total = total;
-        this.cursor = "";
+        this(data, total, "");
     }
 
     public CommonResult(List<E> data, Integer total, String cursor) {

@@ -146,11 +146,11 @@ public class UserInfoReq {
             if (!userInfo.hasRadioCount()) userInfo.setRadioCount(data.getInt("albumsCount"));
             if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("tracksCount"));
 
-            String avatarUrl = "http:" + data.getString("cover");
+            String avatarUrl = "https:" + data.getString("cover");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
-            String bgImgUrl = "http:" + data.getString("background");
+            String bgImgUrl = "https:" + data.getString("background");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
@@ -233,7 +233,7 @@ public class UserInfoReq {
 
             // 个人信息面板 ui 不同，需要分情况
             // 签名
-            Elements intro = doc.select(".home_simpleTxt");
+            Elements intro = doc.select(".home_fullTxt");
             if (intro.isEmpty()) intro = doc.select(".rig.intro p");
             if (intro.isEmpty()) intro = doc.select(".simpleTxt");
             if (intro.isEmpty()) intro = doc.select(".resurm");
@@ -247,13 +247,13 @@ public class UserInfoReq {
             if (img.isEmpty()) img = doc.select(".p_abs img");
             // 关注数
             Elements followElem = doc.select("#totalfriend a");
-            if(followElem.isEmpty()) followElem = doc.select(".lt.w_20 a");
+            if (followElem.isEmpty()) followElem = doc.select(".lt.w_20 a");
             // 粉丝数
             Elements followedElem = doc.select("#totalfans a");
             // 背景图
             Elements bgImgElem = doc.select("html > body");
 
-            String sign = intro.text();
+            String sign = intro.first().ownText();
             String avatarUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
             Integer follow = Integer.parseInt(followElem.text());
             Integer followed = Integer.parseInt(followedElem.text());
@@ -561,58 +561,51 @@ public class UserInfoReq {
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
-                Elements pageElem = doc.select(".page_number em");
+                // 判断主页 ui 类型
                 int pageType = 1;
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page_list span");
-                    pageType = 2;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page_message a");
-                    pageType = 3;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select("span.page_list a");
-                    pageType = 4;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page a");
-                    pageType = 5;
-                }
-                if (pageElem.isEmpty()) pageType = -1;
+                if (!doc.select(".mainnav").isEmpty()) pageType = 2;
+                else if (!doc.select(".right h1").isEmpty()) pageType = 3;
+                else if (!doc.select(".rank_ry.c_wap").isEmpty()) pageType = 4;
+                else if (!doc.select(".rank_ry h3").isEmpty()) pageType = 5;
+                else if (!doc.select(".user_name").isEmpty()) pageType = 6;
+
                 switch (pageType) {
                     case 1:
-                        String pageText = pageElem.text();
+                        Elements pageElem = doc.select(".page_number em");
+                        String pageText = pageElem.isEmpty() ? "" : pageElem.text();
                         t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
                         break;
                     case 2:
-                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        pageElem = doc.select(".page_list span");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
-                        pageText = pageElem.last().text();
+                        pageElem = doc.select(".page_message a");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
-                        pageText = pageElem.get(pageElem.size() - 1).text();
-                        if (!StringUtil.isNumber(pageText)) pageText = pageElem.get(pageElem.size() - 3).text();
+                    case 6:
+                        pageElem = doc.select("span.page_list a");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
-                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        pageElem = doc.select(".page span");
+                        pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
-                    default:
-                        t = limit;
                 }
 
                 // 主页 ui 不同
-                Elements songArray = doc.select(".song_list li .song_name a");
-                if (songArray.isEmpty()) songArray = doc.select(".song tr td:nth-child(2) a");
-                if (songArray.isEmpty()) songArray = doc.select(".song_tb_a a");
-                if (songArray.isEmpty()) songArray = doc.select(".lt.list_name a");
-                if (songArray.isEmpty()) songArray = doc.select(".per_td a");
-                if (songArray.isEmpty()) songArray = doc.select(".s_title.list_name.lt a");
+                Elements songArray;
+                if (pageType == 1) songArray = doc.select(".song_list li .song_name a");
+                else if (pageType == 2) songArray = doc.select(".song tr td:nth-child(2) a");
+                else if (pageType == 3) songArray = doc.select(".song_tb_a a");
+                else if (pageType == 4) songArray = doc.select(".lt.list_name a");
+                else if (pageType == 5) songArray = doc.select(".per_td a");
+                else songArray = doc.select(".s_title.list_name.lt a");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     Element song = songArray.get(i);
 
@@ -644,58 +637,51 @@ public class UserInfoReq {
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
-                Elements pageElem = doc.select(".page_number em");
+                // 判断主页 ui 类型
                 int pageType = 1;
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page_list span");
-                    pageType = 2;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page_message a");
-                    pageType = 3;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select("span.page_list a");
-                    pageType = 4;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page span");
-                    pageType = 5;
-                }
-                if (pageElem.isEmpty()) pageType = -1;
+                if (!doc.select(".mainnav").isEmpty()) pageType = 2;
+                else if (!doc.select(".right h1").isEmpty()) pageType = 3;
+                else if (!doc.select(".rank_ry.c_wap").isEmpty()) pageType = 4;
+                else if (!doc.select(".rank_ry h3").isEmpty()) pageType = 5;
+                else if (!doc.select(".user_name").isEmpty()) pageType = 6;
+
                 switch (pageType) {
                     case 1:
-                        String pageText = pageElem.text();
+                        Elements pageElem = doc.select(".page_number em");
+                        String pageText = pageElem.isEmpty() ? "" : pageElem.text();
                         t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
                         break;
                     case 2:
-                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        pageElem = doc.select(".page_list span");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
-                        pageText = pageElem.last().text();
+                        pageElem = doc.select(".page_message a");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
-                        pageText = pageElem.get(pageElem.size() - 1).text();
-                        if (!StringUtil.isNumber(pageText)) pageText = pageElem.get(pageElem.size() - 3).text();
+                    case 6:
+                        pageElem = doc.select("span.page_list a");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
-                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        pageElem = doc.select(".page span");
+                        pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
-                    default:
-                        t = limit;
                 }
 
                 // 主页 ui 不同
-                Elements songArray = doc.select(".song_list li .song_name a");
-                if (songArray.isEmpty()) songArray = doc.select(".song tr td:nth-child(2) a");
-                if (songArray.isEmpty()) songArray = doc.select(".song_tb_a a");
-                if (songArray.isEmpty()) songArray = doc.select(".lt.list_name a");
-                if (songArray.isEmpty()) songArray = doc.select(".per_td a");
-                if (songArray.isEmpty()) songArray = doc.select(".s_title.list_name.lt a");
+                Elements songArray;
+                if (pageType == 1) songArray = doc.select(".song_list li .song_name a");
+                else if (pageType == 2) songArray = doc.select(".song tr td:nth-child(2) a");
+                else if (pageType == 3) songArray = doc.select(".song_tb_a a");
+                else if (pageType == 4) songArray = doc.select(".lt.list_name a");
+                else if (pageType == 5) songArray = doc.select(".per_td a");
+                else songArray = doc.select(".s_title.list_name.lt a");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     Element song = songArray.get(i);
 
@@ -727,58 +713,51 @@ public class UserInfoReq {
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
-                Elements pageElem = doc.select(".page_number em");
+                // 判断主页 ui 类型
                 int pageType = 1;
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page_list span");
-                    pageType = 2;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page_message a");
-                    pageType = 3;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select("span.page_list a");
-                    pageType = 4;
-                }
-                if (pageElem.isEmpty()) {
-                    pageElem = doc.select(".page span");
-                    pageType = 5;
-                }
-                if (pageElem.isEmpty()) pageType = -1;
+                if (!doc.select(".mainnav").isEmpty()) pageType = 2;
+                else if (!doc.select(".right h1").isEmpty()) pageType = 3;
+                else if (!doc.select(".rank_ry.c_wap").isEmpty()) pageType = 4;
+                else if (!doc.select(".rank_ry h3").isEmpty()) pageType = 5;
+                else if (!doc.select(".user_name").isEmpty()) pageType = 6;
+
                 switch (pageType) {
                     case 1:
-                        String pageText = pageElem.text();
+                        Elements pageElem = doc.select(".page_number em");
+                        String pageText = pageElem.isEmpty() ? "" : pageElem.text();
                         t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
                         break;
                     case 2:
-                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        pageElem = doc.select(".page_list span");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
-                        pageText = pageElem.last().text();
+                        pageElem = doc.select(".page_message a");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
-                        pageText = pageElem.get(pageElem.size() - 1).text();
-                        if (!StringUtil.isNumber(pageText)) pageText = pageElem.get(pageElem.size() - 3).text();
+                    case 6:
+                        pageElem = doc.select("span.page_list a");
+                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
-                        pageText = ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        pageElem = doc.select(".page span");
+                        pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
                         t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
-                    default:
-                        t = limit;
                 }
 
                 // 主页 ui 不同
-                Elements songArray = doc.select(".song_list li .song_name a");
-                if (songArray.isEmpty()) songArray = doc.select(".song tr td:nth-child(2) a");
-                if (songArray.isEmpty()) songArray = doc.select(".song_tb_a a");
-                if (songArray.isEmpty()) songArray = doc.select(".lt.list_name a");
-                if (songArray.isEmpty()) songArray = doc.select(".per_td a");
-                if (songArray.isEmpty()) songArray = doc.select(".s_title.list_name.lt a");
+                Elements songArray;
+                if (pageType == 1) songArray = doc.select(".song_list li .song_name a");
+                else if (pageType == 2) songArray = doc.select(".song tr td:nth-child(2) a");
+                else if (pageType == 3) songArray = doc.select(".song_tb_a a");
+                else if (pageType == 4) songArray = doc.select(".lt.list_name a");
+                else if (pageType == 5) songArray = doc.select(".per_td a");
+                else songArray = doc.select(".s_title.list_name.lt a");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     Element song = songArray.get(i);
 
@@ -911,7 +890,7 @@ public class UserInfoReq {
                 String userName = data.getString("nickName");
                 Integer gen = data.getInt("gender");
                 String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
-                String avatarThumbUrl = "http:" + data.getString("cover");
+                String avatarThumbUrl = "https:" + data.getString("cover");
                 Integer follow = data.getInt("followingCount");
                 Integer followed = data.getInt("fansCount");
                 Integer radioCount = data.getInt("albumsCount");
@@ -1089,7 +1068,7 @@ public class UserInfoReq {
                 if (img.isEmpty()) img = doc.select(".p_abs img");
                 // 关注数
                 Elements followElem = doc.select("#totalfriend a");
-                if(followElem.isEmpty()) followElem = doc.select(".lt.w_20 a");
+                if (followElem.isEmpty()) followElem = doc.select(".lt.w_20 a");
                 // 粉丝数
                 Elements followedElem = doc.select("#totalfans a");
 
@@ -1156,7 +1135,7 @@ public class UserInfoReq {
                 Elements img = doc.select("div.basic-info img");
 
                 if (h1 != null) {
-                    String userName = h1.ownText().trim();
+                    String userName = h1.ownText();
                     if (StringUtil.isNotEmpty(userName)) {
                         String gender = "保密";
                         String avatarThumbUrl = img.attr("src");

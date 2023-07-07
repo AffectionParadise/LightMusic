@@ -119,7 +119,7 @@ public class RadioSearchReq {
                 String radioName = radioJson.getString("title");
                 String dj = radioJson.getString("nickname");
                 String djId = radioJson.getString("uid");
-                String coverImgThumbUrl = radioJson.getString("coverPath");
+                String coverImgThumbUrl = radioJson.getString("coverPath").replaceFirst("http:", "https:");
                 Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getInt("tracksCount");
                 String category = radioJson.optString("categoryTitle");
