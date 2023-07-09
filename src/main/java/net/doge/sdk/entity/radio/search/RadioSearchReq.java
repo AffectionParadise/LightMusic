@@ -12,8 +12,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -59,10 +59,10 @@ public class RadioSearchReq {
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_API, encodedKeyword, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject result = radioInfoJson.getJSONObject("result");
             if (!result.isEmpty()) {
-                t = result.getInt("djRadiosCount");
+                t = result.getIntValue("djRadiosCount");
                 JSONArray radioArray = result.getJSONArray("djRadios");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
@@ -72,7 +72,7 @@ public class RadioSearchReq {
                     String dj = radioJson.getJSONObject("dj").getString("nickname");
                     String djId = radioJson.getJSONObject("dj").getString("userId");
                     Long playCount = radioJson.getLong("playCount");
-                    Integer trackCount = radioJson.getInt("programCount");
+                    Integer trackCount = radioJson.getIntValue("programCount");
                     String category = radioJson.getString("category");
                     if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
                     String coverImgThumbUrl = radioJson.getString("picUrl");
@@ -108,9 +108,9 @@ public class RadioSearchReq {
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data").getJSONObject("album");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray radioArray = data.getJSONArray("docs");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
@@ -121,8 +121,8 @@ public class RadioSearchReq {
                 String djId = radioJson.getString("uid");
                 String coverImgThumbUrl = radioJson.getString("coverPath").replaceFirst("http:", "https:");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("tracksCount");
-                String category = radioJson.optString("categoryTitle");
+                Integer trackCount = radioJson.getIntValue("tracksCount");
+                String category = radioJson.getString("categoryTitle");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setSource(NetMusicSource.XM);
@@ -152,9 +152,9 @@ public class RadioSearchReq {
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_ME_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
-            t = data.getJSONObject("pagination").getInt("count");
+            t = data.getJSONObject("pagination").getIntValue("count");
             JSONArray radioArray = data.getJSONArray("Datas");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
@@ -193,10 +193,10 @@ public class RadioSearchReq {
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            JSONArray radioArray = radioInfoJson.optJSONArray("items");
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
+            JSONArray radioArray = radioInfoJson.getJSONArray("items");
             if (radioArray != null) {
-                int to = radioInfoJson.getInt("total");
+                int to = radioInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
@@ -236,10 +236,10 @@ public class RadioSearchReq {
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_BOOK_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            JSONArray radioArray = radioInfoJson.optJSONArray("items");
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
+            JSONArray radioArray = radioInfoJson.getJSONArray("items");
             if (radioArray != null) {
-                int to = radioInfoJson.getInt("total");
+                int to = radioInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
@@ -280,10 +280,10 @@ public class RadioSearchReq {
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_GAME_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            JSONArray radioArray = radioInfoJson.optJSONArray("items");
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
+            JSONArray radioArray = radioInfoJson.getJSONArray("items");
             if (radioArray != null) {
-                int to = radioInfoJson.getInt("total");
+                int to = radioInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));

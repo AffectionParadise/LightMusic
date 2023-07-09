@@ -1,8 +1,8 @@
 package net.doge.util.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 
 import java.io.*;
 
@@ -26,7 +26,7 @@ public class JsonUtil {
             while ((s = reader.readLine()) != null) {
                 sb.append(s);
             }
-            return JSONObject.fromObject(sb.toString());
+            return JSONObject.parseObject(sb.toString());
         } catch (Exception e) {
             return new JSONObject();
         }
@@ -52,7 +52,7 @@ public class JsonUtil {
      */
     public static void saveJson(JSONObject object, String dest) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(dest));
-        String jsonString = prettyJson(object.toString());
+        String jsonString = JSON.toJSONString(object, JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue);
         writer.write(jsonString, 0, jsonString.length());
         writer.close();
     }
@@ -66,18 +66,5 @@ public class JsonUtil {
      */
     public static void saveJson(JSONObject object, File output) throws IOException {
         saveJson(object, output.getAbsolutePath());
-    }
-
-    /**
-     * 美化 Json 字符串
-     *
-     * @param jsonStr
-     * @return
-     * @throws IOException
-     */
-    public static String prettyJson(String jsonStr) {
-        if (StringUtil.isEmpty(jsonStr)) return jsonStr;
-        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(jsonStr);
-        return JSON.toJSONString(jsonObject, SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteDateUseDateFormat);
     }
 }

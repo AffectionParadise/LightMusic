@@ -74,17 +74,9 @@
 
         <!-- Json 解析 -->
         <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>2.4</version>
-            <classifier>jdk15</classifier>
-        </dependency>
-
-        <!-- Json 美化 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>2.0.19</version>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>2.0.34</version>
         </dependency>
 
         <!-- Jsoup -->
@@ -121,6 +113,7 @@
             <systemPath>${basedir}/libs/antlr-2.7.4.jar</systemPath>
         </dependency>
 
+        <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -172,63 +165,10 @@
                     <showWarnings>true</showWarnings>
                     <compilerArgs>
                         <arg>-extdirs</arg>
-                        <arg>${project.basedir}/libs;D:/EdgeDownloads/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib</arg>
+                        <arg>${project.basedir}/libs</arg>
                     </compilerArgs>
-<!--                    <compilerArguments>-->
-<!--                        <extdirs>${project.basedir}/libs</extdirs>-->
-<!--                        <extdirs>C:\Program Files\Java\javafx-sdk-15.0.1\lib</extdirs>-->
-<!--                    </compilerArguments>-->
                 </configuration>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <!-- 后缀 -->
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <!-- 主类 -->
-                        <manifest>
-                            <mainClass>net.doge.ui.MainFrame</mainClass>
-                        </manifest>
-                    </archive>
-                    <!-- 配置文件路径 -->
-                    <descriptors>
-                        <descriptor>assembly.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-dependency-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>copy-dependencies</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>copy-dependencies</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <outputDirectory>${project.build.directory}/libs</outputDirectory>-->
-<!--                            <overWriteReleases>false</overWriteReleases>-->
-<!--                            <overWriteSnapshots>false</overWriteSnapshots>-->
-<!--                            <overWriteIfNewer>true</overWriteIfNewer>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 </project>

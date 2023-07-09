@@ -14,8 +14,8 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -94,17 +94,17 @@ public class UserInfoReq {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_API, uid))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject profileJson = userInfoJson.getJSONObject("profile");
-            if (!userInfo.hasLevel()) userInfo.setLevel(userInfoJson.getInt("level"));
+            if (!userInfo.hasLevel()) userInfo.setLevel(userInfoJson.getIntValue("level"));
             if (!userInfo.hasAccAge()) userInfo.setAccAge(TimeUtil.getAccAge(profileJson.getLong("createTime")));
             if (!userInfo.hasBirthday()) userInfo.setBirthday(TimeUtil.msToDate(profileJson.getLong("birthday")));
             if (!userInfo.hasArea())
-                userInfo.setArea(AreaUtil.getArea(profileJson.getInt("province"), profileJson.getInt("city")));
+                userInfo.setArea(AreaUtil.getArea(profileJson.getIntValue("province"), profileJson.getIntValue("city")));
             if (!userInfo.hasSign()) userInfo.setSign(profileJson.getString("signature"));
-            if (!userInfo.hasFollow()) userInfo.setFollow(profileJson.getInt("follows"));
-            if (!userInfo.hasFollowed()) userInfo.setFollowed(profileJson.getInt("followeds"));
-            if (!userInfo.hasPlaylistCount()) userInfo.setPlaylistCount(profileJson.getInt("playlistCount"));
+            if (!userInfo.hasFollow()) userInfo.setFollow(profileJson.getIntValue("follows"));
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(profileJson.getIntValue("followeds"));
+            if (!userInfo.hasPlaylistCount()) userInfo.setPlaylistCount(profileJson.getIntValue("playlistCount"));
 
             String avatarUrl = profileJson.getString("avatarUrl");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
@@ -126,25 +126,25 @@ public class UserInfoReq {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_XM_API, uid))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            if (!userInfo.hasLevel()) userInfo.setLevel(data.getInt("anchorGrade"));
+            if (!userInfo.hasLevel()) userInfo.setLevel(data.getIntValue("anchorGrade"));
             if (!userInfo.hasGender()) {
-                Integer gen = data.getInt("gender");
+                Integer gen = data.getIntValue("gender");
                 String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                 userInfo.setGender(gender);
             }
             if (!userInfo.hasBirthday())
-                userInfo.setBirthday(data.getInt("birthMonth") <= 0 ? null : data.getString("birthMonth") + "-" + data.getString("birthDay"));
+                userInfo.setBirthday(data.getIntValue("birthMonth") <= 0 ? null : data.getString("birthMonth") + "-" + data.getString("birthDay"));
             if (!userInfo.hasArea()) {
-                String area = (data.has("province") ? data.getString("province") : "") + (data.has("city") ? " - " + data.getString("city") : "");
+                String area = (data.containsKey("province") ? data.getString("province") : "") + (data.containsKey("city") ? " - " + data.getString("city") : "");
                 userInfo.setArea(area.isEmpty() ? "未知" : area);
             }
-            if (!userInfo.hasSign()) userInfo.setSign(data.optString("personalSignature"));
-            if (!userInfo.hasFollow()) userInfo.setFollow(data.getInt("followingCount"));
-            if (!userInfo.hasFollowed()) userInfo.setFollowed(data.getInt("fansCount"));
-            if (!userInfo.hasRadioCount()) userInfo.setRadioCount(data.getInt("albumsCount"));
-            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("tracksCount"));
+            if (!userInfo.hasSign()) userInfo.setSign(data.getString("personalSignature"));
+            if (!userInfo.hasFollow()) userInfo.setFollow(data.getIntValue("followingCount"));
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(data.getIntValue("fansCount"));
+            if (!userInfo.hasRadioCount()) userInfo.setRadioCount(data.getIntValue("albumsCount"));
+            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getIntValue("tracksCount"));
 
             String avatarUrl = "https:" + data.getString("cover");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
@@ -176,7 +176,7 @@ public class UserInfoReq {
                         String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, uid, 1, 1))
                                 .execute()
                                 .body();
-                        Integer programCount = JSONObject.fromObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getInt("count");
+                        Integer programCount = JSONObject.parseObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getIntValue("count");
                         userInfo.setProgramCount(programCount);
                     });
                 }
@@ -275,11 +275,11 @@ public class UserInfoReq {
                     .header(Header.COOKIE, SdkCommon.HK_COOKIE)
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
+            JSONObject userInfoJson = JSONObject.parseObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
 
             if (!userInfo.hasSign()) userInfo.setSign(userInfoJson.getString("wishes"));
-            if (!userInfo.hasFollowed()) userInfo.setFollowed(userInfoJson.getInt("fansCnt"));
-            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(userInfoJson.getInt("videoCnt"));
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(userInfoJson.getIntValue("fansCnt"));
+            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(userInfoJson.getIntValue("videoCnt"));
 
             String avatarUrl = userInfoJson.getString("avatar");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
@@ -347,17 +347,17 @@ public class UserInfoReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONObject card = data.getJSONObject("card");
 
-            if (!userInfo.hasLevel()) userInfo.setLevel(card.getJSONObject("level_info").getInt("current_level"));
+            if (!userInfo.hasLevel()) userInfo.setLevel(card.getJSONObject("level_info").getIntValue("current_level"));
             if (!userInfo.hasGender()) userInfo.setGender(card.getString("sex"));
             if (!userInfo.hasBirthday()) userInfo.setBirthday(card.getString("birthday"));
             if (!userInfo.hasSign()) userInfo.setSign(card.getString("sign"));
-            if (!userInfo.hasFollow()) userInfo.setFollow(card.getInt("attention"));
-            if (!userInfo.hasFollowed()) userInfo.setFollowed(card.getInt("fans"));
-            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getInt("archive_count"));
+            if (!userInfo.hasFollow()) userInfo.setFollow(card.getIntValue("attention"));
+            if (!userInfo.hasFollowed()) userInfo.setFollowed(card.getIntValue("fans"));
+            if (!userInfo.hasProgramCount()) userInfo.setProgramCount(data.getIntValue("archive_count"));
 
             String avatarUrl = card.getString("face");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
@@ -385,8 +385,8 @@ public class UserInfoReq {
             String userInfoBody = HttpRequest.get(String.format(USER_SONGS_API, recordType ^ 1, userId))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
-            JSONArray songArray = userInfoJson.optJSONArray(isAll ? "allData" : "weekData");
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
+            JSONArray songArray = userInfoJson.getJSONArray(isAll ? "allData" : "weekData");
             if (songArray != null) {
                 total.set(songArray.size());
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
@@ -419,10 +419,10 @@ public class UserInfoReq {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_XM_API, userId, recordType + 1, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray songArray = data.getJSONArray("trackList");
-            total.set(data.getInt("totalCount"));
+            total.set(data.getIntValue("totalCount"));
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
@@ -524,10 +524,10 @@ public class UserInfoReq {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, recordType, userId, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("info");
             JSONArray songArray = data.getJSONArray("Datas");
-            total.set(data.getJSONObject("pagination").getInt("count"));
+            total.set(data.getJSONObject("pagination").getIntValue("count"));
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
@@ -805,10 +805,10 @@ public class UserInfoReq {
             String userInfoBody = HttpRequest.get(String.format(USER_AUDIO_BI_API, recordType + 1, userId, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            total.set(data.getInt("totalSize"));
-            JSONArray songArray = data.optJSONArray("data");
+            total.set(data.getIntValue("totalSize"));
+            JSONArray songArray = data.getJSONArray("data");
             if (songArray != null) {
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
@@ -843,23 +843,23 @@ public class UserInfoReq {
         LinkedList<NetUserInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        if (!"0".equals(id) && !"null".equals(id) && StringUtil.isNotEmpty(id)) {
+        if (!"0".equals(id) && StringUtil.isNotEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_API, id))
                         .execute()
                         .body();
-                JSONObject userJson = JSONObject.fromObject(userInfoBody).getJSONObject("profile");
+                JSONObject userJson = JSONObject.parseObject(userInfoBody).getJSONObject("profile");
 
                 String userId = userJson.getString("userId");
                 String userName = userJson.getString("nickname");
-                Integer gen = userJson.getInt("gender");
+                Integer gen = userJson.getIntValue("gender");
                 String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                 String accAge = TimeUtil.getAccAge(userJson.getLong("createTime"));
                 String avatarThumbUrl = userJson.getString("avatarUrl");
-                Integer follow = userJson.getInt("follows");
-                Integer followed = userJson.getInt("followeds");
-                Integer playlistCount = userJson.getInt("playlistCount");
+                Integer follow = userJson.getIntValue("follows");
+                Integer followed = userJson.getIntValue("followeds");
+                Integer playlistCount = userJson.getIntValue("playlistCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setId(userId);
@@ -883,18 +883,18 @@ public class UserInfoReq {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_XM_API, id))
                         .execute()
                         .body();
-                JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+                JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
                 JSONObject data = userInfoJson.getJSONObject("data");
 
                 String userId = data.getString("uid");
                 String userName = data.getString("nickName");
-                Integer gen = data.getInt("gender");
+                Integer gen = data.getIntValue("gender");
                 String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                 String avatarThumbUrl = "https:" + data.getString("cover");
-                Integer follow = data.getInt("followingCount");
-                Integer followed = data.getInt("fansCount");
-                Integer radioCount = data.getInt("albumsCount");
-                Integer programCount = data.getInt("tracksCount");
+                Integer follow = data.getIntValue("followingCount");
+                Integer followed = data.getIntValue("fansCount");
+                Integer radioCount = data.getIntValue("albumsCount");
+                Integer programCount = data.getIntValue("tracksCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.XM);
@@ -996,7 +996,7 @@ public class UserInfoReq {
                         String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, id, 1, 1))
                                 .execute()
                                 .body();
-                        Integer programCount = JSONObject.fromObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getInt("count");
+                        Integer programCount = JSONObject.parseObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getIntValue("count");
                         userInfo.setProgramCount(programCount);
                     });
                 };
@@ -1098,14 +1098,14 @@ public class UserInfoReq {
                         .header(Header.COOKIE, SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
+                JSONObject data = JSONObject.parseObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
 
                 String userId = data.getString("id");
                 String userName = data.getString("name");
                 String gender = "保密";
                 String avatarThumbUrl = data.getString("avatar");
-                Integer followed = data.getInt("fansCnt");
-                Integer programCount = data.getInt("videoCnt");
+                Integer followed = data.getIntValue("fansCnt");
+                Integer programCount = data.getIntValue("videoCnt");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.HK);
@@ -1162,7 +1162,7 @@ public class UserInfoReq {
                         .cookie(SdkCommon.BI_COOKIE)
                         .execute()
                         .body();
-                JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+                JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
                 JSONObject data = userInfoJson.getJSONObject("data");
                 JSONObject card = data.getJSONObject("card");
 
@@ -1171,9 +1171,9 @@ public class UserInfoReq {
                 String gender = card.getString("sex");
                 gender = "男".equals(gender) ? "♂ " + gender : "女".equals(gender) ? "♀ " + gender : "保密";
                 String avatarThumbUrl = card.getString("face");
-                Integer follow = card.getInt("attention");
-                Integer followed = card.getInt("fans");
-                Integer programCount = data.getInt("archive_count");
+                Integer follow = card.getIntValue("attention");
+                Integer followed = card.getIntValue("fans");
+                Integer programCount = data.getIntValue("archive_count");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.BI);

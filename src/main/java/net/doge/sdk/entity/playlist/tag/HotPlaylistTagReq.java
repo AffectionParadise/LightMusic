@@ -5,8 +5,8 @@ import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -60,7 +60,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(HIGH_QUALITY_PLAYLIST_TAG_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("tags");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tagJson = tags.getJSONObject(i);
@@ -76,7 +76,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PICKED_PLAYLIST_TAG_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("sub");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tagJson = tags.getJSONObject(i);
@@ -93,7 +93,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_KG_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tagIds = playlistTagJson.getJSONObject("data").getJSONObject("tagids");
             final String[] cats = new String[]{"主题", "语种", "风格", "年代", "心情", "场景"};
             for (int i = 0, len = cats.length; i < len; i++) {
@@ -115,7 +115,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_QQ_API)
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONObject("tags").getJSONObject("data").getJSONArray("v_group");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONArray tagArray = tags.getJSONObject(i).getJSONArray("v_item");
@@ -136,7 +136,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_KW_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONArray tagArray = tags.getJSONObject(i).getJSONArray("data");
@@ -157,7 +157,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_MG_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONArray tagArray = tags.getJSONObject(i).getJSONArray("content");
@@ -178,7 +178,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(PLAYLIST_TAG_QI_API, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONArray tagArray = tags.getJSONObject(i).getJSONArray("subCate");
@@ -199,7 +199,7 @@ public class HotPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_ME_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tags = playlistTagJson.getJSONObject("info");
             final String[] cats = new String[]{"主题", "场景", "情感"};
             for (int i = 0, len = tags.size(); i < len; i++) {

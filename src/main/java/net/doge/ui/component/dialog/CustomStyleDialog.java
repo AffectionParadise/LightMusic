@@ -175,7 +175,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(null);

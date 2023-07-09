@@ -13,8 +13,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -78,11 +78,11 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_API, encodedKeyword, limit, (page - 1) * limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
-            JSONObject result = musicInfoJson.optJSONObject("result");
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONObject result = musicInfoJson.getJSONObject("result");
             if (result != null) {
-                t = result.getInt("songCount");
-                JSONArray songsArray = result.optJSONArray("songs");
+                t = result.getIntValue("songCount");
+                JSONArray songsArray = result.getJSONArray("songs");
                 if (songsArray != null) {
                     for (int i = 0, len = songsArray.size(); i < len; i++) {
                         JSONObject songJson = songsArray.getJSONObject(i);
@@ -120,11 +120,11 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_BY_LYRIC_API, encodedKeyword, limit, (page - 1) * limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
-            JSONObject result = musicInfoJson.optJSONObject("result");
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONObject result = musicInfoJson.getJSONObject("result");
             if (result != null) {
-                t = result.getInt("songCount");
-                JSONArray songs = result.optJSONArray("songs");
+                t = result.getIntValue("songCount");
+                JSONArray songs = result.getJSONArray("songs");
                 if (songs != null) {
                     for (int i = 0, len = songs.size(); i < len; i++) {
                         JSONObject songJson = songs.getJSONObject(i);
@@ -138,7 +138,7 @@ public class MusicSearchReq {
                         Double duration = songJson.getDouble("duration") / 1000;
                         String mvId = songJson.getString("mvid");
                         String lrcMatch = songJson.getJSONObject("lyrics").getString("txt").replace("\n", " / ");
-//                        JSONArray lyrics = songJson.optJSONArray("lyrics");
+//                        JSONArray lyrics = songJson.getJSONArray("lyrics");
 //                        String lrcMatch = null;
 //                        if (lyrics != null) {
 //                            StringBuffer sb = new StringBuffer();
@@ -175,11 +175,11 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_VOICE_API, encodedKeyword, lim, (page - 1) * lim))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            int to = data.getInt("totalCount");
+            int to = data.getIntValue("totalCount");
             t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
-            JSONArray songsArray = data.optJSONArray("resources");
+            JSONArray songsArray = data.getJSONArray("resources");
             if (songsArray != null) {
                 for (int i = 0, len = songsArray.size(); i < len; i++) {
                     JSONObject programJson = songsArray.getJSONObject(i).getJSONObject("baseInfo");
@@ -221,9 +221,9 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KG_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray songsArray = data.getJSONArray("info");
             for (int i = 0, len = songsArray.size(); i < len; i++) {
                 JSONObject songJson = songsArray.getJSONObject(i);
@@ -236,7 +236,7 @@ public class MusicSearchReq {
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getString("mvhash");
-                String lrcMatch = songJson.optString("lyric");
+                String lrcMatch = songJson.getString("lyric");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -262,9 +262,9 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_BY_LYRIC_KG_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray songsArray = data.getJSONArray("info");
             for (int i = 0, len = songsArray.size(); i < len; i++) {
                 JSONObject songJson = songsArray.getJSONObject(i);
@@ -278,7 +278,7 @@ public class MusicSearchReq {
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getString("mvhash");
-                String lrcMatch = songJson.optString("lyric");
+                String lrcMatch = songJson.getString("lyric");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -307,9 +307,9 @@ public class MusicSearchReq {
                     .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 0))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
-            t = data.getJSONObject("meta").getInt("sum");
+            t = data.getJSONObject("meta").getIntValue("sum");
             JSONArray songsArray = data.getJSONObject("body").getJSONObject("song").getJSONArray("list");
             for (int i = 0, len = songsArray.size(); i < len; i++) {
                 JSONObject songJson = songsArray.getJSONObject(i);
@@ -347,9 +347,9 @@ public class MusicSearchReq {
                     .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 7))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
-            t = data.getJSONObject("meta").getInt("sum");
+            t = data.getJSONObject("meta").getIntValue("sum");
             JSONArray songsArray = data.getJSONObject("body").getJSONObject("song").getJSONArray("list");
             for (int i = 0, len = songsArray.size(); i < len; i++) {
                 JSONObject songJson = songsArray.getJSONObject(i);
@@ -362,7 +362,7 @@ public class MusicSearchReq {
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("id");
-                String lrcMatch = StringUtil.removeHTMLLabel(songJson.optString("content")).replace("\\n", " / ");
+                String lrcMatch = StringUtil.removeHTMLLabel(songJson.getString("content")).replace("\\n", " / ");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.QQ);
@@ -390,11 +390,11 @@ public class MusicSearchReq {
             // 有时候请求会崩，先判断是否请求成功
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String musicInfoBody = resp.body();
-                JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
-                JSONObject data = musicInfoJson.optJSONObject("data");
+                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+                JSONObject data = musicInfoJson.getJSONObject("data");
                 if (data != null) {
-                    t = data.getInt("total");
-                    JSONArray songsArray = data.optJSONArray("list");
+                    t = data.getIntValue("total");
+                    JSONArray songsArray = data.getJSONArray("list");
                     if (songsArray != null) {
                         for (int i = 0, len = songsArray.size(); i < len; i++) {
                             JSONObject songJson = songsArray.getJSONObject(i);
@@ -406,7 +406,7 @@ public class MusicSearchReq {
                             String albumName = StringUtil.removeHTMLLabel(songJson.getString("album"));
                             String albumId = songJson.getString("albumid");
                             Double duration = songJson.getDouble("duration");
-                            String mvId = songJson.getInt("hasmv") == 0 ? "" : songId;
+                            String mvId = songJson.getIntValue("hasmv") == 0 ? "" : songId;
 
                             NetMusicInfo musicInfo = new NetMusicInfo();
                             musicInfo.setSource(NetMusicSource.KW);
@@ -435,9 +435,9 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_MG_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.optInt("total");
+            t = data.getIntValue("total");
             JSONArray songsArray = data.getJSONArray("list");
             for (int i = 0, len = songsArray.size(); i < len; i++) {
                 JSONObject songJson = songsArray.getJSONObject(i);
@@ -449,7 +449,7 @@ public class MusicSearchReq {
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("id");
                 // 咪咕音乐没有 mv 时，该字段不存在！
-                String mvId = songJson.optString("mvId");
+                String mvId = songJson.getString("mvId");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.MG);
@@ -474,10 +474,10 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SEARCH_MUSIC_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword)))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
-            JSONObject data = musicInfoJson.optJSONObject("data");
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONObject data = musicInfoJson.getJSONObject("data");
             if (data != null) {
-                t = data.optInt("total");
+                t = data.getIntValue("total");
                 JSONArray songsArray = data.getJSONArray("typeTrack");
                 for (int i = 0, len = songsArray.size(); i < len; i++) {
                     JSONObject songJson = songsArray.getJSONObject(i);
@@ -485,7 +485,7 @@ public class MusicSearchReq {
                     String songId = songJson.getString("TSID");
                     String songName = songJson.getString("title");
                     String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QI);
-                    JSONArray artistArray = songJson.optJSONArray("artist");
+                    JSONArray artistArray = songJson.getJSONArray("artist");
                     String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                     String albumName = songJson.getString("albumTitle");
                     String albumId = songJson.getString("albumAssetCode");
@@ -591,9 +591,9 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_FS_API, encodedKeyword, page))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(musicInfoBody);
-            t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
-            JSONArray songsArray = data.optJSONArray("list");
+            JSONObject data = JSONObject.parseObject(musicInfoBody);
+            t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
+            JSONArray songsArray = data.getJSONArray("list");
             if (songsArray != null) {
                 for (int i = 0, len = songsArray.size(); i < len; i++) {
                     JSONObject songJson = songsArray.getJSONObject(i);
@@ -625,9 +625,9 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_XM_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data").getJSONObject("track");
-            t = data.optInt("total");
+            t = data.getIntValue("total");
             JSONArray songsArray = data.getJSONArray("docs");
             for (int i = 0, len = songsArray.size(); i < len; i++) {
                 JSONObject songJson = songsArray.getJSONObject(i);
@@ -664,9 +664,9 @@ public class MusicSearchReq {
                 String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, s[0].trim(), encodedKeyword, page, limit))
                         .execute()
                         .body();
-                JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("info");
-                t = data.getJSONObject("pagination").getInt("count");
+                t = data.getJSONObject("pagination").getIntValue("count");
                 JSONArray songsArray = data.getJSONArray("Datas");
                 for (int i = 0, len = songsArray.size(); i < len; i++) {
                     JSONObject songJson = songsArray.getJSONObject(i);

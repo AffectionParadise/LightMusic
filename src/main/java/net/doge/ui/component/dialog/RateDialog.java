@@ -63,7 +63,7 @@ public class RateDialog extends AbstractShadowDialog {
         initView();
 
         globalPanel.add(centerPanel, BorderLayout.CENTER);
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
 
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);

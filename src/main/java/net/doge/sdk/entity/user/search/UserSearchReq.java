@@ -11,8 +11,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -63,22 +63,22 @@ public class UserSearchReq {
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_API, encodedKeyword, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject result = userInfoJson.getJSONObject("result");
             if (!result.isEmpty()) {
-                t = result.getInt("userprofileCount");
+                t = result.getIntValue("userprofileCount");
                 JSONArray userArray = result.getJSONArray("userprofiles");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 
                     String userId = userJson.getString("userId");
                     String userName = userJson.getString("nickname");
-                    Integer gen = userJson.getInt("gender");
+                    Integer gen = userJson.getIntValue("gender");
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                     String avatarThumbUrl = userJson.getString("avatarUrl");
-                    Integer follow = userJson.getInt("follows");
-                    Integer followed = userJson.getInt("followeds");
-                    Integer playlistCount = userJson.getInt("playlistCount");
+                    Integer follow = userJson.getIntValue("follows");
+                    Integer followed = userJson.getIntValue("followeds");
+                    Integer playlistCount = userJson.getIntValue("playlistCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setId(userId);
@@ -108,9 +108,9 @@ public class UserSearchReq {
                     .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 8))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
-            t = data.getJSONObject("meta").getInt("sum");
+            t = data.getJSONObject("meta").getIntValue("sum");
             JSONArray userArray = data.getJSONObject("body").getJSONObject("user").getJSONArray("list");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
@@ -119,8 +119,8 @@ public class UserSearchReq {
                 String userName = userJson.getString("title");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("pic");
-                Integer followed = userJson.getInt("fans_num");
-                Integer playlistCount = userJson.getInt("diss_num");
+                Integer followed = userJson.getIntValue("fans_num");
+                Integer playlistCount = userJson.getIntValue("diss_num");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.QQ);
@@ -149,23 +149,23 @@ public class UserSearchReq {
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_XM_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
-            JSONObject result = userInfoJson.getJSONObject("data").optJSONObject("user");
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
+            JSONObject result = userInfoJson.getJSONObject("data").getJSONObject("user");
             if (result != null) {
-                t = result.getInt("total");
+                t = result.getIntValue("total");
                 JSONArray userArray = result.getJSONArray("docs");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 
                     String userId = userJson.getString("uid");
                     String userName = userJson.getString("nickname");
-                    Integer gen = userJson.getInt("gender");
+                    Integer gen = userJson.getIntValue("gender");
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                     String avatarThumbUrl = userJson.getString("logoPic").replaceFirst("http:", "https:");
-                    Integer follow = userJson.getInt("followingsCount");
-                    Integer followed = userJson.getInt("followersCount");
-                    Integer radioCount = userJson.getInt("albumCount");
-                    Integer programCount = userJson.getInt("tracksCount");
+                    Integer follow = userJson.getIntValue("followingsCount");
+                    Integer followed = userJson.getIntValue("followersCount");
+                    Integer radioCount = userJson.getIntValue("albumCount");
+                    Integer programCount = userJson.getIntValue("tracksCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.XM);
@@ -198,9 +198,9 @@ public class UserSearchReq {
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_ME_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject info = userInfoJson.getJSONObject("info");
-            t = info.getJSONObject("pagination").getInt("count");
+            t = info.getJSONObject("pagination").getIntValue("count");
             JSONArray userArray = info.getJSONArray("Datas");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
@@ -210,10 +210,10 @@ public class UserSearchReq {
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar2");
 //                String bgImgUrl = userJson.getString("coverurl2");
-                Integer follow = userJson.getInt("follownum");
-                Integer followed = userJson.getInt("fansnum");
-//                Integer radioCount = userJson.getInt("albumnum");
-                Integer programCount = userJson.getInt("soundnum");
+                Integer follow = userJson.getIntValue("follownum");
+                Integer followed = userJson.getIntValue("fansnum");
+//                Integer radioCount = userJson.getIntValue("albumnum");
+                Integer programCount = userJson.getIntValue("soundnum");
 //                String sign = userJson.getString("userintro");
 
                 NetUserInfo userInfo = new NetUserInfo();
@@ -247,21 +247,21 @@ public class UserSearchReq {
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_FS_API, encodedKeyword, page))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(userInfoBody);
-            t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
-            JSONArray userArray = data.optJSONArray("list");
+            JSONObject data = JSONObject.parseObject(userInfoBody);
+            t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
+            JSONArray userArray = data.getJSONArray("list");
             if (userArray != null) {
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 
                     String userId = userJson.getString("id");
                     String name = StringUtil.removeHTMLLabel(userJson.getString("nickName"));
-                    int sex = userJson.getInt("sex");
+                    int sex = userJson.getIntValue("sex");
                     String gender = sex == 0 ? "♂ 男" : sex == 1 ? "♀ 女" : "保密";
                     String avatarThumbUrl = userJson.getString("pictureUrl");
-                    Integer follow = userJson.getInt("follow");
-                    Integer followed = userJson.getInt("fans");
-                    Integer programCount = userJson.getInt("totalSong");
+                    Integer follow = userJson.getIntValue("follow");
+                    Integer followed = userJson.getIntValue("fans");
+                    Integer programCount = userJson.getIntValue("totalSong");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.FS);
@@ -291,9 +291,9 @@ public class UserSearchReq {
                     .header(Header.COOKIE, SdkCommon.HK_COOKIE)
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = data.getInt("has_more") == 1 ? (page + 1) * limit : page * limit;
+            t = data.getIntValue("has_more") == 1 ? (page + 1) * limit : page * limit;
             JSONArray userArray = data.getJSONArray("list");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
@@ -302,8 +302,8 @@ public class UserSearchReq {
                 String userName = userJson.getString("name");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("author_icon");
-                Integer followed = userJson.getInt("fansCnt");
-                Integer programCount = userJson.getInt("videoCnt");
+                Integer followed = userJson.getIntValue("fansCnt");
+                Integer programCount = userJson.getIntValue("videoCnt");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.HK);
@@ -333,10 +333,10 @@ public class UserSearchReq {
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DB_API, encodedKeyword, (page - 1) * lim))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
-            JSONArray userArray = userInfoJson.optJSONArray("items");
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
+            JSONArray userArray = userInfoJson.getJSONArray("items");
             if (userArray != null) {
-                int to = userInfoJson.getInt("total");
+                int to = userInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(userArray.getString(i));
@@ -378,11 +378,11 @@ public class UserSearchReq {
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            JSONArray userArray = data.optJSONArray("object_list");
+            JSONArray userArray = data.getJSONArray("object_list");
             if (userArray != null && !userArray.isEmpty()) {
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 
@@ -390,8 +390,8 @@ public class UserSearchReq {
                     String userName = userJson.getString("username");
                     String gender = "保密";
                     String avatarThumbUrl = userJson.getString("avatar");
-                    Integer follow = userJson.getInt("followCount");
-                    Integer followed = userJson.getInt("beFollowCount");
+                    Integer follow = userJson.getIntValue("followCount");
+                    Integer followed = userJson.getIntValue("beFollowCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.DT);
@@ -422,21 +422,21 @@ public class UserSearchReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            JSONArray userArray = data.optJSONArray("result");
+            JSONArray userArray = data.getJSONArray("result");
             if (userArray != null) {
-                t = data.getInt("numResults");
+                t = data.getIntValue("numResults");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 
                     String userId = userJson.getString("mid");
                     String userName = userJson.getString("uname");
-                    int gen = userJson.getInt("gender");
+                    int gen = userJson.getIntValue("gender");
                     String gender = gen == 1 ? "♂ 男" : gen == 2 ? "♀ 女" : "保密";
                     String avatarThumbUrl = "https:" + userJson.getString("upic");
-                    Integer programCount = userJson.getInt("videos");
-                    Integer followed = userJson.getInt("fans");
+                    Integer programCount = userJson.getIntValue("videos");
+                    Integer followed = userJson.getIntValue("fans");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.BI);

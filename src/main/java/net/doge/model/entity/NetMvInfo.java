@@ -92,7 +92,7 @@ public class NetMvInfo {
     }
 
     public void setFormat(String format) {
-        this.format = StringUtil.isNotEmpty(format) && !"null".equals(format) ? format : Format.MP4;
+        this.format = StringUtil.isNotEmpty(format) ? format : Format.MP4;
     }
 
     public boolean isFlv() {

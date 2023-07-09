@@ -99,8 +99,7 @@ public class DonateDialog extends AbstractTitledDialog {
         yes.addActionListener(e -> close());
 
         initTitleBar();
-        setLayout(new BorderLayout());
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
         pack();
 
         updateBlur();

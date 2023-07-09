@@ -4,8 +4,8 @@ import cn.hutool.http.HttpRequest;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -236,7 +236,7 @@ public class MvTagReq {
             String radioTagBody = HttpRequest.get(String.format(MV_TAG_KG_API))
                     .execute()
                     .body();
-            JSONObject radioTagJson = JSONObject.fromObject(radioTagBody);
+            JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONObject("data").getJSONArray("list");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tagJson = tags.getJSONObject(i);
@@ -254,7 +254,7 @@ public class MvTagReq {
             String radioTagBody = HttpRequest.get(String.format(MV_TAG_QQ_API))
                     .execute()
                     .body();
-            JSONObject radioTagJson = JSONObject.fromObject(radioTagBody);
+            JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONObject("data").getJSONArray("version");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tagJson = tags.getJSONObject(i);

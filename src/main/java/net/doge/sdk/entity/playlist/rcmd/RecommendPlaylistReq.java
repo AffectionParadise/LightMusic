@@ -14,8 +14,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -140,7 +140,7 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(RECOMMEND_PLAYLIST_API)
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("result");
             t = playlistArray.size();
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -149,7 +149,7 @@ public class RecommendPlaylistReq {
                 String playlistId = playlistJson.getString("id");
                 String playlistName = playlistJson.getString("name");
                 Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getInt("trackCount");
+                Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("picUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -176,10 +176,10 @@ public class RecommendPlaylistReq {
                 String playlistInfoBody = HttpRequest.get(String.format(STYLE_PLAYLIST_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
                 JSONArray playlistArray = data.getJSONArray("playlist");
-                t = data.getJSONObject("page").getInt("total");
+                t = data.getJSONObject("page").getIntValue("total");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 
@@ -188,7 +188,7 @@ public class RecommendPlaylistReq {
                     String creator = playlistJson.getString("userName");
                     String creatorId = playlistJson.getString("userId");
                     Long playCount = playlistJson.getLong("playCount");
-                    Integer trackCount = playlistJson.getInt("songCount");
+                    Integer trackCount = playlistJson.getIntValue("songCount");
                     String coverImgThumbUrl = playlistJson.getString("cover");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -219,9 +219,9 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_KG_API, page))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("plist").getJSONObject("list");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray playlistArray = data.getJSONArray("info");
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -230,7 +230,7 @@ public class RecommendPlaylistReq {
                 String playlistName = playlistJson.getString("specialname");
                 String creator = playlistJson.getString("username");
                 Long playCount = playlistJson.getLong("playcount");
-                Integer trackCount = playlistJson.optInt("songcount", -1);
+                Integer trackCount = playlistJson.getIntValue("songcount", -1);
                 String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -259,7 +259,7 @@ public class RecommendPlaylistReq {
                 String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, s[1].trim(), page))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
@@ -297,7 +297,7 @@ public class RecommendPlaylistReq {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, s[1].trim(), page))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
@@ -336,7 +336,7 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(DAILY_RECOMMEND_PLAYLIST_QQ_API)
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
             t = playlistArray.size();
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -373,7 +373,7 @@ public class RecommendPlaylistReq {
 //                String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_QQ_API, s[0]))
 //                        .execute()
 //                        .body();
-//                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+//                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
 //                JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
 //                t = playlistArray.size();
 //                for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -437,10 +437,10 @@ public class RecommendPlaylistReq {
                 String playlistInfoBody = HttpRequest.get(url)
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 if (isAll) {
                     JSONObject data = playlistInfoJson.getJSONObject("playlist").getJSONObject("data");
-                    t = data.getInt("total");
+                    t = data.getIntValue("total");
                     JSONArray playlistArray = data.getJSONArray("v_playlist");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -467,7 +467,7 @@ public class RecommendPlaylistReq {
                     }
                 } else {
                     JSONObject data = playlistInfoJson.getJSONObject("playlist").getJSONObject("data").getJSONObject("content");
-                    t = data.getInt("total_cnt");
+                    t = data.getIntValue("total_cnt");
                     JSONArray playlistArray = data.getJSONArray("v_item");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i).getJSONObject("basic");
@@ -506,7 +506,7 @@ public class RecommendPlaylistReq {
             HttpResponse resp = SdkCommon.kwRequest(RECOMMEND_PLAYLIST_KW_API).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String playlistInfoBody = resp.body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
                 t = playlistArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -516,7 +516,7 @@ public class RecommendPlaylistReq {
                     String playlistName = playlistJson.getString("name");
                     String creator = playlistJson.getString("uname");
                     Long playCount = playlistJson.getLong("listencnt");
-                    Integer trackCount = playlistJson.getInt("total");
+                    Integer trackCount = playlistJson.getIntValue("total");
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -545,9 +545,9 @@ public class RecommendPlaylistReq {
             HttpResponse resp = HttpRequest.get(String.format(NEW_PLAYLIST_KW_API, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String playlistInfoBody = resp.body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 JSONArray playlistArray = data.getJSONArray("data");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -556,7 +556,7 @@ public class RecommendPlaylistReq {
                     String playlistName = playlistJson.getString("name");
                     String creator = playlistJson.getString("uname");
                     Long playCount = playlistJson.getLong("listencnt");
-                    Integer trackCount = playlistJson.getInt("total");
+                    Integer trackCount = playlistJson.getIntValue("total");
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -587,7 +587,7 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(String.format(REC_NEW_PLAYLIST_MG_API, page, limit))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data").getJSONArray("contentItemList").getJSONObject(0);
             t = 1000;
             JSONArray playlistArray = data.getJSONArray("itemList");
@@ -605,7 +605,7 @@ public class RecommendPlaylistReq {
                 playlistInfo.setSource(NetMusicSource.MG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
-                playlistInfo.setCreator("null".equals(creator) ? "" : creator);
+                playlistInfo.setCreator(creator);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
@@ -627,9 +627,9 @@ public class RecommendPlaylistReq {
                     .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("retMsg");
-            t = data.getInt("countSize");
+            t = data.getIntValue("countSize");
             JSONArray playlistArray = data.getJSONArray("playlist");
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -638,14 +638,14 @@ public class RecommendPlaylistReq {
                 String playlistName = playlistJson.getString("playListName");
                 String creator = playlistJson.getString("createName");
                 Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getInt("contentCount");
+                Integer trackCount = playlistJson.getIntValue("contentCount");
                 String coverImgThumbUrl = playlistJson.getString("image");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                 playlistInfo.setSource(NetMusicSource.MG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
-                playlistInfo.setCreator("null".equals(creator) ? "" : creator);
+                playlistInfo.setCreator(creator);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
@@ -668,9 +668,9 @@ public class RecommendPlaylistReq {
                     .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("retMsg");
-            t = data.getInt("countSize");
+            t = data.getIntValue("countSize");
             JSONArray playlistArray = data.getJSONArray("playlist");
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -679,14 +679,14 @@ public class RecommendPlaylistReq {
                 String playlistName = playlistJson.getString("playListName");
                 String creator = playlistJson.getString("createName");
                 Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getInt("contentCount");
+                Integer trackCount = playlistJson.getIntValue("contentCount");
                 String coverImgThumbUrl = playlistJson.getString("image");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                 playlistInfo.setSource(NetMusicSource.MG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
-                playlistInfo.setCreator("null".equals(creator) ? "" : creator);
+                playlistInfo.setCreator(creator);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 playlistInfo.setPlayCount(playCount);
                 playlistInfo.setTrackCount(trackCount);
@@ -709,16 +709,16 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(REC_PLAYLIST_QI_API, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONArray("data").getJSONObject(4);
-            t = data.getInt("module_nums");
+            t = data.getIntValue("module_nums");
             JSONArray playlistArray = data.getJSONArray("result");
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                 String playlistId = playlistJson.getString("id");
                 String playlistName = playlistJson.getString("title");
-                Integer trackCount = playlistJson.getInt("trackCount");
+                Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("pic");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -746,7 +746,7 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(String.format(REC_PLAYLIST_ME_API))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject info = playlistInfoJson.getJSONObject("info");
             JSONArray playlistArray = info.getJSONArray("albums");
             t = playlistArray.size();
@@ -757,7 +757,7 @@ public class RecommendPlaylistReq {
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("username");
                 String creatorId = playlistJson.getString("user_id");
-                Integer trackCount = playlistJson.getInt("music_count");
+                Integer trackCount = playlistJson.getIntValue("music_count");
                 Long playCount = playlistJson.getLong("view_count");
                 String coverImgThumbUrl = playlistJson.getString("front_cover");
 
@@ -788,8 +788,8 @@ public class RecommendPlaylistReq {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, s[3].trim(), page, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-                t = playlistInfoJson.getJSONObject("pagination").getInt("count");
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+                t = playlistInfoJson.getJSONObject("pagination").getIntValue("count");
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("albums");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -798,7 +798,7 @@ public class RecommendPlaylistReq {
                     String playlistName = playlistJson.getString("title");
                     String creator = playlistJson.getString("username");
                     String creatorId = playlistJson.getString("user_id");
-                    Integer trackCount = playlistJson.getInt("music_count");
+                    Integer trackCount = playlistJson.getIntValue("music_count");
                     String coverImgThumbUrl = playlistJson.getString("front_cover");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -877,9 +877,9 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_BI_API, page, limit))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
-            t = data.getInt("totalSize");
+            t = data.getIntValue("totalSize");
             JSONArray playlistArray = data.getJSONArray("data");
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -889,7 +889,7 @@ public class RecommendPlaylistReq {
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("uname");
                 String creatorId = playlistJson.getString("uid");
-                Integer trackCount = playlistJson.getInt("snum");
+                Integer trackCount = playlistJson.getIntValue("snum");
                 Long playCount = statistic.getLong("play");
                 String coverImgThumbUrl = playlistJson.getString("cover");
 

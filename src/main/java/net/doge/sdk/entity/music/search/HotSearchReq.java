@@ -5,8 +5,8 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
@@ -49,7 +49,7 @@ public class HotSearchReq {
             String hotSearchBody = HttpRequest.get(String.format(HOT_SEARCH_API))
                     .execute()
                     .body();
-            JSONObject hotSearchJson = JSONObject.fromObject(hotSearchBody);
+            JSONObject hotSearchJson = JSONObject.parseObject(hotSearchBody);
             JSONObject result = hotSearchJson.getJSONObject("result");
             JSONArray hotSearchArray = result.getJSONArray("hots");
             for (int i = 0, len = hotSearchArray.size(); i < len; i++) {
@@ -72,7 +72,7 @@ public class HotSearchReq {
                     .header("kg-rc", "1")
                     .execute()
                     .body();
-            JSONArray hotkeys = JSONObject.fromObject(hotSearchBody).getJSONObject("data").getJSONArray("list").getJSONObject(0).getJSONArray("keywords");
+            JSONArray hotkeys = JSONObject.parseObject(hotSearchBody).getJSONObject("data").getJSONArray("list").getJSONObject(0).getJSONArray("keywords");
             for (int i = 0, len = hotkeys.size(); i < len; i++) {
                 JSONObject keywordJson = hotkeys.getJSONObject(i);
                 res.add(keywordJson.getString("keyword"));
@@ -88,7 +88,7 @@ public class HotSearchReq {
                     .body("{\"comm\":{\"ct\":\"19\",\"cv\":\"1803\",\"guid\":\"0\",\"patch\":\"118\",\"psrf_access_token_expiresAt\":0,\"psrf_qqaccess_token\":\"\",\"psrf_qqopenid\":\"\",\"psrf_qqunionid\":\"\",\"tmeAppID\":\"qqmusic\",\"tmeLoginType\":0,\"uin\":\"0\",\"wid\":\"0\"},\"hotkey\":{\"method\":\"GetHotkeyForQQMusicPC\",\"module\":\"tencent_musicsoso_hotkey.HotkeyService\",\"param\":{\"search_id\":\"\",\"uin\":0}}}")
                     .execute()
                     .body();
-            JSONArray hotkeys = JSONObject.fromObject(hotSearchBody).getJSONObject("hotkey").getJSONObject("data").getJSONArray("vec_hotkey");
+            JSONArray hotkeys = JSONObject.parseObject(hotSearchBody).getJSONObject("hotkey").getJSONObject("data").getJSONArray("vec_hotkey");
             for (int i = 0, len = hotkeys.size(); i < len; i++) {
                 JSONObject keywordJson = hotkeys.getJSONObject(i);
                 res.add(keywordJson.getString("title"));
@@ -102,7 +102,7 @@ public class HotSearchReq {
 
             HttpResponse resp = HttpRequest.get(String.format(HOT_SEARCH_KW_API)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
-                JSONArray hotkeys = JSONObject.fromObject(resp.body()).getJSONArray("tagvalue");
+                JSONArray hotkeys = JSONObject.parseObject(resp.body()).getJSONArray("tagvalue");
                 for (int i = 0, len = hotkeys.size(); i < len; i++) {
                     res.add(hotkeys.getJSONObject(i).getString("key"));
                 }
@@ -116,7 +116,7 @@ public class HotSearchReq {
 
             HttpResponse resp = HttpRequest.get(String.format(HOT_SEARCH_MG_API)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
-                JSONObject data = JSONObject.fromObject(resp.body()).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(resp.body()).getJSONObject("data");
                 JSONArray hotkeys = data.getJSONArray("hotwords").getJSONObject(0).getJSONArray("hotwordList");
                 for (int i = 0, len = hotkeys.size(); i < len; i++) {
                     res.add(hotkeys.getJSONObject(i).getString("word"));

@@ -13,7 +13,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="MusicPlayer" options="-extdirs D:\编程之路\Java\我的项目\MusicPlayer/libs;$PROJECT_DIR$/../../../../EdgeDownloads/openjfx-19_windows-x64_bin-sdk/javafx-sdk-19/lib" />
+      <module name="MusicPlayer" options="-extdirs D:\编程之路\Java\我的项目\MusicPlayer/libs" />
     </option>
   </component>
 </project>

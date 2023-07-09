@@ -14,8 +14,8 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -60,10 +60,10 @@ public class MvSearchReq {
             String mvInfoBody = HttpRequest.get(String.format(SEARCH_MV_API, encodedKeyword, limit, (page - 1) * limit))
                     .execute()
                     .body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject result = mvInfoJson.getJSONObject("result");
             if (!result.isEmpty()) {
-                t = result.getInt("mvCount");
+                t = result.getIntValue("mvCount");
                 JSONArray mvArray = result.getJSONArray("mvs");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
@@ -102,15 +102,15 @@ public class MvSearchReq {
             String mvInfoBody = HttpRequest.get(String.format(SEARCH_VIDEO_API, encodedKeyword, limit, (page - 1) * limit))
                     .execute()
                     .body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject result = mvInfoJson.getJSONObject("result");
             if (!result.isEmpty()) {
-                t = result.getInt("videoCount");
+                t = result.getIntValue("videoCount");
                 JSONArray mvArray = result.getJSONArray("videos");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
 
-                    Integer type = mvJson.getInt("type");
+                    Integer type = mvJson.getIntValue("type");
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title");
                     String creators = SdkUtil.parseCreators(mvJson);
@@ -148,9 +148,9 @@ public class MvSearchReq {
             String mvInfoBody = HttpRequest.get(String.format(SEARCH_MV_KG_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray mvArray = data.getJSONArray("info");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -196,9 +196,9 @@ public class MvSearchReq {
                     .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 4))
                     .execute()
                     .body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
-            t = data.getJSONObject("meta").getInt("sum");
+            t = data.getJSONObject("meta").getIntValue("sum");
             JSONArray mvArray = data.getJSONObject("body").getJSONObject("mv").getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -240,9 +240,9 @@ public class MvSearchReq {
             HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MV_KW_API, encodedKeyword, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();
-                JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+                JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONObject data = mvInfoJson.getJSONObject("data");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 JSONArray mvArray = data.getJSONArray("mvlist");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
@@ -284,10 +284,10 @@ public class MvSearchReq {
                     .header(Header.COOKIE, SdkCommon.HK_COOKIE)
                     .execute();
             String mvInfoBody = resp.body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
             t = page * limit;
-            if (data.getInt("has_more") == 1) t++;
+            if (data.getIntValue("has_more") == 1) t++;
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -330,9 +330,9 @@ public class MvSearchReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute();
             String mvInfoBody = resp.body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
-            t = data.getInt("numResults");
+            t = data.getIntValue("numResults");
             JSONArray mvArray = data.getJSONArray("result");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);

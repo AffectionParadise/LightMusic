@@ -10,8 +10,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_QQ_API, id, 1))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
 
             GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
@@ -83,12 +83,12 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_MG_API, id))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("columnInfo");
 
             if (!rankingInfo.hasPlayCount())
                 rankingInfo.setPlayCount(data.getJSONObject("opNumItem").getLong("playNum"));
-            if (!rankingInfo.hasUpdateTime()) rankingInfo.setUpdateTime(data.optString("columnUpdateTime"));
+            if (!rankingInfo.hasUpdateTime()) rankingInfo.setUpdateTime(data.getString("columnUpdateTime"));
             GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
             // 咪咕需要额外补全榜单描述
             rankingInfo.setDescription(data.getString("columnDes"));
@@ -104,7 +104,7 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_ME_API, id))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("info").getJSONObject("album");
 
             String description = StringUtil.removeHTMLLabel(data.getString("intro"));
@@ -131,9 +131,9 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_KG_API, rankingId, page, limit))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
-            total = data.getInt("total");
+            total = data.getIntValue("total");
             JSONArray songArray = data.getJSONArray("info");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -142,12 +142,12 @@ public class RankingInfoReq {
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
-                JSONArray artistArray = songJson.optJSONArray("authors");
+                JSONArray artistArray = songJson.getJSONArray("authors");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
-                JSONArray mvdata = songJson.optJSONArray("mvdata");
+                JSONArray mvdata = songJson.getJSONArray("mvdata");
                 String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -171,9 +171,9 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_QQ_API, rankingId, 1000))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
-            total = data.getInt("total");
+            total = data.getIntValue("total");
             JSONArray songArray = data.getJSONArray("list");
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -208,9 +208,9 @@ public class RankingInfoReq {
             String rankingInfoBody = SdkCommon.kwRequest(String.format(RANKING_DETAIL_KW_API, rankingId, page, lim))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
-            int to = data.getInt("num");
+            int to = data.getIntValue("num");
             total = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
             JSONArray songArray = data.getJSONArray("musicList");
             for (int i = 0, len = songArray.size(); i < len; i++) {
@@ -223,7 +223,7 @@ public class RankingInfoReq {
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
-                String mvId = songJson.getInt("hasmv") == 0 ? "" : songId;
+                String mvId = songJson.getIntValue("hasmv") == 0 ? "" : songId;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KW);
@@ -245,14 +245,14 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_MG_API, rankingId))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("columnInfo");
-            total = data.getInt("contentsCount");
+            total = data.getIntValue("contentsCount");
             JSONArray songArray = data.getJSONArray("contents");
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i).getJSONObject("objectInfo");
 
-                String songId = songJson.optString("copyrightId");
+                String songId = songJson.getString("copyrightId");
                 // 过滤掉不是歌曲的 objectInfo
                 if (StringUtil.isEmpty(songId)) continue;
                 String name = songJson.getString("songName");
@@ -279,9 +279,9 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(RANKING_DETAIL_QI_API, rankingId, page, limit, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
-            total = data.getInt("total");
+            total = data.getIntValue("total");
             JSONArray songArray = data.getJSONArray("result");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -289,7 +289,7 @@ public class RankingInfoReq {
                 String songId = songJson.getString("TSID");
                 String name = songJson.getString("title");
                 String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QI);
-                JSONArray artistArray = songJson.optJSONArray("artist");
+                JSONArray artistArray = songJson.getJSONArray("artist");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumAssetCode");
@@ -314,7 +314,7 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_ME_API, rankingId))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("info");
             JSONArray songArray = data.getJSONArray("sounds");
             total = songArray.size();

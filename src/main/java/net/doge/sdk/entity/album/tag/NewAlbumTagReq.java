@@ -1,11 +1,11 @@
 package net.doge.sdk.entity.album.tag;
 
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import net.doge.sdk.common.Tags;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -379,7 +379,7 @@ public class NewAlbumTagReq {
             String tagBody = HttpRequest.get(String.format(STYLE_API))
                     .execute()
                     .body();
-            JSONObject tagJson = JSONObject.fromObject(tagBody);
+            JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tag = tags.getJSONObject(i);
@@ -390,7 +390,7 @@ public class NewAlbumTagReq {
                 if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
                 Tags.newAlbumTag.get(name)[2] = id;
                 // 子标签
-                JSONArray subTags = tag.optJSONArray("childrenTags");
+                JSONArray subTags = tag.getJSONArray("childrenTags");
                 if (subTags == null) continue;
                 for (int j = 0, s = subTags.size(); j < s; j++) {
                     JSONObject subTag = subTags.getJSONObject(j);
@@ -401,7 +401,7 @@ public class NewAlbumTagReq {
                     if (!Tags.newAlbumTag.containsKey(subName)) Tags.newAlbumTag.put(subName, new String[c]);
                     Tags.newAlbumTag.get(subName)[2] = subId;
                     // 孙子标签
-                    JSONArray ssTags = subTag.optJSONArray("childrenTags");
+                    JSONArray ssTags = subTag.getJSONArray("childrenTags");
                     if (ssTags == null) continue;
                     for (int k = 0, l = ssTags.size(); k < l; k++) {
                         JSONObject ssTag = ssTags.getJSONObject(k);

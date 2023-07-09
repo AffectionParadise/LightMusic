@@ -10,8 +10,8 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -73,13 +73,13 @@ public class RadioInfoReq {
         LinkedList<NetRadioInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        if (!"0".equals(id) && !"null".equals(id) && StringUtil.isNotEmpty(id)) {
+        if (!"0".equals(id) && StringUtil.isNotEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_API, id))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject radioJson = radioInfoJson.getJSONObject("data");
 
                 String radioId = radioJson.getString("id");
@@ -87,7 +87,7 @@ public class RadioInfoReq {
                 String dj = radioJson.getJSONObject("dj").getString("nickname");
                 String djId = radioJson.getJSONObject("dj").getString("userId");
 //                Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
+                Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
                 if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
@@ -114,7 +114,7 @@ public class RadioInfoReq {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_XM_API, id))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
                 JSONObject radioJson = data.getJSONObject("albumPageMainInfo");
 
@@ -123,7 +123,7 @@ public class RadioInfoReq {
 //                String dj = radioJson.getString("nickname");
                 String djId = radioJson.getString("anchorUid");
                 Long playCount = radioJson.getLong("playCount");
-//                Integer trackCount = radioJson.getInt("programCount");
+//                Integer trackCount = radioJson.getIntValue("programCount");
                 String coverImgThumbUrl = "https:" + radioJson.getString("cover");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
@@ -148,7 +148,7 @@ public class RadioInfoReq {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject info = radioInfoJson.getJSONObject("info");
                 JSONObject drama = info.getJSONObject("drama");
                 JSONObject episodes = info.getJSONObject("episodes");
@@ -170,7 +170,7 @@ public class RadioInfoReq {
                 radioInfo.setSource(NetMusicSource.ME);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
-                if (!"null".equals(dj)) radioInfo.setDj(dj);
+                radioInfo.setDj(dj);
                 radioInfo.setDjId(djId);
                 radioInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 radioInfo.setPlayCount(playCount);
@@ -206,7 +206,7 @@ public class RadioInfoReq {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_API, id))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject radioJson = radioInfoJson.getJSONObject("data");
 
             String coverImgUrl = radioJson.getString("picUrl");
@@ -214,14 +214,14 @@ public class RadioInfoReq {
 
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
-            radioInfo.setDescription(description.equals("null") ? "" : description);
+            radioInfo.setDescription(description);
             if (!radioInfo.hasDj()) radioInfo.setDj(radioJson.getJSONObject("dj").getString("nickname"));
             if (!radioInfo.hasDjId()) radioInfo.setDjId(radioJson.getJSONObject("dj").getString("userId"));
             String category = radioJson.getString("category");
             if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
             if (!radioInfo.hasCategory()) radioInfo.setCategory(category);
             if (!radioInfo.hasTag()) radioInfo.setTag(category);
-            if (!radioInfo.hasTrackCount()) radioInfo.setTrackCount(radioJson.getInt("programCount"));
+            if (!radioInfo.hasTrackCount()) radioInfo.setTrackCount(radioJson.getIntValue("programCount"));
             if (!radioInfo.hasPlayCount()) radioInfo.setPlayCount(radioJson.getLong("playCount"));
         }
 
@@ -238,16 +238,16 @@ public class RadioInfoReq {
                     String radioInfoBody = HttpRequest.get(String.format(BRIEF_RADIO_DETAIL_XM_API, id))
                             .execute()
                             .body();
-                    JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                    JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                     JSONObject radioJson = radioInfoJson.getJSONObject("data");
 
-                    radioInfo.setTrackCount(radioJson.getInt("trackCount"));
+                    radioInfo.setTrackCount(radioJson.getIntValue("trackCount"));
                 });
             }
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_XM_API, id))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject radioJson = radioInfoJson.getJSONObject("data").getJSONObject("albumPageMainInfo");
 
             String coverImgUrl = "https:" + radioJson.getString("cover");
@@ -265,7 +265,7 @@ public class RadioInfoReq {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject info = radioInfoJson.getJSONObject("info");
             JSONObject drama = info.getJSONObject("drama");
             JSONObject episodes = info.getJSONObject("episodes");
@@ -277,10 +277,7 @@ public class RadioInfoReq {
             GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             if (!radioInfo.hasTag()) radioInfo.setTag(SdkUtil.parseTags(drama, NetMusicSource.ME));
             if (!radioInfo.hasDescription()) radioInfo.setDescription(StringUtil.removeHTMLLabel(description));
-            if (!radioInfo.hasDj()) {
-                String dj = drama.getString("author");
-                if (!"null".equals(dj)) radioInfo.setDj(dj);
-            }
+            if (!radioInfo.hasDj()) radioInfo.setDj(drama.getString("author"));
             if (!radioInfo.hasDjId()) radioInfo.setDjId(drama.getString("user_id"));
             if (!radioInfo.hasCategory()) radioInfo.setCategory(drama.getString("catalog_name"));
             if (!radioInfo.hasTrackCount()) {
@@ -365,8 +362,8 @@ public class RadioInfoReq {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_DETAIL_API, radioId, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            total.set(radioInfoJson.getInt("count"));
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
+            total.set(radioInfoJson.getIntValue("count"));
             JSONArray songArray = radioInfoJson.getJSONArray("programs");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject programJson = songArray.getJSONObject(i);
@@ -401,8 +398,8 @@ public class RadioInfoReq {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_QQ_API, radioId))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-            JSONArray songArray = radioInfoJson.getJSONObject("data").optJSONArray("tracks");
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
+            JSONArray songArray = radioInfoJson.getJSONObject("data").getJSONArray("tracks");
             if (songArray != null) {
                 total.set(songArray.size());
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
@@ -435,9 +432,9 @@ public class RadioInfoReq {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_XM_API, radioId, sortType, page, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
-            total.set(data.getInt("trackTotalCount"));
+            total.set(data.getIntValue("trackTotalCount"));
             JSONArray songArray = data.getJSONArray("tracks");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -468,7 +465,7 @@ public class RadioInfoReq {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, radioId))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject info = radioInfoJson.getJSONObject("info");
             // 猫耳的电台可能有多种类型！
             JSONObject episodes = info.getJSONObject("episodes");

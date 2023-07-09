@@ -208,7 +208,7 @@ public class VideoDialog extends AbstractTitledDialog {
 
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
-        add(globalPanel);
+        setContentPane(globalPanel);
     }
 
     public void showDialog() {

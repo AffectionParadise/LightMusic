@@ -13,8 +13,8 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.sdk.util.BvAvConverter;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -116,7 +116,7 @@ public class CommentReq {
                 String songInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, netMusicInfo.getId()))
                         .execute()
                         .body();
-                JSONObject trackInfo = JSONObject.fromObject(songInfoBody).getJSONObject("data").getJSONObject("track_info");
+                JSONObject trackInfo = JSONObject.parseObject(songInfoBody).getJSONObject("data").getJSONObject("track_info");
                 id = trackInfo.getString("id");
             }
         } else if (info instanceof NetPlaylistInfo) {
@@ -136,7 +136,7 @@ public class CommentReq {
                 String songInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, netAlbumInfo.getId()))
                         .execute()
                         .body();
-                id = JSONObject.fromObject(songInfoBody).getJSONObject("data").getString("id");
+                id = JSONObject.parseObject(songInfoBody).getJSONObject("data").getString("id");
             }
         } else if (info instanceof NetRadioInfo) {
             NetRadioInfo netRadioInfo = (NetRadioInfo) info;
@@ -161,7 +161,7 @@ public class CommentReq {
                 String body = HttpRequest.get(String.format(MLOG_TO_VIDEO_API, id))
                         .execute()
                         .body();
-                id = JSONObject.fromObject(body).getString("data");
+                id = JSONObject.parseObject(body).getString("data");
                 netMvInfo.setId(id);
                 netMvInfo.setType(MvInfoType.VIDEO);
             }
@@ -179,8 +179,8 @@ public class CommentReq {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_API, typeStr[0], id, page, limit, hotOnly ? 2 : 3, cursor))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(commentInfoBody).getJSONObject("data");
-            total = data.getInt("totalCount");
+            JSONObject data = JSONObject.parseObject(commentInfoBody).getJSONObject("data");
+            total = data.getIntValue("totalCount");
             // 按时间排序时才需要 cursor ！
             if (!hotOnly) cursor = data.getString("cursor");
             JSONArray commentArray = data.getJSONArray("comments");
@@ -193,7 +193,7 @@ public class CommentReq {
                 String profileUrl = user.getString("avatarUrl");
                 String content = commentJson.getString("content");
                 String time = TimeUtil.msToPhrase(commentJson.getLong("time"));
-                Integer likedCount = commentJson.getInt("likedCount");
+                Integer likedCount = commentJson.getIntValue("likedCount");
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
                 commentInfo.setUserId(userId);
@@ -213,7 +213,7 @@ public class CommentReq {
                 commentInfos.add(commentInfo);
 
                 // 被回复的评论
-                JSONArray beReplied = commentJson.optJSONArray("beReplied");
+                JSONArray beReplied = commentJson.getJSONArray("beReplied");
                 if (beReplied == null) continue;
                 for (int j = 0, l = beReplied.size(); j < l; j++) {
                     commentJson = beReplied.getJSONObject(j);
@@ -250,18 +250,18 @@ public class CommentReq {
                     .header(Header.USER_AGENT, "Android712-AndroidPhone-8983-18-0-COMMENT-wifi")
                     .execute()
                     .body();
-            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
-            JSONArray commentArray = hotOnly ? commentInfoJson.optJSONArray("weightList") : commentInfoJson.optJSONArray("list");
-            total = hotOnly ? (commentArray != null ? commentArray.size() : 0) : commentInfoJson.getInt("count");
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
+            JSONArray commentArray = hotOnly ? commentInfoJson.getJSONArray("weightList") : commentInfoJson.getJSONArray("list");
+            total = hotOnly ? (commentArray != null ? commentArray.size() : 0) : commentInfoJson.getIntValue("count");
             if (commentArray != null) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
 
                     String username = commentJson.getString("user_name");
                     String profileUrl = commentJson.getString("user_pic");
-                    String content = commentJson.optString("content");
+                    String content = commentJson.getString("content");
                     String time = TimeUtil.strToPhrase(commentJson.getString("addtime"));
-                    Integer likedCount = commentJson.getJSONObject("like").getInt("likenum");
+                    Integer likedCount = commentJson.getJSONObject("like").getIntValue("likenum");
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
                     commentInfo.setSource(NetMusicSource.KG);
@@ -286,12 +286,12 @@ public class CommentReq {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, hotOnly ? 1 : 0, typeStr[1], id, page, lim))
                     .execute()
                     .body();
-            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             JSONObject commentJson = data.getJSONObject("comment");
-            int to = commentJson.getInt("commenttotal");
+            int to = commentJson.getIntValue("commenttotal");
             total = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
-            JSONArray commentArray = commentJson.optJSONArray("commentlist");
+            JSONArray commentArray = commentJson.getJSONArray("commentlist");
             if (commentArray != null) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject cj = commentArray.getJSONObject(i);
@@ -299,18 +299,18 @@ public class CommentReq {
                     String userId = cj.getString("encrypt_uin");
                     String username = cj.getString("nick");
                     String profileUrl = cj.getString("avatarurl").replaceFirst("http:", "https:");
-                    JSONArray middleCommentContent = cj.optJSONArray("middlecommentcontent");
+                    JSONArray middleCommentContent = cj.getJSONArray("middlecommentcontent");
                     String content;
                     JSONObject cj2 = null;
                     if (middleCommentContent != null) {
                         cj2 = middleCommentContent.getJSONObject(0);
                         content = cj2.getString("subcommentcontent").replace("\\n", "\n");
                     } else
-                        content = cj.optString("rootcommentcontent").replace("\\n", "\n");
+                        content = cj.getString("rootcommentcontent").replace("\\n", "\n");
                     // 评论可能已被删除
                     if (content.isEmpty()) content = "该评论已被删除";
                     String time = TimeUtil.msToPhrase(cj.getLong("time") * 1000);
-                    Integer likedCount = cj.getInt("praisenum");
+                    Integer likedCount = cj.getIntValue("praisenum");
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
                     commentInfo.setSource(NetMusicSource.QQ);
@@ -329,9 +329,9 @@ public class CommentReq {
 
                     // 被回复的评论
                     if (middleCommentContent != null) {
-                        String uId = cj2.optString("encrypt_replyeduin");
-                        String uname = cj.optString("rootcommentnick");
-                        String cnt = cj.optString("rootcommentcontent").replace("\\n", "\n");
+                        String uId = cj2.getString("encrypt_replyeduin");
+                        String uname = cj.getString("rootcommentnick");
+                        String cnt = cj.getString("rootcommentcontent").replace("\\n", "\n");
 
                         NetCommentInfo ci = new NetCommentInfo();
                         ci.setSource(NetMusicSource.QQ);
@@ -368,10 +368,10 @@ public class CommentReq {
                     .header(Header.REFERER, ref)
                     .execute()
                     .body();
-            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONArray commentArray = null;
-            if (!commentInfoJson.has("data")) {
-                total = commentInfoJson.getInt("total");
+            if (!commentInfoJson.containsKey("data")) {
+                total = commentInfoJson.getIntValue("total");
                 commentArray = commentInfoJson.getJSONArray("rows");
             }
             if (commentArray != null) {
@@ -382,7 +382,7 @@ public class CommentReq {
                     String profileUrl = commentJson.getString("u_pic");
                     String content = commentJson.getString("msg");
                     String time = TimeUtil.strToPhrase(commentJson.getString("time"));
-                    Integer likedCount = commentJson.getInt("like_num");
+                    Integer likedCount = commentJson.getIntValue("like_num");
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
                     commentInfo.setSource(NetMusicSource.KW);
@@ -400,13 +400,13 @@ public class CommentReq {
                     commentInfos.add(commentInfo);
 
                     // 被回复的评论
-                    JSONObject reply = commentJson.optJSONObject("reply");
+                    JSONObject reply = commentJson.getJSONObject("reply");
                     if (reply == null) continue;
                     username = reply.getString("u_name");
                     profileUrl = reply.getString("u_pic");
                     content = reply.getString("msg");
                     time = TimeUtil.strToPhrase(reply.getString("time"));
-                    likedCount = reply.getInt("like_num");
+                    likedCount = reply.getIntValue("like_num");
 
                     NetCommentInfo rCommentInfo = new NetCommentInfo();
                     rCommentInfo.setSource(NetMusicSource.KW);
@@ -435,18 +435,18 @@ public class CommentReq {
                 String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
                         .execute()
                         .body();
-                JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+                JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
                 JSONObject data = commentInfoJson.getJSONObject("data");
                 JSONObject comments = data.getJSONObject("comments");
-                total = comments.getInt("totalCount");
+                total = comments.getIntValue("totalCount");
                 commentArray = comments.getJSONArray("list");
             } else {
                 String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_XM_API, id, page, limit))
                         .execute()
                         .body();
-                JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+                JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
                 JSONObject data = commentInfoJson.getJSONObject("data");
-                total = data.getInt("totalComment");
+                total = data.getIntValue("totalComment");
                 commentArray = data.getJSONArray("comments");
             }
             if (commentArray != null) {
@@ -459,8 +459,8 @@ public class CommentReq {
                     String profileUrl = isRadio ? smallHeader.replaceFirst("http:", "https:") : "https:" + smallHeader;
                     String content = commentJson.getString("content");
                     String time = TimeUtil.msToPhrase(commentJson.getLong(isRadio ? "createdAt" : "commentTime"));
-                    Integer likedCount = commentJson.getInt("likes");
-                    Integer score = commentJson.optInt("newAlbumScore", -1);
+                    Integer likedCount = commentJson.getIntValue("likes");
+                    Integer score = commentJson.getIntValue("newAlbumScore", -1);
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
                     commentInfo.setSource(NetMusicSource.XM);
@@ -481,7 +481,7 @@ public class CommentReq {
                     commentInfos.add(commentInfo);
 
                     // 回复
-                    JSONArray replies = commentJson.optJSONArray("replies");
+                    JSONArray replies = commentJson.getJSONArray("replies");
                     if (replies == null) continue;
                     for (int j = 0, s = replies.size(); j < s; j++) {
                         JSONObject cj = replies.getJSONObject(j);
@@ -492,8 +492,8 @@ public class CommentReq {
                         profileUrl = isRadio ? smallHeader.replaceFirst("http:", "https:") : "https:" + smallHeader;
                         content = cj.getString("content");
                         time = isRadio ? TimeUtil.msToPhrase(cj.getLong("createdAt")) : cj.getString("createAt");
-                        likedCount = cj.getInt("likes");
-                        score = cj.optInt("newAlbumScore", -1);
+                        likedCount = cj.getIntValue("likes");
+                        score = cj.getIntValue("newAlbumScore", -1);
 
                         NetCommentInfo ci = new NetCommentInfo();
                         ci.setSource(NetMusicSource.XM);
@@ -671,16 +671,16 @@ public class CommentReq {
             String commentInfoBody = HttpRequest.get(url)
                     .execute()
                     .body();
-            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             JSONArray commentArray = data.getJSONArray(hotOnly && isMv ? "hotList" : "comments");
             if (isMv) {
                 if (hotOnly) total = commentArray.size();
                 else {
-                    int count = data.getInt("count"), lim = 10;
+                    int count = data.getIntValue("count"), lim = 10;
                     total = (count % lim == 0 ? count / lim : count / lim + 1) * limit;
                 }
-            } else total = data.getJSONObject("page").getInt("totalCount");
+            } else total = data.getJSONObject("page").getIntValue("totalCount");
             if (isMv) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
@@ -690,7 +690,7 @@ public class CommentReq {
                     String username = userJson.getString("NN");
                     String profileUrl = userJson.getString("I");
                     String content = commentJson.getString("content");
-                    Integer likeCount = commentJson.getInt("like");
+                    Integer likeCount = commentJson.getIntValue("like");
                     String time = TimeUtil.strToPhrase(commentJson.getString("createTime"));
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
@@ -774,9 +774,9 @@ public class CommentReq {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_ME_API, typeStr[3], hotOnly ? 3 : 1, id, page, limit))
                     .execute()
                     .body();
-            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("info").getJSONObject("comment");
-            total = data.getJSONObject("pagination").getInt("count");
+            total = data.getJSONObject("pagination").getIntValue("count");
             JSONArray commentArray = data.getJSONArray("Datas");
             for (int i = 0, len = commentArray.size(); i < len; i++) {
                 JSONObject commentJson = commentArray.getJSONObject(i);
@@ -786,7 +786,7 @@ public class CommentReq {
                 String profileUrl = commentJson.getString("icon");
                 String content = commentJson.getString("comment_content");
                 String time = TimeUtil.msToPhrase(commentJson.getLong("ctime") * 1000);
-                Integer likedCount = commentJson.getInt("like_num");
+                Integer likedCount = commentJson.getIntValue("like_num");
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
                 commentInfo.setSource(NetMusicSource.ME);
@@ -814,7 +814,7 @@ public class CommentReq {
                     profileUrl = cj.getString("icon");
                     content = cj.getString("comment_content");
                     time = TimeUtil.msToPhrase(cj.getLong("ctime") * 1000);
-                    likedCount = cj.getInt("like_num");
+                    likedCount = cj.getIntValue("like_num");
 
                     NetCommentInfo ci = new NetCommentInfo();
                     ci.setSource(NetMusicSource.ME);
@@ -842,9 +842,9 @@ public class CommentReq {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_HK_API, id, page, limit))
                     .execute()
                     .body();
-            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
-            total = data.getInt("comment_count");
+            total = data.getIntValue("comment_count");
             JSONArray commentArray = data.getJSONArray("list");
             for (int i = 0, len = commentArray.size(); i < len; i++) {
                 JSONObject commentJson = commentArray.getJSONObject(i);
@@ -854,7 +854,7 @@ public class CommentReq {
                 String profileUrl = commentJson.getString("avatar");
                 String content = commentJson.getString("content");
                 String time = TimeUtil.msToPhrase(commentJson.getLong("create_time") * 1000);
-                Integer likedCount = commentJson.getInt("like_count");
+                Integer likedCount = commentJson.getIntValue("like_count");
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
                 commentInfo.setSource(NetMusicSource.HK);
@@ -883,7 +883,7 @@ public class CommentReq {
                     profileUrl = cj.getString("avatar");
                     content = cj.getString("content");
                     time = TimeUtil.msToPhrase(cj.getLong("create_time") * 1000);
-                    likedCount = cj.getInt("like_count");
+                    likedCount = cj.getIntValue("like_count");
 
                     NetCommentInfo ci = new NetCommentInfo();
                     ci.setSource(NetMusicSource.HK);
@@ -1000,18 +1000,20 @@ public class CommentReq {
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String url = info instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, limit)
-                    : String.format(GET_SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, limit);
+            int lim = Math.min(20, limit);
+            String url = info instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
+                    : String.format(GET_SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, lim);
             String commentInfoBody = HttpRequest.get(url)
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
-                    .body()
-                    // 貌似解析不了，触及到什么特殊字符了？
-                    .replaceAll("\"\\[\\d+.*?\\]\"", "\"\"");
-            JSONObject commentInfoJson = JSONObject.fromObject(commentInfoBody);
+                    .body();
+//                    // 貌似解析不了，触及到什么特殊字符了？
+//                    .replaceAll("\"\\[\\d+.*?\\]\"", "\"\"");
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
-            total = data.getJSONObject("page").getInt("count");
-            JSONArray commentArray = data.optJSONArray("replies");
+            int count = data.getJSONObject("page").getIntValue("count");
+            total = (count % lim == 0 ? count / lim : count / lim + 1) * limit;
+            JSONArray commentArray = data.getJSONArray("replies");
             if (commentArray != null) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
@@ -1022,7 +1024,7 @@ public class CommentReq {
                     String profileUrl = member.getString("avatar");
                     String content = commentJson.getJSONObject("content").getString("message");
                     String time = TimeUtil.msToPhrase(commentJson.getLong("ctime") * 1000);
-                    Integer likedCount = commentJson.getInt("like");
+                    Integer likedCount = commentJson.getIntValue("like");
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
                     commentInfo.setSource(NetMusicSource.BI);
@@ -1042,7 +1044,7 @@ public class CommentReq {
                     commentInfos.add(commentInfo);
 
                     // 回复
-                    JSONArray replies = commentJson.optJSONArray("replies");
+                    JSONArray replies = commentJson.getJSONArray("replies");
                     if (replies == null) continue;
                     for (int j = 0, s = replies.size(); j < s; j++) {
                         JSONObject cj = replies.getJSONObject(j);
@@ -1053,7 +1055,7 @@ public class CommentReq {
                         profileUrl = mem.getString("avatar");
                         content = cj.getJSONObject("content").getString("message");
                         time = TimeUtil.msToPhrase(cj.getLong("ctime") * 1000);
-                        likedCount = cj.getInt("like");
+                        likedCount = cj.getIntValue("like");
 
                         NetCommentInfo ci = new NetCommentInfo();
                         ci.setSource(NetMusicSource.BI);

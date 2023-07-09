@@ -4,8 +4,8 @@ import cn.hutool.http.HttpRequest;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -46,7 +46,7 @@ public class RecPlaylistTagReq {
             String tagBody = HttpRequest.get(String.format(STYLE_API))
                     .execute()
                     .body();
-            JSONObject tagJson = JSONObject.fromObject(tagBody);
+            JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tag = tags.getJSONObject(i);
@@ -57,7 +57,7 @@ public class RecPlaylistTagReq {
                 if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
                 Tags.recPlaylistTag.get(name)[0] = id;
                 // 子标签
-                JSONArray subTags = tag.optJSONArray("childrenTags");
+                JSONArray subTags = tag.getJSONArray("childrenTags");
                 if (subTags == null) continue;
                 for (int j = 0, s = subTags.size(); j < s; j++) {
                     JSONObject subTag = subTags.getJSONObject(j);
@@ -68,7 +68,7 @@ public class RecPlaylistTagReq {
                     if (!Tags.recPlaylistTag.containsKey(subName)) Tags.recPlaylistTag.put(subName, new String[c]);
                     Tags.recPlaylistTag.get(subName)[0] = subId;
                     // 孙子标签
-                    JSONArray ssTags = subTag.optJSONArray("childrenTags");
+                    JSONArray ssTags = subTag.getJSONArray("childrenTags");
                     if (ssTags == null) continue;
                     for (int k = 0, l = ssTags.size(); k < l; k++) {
                         JSONObject ssTag = ssTags.getJSONObject(k);
@@ -88,7 +88,7 @@ public class RecPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_KG_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tagIds = playlistTagJson.getJSONObject("data").getJSONObject("tagids");
             final String[] cats = new String[]{"主题", "语种", "风格", "年代", "心情", "场景"};
             for (int i = 0, len = cats.length; i < len; i++) {
@@ -110,7 +110,7 @@ public class RecPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_QQ_API)
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONObject("tags").getJSONObject("data").getJSONArray("v_group");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONArray tagArray = tags.getJSONObject(i).getJSONArray("v_item");
@@ -131,7 +131,7 @@ public class RecPlaylistTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_ME_API))
                     .execute()
                     .body();
-            JSONObject playlistTagJson = JSONObject.fromObject(playlistTagBody);
+            JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tags = playlistTagJson.getJSONObject("info");
             final String[] cats = new String[]{"主题", "场景", "情感"};
             for (int i = 0, len = tags.size(); i < len; i++) {

@@ -8,8 +8,8 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 public class MvUrlReq {
     // mlog id 转视频 id API
@@ -57,7 +57,7 @@ public class MvUrlReq {
                     String body = HttpRequest.get(String.format(MLOG_TO_VIDEO_API, mvId))
                             .execute()
                             .body();
-                    mvId = JSONObject.fromObject(body).getString("data");
+                    mvId = JSONObject.parseObject(body).getString("data");
                     netMvInfo.setId(mvId);
                     netMvInfo.setType(MvInfoType.VIDEO);
                 }
@@ -65,16 +65,16 @@ public class MvUrlReq {
                 String mvBody = HttpRequest.get(String.format(VIDEO_URL_API, mvId))
                         .execute()
                         .body();
-                JSONObject mvJson = JSONObject.fromObject(mvBody);
+                JSONObject mvJson = JSONObject.parseObject(mvBody);
                 JSONArray urls = mvJson.getJSONArray("urls");
                 String url = urls.getJSONObject(0).getString("url");
-                if (!"null".equals(url)) return url;
+                if (StringUtil.isNotEmpty(url)) return url;
             }
 //            else if (isMlog) {
 //                String mvBody = HttpRequest.get(String.format(MLOG_URL_API, mvId))
 //                        .execute()
 //                        .body();
-//                JSONObject mvJson = JSONObject.fromObject(mvBody);
+//                JSONObject mvJson = JSONObject.parseObject(mvBody);
 //                JSONArray urls = mvJson.getJSONObject("data")
 //                        .getJSONObject("resource")
 //                        .getJSONObject("content")
@@ -84,22 +84,22 @@ public class MvUrlReq {
 //                int r = 0;
 //                for (int i = 0, s = urls.size(); i < s; i++) {
 //                    JSONObject urlJson = urls.getJSONObject(i);
-//                    int r1 = urlJson.getInt("r");
+//                    int r1 = urlJson.getIntValue("r");
 //                    if (r < r1) {
 //                        r = r1;
 //                        url = urlJson.getString("url");
 //                    }
 //                }
-//                if (!"null".equals(url)) return url;
+//                if (StringUtil.isNotEmpty(url)) return url;
 //            }
             else {
                 String mvBody = HttpRequest.get(String.format(MV_URL_API, mvId))
                         .execute()
                         .body();
-                JSONObject mvJson = JSONObject.fromObject(mvBody);
+                JSONObject mvJson = JSONObject.parseObject(mvBody);
                 JSONObject data = mvJson.getJSONObject("data");
                 String url = data.getString("url");
-                if (!"null".equals(url)) return url;
+                if (StringUtil.isNotEmpty(url)) return url;
             }
         }
 
@@ -110,13 +110,13 @@ public class MvUrlReq {
 //                    .header("x-router", "trackermv.kugou.com")
 //                    .execute()
 //                    .body();
-//            JSONObject data = JSONObject.fromObject(mvBody).getJSONObject("data");
+//            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
 //            return data.getJSONObject(mvId.toLowerCase()).getString("downurl");
 
             String mvBody = HttpRequest.get(String.format(MV_URL_KG_API, mvId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(mvBody).getJSONObject("mvdata");
+            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("mvdata");
             JSONObject mvJson;
             // 高画质优先
             mvJson = data.getJSONObject("rq");
@@ -124,7 +124,7 @@ public class MvUrlReq {
             if (mvJson.isEmpty()) mvJson = data.getJSONObject("sd");
             if (mvJson.isEmpty()) mvJson = data.getJSONObject("le");
             if (mvJson.isEmpty()) mvJson = data.getJSONObject("hd");
-            return mvJson.optString("downurl");
+            return mvJson.getString("downurl");
         }
 
         // QQ
@@ -132,7 +132,7 @@ public class MvUrlReq {
             String mvBody = HttpRequest.get(String.format(MV_URL_QQ_API, mvId))
                     .execute()
                     .body();
-            JSONArray mp4Array = JSONObject.fromObject(mvBody).getJSONObject("data").getJSONArray(mvId);
+            JSONArray mp4Array = JSONObject.parseObject(mvBody).getJSONObject("data").getJSONArray(mvId);
             return mp4Array.getString(mp4Array.size() - 1);
         }
 
@@ -141,7 +141,7 @@ public class MvUrlReq {
             String mvBody = SdkCommon.kwRequest(String.format(MV_URL_KW_API, mvId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(mvBody).optJSONObject("data");
+            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             if (data != null) return data.getString("url");
         }
 
@@ -155,7 +155,7 @@ public class MvUrlReq {
             String mvBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(MV_URL_QI_API, mvId, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONArray data = JSONObject.fromObject(mvBody).getJSONArray("data");
+            JSONArray data = JSONObject.parseObject(mvBody).getJSONArray("data");
             JSONArray urls = data.getJSONObject(0).getJSONArray("allRate");
             return urls.getJSONObject(0).getString("path");
         }
@@ -170,7 +170,7 @@ public class MvUrlReq {
             String mvBody = HttpRequest.get(String.format(MV_URL_HK_API, mvId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(mvBody).getJSONObject("data");
+            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             JSONArray urls = data.getJSONObject("apiData").getJSONObject("curVideoMeta").getJSONArray("clarityUrl");
             return urls.getJSONObject(urls.size() - 1).getString("url");
         }
@@ -183,14 +183,14 @@ public class MvUrlReq {
                         .cookie(SdkCommon.BI_COOKIE)
                         .execute()
                         .body();
-                netMvInfo.setId(mvId = JSONObject.fromObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
+                netMvInfo.setId(mvId = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
             }
 
             String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, mvId))
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(mvBody).getJSONObject("data");
+            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             JSONArray urls = data.getJSONArray("durl");
             String url = urls.getJSONObject(0).getString("url");
             // 根据 url 判断视频的格式

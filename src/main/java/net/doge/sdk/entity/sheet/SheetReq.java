@@ -8,8 +8,8 @@ import net.doge.model.entity.NetSheetInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -33,9 +33,9 @@ public class SheetReq {
             String sheetInfoBody = HttpRequest.get(String.format(GET_SHEETS_API, id))
                     .execute()
                     .body();
-            JSONObject sheetInfoJson = JSONObject.fromObject(sheetInfoBody);
+            JSONObject sheetInfoJson = JSONObject.parseObject(sheetInfoBody);
             JSONObject data = sheetInfoJson.getJSONObject("data");
-            JSONArray sheetArray = data.optJSONArray("musicSheetSimpleInfoVOS");
+            JSONArray sheetArray = data.getJSONArray("musicSheetSimpleInfoVOS");
             if (sheetArray != null) {
                 total = sheetArray.size();
                 for (int i = 0, len = sheetArray.size(); i < len; i++) {
@@ -48,8 +48,8 @@ public class SheetReq {
                     String musicKey = sheetJson.getString("musicKey");
                     String playVersion = sheetJson.getString("playVersion");
                     String chordName = sheetJson.getString("chordName");
-                    Integer pageSize = sheetJson.getInt("totalPageSize");
-                    Integer bpm = sheetJson.getInt("bpm");
+                    Integer pageSize = sheetJson.getIntValue("totalPageSize");
+                    Integer bpm = sheetJson.getIntValue("bpm");
 
                     NetSheetInfo sheetInfo = new NetSheetInfo();
                     sheetInfo.setId(sheetId);
@@ -87,7 +87,7 @@ public class SheetReq {
             String imgInfoBody = HttpRequest.get(String.format(GET_SHEETS_IMG_API, id))
                     .execute()
                     .body();
-            JSONObject imgInfoJson = JSONObject.fromObject(imgInfoBody);
+            JSONObject imgInfoJson = JSONObject.parseObject(imgInfoBody);
             JSONArray imgArray = imgInfoJson.getJSONArray("data");
             total = imgArray.size();
             for (int i = 0, len = imgArray.size(); i < len; i++) {

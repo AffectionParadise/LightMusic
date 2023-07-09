@@ -136,7 +136,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         initView();
         dialog.close();
 
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(null);

@@ -12,8 +12,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -171,20 +171,20 @@ public class MusicUrlReq {
             String songBody = HttpRequest.get(String.format(GET_SONG_URL_API_NEW, songId))
                     .execute()
                     .body();
-            JSONArray data = JSONObject.fromObject(songBody).optJSONArray("data");
+            JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
             // 次选普通音质
             if (data == null) {
                 songBody = HttpRequest.get(String.format(GET_SONG_URL_API, songId))
                         .execute()
                         .body();
-                data = JSONObject.fromObject(songBody).optJSONArray("data");
+                data = JSONObject.parseObject(songBody).getJSONArray("data");
             }
             if (data != null) {
                 JSONObject urlJson = data.getJSONObject(0);
                 // 排除试听部分，直接换源
-                if (urlJson.getJSONObject("freeTrialInfo").isNullObject()) {
+                if (urlJson.getJSONObject("freeTrialInfo") == null) {
                     String url = urlJson.getString("url");
-                    if (!"null".equals(url)) return url;
+                    if (StringUtil.isNotEmpty(url)) return url;
                 }
             }
         }
@@ -196,9 +196,9 @@ public class MusicUrlReq {
                     .header(Header.COOKIE, SdkCommon.COOKIE)
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-            String url = data.optString("play_url");
-            if (data.optInt("is_free_part") == 0) return url;
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+            String url = data.getString("play_url");
+            if (data.getIntValue("is_free_part") == 0) return url;
         }
 
         // QQ
@@ -210,7 +210,7 @@ public class MusicUrlReq {
                                     ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", songId, songId, songId)))
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
+            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
             String sip = data.getJSONArray("sip").getString(0);
             String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
@@ -227,7 +227,7 @@ public class MusicUrlReq {
             String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(urlBody);
+            JSONObject urlJson = JSONObject.parseObject(urlBody);
             JSONObject data = urlJson.getJSONObject("data");
             return data.getString("url");
         }
@@ -237,7 +237,7 @@ public class MusicUrlReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             return data.getString("320");
         }
 
@@ -246,10 +246,10 @@ public class MusicUrlReq {
             String playUrlBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(GET_SONG_URL_QI_API, songId, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(playUrlBody).getJSONObject("data");
+            JSONObject urlJson = JSONObject.parseObject(playUrlBody).getJSONObject("data");
             // 排除试听部分，直接换源
-            if (urlJson.getInt("isVip") == 0) {
-                String url = urlJson.optString("path");
+            if (urlJson.getIntValue("isVip") == 0) {
+                String url = urlJson.getString("path");
                 if (url.isEmpty()) url = urlJson.getJSONObject("trail_audio_info").getString("path");
                 return url;
             }
@@ -264,7 +264,7 @@ public class MusicUrlReq {
             Document doc = Jsoup.parse(songBody);
             String dataStr = ReUtil.get("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
             if (StringUtil.isEmpty(dataStr)) return "";
-            JSONObject data = JSONObject.fromObject(dataStr);
+            JSONObject data = JSONObject.parseObject(dataStr);
             String url = data.getString("url").replace(" ", "%20");
             if (url.startsWith("http")) return url;
             return SdkUtil.getRedirectUrl("https://www.hifini.com/" + url);
@@ -284,7 +284,7 @@ public class MusicUrlReq {
             if (StringUtil.isNotEmpty(base64Str))
                 dataStr = dataStr.replaceFirst(base64Pattern, String.format("\"%s\"", StringUtil.base64Decode(base64Str)));
 
-            JSONObject data = JSONObject.fromObject(dataStr);
+            JSONObject data = JSONObject.parseObject(dataStr);
             String url = data.getString("url").replace(" ", "%20");
             if (url.startsWith("http")) return url;
             else {
@@ -308,10 +308,10 @@ public class MusicUrlReq {
             String songBody = HttpRequest.get(String.format(GET_SONG_URL_FS_API, sp[0], sp[1]))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-            String url = data.optString("squrl");
-            if (StringUtil.isEmpty(url)) url = data.optString("hqurl");
-            if (StringUtil.isEmpty(url)) url = data.optString("lqurl");
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+            String url = data.getString("squrl");
+            if (StringUtil.isEmpty(url)) url = data.getString("hqurl");
+            if (StringUtil.isEmpty(url)) url = data.getString("lqurl");
             return url;
         }
 
@@ -320,7 +320,7 @@ public class MusicUrlReq {
             String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_XM_API, songId))
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
+            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             String url = urlJson.getJSONObject("data").getString("src");
             return url;
         }
@@ -330,8 +330,8 @@ public class MusicUrlReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, songId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("info").getJSONObject("sound");
-            String url = data.optString("soundurl");
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
+            String url = data.getString("soundurl");
             return url;
         }
 
@@ -341,7 +341,7 @@ public class MusicUrlReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
+            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             String url = urlJson.getJSONObject("data").getJSONArray("cdns").getString(0);
             return url;
         }

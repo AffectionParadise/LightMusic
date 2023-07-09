@@ -73,7 +73,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         // 初始化数据
         initCatalogs();
 
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(null);

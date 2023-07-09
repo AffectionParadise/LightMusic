@@ -3,6 +3,7 @@ package net.doge.sdk.entity.music.info;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSON;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.constant.system.SimplePath;
@@ -12,8 +13,8 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -93,8 +94,8 @@ public class MusicInfoReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.optDouble("duration", 0));
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDoubleValue("duration"));
         }
     }
 
@@ -118,7 +119,7 @@ public class MusicInfoReq {
                     String songBody = HttpRequest.get(String.format(SINGLE_PROGRAM_DETAIL_API, musicInfo.getProgramId()))
                             .execute()
                             .body();
-                    JSONObject songJson = JSONObject.fromObject(songBody).getJSONObject("program");
+                    JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("program");
 
                     if (!musicInfo.hasDuration()) musicInfo.setDuration(songJson.getDouble("duration") / 1000);
                     if (!musicInfo.hasArtist())
@@ -140,7 +141,7 @@ public class MusicInfoReq {
                     String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_API, songId))
                             .execute()
                             .body();
-                    JSONArray array = JSONObject.fromObject(songBody).optJSONArray("songs");
+                    JSONArray array = JSONObject.parseObject(songBody).getJSONArray("songs");
                     if (array != null) {
                         JSONObject songJson = array.getJSONObject(0);
                         if (!musicInfo.hasDuration()) musicInfo.setDuration(songJson.getDouble("dt") / 1000);
@@ -172,25 +173,25 @@ public class MusicInfoReq {
                         .header(Header.COOKIE, SdkCommon.COOKIE)
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
                 // 时长是毫秒，转为秒
-                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.optDouble("timelength") / 1000);
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDoubleValue("timelength") / 1000);
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtists(data, NetMusicSource.KG));
                 if (!musicInfo.hasArtistId()) {
-                    JSONArray artistArray = data.optJSONArray("authors");
+                    JSONArray artistArray = data.getJSONArray("authors");
                     if (artistArray != null && !artistArray.isEmpty())
                         musicInfo.setArtistId(artistArray.getJSONObject(0).getString("author_id"));
                 }
-                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.optString("album_name"));
-                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.optString("album_id"));
+                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
-                        BufferedImage albumImage = SdkUtil.getImageFromUrl(data.optString("img"));
+                        BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("img"));
                         ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
                     });
                 }
-                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.optString("lyrics"));
+                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
             }));
         }
 
@@ -200,7 +201,7 @@ public class MusicInfoReq {
                 String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, songId))
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
                 JSONObject trackInfo = data.getJSONObject("track_info");
                 JSONArray singer = trackInfo.getJSONArray("singer");
                 JSONObject album = trackInfo.getJSONObject("album");
@@ -234,7 +235,7 @@ public class MusicInfoReq {
                 String songBody = SdkCommon.kwRequest(String.format(SINGLE_SONG_DETAIL_KW_API, songId))
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
 
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("artist"));
@@ -256,7 +257,7 @@ public class MusicInfoReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
 
             String albumId = data.getJSONObject("album").getString("id");
             if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtists(data, NetMusicSource.MG));
@@ -267,7 +268,7 @@ public class MusicInfoReq {
                 String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, albumId))
                         .execute()
                         .body();
-                JSONObject albumData = JSONObject.fromObject(albumBody).getJSONObject("data");
+                JSONObject albumData = JSONObject.parseObject(albumBody).getJSONObject("data");
                 musicInfo.setAlbumName(albumData.getString("name"));
             }
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumId);
@@ -287,11 +288,11 @@ public class MusicInfoReq {
             String songBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SINGLE_SONG_DETAIL_QI_API, songId, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(songBody).getJSONArray("data").getJSONObject(0);
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
 
             if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtists(data, NetMusicSource.QI));
             if (!musicInfo.hasArtistId()) {
-                JSONArray artistArray = data.optJSONArray("artist");
+                JSONArray artistArray = data.getJSONArray("artist");
                 if (artistArray != null && !artistArray.isEmpty())
                     musicInfo.setArtistId(artistArray.getJSONObject(0).getString("artistCode"));
             }
@@ -316,7 +317,7 @@ public class MusicInfoReq {
                         .body();
                 Document doc = Jsoup.parse(songBody);
                 String dataStr = ReUtil.get("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
-                JSONObject data = JSONObject.fromObject(dataStr);
+                JSONObject data = JSONObject.parseObject(dataStr);
 
                 Elements a = doc.select(".m-3.text-center h5 a");
 
@@ -324,7 +325,7 @@ public class MusicInfoReq {
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
-                        String picUrl = data.optString("pic");
+                        String picUrl = data.getString("pic");
                         if (picUrl.contains("music.126.net"))
                             picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
                         else if (picUrl.contains("y.gtimg.cn"))
@@ -347,7 +348,7 @@ public class MusicInfoReq {
                 Document doc = Jsoup.parse(songBody);
                 String dataStr = ReUtil.get("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
                 dataStr = dataStr.replaceFirst("base64_decode\\(\"(.*?)\"\\)", "\"\"");
-                JSONObject data = JSONObject.fromObject(dataStr);
+                JSONObject data = JSONObject.parseObject(dataStr);
 
                 Elements a = doc.select(".m-3.text-center h5 a");
 
@@ -355,8 +356,8 @@ public class MusicInfoReq {
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
-                        String picUrl = data.optString("cover");
-                        if (StringUtil.isEmpty(picUrl)) picUrl = data.optString("pic");
+                        String picUrl = data.getString("cover");
+                        if (StringUtil.isEmpty(picUrl)) picUrl = data.getString("pic");
                         if (picUrl.contains("music.126.net"))
                             picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
                         else if (picUrl.contains("y.gtimg.cn"))
@@ -375,7 +376,7 @@ public class MusicInfoReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.encode(songId.replace("_", "$"))))
                     .execute()
                     .body();
-            JSONObject data = JSONArray.fromObject(songBody).getJSONObject(0);
+            JSONObject data = JSONArray.parseArray(songBody).getJSONObject(0);
 
             if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("nickname"));
             if (!musicInfo.hasArtistId()) musicInfo.setArtist(data.getString("userid"));
@@ -394,7 +395,7 @@ public class MusicInfoReq {
                 String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_XM_API, songId))
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
                 JSONObject trackInfo = data.getJSONObject("trackInfo");
                 JSONObject albumInfo = data.getJSONObject("albumInfo");
 
@@ -419,7 +420,7 @@ public class MusicInfoReq {
                 String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, songId))
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("info").getJSONObject("sound");
+                JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
                 // 时长是毫秒，转为秒
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration") / 1000);
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("username"));
@@ -437,8 +438,10 @@ public class MusicInfoReq {
                 String albumBody = HttpRequest.get(String.format(SONG_ALBUM_DETAIL_ME_API, songId))
                         .execute()
                         .body();
-                JSONObject info = JSONObject.fromObject(albumBody).optJSONObject("info");
-                if (info == null) return;
+                String infoStr = JSONObject.parseObject(albumBody).getString("info");
+                // 可能是字符串也可能是 json 对象，先判断
+                if (!JSON.isValidObject(infoStr)) return;
+                JSONObject info = JSONObject.parseObject(infoStr);
                 JSONObject albumData = info.getJSONObject("drama");
                 if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(albumData.getString("name"));
                 if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumData.getString("id"));
@@ -453,7 +456,7 @@ public class MusicInfoReq {
                         .cookie(SdkCommon.BI_COOKIE)
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
                 // 时长是毫秒，转为秒
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("uname"));
@@ -495,10 +498,10 @@ public class MusicInfoReq {
             String lrcBody = HttpRequest.get(String.format(LYRIC_API, id))
                     .execute()
                     .body();
-            JSONObject lrcJson = JSONObject.fromObject(lrcBody);
-            JSONObject lrc = lrcJson.optJSONObject("lrc");
-            JSONObject tLrc = lrcJson.optJSONObject("tlyric");
-            JSONObject romaLrc = lrcJson.optJSONObject("romalrc");
+            JSONObject lrcJson = JSONObject.parseObject(lrcBody);
+            JSONObject lrc = lrcJson.getJSONObject("lrc");
+            JSONObject tLrc = lrcJson.getJSONObject("tlyric");
+            JSONObject romaLrc = lrcJson.getJSONObject("romalrc");
             if (lrc != null) netMusicInfo.setLrc(lrc.getString("lyric"));
             if (tLrc != null) netMusicInfo.setTrans(tLrc.getString("lyric"));
             if (romaLrc != null) netMusicInfo.setRoma(romaLrc.getString("lyric"));
@@ -509,7 +512,7 @@ public class MusicInfoReq {
 //            String songBody = HttpRequest.get(String.format(LYRIC_KG_API, id, hash))
 //                    .execute()
 //                    .body();
-//            JSONObject data = JSONObject.fromObject(songBody);
+//            JSONObject data = JSONObject.parseObject(songBody);
 //            String lyric = StringUtils.base64Decode(data.getString("content"));
 //            netMusicInfo.setLrc(lyric);
         }
@@ -520,9 +523,9 @@ public class MusicInfoReq {
                     .header(Header.REFERER, "https://y.qq.com/portal/player.html")
                     .execute()
                     .body();
-            JSONObject lrcJson = JSONObject.fromObject(lrcBody);
-            String lyric = lrcJson.optString("lyric");
-            String trans = lrcJson.optString("trans");
+            JSONObject lrcJson = JSONObject.parseObject(lrcBody);
+            String lyric = lrcJson.getString("lyric");
+            String trans = lrcJson.getString("trans");
             netMusicInfo.setLrc(StringUtil.removeHTMLLabel(StringUtil.base64Decode(lyric)));
             netMusicInfo.setTrans(StringUtil.removeHTMLLabel(StringUtil.base64Decode(trans)));
         }
@@ -532,21 +535,21 @@ public class MusicInfoReq {
             String lrcBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(lrcBody).getJSONObject("data");
-            if (data.isNullObject()) {
+            JSONObject data = JSONObject.parseObject(lrcBody).getJSONObject("data");
+            if (data == null) {
                 netMusicInfo.setLrc(null);
                 netMusicInfo.setTrans(null);
                 return;
             }
             // 酷我歌词返回的是数组，需要先处理成字符串！
             // lrclist 可能是数组也可能为 null ！
-            JSONArray lrcArray = data.optJSONArray("lrclist");
+            JSONArray lrcArray = data.getJSONArray("lrclist");
             if (lrcArray != null) {
                 StringBuffer sb = new StringBuffer();
                 boolean hasTrans = false;
                 for (int i = 0, len = lrcArray.size(); i < len; i++) {
                     JSONObject sentenceJson = lrcArray.getJSONObject(i);
-                    JSONObject nextSentenceJson = lrcArray.optJSONObject(i + 1);
+                    JSONObject nextSentenceJson = lrcArray.getJSONObject(i + 1);
                     // 歌词中带有翻译时，最后一句是翻译直接跳过
                     if (hasTrans && nextSentenceJson == null) break;
                     String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
@@ -572,7 +575,7 @@ public class MusicInfoReq {
                 String lastTime = null;
                 for (int i = 0, len = lrcArray.size(); i < len; i++) {
                     JSONObject sentenceJson = lrcArray.getJSONObject(i);
-                    JSONObject nextSentenceJson = lrcArray.optJSONObject(i + 1);
+                    JSONObject nextSentenceJson = lrcArray.getJSONObject(i + 1);
                     String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
                     String nextTime = null;
                     if (nextSentenceJson != null)
@@ -596,7 +599,7 @@ public class MusicInfoReq {
 //            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
 //                    .execute()
 //                    .body();
-//            JSONObject data = JSONObject.fromObject(songBody).getJSONObject("data");
+//            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
 //            netMusicInfo.setLrc(data.getString("lyric"));
         }
 
@@ -605,7 +608,7 @@ public class MusicInfoReq {
             String playUrlBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(GET_SONG_URL_QI_API, id, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject urlJson = JSONObject.fromObject(playUrlBody);
+            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             String lrcUrl = urlJson.getJSONObject("data").getString("lyric");
             netMusicInfo.setLrc(StringUtil.isNotEmpty(lrcUrl) ? HttpRequest.get(lrcUrl).execute().body() : "");
             netMusicInfo.setTrans("");
@@ -657,7 +660,7 @@ public class MusicInfoReq {
             String lrcBody = HttpRequest.get(String.format(LYRIC_FS_API, sp[0], sp[1]))
                     .execute()
                     .body();
-            JSONObject lrcJson = JSONObject.fromObject(lrcBody);
+            JSONObject lrcJson = JSONObject.parseObject(lrcBody);
             netMusicInfo.setLrc(lrcJson.getString("txt"));
             netMusicInfo.setTrans("");
             netMusicInfo.setRoma("");
@@ -692,7 +695,7 @@ public class MusicInfoReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject lrcJson = JSONObject.fromObject(lrcBody);
+            JSONObject lrcJson = JSONObject.parseObject(lrcBody);
             netMusicInfo.setLrc(lrcJson.getString("data"));
             netMusicInfo.setTrans("");
             netMusicInfo.setRoma("");

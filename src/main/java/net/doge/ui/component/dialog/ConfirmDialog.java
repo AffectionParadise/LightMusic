@@ -116,8 +116,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
             close();
         });
 
-        setLayout(new BorderLayout());
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
         pack();
 
         updateBlur();

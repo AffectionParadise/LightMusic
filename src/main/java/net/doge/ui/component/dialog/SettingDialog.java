@@ -26,7 +26,7 @@ import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.system.KeyUtil;
 import net.doge.util.collection.ListUtil;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -206,7 +206,7 @@ public class SettingDialog extends AbstractTitledDialog {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(null);
@@ -805,7 +805,7 @@ public class SettingDialog extends AbstractTitledDialog {
         f.videoOnly = videoOnlyCheckBox.isSelected();
 
         f.showTabText = showTabTextCheckBox.isSelected();
-        f.initTabSize();
+        f.updateTabSize();
 
         int gsFactorIndex = BlurConstants.gsFactorIndex;
         BlurConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();

@@ -7,8 +7,8 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 
@@ -54,7 +54,7 @@ public class MvInfoReq {
             String mvBody = HttpRequest.get(String.format(MV_DETAIL_API, mvId))
                     .execute()
                     .body();
-            JSONObject mvJson = JSONObject.fromObject(mvBody);
+            JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
             String name = data.getString("name").trim();
             String artists = SdkUtil.parseArtists(data, NetMusicSource.NET_CLOUD);
@@ -83,12 +83,12 @@ public class MvInfoReq {
             String mvBody = HttpRequest.get(String.format(MV_DETAIL_KG_API, mvId))
                     .execute()
                     .body();
-            JSONObject mvJson = JSONObject.fromObject(mvBody);
+            JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
             String[] s = data.getString("filename").split(" - ");
             String name = s[1];
             String artists = s[0];
-            JSONArray artistArray = mvJson.optJSONArray("authors");
+            JSONArray artistArray = mvJson.getJSONArray("authors");
             String creatorId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("singerid") : "";
             Long playCount = data.getLong("history_heat");
             Double duration = data.getDouble("mv_timelength") / 1000;
@@ -114,7 +114,7 @@ public class MvInfoReq {
             String mvBody = HttpRequest.get(String.format(MV_DETAIL_QQ_API, mvId))
                     .execute()
                     .body();
-            JSONObject mvJson = JSONObject.fromObject(mvBody);
+            JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
             String name = data.getString("name");
             String artists = SdkUtil.parseArtists(data, NetMusicSource.QQ);
@@ -143,7 +143,7 @@ public class MvInfoReq {
             String mvBody = SdkCommon.kwRequest(String.format(MV_DETAIL_KW_API, mvId))
                     .execute()
                     .body();
-            JSONObject mvJson = JSONObject.fromObject(mvBody);
+            JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
 
             String name = data.getString("name");

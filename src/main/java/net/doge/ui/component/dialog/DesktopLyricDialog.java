@@ -181,8 +181,7 @@ public class DesktopLyricDialog extends JDialog {
         mainPanel.add(buttonPanel, BorderLayout.NORTH);
         mainPanel.add(lyricPanel, BorderLayout.CENTER);
 
-        setLayout(new BorderLayout());
-        add(mainPanel, BorderLayout.CENTER);
+        setContentPane(mainPanel);
 
         initResponse();
     }

@@ -71,7 +71,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(800, 700);
+        setSize(860, 700);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -81,7 +81,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         // 初始化数据
         initStyles();
 
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
         setLocationRelativeTo(null);

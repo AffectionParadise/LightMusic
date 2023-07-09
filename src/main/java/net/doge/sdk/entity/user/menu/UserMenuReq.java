@@ -13,8 +13,8 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -116,7 +116,7 @@ public class UserMenuReq {
             String playlistInfoBody = HttpRequest.get(String.format(USER_PLAYLIST_API, uid))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlist");
             total.set(playlistArray.size());
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -127,7 +127,7 @@ public class UserMenuReq {
                 String creator = playlistJson.getJSONObject("creator").getString("nickname");
                 String creatorId = playlistJson.getJSONObject("creator").getString("userId");
                 Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getInt("trackCount");
+                Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -156,7 +156,7 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, uid))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
                 t = playlistArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -167,7 +167,7 @@ public class UserMenuReq {
                     String playlistName = playlistJson.getString("diss_name");
                     String creator = netCommentInfo.getUsername();
                     Long playCount = playlistJson.getLong("listen_num");
-                    Integer trackCount = playlistJson.getInt("song_cnt");
+                    Integer trackCount = playlistJson.getIntValue("song_cnt");
                     String coverImgThumbUrl = playlistJson.getString("diss_cover");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -196,10 +196,10 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
                 JSONArray playlistArray = data.getJSONArray("list");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 
@@ -208,7 +208,7 @@ public class UserMenuReq {
                     String playlistName = playlistJson.getString("dissname");
                     String creator = playlistJson.getString("nickname");
                     Long playCount = playlistJson.getLong("listennum");
-                    Integer trackCount = playlistJson.getInt("songnum");
+                    Integer trackCount = playlistJson.getIntValue("songnum");
                     String coverImgThumbUrl = playlistJson.getString("logo");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -259,18 +259,18 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
-                JSONArray playlistArray = data.optJSONArray("Datas");
+                JSONArray playlistArray = data.getJSONArray("Datas");
                 if (playlistArray != null) {
-                    t = data.getJSONObject("pagination").getInt("count");
+                    t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                         String playlistId = playlistJson.getString("id");
                         String playlistName = playlistJson.getString("title");
                         String creator = playlistJson.getString("username");
-                        Integer trackCount = playlistJson.getInt("music_count");
+                        Integer trackCount = playlistJson.getIntValue("music_count");
                         String coverImgThumbUrl = playlistJson.getString("front_cover");
 
                         NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -299,18 +299,18 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
-                JSONArray playlistArray = data.optJSONArray("Datas");
+                JSONArray playlistArray = data.getJSONArray("Datas");
                 if (playlistArray != null) {
-                    t = data.getJSONObject("pagination").getInt("count");
+                    t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                         String playlistId = playlistJson.getString("id");
                         String playlistName = playlistJson.getString("title");
                         String creator = playlistJson.getString("username");
-                        Integer trackCount = playlistJson.getInt("music_count");
+                        Integer trackCount = playlistJson.getIntValue("music_count");
                         String coverImgThumbUrl = playlistJson.getString("front_cover");
 
                         NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -372,9 +372,9 @@ public class UserMenuReq {
             String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, page, limit))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            total = data.getInt("total");
+            total = data.getIntValue("total");
             JSONArray albumArray = data.getJSONArray("list");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
@@ -384,7 +384,7 @@ public class UserMenuReq {
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
                 String artistId = albumJson.getJSONArray("singer").getJSONObject(0).getString("mid");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
-                Integer songNum = albumJson.getInt("songnum");
+                Integer songNum = albumJson.getIntValue("songnum");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -463,7 +463,7 @@ public class UserMenuReq {
             String playlistInfoBody = HttpRequest.get(String.format(USER_PLAYLIST_API, uid))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlist");
             total.set(playlistArray.size());
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -474,7 +474,7 @@ public class UserMenuReq {
                 String creator = playlistJson.getJSONObject("creator").getString("nickname");
                 String creatorId = playlistJson.getJSONObject("creator").getString("userId");
                 Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getInt("trackCount");
+                Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -503,7 +503,7 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, uid))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
                 t = playlistArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
@@ -514,7 +514,7 @@ public class UserMenuReq {
                     String playlistName = playlistJson.getString("diss_name");
                     String creator = netUserInfo.getName();
                     Long playCount = playlistJson.getLong("listen_num");
-                    Integer trackCount = playlistJson.getInt("song_cnt");
+                    Integer trackCount = playlistJson.getIntValue("song_cnt");
                     String coverImgThumbUrl = playlistJson.getString("diss_cover");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -543,10 +543,10 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
                 JSONArray playlistArray = data.getJSONArray("list");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 
@@ -555,7 +555,7 @@ public class UserMenuReq {
                     String playlistName = playlistJson.getString("dissname");
                     String creator = playlistJson.getString("nickname");
                     Long playCount = playlistJson.getLong("listennum");
-                    Integer trackCount = playlistJson.getInt("songnum");
+                    Integer trackCount = playlistJson.getIntValue("songnum");
                     String coverImgThumbUrl = playlistJson.getString("logo");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -606,18 +606,18 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
-                JSONArray playlistArray = data.optJSONArray("Datas");
+                JSONArray playlistArray = data.getJSONArray("Datas");
                 if (playlistArray != null) {
-                    t = data.getJSONObject("pagination").getInt("count");
+                    t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                         String playlistId = playlistJson.getString("id");
                         String playlistName = playlistJson.getString("title");
                         String creator = playlistJson.getString("username");
-                        Integer trackCount = playlistJson.getInt("music_count");
+                        Integer trackCount = playlistJson.getIntValue("music_count");
                         String coverImgThumbUrl = playlistJson.getString("front_cover");
 
                         NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -646,18 +646,18 @@ public class UserMenuReq {
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
-                JSONArray playlistArray = data.optJSONArray("Datas");
+                JSONArray playlistArray = data.getJSONArray("Datas");
                 if (playlistArray != null) {
-                    t = data.getJSONObject("pagination").getInt("count");
+                    t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                         String playlistId = playlistJson.getString("id");
                         String playlistName = playlistJson.getString("title");
                         String creator = playlistJson.getString("username");
-                        Integer trackCount = playlistJson.getInt("music_count");
+                        Integer trackCount = playlistJson.getIntValue("music_count");
                         String coverImgThumbUrl = playlistJson.getString("front_cover");
 
                         NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -719,9 +719,9 @@ public class UserMenuReq {
             String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, page, limit))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray albumArray = data.getJSONArray("list");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
@@ -731,7 +731,7 @@ public class UserMenuReq {
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
                 String artistId = albumJson.getJSONArray("singer").getJSONObject(0).getString("mid");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
-                Integer songNum = albumJson.getInt("songnum");
+                Integer songNum = albumJson.getIntValue("songnum");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -795,11 +795,11 @@ public class UserMenuReq {
             String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DT_API, uid, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             JSONArray albumArray = data.getJSONArray("object_list");
             t = page * limit;
-            if (data.getInt("more") == 1) t++;
+            if (data.getIntValue("more") == 1) t++;
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
 
@@ -809,7 +809,7 @@ public class UserMenuReq {
                 String artistId = albumJson.getJSONObject("user").getString("id");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("updated_at_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
-                Integer songNum = albumJson.getInt("count");
+                Integer songNum = albumJson.getIntValue("count");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.DT);
@@ -848,9 +848,9 @@ public class UserMenuReq {
             String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_API, uid))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
-            total.set(radioInfoJson.getInt("count"));
+            total.set(radioInfoJson.getIntValue("count"));
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -859,7 +859,7 @@ public class UserMenuReq {
                 String dj = radioJson.getJSONObject("dj").getString("nickname");
                 String djId = radioJson.getJSONObject("dj").getString("userId");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
+                Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
                 if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
@@ -893,10 +893,10 @@ public class UserMenuReq {
                 String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_XM_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
                 JSONArray radioArray = data.getJSONArray("albumList");
-                t = data.getInt("totalCount");
+                t = data.getIntValue("totalCount");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -905,7 +905,7 @@ public class UserMenuReq {
                     String dj = radioJson.getString("anchorNickName");
                     String djId = radioJson.getString("anchorUid");
                     Long playCount = radioJson.getLong("playCount");
-                    Integer trackCount = radioJson.getInt("trackCount");
+                    Integer trackCount = radioJson.getIntValue("trackCount");
 //                String category = radioJson.getString("category");
                     String coverImgThumbUrl = "https:" + radioJson.getString("coverPath");
 
@@ -937,10 +937,10 @@ public class UserMenuReq {
                 String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_XM_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
                 JSONArray radioArray = data.getJSONArray("albumsInfo");
-                t = data.getInt("totalCount");
+                t = data.getIntValue("totalCount");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -949,7 +949,7 @@ public class UserMenuReq {
                     String dj = radioJson.getJSONObject("anchor").getString("anchorNickName");
                     String djId = radioJson.getJSONObject("anchor").getString("anchorUid");
                     Long playCount = radioJson.getLong("playCount");
-                    Integer trackCount = radioJson.getInt("trackCount");
+                    Integer trackCount = radioJson.getIntValue("trackCount");
                     String category = radioJson.getString("categoryTitle");
                     String coverImgThumbUrl = "https://imagev2.xmcdn.com/" + radioJson.getString("coverPath");
 
@@ -1004,10 +1004,10 @@ public class UserMenuReq {
                 String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
                 JSONArray radioArray = data.getJSONArray("Datas");
-                t = data.getJSONObject("pagination").getInt("count");
+                t = data.getJSONObject("pagination").getIntValue("count");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -1044,11 +1044,11 @@ public class UserMenuReq {
                 String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, uid, page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
-                JSONArray radioArray = data.optJSONArray("Datas");
+                JSONArray radioArray = data.getJSONArray("Datas");
                 if (radioArray != null) {
-                    t = data.getJSONObject("pagination").getInt("count");
+                    t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = radioArray.size(); i < len; i++) {
                         JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -1229,9 +1229,9 @@ public class UserMenuReq {
                         .header(Header.COOKIE, SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
                 String cs = data.getString("ctime");
-                t = data.getInt("has_more") == 0 ? page * limit : (page + 1) * limit;
+                t = data.getIntValue("has_more") == 0 ? page * limit : (page + 1) * limit;
                 JSONArray mvArray = data.getJSONArray("results");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i).getJSONObject("content");
@@ -1274,7 +1274,7 @@ public class UserMenuReq {
                         .header(Header.COOKIE, SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+                JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
                 String cs = data.getString("ctime");
                 t = data.getBoolean("has_more") ? (page + 1) * limit : page * limit;
                 JSONArray mvArray = data.getJSONArray("results");
@@ -1338,8 +1338,8 @@ public class UserMenuReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
-            total.set(data.getJSONObject("page").getInt("count"));
+            JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
+            total.set(data.getJSONObject("page").getIntValue("count"));
             JSONArray mvArray = data.getJSONObject("list").getJSONArray("vlist");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -1392,7 +1392,7 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_API, id))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("follow");
             t = userArray.size();
             for (int i = (page - 1) * limit, len = Math.min(userArray.size(), page * limit); i < len; i++) {
@@ -1400,13 +1400,13 @@ public class UserMenuReq {
 
                 String userId = userJson.getString("userId");
                 String userName = userJson.getString("nickname");
-                Integer gen = userJson.getInt("gender");
+                Integer gen = userJson.getIntValue("gender");
                 String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
 //                String sign = userJson.getString("signature");
                 String avatarThumbUrl = userJson.getString("avatarUrl");
-                Integer follow = userJson.getInt("follows");
-                Integer followed = userJson.getInt("followeds");
-                Integer playlistCount = userJson.getInt("playlistCount");
+                Integer follow = userJson.getIntValue("follows");
+                Integer followed = userJson.getIntValue("followeds");
+                Integer playlistCount = userJson.getIntValue("playlistCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setId(userId);
@@ -1431,22 +1431,22 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_XM_API, id, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray userArray = data.getJSONArray("followingsPageInfo");
-            t = data.getInt("totalCount");
+            t = data.getIntValue("totalCount");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
                 String userId = userJson.getString("uid");
                 String userName = userJson.getString("anchorNickName");
-//                Integer gen = userJson.getInt("gender");
+//                Integer gen = userJson.getIntValue("gender");
 //                String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                 String avatarThumbUrl = "https:" + userJson.getString("coverPath");
-                Integer follow = userJson.getInt("followingCount");
-                Integer followed = userJson.getInt("followerCount");
-                Integer radioCount = userJson.getInt("albumCount");
-                Integer programCount = userJson.getInt("trackCount");
+                Integer follow = userJson.getIntValue("followingCount");
+                Integer followed = userJson.getIntValue("followerCount");
+                Integer radioCount = userJson.getIntValue("albumCount");
+                Integer programCount = userJson.getIntValue("trackCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.XM);
@@ -1473,10 +1473,10 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_ME_API, id, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("info");
             JSONArray userArray = data.getJSONArray("Datas");
-            t = data.getJSONObject("pagination").getInt("count");
+            t = data.getJSONObject("pagination").getIntValue("count");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
@@ -1485,8 +1485,8 @@ public class UserMenuReq {
                 String gender = "保密";
 //                String sign = userJson.getString("userintro");
                 String avatarThumbUrl = userJson.getString("boardiconurl2");
-                Integer followed = userJson.getInt("fansnum");
-                Integer programCount = userJson.getInt("soundnumchecked");
+                Integer followed = userJson.getIntValue("fansnum");
+                Integer programCount = userJson.getIntValue("soundnumchecked");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.ME);
@@ -1647,9 +1647,9 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_DT_API, id, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray userArray = data.getJSONArray("object_list");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
@@ -1658,8 +1658,8 @@ public class UserMenuReq {
                 String userName = userJson.getString("username");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar");
-                Integer follow = userJson.getInt("followCount");
-                Integer followed = userJson.getInt("beFollowCount");
+                Integer follow = userJson.getIntValue("followCount");
+                Integer followed = userJson.getIntValue("beFollowCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.DT);
@@ -1685,9 +1685,9 @@ public class UserMenuReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray userArray = data.getJSONArray("list");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
@@ -1731,21 +1731,21 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_API, id, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("followeds");
-            t = userInfoJson.getInt("size");
+            t = userInfoJson.getIntValue("size");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
                 String userId = userJson.getString("userId");
                 String userName = userJson.getString("nickname");
-                Integer gen = userJson.getInt("gender");
+                Integer gen = userJson.getIntValue("gender");
                 String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
 //                String sign = userJson.getString("signature");
                 String avatarThumbUrl = userJson.getString("avatarUrl");
-                Integer follow = userJson.getInt("follows");
-                Integer followed = userJson.getInt("followeds");
-                Integer playlistCount = userJson.getInt("playlistCount");
+                Integer follow = userJson.getIntValue("follows");
+                Integer followed = userJson.getIntValue("followeds");
+                Integer playlistCount = userJson.getIntValue("playlistCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setId(userId);
@@ -1770,22 +1770,22 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_XM_API, id, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray userArray = data.getJSONArray("fansPageInfo");
-            t = data.getInt("totalCount");
+            t = data.getIntValue("totalCount");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
                 String userId = userJson.getString("uid");
                 String userName = userJson.getString("anchorNickName");
-//                Integer gen = userJson.getInt("gender");
+//                Integer gen = userJson.getIntValue("gender");
 //                String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                 String avatarThumbUrl = "https:" + userJson.getString("coverPath");
-                Integer follow = userJson.getInt("followingCount");
-                Integer followed = userJson.getInt("followerCount");
-                Integer radioCount = userJson.getInt("albumCount");
-                Integer programCount = userJson.getInt("trackCount");
+                Integer follow = userJson.getIntValue("followingCount");
+                Integer followed = userJson.getIntValue("followerCount");
+                Integer radioCount = userJson.getIntValue("albumCount");
+                Integer programCount = userJson.getIntValue("trackCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.XM);
@@ -1812,10 +1812,10 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_ME_API, id, page, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("info");
             JSONArray userArray = data.getJSONArray("Datas");
-            t = data.getJSONObject("pagination").getInt("count");
+            t = data.getJSONObject("pagination").getIntValue("count");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
@@ -1824,8 +1824,8 @@ public class UserMenuReq {
                 String gender = "保密";
 //                String sign = userJson.getString("userintro");
                 String avatarThumbUrl = userJson.getString("boardiconurl2");
-                Integer followed = userJson.getInt("fansnum");
-                Integer programCount = userJson.getInt("soundnumchecked");
+                Integer followed = userJson.getIntValue("fansnum");
+                Integer programCount = userJson.getIntValue("soundnumchecked");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.ME);
@@ -1986,9 +1986,9 @@ public class UserMenuReq {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_DT_API, id, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray userArray = data.getJSONArray("object_list");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
@@ -1997,8 +1997,8 @@ public class UserMenuReq {
                 String userName = userJson.getString("username");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar");
-                Integer follow = userJson.getInt("followCount");
-                Integer followed = userJson.getInt("beFollowCount");
+                Integer follow = userJson.getIntValue("followCount");
+                Integer followed = userJson.getIntValue("beFollowCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.DT);
@@ -2024,9 +2024,9 @@ public class UserMenuReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray userArray = data.getJSONArray("list");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);

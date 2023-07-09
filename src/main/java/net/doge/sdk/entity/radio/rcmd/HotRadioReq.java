@@ -12,8 +12,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -97,7 +97,7 @@ public class HotRadioReq {
 //        String radioInfoBody = HttpRequest.get(String.format(PERSONAL_RADIO_API))
 //                .execute()
 //                .body();
-//        JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+//        JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
 //        JSONArray radioArray = radioInfoJson.getJSONArray("data");
 //        for (int i = 0, len = radioArray.size(); i < len; i++) {
 //            JSONObject radioJson = radioArray.getJSONObject(i);
@@ -118,7 +118,7 @@ public class HotRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(DAILY_RADIO_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("data");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -129,8 +129,8 @@ public class HotRadioReq {
                 String dj = null;
 //                if (i >= rs) dj = radioJson.getJSONObject("dj").getString("nickname");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
-                String category = radioJson.optString("category");
+                Integer trackCount = radioJson.getIntValue("programCount");
+                String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 //            long ms = radioJson.optLong("createTime");
 
@@ -163,7 +163,7 @@ public class HotRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(HOT_RADIO_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -174,8 +174,8 @@ public class HotRadioReq {
                 String dj = radioJson.getJSONObject("dj").getString("nickname");
                 String djId = radioJson.getJSONObject("dj").getString("userId");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
-                String category = radioJson.optString("category");
+                Integer trackCount = radioJson.getIntValue("programCount");
+                String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
@@ -205,7 +205,7 @@ public class HotRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_TOPLIST_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("toplist");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -216,8 +216,8 @@ public class HotRadioReq {
                 String dj = radioJson.getJSONObject("dj").getString("nickname");
                 String djId = radioJson.getJSONObject("dj").getString("userId");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
-                String category = radioJson.optString("category");
+                Integer trackCount = radioJson.getIntValue("programCount");
+                String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
@@ -247,7 +247,7 @@ public class HotRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(REC_RADIO_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -258,8 +258,8 @@ public class HotRadioReq {
                 String dj = radioJson.getJSONObject("dj").getString("nickname");
                 String djId = radioJson.getJSONObject("dj").getString("userId");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
-                String category = radioJson.optString("category");
+                Integer trackCount = radioJson.getIntValue("programCount");
+                String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
@@ -290,8 +290,8 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_HOT_RADIO_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
-                t = radioInfoJson.getInt("count");
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
+                t = radioInfoJson.getIntValue("count");
                 JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
@@ -301,8 +301,8 @@ public class HotRadioReq {
                     String dj = radioJson.getJSONObject("dj").getString("nickname");
                     String djId = radioJson.getJSONObject("dj").getString("userId");
 //                    Long playCount = radioJson.getLong("playCount");
-                    Integer trackCount = radioJson.getInt("programCount");
-                    String category = radioJson.optString("category");
+                    Integer trackCount = radioJson.getIntValue("programCount");
+                    String category = radioJson.getString("category");
                     String coverImgThumbUrl = radioJson.getString("picUrl");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
@@ -334,7 +334,7 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_REC_RADIO_API, s[1]))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
                 t = radioArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -345,8 +345,8 @@ public class HotRadioReq {
                     String dj = radioJson.getJSONObject("dj").getString("nickname");
                     String djId = radioJson.getJSONObject("dj").getString("userId");
 //                    Long playCount = radioJson.getLong("playCount");
-                    Integer trackCount = radioJson.getInt("programCount");
-                    String category = radioJson.optString("category");
+                    Integer trackCount = radioJson.getIntValue("programCount");
+                    String category = radioJson.getString("category");
                     String coverImgThumbUrl = radioJson.getString("picUrl");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
@@ -381,9 +381,9 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, sp[0], sp[1], page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 JSONArray radioArray = data.getJSONArray("albums");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
@@ -393,7 +393,7 @@ public class HotRadioReq {
                     String dj = radioJson.getString("anchorName");
                     String djId = radioJson.getString("uid");
                     Long playCount = radioJson.getLong("playCount");
-                    Integer trackCount = radioJson.getInt("trackCount");
+                    Integer trackCount = radioJson.getIntValue("trackCount");
                     String category = tag;
                     String coverImgThumbUrl = "https:" + radioJson.getString("coverPath");
                     coverImgThumbUrl = coverImgThumbUrl.substring(0, coverImgThumbUrl.lastIndexOf('!'));
@@ -429,9 +429,9 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, s[4], page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 JSONArray radioArray = data.getJSONArray("albums");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
@@ -440,7 +440,7 @@ public class HotRadioReq {
                     String radioName = radioJson.getString("albumTitle");
                     String dj = radioJson.getString("albumUserNickName");
                     Long playCount = radioJson.getLong("albumPlayCount");
-                    Integer trackCount = radioJson.getInt("albumTrackCount");
+                    Integer trackCount = radioJson.getIntValue("albumTrackCount");
                     String category = tag;
                     String coverImgThumbUrl = "https://imagev2.xmcdn.com/" + radioJson.getString("albumCoverPath");
 
@@ -473,7 +473,7 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANKING_XM_API, sp[0], sp[1]))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("rankList").getJSONObject(0).getJSONArray("albums");
                 t = radioArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -484,8 +484,8 @@ public class HotRadioReq {
                     String dj = radioJson.getString("anchorName");
                     String djId = radioJson.getString("anchorUrl").replace("/zhubo/", "");
                     Long playCount = radioJson.getLong("playCount");
-                    Integer trackCount = radioJson.getInt("trackCount");
-                    String category = radioJson.optString("categoryTitle");
+                    Integer trackCount = radioJson.getIntValue("trackCount");
+                    String category = radioJson.getString("categoryTitle");
                     String coverImgThumbUrl = "https://imagev2.xmcdn.com/" + radioJson.getString("cover");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
@@ -518,10 +518,10 @@ public class HotRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(WEEK_RADIO_ME_API, page, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
             JSONArray radioArray = data.getJSONArray("Datas");
-            t = data.getJSONObject("pagination").getInt("count");
+            t = data.getJSONObject("pagination").getIntValue("count");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -555,10 +555,10 @@ public class HotRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(MONTH_RADIO_ME_API, page, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
             JSONArray radioArray = data.getJSONArray("Datas");
-            t = data.getJSONObject("pagination").getInt("count");
+            t = data.getJSONObject("pagination").getIntValue("count");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -592,10 +592,10 @@ public class HotRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(ALL_TIME_RADIO_ME_API, page, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
             JSONArray radioArray = data.getJSONArray("Datas");
-            t = data.getJSONObject("pagination").getInt("count");
+            t = data.getJSONObject("pagination").getIntValue("count");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -631,10 +631,10 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_ME_API, sp[2], sp[0], sp[1], page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
                 JSONArray radioArray = data.getJSONArray("Datas");
-                t = data.getJSONObject("pagination").getInt("count");
+                t = data.getJSONObject("pagination").getIntValue("count");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -712,8 +712,8 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, s[6], (page - 1) * limit, limit))
                         .execute()
                         .body();
-                JSONArray radioArray = JSONArray.fromObject(radioInfoBody);
-                t = JSONObject.fromObject(HttpRequest.get(String.format(CAT_RADIO_TOTAL_DB_API, s[6])).execute().body()).getInt("total");
+                JSONArray radioArray = JSONArray.parseArray(radioInfoBody);
+                t = JSONObject.parseObject(HttpRequest.get(String.format(CAT_RADIO_TOTAL_DB_API, s[6])).execute().body()).getIntValue("total");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -750,9 +750,9 @@ public class HotRadioReq {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_GAME_RADIO_DB_API, sp[0], sp[1], page))
                         .execute()
                         .body();
-                JSONObject data = JSONObject.fromObject(radioInfoBody);
+                JSONObject data = JSONObject.parseObject(radioInfoBody);
                 JSONArray radioArray = data.getJSONArray("games");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
 

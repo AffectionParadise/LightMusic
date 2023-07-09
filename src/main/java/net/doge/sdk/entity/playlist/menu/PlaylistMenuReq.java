@@ -8,8 +8,8 @@ import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -37,7 +37,7 @@ public class PlaylistMenuReq {
             String playlistInfoBody = HttpRequest.get(String.format(SIMILAR_PLAYLIST_API, id))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
             t = playlistArray.size();
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
@@ -48,7 +48,7 @@ public class PlaylistMenuReq {
                 String creator = playlistJson.getJSONObject("creator").getString("nickname");
                 String creatorId = playlistJson.getJSONObject("creator").getString("userId");
 //                Long playCount = playlistJson.getLong("playCount");
-//                Integer trackCount = playlistJson.getInt("trackCount");
+//                Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -88,21 +88,21 @@ public class PlaylistMenuReq {
             String userInfoBody = HttpRequest.get(String.format(PLAYLIST_SUBSCRIBERS_API, id, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("subscribers");
-            t = userInfoJson.getInt("total");
+            t = userInfoJson.getIntValue("total");
             for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
                 String userId = userJson.getString("userId");
                 String userName = userJson.getString("nickname");
-                Integer gen = userJson.getInt("gender");
+                Integer gen = userJson.getIntValue("gender");
                 String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
 //                String sign = userJson.getString("signature");
                 String avatarThumbUrl = userJson.getString("avatarUrl");
-//                Integer follow = userJson.getInt("follows");
-//                Integer followed = userJson.getInt("followeds");
-//                Integer playlistCount = userJson.getInt("playlistCount");
+//                Integer follow = userJson.getIntValue("follows");
+//                Integer followed = userJson.getIntValue("followeds");
+//                Integer playlistCount = userJson.getIntValue("playlistCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setId(userId);

@@ -1,7 +1,8 @@
 package net.doge.sdk.core;
 
 import cn.hutool.http.HttpRequest;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.common.StringUtil;
 
 public class MottoReq {
     // 格言 API
@@ -16,11 +17,11 @@ public class MottoReq {
         String mottoBody = HttpRequest.get(String.format(MOTTO_API))
                 .execute()
                 .body();
-        JSONObject mottoJson = JSONObject.fromObject(mottoBody);
+        JSONObject mottoJson = JSONObject.parseObject(mottoBody);
         String content = mottoJson.getString("hitokoto");
         String from = mottoJson.getString("from");
         String fromWho = mottoJson.getString("from_who");
-        return "「" + content + "」    —— " + ("null".equals(fromWho) ? "" : fromWho)
-                + ("null".equals(from) || from.equals(fromWho) ? "" : String.format("《%s》", from.replaceAll("《|》", "")));
+        return "「" + content + "」    —— " + (StringUtil.isEmpty(fromWho) ? "" : fromWho)
+                + (StringUtil.isEmpty(from) || from.equals(fromWho) ? "" : String.format("《%s》", from.replaceAll("《|》", "")));
     }
 }

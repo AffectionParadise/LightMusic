@@ -1,14 +1,14 @@
 package net.doge.sdk.entity.music.tag;
 
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.Tags;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -31,12 +31,11 @@ public class MusicSearchTagReq {
             String playlistTagBody = HttpRequest.get(String.format(PROGRAM_SEARCH_TAG_ME_API))
                     .execute()
                     .body();
-            JSONArray tags = JSONArray.fromObject(playlistTagBody);
+            JSONArray tags = JSONArray.parseArray(playlistTagBody);
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject son = tags.getJSONObject(i).getJSONObject("son");
-                Iterator<String> keys = son.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
+                Set<String> keys = son.keySet();
+                for (String key : keys) {
                     JSONObject obj = son.getJSONObject(key);
 
                     String name = obj.getString("catalog_name");

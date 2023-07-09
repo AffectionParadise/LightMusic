@@ -42,9 +42,7 @@ public class MiniDialog extends AbstractMiniDialog {
     public CustomButton playNextButton = new CustomButton();
     public CustomButton closeButton = new CustomButton();
 
-
     public ExecutorService globalExecutor = Executors.newSingleThreadExecutor();
-    private ExecutorService locationExecutor = Executors.newSingleThreadExecutor();
     private Timer locationTimer;
 
     private int destX;
@@ -152,14 +150,12 @@ public class MiniDialog extends AbstractMiniDialog {
 
         // 窗口隐藏与显示动画
         locationTimer = new Timer(0, e -> {
-            locationExecutor.submit(() -> {
-                Point p = getLocation();
-                if (p.x == destX && p.y == destY) locationTimer.stop();
-                else if (p.x < destX) setLocation(Math.min(p.x + 2, destX), p.y);
-                else if (p.x > destX) setLocation(Math.max(p.x - 2, destX), p.y);
-                else if (p.y < destY) setLocation(p.x, Math.min(p.y + 2, destY));
-                else if (p.y > destY) setLocation(p.x, Math.max(p.y - 2, destY));
-            });
+            Point p = getLocation();
+            if (p.x == destX && p.y == destY) locationTimer.stop();
+            else if (p.x < destX) setLocation(Math.min(p.x + 2, destX), p.y);
+            else if (p.x > destX) setLocation(Math.max(p.x - 2, destX), p.y);
+            else if (p.y < destY) setLocation(p.x, Math.min(p.y + 2, destY));
+            else setLocation(p.x, Math.max(p.y - 2, destY));
         });
 
         setSize(WIDTH, HEIGHT);
@@ -178,7 +174,7 @@ public class MiniDialog extends AbstractMiniDialog {
 
         // Dialog 背景透明
         setBackground(Colors.TRANSLUCENT);
-        add(globalPanel);
+        setContentPane(globalPanel);
     }
 
     public void showDialog() {

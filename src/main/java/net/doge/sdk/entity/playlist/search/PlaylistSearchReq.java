@@ -11,8 +11,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -52,21 +52,21 @@ public class PlaylistSearchReq {
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_API, encodedKeyword, limit, (page - 1) * limit))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject result = playlistInfoJson.getJSONObject("result");
-            if (result.has("playlists")) {
-                t = result.getInt("playlistCount");
+            if (result.containsKey("playlists")) {
+                t = result.getIntValue("playlistCount");
                 JSONArray playlistArray = result.getJSONArray("playlists");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
-                    JSONObject ct = playlistJson.optJSONObject("creator");
+                    JSONObject ct = playlistJson.getJSONObject("creator");
 
                     String playlistId = playlistJson.getString("id");
                     String name = playlistJson.getString("name");
                     String creator = ct != null ? ct.getString("nickname") : "";
                     String creatorId = ct != null ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
-                    Integer trackCount = playlistJson.getInt("trackCount");
+                    Integer trackCount = playlistJson.getIntValue("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -95,9 +95,9 @@ public class PlaylistSearchReq {
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_KG_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray playlistArray = data.getJSONArray("info");
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -106,7 +106,7 @@ public class PlaylistSearchReq {
                 String playlistName = playlistJson.getString("specialname");
                 String creator = playlistJson.getString("nickname");
                 Long playCount = playlistJson.getLong("playcount");
-                Integer trackCount = playlistJson.getInt("songcount");
+                Integer trackCount = playlistJson.getIntValue("songcount");
                 String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -135,9 +135,9 @@ public class PlaylistSearchReq {
                     .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 3))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
-            t = data.getJSONObject("meta").getInt("sum");
+            t = data.getJSONObject("meta").getIntValue("sum");
             JSONArray playlistArray = data.getJSONObject("body").getJSONObject("songlist").getJSONArray("list");
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -146,7 +146,7 @@ public class PlaylistSearchReq {
                 String playlistName = playlistJson.getString("dissname");
                 String creator = playlistJson.getJSONObject("creator").getString("name");
                 Long playCount = playlistJson.getLong("listennum");
-                Integer trackCount = playlistJson.getInt("song_count");
+                Integer trackCount = playlistJson.getIntValue("song_count");
                 String coverImgThumbUrl = playlistJson.getString("imgurl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -174,9 +174,9 @@ public class PlaylistSearchReq {
             HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String playlistInfoBody = resp.body();
-                JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 JSONArray playlistArray = data.getJSONArray("list");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -185,7 +185,7 @@ public class PlaylistSearchReq {
                     String playlistName = StringUtil.removeHTMLLabel(playlistJson.getString("name"));
                     String creator = playlistJson.getString("uname");
                     Long playCount = playlistJson.getLong("listencnt");
-                    Integer trackCount = playlistJson.getInt("total");
+                    Integer trackCount = playlistJson.getIntValue("total");
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -214,10 +214,10 @@ public class PlaylistSearchReq {
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_MG_API, encodedKeyword, page, limit))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
-            JSONObject data = playlistInfoJson.optJSONObject("data");
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+            JSONObject data = playlistInfoJson.getJSONObject("data");
             if (data != null) {
-                t = data.optInt("total");
+                t = data.getIntValue("total");
                 JSONArray playlistArray = data.getJSONArray("list");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -226,14 +226,14 @@ public class PlaylistSearchReq {
                     String playlistName = playlistJson.getString("name");
                     String creator = playlistJson.getJSONObject("creator").getString("name");
                     Long playCount = playlistJson.getLong("playCount");
-                    Integer trackCount = playlistJson.getInt("songCount");
+                    Integer trackCount = playlistJson.getIntValue("songCount");
                     String coverImgThumbUrl = playlistJson.getString("picUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                     playlistInfo.setSource(NetMusicSource.MG);
                     playlistInfo.setId(playlistId);
                     playlistInfo.setName(playlistName);
-                    playlistInfo.setCreator("null".equals(creator) ? "" : creator);
+                    playlistInfo.setCreator(creator);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
                     playlistInfo.setTrackCount(trackCount);
@@ -255,9 +255,9 @@ public class PlaylistSearchReq {
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_FS_API, encodedKeyword, page))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(playlistInfoBody);
-            t = data.getJSONObject("pageInfo").getInt("totalPages") * limit;
-            JSONArray playlistArray = data.optJSONArray("list");
+            JSONObject data = JSONObject.parseObject(playlistInfoBody);
+            t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
+            JSONArray playlistArray = data.getJSONArray("list");
             if (playlistArray != null) {
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -267,7 +267,7 @@ public class PlaylistSearchReq {
                     String creator = playlistJson.getString("userName");
                     String creatorId = playlistJson.getString("userId");
                     Long playCount = playlistJson.getLong("playCount");
-                    Integer trackCount = playlistJson.getInt("songCnt");
+                    Integer trackCount = playlistJson.getIntValue("songCnt");
                     String coverImgThumbUrl = playlistJson.getString("pictureUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();

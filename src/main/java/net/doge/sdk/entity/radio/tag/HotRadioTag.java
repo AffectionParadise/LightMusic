@@ -5,8 +5,8 @@ import cn.hutool.http.HttpRequest;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -77,7 +77,7 @@ public class HotRadioTag {
             String radioTagBody = HttpRequest.get(String.format(HOT_RADIO_TAG_API))
                     .execute()
                     .body();
-            JSONObject radioTagJson = JSONObject.fromObject(radioTagBody);
+            JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tagJson = tags.getJSONObject(i);
@@ -94,7 +94,7 @@ public class HotRadioTag {
             String radioTagBody = HttpRequest.get(String.format(REC_RADIO_TAG_API))
                     .execute()
                     .body();
-            JSONObject radioTagJson = JSONObject.fromObject(radioTagBody);
+            JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONArray("categories");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tagJson = tags.getJSONObject(i);
@@ -113,7 +113,7 @@ public class HotRadioTag {
             String radioTagBody = HttpRequest.get(String.format(RADIO_TAG_XM_API))
                     .execute()
                     .body();
-            JSONObject radioTagJson = JSONObject.fromObject(radioTagBody);
+            JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray fTags = radioTagJson.getJSONArray("data");
             for (int i = 0, len = fTags.size(); i < len; i++) {
                 JSONArray sTags = fTags.getJSONObject(i).getJSONArray("categories");
@@ -146,11 +146,11 @@ public class HotRadioTag {
             String radioTagBody = HttpRequest.get(String.format(RADIO_RANKING_TAG_XM_API))
                     .execute()
                     .body();
-            JSONObject radioTagJson = JSONObject.fromObject(radioTagBody);
+            JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray fTags = radioTagJson.getJSONObject("data").getJSONArray("clusterType");
             for (int i = 0, len = fTags.size(); i < len; i++) {
                 JSONObject sJson = fTags.getJSONObject(i);
-                if (sJson.getInt("rankType") != 2) continue;
+                if (sJson.getIntValue("rankType") != 2) continue;
                 String n = sJson.getString("rankClusterTypeTitle") + " - ";
                 String t = sJson.getString("rankClusterTypeId") + " ";
                 JSONArray sTags = sJson.getJSONArray("rankClusterCategories");
@@ -172,7 +172,7 @@ public class HotRadioTag {
             String radioTagBody = HttpRequest.get(String.format(RADIO_TAG_ME_API))
                     .execute()
                     .body();
-            JSONObject radioTagJson = JSONObject.fromObject(radioTagBody);
+            JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONObject tags = radioTagJson.getJSONObject("info");
             final String[] cats = {"integrity", "age", "tags"};
             for (int i = 0, len = cats.length; i < len; i++) {

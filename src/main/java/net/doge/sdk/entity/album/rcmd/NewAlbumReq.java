@@ -3,18 +3,18 @@ package net.doge.sdk.entity.album.rcmd;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
-import net.doge.sdk.common.Tags;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -100,8 +100,8 @@ public class NewAlbumReq {
                 String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_API, s[0]))
                         .execute()
                         .body();
-                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
-                JSONArray albumArray = albumInfoJson.optJSONArray("weekData");
+                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+                JSONArray albumArray = albumInfoJson.getJSONArray("weekData");
                 JSONArray monthData = albumInfoJson.getJSONArray("monthData");
                 if (albumArray == null) albumArray = monthData;
                 else albumArray.addAll(monthData);
@@ -114,7 +114,7 @@ public class NewAlbumReq {
                     String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.NET_CLOUD);
                     String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String publishTime = TimeUtil.msToDate(albumJson.getLong("publishTime"));
-                    Integer songNum = albumJson.getInt("size");
+                    Integer songNum = albumJson.getIntValue("size");
                     String coverImgThumbUrl = albumJson.getString("picUrl");
 
                     NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -144,8 +144,8 @@ public class NewAlbumReq {
 //                String albumInfoBody = HttpRequest.get(String.format(HOT_ALBUM_API, s[0]))
 //                        .execute()
 //                        .body();
-//                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
-//                JSONArray albumArray = albumInfoJson.optJSONArray("weekData");
+//                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+//                JSONArray albumArray = albumInfoJson.getJSONArray("weekData");
 //                JSONArray monthData = albumInfoJson.getJSONArray("monthData");
 //                if (albumArray == null) albumArray = monthData;
 //                else albumArray.addAll(monthData);
@@ -157,7 +157,7 @@ public class NewAlbumReq {
 //                    String albumName = albumJson.getString("name");
 //                    String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.NET_CLOUD);
 //                    String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
-//                    Integer songNum = albumJson.getInt("size");
+//                    Integer songNum = albumJson.getIntValue("size");
 //                    String coverImgThumbUrl = albumJson.getString("picUrl");
 //
 //                    NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -186,8 +186,8 @@ public class NewAlbumReq {
                 String albumInfoBody = HttpRequest.get(String.format(ALL_NEW_ALBUM_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
-                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
-                t = albumInfoJson.getInt("total");
+                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+                t = albumInfoJson.getIntValue("total");
                 JSONArray albumArray = albumInfoJson.getJSONArray("albums");
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     JSONObject albumJson = albumArray.getJSONObject(i);
@@ -197,7 +197,7 @@ public class NewAlbumReq {
                     String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.NET_CLOUD);
                     String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String publishTime = TimeUtil.msToDate(albumJson.getLong("publishTime"));
-                    Integer songNum = albumJson.getInt("size");
+                    Integer songNum = albumJson.getIntValue("size");
                     String coverImgThumbUrl = albumJson.getString("picUrl");
 
                     NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -226,7 +226,7 @@ public class NewAlbumReq {
             String albumInfoBody = HttpRequest.get(String.format(NEWEST_ALBUM_API))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.getJSONArray("albums");
             t = albumArray.size();
             for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
@@ -237,7 +237,7 @@ public class NewAlbumReq {
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.NET_CLOUD);
                 String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("publishTime"));
-                Integer songNum = albumJson.getInt("size");
+                Integer songNum = albumJson.getIntValue("size");
                 String coverImgThumbUrl = albumJson.getString("picUrl");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -265,7 +265,7 @@ public class NewAlbumReq {
             String albumInfoBody = HttpRequest.get(String.format(NEWEST_DI_ALBUM_API))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.getJSONArray("products");
             t = albumArray.size();
             for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
@@ -301,7 +301,7 @@ public class NewAlbumReq {
                 String albumInfoBody = HttpRequest.get(String.format(LANG_DI_ALBUM_API, s[1]))
                         .execute()
                         .body();
-                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONArray albumArray = albumInfoJson.getJSONArray("albumProducts");
                 t = albumArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
@@ -336,10 +336,10 @@ public class NewAlbumReq {
                 String albumInfoBody = HttpRequest.get(String.format(STYLE_ALBUM_API, s[2], (page - 1) * limit, limit))
                         .execute()
                         .body();
-                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
                 JSONArray albumArray = data.getJSONArray("albums");
-                t = data.getJSONObject("page").getInt("total");
+                t = data.getJSONObject("page").getIntValue("total");
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
@@ -348,7 +348,7 @@ public class NewAlbumReq {
                     String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.NET_CLOUD);
                     String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String publishTime = TimeUtil.msToDate(albumJson.getLong("publishTime"));
-                    Integer songNum = albumJson.getInt("size");
+                    Integer songNum = albumJson.getIntValue("size");
                     String coverImgThumbUrl = albumJson.getString("picUrl");
 
                     NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -379,7 +379,7 @@ public class NewAlbumReq {
                 String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_QQ_API, s[3]))
                         .execute()
                         .body();
-                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONArray albumArray = albumInfoJson.getJSONObject("data").getJSONArray("list");
                 t = albumArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
@@ -390,7 +390,7 @@ public class NewAlbumReq {
                     String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
                     String artistId = albumJson.getJSONArray("singers").getJSONObject(0).getString("mid");
                     String publishTime = albumJson.getString("release_time");
-//            Integer songNum = albumJson.getJSONObject("ex").getInt("track_nums");
+//            Integer songNum = albumJson.getJSONObject("ex").getIntValue("track_nums");
                     String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
 
                     NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -422,9 +422,9 @@ public class NewAlbumReq {
             String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_MG_API, page, limit))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray albumArray = data.getJSONArray("list");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
@@ -434,7 +434,7 @@ public class NewAlbumReq {
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.MG);
                 String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = albumJson.getString("publishTime");
-                Integer songNum = albumJson.getInt("songCount");
+                Integer songNum = albumJson.getIntValue("songCount");
                 String coverImgThumbUrl = albumJson.getString("picUrl");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -463,9 +463,9 @@ public class NewAlbumReq {
             String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_RANKING_MG_API))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("columnInfo");
-            t = data.getInt("contentsCount");
+            t = data.getIntValue("contentsCount");
             JSONArray albumArray = data.getJSONArray("contents");
             for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i).getJSONObject("objectInfo");
@@ -475,7 +475,7 @@ public class NewAlbumReq {
                 String artist = albumJson.getString("singer").replace("|", "、");
                 String artistId = albumJson.getString("singerId").split("\\|")[0];
                 String publishTime = albumJson.getString("publishTime");
-                Integer songNum = albumJson.getInt("totalCount");
+                Integer songNum = albumJson.getIntValue("totalCount");
                 String coverImgThumbUrl = albumJson.getJSONArray("imgItems").getJSONObject(0).getString("img");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -506,7 +506,7 @@ public class NewAlbumReq {
             String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(INDEX_NEW_ALBUM_QI_API, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONArray("data").getJSONObject(3);
             JSONArray albumArray = data.getJSONArray("result");
             t = albumArray.size();
@@ -516,10 +516,10 @@ public class NewAlbumReq {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
-                JSONArray artistArray = albumJson.optJSONArray("artist");
+                JSONArray artistArray = albumJson.getJSONArray("artist");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
-                String releaseDate = albumJson.optString("releaseDate");
+                String releaseDate = albumJson.getString("releaseDate");
                 if (StringUtil.isEmpty(releaseDate)) releaseDate = albumJson.getString("pushTime");
                 String publishTime = releaseDate.split("T")[0];
                 Integer songNum = albumJson.getJSONArray("trackList").size();
@@ -549,9 +549,9 @@ public class NewAlbumReq {
             String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(XD_ALBUM_QI_API, page, limit, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
-            JSONObject data = albumInfoJson.optJSONObject("data");
-            t = data.optInt("total");
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+            JSONObject data = albumInfoJson.getJSONObject("data");
+            t = data.getIntValue("total");
             JSONArray albumArray = data.getJSONArray("result");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
@@ -559,11 +559,11 @@ public class NewAlbumReq {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
-                JSONArray artistArray = albumJson.optJSONArray("artist");
+                JSONArray artistArray = albumJson.getJSONArray("artist");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
-                Integer songNum = albumJson.getInt("trackCount");
+                Integer songNum = albumJson.getIntValue("trackCount");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.QI);
@@ -590,9 +590,9 @@ public class NewAlbumReq {
             String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(NEW_ALBUM_QI_API, page, limit, System.currentTimeMillis())))
                     .execute()
                     .body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            t = data.optInt("total");
+            t = data.getIntValue("total");
             JSONArray albumArray = data.getJSONArray("result");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
@@ -600,11 +600,11 @@ public class NewAlbumReq {
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
-                JSONArray artistArray = albumJson.optJSONArray("artist");
+                JSONArray artistArray = albumJson.getJSONArray("artist");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
-                Integer songNum = albumJson.getInt("trackCount");
+                Integer songNum = albumJson.getIntValue("trackCount");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.QI);
@@ -632,9 +632,9 @@ public class NewAlbumReq {
 
             HttpResponse resp = HttpRequest.get(String.format(REC_ALBUM_DT_API, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
             String albumInfoBody = resp.body();
-            JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray albumArray = data.getJSONArray("object_list");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject mainJson = albumArray.getJSONObject(i);
@@ -646,7 +646,7 @@ public class NewAlbumReq {
                 String artistId = mainJson.getJSONObject("sender").getString("id");
 //                String publishTime = TimeUtils.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
-                Integer songNum = albumJson.getInt("count");
+                Integer songNum = albumJson.getIntValue("count");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.DT);
@@ -674,9 +674,9 @@ public class NewAlbumReq {
             if (StringUtil.isNotEmpty(s[5])) {
                 HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[5], (page - 1) * limit, limit, System.currentTimeMillis())).execute();
                 String albumInfoBody = resp.body();
-                JSONObject albumInfoJson = JSONObject.fromObject(albumInfoBody);
+                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
-                t = data.getInt("total");
+                t = data.getIntValue("total");
                 JSONArray albumArray = data.getJSONArray("object_list");
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     JSONObject mainJson = albumArray.getJSONObject(i);
@@ -688,7 +688,7 @@ public class NewAlbumReq {
                     String artistId = mainJson.getJSONObject("sender").getString("id");
                     String publishTime = TimeUtil.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                     String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
-                    Integer songNum = albumJson.getInt("count");
+                    Integer songNum = albumJson.getIntValue("count");
 
                     NetAlbumInfo albumInfo = new NetAlbumInfo();
                     albumInfo.setSource(NetMusicSource.DT);

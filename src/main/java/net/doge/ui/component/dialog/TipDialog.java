@@ -92,7 +92,7 @@ public class TipDialog extends AbstractShadowDialog {
         globalPanel.setLayout(new BorderLayout());
         globalPanel.add(messageLabel, BorderLayout.CENTER);
 
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
 
         initTimer();
     }

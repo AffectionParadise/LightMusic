@@ -11,8 +11,8 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -73,8 +73,8 @@ public class ArtistMenuReq {
             String artistInfoBody = HttpRequest.get(String.format(SIMILAR_ARTIST_API, id))
                     .execute()
                     .body();
-            JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
-            JSONArray artistArray = artistInfoJson.optJSONArray("artists");
+            JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+            JSONArray artistArray = artistInfoJson.getJSONArray("artists");
             if (artistArray != null) {
                 t = artistArray.size();
                 for (int i = 0, len = artistArray.size(); i < len; i++) {
@@ -82,9 +82,9 @@ public class ArtistMenuReq {
 
                     String artistId = artistJson.getString("id");
                     String artistName = artistJson.getString("name");
-                    Integer songNum = artistJson.getInt("musicSize");
-                    Integer albumNum = artistJson.getInt("albumSize");
-//                Integer mvNum = artistJson.optInt("mvSize");
+                    Integer songNum = artistJson.getIntValue("musicSize");
+                    Integer albumNum = artistJson.getIntValue("albumSize");
+//                Integer mvNum = artistJson.getIntValue("mvSize");
                     String coverImgThumbUrl = artistJson.getString("img1v1Url");
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
@@ -111,7 +111,7 @@ public class ArtistMenuReq {
                             "\"appid\":\"1005\",\"data\":[{\"author_id\":" + id + "}]}")
                     .execute()
                     .body();
-            JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
+            JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONArray artistArray = artistInfoJson.getJSONArray("data").getJSONArray(0);
             t = artistArray.size();
             for (int i = 0, len = artistArray.size(); i < len; i++) {
@@ -139,8 +139,8 @@ public class ArtistMenuReq {
             String artistInfoBody = HttpRequest.get(String.format(SIMILAR_ARTIST_QQ_API, id))
                     .execute()
                     .body();
-            JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
-            JSONArray artistArray = artistInfoJson.getJSONObject("data").optJSONArray("list");
+            JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+            JSONArray artistArray = artistInfoJson.getJSONObject("data").getJSONArray("list");
             if (artistArray != null) {
                 t = artistArray.size();
                 for (int i = 0, len = artistArray.size(); i < len; i++) {
@@ -185,20 +185,20 @@ public class ArtistMenuReq {
                 String userInfoBody = HttpRequest.get(String.format(ARTIST_FANS_API, id, (page - 1) * limit, limit))
                         .execute()
                         .body();
-                JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+                JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
                 JSONArray userArray = userInfoJson.getJSONArray("data");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i).getJSONObject("userProfile");
 
                     String userId = userJson.getString("userId");
                     String userName = userJson.getString("nickname");
-                    Integer gen = userJson.getInt("gender");
+                    Integer gen = userJson.getIntValue("gender");
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
 //                    String sign = userJson.getString("signature");
                     String avatarThumbUrl = userJson.getString("avatarUrl");
-//                    Integer follow = userJson.getInt("follows");
-//                    Integer followed = userJson.getInt("followeds");
-//                    Integer playlistCount = userJson.getInt("playlistCount");
+//                    Integer follow = userJson.getIntValue("follows");
+//                    Integer followed = userJson.getIntValue("followeds");
+//                    Integer playlistCount = userJson.getIntValue("playlistCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setId(userId);
@@ -222,7 +222,7 @@ public class ArtistMenuReq {
                 String tBody = HttpRequest.get(String.format(ARTIST_FANS_TOTAL_API, id))
                         .execute()
                         .body();
-                t.set(JSONObject.fromObject(tBody).getJSONObject("data").getInt("fansCnt"));
+                t.set(JSONObject.parseObject(tBody).getJSONObject("data").getIntValue("fansCnt"));
             };
 
             List<Future<?>> taskList = new LinkedList<>();
@@ -246,10 +246,10 @@ public class ArtistMenuReq {
             String userInfoBody = HttpRequest.get(String.format(ORGANIZATION_STAFFS_ME_API, id, page))
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.fromObject(userInfoBody);
+            JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("info");
             JSONArray userArray = data.getJSONArray("staff");
-            t.set(data.getJSONObject("pagination").getInt("count"));
+            t.set(data.getJSONObject("pagination").getIntValue("count"));
             for (int i = (page - 1) * limit, len = Math.min(page * limit, userArray.size()); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
@@ -332,9 +332,9 @@ public class ArtistMenuReq {
             String artistInfoBody = HttpRequest.get(String.format(ORGANIZATION_CVS_ME_API, id, page))
                     .execute()
                     .body();
-            JSONObject artistInfoJson = JSONObject.fromObject(artistInfoBody);
-            JSONObject info = artistInfoJson.optJSONObject("info");
-            t = info.getJSONObject("pagination").getInt("count");
+            JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+            JSONObject info = artistInfoJson.getJSONObject("info");
+            t = info.getJSONObject("pagination").getIntValue("count");
             JSONArray artistArray = info.getJSONArray("cast");
             for (int i = (page - 1) * limit, len = Math.min(page * limit, artistArray.size()); i < len; i++) {
                 JSONObject artistJson = artistArray.getJSONObject(i);
@@ -412,9 +412,9 @@ public class ArtistMenuReq {
                 String radioInfoBody = HttpRequest.get(String.format(ORGANIZATION_RADIOS_ME_API, id, page))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
-                t = data.getJSONObject("pagination").getInt("count");
+                t = data.getJSONObject("pagination").getIntValue("count");
                 JSONArray radioArray = data.getJSONArray("drama");
                 for (int i = (page - 1) * limit, len = Math.min(page * limit, radioArray.size()); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
@@ -441,10 +441,10 @@ public class ArtistMenuReq {
                 String radioInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, id, page, limit))
                         .execute()
                         .body();
-                JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+                JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("dramas");
                 JSONArray radioArray = data.getJSONArray("Datas");
-                t = data.getJSONObject("pagination").getInt("count");
+                t = data.getJSONObject("pagination").getIntValue("count");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i).getJSONObject("drama");
 

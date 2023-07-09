@@ -134,7 +134,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         initView();
 
         globalPanel.add(centerPanel, BorderLayout.CENTER);
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
 
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);

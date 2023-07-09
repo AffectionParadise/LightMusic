@@ -11,8 +11,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -62,7 +62,7 @@ public class RecommendProgramReq {
             String programInfoBody = HttpRequest.get(String.format(RECOMMEND_PROGRAM_API))
                     .execute()
                     .body();
-            JSONObject programInfoJson = JSONObject.fromObject(programInfoBody);
+            JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONArray("programs");
             t = programArray.size();
             for (int i = (page - 1) * limit, len = Math.min(programArray.size(), page * limit); i < len; i++) {
@@ -102,7 +102,7 @@ public class RecommendProgramReq {
             String programInfoBody = HttpRequest.get(String.format(PERSONALIZED_PROGRAM_API))
                     .execute()
                     .body();
-            JSONObject programInfoJson = JSONObject.fromObject(programInfoBody);
+            JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONArray("result");
             t = programArray.size();
             for (int i = (page - 1) * limit, len = Math.min(programArray.size(), page * limit); i < len; i++) {
@@ -142,7 +142,7 @@ public class RecommendProgramReq {
             String programInfoBody = HttpRequest.get(String.format(PROGRAM_24_HOURS_TOPLIST_API))
                     .execute()
                     .body();
-            JSONObject programInfoJson = JSONObject.fromObject(programInfoBody);
+            JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONObject("data").getJSONArray("list");
             t = programArray.size();
             for (int i = (page - 1) * limit, len = Math.min(programArray.size(), page * limit); i < len; i++) {
@@ -182,7 +182,7 @@ public class RecommendProgramReq {
             String programInfoBody = HttpRequest.get(String.format(PROGRAM_TOPLIST_API))
                     .execute()
                     .body();
-            JSONObject programInfoJson = JSONObject.fromObject(programInfoBody);
+            JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONArray("toplist");
             t = programArray.size();
             for (int i = (page - 1) * limit, len = Math.min(programArray.size(), page * limit); i < len; i++) {
@@ -224,7 +224,7 @@ public class RecommendProgramReq {
             String programInfoBody = HttpRequest.get(String.format(REC_PROGRAM_ME_API))
                     .execute()
                     .body();
-            JSONObject programInfoJson = JSONObject.fromObject(programInfoBody);
+            JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONObject info = programInfoJson.getJSONObject("info");
             // 轮播图
             JSONArray programArray = info.getJSONArray("links");

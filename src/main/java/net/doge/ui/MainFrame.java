@@ -98,9 +98,9 @@ import net.doge.util.system.*;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.SpectrumUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONException;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -805,7 +805,7 @@ public class MainFrame extends JFrame {
     // 桌面歌词是否置顶
     public boolean desktopLyricOnTop;
     // 桌面歌词透明度
-    public double desktopLyricAlpha;
+    public float desktopLyricAlpha;
     // 桌面歌词字体大小
     public int desktopLyricFontSize;
     // 专辑图片宽/高
@@ -971,40 +971,40 @@ public class MainFrame extends JFrame {
     private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT);
     // 个人音乐 Tab 面板
     private CustomPanel personalMusicPanel = new CustomPanel();
-    private CustomLabel personalMusicLabel = new CustomLabel("个人音乐", personalMusicIcon);
+    private CustomLabel personalMusicLabel = new CustomLabel(personalMusicIcon);
     // 音乐馆 Tab 面板
     private CustomPanel netMusicPanel = new CustomPanel();
-    private CustomLabel netMusicLabel = new CustomLabel("音乐馆", netMusicIcon);
+    private CustomLabel netMusicLabel = new CustomLabel(netMusicIcon);
     // 歌单 Tab 面板
     private CustomPanel netPlaylistPanel = new CustomPanel();
-    private CustomLabel netPlaylistLabel = new CustomLabel("歌单", playlistIcon);
+    private CustomLabel netPlaylistLabel = new CustomLabel(playlistIcon);
     // 专辑 Tab 面板
     private CustomPanel netAlbumPanel = new CustomPanel();
-    private CustomLabel netAlbumLabel = new CustomLabel("专辑", netAlbumIcon);
+    private CustomLabel netAlbumLabel = new CustomLabel(netAlbumIcon);
     // 歌手 Tab 面板
     private CustomPanel netArtistPanel = new CustomPanel();
-    private CustomLabel netArtistLabel = new CustomLabel("歌手", netArtistIcon);
+    private CustomLabel netArtistLabel = new CustomLabel(netArtistIcon);
     // 电台 Tab 面板
     private CustomPanel netRadioPanel = new CustomPanel();
-    private CustomLabel netRadioLabel = new CustomLabel("电台", netRadioIcon);
+    private CustomLabel netRadioLabel = new CustomLabel(netRadioIcon);
     // MV Tab 面板
     private CustomPanel netMvPanel = new CustomPanel();
-    private CustomLabel netMvLabel = new CustomLabel("MV", netMvIcon);
+    private CustomLabel netMvLabel = new CustomLabel(netMvIcon);
     // 榜单 Tab 面板
     private CustomPanel netRankingPanel = new CustomPanel();
-    private CustomLabel netRankingLabel = new CustomLabel("榜单", netRankingIcon);
+    private CustomLabel netRankingLabel = new CustomLabel(netRankingIcon);
     // 用户 Tab 面板
     private CustomPanel netUserPanel = new CustomPanel();
-    private CustomLabel netUserLabel = new CustomLabel("用户", netUserIcon);
+    private CustomLabel netUserLabel = new CustomLabel(netUserIcon);
     // 推荐 Tab 面板
     private CustomPanel recommendPanel = new CustomPanel();
-    private CustomLabel recommendLabel = new CustomLabel("推荐", recommendIcon);
+    private CustomLabel recommendLabel = new CustomLabel(recommendIcon);
     // 下载管理 Tab 面板
     private CustomPanel downloadManagementPanel = new CustomPanel();
-    private CustomLabel downloadManagementLabel = new CustomLabel("下载管理", downloadManagementIcon);
+    private CustomLabel downloadManagementLabel = new CustomLabel(downloadManagementIcon);
     // 播放队列 Tab 面板
     private CustomPanel playQueuePanel = new CustomPanel();
-    private CustomLabel playQueueLabel = new CustomLabel("播放队列", playQueueIcon);
+    private CustomLabel playQueueLabel = new CustomLabel(playQueueIcon);
 
     // 收藏标签页
     private CustomTabbedPane collectionTabbedPane = new CustomTabbedPane(CustomTabbedPane.TOP);
@@ -2430,7 +2430,6 @@ public class MainFrame extends JFrame {
         setDefaultLookAndFeelDecorated(true);
         // 窗口透明
         // setWindowOpaque 存在性能问题，别用
-//        AWTUtilities.setWindowOpaque(THIS, false);
 //        setBackground(Colors.TRANSLUCENT);
         // 窗口大小适应
         addComponentListener(new ComponentAdapter() {
@@ -2465,11 +2464,6 @@ public class MainFrame extends JFrame {
                     songNameLabel.setVisible(true);
                     if (player.loadedMusic()) {
                         showAlbumImage();
-                        // 防止歌词面板错位
-//                        leftInfoBox.setVisible(false);
-//                        leftInfoBox.setVisible(true);
-//                        lrcAndSpecBox.setVisible(false);
-//                        lrcAndSpecBox.setVisible(true);
                     }
                     if (blurType == BlurConstants.OFF) doBlur();
                 });
@@ -2511,6 +2505,9 @@ public class MainFrame extends JFrame {
                 setLocation(x = p.x + e.getX() - origin.x, y = p.y + e.getY() - origin.y);
             }
         });
+
+        // 主面板
+        setContentPane(globalPanel);
 
         // loading 面板
         setGlassPane(loading);
@@ -2645,6 +2642,9 @@ public class MainFrame extends JFrame {
         // 初始化控制面板
         controlPanelInit();
 
+        // 加载全局快捷键监听器
+        loadHotKeyListener();
+
         // 格言
         updateMotto();
 
@@ -2669,7 +2669,6 @@ public class MainFrame extends JFrame {
         // 加载配置
         boolean succeed = loadConfig();
 
-        add(globalPanel);
         setVisible(true);
 
         // 加载上一次播放的歌曲
@@ -2677,9 +2676,6 @@ public class MainFrame extends JFrame {
             playQueue.setSelectedIndex(currSong);
             playExecutor.submit(() -> playSelected(playQueue, false, false));
         }
-
-        // 加载全局快捷键监听器
-        loadHotKeyListener();
 
         // 首次使用显示指南
         if (!succeed) helpMenuItem.doClick();
@@ -2935,92 +2931,92 @@ public class MainFrame extends JFrame {
     private boolean loadConfig() {
         JSONObject config = JsonUtil.readJson(ConfigConstants.fileName);
         // 载入已保存的自定义风格(逆序加载，这样才能保持顺序一致)
-        JSONArray styleArray = config.optJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
+        JSONArray styleArray = config.getJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
         if (styleArray != null) {
             for (int i = 0, len = styleArray.size(); i < len; i++) {
                 JSONObject styleObject = styleArray.getJSONObject(i);
                 UIStyle style = new UIStyle(
                         UIStyleConstants.CUSTOM,
-                        styleObject.optString("name"),
-                        styleObject.optString("imgPath"),
-                        ColorUtil.RGBStringToColor(styleObject.optString("bgColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("foreColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("selectedColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("lrcColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("highlightColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("textColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("timeBarColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("iconColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("scrollBarColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("sliderColor")),
-                        ColorUtil.RGBStringToColor(styleObject.optString("spectrumColor"))
+                        styleObject.getString("name"),
+                        styleObject.getString("imgPath"),
+                        ColorUtil.RGBStringToColor(styleObject.getString("bgColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("foreColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("selectedColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("lrcColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("highlightColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("textColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("timeBarColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("iconColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("scrollBarColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("sliderColor")),
+                        ColorUtil.RGBStringToColor(styleObject.getString("spectrumColor"))
                 );
                 addStyle(style);
             }
         }
         // 载入是否启用快捷键
-        keyEnabled = config.optBoolean(ConfigConstants.KEY_ENABLED, true);
-        playOrPauseKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.PLAY_OR_PAUSE_KEYS));
+        keyEnabled = config.getBooleanValue(ConfigConstants.KEY_ENABLED, true);
+        playOrPauseKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.PLAY_OR_PAUSE_KEYS));
         if (playOrPauseKeys.isEmpty()) {
             playOrPauseKeys.add(KeyEvent.VK_CONTROL);
             playOrPauseKeys.add(KeyEvent.VK_F5);
         }
-        playLastKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.PLAY_LAST_KEYS));
+        playLastKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.PLAY_LAST_KEYS));
         if (playLastKeys.isEmpty()) {
             playLastKeys.add(KeyEvent.VK_CONTROL);
             playLastKeys.add(KeyEvent.VK_LEFT);
         }
-        playNextKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.PLAY_NEXT_KEYS));
+        playNextKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.PLAY_NEXT_KEYS));
         if (playNextKeys.isEmpty()) {
             playNextKeys.add(KeyEvent.VK_CONTROL);
             playNextKeys.add(KeyEvent.VK_RIGHT);
         }
-        backwardKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.BACKWARD_KEYS));
+        backwardKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.BACKWARD_KEYS));
         if (backwardKeys.isEmpty()) {
             backwardKeys.add(KeyEvent.VK_CONTROL);
             backwardKeys.add(KeyEvent.VK_ALT);
             backwardKeys.add(KeyEvent.VK_LEFT);
         }
-        forwardKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.FORWARD_KEYS));
+        forwardKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.FORWARD_KEYS));
         if (forwardKeys.isEmpty()) {
             forwardKeys.add(KeyEvent.VK_CONTROL);
             forwardKeys.add(KeyEvent.VK_ALT);
             forwardKeys.add(KeyEvent.VK_RIGHT);
         }
-        videoFullScreenKeys = KeyUtil.strToCodes(config.optString(ConfigConstants.VIDEO_FULL_SCREEN_KEYS));
+        videoFullScreenKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.VIDEO_FULL_SCREEN_KEYS));
         if (videoFullScreenKeys.isEmpty()) {
             videoFullScreenKeys.add(KeyEvent.VK_F11);
         }
         // 载入是否自动更新
-        autoUpdate = config.optBoolean(ConfigConstants.AUTO_UPDATE, true);
+        autoUpdate = config.getBooleanValue(ConfigConstants.AUTO_UPDATE, true);
         if (autoUpdate) checkUpdate(true);
         // 载入关闭窗口操作
-        currCloseWindowOption = config.optInt(ConfigConstants.CLOSE_WINDOW_OPTION, CloseWindowOptions.ASK);
+        currCloseWindowOption = config.getIntValue(ConfigConstants.CLOSE_WINDOW_OPTION, CloseWindowOptions.ASK);
         // 载入窗口大小
-        windowSize = config.optInt(ConfigConstants.WINDOW_SIZE, WindowSize.MIDDLE);
+        windowSize = config.getIntValue(ConfigConstants.WINDOW_SIZE, WindowSize.MIDDLE);
         windowWidth = WindowSize.dimensions[windowSize][0];
         windowHeight = WindowSize.dimensions[windowSize][1];
         x = y = 0x3f3f3f3f;
         setSize(windowWidth, windowHeight);
         // 载入播放视频是否关闭主界面
-        videoOnly = config.optBoolean(ConfigConstants.VIDEO_ONLY, true);
+        videoOnly = config.getBooleanValue(ConfigConstants.VIDEO_ONLY, true);
         // 是否显示侧边栏文字
-        showTabText = config.optBoolean(ConfigConstants.SHOW_TAB_TEXT, true);
-        initTabSize();
+        showTabText = config.getBooleanValue(ConfigConstants.SHOW_TAB_TEXT, true);
+        updateTabSize();
         // 载入高斯模糊因子
-        BlurConstants.gsFactorIndex = config.optInt(ConfigConstants.GS_FACTOR_INDEX, 3);
+        BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, 3);
         // 载入暗角滤镜因子
-        BlurConstants.darkerFactorIndex = config.optInt(ConfigConstants.DARKER_FACTOR_INDEX, 2);
+        BlurConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, 2);
         // 载入歌曲下载路径
-        String musicDownPath = config.optString(ConfigConstants.MUSIC_DOWN_PATH);
+        String musicDownPath = config.getString(ConfigConstants.MUSIC_DOWN_PATH);
         if (!musicDownPath.isEmpty()) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
         FileUtil.makeSureDir(musicDownPath);
         // 载入 MV 下载路径
-        String mvDownPath = config.optString(ConfigConstants.MV_DOWN_PATH);
+        String mvDownPath = config.getString(ConfigConstants.MV_DOWN_PATH);
         if (!mvDownPath.isEmpty()) SimplePath.DOWNLOAD_MV_PATH = mvDownPath;
         FileUtil.makeSureDir(mvDownPath);
         // 载入缓存路径
-        String cachePath = config.optString(ConfigConstants.CACHE_PATH);
+        String cachePath = config.getString(ConfigConstants.CACHE_PATH);
         if (!cachePath.isEmpty()) {
             SimplePath.CACHE_PATH = cachePath;
             SimplePath.IMG_CACHE_PATH = cachePath + (cachePath.endsWith("/") ? "" : "/") + "img/";
@@ -3028,55 +3024,55 @@ public class MainFrame extends JFrame {
         FileUtil.makeSureDir(cachePath);
         FileUtil.makeSureDir(SimplePath.IMG_CACHE_PATH);
         // 载入最大缓存大小
-        maxCacheSize = config.optLong(ConfigConstants.MAX_CACHE_SIZE, 1024);
+        maxCacheSize = config.getLongValue(ConfigConstants.MAX_CACHE_SIZE, 1024);
         // 载入最大播放历史数量
-        maxHistoryCount = config.optInt(ConfigConstants.MAX_HISTORY_COUNT, 300);
+        maxHistoryCount = config.getIntValue(ConfigConstants.MAX_HISTORY_COUNT, 300);
         // 载入最大搜索历史数量
-        maxSearchHistoryCount = config.optInt(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, 50);
+        maxSearchHistoryCount = config.getIntValue(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, 50);
         // 载入同时下载的最大任务数
-        int maxConcurrentTaskCount = Math.min(3, config.optInt(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, 3));
+        int maxConcurrentTaskCount = Math.min(3, config.getIntValue(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, 3));
         GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(maxConcurrentTaskCount);
         // 载入是否显示频谱
-        showSpectrum = config.optBoolean(ConfigConstants.SHOW_SPECTRUM, true);
+        showSpectrum = config.getBooleanValue(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
         // 载入是否高斯模糊
-        gsOn = config.optBoolean(ConfigConstants.GS_ON, false);
+        gsOn = config.getBooleanValue(ConfigConstants.GS_ON, false);
         // 载入是否暗化
-        darkerOn = config.optBoolean(ConfigConstants.DARKER_ON, true);
+        darkerOn = config.getBooleanValue(ConfigConstants.DARKER_ON, true);
         // 载入模糊类型
-        blurType = config.optInt(ConfigConstants.BLUR_TYPE, BlurConstants.OFF);
+        blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.OFF);
         blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon : blurType == BlurConstants.MC ? mcBlurIcon :
                 blurType == BlurConstants.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
-        isAutoDownloadLrc = config.optBoolean(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
+        isAutoDownloadLrc = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入歌词偏移
-        lrcOffset = config.optDouble(ConfigConstants.LYRIC_OFFSET, 0);
+        lrcOffset = config.getDoubleValue(ConfigConstants.LYRIC_OFFSET);
         currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset));
         // 载入频谱透明度
-        specOpacity = (float) config.optDouble(ConfigConstants.SPEC_OPACITY, 0.3);
+        specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.3f;
         spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
         // 载入是否显示桌面歌词
         desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
-        if (showDesktopLyric = config.optBoolean(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
+        if (showDesktopLyric = config.getBooleanValue(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
             desktopLyricDialog.setVisible(true);
         } else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
         // 载入是否锁定桌面歌词
-        desktopLyricLocked = config.optBoolean(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
+        desktopLyricLocked = config.getBooleanValue(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
         // 载入桌面歌词坐标
-        desktopLyricX = config.optInt(ConfigConstants.DESKTOP_LYRIC_X, -1);
-        desktopLyricY = config.optInt(ConfigConstants.DESKTOP_LYRIC_Y, -1);
+        desktopLyricX = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_X, -1);
+        desktopLyricY = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_Y, -1);
         if (desktopLyricX >= 0) desktopLyricDialog.setLocation(desktopLyricX, desktopLyricY);
         // 载入是否桌面歌词置顶
-        desktopLyricOnTop = config.optBoolean(ConfigConstants.DESKTOP_LYRIC_ON_TOP, true);
+        desktopLyricOnTop = config.getBooleanValue(ConfigConstants.DESKTOP_LYRIC_ON_TOP, true);
         desktopLyricDialog.setAlwaysOnTop(desktopLyricOnTop);
         // 载入桌面歌词透明度
-        desktopLyricAlpha = config.optDouble(ConfigConstants.DESKTOP_LYRIC_ALPHA, 1);
-        desktopLyricDialog.setAlpha((float) desktopLyricAlpha);
+        desktopLyricAlpha = config.containsKey(ConfigConstants.DESKTOP_LYRIC_ALPHA) ? config.getFloatValue(ConfigConstants.DESKTOP_LYRIC_ALPHA) : 1;
+        desktopLyricDialog.setAlpha(desktopLyricAlpha);
         // 载入桌面歌词字体大小
-        desktopLyricFontSize = config.optInt(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, Fonts.HUGE_SIZE);
+        desktopLyricFontSize = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, Fonts.HUGE_SIZE);
         desktopLyricDialog.updateFontSize(desktopLyricFontSize);
         // 载入播放模式
-        switch (config.optInt(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
+        switch (config.getIntValue(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
             case PlayMode.DISABLED:
                 changeToDisabled(false);
                 break;
@@ -3094,15 +3090,15 @@ public class MainFrame extends JFrame {
                 break;
         }
         // 载入快进/快退时间
-        forwardOrBackwardTime = config.optInt(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
+        forwardOrBackwardTime = config.getIntValue(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入视频快进/快退时间
-        videoForwardOrBackwardTime = config.optInt(ConfigConstants.VIDEO_FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
+        videoForwardOrBackwardTime = config.getIntValue(ConfigConstants.VIDEO_FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入速率
-        currRate = config.optDouble(ConfigConstants.RATE, DEFAULT_RATE);
+        currRate = config.containsKey(ConfigConstants.RATE) ? config.getDoubleValue(ConfigConstants.RATE) : DEFAULT_RATE;
         // 载入视频速率
-        currVideoRate = config.optDouble(ConfigConstants.VIDEO_RATE, DEFAULT_RATE);
+        currVideoRate = config.containsKey(ConfigConstants.VIDEO_RATE) ? config.getDoubleValue(ConfigConstants.VIDEO_RATE) : DEFAULT_RATE;
         // 载入频谱样式
-        currSpecStyle = config.optInt(ConfigConstants.SPECTRUM_STYLE, SpectrumConstants.GROUND);
+        currSpecStyle = config.getIntValue(ConfigConstants.SPECTRUM_STYLE, SpectrumConstants.GROUND);
         Enumeration<AbstractButton> mis = spectrumStyleGroup.getElements();
         int ei = 0;
         while (mis.hasMoreElements()) {
@@ -3111,53 +3107,53 @@ public class MainFrame extends JFrame {
             ei++;
         }
         // 载入均衡
-        currBalance = config.optDouble(ConfigConstants.BALANCE, DEFAULT_BALANCE);
+        currBalance = config.containsKey(ConfigConstants.BALANCE) ? config.getDoubleValue(ConfigConstants.BALANCE) : DEFAULT_BALANCE;
         // 载入音量
-        volumeSlider.setValue(config.optInt(ConfigConstants.VOLUME, DEFAULT_VOLUME));
+        volumeSlider.setValue(config.getIntValue(ConfigConstants.VOLUME, DEFAULT_VOLUME));
         // 载入是否静音
-        isMute = config.optBoolean(ConfigConstants.MUTE, false);
+        isMute = config.getBooleanValue(ConfigConstants.MUTE, false);
         if (isMute) muteButton.setIcon(ImageUtil.dye(muteIcon, currUIStyle.getIconColor()));
         // 载入音效
-        currSoundEffect = config.optInt(ConfigConstants.SOUND_EFFECT, 0);
-        JSONArray edArray = config.optJSONArray(ConfigConstants.EQUALIZER_DATA);
+        currSoundEffect = config.getIntValue(ConfigConstants.SOUND_EFFECT, 0);
+        JSONArray edArray = config.getJSONArray(ConfigConstants.EQUALIZER_DATA);
         ed = new double[EqualizerData.BAND_NUM];
         if (edArray != null) {
-            for (int i = 0, s = edArray.size(); i < s; i++) ed[i] = edArray.optDouble(i);
+            for (int i = 0, s = edArray.size(); i < s; i++) ed[i] = edArray.getDoubleValue(i);
         }
         // 载入均衡数据
-        JSONArray equalizerData = config.optJSONArray(ConfigConstants.EQUALIZER_DATA);
+        JSONArray equalizerData = config.getJSONArray(ConfigConstants.EQUALIZER_DATA);
         if (equalizerData != null) {
             ed = new double[EqualizerData.BAND_NUM];
-            for (int i = 0, len = equalizerData.size(); i < len; i++) ed[i] = equalizerData.optDouble(i);
+            for (int i = 0, len = equalizerData.size(); i < len; i++) ed[i] = equalizerData.getDoubleValue(i);
         }
         // 载入迷你窗口位置
-        miniX = config.optInt(ConfigConstants.MINIX, -0x3f3f3f3f);
-        miniY = config.optInt(ConfigConstants.MINIY, -0x3f3f3f3f);
+        miniX = config.getIntValue(ConfigConstants.MINIX, -0x3f3f3f3f);
+        miniY = config.getIntValue(ConfigConstants.MINIY, -0x3f3f3f3f);
         // 载入中文类型
-        currChineseType = config.optInt(ConfigConstants.CHINESE_TYPE, ChineseType.SIMPLIFIED);
+        currChineseType = config.getIntValue(ConfigConstants.CHINESE_TYPE, ChineseType.SIMPLIFIED);
         if (currChineseType == ChineseType.SIMPLIFIED)
             switchChineseButton.setIcon(ImageUtil.dye(simpChineseIcon, currUIStyle.getIconColor()));
         else
             switchChineseButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
         // 载入日文类型
-        currJapaneseType = config.optInt(ConfigConstants.JAPANESE_TYPE, JapaneseType.KANA);
+        currJapaneseType = config.getIntValue(ConfigConstants.JAPANESE_TYPE, JapaneseType.KANA);
         if (currJapaneseType == JapaneseType.KANA)
             switchJapaneseButton.setIcon(ImageUtil.dye(kanaIcon, currUIStyle.getIconColor()));
         else
             switchJapaneseButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
         // 载入歌词类型
-        currLrcType = config.optInt(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL);
+        currLrcType = config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL);
         if (currLrcType == LyricType.ORIGINAL)
             switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
         else if (currLrcType == LyricType.TRANSLATION)
             switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
         // 载入排序顺序
-        currSortOrder = config.optInt(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
+        currSortOrder = config.getIntValue(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
         ascendingMenuItem.setSelected(currSortOrder == SortMethod.ASCENDING);
         descendingMenuItem.setSelected(currSortOrder == SortMethod.DESCENDING);
 
         // 载入歌曲目录
-        JSONArray catalogJsonArray = config.optJSONArray(ConfigConstants.CATALOGS);
+        JSONArray catalogJsonArray = config.getJSONArray(ConfigConstants.CATALOGS);
         if (catalogJsonArray != null) {
             for (int i = 0, len = catalogJsonArray.size(); i < len; i++) {
                 String filePath = catalogJsonArray.getString(i);
@@ -3169,7 +3165,7 @@ public class MainFrame extends JFrame {
         loadLocalMusicList(config);
 
         // 载入历史列表
-        JSONArray historyJsonArray = config.optJSONArray(ConfigConstants.HISTORY);
+        JSONArray historyJsonArray = config.getJSONArray(ConfigConstants.HISTORY);
         if (historyJsonArray != null) {
             for (int i = 0, len = historyJsonArray.size(); i < len; i++) {
                 String s = historyJsonArray.getString(i);
@@ -3182,20 +3178,20 @@ public class MainFrame extends JFrame {
                     });
                     historyModel.addElement(audioFile);
                 } else {
-                    JSONObject jsonObject = JSONObject.fromObject(s);
+                    JSONObject jsonObject = JSONObject.parseObject(s);
                     NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jsonObject.optInt(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jsonObject.optString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setHash(jsonObject.optString(ConfigConstants.NET_MUSIC_HASH));
-                    netMusicInfo.setId(jsonObject.optString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setProgramId(jsonObject.optString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
-                    netMusicInfo.setName(jsonObject.optString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jsonObject.optString(ConfigConstants.NET_MUSIC_ARTIST));
-                    netMusicInfo.setArtistId(jsonObject.optString(ConfigConstants.NET_MUSIC_ARTIST_ID));
-                    netMusicInfo.setAlbumName(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-                    netMusicInfo.setAlbumId(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_ID));
-                    netMusicInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MUSIC_DURATION));
-                    netMusicInfo.setMvId(jsonObject.optString(ConfigConstants.NET_MUSIC_MV_ID));
+                    netMusicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    netMusicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    netMusicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
+                    netMusicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
+                    netMusicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
+                    netMusicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
+                    netMusicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                    netMusicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
+                    netMusicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
+                    netMusicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
+                    netMusicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
+                    netMusicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
                     historyModel.addElement(netMusicInfo);
                 }
             }
@@ -3205,28 +3201,28 @@ public class MainFrame extends JFrame {
         loadCollectedMusicList(config);
 
         // 载入下载任务列表
-        JSONArray tasksJsonArray = config.optJSONArray(ConfigConstants.TASKS);
+        JSONArray tasksJsonArray = config.getJSONArray(ConfigConstants.TASKS);
         if (tasksJsonArray != null) {
             for (int i = 0, len = tasksJsonArray.size(); i < len; i++) {
                 String s = tasksJsonArray.getString(i);
 
-                JSONObject jsonObject = JSONObject.fromObject(s);
-                int type = jsonObject.optInt(ConfigConstants.TASK_TYPE);
-                String name = jsonObject.optString(ConfigConstants.TASK_NAME);
-                String dest = jsonObject.optString(ConfigConstants.TASK_DEST);
-                int status = jsonObject.optInt(ConfigConstants.TASK_STATUS);
-                long finished = jsonObject.optLong(ConfigConstants.TASK_FINISHED);
-                long total = jsonObject.optLong(ConfigConstants.TASK_TOTAL);
+                JSONObject jsonObject = JSONObject.parseObject(s);
+                int type = jsonObject.getIntValue(ConfigConstants.TASK_TYPE);
+                String name = jsonObject.getString(ConfigConstants.TASK_NAME);
+                String dest = jsonObject.getString(ConfigConstants.TASK_DEST);
+                int status = jsonObject.getIntValue(ConfigConstants.TASK_STATUS);
+                long finished = jsonObject.getLongValue(ConfigConstants.TASK_FINISHED);
+                long total = jsonObject.getLongValue(ConfigConstants.TASK_TOTAL);
 
                 Task task = null;
                 if (type == TaskType.MUSIC) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MUSIC_INFO);
                     NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jo.optInt(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jo.optString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setId(jo.optString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setName(jo.optString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jo.optString(ConfigConstants.NET_MUSIC_ARTIST));
+                    netMusicInfo.setSource(jo.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    netMusicInfo.setFormat(jo.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    netMusicInfo.setId(jo.getString(ConfigConstants.NET_MUSIC_ID));
+                    netMusicInfo.setName(jo.getString(ConfigConstants.NET_MUSIC_NAME));
+                    netMusicInfo.setArtist(jo.getString(ConfigConstants.NET_MUSIC_ARTIST));
                     task = new Task(downloadList, type, netMusicInfo, null);
 
                     task.setInvokeLater(() -> {
@@ -3244,13 +3240,13 @@ public class MainFrame extends JFrame {
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
                     NetMvInfo netMvInfo = new NetMvInfo();
-                    netMvInfo.setSource(jo.optInt(ConfigConstants.NET_MV_SOURCE));
-                    netMvInfo.setType(jo.optInt(ConfigConstants.NET_MV_TYPE));
-                    netMvInfo.setFormat(jo.optString(ConfigConstants.NET_MV_FORMAT));
-                    netMvInfo.setId(jo.optString(ConfigConstants.NET_MV_ID));
-                    netMvInfo.setBvid(jo.optString(ConfigConstants.NET_MV_BVID));
-                    netMvInfo.setName(jo.optString(ConfigConstants.NET_MV_NAME));
-                    netMvInfo.setArtist(jo.optString(ConfigConstants.NET_MV_ARTIST));
+                    netMvInfo.setSource(jo.getIntValue(ConfigConstants.NET_MV_SOURCE));
+                    netMvInfo.setType(jo.getIntValue(ConfigConstants.NET_MV_TYPE));
+                    netMvInfo.setFormat(jo.getString(ConfigConstants.NET_MV_FORMAT));
+                    netMvInfo.setId(jo.getString(ConfigConstants.NET_MV_ID));
+                    netMvInfo.setBvid(jo.getString(ConfigConstants.NET_MV_BVID));
+                    netMvInfo.setName(jo.getString(ConfigConstants.NET_MV_NAME));
+                    netMvInfo.setArtist(jo.getString(ConfigConstants.NET_MV_ARTIST));
                     task = new Task(downloadList, type, null, netMvInfo);
                 }
                 // 考虑到下载路径可能更换，沿用任务原来的路径
@@ -3264,7 +3260,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入播放队列
-        JSONArray playQueueJsonArray = config.optJSONArray(ConfigConstants.PLAY_QUEUE);
+        JSONArray playQueueJsonArray = config.getJSONArray(ConfigConstants.PLAY_QUEUE);
         if (playQueueJsonArray != null) {
             for (int i = 0, len = playQueueJsonArray.size(); i < len; i++) {
                 String s = playQueueJsonArray.getString(i);
@@ -3277,41 +3273,41 @@ public class MainFrame extends JFrame {
                     });
                     playQueueModel.addElement(audioFile);
                 } else {
-                    JSONObject jsonObject = JSONObject.fromObject(s);
+                    JSONObject jsonObject = JSONObject.parseObject(s);
                     NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jsonObject.optInt(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jsonObject.optString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setHash(jsonObject.optString(ConfigConstants.NET_MUSIC_HASH));
-                    netMusicInfo.setId(jsonObject.optString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setProgramId(jsonObject.optString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
-                    netMusicInfo.setName(jsonObject.optString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jsonObject.optString(ConfigConstants.NET_MUSIC_ARTIST));
-                    netMusicInfo.setArtistId(jsonObject.optString(ConfigConstants.NET_MUSIC_ARTIST_ID));
-                    netMusicInfo.setAlbumName(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-                    netMusicInfo.setAlbumId(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_ID));
-                    netMusicInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MUSIC_DURATION));
-                    netMusicInfo.setMvId(jsonObject.optString(ConfigConstants.NET_MUSIC_MV_ID));
+                    netMusicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    netMusicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    netMusicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
+                    netMusicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
+                    netMusicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
+                    netMusicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
+                    netMusicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                    netMusicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
+                    netMusicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
+                    netMusicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
+                    netMusicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
+                    netMusicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
                     playQueueModel.addElement(netMusicInfo);
                 }
             }
         }
 
         // 载入上次播放歌曲，选中并加载
-        currSong = config.optInt(ConfigConstants.CURR_SONG, -1);
+        currSong = config.getIntValue(ConfigConstants.CURR_SONG, -1);
         if (currSong >= playQueueModel.size()) currSong = -1;
 
         // 载入选项卡
-        tabbedPane.setSelectedIndex(config.optInt(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
+        tabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
         // 载入收藏选项卡
-        collectionTabbedPane.setSelectedIndex(config.optInt(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
+        collectionTabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
         // 载入个人音乐选项卡
-        currPersonalMusicTab = config.optInt(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
+        currPersonalMusicTab = config.getIntValue(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
         if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) localMusicButton.doClick();
         else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) historyButton.doClick();
         else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) collectionButton.doClick();
 
         // 载入在线音乐搜索历史关键词
-        JSONArray historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
+        JSONArray historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
@@ -3341,7 +3337,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入歌单搜索历史关键词
-        historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_PLAYLIST_HISTORY_SEARCH);
+        historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_PLAYLIST_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
@@ -3371,7 +3367,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入专辑搜索历史关键词
-        historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_ALBUM_HISTORY_SEARCH);
+        historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_ALBUM_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
@@ -3401,7 +3397,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入歌手搜索历史关键词
-        historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_ARTIST_HISTORY_SEARCH);
+        historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_ARTIST_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
@@ -3431,7 +3427,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入电台搜索历史关键词
-        historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_RADIO_HISTORY_SEARCH);
+        historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_RADIO_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
@@ -3461,7 +3457,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入 MV 搜索历史关键词
-        historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_MV_HISTORY_SEARCH);
+        historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_MV_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
@@ -3491,7 +3487,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入用户搜索历史关键词
-        historySearchJsonArray = config.optJSONArray(ConfigConstants.NET_USER_HISTORY_SEARCH);
+        historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_USER_HISTORY_SEARCH);
         if (historySearchJsonArray != null) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
@@ -3520,7 +3516,7 @@ public class MainFrame extends JFrame {
         }
 
         // 载入上次选的风格
-        int styleIndex = config.optInt(ConfigConstants.CURR_UI_STYLE, 0);
+        int styleIndex = config.getIntValue(ConfigConstants.CURR_UI_STYLE, 0);
         changeUIStyle(styles.get(styleIndex));
 
         return !config.isEmpty();
@@ -3528,7 +3524,7 @@ public class MainFrame extends JFrame {
 
     // 载入本地音乐列表
     public void loadLocalMusicList(JSONObject config) {
-        JSONArray musicJsonArray = config.optJSONArray(ConfigConstants.MUSIC_LIST);
+        JSONArray musicJsonArray = config.getJSONArray(ConfigConstants.MUSIC_LIST);
         if (musicJsonArray != null) {
             for (int i = 0, len = musicJsonArray.size(); i < len; i++) {
                 String filePath = musicJsonArray.getString(i);
@@ -3545,7 +3541,7 @@ public class MainFrame extends JFrame {
     // 载入全部收藏列表
     public void loadCollectedMusicList(JSONObject config) {
         // 载入收藏歌曲列表
-        JSONArray collectionJsonArray = config.optJSONArray(ConfigConstants.COLLECTION);
+        JSONArray collectionJsonArray = config.getJSONArray(ConfigConstants.COLLECTION);
         if (collectionJsonArray != null) {
             for (int i = 0, len = collectionJsonArray.size(); i < len; i++) {
                 String s = collectionJsonArray.getString(i);
@@ -3558,170 +3554,170 @@ public class MainFrame extends JFrame {
                     });
                     collectionModel.addElement(audioFile);
                 } else {
-                    JSONObject jsonObject = JSONObject.fromObject(s);
+                    JSONObject jsonObject = JSONObject.parseObject(s);
                     NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jsonObject.optInt(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jsonObject.optString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setHash(jsonObject.optString(ConfigConstants.NET_MUSIC_HASH));
-                    netMusicInfo.setId(jsonObject.optString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setProgramId(jsonObject.optString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
-                    netMusicInfo.setName(jsonObject.optString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jsonObject.optString(ConfigConstants.NET_MUSIC_ARTIST));
-                    netMusicInfo.setArtistId(jsonObject.optString(ConfigConstants.NET_MUSIC_ARTIST_ID));
-                    netMusicInfo.setAlbumName(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-                    netMusicInfo.setAlbumId(jsonObject.optString(ConfigConstants.NET_MUSIC_ALBUM_ID));
-                    netMusicInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MUSIC_DURATION));
-                    netMusicInfo.setMvId(jsonObject.optString(ConfigConstants.NET_MUSIC_MV_ID));
+                    netMusicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    netMusicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    netMusicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
+                    netMusicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
+                    netMusicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
+                    netMusicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
+                    netMusicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                    netMusicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
+                    netMusicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
+                    netMusicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
+                    netMusicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
+                    netMusicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
                     collectionModel.addElement(netMusicInfo);
                 }
             }
         }
 
         // 载入收藏歌单列表
-        JSONArray playlistCollectionJsonArray = config.optJSONArray(ConfigConstants.PLAYLIST_COLLECTION);
+        JSONArray playlistCollectionJsonArray = config.getJSONArray(ConfigConstants.PLAYLIST_COLLECTION);
         if (playlistCollectionJsonArray != null) {
             for (int i = 0, len = playlistCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = playlistCollectionJsonArray.getJSONObject(i);
 
                 NetPlaylistInfo netPlaylistInfo = new NetPlaylistInfo();
-                netPlaylistInfo.setSource(jsonObject.optInt(ConfigConstants.NET_PLAYLIST_SOURCE));
-                netPlaylistInfo.setId(jsonObject.optString(ConfigConstants.NET_PLAYLIST_ID));
-                netPlaylistInfo.setName(jsonObject.optString(ConfigConstants.NET_PLAYLIST_NAME));
-                netPlaylistInfo.setCreator(jsonObject.optString(ConfigConstants.NET_PLAYLIST_CREATOR));
-                netPlaylistInfo.setCreatorId(jsonObject.optString(ConfigConstants.NET_PLAYLIST_CREATOR_ID));
-                netPlaylistInfo.setCoverImgThumbUrl(jsonObject.optString(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL));
-                netPlaylistInfo.setTrackCount(jsonObject.optInt(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, -1));
-                netPlaylistInfo.setPlayCount(jsonObject.optLong(ConfigConstants.NET_PLAYLIST_PLAY_COUNT, -1));
+                netPlaylistInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_PLAYLIST_SOURCE));
+                netPlaylistInfo.setId(jsonObject.getString(ConfigConstants.NET_PLAYLIST_ID));
+                netPlaylistInfo.setName(jsonObject.getString(ConfigConstants.NET_PLAYLIST_NAME));
+                netPlaylistInfo.setCreator(jsonObject.getString(ConfigConstants.NET_PLAYLIST_CREATOR));
+                netPlaylistInfo.setCreatorId(jsonObject.getString(ConfigConstants.NET_PLAYLIST_CREATOR_ID));
+                netPlaylistInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL));
+                netPlaylistInfo.setTrackCount(jsonObject.getIntValue(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, -1));
+                netPlaylistInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_PLAYLIST_PLAY_COUNT, -1));
 
                 playlistCollectionModel.addElement(netPlaylistInfo);
             }
         }
 
         // 载入收藏专辑列表
-        JSONArray albumCollectionJsonArray = config.optJSONArray(ConfigConstants.ALBUM_COLLECTION);
+        JSONArray albumCollectionJsonArray = config.getJSONArray(ConfigConstants.ALBUM_COLLECTION);
         if (albumCollectionJsonArray != null) {
             for (int i = 0, len = albumCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = albumCollectionJsonArray.getJSONObject(i);
 
                 NetAlbumInfo netAlbumInfo = new NetAlbumInfo();
-                netAlbumInfo.setSource(jsonObject.optInt(ConfigConstants.NET_ALBUM_SOURCE));
-                netAlbumInfo.setId(jsonObject.optString(ConfigConstants.NET_ALBUM_ID));
-                netAlbumInfo.setName(jsonObject.optString(ConfigConstants.NET_ALBUM_NAME));
-                netAlbumInfo.setArtist(jsonObject.optString(ConfigConstants.NET_ALBUM_ARTIST));
-                netAlbumInfo.setArtistId(jsonObject.optString(ConfigConstants.NET_ALBUM_ARTIST_ID));
-                netAlbumInfo.setCoverImgThumbUrl(jsonObject.optString(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL));
-                netAlbumInfo.setSongNum(jsonObject.optInt(ConfigConstants.NET_ALBUM_SONG_NUM, -1));
-                netAlbumInfo.setPublishTime(jsonObject.optString(ConfigConstants.NET_ALBUM_PUBLISH_TIME));
+                netAlbumInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_ALBUM_SOURCE));
+                netAlbumInfo.setId(jsonObject.getString(ConfigConstants.NET_ALBUM_ID));
+                netAlbumInfo.setName(jsonObject.getString(ConfigConstants.NET_ALBUM_NAME));
+                netAlbumInfo.setArtist(jsonObject.getString(ConfigConstants.NET_ALBUM_ARTIST));
+                netAlbumInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_ALBUM_ARTIST_ID));
+                netAlbumInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL));
+                netAlbumInfo.setSongNum(jsonObject.getIntValue(ConfigConstants.NET_ALBUM_SONG_NUM, -1));
+                netAlbumInfo.setPublishTime(jsonObject.getString(ConfigConstants.NET_ALBUM_PUBLISH_TIME));
 
                 albumCollectionModel.addElement(netAlbumInfo);
             }
         }
 
         // 载入收藏歌手列表
-        JSONArray artistCollectionJsonArray = config.optJSONArray(ConfigConstants.ARTIST_COLLECTION);
+        JSONArray artistCollectionJsonArray = config.getJSONArray(ConfigConstants.ARTIST_COLLECTION);
         if (artistCollectionJsonArray != null) {
             for (int i = 0, len = artistCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = artistCollectionJsonArray.getJSONObject(i);
 
                 NetArtistInfo netArtistInfo = new NetArtistInfo();
-                netArtistInfo.setSource(jsonObject.optInt(ConfigConstants.NET_ARTIST_SOURCE));
-                netArtistInfo.setOrganization(jsonObject.optBoolean(ConfigConstants.NET_ARTIST_IS_ORGANIZATION));
-                netArtistInfo.setId(jsonObject.optString(ConfigConstants.NET_ARTIST_ID));
-                netArtistInfo.setName(jsonObject.optString(ConfigConstants.NET_ARTIST_NAME));
-                netArtistInfo.setCoverImgUrl(jsonObject.optString(ConfigConstants.NET_ARTIST_COVER_IMG_URL));
-                netArtistInfo.setCoverImgThumbUrl(jsonObject.optString(ConfigConstants.NET_ARTIST_COVER_IMG_THUMB_URL));
-                netArtistInfo.setSongNum(jsonObject.optInt(ConfigConstants.NET_ARTIST_SONG_NUM, -1));
-                netArtistInfo.setAlbumNum(jsonObject.optInt(ConfigConstants.NET_ARTIST_ALBUM_NUM, -1));
-                netArtistInfo.setMvNum(jsonObject.optInt(ConfigConstants.NET_ARTIST_MV_NUM, -1));
+                netArtistInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_SOURCE));
+                netArtistInfo.setOrganization(jsonObject.getBooleanValue(ConfigConstants.NET_ARTIST_IS_ORGANIZATION));
+                netArtistInfo.setId(jsonObject.getString(ConfigConstants.NET_ARTIST_ID));
+                netArtistInfo.setName(jsonObject.getString(ConfigConstants.NET_ARTIST_NAME));
+                netArtistInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_ARTIST_COVER_IMG_URL));
+                netArtistInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_ARTIST_COVER_IMG_THUMB_URL));
+                netArtistInfo.setSongNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_SONG_NUM, -1));
+                netArtistInfo.setAlbumNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_ALBUM_NUM, -1));
+                netArtistInfo.setMvNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_MV_NUM, -1));
 
                 artistCollectionModel.addElement(netArtistInfo);
             }
         }
 
         // 载入收藏电台列表
-        JSONArray radioCollectionJsonArray = config.optJSONArray(ConfigConstants.RADIO_COLLECTION);
+        JSONArray radioCollectionJsonArray = config.getJSONArray(ConfigConstants.RADIO_COLLECTION);
         if (radioCollectionJsonArray != null) {
             for (int i = 0, len = radioCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = radioCollectionJsonArray.getJSONObject(i);
 
                 NetRadioInfo netRadioInfo = new NetRadioInfo();
-                netRadioInfo.setSource(jsonObject.optInt(ConfigConstants.NET_RADIO_SOURCE));
-                netRadioInfo.setId(jsonObject.optString(ConfigConstants.NET_RADIO_ID));
-                netRadioInfo.setName(jsonObject.optString(ConfigConstants.NET_RADIO_NAME));
-                netRadioInfo.setDj(jsonObject.optString(ConfigConstants.NET_RADIO_DJ));
-                netRadioInfo.setDjId(jsonObject.optString(ConfigConstants.NET_RADIO_DJ_ID));
-                netRadioInfo.setCoverImgUrl(jsonObject.optString(ConfigConstants.NET_RADIO_COVER_IMG_URL));
-                netRadioInfo.setCoverImgThumbUrl(jsonObject.optString(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL));
-                netRadioInfo.setCategory(jsonObject.optString(ConfigConstants.NET_RADIO_CATEGORY));
-                netRadioInfo.setTrackCount(jsonObject.optInt(ConfigConstants.NET_RADIO_TRACK_COUNT, -1));
-                netRadioInfo.setPlayCount(jsonObject.optLong(ConfigConstants.NET_RADIO_PLAY_COUNT, -1));
+                netRadioInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RADIO_SOURCE));
+                netRadioInfo.setId(jsonObject.getString(ConfigConstants.NET_RADIO_ID));
+                netRadioInfo.setName(jsonObject.getString(ConfigConstants.NET_RADIO_NAME));
+                netRadioInfo.setDj(jsonObject.getString(ConfigConstants.NET_RADIO_DJ));
+                netRadioInfo.setDjId(jsonObject.getString(ConfigConstants.NET_RADIO_DJ_ID));
+                netRadioInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RADIO_COVER_IMG_URL));
+                netRadioInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL));
+                netRadioInfo.setCategory(jsonObject.getString(ConfigConstants.NET_RADIO_CATEGORY));
+                netRadioInfo.setTrackCount(jsonObject.getIntValue(ConfigConstants.NET_RADIO_TRACK_COUNT, -1));
+                netRadioInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RADIO_PLAY_COUNT, -1));
 
                 radioCollectionModel.addElement(netRadioInfo);
             }
         }
 
         // 载入收藏 MV 列表
-        JSONArray mvCollectionJsonArray = config.optJSONArray(ConfigConstants.MV_COLLECTION);
+        JSONArray mvCollectionJsonArray = config.getJSONArray(ConfigConstants.MV_COLLECTION);
         if (mvCollectionJsonArray != null) {
             for (int i = 0, len = mvCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = mvCollectionJsonArray.getJSONObject(i);
 
                 NetMvInfo netMvInfo = new NetMvInfo();
-                netMvInfo.setSource(jsonObject.optInt(ConfigConstants.NET_MV_SOURCE));
-                netMvInfo.setType(jsonObject.optInt(ConfigConstants.NET_MV_TYPE));
-                netMvInfo.setFormat(jsonObject.optString(ConfigConstants.NET_MV_FORMAT));
-                netMvInfo.setId(jsonObject.optString(ConfigConstants.NET_MV_ID));
-                netMvInfo.setBvid(jsonObject.optString(ConfigConstants.NET_MV_BVID));
-                netMvInfo.setName(jsonObject.optString(ConfigConstants.NET_MV_NAME));
-                netMvInfo.setArtist(jsonObject.optString(ConfigConstants.NET_MV_ARTIST));
-                netMvInfo.setCreatorId(jsonObject.optString(ConfigConstants.NET_MV_CREATOR_ID));
-                netMvInfo.setDuration(jsonObject.optDouble(ConfigConstants.NET_MV_DURATION));
-                netMvInfo.setPubTime(jsonObject.optString(ConfigConstants.NET_MV_PUB_TIME));
-                netMvInfo.setCoverImgUrl(jsonObject.optString(ConfigConstants.NET_MV_COVER_IMG_URL));
-                netMvInfo.setPlayCount(jsonObject.optLong(ConfigConstants.NET_MV_PLAY_COUNT, -1));
+                netMvInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MV_SOURCE));
+                netMvInfo.setType(jsonObject.getIntValue(ConfigConstants.NET_MV_TYPE));
+                netMvInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MV_FORMAT));
+                netMvInfo.setId(jsonObject.getString(ConfigConstants.NET_MV_ID));
+                netMvInfo.setBvid(jsonObject.getString(ConfigConstants.NET_MV_BVID));
+                netMvInfo.setName(jsonObject.getString(ConfigConstants.NET_MV_NAME));
+                netMvInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MV_ARTIST));
+                netMvInfo.setCreatorId(jsonObject.getString(ConfigConstants.NET_MV_CREATOR_ID));
+                netMvInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MV_DURATION));
+                netMvInfo.setPubTime(jsonObject.getString(ConfigConstants.NET_MV_PUB_TIME));
+                netMvInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_MV_COVER_IMG_URL));
+                netMvInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_MV_PLAY_COUNT, -1));
 
                 mvCollectionModel.addElement(netMvInfo);
             }
         }
 
         // 载入收藏榜单列表
-        JSONArray rankingCollectionJsonArray = config.optJSONArray(ConfigConstants.RANKING_COLLECTION);
+        JSONArray rankingCollectionJsonArray = config.getJSONArray(ConfigConstants.RANKING_COLLECTION);
         if (rankingCollectionJsonArray != null) {
             for (int i = 0, len = rankingCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = rankingCollectionJsonArray.getJSONObject(i);
 
                 NetRankingInfo netRankingInfo = new NetRankingInfo();
-                netRankingInfo.setSource(jsonObject.optInt(ConfigConstants.NET_RANKING_SOURCE));
-                netRankingInfo.setId(jsonObject.optString(ConfigConstants.NET_RANKING_ID));
-                netRankingInfo.setName(jsonObject.optString(ConfigConstants.NET_RANKING_NAME));
-                netRankingInfo.setPlayCount(jsonObject.optLong(ConfigConstants.NET_RANKING_PLAY_COUNT, -1));
-                netRankingInfo.setDescription(jsonObject.optString(ConfigConstants.NET_RANKING_DESCRIPTION));
-                netRankingInfo.setUpdateFre(jsonObject.optString(ConfigConstants.NET_RANKING_UPDATE_FRE));
-                netRankingInfo.setUpdateTime(jsonObject.optString(ConfigConstants.NET_RANKING_UPDATE_TIME));
-                netRankingInfo.setCoverImgUrl(jsonObject.optString(ConfigConstants.NET_RANKING_COVER_IMG_URL));
+                netRankingInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RANKING_SOURCE));
+                netRankingInfo.setId(jsonObject.getString(ConfigConstants.NET_RANKING_ID));
+                netRankingInfo.setName(jsonObject.getString(ConfigConstants.NET_RANKING_NAME));
+                netRankingInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RANKING_PLAY_COUNT, -1));
+                netRankingInfo.setDescription(jsonObject.getString(ConfigConstants.NET_RANKING_DESCRIPTION));
+                netRankingInfo.setUpdateFre(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_FRE));
+                netRankingInfo.setUpdateTime(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_TIME));
+                netRankingInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RANKING_COVER_IMG_URL));
 
                 rankingCollectionModel.addElement(netRankingInfo);
             }
         }
 
         // 载入收藏用户列表
-        JSONArray userCollectionJsonArray = config.optJSONArray(ConfigConstants.USER_COLLECTION);
+        JSONArray userCollectionJsonArray = config.getJSONArray(ConfigConstants.USER_COLLECTION);
         if (userCollectionJsonArray != null) {
             for (int i = 0, len = userCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = userCollectionJsonArray.getJSONObject(i);
 
                 NetUserInfo netUserInfo = new NetUserInfo();
-                netUserInfo.setSource(jsonObject.optInt(ConfigConstants.NET_USER_SOURCE));
-                netUserInfo.setId(jsonObject.optString(ConfigConstants.NET_USER_ID));
-                netUserInfo.setName(jsonObject.optString(ConfigConstants.NET_USER_NAME));
-                netUserInfo.setGender(jsonObject.optString(ConfigConstants.NET_USER_GENDER));
-                netUserInfo.setAvatarUrl(jsonObject.optString(ConfigConstants.NET_USER_AVATAR_URL));
-                netUserInfo.setAvatarThumbUrl(jsonObject.optString(ConfigConstants.NET_USER_AVATAR_THUMB_URL));
-                netUserInfo.setFollow(jsonObject.optInt(ConfigConstants.NET_USER_FOLLOW, -1));
-                netUserInfo.setFollowed(jsonObject.optInt(ConfigConstants.NET_USER_FOLLOWED, -1));
-                netUserInfo.setPlaylistCount(jsonObject.optInt(ConfigConstants.NET_USER_PLAYLIST_COUNT, -1));
-                netUserInfo.setRadioCount(jsonObject.optInt(ConfigConstants.NET_USER_RADIO_COUNT, -1));
-                netUserInfo.setProgramCount(jsonObject.optInt(ConfigConstants.NET_USER_PROGRAM_COUNT, -1));
+                netUserInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_USER_SOURCE));
+                netUserInfo.setId(jsonObject.getString(ConfigConstants.NET_USER_ID));
+                netUserInfo.setName(jsonObject.getString(ConfigConstants.NET_USER_NAME));
+                netUserInfo.setGender(jsonObject.getString(ConfigConstants.NET_USER_GENDER));
+                netUserInfo.setAvatarUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_URL));
+                netUserInfo.setAvatarThumbUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_THUMB_URL));
+                netUserInfo.setFollow(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOW, -1));
+                netUserInfo.setFollowed(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOWED, -1));
+                netUserInfo.setPlaylistCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PLAYLIST_COUNT, -1));
+                netUserInfo.setRadioCount(jsonObject.getIntValue(ConfigConstants.NET_USER_RADIO_COUNT, -1));
+                netUserInfo.setProgramCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PROGRAM_COUNT, -1));
 
                 userCollectionModel.addElement(netUserInfo);
             }
@@ -3729,7 +3725,7 @@ public class MainFrame extends JFrame {
     }
 
     // 保存配置
-    void saveConfig() throws IOException {
+    private void saveConfig() throws IOException {
         JSONObject config = new JSONObject();
         // 存入自定义风格
         JSONArray styleArray = new JSONArray();
@@ -3799,8 +3795,6 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, ((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize());
         // 存入当前播放模式
         config.put(ConfigConstants.PLAY_MODE, currPlayMode);
-        // 存入快进/快退时间(索引)
-//        config.put(ConfigConstants.FOB_TIME, )
         // 存入是否显示频谱
         config.put(ConfigConstants.SHOW_SPECTRUM, showSpectrum);
         // 存入是否高斯模糊
@@ -3882,7 +3876,7 @@ public class MainFrame extends JFrame {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, netMusicInfo.getSource());
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
-                if (netMusicInfo.hasHash()) jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
+                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
@@ -3890,8 +3884,7 @@ public class MainFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if (netMusicInfo.hasDuration())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
+                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
                 historyJsonArray.add(jsonObject);
             }
@@ -3955,7 +3948,7 @@ public class MainFrame extends JFrame {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, netMusicInfo.getSource());
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
-                if (netMusicInfo.hasHash()) jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
+                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
@@ -3963,8 +3956,7 @@ public class MainFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if (netMusicInfo.hasDuration())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
+                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
                 playQueueJsonArray.add(jsonObject);
             }
@@ -4061,7 +4053,7 @@ public class MainFrame extends JFrame {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, netMusicInfo.getSource());
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
-                if (netMusicInfo.hasHash()) jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
+                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
@@ -4069,8 +4061,7 @@ public class MainFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                if (netMusicInfo.hasDuration())
-                    jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
+                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
                 collectionJsonArray.add(jsonObject);
             }
@@ -4166,7 +4157,7 @@ public class MainFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_MV_NAME, netMvInfo.getName());
             jsonObject.put(ConfigConstants.NET_MV_ARTIST, netMvInfo.getArtist());
             jsonObject.put(ConfigConstants.NET_MV_CREATOR_ID, netMvInfo.getCreatorId());
-            if (netMvInfo.hasDuration()) jsonObject.put(ConfigConstants.NET_MV_DURATION, netMvInfo.getDuration());
+            jsonObject.put(ConfigConstants.NET_MV_DURATION, netMvInfo.getDuration());
             jsonObject.put(ConfigConstants.NET_MV_PUB_TIME, netMvInfo.getPubTime());
             jsonObject.put(ConfigConstants.NET_MV_COVER_IMG_URL, netMvInfo.getCoverImgUrl());
             jsonObject.put(ConfigConstants.NET_MV_PLAY_COUNT, netMvInfo.getPlayCount());
@@ -4462,8 +4453,8 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化侧边栏大小
-    public void initTabSize() {
-        Dimension d = new Dimension(showTabText ? 125 : 44, 42);
+    public void updateTabSize() {
+        Dimension d = new Dimension(showTabText ? 125 : 43, 42);
         personalMusicPanel.setPreferredSize(d);
         netMusicPanel.setPreferredSize(d);
         netPlaylistPanel.setPreferredSize(d);
@@ -4476,48 +4467,48 @@ public class MainFrame extends JFrame {
         recommendPanel.setPreferredSize(d);
         downloadManagementPanel.setPreferredSize(d);
         playQueuePanel.setPreferredSize(d);
-        tabbedPane.setVisible(false);
-        tabbedPane.setVisible(true);
+
+        personalMusicLabel.setText(showTabText ? "个人音乐" : "");
+        netMusicLabel.setText(showTabText ? "音乐馆" : "");
+        netPlaylistLabel.setText(showTabText ? "歌单" : "");
+        netAlbumLabel.setText(showTabText ? "专辑" : "");
+        netArtistLabel.setText(showTabText ? "歌手" : "");
+        netRadioLabel.setText(showTabText ? "电台" : "");
+        netMvLabel.setText(showTabText ? "MV" : "");
+        netRankingLabel.setText(showTabText ? "榜单" : "");
+        netUserLabel.setText(showTabText ? "用户" : "");
+        recommendLabel.setText(showTabText ? "推荐" : "");
+        downloadManagementLabel.setText(showTabText ? "下载管理" : "");
+        playQueueLabel.setText(showTabText ? "播放队列" : "");
     }
 
     // 初始化标签页
     private void tabbedPaneInit() {
-        // 组装标签面板
         int gap = 10;
         personalMusicLabel.setIconTextGap(gap);
-        personalMusicPanel.add(personalMusicLabel);
-
         netMusicLabel.setIconTextGap(gap);
-        netMusicPanel.add(netMusicLabel);
-
         netPlaylistLabel.setIconTextGap(gap);
-        netPlaylistPanel.add(netPlaylistLabel);
-
         netAlbumLabel.setIconTextGap(gap);
-        netAlbumPanel.add(netAlbumLabel);
-
         netArtistLabel.setIconTextGap(gap);
-        netArtistPanel.add(netArtistLabel);
-
         netRadioLabel.setIconTextGap(gap);
-        netRadioPanel.add(netRadioLabel);
-
         netMvLabel.setIconTextGap(gap);
-        netMvPanel.add(netMvLabel);
-
         netRankingLabel.setIconTextGap(gap);
-        netRankingPanel.add(netRankingLabel);
-
         netUserLabel.setIconTextGap(gap);
-        netUserPanel.add(netUserLabel);
-
         recommendLabel.setIconTextGap(gap);
-        recommendPanel.add(recommendLabel);
-
         downloadManagementLabel.setIconTextGap(gap);
-        downloadManagementPanel.add(downloadManagementLabel);
-
         playQueueLabel.setIconTextGap(gap);
+
+        personalMusicPanel.add(personalMusicLabel);
+        netMusicPanel.add(netMusicLabel);
+        netPlaylistPanel.add(netPlaylistLabel);
+        netAlbumPanel.add(netAlbumLabel);
+        netArtistPanel.add(netArtistLabel);
+        netRadioPanel.add(netRadioLabel);
+        netMvPanel.add(netMvLabel);
+        netRankingPanel.add(netRankingLabel);
+        netUserPanel.add(netUserLabel);
+        recommendPanel.add(recommendLabel);
+        downloadManagementPanel.add(downloadManagementLabel);
         playQueuePanel.add(playQueueLabel);
 
         // 标签布局
@@ -21346,7 +21337,7 @@ public class MainFrame extends JFrame {
     }
 
     // 变为随机播放
-    void changeToShuffle(boolean showDialog) {
+    private void changeToShuffle(boolean showDialog) {
         playModeButton.setIcon(ImageUtil.dye(shuffleIcon, currUIStyle.getIconColor()));
         playModeButton.setToolTipText(SHUFFLE_TIP);
         currPlayMode = PlayMode.SHUFFLE;
@@ -21504,7 +21495,7 @@ public class MainFrame extends JFrame {
     }
 
     // 改变所有单选菜单项图标
-    public void updateMenuItemIcon(CustomPopupMenu popupMenu) {
+    private void updateMenuItemIcon(CustomPopupMenu popupMenu) {
         Color iconColor = currUIStyle.getIconColor();
         Component[] components = popupMenu.getComponents();
         for (Component c : components) {

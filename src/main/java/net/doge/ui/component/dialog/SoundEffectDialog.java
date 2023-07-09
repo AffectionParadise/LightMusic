@@ -95,7 +95,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
         initView();
 
         globalPanel.add(centerPanel, BorderLayout.CENTER);
-        add(globalPanel, BorderLayout.CENTER);
+        setContentPane(globalPanel);
 
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);

@@ -1,12 +1,13 @@
 package net.doge.sdk.util;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constant.ui.ImageConstants;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.ui.ImageConstants;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -21,26 +22,26 @@ public class SdkUtil {
     public static String parseArtists(JSONObject json, int source) {
         JSONArray artistsArray;
         if (source == NetMusicSource.QQ) {
-            artistsArray = json.optJSONArray("singer");
-            if (artistsArray == null) artistsArray = json.optJSONArray("singer_list");
-            if (artistsArray == null) artistsArray = json.optJSONArray("singers");
-            if (artistsArray == null) artistsArray = json.optJSONArray("ar");
+            artistsArray = json.getJSONArray("singer");
+            if (artistsArray == null) artistsArray = json.getJSONArray("singer_list");
+            if (artistsArray == null) artistsArray = json.getJSONArray("singers");
+            if (artistsArray == null) artistsArray = json.getJSONArray("ar");
         } else if (source == NetMusicSource.KG) {
-            artistsArray = json.optJSONArray("authors");
+            artistsArray = json.getJSONArray("authors");
         } else {
-            artistsArray = json.optJSONArray("artists");
-            if (artistsArray == null) artistsArray = json.optJSONArray("ar");
-            if (artistsArray == null) artistsArray = json.optJSONArray("artist");
-            if (artistsArray == null) artistsArray = json.optJSONArray("actors");
+            artistsArray = json.getJSONArray("artists");
+            if (artistsArray == null) artistsArray = json.getJSONArray("ar");
+            if (artistsArray == null) artistsArray = json.getJSONArray("artist");
+            if (artistsArray == null) artistsArray = json.getJSONArray("actors");
         }
         if (artistsArray == null) return "";
 
         StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = artistsArray.size(); i < len; i++) {
             JSONObject artistJson = artistsArray.getJSONObject(i);
-            String name = artistJson.optString("name", null);
-            if (name == null) name = artistJson.optString("singer_name", null);
-            if (name == null) name = artistJson.getString("author_name");
+            String name = artistJson.getString("name");
+            if (StringUtil.isEmpty(name)) name = artistJson.getString("singer_name");
+            if (StringUtil.isEmpty(name)) name = artistJson.getString("author_name");
             sj.add(name);
         }
         return sj.toString();

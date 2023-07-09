@@ -14,8 +14,8 @@ import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -89,10 +89,10 @@ public class HotMusicRecommendReq {
                 String musicInfoBody = HttpRequest.get(String.format(STYLE_HOT_SONG_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
-                JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("data");
                 JSONArray songsArray = data.getJSONArray("songs");
-                t = data.getJSONObject("page").getInt("total");
+                t = data.getJSONObject("page").getIntValue("total");
                 for (int i = 0, len = songsArray.size(); i < len; i++) {
                     JSONObject songJson = songsArray.getJSONObject(i);
 
@@ -130,9 +130,9 @@ public class HotMusicRecommendReq {
             String rankingInfoBody = HttpRequest.get(String.format(UP_MUSIC_KG_API, page, limit))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray songArray = data.getJSONArray("info");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -141,12 +141,12 @@ public class HotMusicRecommendReq {
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
-                JSONArray artistArray = songJson.optJSONArray("authors");
+                JSONArray artistArray = songJson.getJSONArray("authors");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
-                JSONArray mvdata = songJson.optJSONArray("mvdata");
+                JSONArray mvdata = songJson.getJSONArray("mvdata");
                 String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -173,9 +173,9 @@ public class HotMusicRecommendReq {
             String rankingInfoBody = HttpRequest.get(String.format(TOP500_KG_API, page, limit))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray songArray = data.getJSONArray("info");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -184,12 +184,12 @@ public class HotMusicRecommendReq {
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
-                JSONArray artistArray = songJson.optJSONArray("authors");
+                JSONArray artistArray = songJson.getJSONArray("authors");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
-                JSONArray mvdata = songJson.optJSONArray("mvdata");
+                JSONArray mvdata = songJson.getJSONArray("mvdata");
                 String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -218,9 +218,9 @@ public class HotMusicRecommendReq {
             String musicInfoBody = HttpRequest.get(String.format(POPULAR_MUSIC_QQ_API, page, limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray songArray = data.getJSONArray("list");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -257,9 +257,9 @@ public class HotMusicRecommendReq {
             String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_QQ_API, page, limit))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getInt("total");
+            t = data.getIntValue("total");
             JSONArray songArray = data.getJSONArray("list");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -298,9 +298,9 @@ public class HotMusicRecommendReq {
             HttpResponse resp = SdkCommon.kwRequest(String.format(UP_MUSIC_KW_API, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String musicInfoBody = resp.body();
-                JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("data");
-                t = data.getInt("num");
+                t = data.getIntValue("num");
                 JSONArray songArray = data.getJSONArray("musicList");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
@@ -312,7 +312,7 @@ public class HotMusicRecommendReq {
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
-                    String mvId = songJson.getInt("hasmv") == 0 ? "" : id;
+                    String mvId = songJson.getIntValue("hasmv") == 0 ? "" : id;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.KW);
@@ -338,9 +338,9 @@ public class HotMusicRecommendReq {
             HttpResponse resp = SdkCommon.kwRequest(String.format(HOT_MUSIC_KW_API, page, limit)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String musicInfoBody = resp.body();
-                JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("data");
-                t = data.getInt("num");
+                t = data.getIntValue("num");
                 JSONArray songArray = data.getJSONArray("musicList");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
@@ -352,7 +352,7 @@ public class HotMusicRecommendReq {
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");
                     Double duration = songJson.getDouble("duration");
-                    String mvId = songJson.getInt("hasmv") == 0 ? "" : id;
+                    String mvId = songJson.getIntValue("hasmv") == 0 ? "" : id;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.KW);
@@ -380,14 +380,14 @@ public class HotMusicRecommendReq {
             String rankingInfoBody = HttpRequest.get(String.format(HOT_MUSIC_MG_API))
                     .execute()
                     .body();
-            JSONObject rankingInfoJson = JSONObject.fromObject(rankingInfoBody);
+            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("columnInfo");
-            t = data.getInt("contentsCount");
+            t = data.getIntValue("contentsCount");
             JSONArray songArray = data.getJSONArray("contents");
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i).getJSONObject("objectInfo");
 
-                String songId = songJson.optString("copyrightId");
+                String songId = songJson.getString("copyrightId");
                 // 过滤掉不是歌曲的 objectInfo
                 if (StringUtil.isEmpty(songId)) continue;
                 String name = songJson.getString("songName");

@@ -9,8 +9,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -56,7 +56,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(NEW_RADIO_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("toplist");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -67,7 +67,7 @@ public class NewRadioReq {
                 String dj = radioJson.getJSONObject("dj").getString("nickname");
                 String djId = radioJson.getJSONObject("dj").getString("userId");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
+                Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 //            String createTime = TimeUtils.msToDate(radioJson.getLong("createTime"));
@@ -99,7 +99,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(PERSONALIZED_RADIO_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("result");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -113,7 +113,7 @@ public class NewRadioReq {
                 String dj = djJson.getString("nickname");
                 String djId = djJson.getString("userId");
 //                Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
+                Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 //            String createTime = TimeUtils.msToDate(radioJson.getLong("createTime"));
@@ -145,7 +145,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(RECOMMEND_RADIO_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -156,7 +156,7 @@ public class NewRadioReq {
                 String dj = radioJson.getJSONObject("dj").getString("nickname");
                 String djId = radioJson.getJSONObject("dj").getString("userId");
                 Long playCount = radioJson.getLong("playCount");
-                Integer trackCount = radioJson.getInt("programCount");
+                Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 //            String createTime = TimeUtils.msToDate(radioJson.getLong("createTime"));
@@ -188,7 +188,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(PAY_RADIO_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -198,7 +198,7 @@ public class NewRadioReq {
                 String radioName = radioJson.getString("name");
                 String dj = radioJson.getString("creatorName");
                 Long playCount = radioJson.getLong("score");
-//                Integer trackCount = radioJson.getInt("programCount");
+//                Integer trackCount = radioJson.getIntValue("programCount");
 //                String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 //            String createTime = TimeUtils.msToDate(radioJson.getLong("createTime"));
@@ -229,7 +229,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(PAY_GIFT_RADIO_API, (page - 1) * limit, limit))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");
             t = radioArray.size();
             for (int i = 0, len = radioArray.size(); i < len; i++) {
@@ -239,7 +239,7 @@ public class NewRadioReq {
                 String radioName = radioJson.getString("name");
 //                String dj = radioJson.getString("creatorName");
 //                Long playCount = radioJson.getLong("score");
-                Integer trackCount = radioJson.getInt("programCount");
+                Integer trackCount = radioJson.getIntValue("programCount");
 //                String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 //            String createTime = TimeUtils.msToDate(radioJson.getLong("createTime"));
@@ -271,7 +271,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(RECOMMEND_RADIO_QQ_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray data = radioInfoJson.getJSONArray("data");
             for (int i = 0, len = data.size(); i < len; i++) {
                 JSONArray radioArray = data.getJSONObject(i).getJSONArray("list");
@@ -314,7 +314,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(REC_RADIO_ME_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("info");
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
@@ -350,7 +350,7 @@ public class NewRadioReq {
             String radioInfoBody = HttpRequest.get(String.format(SUMMER_RADIO_ME_API))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("info");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONArray array = radioArray.getJSONArray(i);

@@ -10,8 +10,8 @@ import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -60,7 +60,7 @@ public class MusicMenuReq {
             String musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_API, id))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songsArray = musicInfoJson.getJSONArray("songs");
             t = songsArray.size();
             for (int i = 0, len = songsArray.size(); i < len; i++) {
@@ -95,13 +95,13 @@ public class MusicMenuReq {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, id))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("data").getJSONObject("track_info").getString("id");
 
             musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_QQ_API, id))
                     .execute()
                     .body();
-            musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songsArray = musicInfoJson.getJSONArray("data");
             t = songsArray.size();
             for (int i = 0, len = songsArray.size(); i < len; i++) {
@@ -185,7 +185,7 @@ public class MusicMenuReq {
             String musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_ME_API, id))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songsArray = musicInfoJson.getJSONObject("info").getJSONArray("sounds");
             t = songsArray.size();
             for (int i = 0, len = songsArray.size(); i < len; i++) {
@@ -223,7 +223,7 @@ public class MusicMenuReq {
             String playlistInfoBody = HttpRequest.get(String.format(RELATED_PLAYLIST_API, id))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
             t = playlistArray.size();
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
@@ -234,7 +234,7 @@ public class MusicMenuReq {
                 String creator = playlistJson.getJSONObject("creator").getString("nickname");
                 String creatorId = playlistJson.getJSONObject("creator").getString("userId");
                 Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getInt("trackCount");
+                Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -260,13 +260,13 @@ public class MusicMenuReq {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, id))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("data").getJSONObject("track_info").getString("id");
 
             String playlistInfoBody = HttpRequest.get(String.format(RELATED_PLAYLIST_QQ_API, id))
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.fromObject(playlistInfoBody);
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("data");
             t = playlistArray.size();
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
@@ -276,7 +276,7 @@ public class MusicMenuReq {
                 String playlistName = playlistJson.getString("dissname");
                 String creator = playlistJson.getString("creator");
                 Long playCount = playlistJson.getLong("listen_num");
-                Integer trackCount = playlistJson.getInt("song_num");
+                Integer trackCount = playlistJson.getIntValue("song_num");
                 String coverImgThumbUrl = playlistJson.getString("imgurl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -316,7 +316,7 @@ public class MusicMenuReq {
             String radioInfoBody = HttpRequest.get(String.format(SONG_REC_RADIO_ME_API, id))
                     .execute()
                     .body();
-            JSONObject radioInfoJson = JSONObject.fromObject(radioInfoBody);
+            JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
             JSONArray radioArray = data.getJSONArray("dramas");
             t = radioArray.size();

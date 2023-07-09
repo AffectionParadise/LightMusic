@@ -12,8 +12,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -59,7 +59,7 @@ public class MvMenuReq {
             String mvInfoBody = HttpRequest.get(String.format(RELATED_MLOG_API, id))
                     .execute()
                     .body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("feeds");
             t = mvArray.size();
             for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
@@ -68,7 +68,7 @@ public class MvMenuReq {
 
                 String mvId = mlogBaseData.getString("id");
                 String mvName = mlogBaseData.getString("originalTitle").trim();
-                if ("null".equals(mvName)) mvName = mlogBaseData.getString("text");
+                if (StringUtil.isEmpty(mvName)) mvName = mlogBaseData.getString("text");
                 String artistName = resource.getJSONObject("userProfile").getString("nickname");
                 String creatorId = resource.getJSONObject("userProfile").getString("userId");
                 String coverImgUrl = mlogBaseData.getString("coverUrl");
@@ -101,13 +101,13 @@ public class MvMenuReq {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, id))
                     .execute()
                     .body();
-            JSONObject musicInfoJson = JSONObject.fromObject(musicInfoBody);
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("data").getJSONObject("track_info").getString("id");
 
             String mvInfoBody = HttpRequest.get(String.format(RELATED_MV_QQ_API, id))
                     .execute()
                     .body();
-            JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("data");
             t = mvArray.size();
             for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
@@ -165,7 +165,7 @@ public class MvMenuReq {
                     String body = HttpRequest.get(String.format(MLOG_TO_VIDEO_API, id))
                             .execute()
                             .body();
-                    id = JSONObject.fromObject(body).getString("data");
+                    id = JSONObject.parseObject(body).getString("data");
                     netMvInfo.setId(id);
                     netMvInfo.setType(MvInfoType.VIDEO);
                 }
@@ -173,7 +173,7 @@ public class MvMenuReq {
                 String mvInfoBody = HttpRequest.get(String.format(RELATED_VIDEO_API, id))
                         .execute()
                         .body();
-                JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+                JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -209,7 +209,7 @@ public class MvMenuReq {
                 String mvInfoBody = HttpRequest.get(String.format(SIMILAR_MV_API, id))
                         .execute()
                         .body();
-                JSONObject mvInfoJson = JSONObject.fromObject(mvInfoBody);
+                JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("mvs");
                 t = mvArray.size();
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -246,7 +246,7 @@ public class MvMenuReq {
             String mvInfoBody = HttpRequest.get(String.format(SIMILAR_MV_QQ_API, id))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data");
+            JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
             JSONArray mvArray = data.getJSONArray("recommend");
             t = mvArray.size();
             for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -286,7 +286,7 @@ public class MvMenuReq {
                     .header(Header.REFERER, String.format("https://haokan.baidu.com/v?vid=%s", id))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.fromObject(mvInfoBody).getJSONObject("data").getJSONObject("response");
+            JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data").getJSONObject("response");
             JSONArray mvArray = data.getJSONArray("videos");
             t = mvArray.size();
             for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -326,7 +326,7 @@ public class MvMenuReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONArray mvArray = JSONObject.fromObject(mvInfoBody).getJSONArray("data");
+            JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
             t = mvArray.size();
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -382,7 +382,7 @@ public class MvMenuReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
-            JSONArray mvArray = JSONObject.fromObject(mvInfoBody).optJSONArray("data");
+            JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
             if (mvArray != null) {
                 t = mvArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(page * limit, mvArray.size()); i < len; i++) {
