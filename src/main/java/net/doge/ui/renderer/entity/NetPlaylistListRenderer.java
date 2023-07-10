@@ -33,7 +33,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private static ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playlistItem.png"), ImageConstants.mediumWidth));
+    private static ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playlistItem.png"), ImageConstants.MEDIUM_WIDTH));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;

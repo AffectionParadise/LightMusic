@@ -1,21 +1,20 @@
 package net.doge.sdk.entity.mv.rcmd;
 
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
-import net.doge.sdk.common.Tags;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -82,7 +81,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String mvInfoBody = HttpRequest.get(String.format(TOP_MV_API, s[0].replace("全部", ""), (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -125,7 +124,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String mvInfoBody = HttpRequest.get(String.format(NEW_MV_API, s[0]))
                         .execute()
                         .body();
@@ -163,7 +162,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0]) || StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[0]) || StringUtil.notEmpty(s[1])) {
                 String mvInfoBody = HttpRequest.get(String.format(ALL_MV_API, s[0], s[1], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -280,7 +279,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_KG_API, s[2], page, limit))
                         .execute()
                         .body();
@@ -328,7 +327,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_QQ_API, s[3], s[4], page, limit))
                         .execute()
                         .body();
@@ -373,7 +372,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[5])) {
+            if (StringUtil.notEmpty(s[5])) {
                 String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, s[5]))
                         .execute()
                         .body();
@@ -416,7 +415,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, s[6], page, limit)).execute();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String mvInfoBody = resp.body();
@@ -724,9 +723,9 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[7])) {
+            if (StringUtil.notEmpty(s[7])) {
                 String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[7], limit))
-                        .header(Header.COOKIE, SdkCommon.HK_COOKIE)
+                        .cookie(SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -817,7 +816,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[8])) {
+            if (StringUtil.notEmpty(s[8])) {
                 String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[8]))
                         .cookie(SdkCommon.BI_COOKIE)
                         .execute()
@@ -864,7 +863,7 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[8])) {
+            if (StringUtil.notEmpty(s[8])) {
                 String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[8], page, limit))
                         .cookie(SdkCommon.BI_COOKIE)
                         .execute()

@@ -3,10 +3,10 @@ package net.doge.ui.component.dialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
-import net.doge.constant.ui.Colors;
-import net.doge.constant.player.Format;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.player.Format;
 import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.Colors;
 import net.doge.sdk.common.CommonResult;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
@@ -16,8 +16,8 @@ import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.listener.ButtonMouseListener;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +25,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -352,23 +351,19 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
 
     // 获取第 i 张图片
     private BufferedImage getImg(int i) {
-        try {
-            // 请求指定页数的图片
-            int dp = i % limit == 0 ? i / limit : i / limit + 1, di = (i - 1) % limit;
-            if (results == null || pn != dp) {
-                String cursor = results == null || cursors.size() == 1 ? "" : cursors.get(dp - 1);
-                results = requestImgUrls(pn = dp, limit, cursor);
-                String next = results.cursor;
-                if (ListUtil.search(cursors, next) < 0) cursors.add(next);
-            }
-            String url = results.data.get(di);
-            BufferedImage img = ImageUtil.read(new URL(url));
-            // 单独处理 Webp 类型图片
-//            if (img == null) img = ImageUtils.readWebp(url);
-            return img;
-        } catch (Exception e) {
-            return null;
+        // 请求指定页数的图片
+        int dp = i % limit == 0 ? i / limit : i / limit + 1, di = (i - 1) % limit;
+        if (results == null || pn != dp) {
+            String cursor = results == null || cursors.size() == 1 ? "" : cursors.get(dp - 1);
+            results = requestImgUrls(pn = dp, limit, cursor);
+            String next = results.cursor;
+            if (ListUtil.search(cursors, next) < 0) cursors.add(next);
         }
+        String url = results.data.get(di);
+        BufferedImage img = ImageUtil.readByUrl(url);
+        // 单独处理 Webp 类型图片
+//            if (img == null) img = ImageUtils.readWebp(url);
+        return img;
     }
 
     // 导出第 i 张图片

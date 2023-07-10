@@ -47,19 +47,19 @@ public class NetPlaylistInfo {
     private Runnable invokeLater;
 
     public boolean hasName() {
-        return StringUtil.isNotEmpty(name);
+        return StringUtil.notEmpty(name);
     }
 
     public boolean hasCreator() {
-        return StringUtil.isNotEmpty(creator);
+        return StringUtil.notEmpty(creator);
     }
 
     public boolean hasCreatorId() {
-        return StringUtil.isNotEmpty(creatorId);
+        return StringUtil.notEmpty(creatorId);
     }
 
     public boolean hasTag() {
-        return StringUtil.isNotEmpty(tag);
+        return StringUtil.notEmpty(tag);
     }
 
     public boolean hasTrackCount() {
@@ -71,7 +71,7 @@ public class NetPlaylistInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtil.isNotEmpty(coverImgUrl);
+        return StringUtil.notEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -132,7 +132,7 @@ public class NetPlaylistInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + " - " + toSimpleString();
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

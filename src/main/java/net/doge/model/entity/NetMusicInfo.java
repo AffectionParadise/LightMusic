@@ -57,7 +57,7 @@ public class NetMusicInfo {
     // 封面图加载后的回调函数
     private Runnable invokeLater;
 
-    private final static String separator = " - ";
+    private static final String separator = " - ";
 
     public BufferedImage getAlbumImage() {
         File imgFile = new File(SimplePath.IMG_CACHE_PATH + toAlbumImageFileName());
@@ -82,7 +82,7 @@ public class NetMusicInfo {
     }
 
     public boolean hasProgramId() {
-        return StringUtil.isNotEmpty(programId);
+        return StringUtil.notEmpty(programId);
     }
 
     /**
@@ -101,23 +101,23 @@ public class NetMusicInfo {
      * @return
      */
     public boolean hasHash() {
-        return StringUtil.isNotEmpty(hash);
+        return StringUtil.notEmpty(hash);
     }
 
     public boolean hasArtist() {
-        return StringUtil.isNotEmpty(artist);
+        return StringUtil.notEmpty(artist);
     }
 
     public boolean hasArtistId() {
-        return StringUtil.isNotEmpty(artistId);
+        return StringUtil.notEmpty(artistId);
     }
 
     public boolean hasAlbumName() {
-        return StringUtil.isNotEmpty(albumName);
+        return StringUtil.notEmpty(albumName);
     }
 
     public boolean hasAlbumId() {
-        return StringUtil.isNotEmpty(albumId);
+        return StringUtil.notEmpty(albumId);
     }
 
     public boolean hasAlbumImage() {
@@ -126,11 +126,11 @@ public class NetMusicInfo {
     }
 
     public boolean hasMv() {
-        return StringUtil.isNotEmpty(mvId) && !"0".equals(mvId);
+        return StringUtil.notEmpty(mvId) && !"0".equals(mvId);
     }
 
     public boolean hasUrl() {
-        return StringUtil.isNotEmpty(url);
+        return StringUtil.notEmpty(url);
     }
 
     // 判断歌词 + 翻译 + 罗马音是否完整
@@ -143,15 +143,15 @@ public class NetMusicInfo {
     }
 
     public boolean hasTrans() {
-        return StringUtil.isNotEmpty(trans);
+        return StringUtil.notEmpty(trans);
     }
 
     public boolean hasRoma() {
-        return StringUtil.isNotEmpty(roma);
+        return StringUtil.notEmpty(roma);
     }
 
     public boolean hasLrcMatch() {
-        return StringUtil.isNotEmpty(lrcMatch);
+        return StringUtil.notEmpty(lrcMatch);
     }
 
     public boolean hasDuration() {
@@ -210,16 +210,16 @@ public class NetMusicInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + separator + toSimpleString();
+        return NetMusicSource.NAMES[source] + separator + toSimpleString();
     }
 
     public String toSimpleString() {
         return StringUtil.shorten(name
-                + (StringUtil.isNotEmpty(artist) ? separator + artist : ""), 230);
+                + (StringUtil.notEmpty(artist) ? separator + artist : ""), 230);
     }
 
     public String toKeywords() {
         return name
-                + (StringUtil.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
+                + (StringUtil.notEmpty(artist) ? " " + artist.replace("、", " ") : "");
     }
 }

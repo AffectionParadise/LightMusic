@@ -1,5 +1,10 @@
 package net.doge.constant.ui;
 
+import net.doge.constant.system.SimplePath;
+import net.doge.util.ui.ImageUtil;
+
+import java.awt.image.BufferedImage;
+
 /**
  * @Author yzx
  * @Description 图片宽度相关参数
@@ -7,13 +12,16 @@ package net.doge.constant.ui;
  */
 public class ImageConstants {
     // 小图标
-    public static final int smallWidth = 30;
+    public static final int SMALL_WIDTH = 30;
     // 头像图标
-    public static final int profileWidth = 70;
+    public static final int PROFILE_WIDTH = 70;
     // 中等图标
-    public static final int mediumWidth = 120;
+    public static final int MEDIUM_WIDTH = 120;
     // MV 封面图标
-    public static final int mvCoverWidth = 150;
+    public static final int MV_COVER_WIDTH = 150;
     // MV 封面最大高度
-    public static final int mvCoverMaxHeight = 110;
+    public static final int MV_COVER_MAX_HEIGHT = 110;
+
+    // 默认图片
+    public static final BufferedImage DEFAULT_IMG = ImageUtil.read(SimplePath.ICON_PATH + "default.jpg");
 }

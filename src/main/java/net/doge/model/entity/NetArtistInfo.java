@@ -87,7 +87,7 @@ public class NetArtistInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtil.isNotEmpty(coverImgUrl);
+        return StringUtil.notEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -95,7 +95,7 @@ public class NetArtistInfo {
     }
 
     public boolean hasName() {
-        return StringUtil.isNotEmpty(name);
+        return StringUtil.notEmpty(name);
     }
 
     public boolean hasSongNum() {
@@ -111,31 +111,31 @@ public class NetArtistInfo {
     }
 
     public boolean hasGender() {
-        return StringUtil.isNotEmpty(gender);
+        return StringUtil.notEmpty(gender);
     }
 
     public boolean hasBirthday() {
-        return StringUtil.isNotEmpty(birthday);
+        return StringUtil.notEmpty(birthday);
     }
 
     public boolean hasCareer() {
-        return StringUtil.isNotEmpty(career);
+        return StringUtil.notEmpty(career);
     }
 
     public boolean hasBloodType() {
-        return StringUtil.isNotEmpty(bloodType);
+        return StringUtil.notEmpty(bloodType);
     }
 
     public boolean hasAlias() {
-        return StringUtil.isNotEmpty(alias);
+        return StringUtil.notEmpty(alias);
     }
 
     public boolean hasGroup() {
-        return StringUtil.isNotEmpty(group);
+        return StringUtil.notEmpty(group);
     }
 
     public boolean hasDescription() {
-        return StringUtil.isNotEmpty(description);
+        return StringUtil.notEmpty(description);
     }
 
     public void setCoverImgThumb(BufferedImage coverImgThumb) {
@@ -185,7 +185,7 @@ public class NetArtistInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + " - " + toSimpleString();
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

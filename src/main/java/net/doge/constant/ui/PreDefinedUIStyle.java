@@ -9,7 +9,7 @@ import net.doge.model.ui.UIStyle;
  * @Date 2020/12/12
  */
 public class PreDefinedUIStyle {
-    public static final UIStyle[] styles = {
+    public static final UIStyle[] STYLES = {
             new UIStyle(UIStyleConstants.PRE, "默认", SimplePath.STYLE_IMG_PATH + "default.jpg",
                     Colors.LIGHT_GRAY, Colors.GRAY, Colors.LIGHT_GRAY, Colors.DEEP_SKY_BLUE_1, Colors.LIGHT_GRAY,
                     Colors.LIGHT_GRAY, Colors.LIGHT_GRAY, Colors.LIGHT_GRAY, Colors.LIGHT_GRAY, Colors.LIGHT_GRAY),

@@ -96,7 +96,7 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_API, s[0]))
                         .execute()
                         .body();
@@ -140,7 +140,7 @@ public class NewAlbumReq {
 //            LinkedList<NetAlbumInfo> res = new LinkedList<>();
 //            Integer t = 0;
 //
-//            if (StringUtils.isNotEmpty(s[0])) {
+//            if (StringUtils.notEmpty(s[0])) {
 //                String albumInfoBody = HttpRequest.get(String.format(HOT_ALBUM_API, s[0]))
 //                        .execute()
 //                        .body();
@@ -182,7 +182,7 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String albumInfoBody = HttpRequest.get(String.format(ALL_NEW_ALBUM_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -297,7 +297,7 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String albumInfoBody = HttpRequest.get(String.format(LANG_DI_ALBUM_API, s[1]))
                         .execute()
                         .body();
@@ -332,7 +332,7 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String albumInfoBody = HttpRequest.get(String.format(STYLE_ALBUM_API, s[2], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -375,7 +375,7 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_QQ_API, s[3]))
                         .execute()
                         .body();
@@ -671,7 +671,7 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[5])) {
+            if (StringUtil.notEmpty(s[5])) {
                 HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[5], (page - 1) * limit, limit, System.currentTimeMillis())).execute();
                 String albumInfoBody = resp.body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -757,7 +757,7 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[4])) {
+            if (StringUtil.notEmpty(s[4])) {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[4], (page - 1) * limit))
                         .execute()
                         .body();
@@ -765,7 +765,7 @@ public class NewAlbumReq {
                 Elements as = doc.select("tr.item");
                 Element te = doc.select("div.paginator > a").last();
                 String ts = te == null ? "" : te.text();
-                t = StringUtil.isNotEmpty(ts) ? Integer.parseInt(ts) * limit : limit;
+                t = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) * limit : limit;
                 for (int i = 0, len = as.size(); i < len; i++) {
                     Element album = as.get(i);
                     Elements a = album.select("div.pl2 a");

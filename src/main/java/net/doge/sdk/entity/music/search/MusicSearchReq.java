@@ -522,7 +522,7 @@ public class MusicSearchReq {
             String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
             if (StringUtil.isEmpty(ts))
                 ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-            boolean hasTs = StringUtil.isNotEmpty(ts);
+            boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) t = Integer.parseInt(ts) * limit;
             else t = songs.size();
             for (int i = 0, len = songs.size(); i < len; i++) {
@@ -562,7 +562,7 @@ public class MusicSearchReq {
             String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
             if (StringUtil.isEmpty(ts))
                 ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-            boolean hasTs = StringUtil.isNotEmpty(ts);
+            boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) t = Integer.parseInt(ts) * limit;
             else t = songs.size();
             for (int i = 0, len = songs.size(); i < len; i++) {
@@ -660,7 +660,7 @@ public class MusicSearchReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, s[0].trim(), encodedKeyword, page, limit))
                         .execute()
                         .body();

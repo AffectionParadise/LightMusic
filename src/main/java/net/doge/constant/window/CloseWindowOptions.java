@@ -10,5 +10,5 @@ public class CloseWindowOptions {
     public static final int DISPOSE = 1;
     public static final int EXIT = 2;
 
-    public static final String[] names = {"询问", "隐藏到托盘", "退出程序"};
+    public static final String[] NAMES = {"询问", "隐藏到托盘", "退出程序"};
 }

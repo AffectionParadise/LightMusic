@@ -8,7 +8,7 @@ import net.doge.constant.ui.SpectrumConstants;
  * @Date 2020/12/9
  */
 public class SpectrumUtil {
-    private final static int p = Math.abs(SpectrumConstants.THRESHOLD);
+    private static final int p = Math.abs(SpectrumConstants.THRESHOLD);
 
     /**
      * 处理单个 magnitude 数据，magnitude 在 THRESHOLD 到 0 之间

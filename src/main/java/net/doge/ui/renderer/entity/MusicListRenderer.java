@@ -37,10 +37,10 @@ public class MusicListRenderer extends DefaultListCellRenderer {
     private int hoverIndex = -1;
 
     private MusicPlayer player;
-    private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicItem.png"), ImageConstants.smallWidth));
-    private static ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicMvItem.png"), ImageConstants.smallWidth));
-    private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.smallWidth));
-    private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.smallWidth));
+    private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicItem.png"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicMvItem.png"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.SMALL_WIDTH));
 
     public MusicListRenderer(MusicPlayer player) {
         this.player = player;
@@ -111,7 +111,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         outerPanel.add(durationLabel);
 
         final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.names[netMusicInfo.getSource()]);
+        String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[netMusicInfo.getSource()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : netMusicInfo.getName(), maxWidth));
         String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasArtist() ? file.getArtist() : ""
                 : netMusicInfo.hasArtist() ? netMusicInfo.getArtist() : "", maxWidth));

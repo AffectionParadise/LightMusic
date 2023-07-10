@@ -168,8 +168,8 @@ public class VideoDialog extends AbstractTitledDialog {
         this.netMvInfo = netMvInfo;
         this.uri = isLocal ? dest : netMvInfo.getUrl();
 
-        mediaWidth = WindowSize.videoDimensions[f.windowSize][0];
-        mediaHeight = WindowSize.videoDimensions[f.windowSize][1];
+        mediaWidth = WindowSize.VIDEO_DIMENSIONS[f.windowSize][0];
+        mediaHeight = WindowSize.VIDEO_DIMENSIONS[f.windowSize][1];
 
         initUI();
     }

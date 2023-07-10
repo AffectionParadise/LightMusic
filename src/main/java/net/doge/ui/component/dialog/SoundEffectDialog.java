@@ -81,7 +81,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
     public SoundEffectDialog(MainFrame f) {
         super(f, "音效");
 
-        for (String se : EqualizerData.names) comboBox.addItem(se);
+        for (String se : EqualizerData.NAMES) comboBox.addItem(se);
         comboBox.addItem("自定义");
     }
 
@@ -122,7 +122,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
             int index = comboBox.getSelectedIndex();
             // 记录当前音效
             f.currSoundEffect = index;
-            double[][] eds = EqualizerData.data;
+            double[][] eds = EqualizerData.DATA;
             if (index >= eds.length) return;
 
             double[] newEd = eds[index];

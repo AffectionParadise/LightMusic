@@ -175,7 +175,7 @@ public class CommentReq {
         }
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD && StringUtil.isNotEmpty(typeStr[0])) {
+        if (source == NetMusicSource.NET_CLOUD && StringUtil.notEmpty(typeStr[0])) {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_API, typeStr[0], id, page, limit, hotOnly ? 2 : 3, cursor))
                     .execute()
                     .body();
@@ -281,7 +281,7 @@ public class CommentReq {
         }
 
         // QQ
-        else if (source == NetMusicSource.QQ && StringUtil.isNotEmpty(typeStr[1])) {
+        else if (source == NetMusicSource.QQ && StringUtil.notEmpty(typeStr[1])) {
             int lim = hotOnly ? limit : Math.min(25, limit);
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, hotOnly ? 1 : 0, typeStr[1], id, page, lim))
                     .execute()
@@ -346,7 +346,7 @@ public class CommentReq {
         }
 
         // 酷我
-        else if (source == NetMusicSource.KW && StringUtil.isNotEmpty(typeStr[2])) {
+        else if (source == NetMusicSource.KW && StringUtil.notEmpty(typeStr[2])) {
             String ref = "";
             switch (Integer.parseInt(typeStr[2])) {
                 case 15:
@@ -530,7 +530,7 @@ public class CommentReq {
             String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
             if (StringUtil.isEmpty(ts))
                 ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-            boolean hasTs = StringUtil.isNotEmpty(ts);
+            boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total = Integer.parseInt(ts) * limit;
             else total = comments.size();
             for (int i = 0, len = comments.size(); i < len; i++) {
@@ -599,7 +599,7 @@ public class CommentReq {
             String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
             if (StringUtil.isEmpty(ts))
                 ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-            boolean hasTs = StringUtil.isNotEmpty(ts);
+            boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total = Integer.parseInt(ts) * limit;
             else total = comments.size();
             for (int i = 0, len = comments.size(); i < len; i++) {
@@ -770,7 +770,7 @@ public class CommentReq {
         }
 
         // 猫耳
-        else if (source == NetMusicSource.ME && StringUtil.isNotEmpty(typeStr[3])) {
+        else if (source == NetMusicSource.ME && StringUtil.notEmpty(typeStr[3])) {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_ME_API, typeStr[3], hotOnly ? 3 : 1, id, page, limit))
                     .execute()
                     .body();
@@ -917,7 +917,7 @@ public class CommentReq {
                 Document doc = Jsoup.parse(commentInfoBody);
                 Elements comments = doc.select("li.comment-item");
                 String ts = ReUtil.get("\\((\\d+)\\)", doc.select("div#content h1").text(), 1);
-                total = StringUtil.isNotEmpty(ts) ? Integer.parseInt(ts) : comments.size();
+                total = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) : comments.size();
                 for (int i = 0, len = comments.size(); i < len; i++) {
                     Element comment = comments.get(i);
                     Element a = comment.select("div.user-info a").first();
@@ -958,7 +958,7 @@ public class CommentReq {
                 Document doc = Jsoup.parse(commentInfoBody);
                 Elements comments = doc.select(isRadio && !isBook ? "div.comment-item" : "li.comment-item");
                 String ts = ReUtil.get("\\((\\d+)\\)", doc.select("li.is-active").text(), 1);
-                total = StringUtil.isNotEmpty(ts) ? Integer.parseInt(ts) : comments.size();
+                total = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) : comments.size();
                 for (int i = 0, len = comments.size(); i < len; i++) {
                     Element comment = comments.get(i);
                     Element a = comment.select("span.comment-info a").first();

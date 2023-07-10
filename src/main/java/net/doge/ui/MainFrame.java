@@ -3,6 +3,9 @@ package net.doge.ui;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONException;
+import com.alibaba.fastjson2.JSONObject;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -40,14 +43,14 @@ import net.doge.constant.window.WindowState;
 import net.doge.exception.IllegalMediaException;
 import net.doge.exception.NoLyricException;
 import net.doge.exception.NoPrivilegeException;
-import net.doge.model.player.SimpleMusicInfo;
-import net.doge.sdk.common.CommonResult;
-import net.doge.model.player.MusicPlayer;
-import net.doge.model.task.Task;
-import net.doge.model.ui.UIStyle;
 import net.doge.model.entity.*;
 import net.doge.model.lyric.LrcData;
 import net.doge.model.lyric.Statement;
+import net.doge.model.player.MusicPlayer;
+import net.doge.model.player.SimpleMusicInfo;
+import net.doge.model.task.Task;
+import net.doge.model.ui.UIStyle;
+import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.component.button.ChangePaneButton;
@@ -73,7 +76,6 @@ import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.component.toolbar.CustomToolBar;
 import net.doge.ui.componentui.button.ChangePaneButtonUI;
 import net.doge.ui.componentui.combobox.ComboBoxUI;
-import net.doge.ui.componentui.tabbedpane.TabbedPaneUI;
 import net.doge.ui.componentui.list.ListUI;
 import net.doge.ui.componentui.list.ScrollBarUI;
 import net.doge.ui.componentui.menu.CheckMenuItemUI;
@@ -81,6 +83,7 @@ import net.doge.ui.componentui.menu.MenuItemUI;
 import net.doge.ui.componentui.menu.MenuUI;
 import net.doge.ui.componentui.menu.RadioButtonMenuItemUI;
 import net.doge.ui.componentui.slider.SliderUI;
+import net.doge.ui.componentui.tabbedpane.TabbedPaneUI;
 import net.doge.ui.listener.ButtonMouseListener;
 import net.doge.ui.listener.ChangePaneButtonMouseListener;
 import net.doge.ui.listener.ScrollPaneListener;
@@ -94,13 +97,12 @@ import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import net.doge.util.media.MusicUtil;
 import net.doge.util.media.VideoUtil;
-import net.doge.util.system.*;
+import net.doge.util.system.FileUtil;
+import net.doge.util.system.KeyUtil;
+import net.doge.util.system.TerminateUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.SpectrumUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.JSONException;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -684,7 +686,7 @@ public class MainFrame extends JFrame {
 
     // 添加界面风格
     {
-        for (UIStyle style : PreDefinedUIStyle.styles) styles.add(style);
+        for (UIStyle style : PreDefinedUIStyle.STYLES) styles.add(style);
     }
 
     public boolean autoUpdate;
@@ -820,7 +822,7 @@ public class MainFrame extends JFrame {
     private int lastPane;
 
     // 默认专辑图片
-    public BufferedImage defaultAlbumImage = ImageUtil.read(SimplePath.ICON_PATH + "album.png");
+    public BufferedImage defaultAlbumImage = ImageConstants.DEFAULT_IMG;
     // 加载中图片
     private BufferedImage loadingImage = ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
 
@@ -2929,7 +2931,7 @@ public class MainFrame extends JFrame {
 
     // 加载配置
     private boolean loadConfig() {
-        JSONObject config = JsonUtil.readJson(ConfigConstants.fileName);
+        JSONObject config = JsonUtil.readJson(ConfigConstants.FILE_NAME);
         // 载入已保存的自定义风格(逆序加载，这样才能保持顺序一致)
         JSONArray styleArray = config.getJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
         if (styleArray != null) {
@@ -2994,8 +2996,8 @@ public class MainFrame extends JFrame {
         currCloseWindowOption = config.getIntValue(ConfigConstants.CLOSE_WINDOW_OPTION, CloseWindowOptions.ASK);
         // 载入窗口大小
         windowSize = config.getIntValue(ConfigConstants.WINDOW_SIZE, WindowSize.MIDDLE);
-        windowWidth = WindowSize.dimensions[windowSize][0];
-        windowHeight = WindowSize.dimensions[windowSize][1];
+        windowWidth = WindowSize.DIMENSIONS[windowSize][0];
+        windowHeight = WindowSize.DIMENSIONS[windowSize][1];
         x = y = 0x3f3f3f3f;
         setSize(windowWidth, windowHeight);
         // 载入播放视频是否关闭主界面
@@ -3030,7 +3032,7 @@ public class MainFrame extends JFrame {
         // 载入最大搜索历史数量
         maxSearchHistoryCount = config.getIntValue(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, 50);
         // 载入同时下载的最大任务数
-        int maxConcurrentTaskCount = Math.min(3, config.getIntValue(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, 3));
+        int maxConcurrentTaskCount = config.getIntValue(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, 3);
         GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(maxConcurrentTaskCount);
         // 载入是否显示频谱
         showSpectrum = config.getBooleanValue(ConfigConstants.SHOW_SPECTRUM, true);
@@ -3231,7 +3233,7 @@ public class MainFrame extends JFrame {
                             // 写入歌曲信息
                             if (netMusicInfo.isMp3()) MusicUtil.writeMP3Info(dest, netMusicInfo);
                             // 自动下载歌词
-                            if (isAutoDownloadLrc && StringUtil.isNotEmpty(netMusicInfo.getLrc()))
+                            if (isAutoDownloadLrc && StringUtil.notEmpty(netMusicInfo.getLrc()))
                                 FileUtil.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -3730,23 +3732,22 @@ public class MainFrame extends JFrame {
         // 存入自定义风格
         JSONArray styleArray = new JSONArray();
         for (UIStyle style : styles) {
-            if (style.isCustom()) {
-                JSONObject styleObject = new JSONObject();
-                styleObject.put("name", style.getStyleName());
-                styleObject.put("imgPath", style.getStyleImgPath());
-                styleObject.put("bgColor", ColorUtil.colorToRGBString(style.getBgColor()));
-                styleObject.put("foreColor", ColorUtil.colorToRGBString(style.getForeColor()));
-                styleObject.put("selectedColor", ColorUtil.colorToRGBString(style.getSelectedColor()));
-                styleObject.put("lrcColor", ColorUtil.colorToRGBString(style.getLrcColor()));
-                styleObject.put("highlightColor", ColorUtil.colorToRGBString(style.getHighlightColor()));
-                styleObject.put("textColor", ColorUtil.colorToRGBString(style.getTextColor()));
-                styleObject.put("timeBarColor", ColorUtil.colorToRGBString(style.getTimeBarColor()));
-                styleObject.put("iconColor", ColorUtil.colorToRGBString(style.getIconColor()));
-                styleObject.put("scrollBarColor", ColorUtil.colorToRGBString(style.getScrollBarColor()));
-                styleObject.put("sliderColor", ColorUtil.colorToRGBString(style.getSliderColor()));
-                styleObject.put("spectrumColor", ColorUtil.colorToRGBString(style.getSpectrumColor()));
-                styleArray.add(styleObject);
-            }
+            if (!style.isCustom()) continue;
+            JSONObject styleObject = new JSONObject();
+            styleObject.put("name", style.getStyleName());
+            styleObject.put("imgPath", style.getStyleImgPath());
+            styleObject.put("bgColor", ColorUtil.colorToRGBString(style.getBgColor()));
+            styleObject.put("foreColor", ColorUtil.colorToRGBString(style.getForeColor()));
+            styleObject.put("selectedColor", ColorUtil.colorToRGBString(style.getSelectedColor()));
+            styleObject.put("lrcColor", ColorUtil.colorToRGBString(style.getLrcColor()));
+            styleObject.put("highlightColor", ColorUtil.colorToRGBString(style.getHighlightColor()));
+            styleObject.put("textColor", ColorUtil.colorToRGBString(style.getTextColor()));
+            styleObject.put("timeBarColor", ColorUtil.colorToRGBString(style.getTimeBarColor()));
+            styleObject.put("iconColor", ColorUtil.colorToRGBString(style.getIconColor()));
+            styleObject.put("scrollBarColor", ColorUtil.colorToRGBString(style.getScrollBarColor()));
+            styleObject.put("sliderColor", ColorUtil.colorToRGBString(style.getSliderColor()));
+            styleObject.put("spectrumColor", ColorUtil.colorToRGBString(style.getSpectrumColor()));
+            styleArray.add(styleObject);
         }
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
         // 当前 UI 风格索引
@@ -3868,8 +3869,8 @@ public class MainFrame extends JFrame {
         JSONArray historyJsonArray = new JSONArray();
         for (int i = 0, len = historyModel.getSize(); i < len; i++) {
             Object o = historyModel.get(i);
-            if (o instanceof File) {
-                File file = (File) o;
+            if (o instanceof AudioFile) {
+                AudioFile file = (AudioFile) o;
                 historyJsonArray.add(file.getPath());
             } else if (o instanceof NetMusicInfo) {
                 NetMusicInfo netMusicInfo = (NetMusicInfo) o;
@@ -3892,7 +3893,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.HISTORY, historyJsonArray);
 
         // 存入全部收藏列表
-        saveCollectedMusicList(config);
+        saveCollectedItemList(config);
 
         // 存入下载任务列表
         JSONArray tasksJsonArray = new JSONArray();
@@ -3940,8 +3941,8 @@ public class MainFrame extends JFrame {
         JSONArray playQueueJsonArray = new JSONArray();
         for (int i = 0, len = playQueueModel.getSize(); i < len; i++) {
             Object o = playQueueModel.get(i);
-            if (o instanceof File) {
-                File file = (File) o;
+            if (o instanceof AudioFile) {
+                AudioFile file = (AudioFile) o;
                 playQueueJsonArray.add(file.getPath());
             } else if (o instanceof NetMusicInfo) {
                 NetMusicInfo netMusicInfo = (NetMusicInfo) o;
@@ -3973,60 +3974,60 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.NET_MUSIC_HISTORY_SEARCH, historySearchJsonArray);
 
         // 存入歌单搜索历史关键词
-        historySearchJsonArray.clear();
+        JSONArray netPlaylistHistorySearchJsonArray = new JSONArray();
         components = netPlaylistHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getPlainText());
+            netPlaylistHistorySearchJsonArray.add(b.getPlainText());
         }
-        config.put(ConfigConstants.NET_PLAYLIST_HISTORY_SEARCH, historySearchJsonArray);
+        config.put(ConfigConstants.NET_PLAYLIST_HISTORY_SEARCH, netPlaylistHistorySearchJsonArray);
 
         // 存入专辑搜索历史关键词
-        historySearchJsonArray.clear();
+        JSONArray netAlbumHistorySearchJsonArray = new JSONArray();
         components = netAlbumHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getPlainText());
+            netAlbumHistorySearchJsonArray.add(b.getPlainText());
         }
-        config.put(ConfigConstants.NET_ALBUM_HISTORY_SEARCH, historySearchJsonArray);
+        config.put(ConfigConstants.NET_ALBUM_HISTORY_SEARCH, netAlbumHistorySearchJsonArray);
 
         // 存入歌手搜索历史关键词
-        historySearchJsonArray.clear();
+        JSONArray netArtistHistorySearchJsonArray = new JSONArray();
         components = netArtistHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getPlainText());
+            netArtistHistorySearchJsonArray.add(b.getPlainText());
         }
-        config.put(ConfigConstants.NET_ARTIST_HISTORY_SEARCH, historySearchJsonArray);
+        config.put(ConfigConstants.NET_ARTIST_HISTORY_SEARCH, netArtistHistorySearchJsonArray);
 
         // 存入电台搜索历史关键词
-        historySearchJsonArray.clear();
+        JSONArray netRadioHistorySearchJsonArray = new JSONArray();
         components = netRadioHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getPlainText());
+            netRadioHistorySearchJsonArray.add(b.getPlainText());
         }
-        config.put(ConfigConstants.NET_RADIO_HISTORY_SEARCH, historySearchJsonArray);
+        config.put(ConfigConstants.NET_RADIO_HISTORY_SEARCH, netRadioHistorySearchJsonArray);
 
         // 存入 MV 搜索历史关键词
-        historySearchJsonArray.clear();
+        JSONArray netMvHistorySearchJsonArray = new JSONArray();
         components = netMvHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getPlainText());
+            netMvHistorySearchJsonArray.add(b.getPlainText());
         }
-        config.put(ConfigConstants.NET_MV_HISTORY_SEARCH, historySearchJsonArray);
+        config.put(ConfigConstants.NET_MV_HISTORY_SEARCH, netMvHistorySearchJsonArray);
 
         // 存入用户搜索历史关键词
-        historySearchJsonArray.clear();
+        JSONArray netUserHistorySearchJsonArray = new JSONArray();
         components = netUserHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             DialogButton b = (DialogButton) c;
-            historySearchJsonArray.add(b.getPlainText());
+            netUserHistorySearchJsonArray.add(b.getPlainText());
         }
-        config.put(ConfigConstants.NET_USER_HISTORY_SEARCH, historySearchJsonArray);
+        config.put(ConfigConstants.NET_USER_HISTORY_SEARCH, netUserHistorySearchJsonArray);
 
-        JsonUtil.saveJson(config, ConfigConstants.fileName);
+        JsonUtil.saveJson(config, ConfigConstants.FILE_NAME);
     }
 
     // 存入本地音乐列表
@@ -4040,13 +4041,13 @@ public class MainFrame extends JFrame {
     }
 
     // 存入全部收藏列表
-    public void saveCollectedMusicList(JSONObject config) {
+    public void saveCollectedItemList(JSONObject config) {
         // 存入收藏歌曲列表
         JSONArray collectionJsonArray = new JSONArray();
         for (int i = 0, len = collectionModel.getSize(); i < len; i++) {
             Object o = collectionModel.get(i);
-            if (o instanceof File) {
-                File file = (File) o;
+            if (o instanceof AudioFile) {
+                AudioFile file = (AudioFile) o;
                 collectionJsonArray.add(file.getPath());
             } else if (o instanceof NetMusicInfo) {
                 NetMusicInfo netMusicInfo = (NetMusicInfo) o;
@@ -5482,7 +5483,7 @@ public class MainFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5578,7 +5579,7 @@ public class MainFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
@@ -5672,7 +5673,7 @@ public class MainFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5768,7 +5769,7 @@ public class MainFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5867,7 +5868,7 @@ public class MainFrame extends JFrame {
                     NetRankingInfo rankingInfo = (NetRankingInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
@@ -5960,7 +5961,7 @@ public class MainFrame extends JFrame {
                     NetUserInfo userInfo = (NetUserInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         ImageIcon icon = new ImageIcon(coverImg);
                         collectionItemCoverAndNameLabel.setIcon(icon);
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
@@ -7325,7 +7326,7 @@ public class MainFrame extends JFrame {
         // 在线音乐跳页事件
         Runnable netMusicGoPageAction = () -> {
             boolean songRequest = currMusicMusicInfo != null;
-            if (songRequest || StringUtil.isNotEmpty(netMusicCurrKeyword)) {
+            if (songRequest || StringUtil.notEmpty(netMusicCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 显示节目搜索分类标签
@@ -7376,7 +7377,7 @@ public class MainFrame extends JFrame {
                 });
             }
         };
-        for (String name : NetMusicSource.names) netMusicSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netMusicSourceComboBox.addItem(name);
         netMusicSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -9382,7 +9383,7 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 boolean songRequest = currPlaylistMusicInfo != null, playlistRequest = currPlaylistPlaylistInfo != null,
                         commentRequest = currPlaylistCommentInfo != null, userRequest = currPlaylistUserInfo != null;
-                if (songRequest || playlistRequest || commentRequest || userRequest || StringUtil.isNotEmpty(netPlaylistCurrKeyword)) {
+                if (songRequest || playlistRequest || commentRequest || userRequest || StringUtil.notEmpty(netPlaylistCurrKeyword)) {
                     try {
                         // 搜索歌单并显示歌单列表
                         CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo)
@@ -9651,7 +9652,7 @@ public class MainFrame extends JFrame {
         netPlaylistToolBar.add(netPlaylistSearchButton);
         netPlaylistLeftBox.add(netPlaylistToolBar);
 
-        for (String name : NetMusicSource.names) netPlaylistSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netPlaylistSourceComboBox.addItem(name);
         netPlaylistSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -9716,7 +9717,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                     playlistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     playlistCoverAndNameLabel.setText(LOADING_MSG);
                     playlistTagLabel.setText(LOADING_MSG);
@@ -10382,7 +10383,7 @@ public class MainFrame extends JFrame {
         Runnable searchAlbumGoPageAction = () -> {
             boolean songRequest = currAlbumMusicInfo != null, artistRequest = currAlbumArtistInfo != null, albumRequest = currAlbumAlbumInfo != null,
                     userRequest = currAlbumUserInfo != null, commentRequest = currAlbumCommentInfo != null;
-            if (artistRequest || albumRequest || userRequest || commentRequest || songRequest || StringUtil.isNotEmpty(netAlbumCurrKeyword)) {
+            if (artistRequest || albumRequest || userRequest || commentRequest || songRequest || StringUtil.notEmpty(netAlbumCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索专辑并显示专辑列表
@@ -10653,7 +10654,7 @@ public class MainFrame extends JFrame {
         netAlbumToolBar.add(netAlbumSearchButton);
         netAlbumLeftBox.add(netAlbumToolBar);
 
-        for (String name : NetMusicSource.names) netAlbumSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netAlbumSourceComboBox.addItem(name);
         netAlbumSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -10718,7 +10719,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                     albumCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     albumCoverAndNameLabel.setText(LOADING_MSG);
                     albumDescriptionLabel.setText(LOADING_MSG);
@@ -11410,7 +11411,7 @@ public class MainFrame extends JFrame {
                     buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null,
                     radioCVRequest = currCVRadioInfo != null;
             if (artistRequest || buddyRequest || radioRequest || radioCVRequest || songRequest ||
-                    albumRequest || mvRequest || StringUtil.isNotEmpty(netArtistCurrKeyword)) {
+                    albumRequest || mvRequest || StringUtil.notEmpty(netArtistCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
@@ -11682,7 +11683,7 @@ public class MainFrame extends JFrame {
         netArtistToolBar.add(netArtistSearchButton);
         netArtistLeftBox.add(netArtistToolBar);
 
-        for (String name : NetMusicSource.names) netArtistSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netArtistSourceComboBox.addItem(name);
         netArtistSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -11747,7 +11748,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                     artistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     artistCoverAndNameLabel.setText(LOADING_MSG);
                     artistTagLabel.setText(LOADING_MSG);
@@ -12661,7 +12662,7 @@ public class MainFrame extends JFrame {
         Runnable searchRadioGoPageAction = () -> {
             boolean songRequest = currRadioMusicInfo != null, songRecRequest = currRecRadioMusicInfo != null, userRequest = currRadioUserInfo != null,
                     artistRequest = currRadioArtistInfo != null, radioRequest = currRadioRadioInfo != null;
-            if (userRequest || artistRequest || radioRequest || songRequest || songRecRequest || StringUtil.isNotEmpty(netRadioCurrKeyword)) {
+            if (userRequest || artistRequest || radioRequest || songRequest || songRecRequest || StringUtil.notEmpty(netRadioCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索电台并显示电台列表
@@ -12931,7 +12932,7 @@ public class MainFrame extends JFrame {
         netRadioToolBar.add(netRadioSearchButton);
         netRadioLeftBox.add(netRadioToolBar);
 
-        for (String name : NetMusicSource.names) netRadioSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netRadioSourceComboBox.addItem(name);
         netRadioSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -13007,7 +13008,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                     radioCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     radioCoverAndNameLabel.setText(LOADING_MSG);
                     radioTagLabel.setText(LOADING_MSG);
@@ -13780,7 +13781,7 @@ public class MainFrame extends JFrame {
         Runnable searchMvGoPageAction = () -> {
             boolean artistRequest = currMvArtistInfo != null, songRequest = currMvMusicInfo != null,
                     mvRequest = currMvMvInfo != null, episodeRequest = currEpisodesMvInfo != null, userRequest = currMvUserInfo != null;
-            if (artistRequest || songRequest || mvRequest || episodeRequest || userRequest || StringUtil.isNotEmpty(netMvCurrKeyword)) {
+            if (artistRequest || songRequest || mvRequest || episodeRequest || userRequest || StringUtil.notEmpty(netMvCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索 MV 并显示 MV 列表
@@ -13938,7 +13939,7 @@ public class MainFrame extends JFrame {
         netMvToolBar.add(netMvSearchButton);
         netMvLeftBox.add(netMvToolBar);
 
-        for (String name : NetMusicSource.names) netMvSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netMvSourceComboBox.addItem(name);
         netMvSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -14694,7 +14695,7 @@ public class MainFrame extends JFrame {
         netRankingToolBar.add(Box.createHorizontalGlue());
         netRankingLeftBox.add(netRankingToolBar);
 
-        for (String name : NetMusicSource.names) netRankingSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netRankingSourceComboBox.addItem(name);
         netRankingSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -14760,7 +14761,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                     rankingCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     rankingCoverAndNameLabel.setText(LOADING_MSG);
                     rankingDescriptionLabel.setText(LOADING_MSG);
@@ -15176,7 +15177,7 @@ public class MainFrame extends JFrame {
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
                     songRequest = currAuthorMusicInfo != null, albumRequest = currAuthorAlbumInfo != null;
             if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
-                    playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtil.isNotEmpty(netUserCurrKeyword)) {
+                    playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtil.notEmpty(netUserCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索用户并显示用户列表
@@ -15469,7 +15470,7 @@ public class MainFrame extends JFrame {
         netUserToolBar.add(netUserSearchButton);
         netUserLeftBox.add(netUserToolBar);
 
-        for (String name : NetMusicSource.names) netUserSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netUserSourceComboBox.addItem(name);
         netUserSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -15535,7 +15536,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                     ImageIcon icon = new ImageIcon(coverImg);
                     userCoverAndNameLabel.setIcon(icon);
                     userCoverAndNameLabel.setText(LOADING_MSG);
@@ -18483,7 +18484,7 @@ public class MainFrame extends JFrame {
         musicRecommendToolBar.add(recommendBackwardButton);
         musicRecommendToolBar.add(Box.createHorizontalGlue());
 
-        for (String name : NetMusicSource.names) netRecommendSourceComboBox.addItem(name);
+        for (String name : NetMusicSource.NAMES) netRecommendSourceComboBox.addItem(name);
         netRecommendSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -18616,7 +18617,7 @@ public class MainFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -18712,7 +18713,7 @@ public class MainFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText("");
@@ -18806,7 +18807,7 @@ public class MainFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -18902,7 +18903,7 @@ public class MainFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) o;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getTextColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -19071,7 +19072,7 @@ public class MainFrame extends JFrame {
         int si = netRecommendSourceComboBox.getSelectedIndex();
         String[] vals = tags.get(tag);
         for (int i = 0, len = map.length; i < len; i++) {
-            if (map[i] == si && StringUtil.isNotEmpty(vals[i])) return true;
+            if (map[i] == si && StringUtil.notEmpty(vals[i])) return true;
         }
         return false;
     }
@@ -19960,7 +19961,7 @@ public class MainFrame extends JFrame {
             spectrumPopupMenu.add(mi);
         }
         spectrumPopupMenu.addSeparator();
-        String[] names = SpectrumConstants.names;
+        String[] names = SpectrumConstants.NAMES;
         for (int i = 0, len = names.length; i < len; i++) {
             CustomRadioButtonMenuItem mi = new CustomRadioButtonMenuItem(names[i]);
             int finalI = i;
@@ -20642,26 +20643,6 @@ public class MainFrame extends JFrame {
         albumLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
-    // 加载专辑图片
-//    private void loadAlbumImage() {
-//        // 设置为默认专辑图片
-//        saveAlbumImageMenuItem.setEnabled(false);
-//        BufferedImage img = ImageUtils.width(ImageUtils.cropCenter(defaultAlbumImage), albumImageWidth);
-//        albumImageLabel.setIcon(
-//                ImageUtils.dye(new ImageIcon(ImageUtils.borderShadow(ImageUtils.setRadius(img, LARGE_ARC))), currUIStyle.getTextColor())
-//        );
-//        changePaneButton.setIcon(
-//                ImageUtils.dye(new ImageIcon(ImageUtils.setRadius(ImageUtils.width(img, changePaneImageWidth), TINY_ARC)), currUIStyle.getTextColor())
-//        );
-//        if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
-//
-//        SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
-//
-//        if (!simpleMusicInfo.hasAlbumImage())
-//            simpleMusicInfo.setInvokeLater(() -> showAlbumImage());
-//        else showAlbumImage();
-//    }
-
     // 显示专辑图片
     public void showAlbumImage() {
         SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
@@ -20670,11 +20651,10 @@ public class MainFrame extends JFrame {
         boolean isDefault = albumImage == defaultAlbumImage;
         saveAlbumImageMenuItem.setEnabled(!isDefault);
         // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
-        BufferedImage image = ImageUtil.width(ImageUtil.cropCenter(albumImage), albumImageWidth);
-        if (isDefault) image = ImageUtil.dye(image, currUIStyle.getTextColor());
-        albumImageLabel.setIcon(new ImageIcon(ImageUtil.borderShadow(ImageUtil.setRadius(image, LARGE_ARC))));
+        BufferedImage img = ImageUtil.width(ImageUtil.cropCenter(albumImage), albumImageWidth);
+        albumImageLabel.setIcon(new ImageIcon(ImageUtil.borderShadow(ImageUtil.setRadius(img, LARGE_ARC))));
         // 切换面板专辑图片
-        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(image, changePaneImageWidth), TINY_ARC)));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(img, changePaneImageWidth), TINY_ARC)));
         if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
         // 背景模糊
         if (blurType != BlurConstants.OFF) doBlur();
@@ -20772,7 +20752,7 @@ public class MainFrame extends JFrame {
                 f = new File(lrcPath);
                 fileExists = f.exists();
             }
-            boolean isBadFormat = fileExists || StringUtil.isNotEmpty(lrc);
+            boolean isBadFormat = fileExists || StringUtil.notEmpty(lrc);
             // 本地歌曲歌词不支持滚动时不需要写入 lrcStr
             lrcStr = isBadFormat && !fileExists ? lrc : null;
 //            lrcStr = isBadFormat ? (fileExists ? FileUtils.readAsStr(f) : lrc) : null;
@@ -20867,7 +20847,7 @@ public class MainFrame extends JFrame {
                 updateTitle("刷新 URL 中");
                 playExecutor.submit(() -> {
                     String url = MusicServerUtil.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
-                    if (StringUtil.isNotEmpty(url)) netMusicInfo.setUrl(url);
+                    if (StringUtil.notEmpty(url)) netMusicInfo.setUrl(url);
                     else MusicServerUtil.fillAvailableMusicUrl(netMusicInfo);
                     resetMp();
                 });
@@ -22819,7 +22799,7 @@ public class MainFrame extends JFrame {
             try {
                 if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
                 // 自动下载歌词
-                if (isAutoDownloadLrc && StringUtil.isNotEmpty(musicInfo.getLrc()))
+                if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
                     FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -22850,7 +22830,7 @@ public class MainFrame extends JFrame {
                 try {
                     if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
                     // 自动下载歌词
-                    if (isAutoDownloadLrc && StringUtil.isNotEmpty(musicInfo.getLrc()))
+                    if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
                         FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -23120,7 +23100,6 @@ public class MainFrame extends JFrame {
         blurExecutor.submit(() -> {
             BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
             if (albumImage == null) albumImage = defaultAlbumImage;
-            if (albumImage == defaultAlbumImage) albumImage = ImageUtil.eraseTranslucency(defaultAlbumImage);
             if (blurType == BlurConstants.MC)
                 albumImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(albumImage));
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();

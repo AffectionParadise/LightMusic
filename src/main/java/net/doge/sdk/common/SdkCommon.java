@@ -31,7 +31,7 @@ public class SdkCommon {
     // 构造酷我音乐请求
     public static HttpRequest kwRequest(String url) {
         return HttpRequest.get(url)
-                .header(Header.COOKIE, "kw_token=EFWR1Z8B8F; Hm_token=a5k3Rn3zi52eF3zEyQ3EQjb2HfbaCZDr")
+                .cookie("kw_token=EFWR1Z8B8F; Hm_token=a5k3Rn3zi52eF3zEyQ3EQjb2HfbaCZDr")
                 .header("cross", "4ef7fff9eeb7a38b89bf3fbb5a6a111e")
                 .header(Header.HOST, "www.kuwo.cn")
                 .header(Header.REFERER, "https://www.kuwo.cn/");

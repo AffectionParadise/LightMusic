@@ -44,10 +44,10 @@ public class EqualizerData {
     public static final double[] HIGH_VOICE_PRESSURE = {12, 12, 12, -2, -10, -12, -12, -12, -12, -12};
     public static final double[] OLD_PHONE = {7, -7, 7, -7, 7, -7, 7, -7, 7, -7};
 
-    public static final String[] names = {"关闭", "流行", "舞曲", "现场", "蓝调", "古典", "爵士", "慢歌", "电子", "摇滚", "乡村", "人声", "ACG", "ACG 女声", "国风", "民谣", "说唱",
+    public static final String[] NAMES = {"关闭", "流行", "舞曲", "现场", "蓝调", "古典", "爵士", "慢歌", "电子", "摇滚", "乡村", "人声", "ACG", "ACG 女声", "国风", "民谣", "说唱",
             "柔和", "柔和低音", "柔和高音", "高音", "中音", "低音", "低音 & 高音", "重低音", "超重低音",
             "扬声器（响亮）", "村口大喇叭", "iPhone4s 赠送耳机专用", "高解析", "高音衰减", "喇叭炸机专用", "老年机/儿童玩具"};
-    public static final double[][] data = {
+    public static final double[][] DATA = {
             OFF, POP, DANCE, PRESENT, BLUE, CLASSIC, JAZZ, SLOW, ELECTRONIC, ROCK, COUNTRY, VOICE, ACG, ACG_WOMAN, CHINESE_STYLE, FOLK, RAP,
             SOFT, SOFT_BASS, SOFT_TONE, TONE, MEDIANT, BASS, BASS_AND_TONE, MEGA_BASS, SUPER_MEGA_BASS,
             SPEAKER, BIG_HORN, IPHONE4S, HIGH_PARSE, TREBLE_ATTENUATION, HIGH_VOICE_PRESSURE, OLD_PHONE

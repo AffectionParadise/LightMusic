@@ -171,7 +171,7 @@ public class SliderUI extends BasicSliderUI {
                     }
                 } else dialog.setMessage("音量：" + slider.getValue());
                 if (!dialog.isShowing()) dialog.showDialog();
-                if (lrcDialog != null && lrcDialog.isNotEmpty() && !lrcDialog.isShowing()) lrcDialog.showDialog(false);
+                if (lrcDialog != null && lrcDialog.notEmpty() && !lrcDialog.isShowing()) lrcDialog.showDialog(false);
             }
 
             @Override
@@ -192,7 +192,7 @@ public class SliderUI extends BasicSliderUI {
                     slider.repaint();
                 }
                 if (dialog.isShowing()) dialog.close();
-                if (lrcDialog != null && lrcDialog.isNotEmpty() && lrcDialog.isShowing()) lrcDialog.close();
+                if (lrcDialog != null && lrcDialog.notEmpty() && lrcDialog.isShowing()) lrcDialog.close();
                 slider.setValueIsAdjusting(false);
             }
 

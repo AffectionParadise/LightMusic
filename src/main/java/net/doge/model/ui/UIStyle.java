@@ -78,10 +78,10 @@ public class UIStyle {
         GlobalExecutors.imageExecutor.execute(() -> {
             img = ImageUtil.read(styleImgPath);
             if (img == null) return;
-            imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.mvCoverWidth), 10);
+            imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.MV_COVER_WIDTH), 10);
             // 控制高度不超过阈值
-            if (imgThumb != null && imgThumb.getHeight() > ImageConstants.mvCoverMaxHeight)
-                imgThumb = ImageUtil.height(imgThumb, ImageConstants.mvCoverMaxHeight);
+            if (imgThumb != null && imgThumb.getHeight() > ImageConstants.MV_COVER_MAX_HEIGHT)
+                imgThumb = ImageUtil.height(imgThumb, ImageConstants.MV_COVER_MAX_HEIGHT);
             callback();
         });
     }
@@ -91,7 +91,7 @@ public class UIStyle {
         if (bgColor == null) return;
         GlobalExecutors.imageExecutor.execute(() -> {
             img = ImageUtil.dyeRect(2, 1, bgColor);
-            imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.mvCoverWidth), 10);
+            imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.MV_COVER_WIDTH), 10);
             callback();
         });
     }

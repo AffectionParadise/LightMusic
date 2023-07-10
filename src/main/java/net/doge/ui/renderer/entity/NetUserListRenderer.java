@@ -33,7 +33,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private static ImageIcon userIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "userItem.png"), ImageConstants.mediumWidth));
+    private static ImageIcon userIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "userItem.png"), ImageConstants.MEDIUM_WIDTH));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;

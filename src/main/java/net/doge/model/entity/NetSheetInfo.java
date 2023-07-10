@@ -46,19 +46,19 @@ public class NetSheetInfo {
     }
 
     public boolean hasDifficulty() {
-        return StringUtil.isNotEmpty(difficulty);
+        return StringUtil.notEmpty(difficulty);
     }
 
     public boolean hasMusicKey() {
-        return StringUtil.isNotEmpty(musicKey);
+        return StringUtil.notEmpty(musicKey);
     }
 
     public boolean hasPlayVersion() {
-        return StringUtil.isNotEmpty(playVersion);
+        return StringUtil.notEmpty(playVersion);
     }
 
     public boolean hasChordName() {
-        return StringUtil.isNotEmpty(chordName);
+        return StringUtil.notEmpty(chordName);
     }
 
     public boolean hasPageSize() {

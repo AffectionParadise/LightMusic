@@ -56,7 +56,7 @@ public class AudioFile extends File {
     }
 
     public boolean hasSongName() {
-        return StringUtil.isNotEmpty(songName);
+        return StringUtil.notEmpty(songName);
     }
 
     public boolean isMp3() {
@@ -72,11 +72,11 @@ public class AudioFile extends File {
     }
 
     public boolean hasArtist() {
-        return StringUtil.isNotEmpty(artist);
+        return StringUtil.notEmpty(artist);
     }
 
     public boolean hasAlbum() {
-        return StringUtil.isNotEmpty(album);
+        return StringUtil.notEmpty(album);
     }
 
     public boolean hasDuration() {
@@ -141,6 +141,6 @@ public class AudioFile extends File {
 
     public String toKeywords() {
         return songName
-                + (StringUtil.isNotEmpty(artist) ? " " + artist.replace("、", " ") : "");
+                + (StringUtil.notEmpty(artist) ? " " + artist.replace("、", " ") : "");
     }
 }

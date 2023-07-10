@@ -6,7 +6,7 @@ package net.doge.constant.ui;
  * @Date 2020/12/14
  */
 public class SpectrumConstants {
-    public static final String[] names = {"平地式", "悬空式", "折线式", "曲线式", "山峰式", "波浪式", "对称山峰式", "对称波浪式"};
+    public static final String[] NAMES = {"平地式", "悬空式", "折线式", "曲线式", "山峰式", "波浪式", "对称山峰式", "对称波浪式"};
     // 平地式
     public static final int GROUND = 0;
     // 悬空式

@@ -1,8 +1,9 @@
 package net.doge.sdk.entity.music.info;
 
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.player.Format;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
@@ -12,14 +13,9 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,7 +63,7 @@ public class MusicUrlReq {
         if (source == NetMusicSource.NET_CLOUD) {
             String url = fetchMusicUrl(songId, NetMusicSource.NET_CLOUD);
             // 排除试听部分，直接换源
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
             // 网易云音乐里面有的电台节目是 flac 格式！
             if (url.endsWith(Format.FLAC)) musicInfo.setFormat(Format.FLAC);
@@ -77,7 +73,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.KG) {
             // 排除试听部分，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.KG);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -85,7 +81,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.QQ) {
             // 排除试听部分，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.QQ);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -93,7 +89,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.KW) {
             // 无链接，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.KW);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -101,7 +97,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.MG) {
             // 无链接，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.MG);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -109,7 +105,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.QI) {
             // 无链接或试听，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.QI);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -118,7 +114,7 @@ public class MusicUrlReq {
             // 无链接或试听，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.HF);
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -127,7 +123,7 @@ public class MusicUrlReq {
             // 无链接或试听，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.GG);
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -135,7 +131,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.FS) {
             // 无链接或试听，直接换源
             String url = fetchMusicUrl(songId, NetMusicSource.FS);
-            if (StringUtil.isNotEmpty(url)) musicInfo.setUrl(url);
+            if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
@@ -184,7 +180,7 @@ public class MusicUrlReq {
                 // 排除试听部分，直接换源
                 if (urlJson.getJSONObject("freeTrialInfo") == null) {
                     String url = urlJson.getString("url");
-                    if (StringUtil.isNotEmpty(url)) return url;
+                    if (StringUtil.notEmpty(url)) return url;
                 }
             }
         }
@@ -193,12 +189,11 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.KG) {
             // 酷狗接口请求需要带上 cookie ！
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
-                    .header(Header.COOKIE, SdkCommon.COOKIE)
+                    .cookie(SdkCommon.COOKIE)
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-            String url = data.getString("play_url");
-            if (data.getIntValue("is_free_part") == 0) return url;
+            if (data.getIntValue("is_free_part") == 0) return data.getString("play_url");
         }
 
         // QQ
@@ -250,7 +245,7 @@ public class MusicUrlReq {
             // 排除试听部分，直接换源
             if (urlJson.getIntValue("isVip") == 0) {
                 String url = urlJson.getString("path");
-                if (url.isEmpty()) url = urlJson.getJSONObject("trail_audio_info").getString("path");
+                if (StringUtil.isEmpty(url)) url = urlJson.getJSONObject("trail_audio_info").getString("path");
                 return url;
             }
         }
@@ -263,11 +258,13 @@ public class MusicUrlReq {
                     .body();
             Document doc = Jsoup.parse(songBody);
             String dataStr = ReUtil.get("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
-            if (StringUtil.isEmpty(dataStr)) return "";
-            JSONObject data = JSONObject.parseObject(dataStr);
-            String url = data.getString("url").replace(" ", "%20");
-            if (url.startsWith("http")) return url;
-            return SdkUtil.getRedirectUrl("https://www.hifini.com/" + url);
+            if (StringUtil.notEmpty(dataStr)) {
+                // json 字段带引号
+                JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));
+                String url = data.getString("url").replace(" ", "%20");
+                if (url.startsWith("http")) return url;
+                return SdkUtil.getRedirectUrl("https://www.hifini.com/" + url);
+            }
         }
 
         // 咕咕咕音乐
@@ -277,27 +274,21 @@ public class MusicUrlReq {
                     .body();
             Document doc = Jsoup.parse(songBody);
             String dataStr = ReUtil.get("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+            if (StringUtil.notEmpty(dataStr)) {
+                String base64Pattern = "base64_decode\\(\"(.*?)\"\\)";
+                String base64Str = ReUtil.get(base64Pattern, dataStr, 1);
+                if (StringUtil.notEmpty(base64Str))
+                    dataStr = dataStr.replaceFirst(base64Pattern, String.format("\"%s\"", StringUtil.base64Decode(base64Str)));
 
-            if (StringUtil.isEmpty(dataStr)) return "";
-            String base64Pattern = "base64_decode\\(\"(.*?)\"\\)";
-            String base64Str = ReUtil.get(base64Pattern, dataStr, 1);
-            if (StringUtil.isNotEmpty(base64Str))
-                dataStr = dataStr.replaceFirst(base64Pattern, String.format("\"%s\"", StringUtil.base64Decode(base64Str)));
-
-            JSONObject data = JSONObject.parseObject(dataStr);
-            String url = data.getString("url").replace(" ", "%20");
-            if (url.startsWith("http")) return url;
-            else {
-                try {
+                // json 字段带引号
+                JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));
+                String url = data.getString("url").replace(" ", "%20");
+                if (url.startsWith("http")) return url;
+                else {
                     // 获取重定向之后的 url
                     String startUrl = "http://www.gggmusic.com" + url;
-                    HttpURLConnection conn = (HttpURLConnection) new URL(startUrl).openConnection();
-                    conn.setInstanceFollowRedirects(false);
-                    conn.setConnectTimeout(SdkCommon.TIME_OUT);
-                    String newUrl = conn.getHeaderField("Location");
+                    String newUrl = SdkUtil.getRedirectUrl(startUrl);
                     return StringUtil.isEmpty(newUrl) ? startUrl : newUrl;
-                } catch (IOException e) {
-                    return "";
                 }
             }
         }
@@ -321,8 +312,7 @@ public class MusicUrlReq {
                     .execute()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
-            String url = urlJson.getJSONObject("data").getString("src");
-            return url;
+            return urlJson.getJSONObject("data").getString("src");
         }
 
         // 猫耳
@@ -331,8 +321,7 @@ public class MusicUrlReq {
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
-            String url = data.getString("soundurl");
-            return url;
+            return data.getString("soundurl");
         }
 
         // 哔哩哔哩
@@ -342,8 +331,7 @@ public class MusicUrlReq {
                     .execute()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
-            String url = urlJson.getJSONObject("data").getJSONArray("cdns").getString(0);
-            return url;
+            return urlJson.getJSONObject("data").getJSONArray("cdns").getString(0);
         }
 
         return "";
@@ -381,12 +369,11 @@ public class MusicUrlReq {
         for (MusicCandidate candidate : candidates) {
             NetMusicInfo info = candidate.musicInfo;
             String url = fetchMusicUrl(info.getId(), info.getSource());
-            if (StringUtil.isNotEmpty(url)) {
-                if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-                musicInfo.setUrl(url);
-                if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDuration());
-                return;
-            }
+            if (StringUtil.isEmpty(url)) continue;
+            if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
+            musicInfo.setUrl(url);
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDuration());
+            return;
         }
     }
 }

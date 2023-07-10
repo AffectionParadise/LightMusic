@@ -286,7 +286,7 @@ public class AlbumSearchReq {
                 JSONArray artistArray = albumJson.getJSONArray("artist");
                 String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String rd = albumJson.getString("releaseDate");
-                String publishTime = StringUtil.isNotEmpty(rd) ? rd.split("T")[0] : "";
+                String publishTime = StringUtil.notEmpty(rd) ? rd.split("T")[0] : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 Integer songNum = albumJson.getJSONArray("trackList").size();
 

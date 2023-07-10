@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class BvAvConverter {
-    public final static Map<Character, String> charMap;
-    public final static BigInteger base = new BigInteger("58");
-    public final static BigInteger subV = new BigInteger("100618342136696320");
-    public final static BigInteger xorV = new BigInteger("1010100100111011001100100100", 2);
-    public final static int[] power = {6, 2, 4, 8, 5, 9, 3, 7, 1, 0};
+    public static final Map<Character, String> charMap;
+    public static final BigInteger base = new BigInteger("58");
+    public static final BigInteger subV = new BigInteger("100618342136696320");
+    public static final BigInteger xorV = new BigInteger("1010100100111011001100100100", 2);
+    public static final int[] power = {6, 2, 4, 8, 5, 9, 3, 7, 1, 0};
 
     static {
         charMap = new HashMap<>();

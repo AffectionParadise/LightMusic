@@ -132,7 +132,7 @@ public class HotRadioReq {
                 Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
-//            long ms = radioJson.optLong("createTime");
+//            long ms = radioJson.getLongValue("createTime");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setId(radioId);
@@ -286,7 +286,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_HOT_RADIO_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -330,7 +330,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_REC_RADIO_API, s[1]))
                         .execute()
                         .body();
@@ -376,7 +376,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String[] sp = s[3].split(" ", -1);
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, sp[0], sp[1], page, limit))
                         .execute()
@@ -425,7 +425,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[4])) {
+            if (StringUtil.notEmpty(s[4])) {
                 String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, s[4], page, limit))
                         .execute()
                         .body();
@@ -468,7 +468,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String[] sp = s[2].split(" ");
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANKING_XM_API, sp[0], sp[1]))
                         .execute()
@@ -626,7 +626,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[5])) {
+            if (StringUtil.notEmpty(s[5])) {
                 String[] sp = s[5].split(" ");
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_ME_API, sp[2], sp[0], sp[1], page, limit))
                         .execute()
@@ -708,7 +708,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, s[6], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -745,7 +745,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[7])) {
+            if (StringUtil.notEmpty(s[7])) {
                 String[] sp = s[7].split(" ", -1);
                 String radioInfoBody = HttpRequest.get(String.format(CAT_GAME_RADIO_DB_API, sp[0], sp[1], page))
                         .execute()

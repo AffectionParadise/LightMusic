@@ -272,7 +272,7 @@ public class UserInfoReq {
         // 好看
         else if (source == NetMusicSource.HK) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HK_API, uid))
-                    .header(Header.COOKIE, SdkCommon.HK_COOKIE)
+                    .cookie(SdkCommon.HK_COOKIE)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
@@ -325,7 +325,7 @@ public class UserInfoReq {
                 userInfo.setSign(doc.select("div.people-desc").text().trim());
             if (!userInfo.hasProgramCount()) {
                 String s = doc.select("ul.people-nav li a").get(1).select("u").text().trim();
-                if (StringUtil.isNotEmpty(s)) userInfo.setProgramCount(Integer.parseInt(s));
+                if (StringUtil.notEmpty(s)) userInfo.setProgramCount(Integer.parseInt(s));
             }
             if (!userInfo.hasFollow())
                 userInfo.setFollow(Integer.parseInt(ReUtil.get("(\\d+)", a.first().text(), 1)));
@@ -459,7 +459,7 @@ public class UserInfoReq {
             String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
             if (StringUtil.isEmpty(ts))
                 ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-            boolean hasTs = StringUtil.isNotEmpty(ts);
+            boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total.set(Integer.parseInt(ts) * limit);
             else total.set(songs.size());
             for (int i = 0, len = songs.size(); i < len; i++) {
@@ -497,7 +497,7 @@ public class UserInfoReq {
             String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
             if (StringUtil.isEmpty(ts))
                 ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-            boolean hasTs = StringUtil.isNotEmpty(ts);
+            boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total.set(Integer.parseInt(ts) * limit);
             else total.set(songs.size());
             for (int i = 0, len = songs.size(); i < len; i++) {
@@ -573,28 +573,28 @@ public class UserInfoReq {
                     case 1:
                         Elements pageElem = doc.select(".page_number em");
                         String pageText = pageElem.isEmpty() ? "" : pageElem.text();
-                        t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
+                        t = StringUtil.notEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
                         break;
                     case 2:
                         pageElem = doc.select(".page_list span");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
                         pageElem = doc.select(".page_message a");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
                     case 6:
                         pageElem = doc.select("span.page_list a");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
                         pageElem = doc.select(".page span");
                         pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                 }
 
@@ -649,28 +649,28 @@ public class UserInfoReq {
                     case 1:
                         Elements pageElem = doc.select(".page_number em");
                         String pageText = pageElem.isEmpty() ? "" : pageElem.text();
-                        t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
+                        t = StringUtil.notEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
                         break;
                     case 2:
                         pageElem = doc.select(".page_list span");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
                         pageElem = doc.select(".page_message a");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
                     case 6:
                         pageElem = doc.select("span.page_list a");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
                         pageElem = doc.select(".page span");
                         pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                 }
 
@@ -725,28 +725,28 @@ public class UserInfoReq {
                     case 1:
                         Elements pageElem = doc.select(".page_number em");
                         String pageText = pageElem.isEmpty() ? "" : pageElem.text();
-                        t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
+                        t = StringUtil.notEmpty(pageText) ? (Integer.parseInt(pageText) / 20 + 1) * limit + 1 : limit;
                         break;
                     case 2:
                         pageElem = doc.select(".page_list span");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
                         pageElem = doc.select(".page_message a");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
                     case 6:
                         pageElem = doc.select("span.page_list a");
                         pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
                         pageElem = doc.select(".page span");
                         pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
-                        t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                        t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                 }
 
@@ -843,7 +843,7 @@ public class UserInfoReq {
         LinkedList<NetUserInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        if (!"0".equals(id) && StringUtil.isNotEmpty(id)) {
+        if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_API, id))
@@ -1095,7 +1095,7 @@ public class UserInfoReq {
             // 好看
             else if (source == NetMusicSource.HK) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HK_API, id))
-                        .header(Header.COOKIE, SdkCommon.HK_COOKIE)
+                        .cookie(SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
                 JSONObject data = JSONObject.parseObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
@@ -1136,7 +1136,7 @@ public class UserInfoReq {
 
                 if (h1 != null) {
                     String userName = h1.ownText();
-                    if (StringUtil.isNotEmpty(userName)) {
+                    if (StringUtil.notEmpty(userName)) {
                         String gender = "保密";
                         String avatarThumbUrl = img.attr("src");
 

@@ -172,7 +172,7 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String playlistInfoBody = HttpRequest.get(String.format(STYLE_PLAYLIST_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -255,7 +255,7 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, s[1].trim(), page))
                         .execute()
                         .body();
@@ -293,7 +293,7 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, s[1].trim(), page))
                         .execute()
                         .body();
@@ -369,7 +369,7 @@ public class RecommendPlaylistReq {
 //            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
 //            Integer t = 0;
 //
-//            if (StringUtils.isNotEmpty(s[0])) {
+//            if (StringUtils.notEmpty(s[0])) {
 //                String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_QQ_API, s[0]))
 //                        .execute()
 //                        .body();
@@ -409,7 +409,7 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String cat = s[2];
                 boolean isAll = "10000000".equals(cat);
                 String url;
@@ -784,7 +784,7 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, s[3].trim(), page, limit))
                         .execute()
                         .body();
@@ -826,7 +826,7 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[4])) {
+            if (StringUtil.notEmpty(s[4])) {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_FS_API, s[4].trim(), page))
                         .execute()
                         .body();

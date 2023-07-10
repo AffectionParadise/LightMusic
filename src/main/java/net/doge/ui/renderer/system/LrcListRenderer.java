@@ -89,7 +89,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         else {
             label.setFont(index == row - 2 ? shrinkFont : defaultFont);
             label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth)));
-//            labelUI.setDrawBg(index == hoverIndex && StringUtil.isNotEmpty(text.trim()));
+//            labelUI.setDrawBg(index == hoverIndex && StringUtil.notEmpty(text.trim()));
             label.setIcon(null);
         }
         // 设置 list 对应行的高度

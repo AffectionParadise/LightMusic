@@ -77,7 +77,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String artistInfoBody = HttpRequest.get(String.format(ARTIST_RANKING_LIST_API, s[0]))
                         .execute()
                         .body();
@@ -149,7 +149,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String[] split = s[1].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(CAT_ARTIST_API, split[0], split[1], split[2], (page - 1) * limit, limit))
                         .execute()
@@ -187,7 +187,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String artistInfoBody = HttpRequest.get(String.format(STYLE_ARTIST_API, s[2], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -227,7 +227,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String[] split = s[3].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(HOT_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
                         .execute()
@@ -269,7 +269,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String[] split = s[3].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(UP_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
                         .execute()
@@ -312,7 +312,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[4])) {
+            if (StringUtil.notEmpty(s[4])) {
                 final int num = 80;
                 String[] split = s[4].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(ARTIST_LIST_QQ_API, split[0], split[1], split[2], split[3], (page - 1) / 4 + 1))
@@ -351,7 +351,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[5])) {
+            if (StringUtil.notEmpty(s[5])) {
                 HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, s[5], page, limit)).execute();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
@@ -393,10 +393,10 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String[] sp = s[6].split(" ", -1);
                 HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
-                        .header(Header.REFERER, StringUtil.isNotEmpty(sp[1]) ? "http://www.kuwo.cn/singers" : "")
+                        .header(Header.REFERER, StringUtil.notEmpty(sp[1]) ? "http://www.kuwo.cn/singers" : "")
                         .execute();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
@@ -547,7 +547,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[7])) {
+            if (StringUtil.notEmpty(s[7])) {
                 // 分割时保留空串
                 String[] sp = s[7].split(" ", -1);
                 HttpResponse resp = HttpRequest.get(SdkCommon.buildQianUrl(
@@ -589,7 +589,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[8])) {
+            if (StringUtil.notEmpty(s[8])) {
                 String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[8].trim(), page, limit))
                         .execute()
                         .body();
@@ -625,7 +625,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[8])) {
+            if (StringUtil.notEmpty(s[8])) {
                 String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[8].trim(), page, limit))
                         .execute()
                         .body();

@@ -123,7 +123,7 @@ public class ArtistInfoReq {
         LinkedList<NetArtistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        if (!"0".equals(id) && StringUtil.isNotEmpty(id)) {
+        if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
                 String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_API, id))

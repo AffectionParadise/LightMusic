@@ -37,11 +37,11 @@ public class NetCommentInfo {
     private Runnable invokeLater;
 
     public boolean hasTime() {
-        return StringUtil.isNotEmpty(time);
+        return StringUtil.notEmpty(time);
     }
 
     public boolean hasProfileUrl() {
-        return StringUtil.isNotEmpty(profileUrl);
+        return StringUtil.notEmpty(profileUrl);
     }
 
     public boolean hasLikedCount() {

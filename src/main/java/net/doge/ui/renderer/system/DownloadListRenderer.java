@@ -37,7 +37,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.smallWidth));
+    private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.SMALL_WIDTH));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
@@ -89,13 +89,13 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.add(statusLabel);
 
         final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String type = StringUtil.textToHtml(TaskType.s[task.getType()]);
+        String type = StringUtil.textToHtml(TaskType.NAMES[task.getType()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(task.getName(), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
         String percentStr = StringUtil.textToHtml(String.format("%.2f %%", percent));
         String size = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
                 String.format("%s / %s", FileUtil.getUnitString(task.getFinished()), FileUtil.getUnitString(task.getTotal())), maxWidth));
-        String status = StringUtil.textToHtml(TaskStatus.s[task.getStatus()]);
+        String status = StringUtil.textToHtml(TaskStatus.NAMES[task.getStatus()]);
 
         nameLabel.setText(name);
         typeLabel.setText(type);

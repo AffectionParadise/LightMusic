@@ -117,7 +117,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String musicInfoBody = HttpRequest.get(String.format(FAST_NEW_SONG_API, s[0]))
                         .execute()
                         .body();
@@ -157,7 +157,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String musicInfoBody = HttpRequest.get(String.format(STYLE_NEW_SONG_API, s[1], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -199,7 +199,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, s[2], page, limit))
                         .execute()
                         .body();
@@ -242,7 +242,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_QQ_API, s[3]))
                         .execute()
                         .body();
@@ -396,7 +396,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[4])) {
+            if (StringUtil.notEmpty(s[4])) {
                 String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_HF_API, s[4], page))
                         .cookie(SdkCommon.HF_COOKIE)
                         .execute()
@@ -407,7 +407,7 @@ public class NewMusicReq {
                 String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
                 if (StringUtil.isEmpty(ts))
                     ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-                boolean hasTs = StringUtil.isNotEmpty(ts);
+                boolean hasTs = StringUtil.notEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();
                 for (int i = hasTs ? 0 : (page - 1) * limit, len = hasTs ? songs.size() : Math.min(songs.size(), page * limit); i < len; i++) {
@@ -439,7 +439,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[5])) {
+            if (StringUtil.notEmpty(s[5])) {
                 String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_GG_API, s[5], page))
                         .execute()
                         .body();
@@ -449,7 +449,7 @@ public class NewMusicReq {
                 String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
                 if (StringUtil.isEmpty(ts))
                     ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-                boolean hasTs = StringUtil.isNotEmpty(ts);
+                boolean hasTs = StringUtil.notEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();
                 for (int i = hasTs ? 0 : (page - 1) * limit, len = hasTs ? songs.size() : Math.min(songs.size(), page * limit); i < len; i++) {
@@ -477,7 +477,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String[] sp = s[6].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(LATEST_YC_MUSIC_FS_API, sp[0], sp[1], page))
                         .execute()
@@ -513,7 +513,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String[] sp = s[6].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
                         .execute()
@@ -549,7 +549,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String[] sp = s[6].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
                         .execute()
@@ -585,7 +585,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String[] sp = s[6].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(LATEST_FC_MUSIC_FS_API, sp[0], sp[1], page))
                         .execute()
@@ -621,7 +621,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String[] sp = s[6].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
                         .execute()
@@ -657,7 +657,7 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String[] sp = s[6].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
                         .execute()

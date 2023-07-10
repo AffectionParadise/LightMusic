@@ -9,10 +9,10 @@ import java.lang.reflect.Field;
  * @Date 2020/12/9
  */
 public class SimplePath {
-    private static final String separator = File.separator;
+    private static final String SEPARATOR = File.separator;
 
     private static String buildPath(String... parts) {
-        return String.join(separator, parts);
+        return String.join(SEPARATOR, parts);
     }
 
     // 基础路径
@@ -44,7 +44,7 @@ public class SimplePath {
             // 所有路径后面添加分隔符
             Field[] fields = SimplePath.class.getFields();
             for (Field field : fields) {
-                field.set(null, field.get(null) + separator);
+                field.set(null, field.get(null) + SEPARATOR);
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);

@@ -68,7 +68,7 @@ public class MvUrlReq {
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
                 JSONArray urls = mvJson.getJSONArray("urls");
                 String url = urls.getJSONObject(0).getString("url");
-                if (StringUtil.isNotEmpty(url)) return url;
+                if (StringUtil.notEmpty(url)) return url;
             }
 //            else if (isMlog) {
 //                String mvBody = HttpRequest.get(String.format(MLOG_URL_API, mvId))
@@ -90,7 +90,7 @@ public class MvUrlReq {
 //                        url = urlJson.getString("url");
 //                    }
 //                }
-//                if (StringUtil.isNotEmpty(url)) return url;
+//                if (StringUtil.notEmpty(url)) return url;
 //            }
             else {
                 String mvBody = HttpRequest.get(String.format(MV_URL_API, mvId))
@@ -99,7 +99,7 @@ public class MvUrlReq {
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
                 JSONObject data = mvJson.getJSONObject("data");
                 String url = data.getString("url");
-                if (StringUtil.isNotEmpty(url)) return url;
+                if (StringUtil.notEmpty(url)) return url;
             }
         }
 

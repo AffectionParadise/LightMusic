@@ -43,7 +43,6 @@ public abstract class AbstractMiniDialog extends JDialog {
         if (f.blurType != BlurConstants.OFF && f.player.loadedMusic()) {
             img = f.player.getMusicInfo().getAlbumImage();
             if (img == null) img = f.defaultAlbumImage;
-            if (img == f.defaultAlbumImage) img = ImageUtil.eraseTranslucency(img);
             if (f.blurType == BlurConstants.MC)
                 img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
         } else {

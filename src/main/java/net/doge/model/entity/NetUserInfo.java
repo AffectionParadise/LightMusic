@@ -98,7 +98,7 @@ public class NetUserInfo {
     }
 
     public boolean hasAvatarUrl() {
-        return StringUtil.isNotEmpty(avatarUrl);
+        return StringUtil.notEmpty(avatarUrl);
     }
 
     public boolean hasAvatar() {
@@ -106,7 +106,7 @@ public class NetUserInfo {
     }
 
     public boolean hasBgImgUrl() {
-        return StringUtil.isNotEmpty(bgImgUrl);
+        return StringUtil.notEmpty(bgImgUrl);
     }
 
     public boolean hasBgImg() {
@@ -114,23 +114,23 @@ public class NetUserInfo {
     }
 
     public boolean hasName() {
-        return StringUtil.isNotEmpty(name);
+        return StringUtil.notEmpty(name);
     }
 
     public boolean hasGender() {
-        return StringUtil.isNotEmpty(gender);
+        return StringUtil.notEmpty(gender);
     }
 
     public boolean hasBirthday() {
-        return StringUtil.isNotEmpty(birthday);
+        return StringUtil.notEmpty(birthday);
     }
 
     public boolean hasAccAge() {
-        return StringUtil.isNotEmpty(accAge);
+        return StringUtil.notEmpty(accAge);
     }
 
     public boolean hasArea() {
-        return StringUtil.isNotEmpty(area);
+        return StringUtil.notEmpty(area);
     }
 
     public boolean hasLevel() {
@@ -158,7 +158,7 @@ public class NetUserInfo {
     }
 
     public boolean hasSign() {
-        return StringUtil.isNotEmpty(sign);
+        return StringUtil.notEmpty(sign);
     }
 
     public void setAvatarThumb(BufferedImage avatarThumb) {
@@ -221,7 +221,7 @@ public class NetUserInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + " - " + toSimpleString();
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

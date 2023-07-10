@@ -151,7 +151,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                         results[1] = newPath;
                         // 更新时删除原来的图片
                         String imgPath = f.currUIStyle.getStyleImgPath();
-                        if (StringUtil.isNotEmpty(imgPath)) {
+                        if (StringUtil.notEmpty(imgPath)) {
                             File sf = new File(imgPath);
                             File df = new File(newPath);
                             if (f.currUIStyle == showedStyle && !sf.equals(df) && sf.getParentFile().equals(dir))

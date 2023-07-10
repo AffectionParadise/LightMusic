@@ -47,7 +47,7 @@ public class NetAlbumInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtil.isNotEmpty(coverImgUrl);
+        return StringUtil.notEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -55,19 +55,19 @@ public class NetAlbumInfo {
     }
 
     public boolean hasName() {
-        return StringUtil.isNotEmpty(name);
+        return StringUtil.notEmpty(name);
     }
 
     public boolean hasArtist() {
-        return StringUtil.isNotEmpty(artist);
+        return StringUtil.notEmpty(artist);
     }
 
     public boolean hasArtistId() {
-        return StringUtil.isNotEmpty(artistId);
+        return StringUtil.notEmpty(artistId);
     }
 
     public boolean hasPublishTime() {
-        return StringUtil.isNotEmpty(publishTime);
+        return StringUtil.notEmpty(publishTime);
     }
 
     public boolean hasSongNum() {
@@ -120,7 +120,7 @@ public class NetAlbumInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + " - " + toSimpleString();
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

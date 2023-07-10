@@ -58,11 +58,11 @@ public class NetMvInfo {
     }
 
     public boolean hasCreatorId() {
-        return StringUtil.isNotEmpty(creatorId);
+        return StringUtil.notEmpty(creatorId);
     }
 
     public boolean hasPubTime() {
-        return StringUtil.isNotEmpty(pubTime);
+        return StringUtil.notEmpty(pubTime);
     }
 
     public boolean hasPlayCount() {
@@ -92,7 +92,7 @@ public class NetMvInfo {
     }
 
     public void setFormat(String format) {
-        this.format = StringUtil.isNotEmpty(format) ? format : Format.MP4;
+        this.format = StringUtil.notEmpty(format) ? format : Format.MP4;
     }
 
     public boolean isFlv() {
@@ -139,7 +139,7 @@ public class NetMvInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + " - " + toSimpleString()
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString()
                 + (playCount == null ? "" : "\n\n" + StringUtil.formatNumber(playCount));
     }
 

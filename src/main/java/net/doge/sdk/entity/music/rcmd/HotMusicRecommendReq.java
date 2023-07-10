@@ -85,7 +85,7 @@ public class HotMusicRecommendReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String musicInfoBody = HttpRequest.get(String.format(STYLE_HOT_SONG_API, s[0], (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -415,7 +415,7 @@ public class HotMusicRecommendReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_HF_API, s[1], page))
                         .cookie(SdkCommon.HF_COOKIE)
                         .execute()
@@ -426,7 +426,7 @@ public class HotMusicRecommendReq {
                 String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
                 if (StringUtil.isEmpty(ts))
                     ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-                boolean hasTs = StringUtil.isNotEmpty(ts);
+                boolean hasTs = StringUtil.notEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();
                 for (int i = hasTs ? 0 : (page - 1) * limit, len = hasTs ? songs.size() : Math.min(songs.size(), page * limit); i < len; i++) {
@@ -458,7 +458,7 @@ public class HotMusicRecommendReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_GG_API, s[2], page))
                         .execute()
                         .body();
@@ -468,7 +468,7 @@ public class HotMusicRecommendReq {
                 String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
                 if (StringUtil.isEmpty(ts))
                     ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
-                boolean hasTs = StringUtil.isNotEmpty(ts);
+                boolean hasTs = StringUtil.notEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();
                 for (int i = hasTs ? 0 : (page - 1) * limit, len = hasTs ? songs.size() : Math.min(songs.size(), page * limit); i < len; i++) {

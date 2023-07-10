@@ -67,7 +67,7 @@ public class AlbumInfoReq {
         LinkedList<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        if (!"0".equals(id) && StringUtil.isNotEmpty(id)) {
+        if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
                 String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_API, id))

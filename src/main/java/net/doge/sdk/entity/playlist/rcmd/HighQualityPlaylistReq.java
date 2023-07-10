@@ -96,7 +96,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[0])) {
+            if (StringUtil.notEmpty(s[0])) {
                 String playlistInfoBody = HttpRequest.get(String.format(HIGH_QUALITY_PLAYLIST_API, s[0]))
                         .execute()
                         .body();
@@ -138,7 +138,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String playlistInfoBody = HttpRequest.get(String.format(HOT_PICKED_PLAYLIST_API, s[1], limit, (page - 1) * limit))
                         .execute()
                         .body();
@@ -180,7 +180,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[1])) {
+            if (StringUtil.notEmpty(s[1])) {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_PICKED_PLAYLIST_API, s[1], limit, (page - 1) * limit))
                         .execute()
                         .body();
@@ -224,7 +224,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_KG_API, s[2].trim(), page))
                         .execute()
                         .body();
@@ -262,7 +262,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String playlistInfoBody = HttpRequest.get(String.format(HOT_COLLECTED_CAT_PLAYLIST_KG_API, s[2].trim(), page))
                         .execute()
                         .body();
@@ -300,7 +300,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[2])) {
+            if (StringUtil.notEmpty(s[2])) {
                 String playlistInfoBody = HttpRequest.get(String.format(UP_CAT_PLAYLIST_KG_API, s[2].trim(), page))
                         .execute()
                         .body();
@@ -379,7 +379,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[3])) {
                 String cat = s[3];
                 boolean isAll = "10000000".equals(cat);
                 String url;
@@ -555,7 +555,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[4])) {
+            if (StringUtil.notEmpty(s[4])) {
                 String[] sp = s[4].split(" ");
                 // 根据 digest 信息请求不同的分类歌单接口
                 if ("43".equals(sp[1])) {
@@ -712,7 +712,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[5])) {
+            if (StringUtil.notEmpty(s[5])) {
                 String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, s[5], page))
                         .execute()
                         .body();
@@ -754,7 +754,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[6])) {
+            if (StringUtil.notEmpty(s[6])) {
                 String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(CAT_PLAYLIST_QI_API, page, limit, s[6].trim(), System.currentTimeMillis())))
                         .execute()
                         .body();
@@ -793,7 +793,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[7])) {
+            if (StringUtil.notEmpty(s[7])) {
                 String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_ME_API, s[7].trim(), page, limit))
                         .execute()
                         .body();
@@ -833,7 +833,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[8])) {
+            if (StringUtil.notEmpty(s[8])) {
                 String playlistInfoBody = HttpRequest.get(String.format(EXP_PLAYLIST_ME_API, s[8].trim(), page, limit))
                         .execute()
                         .body();
@@ -876,7 +876,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.isNotEmpty(s[9])) {
+            if (StringUtil.notEmpty(s[9])) {
                 String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, s[9].trim(), page))
                         .execute()
                         .body();

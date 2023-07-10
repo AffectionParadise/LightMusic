@@ -94,9 +94,9 @@ public class ConfirmDialog extends AbstractShadowDialog {
         fl.setHgap(20);
         buttonPanel.setLayout(fl);
 
-        if (StringUtil.isNotEmpty(yes.getPlainText())) buttonPanel.add(yes);
-        if (StringUtil.isNotEmpty(no.getPlainText())) buttonPanel.add(no);
-        if (StringUtil.isNotEmpty(cancel.getPlainText())) buttonPanel.add(cancel);
+        if (StringUtil.notEmpty(yes.getPlainText())) buttonPanel.add(yes);
+        if (StringUtil.notEmpty(no.getPlainText())) buttonPanel.add(no);
+        if (StringUtil.notEmpty(cancel.getPlainText())) buttonPanel.add(cancel);
         globalPanel.setLayout(new BorderLayout());
         globalPanel.add(messagePanel, BorderLayout.NORTH);
         globalPanel.add(checkPanel, BorderLayout.CENTER);

@@ -571,7 +571,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 if (output != null) {
                     JSONObject config = new JSONObject();
                     f.saveLocalMusicList(config);
-                    f.saveCollectedMusicList(config);
+                    f.saveCollectedItemList(config);
                     try {
                         JsonUtil.saveJson(config, output);
                         new TipDialog(f, "备份成功").showDialog();
@@ -660,11 +660,11 @@ public class SettingDialog extends AbstractTitledDialog {
         maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountLabel);
         maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountTextField);
 
-        for (String name : CloseWindowOptions.names) closeOptionComboBox.addItem(name);
+        for (String name : CloseWindowOptions.NAMES) closeOptionComboBox.addItem(name);
         closeOptionPanel.add(closeOptionLabel);
         closeOptionPanel.add(closeOptionComboBox);
 
-        for (String name : WindowSize.names) windowSizeComboBox.addItem(name);
+        for (String name : WindowSize.NAMES) windowSizeComboBox.addItem(name);
         windowSizePanel.add(windowSizeLabel);
         windowSizePanel.add(windowSizeComboBox);
 
@@ -676,7 +676,7 @@ public class SettingDialog extends AbstractTitledDialog {
         fobPanel.add(fobLabel);
         fobPanel.add(fobComboBox);
 
-//        for (String name : SpectrumConstants.names) specStyleComboBox.addItem(name);
+//        for (String name : SpectrumConstants.NAMES) specStyleComboBox.addItem(name);
 //        specStylePanel.add(specStyleLabel);
 //        specStylePanel.add(specStyleComboBox);
 
@@ -871,8 +871,8 @@ public class SettingDialog extends AbstractTitledDialog {
 
         f.currCloseWindowOption = closeOptionComboBox.getSelectedIndex();
         f.windowSize = windowSizeComboBox.getSelectedIndex();
-        f.windowWidth = WindowSize.dimensions[f.windowSize][0];
-        f.windowHeight = WindowSize.dimensions[f.windowSize][1];
+        f.windowWidth = WindowSize.DIMENSIONS[f.windowSize][0];
+        f.windowHeight = WindowSize.DIMENSIONS[f.windowSize][1];
         f.x = f.y = 0x3f3f3f3f;
         if (f.windowState != WindowState.MAXIMIZED) f.setSize(f.windowWidth, f.windowHeight);
 

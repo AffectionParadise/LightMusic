@@ -170,7 +170,7 @@ public class MusicInfoReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                 // 酷狗接口请求需要带上 cookie ！
                 String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
-                        .header(Header.COOKIE, SdkCommon.COOKIE)
+                        .cookie(SdkCommon.COOKIE)
                         .execute()
                         .body();
                 JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
@@ -317,6 +317,8 @@ public class MusicInfoReq {
                         .body();
                 Document doc = Jsoup.parse(songBody);
                 String dataStr = ReUtil.get("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+                // json 字段带引号
+                if (StringUtil.notEmpty(dataStr)) dataStr = dataStr.replaceAll(" (\\w+):", "'$1':");
                 JSONObject data = JSONObject.parseObject(dataStr);
 
                 Elements a = doc.select(".m-3.text-center h5 a");
@@ -347,7 +349,11 @@ public class MusicInfoReq {
                         .body();
                 Document doc = Jsoup.parse(songBody);
                 String dataStr = ReUtil.get("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
-                dataStr = dataStr.replaceFirst("base64_decode\\(\"(.*?)\"\\)", "\"\"");
+                if (StringUtil.notEmpty(dataStr)) {
+                    dataStr = dataStr.replaceFirst("base64_decode\\(\"(.*?)\"\\)", "\"\"");
+                    // json 字段带引号
+                    dataStr = dataStr.replaceAll(" (\\w+):", "'$1':");
+                }
                 JSONObject data = JSONObject.parseObject(dataStr);
 
                 Elements a = doc.select(".m-3.text-center h5 a");
@@ -541,57 +547,61 @@ public class MusicInfoReq {
                 netMusicInfo.setTrans(null);
                 return;
             }
-            // 酷我歌词返回的是数组，需要先处理成字符串！
-            // lrclist 可能是数组也可能为 null ！
-            JSONArray lrcArray = data.getJSONArray("lrclist");
-            if (lrcArray != null) {
-                StringBuffer sb = new StringBuffer();
-                boolean hasTrans = false;
-                for (int i = 0, len = lrcArray.size(); i < len; i++) {
-                    JSONObject sentenceJson = lrcArray.getJSONObject(i);
-                    JSONObject nextSentenceJson = lrcArray.getJSONObject(i + 1);
-                    // 歌词中带有翻译时，最后一句是翻译直接跳过
-                    if (hasTrans && nextSentenceJson == null) break;
-                    String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
-                    String nextTime = null;
-                    if (nextSentenceJson != null)
-                        nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
-                    // 歌词中带有翻译，有多个 time 相同的歌词时取不重复的第二个
-                    if (!time.equals(nextTime)) {
-                        sb.append(time);
-                        String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
-                        sb.append(lineLyric);
-                        sb.append("\n");
-                    } else hasTrans = true;
-                }
-                netMusicInfo.setLrc(sb.toString());
-            } else netMusicInfo.setLrc(null);
-
-            // 酷我歌词返回的是数组，需要先处理成字符串！
-            // lrclist 可能是数组也可能为 null ！
-            if (lrcArray != null) {
-                StringBuffer sb = new StringBuffer();
-                boolean hasTrans = false;
-                String lastTime = null;
-                for (int i = 0, len = lrcArray.size(); i < len; i++) {
-                    JSONObject sentenceJson = lrcArray.getJSONObject(i);
-                    JSONObject nextSentenceJson = lrcArray.getJSONObject(i + 1);
-                    String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
-                    String nextTime = null;
-                    if (nextSentenceJson != null)
-                        nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
-                    // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
-                    if (hasTrans && nextTime == null || time.equals(nextTime)) {
-                        sb.append(lastTime);
-                        String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
-                        sb.append(lineLyric);
-                        sb.append("\n");
-                        hasTrans = true;
+            try {
+                // 酷我歌词返回的是数组，需要先处理成字符串！
+                // lrclist 可能是数组也可能为 null ！
+                JSONArray lrcArray = data.getJSONArray("lrclist");
+                if (lrcArray != null) {
+                    StringBuffer sb = new StringBuffer();
+                    boolean hasTrans = false;
+                    for (int i = 0, len = lrcArray.size(); i < len; i++) {
+                        JSONObject sentenceJson = lrcArray.getJSONObject(i);
+                        JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
+                        // 歌词中带有翻译时，最后一句是翻译直接跳过
+                        if (hasTrans && nextSentenceJson == null) break;
+                        String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
+                        String nextTime = null;
+                        if (nextSentenceJson != null)
+                            nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
+                        // 歌词中带有翻译，有多个 time 相同的歌词时取不重复的第二个
+                        if (!time.equals(nextTime)) {
+                            sb.append(time);
+                            String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
+                            sb.append(lineLyric);
+                            sb.append("\n");
+                        } else hasTrans = true;
                     }
-                    lastTime = time;
-                }
-                netMusicInfo.setTrans(sb.toString());
-            } else netMusicInfo.setTrans(null);
+                    netMusicInfo.setLrc(sb.toString());
+                } else netMusicInfo.setLrc(null);
+
+                // 酷我歌词返回的是数组，需要先处理成字符串！
+                // lrclist 可能是数组也可能为 null ！
+                if (lrcArray != null) {
+                    StringBuffer sb = new StringBuffer();
+                    boolean hasTrans = false;
+                    String lastTime = null;
+                    for (int i = 0, len = lrcArray.size(); i < len; i++) {
+                        JSONObject sentenceJson = lrcArray.getJSONObject(i);
+                        JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
+                        String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
+                        String nextTime = null;
+                        if (nextSentenceJson != null)
+                            nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
+                        // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
+                        if (hasTrans && nextTime == null || time.equals(nextTime)) {
+                            sb.append(lastTime);
+                            String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
+                            sb.append(lineLyric);
+                            sb.append("\n");
+                            hasTrans = true;
+                        }
+                        lastTime = time;
+                    }
+                    netMusicInfo.setTrans(sb.toString());
+                } else netMusicInfo.setTrans(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         // 咪咕
@@ -610,7 +620,7 @@ public class MusicInfoReq {
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             String lrcUrl = urlJson.getJSONObject("data").getString("lyric");
-            netMusicInfo.setLrc(StringUtil.isNotEmpty(lrcUrl) ? HttpRequest.get(lrcUrl).execute().body() : "");
+            netMusicInfo.setLrc(StringUtil.notEmpty(lrcUrl) ? HttpRequest.get(lrcUrl).execute().body() : "");
             netMusicInfo.setTrans("");
             netMusicInfo.setRoma("");
         }

@@ -1,6 +1,5 @@
 package net.doge.sdk.util;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.system.NetMusicSource;
@@ -51,7 +50,8 @@ public class SdkUtil {
      * 根据链接获取图片
      */
     public static BufferedImage getImageFromUrl(String url) {
-        return ImageUtil.read(HttpRequest.get(url).setFollowRedirects(true).execute().bodyStream());
+        BufferedImage img = ImageUtil.readByUrl(url);
+        return img == null ? ImageConstants.DEFAULT_IMG : img;
     }
 
     /**
@@ -61,7 +61,9 @@ public class SdkUtil {
      * @return
      */
     public static BufferedImage extractProfile(String imgUrl) {
-        return ImageUtil.setRadius(ImageUtil.width(imgUrl, ImageConstants.profileWidth), 0.1);
+        BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.PROFILE_WIDTH);
+        if (img == null) img = ImageUtil.width(ImageConstants.DEFAULT_IMG, ImageConstants.PROFILE_WIDTH);
+        return ImageUtil.setRadius(img, 0.1);
     }
 
     /**
@@ -71,11 +73,11 @@ public class SdkUtil {
      * @return
      */
     public static BufferedImage extractCover(String imgUrl) {
-        BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.mediumWidth);
-        if (img == null) return null;
+        BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.MEDIUM_WIDTH);
+        if (img == null) img = ImageUtil.width(ImageConstants.DEFAULT_IMG, ImageConstants.MEDIUM_WIDTH);
         // 控制封面高度不超过阈值
-        if (img.getHeight() > ImageConstants.mvCoverMaxHeight)
-            img = ImageUtil.height(img, ImageConstants.mvCoverMaxHeight);
+        if (img.getHeight() > ImageConstants.MV_COVER_MAX_HEIGHT)
+            img = ImageUtil.height(img, ImageConstants.MV_COVER_MAX_HEIGHT);
         return ImageUtil.setRadius(img, 0.1);
     }
 
@@ -86,11 +88,11 @@ public class SdkUtil {
      * @return
      */
     public static BufferedImage extractMvCover(String imgUrl) {
-        BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.mvCoverWidth);
-        if (img == null) return null;
+        BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.MV_COVER_WIDTH);
+        if (img == null) img = ImageUtil.width(ImageConstants.DEFAULT_IMG, ImageConstants.MV_COVER_WIDTH);
         // 控制 MV 封面高度不超过阈值
-        if (img.getHeight() > ImageConstants.mvCoverMaxHeight)
-            img = ImageUtil.height(img, ImageConstants.mvCoverMaxHeight);
+        if (img.getHeight() > ImageConstants.MV_COVER_MAX_HEIGHT)
+            img = ImageUtil.height(img, ImageConstants.MV_COVER_MAX_HEIGHT);
         return ImageUtil.setRadius(img, 0.1);
     }
 

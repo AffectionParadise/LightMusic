@@ -166,7 +166,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return TaskStatus.s[status] + SEPARATOR + (isProcessing() ? String.format("%.2f %%", percent) + SEPARATOR : "")
-                + TaskType.s[type] + SEPARATOR + name;
+        return TaskStatus.NAMES[status] + SEPARATOR + (isProcessing() ? String.format("%.2f %%", percent) + SEPARATOR : "")
+                + TaskType.NAMES[type] + SEPARATOR + name;
     }
 }

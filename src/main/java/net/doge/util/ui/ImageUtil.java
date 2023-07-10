@@ -17,9 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,7 +56,35 @@ public class ImageUtil {
     public static BufferedImage read(String source) {
         try {
             return Thumbnails.of(source).scale(1).asBufferedImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 从 File 读取图片
+     *
+     * @param f 图片文件
+     * @return
+     */
+    public static BufferedImage read(File f) {
+        try {
+            return Thumbnails.of(f).scale(1).asBufferedImage();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 从流读取图片
+     *
+     * @param in 图片输入流
+     * @return
+     */
+    public static BufferedImage read(InputStream in) {
+        try {
+            return Thumbnails.of(in).scale(1).asBufferedImage();
+        } catch (Exception e) {
             return null;
         }
     }
@@ -86,51 +112,19 @@ public class ImageUtil {
 
             // Decode the image
             return reader.read(0, readParam);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
 
     /**
-     * 从 URL 读取图片
+     * 从 url 读取图片
      *
-     * @param url 图片 url
+     * @param imgUrl 图片 url
      * @return
      */
-    public static BufferedImage read(URL url) {
-        try {
-            return Thumbnails.of(getImgStream(url.toString())).scale(1).asBufferedImage();
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 从 File 读取图片
-     *
-     * @param f 图片文件
-     * @return
-     */
-    public static BufferedImage read(File f) {
-        try {
-            return Thumbnails.of(f).scale(1).asBufferedImage();
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 从流读取图片
-     *
-     * @param in 图片输入流
-     * @return
-     */
-    public static BufferedImage read(InputStream in) {
-        try {
-            return Thumbnails.of(in).scale(1).asBufferedImage();
-        } catch (IOException e) {
-            return null;
-        }
+    public static BufferedImage readByUrl(String imgUrl) {
+        return read(getImgStream(imgUrl));
     }
 
     /**
@@ -140,11 +134,15 @@ public class ImageUtil {
      * @return
      */
     public static InputStream getImgStream(String imgUrl) {
-        return HttpRequest.get(imgUrl)
-                .setFollowRedirects(true)
-                .setReadTimeout(20000)
-                .execute()
-                .bodyStream();
+        try {
+            return HttpRequest.get(imgUrl)
+                    .setFollowRedirects(true)
+                    .setReadTimeout(20000)
+                    .execute()
+                    .bodyStream();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -157,7 +155,7 @@ public class ImageUtil {
     public static void toFile(String imgUrl, String dest) {
         try {
             Thumbnails.of(getImgStream(imgUrl)).scale(1).toFile(dest);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -172,7 +170,7 @@ public class ImageUtil {
     public static void toFile(String imgUrl, File outputFile) {
         try {
             Thumbnails.of(getImgStream(imgUrl)).scale(1).toFile(outputFile);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -187,7 +185,7 @@ public class ImageUtil {
     public static void toFile(BufferedImage img, String dest) {
         try {
             Thumbnails.of(img).scale(1).toFile(dest);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -200,11 +198,10 @@ public class ImageUtil {
      * @return
      */
     public static void toFile(BufferedImage img, File outputFile) {
-        if (img == null) return;
         try {
             Thumbnails.of(img).scale(1).toFile(outputFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
         }
     }
 
@@ -436,31 +433,31 @@ public class ImageUtil {
     /**
      * BufferedImage 设置为圆角边框，保留透明度
      *
-     * @param image
+     * @param img
      * @param arc
      * @return
      */
-    public static BufferedImage setRadius(BufferedImage image, double arc) {
-        if (image == null) return null;
-        return setRadius(image, (int) (image.getWidth() * arc));
+    public static BufferedImage setRadius(BufferedImage img, double arc) {
+        if (img == null) return null;
+        return setRadius(img, (int) (img.getWidth() * arc));
     }
 
     /**
      * BufferedImage 设置为圆角边框，保留透明度
      *
-     * @param image
+     * @param img
      * @param radius
      * @return
      */
-    public static BufferedImage setRadius(BufferedImage image, int radius) {
-        if (image == null) return null;
-        int width = image.getWidth(), height = image.getHeight();
+    public static BufferedImage setRadius(BufferedImage img, int radius) {
+        if (img == null) return null;
+        int width = img.getWidth(), height = img.getHeight();
         BufferedImage outputImage = createTranslucentImage(width, height);
         Graphics2D g = outputImage.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.fillRoundRect(0, 0, width, height, radius, radius);
         g.setComposite(AlphaComposite.SrcIn);
-        g.drawImage(image, 0, 0, width, height, null);
+        g.drawImage(img, 0, 0, width, height, null);
         g.dispose();
         return outputImage;
     }
@@ -473,10 +470,9 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage quality(BufferedImage img, float q) {
-        if (img == null) return null;
         try {
             return Thumbnails.of(img).scale(1f).outputQuality(q).asBufferedImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -487,13 +483,11 @@ public class ImageUtil {
      * @param img
      * @param width
      * @return
-     * @throws IOException
      */
     public static BufferedImage width(BufferedImage img, int width) {
-        if (img == null) return null;
         try {
             return Thumbnails.of(img).width(width).asBufferedImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -504,7 +498,6 @@ public class ImageUtil {
      * @param imgUrl
      * @param width
      * @return
-     * @throws IOException
      */
     public static BufferedImage width(String imgUrl, int width) {
         try {
@@ -524,12 +517,11 @@ public class ImageUtil {
      * @param img
      * @param height
      * @return
-     * @throws IOException
      */
     public static BufferedImage height(BufferedImage img, int height) {
         try {
             return Thumbnails.of(img).height(height).asBufferedImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -541,12 +533,11 @@ public class ImageUtil {
      * @param width
      * @param height
      * @return
-     * @throws IOException
      */
     public static BufferedImage forceSize(BufferedImage img, int width, int height) {
         try {
             return Thumbnails.of(img).forceSize(width, height).asBufferedImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -556,7 +547,6 @@ public class ImageUtil {
      *
      * @param img
      * @return
-     * @throws IOException
      */
     public static BufferedImage cropCenter(BufferedImage img) {
         if (img == null) return null;
@@ -566,10 +556,10 @@ public class ImageUtil {
                 return Thumbnails.of(img).scale(1f).sourceRegion(0, (h - w) / 2, w, w).asBufferedImage();
             else if (w > h)
                 return Thumbnails.of(img).scale(1f).sourceRegion((w - h) / 2, 0, h, h).asBufferedImage();
-        } catch (IOException e) {
+            return img;
+        } catch (Exception e) {
             return null;
         }
-        return img;
     }
 
     /**
@@ -670,10 +660,9 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage scale(BufferedImage img, float scale) {
-        if (img == null) return null;
         try {
             return Thumbnails.of(img).scale(scale).asBufferedImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -686,10 +675,9 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage rotate(BufferedImage img, double angle) {
-        if (img == null) return null;
         try {
             return Thumbnails.of(img).scale(1f).rotate(angle).asBufferedImage();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }

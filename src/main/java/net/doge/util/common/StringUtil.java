@@ -70,7 +70,7 @@ public class StringUtil {
      * @param s
      * @return
      */
-    public static boolean isNotEmpty(String s) {
+    public static boolean notEmpty(String s) {
         return null != s && !s.isEmpty();
     }
 
@@ -150,16 +150,6 @@ public class StringUtil {
      */
     public static String toMD5(String s) {
         return DigestUtil.md5Hex(s);
-    }
-
-    /**
-     * byr 数组转为 32 位 MD5
-     *
-     * @param b
-     * @return
-     */
-    public static String toMD5(byte[] b) {
-        return DigestUtil.md5Hex(b);
     }
 
     /**

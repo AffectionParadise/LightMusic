@@ -28,8 +28,8 @@ public class TipDialog extends AbstractShadowDialog {
     private Timer showtimer;
     private Timer closeTimer;
 
-    public boolean isNotEmpty() {
-        return StringUtil.isNotEmpty(StringUtil.removeHTMLLabel(message));
+    public boolean notEmpty() {
+        return StringUtil.notEmpty(StringUtil.removeHTMLLabel(message));
     }
 
     public void setMessage(String message) {

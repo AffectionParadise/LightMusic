@@ -43,15 +43,15 @@ public class NetRankingInfo {
     }
 
     public boolean hasUpdateFre() {
-        return StringUtil.isNotEmpty(updateFre);
+        return StringUtil.notEmpty(updateFre);
     }
 
     public boolean hasUpdateTime() {
-        return StringUtil.isNotEmpty(updateTime);
+        return StringUtil.notEmpty(updateTime);
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtil.isNotEmpty(coverImgUrl);
+        return StringUtil.notEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -105,7 +105,7 @@ public class NetRankingInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + " - " + toSimpleString()
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString()
                 + (playCount == null ? "" : "\n\n" + StringUtil.formatNumber(playCount));
     }
 

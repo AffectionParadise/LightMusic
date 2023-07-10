@@ -1,9 +1,10 @@
 package net.doge.sdk.entity.mv.search;
 
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.system.NetMusicSource;
@@ -14,8 +15,6 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -281,7 +280,7 @@ public class MvSearchReq {
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_HK_API, encodedKeyword, page, limit))
-                    .header(Header.COOKIE, SdkCommon.HK_COOKIE)
+                    .cookie(SdkCommon.HK_COOKIE)
                     .execute();
             String mvInfoBody = resp.body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

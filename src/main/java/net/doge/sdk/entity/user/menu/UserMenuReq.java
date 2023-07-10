@@ -1226,7 +1226,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, uid, cursor))
-                        .header(Header.COOKIE, SdkCommon.HK_COOKIE)
+                        .cookie(SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
                 JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
@@ -1271,7 +1271,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String mvInfoBody = HttpRequest.get(String.format(USER_SMALL_VIDEO_HK_API, uid))
-                        .header(Header.COOKIE, SdkCommon.HK_COOKIE)
+                        .cookie(SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
                 JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
@@ -1527,28 +1527,28 @@ public class UserMenuReq {
                 case 1:
                     Elements pageElem = doc.select(".page_number em");
                     String pageText = pageElem.isEmpty() ? "" : pageElem.text();
-                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 42 + 1) * limit + 1 : limit;
+                    t = StringUtil.notEmpty(pageText) ? (Integer.parseInt(pageText) / 42 + 1) * limit + 1 : limit;
                     break;
                 case 2:
                     pageElem = doc.select(".page_list span");
                     pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 3:
                     pageElem = doc.select("a.page_t_next");
                     pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.attr("href"), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 4:
                 case 6:
                     pageElem = doc.select(".msg_page_list a");
                     pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 5:
                     pageElem = doc.select(".page span");
                     pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
             }
 
@@ -1866,28 +1866,28 @@ public class UserMenuReq {
                 case 1:
                     Elements pageElem = doc.select(".page_number em");
                     String pageText = pageElem.isEmpty() ? "" : pageElem.text();
-                    t = StringUtil.isNotEmpty(pageText) ? (Integer.parseInt(pageText) / 42 + 1) * limit + 1 : limit;
+                    t = StringUtil.notEmpty(pageText) ? (Integer.parseInt(pageText) / 42 + 1) * limit + 1 : limit;
                     break;
                 case 2:
                     pageElem = doc.select(".page_list span");
                     pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 3:
                     pageElem = doc.select("a.page_t_next");
                     pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.attr("href"), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 4:
                 case 6:
                     pageElem = doc.select(".msg_page_list a");
                     pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 5:
                     pageElem = doc.select(".page span");
                     pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
-                    t = StringUtil.isNotEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
+                    t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
             }
 

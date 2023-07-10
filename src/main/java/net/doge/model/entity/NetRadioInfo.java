@@ -68,7 +68,7 @@ public class NetRadioInfo {
     }
 
     public boolean hasCoverImgUrl() {
-        return StringUtil.isNotEmpty(coverImgUrl);
+        return StringUtil.notEmpty(coverImgUrl);
     }
 
     public boolean hasCoverImg() {
@@ -84,31 +84,31 @@ public class NetRadioInfo {
     }
 
     public boolean hasName() {
-        return StringUtil.isNotEmpty(name);
+        return StringUtil.notEmpty(name);
     }
 
     public boolean hasTag() {
-        return StringUtil.isNotEmpty(tag);
+        return StringUtil.notEmpty(tag);
     }
 
     public boolean hasDescription() {
-        return StringUtil.isNotEmpty(description);
+        return StringUtil.notEmpty(description);
     }
 
     public boolean hasDj() {
-        return StringUtil.isNotEmpty(dj);
+        return StringUtil.notEmpty(dj);
     }
 
     public boolean hasDjId() {
-        return StringUtil.isNotEmpty(djId);
+        return StringUtil.notEmpty(djId);
     }
 
     public boolean hasCategory() {
-        return StringUtil.isNotEmpty(category);
+        return StringUtil.notEmpty(category);
     }
 
 //    public boolean hasCreateTime() {
-//        return StringUtils.isNotEmpty(createTime);
+//        return StringUtils.notEmpty(createTime);
 //    }
 
     public void setCoverImgThumb(BufferedImage coverImgThumb) {
@@ -158,7 +158,7 @@ public class NetRadioInfo {
     }
 
     public String toString() {
-        return NetMusicSource.names[source] + " - " + toSimpleString();
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

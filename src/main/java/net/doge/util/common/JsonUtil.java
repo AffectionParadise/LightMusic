@@ -26,7 +26,8 @@ public class JsonUtil {
             while ((s = reader.readLine()) != null) {
                 sb.append(s);
             }
-            return JSONObject.parseObject(sb.toString());
+            JSONObject obj = JSONObject.parseObject(sb.toString());
+            return obj == null ? new JSONObject() : obj;
         } catch (Exception e) {
             return new JSONObject();
         }

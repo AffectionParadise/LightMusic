@@ -6,8 +6,8 @@ package net.doge.constant.system;
  * @Date 2020/12/15
  */
 public class MusicPane {
-    public final static int MUSIC = 1;
-    public final static int LYRIC = 2;
-    public final static int COMMENT = 3;
-    public final static int SHEET = 4;
+    public static final int MUSIC = 1;
+    public static final int LYRIC = 2;
+    public static final int COMMENT = 3;
+    public static final int SHEET = 4;
 }

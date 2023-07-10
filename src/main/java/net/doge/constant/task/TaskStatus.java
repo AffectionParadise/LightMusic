@@ -6,7 +6,7 @@ package net.doge.constant.task;
  * @Date 2020/12/7
  */
 public class TaskStatus {
-    public static final String s[] = new String[]{"下载中", "已完成", "已中断", "失败", "等待中"};
+    public static final String[] NAMES = new String[]{"下载中", "已完成", "已中断", "失败", "等待中"};
 
     public static final int RUNNING = 0;
     public static final int FINISHED = 1;
