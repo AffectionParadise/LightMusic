@@ -35,7 +35,6 @@ public class SliderUI extends BasicSliderUI {
 //    private Timer bufferTimer;
 
     private boolean drawThumb;
-    private boolean cursorOnSlider;
 
 //    private final BufferedImage hxhImg = ImageUtil.read(SimplePath.ICON_PATH + "hxh.png");
 
@@ -186,19 +185,18 @@ public class SliderUI extends BasicSliderUI {
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                slider.setValueIsAdjusting(false);
                 // 鼠标在滑动条之外且松开时不画把手
-                if (!cursorOnSlider) {
+                if (!trackRect.contains(e.getPoint())) {
                     drawThumb = false;
                     slider.repaint();
                 }
                 if (dialog.isShowing()) dialog.close();
                 if (lrcDialog != null && lrcDialog.notEmpty() && lrcDialog.isShowing()) lrcDialog.close();
-                slider.setValueIsAdjusting(false);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                cursorOnSlider = true;
                 // 鼠标进入时画出把手
                 drawThumb = true;
                 slider.repaint();
@@ -206,12 +204,10 @@ public class SliderUI extends BasicSliderUI {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                cursorOnSlider = false;
                 // 鼠标退出时且不在拖拽状态不画把手
-                if (!slider.getValueIsAdjusting()) {
-                    drawThumb = false;
-                    slider.repaint();
-                }
+                if (slider.getValueIsAdjusting()) return;
+                drawThumb = false;
+                slider.repaint();
             }
         };
     }

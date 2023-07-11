@@ -18,7 +18,7 @@ import java.util.Vector;
 public class LrcData {
     // 读取文件实例
     private BufferedReader bufferReader;
-//    // 歌曲题目
+    //    // 歌曲题目
 //    private String title = "";
 //    // 演唱者
 //    private String artist = "";
@@ -189,13 +189,12 @@ public class LrcData {
     public void clean() {
         for (int i = 0; i < statements.size(); i++) {
             Statement stmt = statements.get(i);
-            if (stmt.getLyric().isEmpty()) {
-                if (i > 0) {
-                    Statement ls = statements.get(i - 1);
-                    if (!ls.hasEndTime()) ls.setEndTime(stmt.getTime());
-                }
-                statements.remove(i--);
+            if (StringUtil.notEmpty(stmt.getLyric())) continue;
+            if (i > 0) {
+                Statement ls = statements.get(i - 1);
+                if (!ls.hasEndTime()) ls.setEndTime(stmt.getTime());
             }
+            statements.remove(i--);
         }
     }
 

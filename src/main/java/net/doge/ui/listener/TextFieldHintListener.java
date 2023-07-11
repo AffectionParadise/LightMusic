@@ -8,6 +8,7 @@ package net.doge.ui.listener;
 
 import lombok.Data;
 import net.doge.ui.component.textfield.CustomTextField;
+import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;
@@ -45,10 +46,9 @@ public class TextFieldHintListener implements FocusListener {
     public void focusLost(FocusEvent e) {
         // 失去焦点时，没有输入内容，显示提示内容
         String temp = tf.getText();
-        if (temp.isEmpty()) {
-            tf.setOccupied(false);
-            tf.setForeground(placeholderColor);
-            tf.setText(hintText);
-        }
+        if (StringUtil.notEmpty(temp)) return;
+        tf.setOccupied(false);
+        tf.setForeground(placeholderColor);
+        tf.setText(hintText);
     }
 }

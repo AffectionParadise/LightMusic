@@ -2,6 +2,7 @@ package net.doge.util.system;
 
 import info.monitorenter.cpdetector.io.*;
 import net.doge.model.lyric.Statement;
+import net.doge.util.common.StringUtil;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -353,7 +354,7 @@ public class FileUtil {
             }
             String strLine;
             while (null != (strLine = bufferReader.readLine())) {
-                if (strLine.trim().isEmpty()) continue;
+                if (StringUtil.isEmpty(strLine.trim())) continue;
 
                 Statement stmt = new Statement();
                 stmt.setLyric(strLine);

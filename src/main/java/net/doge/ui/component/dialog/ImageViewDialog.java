@@ -17,6 +17,7 @@ import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.listener.ButtonMouseListener;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -257,7 +258,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
             if (results == null) return;
             String text = pageTextField.getText();
             pageTextField.setText("");
-            if (text.isEmpty()) return;
+            if (StringUtil.isEmpty(text)) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > results.total) {
                 new TipDialog(f, ILLEGAL_PAGE_MSG).showDialog();

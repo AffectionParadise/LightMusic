@@ -1,8 +1,9 @@
 package net.doge.sdk.entity.user.info;
 
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
@@ -14,8 +15,6 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -138,7 +137,7 @@ public class UserInfoReq {
                 userInfo.setBirthday(data.getIntValue("birthMonth") <= 0 ? null : data.getString("birthMonth") + "-" + data.getString("birthDay"));
             if (!userInfo.hasArea()) {
                 String area = (data.containsKey("province") ? data.getString("province") : "") + (data.containsKey("city") ? " - " + data.getString("city") : "");
-                userInfo.setArea(area.isEmpty() ? "未知" : area);
+                userInfo.setArea(StringUtil.isEmpty(area) ? "未知" : area);
             }
             if (!userInfo.hasSign()) userInfo.setSign(data.getString("personalSignature"));
             if (!userInfo.hasFollow()) userInfo.setFollow(data.getIntValue("followingCount"));

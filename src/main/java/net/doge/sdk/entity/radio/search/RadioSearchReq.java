@@ -74,7 +74,7 @@ public class RadioSearchReq {
                     Long playCount = radioJson.getLong("playCount");
                     Integer trackCount = radioJson.getIntValue("programCount");
                     String category = radioJson.getString("category");
-                    if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
+                    if (StringUtil.notEmpty(category)) category += "、" + radioJson.getString("secondCategory");
                     String coverImgThumbUrl = radioJson.getString("picUrl");
 //                String createTime = TimeUtils.msToDate(radioJson.getLong("createTime"));
 

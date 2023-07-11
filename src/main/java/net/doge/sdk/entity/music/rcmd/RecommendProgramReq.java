@@ -309,7 +309,7 @@ public class RecommendProgramReq {
                         .body();
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = ReUtil.get("p=(\\d+)", doc.select("li.last a").attr("href"), 1);
-                t = ts.isEmpty() ? limit : Integer.parseInt(ts) * limit;
+                t = StringUtil.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
                 Elements boxes = doc.select("div.vw-subcatalog-contant.fc-leftcontent-block.floatleft a[target=_player]");
                 for (int i = 0, size = boxes.size(); i < size; i++) {
                     Element box = boxes.get(i);
@@ -340,7 +340,7 @@ public class RecommendProgramReq {
                         .body();
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = ReUtil.get("p=(\\d+)", doc.select("li.last a").attr("href"), 1);
-                t = ts.isEmpty() ? limit : Integer.parseInt(ts) * limit;
+                t = StringUtil.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
                 Elements boxes = doc.select("div.vw-subcatalog-contant.fc-leftcontent-block.floatleft a[target=_player]");
                 for (int i = 0, size = boxes.size(); i < size; i++) {
                     Element box = boxes.get(i);

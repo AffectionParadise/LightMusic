@@ -89,7 +89,7 @@ public class RadioInfoReq {
 //                Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
-                if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
+                if (StringUtil.notEmpty(category)) category += "、" + radioJson.getString("secondCategory");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
@@ -218,7 +218,7 @@ public class RadioInfoReq {
             if (!radioInfo.hasDj()) radioInfo.setDj(radioJson.getJSONObject("dj").getString("nickname"));
             if (!radioInfo.hasDjId()) radioInfo.setDjId(radioJson.getJSONObject("dj").getString("userId"));
             String category = radioJson.getString("category");
-            if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
+            if (StringUtil.notEmpty(category)) category += "、" + radioJson.getString("secondCategory");
             if (!radioInfo.hasCategory()) radioInfo.setCategory(category);
             if (!radioInfo.hasTag()) radioInfo.setTag(category);
             if (!radioInfo.hasTrackCount()) radioInfo.setTrackCount(radioJson.getIntValue("programCount"));

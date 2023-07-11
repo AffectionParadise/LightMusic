@@ -209,7 +209,7 @@ public class MusicUrlReq {
             JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
             String sip = data.getJSONArray("sip").getString(0);
             String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
-            return url.isEmpty() ? "" : sip + url;
+            return StringUtil.isEmpty(url) ? "" : sip + url;
         }
 
         // 酷我(解锁付费音乐)

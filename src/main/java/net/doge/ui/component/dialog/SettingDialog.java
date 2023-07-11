@@ -22,6 +22,8 @@ import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.componentui.combobox.ComboBoxUI;
 import net.doge.ui.componentui.list.ScrollBarUI;
+import net.doge.util.common.StringUtil;
+import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.system.KeyUtil;
@@ -819,32 +821,33 @@ public class SettingDialog extends AbstractTitledDialog {
         SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
         SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + File.separator;
         SimplePath.CACHE_PATH = cacheDir.getAbsolutePath() + File.separator;
+        SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + File.separator + "img" + File.separator;
         // 更改缓存图像路径并创建
-        new File(SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + File.separator + "img" + File.separator).mkdirs();
+        FileUtil.makeSureDir(SimplePath.IMG_CACHE_PATH);
 
         String text = maxCacheSizeTextField.getText();
-        if (text.isEmpty()) {
+        if (StringUtil.isEmpty(text)) {
             new TipDialog(f, "最大缓存大小无效").showDialog();
             return false;
         }
         f.maxCacheSize = Long.parseLong(text);
 
         text = maxHistoryCountTextField.getText();
-        if (text.isEmpty()) {
+        if (StringUtil.isEmpty(text)) {
             new TipDialog(f, "最大播放历史数量无效").showDialog();
             return false;
         }
         f.maxHistoryCount = Integer.parseInt(text);
 
         text = maxSearchHistoryCountTextField.getText();
-        if (text.isEmpty()) {
+        if (StringUtil.isEmpty(text)) {
             new TipDialog(f, "最大搜索历史数量无效").showDialog();
             return false;
         }
         f.maxSearchHistoryCount = Integer.parseInt(text);
 
         text = maxConcurrentTaskCountTextField.getText();
-        if (text.isEmpty()) {
+        if (StringUtil.isEmpty(text)) {
             new TipDialog(f, "同时下载的最大任务数无效").showDialog();
             return false;
         }

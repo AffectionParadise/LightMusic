@@ -3,6 +3,7 @@ package net.doge.ui;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
@@ -26,10 +27,7 @@ import net.doge.constant.lyric.JapaneseType;
 import net.doge.constant.lyric.LyricType;
 import net.doge.constant.lyric.NextLrc;
 import net.doge.constant.meta.SoftInfo;
-import net.doge.constant.player.EqualizerData;
-import net.doge.constant.player.Format;
-import net.doge.constant.player.PlayMode;
-import net.doge.constant.player.PlayerStatus;
+import net.doge.constant.player.*;
 import net.doge.constant.system.*;
 import net.doge.constant.tab.CollectionTabIndex;
 import net.doge.constant.tab.PersonalMusicTabIndex;
@@ -2693,9 +2691,8 @@ public class MainFrame extends JFrame {
         titleLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (player.isEmpty()) mottoPopupMenu.show(titleLabel, e.getX(), e.getY());
-                }
+                if (e.getButton() != MouseEvent.BUTTON3 || !player.isEmpty()) return;
+                mottoPopupMenu.show(titleLabel, e.getX(), e.getY());
             }
         });
 
@@ -3011,19 +3008,19 @@ public class MainFrame extends JFrame {
         BlurConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, 2);
         // 载入歌曲下载路径
         String musicDownPath = config.getString(ConfigConstants.MUSIC_DOWN_PATH);
-        if (!musicDownPath.isEmpty()) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
-        FileUtil.makeSureDir(musicDownPath);
+        if (StringUtil.notEmpty(musicDownPath)) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
+        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
         // 载入 MV 下载路径
         String mvDownPath = config.getString(ConfigConstants.MV_DOWN_PATH);
-        if (!mvDownPath.isEmpty()) SimplePath.DOWNLOAD_MV_PATH = mvDownPath;
-        FileUtil.makeSureDir(mvDownPath);
+        if (StringUtil.notEmpty(mvDownPath)) SimplePath.DOWNLOAD_MV_PATH = mvDownPath;
+        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MV_PATH);
         // 载入缓存路径
         String cachePath = config.getString(ConfigConstants.CACHE_PATH);
-        if (!cachePath.isEmpty()) {
+        if (StringUtil.notEmpty(cachePath)) {
             SimplePath.CACHE_PATH = cachePath;
-            SimplePath.IMG_CACHE_PATH = cachePath + (cachePath.endsWith("/") ? "" : "/") + "img/";
+            SimplePath.IMG_CACHE_PATH = cachePath + (cachePath.endsWith(File.separator) ? "" : File.separator) + "img" + File.separator;
         }
-        FileUtil.makeSureDir(cachePath);
+        FileUtil.makeSureDir(SimplePath.CACHE_PATH);
         FileUtil.makeSureDir(SimplePath.IMG_CACHE_PATH);
         // 载入最大缓存大小
         maxCacheSize = config.getLongValue(ConfigConstants.MAX_CACHE_SIZE, 1024);
@@ -3053,11 +3050,6 @@ public class MainFrame extends JFrame {
         // 载入频谱透明度
         specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.3f;
         spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
-        // 载入是否显示桌面歌词
-        desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
-        if (showDesktopLyric = config.getBooleanValue(ConfigConstants.SHOW_DESKTOP_LYRIC, true)) {
-            desktopLyricDialog.setVisible(true);
-        } else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
         // 载入是否锁定桌面歌词
         desktopLyricLocked = config.getBooleanValue(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
         // 载入桌面歌词坐标
@@ -3073,6 +3065,12 @@ public class MainFrame extends JFrame {
         // 载入桌面歌词字体大小
         desktopLyricFontSize = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, Fonts.HUGE_SIZE);
         desktopLyricDialog.updateFontSize(desktopLyricFontSize);
+        // 初始化桌面歌词
+        desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
+        // 载入是否显示桌面歌词
+        showDesktopLyric = config.getBooleanValue(ConfigConstants.SHOW_DESKTOP_LYRIC, true);
+        if (showDesktopLyric) desktopLyricDialog.setVisible(true);
+        else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
         // 载入播放模式
         switch (config.getIntValue(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
             case PlayMode.DISABLED:
@@ -3172,7 +3170,7 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = historyJsonArray.size(); i < len; i++) {
                 String s = historyJsonArray.getString(i);
                 // 判断是否为文件路径
-                if (!s.contains("\"")) {
+                if (!JSON.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.submit(() -> {
                         MusicUtil.fillAudioFileInfo(audioFile);
@@ -3267,7 +3265,7 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = playQueueJsonArray.size(); i < len; i++) {
                 String s = playQueueJsonArray.getString(i);
                 // 判断是否为文件路径
-                if (!s.contains("\"")) {
+                if (!JSON.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.submit(() -> {
                         MusicUtil.fillAudioFileInfo(audioFile);
@@ -3548,7 +3546,7 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = collectionJsonArray.size(); i < len; i++) {
                 String s = collectionJsonArray.getString(i);
                 // 判断是否为文件路径
-                if (!s.contains("\"")) {
+                if (!JSON.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.submit(() -> {
                         MusicUtil.fillAudioFileInfo(audioFile);
@@ -20091,6 +20089,7 @@ public class MainFrame extends JFrame {
         changePaneButton.setIconTextGap(10);
         changePaneButton.setPreferredSize(new Dimension(280, 66));
         changePaneButton.setText(NO_LRC_MSG);
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
             // 歌词页面切到歌单
             if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) {
@@ -20617,9 +20616,7 @@ public class MainFrame extends JFrame {
 
         // 卸载专辑图片
         albumImageLabel.setIcon(null);
-        changePaneButton.setIcon(ImageUtil.dye(
-                new ImageIcon(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)),
-                currUIStyle.getIconColor()));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)));
         changePaneButton.setText(NO_LRC_MSG);
         if (miniDialog != null) {
             miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
@@ -22585,16 +22582,16 @@ public class MainFrame extends JFrame {
         switchLrcTypeButton.setIcon(ImageUtil.dye((ImageIcon) switchLrcTypeButton.getIcon(), iconColor));
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
-        // 按钮图标颜色
-        if (!player.loadedMusic() || player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
-            changePaneButton.setIcon(ImageUtil.dye(new ImageIcon(
-                    ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), iconColor));
-        }
-        // 默认专辑图颜色
-        if (player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
-            BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), textColor));
-            albumImageLabel.setIcon(new ImageIcon(albumImage));
-        }
+//        // 按钮图标颜色
+//        if (!player.loadedMusic() || player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
+//            changePaneButton.setIcon(ImageUtil.dye(new ImageIcon(
+//                    ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), iconColor));
+//        }
+//        // 默认专辑图颜色
+//        if (player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
+//            BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), iconColor));
+//            albumImageLabel.setIcon(new ImageIcon(albumImage));
+//        }
         // 其他标签颜色
         songNameLabel.setForeground(textColor);
         artistLabel.setForeground(textColor);

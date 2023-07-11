@@ -304,11 +304,14 @@ public class CommentReq {
                     JSONObject cj2 = null;
                     if (middleCommentContent != null) {
                         cj2 = middleCommentContent.getJSONObject(0);
-                        content = cj2.getString("subcommentcontent").replace("\\n", "\n");
-                    } else
-                        content = cj.getString("rootcommentcontent").replace("\\n", "\n");
+                        String sc = cj2.getString("subcommentcontent");
+                        content = StringUtil.notEmpty(sc) ? sc.replace("\\n", "\n") : "";
+                    } else {
+                        String rc = cj.getString("rootcommentcontent");
+                        content = StringUtil.notEmpty(rc) ? rc.replace("\\n", "\n") : "";
+                    }
                     // 评论可能已被删除
-                    if (content.isEmpty()) content = "该评论已被删除";
+                    if (StringUtil.isEmpty(content)) content = "该评论已被删除";
                     String time = TimeUtil.msToPhrase(cj.getLong("time") * 1000);
                     Integer likedCount = cj.getIntValue("praisenum");
 
@@ -331,7 +334,8 @@ public class CommentReq {
                     if (middleCommentContent != null) {
                         String uId = cj2.getString("encrypt_replyeduin");
                         String uname = cj.getString("rootcommentnick");
-                        String cnt = cj.getString("rootcommentcontent").replace("\\n", "\n");
+                        String rc = cj.getString("rootcommentcontent");
+                        String cnt = StringUtil.notEmpty(rc) ? rc.replace("\\n", "\n") : "";
 
                         NetCommentInfo ci = new NetCommentInfo();
                         ci.setSource(NetMusicSource.QQ);
