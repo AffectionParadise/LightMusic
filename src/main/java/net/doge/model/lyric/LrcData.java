@@ -75,10 +75,10 @@ public class LrcData {
     public void readData() throws IOException {
         statements.clear();
         String strLine;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         // 循环读入所有行
         while (null != (strLine = bufferReader.readLine())) {
-            sb.append(strLine + "\n");
+            sb.append(strLine).append("\n");
             // 把 tab 先移除，去掉两边空格(包含特殊空格)
             strLine = StringUtil.trimStringWith(strLine.replace("\t", "").trim(), ' ', '　');
             // 判断该行是否为有效行

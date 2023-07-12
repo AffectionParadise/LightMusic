@@ -112,7 +112,7 @@ public class SdkUtil {
      * 连接 Json 数组中的所有字符串
      */
     public static String joinStrings(JSONArray array, int limit) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0, len = array.size(); i < len; i++) {
             sb.append(array.getString(i));
             if (i != len - 1) sb.append("、");

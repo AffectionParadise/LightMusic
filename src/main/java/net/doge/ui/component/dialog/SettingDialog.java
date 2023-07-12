@@ -570,16 +570,15 @@ public class SettingDialog extends AbstractTitledDialog {
             Platform.runLater(() -> {
                 fileChooser.setTitle("保存文件");
                 File output = fileChooser.showSaveDialog(null);
-                if (output != null) {
-                    JSONObject config = new JSONObject();
-                    f.saveLocalMusicList(config);
-                    f.saveCollectedItemList(config);
-                    try {
-                        JsonUtil.saveJson(config, output);
-                        new TipDialog(f, "备份成功").showDialog();
-                    } catch (IOException ex) {
-                        new TipDialog(f, "备份失败").showDialog();
-                    }
+                if (output == null) return;
+                JSONObject config = new JSONObject();
+                f.saveLocalMusicList(config);
+                f.saveCollectedItemList(config);
+                try {
+                    JsonUtil.saveJson(config, output);
+                    new TipDialog(f, "备份成功").showDialog();
+                } catch (IOException ex) {
+                    new TipDialog(f, "备份失败").showDialog();
                 }
             });
         });
@@ -588,12 +587,11 @@ public class SettingDialog extends AbstractTitledDialog {
             Platform.runLater(() -> {
                 fileChooser.setTitle("选择文件");
                 File input = fileChooser.showOpenDialog(null);
-                if (input != null) {
-                    JSONObject config = JsonUtil.readJson(input);
-                    f.loadLocalMusicList(config);
-                    f.loadCollectedMusicList(config);
-                    new TipDialog(f, "恢复成功").showDialog();
-                }
+                if (input == null) return;
+                JSONObject config = JsonUtil.readJson(input);
+                f.loadLocalMusicList(config);
+                f.loadCollectedMusicList(config);
+                new TipDialog(f, "恢复成功").showDialog();
             });
         });
 

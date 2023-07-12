@@ -713,7 +713,7 @@ public class PlaylistInfoReq {
 
                 String songId = songJson.getString("rid");
                 String name = songJson.getString("name");
-                String artists = songJson.getString("artist");
+                String artist = songJson.getString("artist").replace("&", "、");
                 String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
@@ -724,7 +724,7 @@ public class PlaylistInfoReq {
                 netMusicInfo.setSource(NetMusicSource.KW);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
                 netMusicInfo.setArtistId(artistId);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(albumId);
@@ -824,14 +824,14 @@ public class PlaylistInfoReq {
 
                 String songId = ReUtil.get("http://5sing.kugou.com/(.*?).html", na.attr("href"), 1).replaceFirst("/", "_");
                 String name = na.text();
-                String artists = aa.text();
+                String artist = aa.text();
                 String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", aa.attr("href"), 1);
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
                 netMusicInfo.setSource(NetMusicSource.FS);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
                 netMusicInfo.setArtistId(artistId);
 
                 netMusicInfos.add(netMusicInfo);

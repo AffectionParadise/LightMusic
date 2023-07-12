@@ -141,7 +141,7 @@ public class MusicSearchReq {
 //                        JSONArray lyrics = songJson.getJSONArray("lyrics");
 //                        String lrcMatch = null;
 //                        if (lyrics != null) {
-//                            StringBuffer sb = new StringBuffer();
+//                            StringBuilder sb = new StringBuilder();
 //                            for (int j = 0, size = lyrics.size(); j < size; j++) {
 //                                sb.append(lyrics.get(j));
 //                                if (j != size - 1) sb.append(" / ");
@@ -401,7 +401,7 @@ public class MusicSearchReq {
 
                             String songId = songJson.getString("rid");
                             String songName = StringUtil.removeHTMLLabel(songJson.getString("name"));
-                            String artist = StringUtil.removeHTMLLabel(songJson.getString("artist"));
+                            String artist = StringUtil.removeHTMLLabel(songJson.getString("artist")).replace("&", "、");
                             String artistId = songJson.getString("artistid");
                             String albumName = StringUtil.removeHTMLLabel(songJson.getString("album"));
                             String albumId = songJson.getString("albumid");

@@ -296,7 +296,7 @@ public class NewMusicReq {
 
                     String id = songJson.getString("rid");
                     String name = songJson.getString("name");
-                    String artist = songJson.getString("artist");
+                    String artist = songJson.getString("artist").replace("&", "、");
                     String artistId = songJson.getString("artistid");
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumid");

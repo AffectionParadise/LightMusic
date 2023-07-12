@@ -115,7 +115,7 @@ public class StringUtil {
      * @return
      */
     public static String insert(String s, int index, String content) {
-        StringBuffer sb = new StringBuffer(s);
+        StringBuilder sb = new StringBuilder(s);
         sb.insert(index, content);
         return sb.toString();
     }
@@ -189,7 +189,7 @@ public class StringUtil {
      * @return
      */
     public static String toRomaji(String s) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0, len = s.length(); i < len; i++) {
             char ch = s.charAt(i);
             String s1 = mojiConverter.convertKanaToRomaji(ch + "");
@@ -247,7 +247,7 @@ public class StringUtil {
      * @return
      */
     public static String genStar(int n) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 10; i++) {
             if (i < n) sb.append('★');
             else sb.append('☆');
@@ -263,7 +263,7 @@ public class StringUtil {
      */
     public static String getPrettyText(Element parentElement) {
         if (parentElement == null) return "";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Node child : parentElement.childNodes()) {
             if (child instanceof TextNode) {
                 sb.append(((TextNode) child).text());
@@ -308,7 +308,7 @@ public class StringUtil {
      */
     public static String textToHtml(String text, boolean withSpace) {
         if (text == null || text.startsWith("<html>") || text.trim().equals("")) return text;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(String.format("<html><div style=\"font-family:%s\">", Fonts.NORMAL.getFontName(Locale.ENGLISH)));
         for (int i = 0, len = text.length(); i < len; i++) {
             int codePoint = text.codePointAt(i);
@@ -360,7 +360,7 @@ public class StringUtil {
      */
     public static String wrapLineByWidth(String text, int thresholdWidth) {
         if (thresholdWidth < 0) return text;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int sw = 0;
         JLabel label = new JLabel();
         for (int i = 0, len = text.length(); i < len; i++) {

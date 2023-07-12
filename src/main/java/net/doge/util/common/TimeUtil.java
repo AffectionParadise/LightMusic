@@ -204,12 +204,12 @@ public class TimeUtil {
      * @return
      */
     public static String format(double timeSeconds) {
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         int s = (int) timeSeconds;
         int minutes = s / 60, seconds = s % 60;
-        if (minutes < 10) res.append("0" + minutes + ":");
-        else res.append(minutes + ":");
-        if (seconds < 10) res.append("0" + seconds);
+        if (minutes < 10) res.append("0").append(minutes).append(":");
+        else res.append(minutes).append(":");
+        if (seconds < 10) res.append("0").append(seconds);
         else res.append(seconds);
         return res.toString();
     }
@@ -263,15 +263,15 @@ public class TimeUtil {
      */
     public static String formatToLrcTime(Double timeSeconds) {
         if (timeSeconds == null) return null;
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         int s = timeSeconds.intValue();
         String s1 = String.valueOf(timeSeconds);
         int minutes = s / 60, seconds = s % 60;
         String milliseconds = s1.substring(s1.lastIndexOf('.'));
         res.append("[");
-        if (minutes < 10) res.append("0" + minutes + ":");
-        else res.append(minutes + ":");
-        if (seconds < 10) res.append("0" + seconds);
+        if (minutes < 10) res.append("0").append(minutes).append(":");
+        else res.append(minutes).append(":");
+        if (seconds < 10) res.append("0").append(seconds);
         else res.append(seconds);
         res.append(milliseconds.length() == 2 ? milliseconds + "0" : milliseconds);
         res.append("]");

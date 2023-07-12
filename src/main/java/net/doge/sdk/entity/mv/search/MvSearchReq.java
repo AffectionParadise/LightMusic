@@ -248,7 +248,7 @@ public class MvSearchReq {
 
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = mvJson.getString("artist");
+                    String artistName = mvJson.getString("artist").replace("&", "、");
                     String creatorId = mvJson.getString("artistid");
                     Long playCount = mvJson.getLong("mvPlayCnt");
                     Double duration = mvJson.getDouble("duration");

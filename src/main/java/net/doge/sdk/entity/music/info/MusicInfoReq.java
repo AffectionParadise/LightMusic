@@ -238,7 +238,7 @@ public class MusicInfoReq {
                 JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
 
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
-                if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("artist"));
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("artist").replace("&", "、"));
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(data.getString("artistid"));
                 if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album"));
                 if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("albumid"));
@@ -552,7 +552,7 @@ public class MusicInfoReq {
                 // lrclist 可能是数组也可能为 null ！
                 JSONArray lrcArray = data.getJSONArray("lrclist");
                 if (lrcArray != null) {
-                    StringBuffer sb = new StringBuffer();
+                    StringBuilder sb = new StringBuilder();
                     boolean hasTrans = false;
                     for (int i = 0, len = lrcArray.size(); i < len; i++) {
                         JSONObject sentenceJson = lrcArray.getJSONObject(i);
@@ -577,7 +577,7 @@ public class MusicInfoReq {
                 // 酷我歌词返回的是数组，需要先处理成字符串！
                 // lrclist 可能是数组也可能为 null ！
                 if (lrcArray != null) {
-                    StringBuffer sb = new StringBuffer();
+                    StringBuilder sb = new StringBuilder();
                     boolean hasTrans = false;
                     String lastTime = null;
                     for (int i = 0, len = lrcArray.size(); i < len; i++) {
@@ -633,7 +633,7 @@ public class MusicInfoReq {
                     .body();
             Document doc = Jsoup.parse(songBody);
             Elements ps = doc.select("p:not(.text-center)");
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (Element p : ps) {
                 String lrc = p.text().trim();
                 if (StringUtil.isEmpty(lrc)) continue;
@@ -652,7 +652,7 @@ public class MusicInfoReq {
                     .body();
             Document doc = Jsoup.parse(songBody);
             Elements ps = doc.select(".message.break-all p");
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (Element p : ps) {
                 String lrc = p.text().trim();
                 if (StringUtil.isEmpty(lrc)) continue;
@@ -686,7 +686,7 @@ public class MusicInfoReq {
             // 限制弹幕数量，避免引发性能问题
             final int dmLimit = 300;
             List<Element> ds = elements.subList(0, Math.min(elements.size(), dmLimit));
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (Element d : ds) {
                 Double time = Double.parseDouble(d.attr("p").split(",", 2)[0]);
                 sb.append(TimeUtil.formatToLrcTime(time));

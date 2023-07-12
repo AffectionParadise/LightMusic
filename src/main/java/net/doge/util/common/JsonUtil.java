@@ -21,11 +21,9 @@ public class JsonUtil {
      */
     public static JSONObject readJson(String source) {
         try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             String s;
-            while ((s = reader.readLine()) != null) {
-                sb.append(s);
-            }
+            while ((s = reader.readLine()) != null) sb.append(s);
             JSONObject obj = JSONObject.parseObject(sb.toString());
             return obj == null ? new JSONObject() : obj;
         } catch (Exception e) {

@@ -42,7 +42,7 @@ public class AlbumInfoReq {
     private final String ALBUM_DETAIL_DB_API = "https://music.douban.com/subject/%s/";
     // 专辑信息 API (堆糖)
     private final String ALBUM_DETAIL_DT_API = "https://www.duitang.com/napi/album/detail/?album_id=%s";
-    
+
     // 获取专辑照片 API (堆糖)
     private final String GET_ALBUMS_IMG_DT_API
             = "https://www.duitang.com/napi/vienna/blog/by_album/?album_id=%s&after_id=%s&limit=%s&_=%s";
@@ -481,7 +481,7 @@ public class AlbumInfoReq {
                 String songId = songJson.getString("album_audio_id");
                 String[] s = songJson.getString("filename").split(" - ");
                 String name = s[1];
-                String artists = s[0];
+                String artist = s[0];
 //                String albumName = songJson.getString("remark");
                 String alId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
@@ -492,7 +492,7 @@ public class AlbumInfoReq {
                 netMusicInfo.setHash(hash);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
 //                netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(alId);
                 netMusicInfo.setDuration(duration);
@@ -516,7 +516,7 @@ public class AlbumInfoReq {
 
                 String songId = songJson.getString("mid");
                 String name = songJson.getString("name");
-                String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
+                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
                 String artistId = songJson.getJSONArray("singer").getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String alId = songJson.getJSONObject("album").getString("mid");
@@ -527,7 +527,7 @@ public class AlbumInfoReq {
                 netMusicInfo.setSource(NetMusicSource.QQ);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
                 netMusicInfo.setArtistId(artistId);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(alId);
@@ -552,7 +552,7 @@ public class AlbumInfoReq {
 
                 String songId = songJson.getString("rid");
                 String name = songJson.getString("name");
-                String artists = songJson.getString("artist");
+                String artist = songJson.getString("artist").replace("&", "、");
                 String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String alId = songJson.getString("albumid");
@@ -563,7 +563,7 @@ public class AlbumInfoReq {
                 netMusicInfo.setSource(NetMusicSource.KW);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
                 netMusicInfo.setArtistId(artistId);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(alId);
@@ -646,7 +646,7 @@ public class AlbumInfoReq {
 
         return new CommonResult<>(netMusicInfos, total);
     }
-    
+
     /**
      * 获取专辑照片链接
      */

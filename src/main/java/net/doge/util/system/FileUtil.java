@@ -284,7 +284,7 @@ public class FileUtil {
     public static String readAsStr(File f) {
         if (f == null) return null;
         try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             String s;
             while ((s = reader.readLine()) != null) {
                 sb.append(s);

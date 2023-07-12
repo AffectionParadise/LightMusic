@@ -2,6 +2,8 @@ package net.doge.sdk.entity.music.info;
 
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.player.Format;
@@ -219,12 +221,13 @@ public class MusicUrlReq {
 //                    .execute()
 //                    .body();
 //            return urlBody;
-            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
-                    .execute()
-                    .body();
-            JSONObject urlJson = JSONObject.parseObject(urlBody);
-            JSONObject data = urlJson.getJSONObject("data");
-            return data.getString("url");
+            HttpResponse resp = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId)).execute();
+            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                String urlBody = resp.body();
+                JSONObject urlJson = JSONObject.parseObject(urlBody);
+                JSONObject data = urlJson.getJSONObject("data");
+                return data.getString("url");
+            }
         }
 
         // 咪咕

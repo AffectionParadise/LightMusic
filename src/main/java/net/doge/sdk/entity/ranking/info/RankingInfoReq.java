@@ -218,7 +218,7 @@ public class RankingInfoReq {
 
                 String songId = songJson.getString("rid");
                 String name = songJson.getString("name");
-                String artist = songJson.getString("artist");
+                String artist = songJson.getString("artist").replace("&", "、");
                 String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
@@ -256,7 +256,7 @@ public class RankingInfoReq {
                 // 过滤掉不是歌曲的 objectInfo
                 if (StringUtil.isEmpty(songId)) continue;
                 String name = songJson.getString("songName");
-                String artists = songJson.getString("singer");
+                String artist = songJson.getString("singer");
                 String artistId = songJson.getString("singerId");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumId");
@@ -265,7 +265,7 @@ public class RankingInfoReq {
                 musicInfo.setSource(NetMusicSource.MG);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
-                musicInfo.setArtist(artists);
+                musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);

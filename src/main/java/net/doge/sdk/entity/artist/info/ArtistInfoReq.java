@@ -577,7 +577,7 @@ public class ArtistInfoReq {
                 String songId = songJson.getString("album_audio_id");
                 String[] s = songJson.getString("filename").split(" - ");
                 String name = s[1];
-                String artists = s[0];
+                String artist = s[0];
                 String albumName = songJson.getString("album_name");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
@@ -589,7 +589,7 @@ public class ArtistInfoReq {
                 netMusicInfo.setHash(hash);
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(albumId);
                 netMusicInfo.setDuration(duration);
@@ -651,7 +651,7 @@ public class ArtistInfoReq {
                 String songId = songJson.getString("rid");
                 // 酷我歌名中可能含有 HTML 标签，先去除
                 String name = StringUtil.removeHTMLLabel(songJson.getString("name"));
-                String artists = songJson.getString("artist");
+                String artist = songJson.getString("artist").replace("&", "、");
                 String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumid");
@@ -663,7 +663,7 @@ public class ArtistInfoReq {
                 netMusicInfo.setId(songId);
                 netMusicInfo.setName(name);
                 netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setArtist(artists);
+                netMusicInfo.setArtist(artist);
                 netMusicInfo.setAlbumName(albumName);
                 netMusicInfo.setAlbumId(albumId);
                 netMusicInfo.setDuration(duration);
@@ -1187,7 +1187,7 @@ public class ArtistInfoReq {
 
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = mvJson.getString("artist");
+                    String artistName = mvJson.getString("artist").replace("&", "、");
                     String creatorId = mvJson.getString("artistid");
                     String coverImgUrl = mvJson.getString("pic");
                     Long playCount = mvJson.getLong("mvPlayCnt");

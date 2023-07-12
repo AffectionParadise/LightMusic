@@ -21,7 +21,7 @@ public class MvInfoReq {
     private final String MV_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/mv?id=%s";
     // MV 信息 API (酷我)
     private final String MV_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
-    
+
     /**
      * 根据 MV id 预加载 MV 信息
      */
@@ -87,7 +87,7 @@ public class MvInfoReq {
             JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
             String[] s = data.getString("filename").split(" - ");
             String name = s[1];
-            String artists = s[0];
+            String artist = s[0];
             JSONArray artistArray = mvJson.getJSONArray("authors");
             String creatorId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("singerid") : "";
             Long playCount = data.getLong("history_heat");
@@ -96,7 +96,7 @@ public class MvInfoReq {
             String coverImgUrl = data.getString("imgurl").replace("/{size}", "");
 
             netMvInfo.setName(name);
-            netMvInfo.setArtist(artists);
+            netMvInfo.setArtist(artist);
             netMvInfo.setCreatorId(creatorId);
             netMvInfo.setPlayCount(playCount);
             netMvInfo.setDuration(duration);
@@ -147,7 +147,7 @@ public class MvInfoReq {
             JSONObject data = mvJson.getJSONObject("data");
 
             String name = data.getString("name");
-            String artist = data.getString("artist");
+            String artist = data.getString("artist").replace("&", "、");
             String creatorId = data.getString("artistid");
             Long playCount = data.getLong("mvPlayCnt");
             Double duration = data.getDouble("duration");
