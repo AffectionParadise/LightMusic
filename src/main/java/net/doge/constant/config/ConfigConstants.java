@@ -27,6 +27,8 @@ public class ConfigConstants {
     public static final String PERSONAL_TAB_INDEX = "personalTabIndex";
     // 收藏选项卡
     public static final String COLLECTION_TAB_INDEX = "collectionTabIndex";
+    // 推荐选项卡
+    public static final String RECOMMEND_TAB_INDEX = "recommendTabIndex";
     // 是否自动更新
     public static final String AUTO_UPDATE = "autoUpdate";
     // 关闭窗口操作

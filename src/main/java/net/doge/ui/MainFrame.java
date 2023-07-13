@@ -781,9 +781,10 @@ public class MainFrame extends JFrame {
     private int netMusicInRecommendMaxPage;
     private int netMusicInCollectionMaxPage;
     // 当前个人音乐展示的标签
-    private int currPersonalMusicTab = PersonalMusicTabIndex.LOCAL_MUSIC;
+    private int currPersonalMusicTab = -1;
     // 当前推荐展示的标签
     private int currRecommendTab = -1;
+    private int preRecommendTab;
     // 是否静音
     public boolean isMute;
     // 是否高斯模糊
@@ -1856,7 +1857,7 @@ public class MainFrame extends JFrame {
     // 飙升歌曲按钮
     private TabButton hotMusicButton = new TabButton(hotMusicIcon);
     // 推荐单曲按钮
-    private TabButton netMusicRecommendButton = new TabButton(musicRecommendIcon);
+    private TabButton newMusicButton = new TabButton(musicRecommendIcon);
     // 新碟上架按钮
     private TabButton newAlbumRecommendButton = new TabButton(newAlbumRecommendIcon);
     // 歌手排行按钮
@@ -3296,15 +3297,17 @@ public class MainFrame extends JFrame {
         currSong = config.getIntValue(ConfigConstants.CURR_SONG, -1);
         if (currSong >= playQueueModel.size()) currSong = -1;
 
+        // 载入个人音乐选项卡
+        int personalMusicTab = config.getIntValue(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
+        if (personalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) localMusicButton.doClick();
+        else if (personalMusicTab == PersonalMusicTabIndex.HISTORY) historyButton.doClick();
+        else if (personalMusicTab == PersonalMusicTabIndex.COLLECTION) collectionButton.doClick();
+        // 载入推荐选项卡
+        preRecommendTab = config.getIntValue(ConfigConstants.RECOMMEND_TAB_INDEX, RecommendTabIndex.PLAYLIST_RECOMMEND);
         // 载入选项卡
         tabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
         // 载入收藏选项卡
         collectionTabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
-        // 载入个人音乐选项卡
-        currPersonalMusicTab = config.getIntValue(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
-        if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) localMusicButton.doClick();
-        else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) historyButton.doClick();
-        else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) collectionButton.doClick();
 
         // 载入在线音乐搜索历史关键词
         JSONArray historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
@@ -3764,6 +3767,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.PERSONAL_TAB_INDEX, currPersonalMusicTab);
         // 存入收藏选项卡
         config.put(ConfigConstants.COLLECTION_TAB_INDEX, collectionTabbedPane.getSelectedIndex());
+        // 存入推荐选项卡
+        config.put(ConfigConstants.RECOMMEND_TAB_INDEX, currRecommendTab == -1 ? preRecommendTab : currRecommendTab);
         // 存入是否自动更新
         config.put(ConfigConstants.AUTO_UPDATE, autoUpdate);
         // 存入关闭窗口操作
@@ -4837,7 +4842,21 @@ public class MainFrame extends JFrame {
             // 推荐
             else if (selectedIndex == TabIndex.RECOMMEND) {
                 if (currRecommendTab == -1) {
-                    playlistRecommendButton.doClick();
+                    if (preRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND) playlistRecommendButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND)
+                        highQualityPlaylistButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) hotMusicButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND) newMusicButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND)
+                        newAlbumRecommendButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND)
+                        artistListRecommendButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND)
+                        newRadioRecommendButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND)
+                        hotRadioRecommendButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND) programRecommendButton.doClick();
+                    else if (preRecommendTab == RecommendTabIndex.MV_RECOMMEND) mvRecommendButton.doClick();
                     return;
                 }
                 // 加载推荐歌单/专辑/歌手/电台
@@ -6246,6 +6265,7 @@ public class MainFrame extends JFrame {
     private void personalMusicToolBarInit() {
         // 本地音乐事件
         localMusicButton.addActionListener(e -> {
+            if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) return;
             currPersonalMusicTab = PersonalMusicTabIndex.LOCAL_MUSIC;
             updateTabButtonStyle();
             leftBox.remove(collectionTabbedPane);
@@ -6268,6 +6288,7 @@ public class MainFrame extends JFrame {
         });
         // 播放历史事件
         historyButton.addActionListener(e -> {
+            if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) return;
             currPersonalMusicTab = PersonalMusicTabIndex.HISTORY;
             updateTabButtonStyle();
             leftBox.remove(collectionTabbedPane);
@@ -6290,6 +6311,7 @@ public class MainFrame extends JFrame {
         });
         // 收藏事件
         collectionButton.addActionListener(e -> {
+            if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) return;
             currPersonalMusicTab = PersonalMusicTabIndex.COLLECTION;
             updateTabButtonStyle();
 
@@ -17811,6 +17833,7 @@ public class MainFrame extends JFrame {
         });
         // 推荐歌单事件
         playlistRecommendButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.PLAYLIST_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -17832,7 +17855,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                    if (!recommendCountPanel.isVisible()) recommendCountPanel.setVisible(true);
+                    recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     playlistRecommendListModel.clear();
                     netPlaylistInfos.forEach(netPlaylistInfo -> {
@@ -17875,6 +17898,7 @@ public class MainFrame extends JFrame {
         });
         // 精品歌单事件
         highQualityPlaylistButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -17896,6 +17920,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     playlistRecommendListModel.clear();
                     netPlaylistInfos.forEach(netPlaylistInfo -> {
@@ -17937,6 +17962,7 @@ public class MainFrame extends JFrame {
         });
         // 飙升歌曲事件
         hotMusicButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.HOT_MUSIC_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -17958,6 +17984,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     netMusicList.setModel(emptyListModel);
                     netMusicRecommendListModel.clear();
                     netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
@@ -17988,7 +18015,8 @@ public class MainFrame extends JFrame {
             });
         });
         // 推荐新单曲事件
-        netMusicRecommendButton.addActionListener(e -> {
+        newMusicButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.NEW_MUSIC_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -18010,6 +18038,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     netMusicList.setModel(emptyListModel);
                     netMusicRecommendListModel.clear();
                     netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
@@ -18041,6 +18070,7 @@ public class MainFrame extends JFrame {
         });
         // 新碟上架事件
         newAlbumRecommendButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.NEW_ALBUM_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -18062,6 +18092,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     albumRecommendListModel.clear();
                     netAlbumInfos.forEach(netAlbumInfo -> {
@@ -18102,6 +18133,7 @@ public class MainFrame extends JFrame {
         });
         // 歌手排行事件
         artistListRecommendButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.ARTIST_LIST_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -18123,6 +18155,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     artistRecommendListModel.clear();
                     netArtistInfos.forEach(netArtistInfo -> {
@@ -18164,6 +18197,7 @@ public class MainFrame extends JFrame {
         });
         // 新晋电台事件
         newRadioRecommendButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.NEW_RADIO_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -18176,6 +18210,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     radioRecommendListModel.clear();
                     netRadioInfos.forEach(netRadioInfo -> {
@@ -18216,6 +18251,7 @@ public class MainFrame extends JFrame {
         });
         // 热门电台事件
         hotRadioRecommendButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.HOT_RADIO_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -18237,6 +18273,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     radioRecommendListModel.clear();
                     netRadioInfos.forEach(netRadioInfo -> {
@@ -18277,6 +18314,7 @@ public class MainFrame extends JFrame {
         });
         // 推荐节目事件
         programRecommendButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.PROGRAM_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -18298,6 +18336,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     netMusicList.setModel(emptyListModel);
                     netMusicRecommendListModel.clear();
                     netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
@@ -18330,6 +18369,7 @@ public class MainFrame extends JFrame {
         });
         // 推荐 MV 事件
         mvRecommendButton.addActionListener(e -> {
+            if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) return;
             currRecommendTab = RecommendTabIndex.MV_RECOMMEND;
             updateTabButtonStyle();
             loadingAndRun(() -> {
@@ -18351,6 +18391,7 @@ public class MainFrame extends JFrame {
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     mvRecommendListModel.clear();
                     netMvInfos.forEach(netMvInfo -> {
@@ -18406,7 +18447,7 @@ public class MainFrame extends JFrame {
         playlistRecommendButton.addMouseListener(new ButtonMouseListener(playlistRecommendButton, THIS));
         highQualityPlaylistButton.addMouseListener(new ButtonMouseListener(highQualityPlaylistButton, THIS));
         hotMusicButton.addMouseListener(new ButtonMouseListener(hotMusicButton, THIS));
-        netMusicRecommendButton.addMouseListener(new ButtonMouseListener(netMusicRecommendButton, THIS));
+        newMusicButton.addMouseListener(new ButtonMouseListener(newMusicButton, THIS));
         newAlbumRecommendButton.addMouseListener(new ButtonMouseListener(newAlbumRecommendButton, THIS));
         artistListRecommendButton.addMouseListener(new ButtonMouseListener(artistListRecommendButton, THIS));
         newRadioRecommendButton.addMouseListener(new ButtonMouseListener(newRadioRecommendButton, THIS));
@@ -18434,7 +18475,7 @@ public class MainFrame extends JFrame {
         playlistRecommendButton.setText(RECOMMEND_PLAYLIST_TIP);
         highQualityPlaylistButton.setText(HIGH_QUALITY_PLAYLIST_TIP);
         hotMusicButton.setText(HOT_MUSIC_TIP);
-        netMusicRecommendButton.setText(RECOMMEND_NET_MUSIC_TIP);
+        newMusicButton.setText(RECOMMEND_NET_MUSIC_TIP);
         newAlbumRecommendButton.setText(RECOMMEND_NEW_ALBUM_TIP);
         artistListRecommendButton.setText(RECOMMEND_ARTIST_LIST_TIP);
         newRadioRecommendButton.setText(RECOMMEND_NEW_RADIO_TIP);
@@ -18449,8 +18490,8 @@ public class MainFrame extends JFrame {
         highQualityPlaylistButton.setIconTextGap(gap);
         hotMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         hotMusicButton.setIconTextGap(gap);
-        netMusicRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        netMusicRecommendButton.setIconTextGap(gap);
+        newMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        newMusicButton.setIconTextGap(gap);
         newAlbumRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         newAlbumRecommendButton.setIconTextGap(gap);
         artistListRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -18469,7 +18510,7 @@ public class MainFrame extends JFrame {
         recommendToolBar.add(playlistRecommendButton);
         recommendToolBar.add(highQualityPlaylistButton);
         recommendToolBar.add(hotMusicButton);
-        recommendToolBar.add(netMusicRecommendButton);
+        recommendToolBar.add(newMusicButton);
         recommendToolBar.add(newAlbumRecommendButton);
         recommendToolBar.add(artistListRecommendButton);
         recommendToolBar.add(newRadioRecommendButton);
@@ -21137,10 +21178,10 @@ public class MainFrame extends JFrame {
             if (isAudioFile) {
                 loadLrc(file, null, false, currLrcType == LyricType.TRANSLATION);
             } else {
+                if (!musicInfo.hasLrc()) lrcLoading();
                 NetMusicInfo finalMusicInfo = musicInfo;
                 globalExecutor.submit(() -> {
                     try {
-                        if (!finalMusicInfo.hasLrc()) lrcLoading();
                         MusicServerUtil.fillLrc(finalMusicInfo);
                     } catch (Exception e) {
 
@@ -21184,6 +21225,8 @@ public class MainFrame extends JFrame {
 
             // 初始化 MediaPlayer 对象
             player.initMp();
+            // 加载 url 时可能拖动进度条导致歌词偏移，让歌词重头开始
+            if (nextLrc > 0) seekLrc(0);
 
             if (instantPlay) playLoaded(false);
             // 添加到历史播放列表
@@ -22086,7 +22129,7 @@ public class MainFrame extends JFrame {
         playlistRecommendButton.setForeground(textColor);
         highQualityPlaylistButton.setForeground(textColor);
         hotMusicButton.setForeground(textColor);
-        netMusicRecommendButton.setForeground(textColor);
+        newMusicButton.setForeground(textColor);
         newAlbumRecommendButton.setForeground(textColor);
         artistListRecommendButton.setForeground(textColor);
         newRadioRecommendButton.setForeground(textColor);
@@ -22218,7 +22261,7 @@ public class MainFrame extends JFrame {
         playlistRecommendButton.setIcon(ImageUtil.dye((ImageIcon) playlistRecommendButton.getIcon(), iconColor));
         highQualityPlaylistButton.setIcon(ImageUtil.dye((ImageIcon) highQualityPlaylistButton.getIcon(), iconColor));
         hotMusicButton.setIcon(ImageUtil.dye((ImageIcon) hotMusicButton.getIcon(), iconColor));
-        netMusicRecommendButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRecommendButton.getIcon(), iconColor));
+        newMusicButton.setIcon(ImageUtil.dye((ImageIcon) newMusicButton.getIcon(), iconColor));
         newAlbumRecommendButton.setIcon(ImageUtil.dye((ImageIcon) newAlbumRecommendButton.getIcon(), iconColor));
         artistListRecommendButton.setIcon(ImageUtil.dye((ImageIcon) artistListRecommendButton.getIcon(), iconColor));
         newRadioRecommendButton.setIcon(ImageUtil.dye((ImageIcon) newRadioRecommendButton.getIcon(), iconColor));
