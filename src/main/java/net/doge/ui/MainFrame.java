@@ -21180,7 +21180,7 @@ public class MainFrame extends JFrame {
             } else {
                 if (!musicInfo.hasLrc()) lrcLoading();
                 NetMusicInfo finalMusicInfo = musicInfo;
-                globalExecutor.submit(() -> {
+                Future<?> lrcTask = globalExecutor.submit(() -> {
                     try {
                         MusicServerUtil.fillLrc(finalMusicInfo);
                     } catch (Exception e) {
@@ -21221,12 +21221,12 @@ public class MainFrame extends JFrame {
                     // 刷新加载歌曲
                     player.load(file, musicInfo);
                 }
+                // 加载 url 时可能拖动进度条导致歌词偏移，让歌词重头开始
+                if (lrcTask.isDone() && nextLrc > 0) seekLrc(0);
             }
 
             // 初始化 MediaPlayer 对象
             player.initMp();
-            // 加载 url 时可能拖动进度条导致歌词偏移，让歌词重头开始
-            if (nextLrc > 0) seekLrc(0);
 
             if (instantPlay) playLoaded(false);
             // 添加到历史播放列表
