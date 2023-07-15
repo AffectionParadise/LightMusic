@@ -230,8 +230,9 @@ public class MainFrame extends JFrame {
     private final String ASK_REMOVE_ALL_TASKS_MSG = "确定要清空任务列表吗？";
     private final String ASK_REMOVE_SONGS_FROM_PLAY_QUEUE_MSG = "是否从播放队列删除选中歌曲？";
     private final String ASK_CLEAR_PLAY_QUEUE_MSG = "是否要清空播放队列？";
-    // 加载 MV 提示
     private final String LOADING_MV_MSG = "请稍候，MV 加载中......";
+    private final String COPY_SUCCESS_MSG = "复制成功";
+
     private final String DEFAULT_TIME = TimeUtil.format(0);
     private final String PLAY_MENU_ITEM_TEXT = "播放";
     private final String NEXT_PLAY_MENU_ITEM_TEXT = "下一首播放";
@@ -23497,6 +23498,7 @@ public class MainFrame extends JFrame {
         StringSelection stringSelection = new StringSelection(s);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
+        new TipDialog(THIS, COPY_SUCCESS_MSG).showDialog();
     }
 
     // 隐藏界面

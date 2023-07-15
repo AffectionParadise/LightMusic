@@ -187,7 +187,7 @@ public class MusicUrlReq {
             }
         }
 
-        // 酷狗(歌曲详情能直接请求到 url，不需要单独调用此方法)
+        // 酷狗
         else if (source == NetMusicSource.KG) {
             // 酷狗接口请求需要带上 cookie ！
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
@@ -225,8 +225,7 @@ public class MusicUrlReq {
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String urlBody = resp.body();
                 JSONObject urlJson = JSONObject.parseObject(urlBody);
-                JSONObject data = urlJson.getJSONObject("data");
-                return data.getString("url");
+                if (urlJson != null) return urlJson.getJSONObject("data").getString("url");
             }
         }
 
