@@ -19963,11 +19963,12 @@ public class MainFrame extends JFrame {
         });
         // 歌词面板滚轮滚动触发延时动画
         lrcScrollPane.addMouseWheelListener(e -> swAction.run());
-        // 滚动条拖拽触发延时动画
-        vs.addMouseMotionListener(new MouseAdapter() {
+        // 滚动条拖拽时停止延时动画
+        vs.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                swAction.run();
+                swActionTimer.stop();
+                lrcScrollWaiting = true;
             }
         });
         // 滚动条显示/隐藏，松开时触发延时动画

@@ -678,7 +678,8 @@ public class PlaylistInfoReq {
                 String songId = songJson.getString("songmid");
                 String name = songJson.getString("songname");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
-                String artistId = songJson.getJSONArray("singer").getJSONObject(0).getString("mid");
+                JSONArray singerArray = songJson.getJSONArray("singer");
+                String artistId = singerArray.isEmpty() ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getString("albumname");
                 String albumId = songJson.getString("albummid");
                 Double duration = songJson.getDouble("interval");

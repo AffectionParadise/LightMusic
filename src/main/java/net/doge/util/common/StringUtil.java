@@ -165,7 +165,7 @@ public class StringUtil {
         for (int i = 0, len = Math.min(s1.length(), s2.length()); i < len; i++) {
             char c1 = s1.charAt(i), c2 = s2.charAt(i);
             if (c1 == c2) continue;
-            if ((c1 + "").matches("[\\u4E00-\\u9FA5]+") && (c2 + "").matches("[\\u4E00-\\u9FA5]+"))
+            if ((String.valueOf(c1)).matches("[\\u4E00-\\u9FA5]+") && (String.valueOf(c2)).matches("[\\u4E00-\\u9FA5]+"))
                 return PinyinHelper.toHanyuPinyinStringArray(c1, format)[0].compareTo(PinyinHelper.toHanyuPinyinStringArray(c2, format)[0]);
             return c1 - c2;
         }
@@ -192,7 +192,7 @@ public class StringUtil {
         StringBuilder sb = new StringBuilder();
         for (int i = 0, len = s.length(); i < len; i++) {
             char ch = s.charAt(i);
-            String s1 = mojiConverter.convertKanaToRomaji(ch + "");
+            String s1 = mojiConverter.convertKanaToRomaji(String.valueOf(ch));
             // 遇到片假、平假加空格隔开
             if (s1.indexOf(ch) < 0) {
                 if (i != 0) sb.append(' ');
@@ -223,7 +223,7 @@ public class StringUtil {
      * @return
      */
     public static String formatNumberWithoutSuffix(long n) {
-        if (n < 10000) return n + "";
+        if (n < 10000) return String.valueOf(n);
         if (n < 100000000) return String.format("%s 万", (double) (n / 1000) / 10).replace(".0", "");
         return String.format("%s 亿", (double) (n / 10000000) / 10).replace(".0", "");
     }

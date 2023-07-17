@@ -26,12 +26,12 @@ public class AreaUtil {
             int id = jo.getIntValue("id");
             if (id == pid) {
                 p = jo.getString("name");
-                c = cities.getString(cid + "");
+                c = cities.getString(String.valueOf(cid));
                 return "海外".equals(p) ? c : p + " - " + c;
             }
             // 直辖市 特别行政区
-            else if ((id == 1 || id == 2) && cities.containsKey(pid + "")) {
-                return cities.getString(pid + "");
+            else if ((id == 1 || id == 2) && cities.containsKey(String.valueOf(pid))) {
+                return cities.getString(String.valueOf(pid));
             }
         }
         return "未知";

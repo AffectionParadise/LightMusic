@@ -63,7 +63,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         JLabel label = (JLabel) component;
 
         final int maxWidth = list.getVisibleRect().width;
-        if (maxWidth <= 0) return label;
+        if (maxWidth == 0) return label;
+        list.setFixedCellWidth(maxWidth);
 
         Statement statement = (Statement) value;
         String lyric = statement.toString();
@@ -71,7 +72,6 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 标签
         label.setOpaque(false);
         label.setForeground(bgColor);
-
         label.setUI(index != row ? normalLabelUI : highlightLabelUI);
 
         // 高亮的行的样式

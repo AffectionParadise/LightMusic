@@ -66,7 +66,7 @@ public class ScrollBarUI extends BasicScrollBarUI {
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // 透明滚动条
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, entered ? 0.5f : 0.3f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, entered ? 0.6f : 0.3f));
         g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, 10, 10);
     }
 

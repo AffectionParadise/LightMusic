@@ -291,18 +291,17 @@ public class StringTwoColor {
 
     // 裁剪图片使之宽度不超过阈值
     private void cropImg() {
-        if (width > widthThreshold) {
-            int foreWidth = (int) (width * ratio + 0.5);
-            try {
-                if (foreWidth <= widthThreshold / 2)
-                    buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(0, 0, widthThreshold, height)).asBufferedImage();
-                else if (width - foreWidth > widthThreshold / 2)
-                    buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(foreWidth - widthThreshold / 2, 0, widthThreshold, height)).asBufferedImage();
-                else
-                    buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(width - widthThreshold, 0, widthThreshold, height)).asBufferedImage();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (width <= widthThreshold) return;
+        int foreWidth = (int) (width * ratio + 0.5);
+        try {
+            if (foreWidth <= widthThreshold / 2)
+                buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(0, 0, widthThreshold, height)).asBufferedImage();
+            else if (width - foreWidth > widthThreshold / 2)
+                buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(foreWidth - widthThreshold / 2, 0, widthThreshold, height)).asBufferedImage();
+            else
+                buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(width - widthThreshold, 0, widthThreshold, height)).asBufferedImage();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

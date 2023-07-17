@@ -28,9 +28,8 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API (QQ)
 //    private final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
     // 歌曲 URL 获取 API (酷我)
-//    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&httpsStatus=1";
-//    private final String GET_SONG_URL_KW_API = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=%s";
-    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=convert_url3&br=320kmp3";
+    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
+//    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
@@ -217,15 +216,17 @@ public class MusicUrlReq {
         // 酷我(解锁付费音乐)
         else if (source == NetMusicSource.KW) {
 //            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
-//                    .header(Header.REFERER, "https://www.kuwo.cn/")
 //                    .execute()
 //                    .body();
 //            return urlBody;
-            HttpResponse resp = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId)).execute();
+            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, songId)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String urlBody = resp.body();
                 JSONObject urlJson = JSONObject.parseObject(urlBody);
-                if (urlJson != null) return urlJson.getJSONObject("data").getString("url");
+                if (urlJson != null) {
+                    JSONObject data = urlJson.getJSONObject("data");
+                    if (data != null) return data.getString("url");
+                }
             }
         }
 
