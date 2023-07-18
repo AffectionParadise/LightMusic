@@ -1,8 +1,6 @@
 package net.doge.util.common;
 
-import cn.hutool.core.codec.Base64Decoder;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.moji4j.MojiConverter;
 import net.doge.constant.ui.Fonts;
@@ -18,7 +16,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import javax.swing.*;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -130,26 +127,6 @@ public class StringUtil {
     public static String shorten(String s, int maxLen) {
         if (maxLen <= 3 || s == null || s.length() <= maxLen) return s;
         return s.substring(0, maxLen - 3) + "...";
-    }
-
-    /**
-     * Base 64 解码
-     *
-     * @param s
-     * @return
-     */
-    public static String base64Decode(String s) {
-        return Base64Decoder.decodeStr(s);
-    }
-
-    /**
-     * 字符串转为 32 位 MD5
-     *
-     * @param s
-     * @return
-     */
-    public static String toMD5(String s) {
-        return DigestUtil.md5Hex(s);
     }
 
     /**
@@ -393,14 +370,12 @@ public class StringUtil {
      * @param s
      * @return
      */
-    public static String encode(String s) {
-        if (null == s) return null;
+    public static String urlEncode(String s) {
         try {
             return URLEncoder.encode(s, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -409,13 +384,12 @@ public class StringUtil {
      * @param s
      * @return
      */
-    public static String decode(String s) {
+    public static String urlDecode(String s) {
         try {
             return URLDecoder.decode(s, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
     /**

@@ -3,6 +3,7 @@ package net.doge.sdk.common;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.CryptoUtil;
 
 public class SdkCommon {
     // 最大等待时间(ms)
@@ -47,8 +48,8 @@ public class SdkCommon {
         String secret = "NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt";
         String params = s.substring(s.indexOf('?') + 1).replace("&", "");
         // 将参数解码
-        params = StringUtil.decode(params);
-        String sign = StringUtil.toMD5(secret + params + secret);
+        params = StringUtil.urlDecode(params);
+        String sign = CryptoUtil.hashMD5(secret + params + secret);
         return s + "&signature=" + sign;
     }
 
@@ -62,8 +63,8 @@ public class SdkCommon {
         String secret = "0b50b02fd0d73a9c4c8c3a781c30845f";
         String params = s.substring(s.indexOf('?') + 1);
         // 将参数解码
-        params = StringUtil.decode(params);
-        String sign = StringUtil.toMD5(params + secret);
+        params = StringUtil.urlDecode(params);
+        String sign = CryptoUtil.hashMD5(params + secret);
         return s + "&sign=" + sign;
     }
 }

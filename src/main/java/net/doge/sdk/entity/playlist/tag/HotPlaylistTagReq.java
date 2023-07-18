@@ -68,7 +68,7 @@ public class HotPlaylistTagReq {
                 String name = tagJson.getString("name");
 
                 if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[0] = StringUtil.encode(name);
+                Tags.hotPlaylistTag.get(name)[0] = StringUtil.urlEncode(name);
             }
         };
         // 网友精选碟标签
@@ -84,7 +84,7 @@ public class HotPlaylistTagReq {
                 String name = tagJson.getString("name");
 
                 if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[1] = StringUtil.encode(name);
+                Tags.hotPlaylistTag.get(name)[1] = StringUtil.urlEncode(name);
             }
         };
 

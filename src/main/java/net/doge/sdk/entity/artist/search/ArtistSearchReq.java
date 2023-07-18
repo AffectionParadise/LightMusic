@@ -51,7 +51,7 @@ public class ArtistSearchReq {
         List<NetArtistInfo> artistInfos = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.encode(keyword);
+        String encodedKeyword = StringUtil.urlEncode(keyword);
 
         // 网易云
         Callable<CommonResult<NetArtistInfo>> searchArtists = () -> {

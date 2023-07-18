@@ -106,7 +106,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo netCommentInfo, int limit, int page) {
         int source = netCommentInfo.getSource();
-        String uid = StringUtil.encode(netCommentInfo.getUserId());
+        String uid = StringUtil.urlEncode(netCommentInfo.getUserId());
 
         LinkedList<NetPlaylistInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
@@ -362,7 +362,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo netCommentInfo, int limit, int page) {
         int source = netCommentInfo.getSource();
-        String uid = StringUtil.encode(netCommentInfo.getUserId());
+        String uid = StringUtil.urlEncode(netCommentInfo.getUserId());
 
         LinkedList<NetAlbumInfo> res = new LinkedList<>();
         Integer total = 0;

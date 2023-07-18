@@ -47,7 +47,7 @@ public class SearchSuggestionReq {
         if (StringUtil.isEmpty(keyword.trim())) return results;
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.encode(keyword);
+        String encodedKeyword = StringUtil.urlEncode(keyword);
 
         // 网易云
         Callable<List<String>> getSimpleSearchSuggestion = () -> {

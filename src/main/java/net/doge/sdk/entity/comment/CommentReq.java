@@ -354,16 +354,16 @@ public class CommentReq {
             String ref = "";
             switch (Integer.parseInt(typeStr[2])) {
                 case 15:
-                    ref = "http://www.kuwo.cn/play_detail/" + StringUtil.encode(id);
+                    ref = "http://www.kuwo.cn/play_detail/" + StringUtil.urlEncode(id);
                     break;
                 case 7:
-                    ref = "http://www.kuwo.cn/mvplay/" + StringUtil.encode(id);
+                    ref = "http://www.kuwo.cn/mvplay/" + StringUtil.urlEncode(id);
                     break;
                 case 8:
-                    ref = "http://www.kuwo.cn/playlist_detail/" + StringUtil.encode(id);
+                    ref = "http://www.kuwo.cn/playlist_detail/" + StringUtil.urlEncode(id);
                     break;
                 case 2:
-                    ref = "http://www.kuwo.cn/rankList/" + StringUtil.encode(id);
+                    ref = "http://www.kuwo.cn/rankList/" + StringUtil.urlEncode(id);
                     break;
             }
             String url = hotOnly ? GET_HOT_COMMENTS_KW_API : GET_NEW_COMMENTS_KW_API;

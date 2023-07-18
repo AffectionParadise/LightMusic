@@ -384,14 +384,14 @@ public class HighQualityPlaylistReq {
                 boolean isAll = "10000000".equals(cat);
                 String url;
                 if (isAll) {
-                    url = CAT_PLAYLIST_QQ_API + StringUtil.encode(String.format(
+                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncode(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_playlist_by_tag\"," +
                                     "\"param\":{\"id\":10000000,\"sin\":%s,\"size\":%s,\"order\":5,\"cur_page\":%s}," +
                                     "\"module\":\"playlist.PlayListPlazaServer\"}}", (page - 1) * limit, limit, page));
                 } else {
-                    url = CAT_PLAYLIST_QQ_API + StringUtil.encode(String.format(
+                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncode(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_category_content\"," +

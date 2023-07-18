@@ -2,8 +2,6 @@ package net.doge.sdk.entity.music.info;
 
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.player.Format;
@@ -12,9 +10,12 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.entity.music.info.trackurl.KWTrackUrlReq;
+import net.doge.sdk.entity.music.info.trackurl.QQTrackUrlReq;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.CryptoUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -28,7 +29,7 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API (QQ)
 //    private final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
     // 歌曲 URL 获取 API (酷我)
-    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
+//    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
@@ -197,20 +198,22 @@ public class MusicUrlReq {
             if (data.getIntValue("is_free_part") == 0) return data.getString("play_url");
         }
 
-        // QQ
+        // QQ(解锁付费音乐)
         else if (source == NetMusicSource.QQ) {
-            String playUrlBody = HttpRequest.get(SdkCommon.qqSearchApi + "?format=json&data=" +
-                            StringUtil.encode(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
-                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
-                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
-                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", songId, songId, songId)))
-                    .execute()
-                    .body();
-            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
-            JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
-            String sip = data.getJSONArray("sip").getString(0);
-            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
-            return StringUtil.isEmpty(url) ? "" : sip + url;
+//            String playUrlBody = HttpRequest.get(SdkCommon.qqSearchApi + "?format=json&data=" +
+//                            StringUtil.urlEncode(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
+//                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
+//                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
+//                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", songId, songId, songId)))
+//                    .execute()
+//                    .body();
+//            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
+//            JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
+//            String sip = data.getJSONArray("sip").getString(0);
+//            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
+//            return StringUtil.isEmpty(url) ? "" : sip + url;
+            // sq hr hq mp3
+            return new QQTrackUrlReq().getTrackUrl(songId, "hq");
         }
 
         // 酷我(解锁付费音乐)
@@ -219,15 +222,16 @@ public class MusicUrlReq {
 //                    .execute()
 //                    .body();
 //            return urlBody;
-            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, songId)).execute();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
-                String urlBody = resp.body();
-                JSONObject urlJson = JSONObject.parseObject(urlBody);
-                if (urlJson != null) {
-                    JSONObject data = urlJson.getJSONObject("data");
-                    if (data != null) return data.getString("url");
-                }
-            }
+//            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, songId)).execute();
+//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//                String urlBody = resp.body();
+//                JSONObject urlJson = JSONObject.parseObject(urlBody);
+//                if (urlJson != null) {
+//                    JSONObject data = urlJson.getJSONObject("data");
+//                    if (data != null) return data.getString("url");
+//                }
+//            }
+            return new KWTrackUrlReq().getTrackUrl(songId, "320k");
         }
 
         // 咪咕
@@ -281,7 +285,7 @@ public class MusicUrlReq {
                 String base64Pattern = "base64_decode\\(\"(.*?)\"\\)";
                 String base64Str = ReUtil.get(base64Pattern, dataStr, 1);
                 if (StringUtil.notEmpty(base64Str))
-                    dataStr = dataStr.replaceFirst(base64Pattern, String.format("\"%s\"", StringUtil.base64Decode(base64Str)));
+                    dataStr = dataStr.replaceFirst(base64Pattern, String.format("\"%s\"", CryptoUtil.base64Decode(base64Str)));
 
                 // json 字段带引号
                 JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));

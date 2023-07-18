@@ -64,7 +64,7 @@ public class MusicSearchReq {
         List<NetMusicInfo> musicInfos = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.encode(keyword);
+        String encodedKeyword = StringUtil.urlEncode(keyword);
 
         boolean dt = "默认".equals(subType);
         String[] s = Tags.programSearchTag.get(subType);

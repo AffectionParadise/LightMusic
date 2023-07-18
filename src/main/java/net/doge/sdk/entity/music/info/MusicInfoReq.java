@@ -10,6 +10,7 @@ import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.CryptoUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -379,7 +380,7 @@ public class MusicInfoReq {
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.encode(songId.replace("_", "$"))))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.urlEncode(songId.replace("_", "$"))))
                     .execute()
                     .body();
             JSONObject data = JSONArray.parseArray(songBody).getJSONObject(0);
@@ -519,7 +520,7 @@ public class MusicInfoReq {
 //                    .execute()
 //                    .body();
 //            JSONObject data = JSONObject.parseObject(songBody);
-//            String lyric = StringUtils.base64Decode(data.getString("content"));
+//            String lyric = CryptoUtil.base64Decode(data.getString("content"));
 //            netMusicInfo.setLrc(lyric);
         }
 
@@ -532,8 +533,8 @@ public class MusicInfoReq {
             JSONObject lrcJson = JSONObject.parseObject(lrcBody);
             String lyric = lrcJson.getString("lyric");
             String trans = lrcJson.getString("trans");
-            netMusicInfo.setLrc(StringUtil.removeHTMLLabel(StringUtil.base64Decode(lyric)));
-            netMusicInfo.setTrans(StringUtil.removeHTMLLabel(StringUtil.base64Decode(trans)));
+            netMusicInfo.setLrc(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(lyric)));
+            netMusicInfo.setTrans(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(trans)));
         }
 
         // 酷我

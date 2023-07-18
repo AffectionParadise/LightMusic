@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.security.MessageDigest;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -58,37 +57,6 @@ public class FileUtil {
      */
     public static void makeSureDir(File dir) {
         if (!dir.exists()) dir.mkdirs();
-    }
-
-    /**
-     * 计算文件hash值
-     */
-    public static String getHash(File file) {
-        String sha256 = null;
-        try (FileInputStream fis = new FileInputStream(file)) {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte buffer[] = new byte[1024];
-            int length;
-            while ((length = fis.read(buffer, 0, 1024)) != -1) {
-                md.update(buffer, 0, length);
-            }
-            byte[] digest = md.digest();
-            sha256 = byte2hexLower(digest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sha256;
-    }
-
-    private static String byte2hexLower(byte[] b) {
-        String hs = "";
-        String stmp = "";
-        for (int i = 0; i < b.length; i++) {
-            stmp = Integer.toHexString(b[i] & 0XFF);
-            if (stmp.length() == 1) hs = hs + "0" + stmp;
-            else hs = hs + stmp;
-        }
-        return hs;
     }
 
     /**
@@ -327,8 +295,8 @@ public class FileUtil {
         detector.add(UnicodeDetector.getInstance());
         Charset charset = detector.detectCodepage(file.toURI().toURL());
         if (charset != null) charsetName = charset.name();
-        if("windows-1252".equals(charsetName)) charsetName = "UTF-16";
-        else if("Big5".equals(charsetName)) charsetName = "GBK";
+        if ("windows-1252".equals(charsetName)) charsetName = "UTF-16";
+        else if ("Big5".equals(charsetName)) charsetName = "GBK";
         return charsetName;
     }
 

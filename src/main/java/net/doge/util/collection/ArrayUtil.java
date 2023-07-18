@@ -19,4 +19,17 @@ public class ArrayUtil {
         }
         return false;
     }
+
+    /**
+     * 反转数组
+     *
+     * @param longs
+     */
+    public static void reverse(long[] longs) {
+        for (int i = 0, len = longs.length; i < len / 2; i++) {
+            long t = longs[i];
+            longs[i] = longs[len - i - 1];
+            longs[len - i - 1] = t;
+        }
+    }
 }

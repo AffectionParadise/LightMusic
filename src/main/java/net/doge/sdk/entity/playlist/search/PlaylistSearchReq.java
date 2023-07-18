@@ -42,7 +42,7 @@ public class PlaylistSearchReq {
         List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.encode(keyword);
+        String encodedKeyword = StringUtil.urlEncode(keyword);
 
         // 网易云
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylists = () -> {

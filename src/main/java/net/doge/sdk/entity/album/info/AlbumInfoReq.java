@@ -655,7 +655,7 @@ public class AlbumInfoReq {
         int source = albumInfo.getSource();
         String id = albumInfo.getId();
         LinkedList<String> imgUrls = new LinkedList<>();
-        cursor = StringUtil.encode(cursor);
+        cursor = StringUtil.urlEncode(cursor);
         Integer total = 0;
 
         if (source == NetMusicSource.DT) {

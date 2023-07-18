@@ -639,7 +639,7 @@ public class ArtistInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_SONGS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.encode(id))
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncode(id))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -902,7 +902,7 @@ public class ArtistInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, artistId, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.encode(artistId) + "/album")
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncode(artistId) + "/album")
                     .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String albumInfoBody = resp.body();
@@ -1175,7 +1175,7 @@ public class ArtistInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, artistId, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.encode(artistId) + "/mv")
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncode(artistId) + "/mv")
                     .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();

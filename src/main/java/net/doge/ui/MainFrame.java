@@ -90,6 +90,7 @@ import net.doge.ui.renderer.entity.*;
 import net.doge.ui.renderer.system.DownloadListRenderer;
 import net.doge.ui.renderer.system.LrcListRenderer;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -23556,9 +23557,9 @@ public class MainFrame extends JFrame {
     private static boolean validateHash() {
         File f1 = new File(SimplePath.ICON_PATH + "weixin.png");
         File f2 = new File(SimplePath.ICON_PATH + "alipay.png");
-        if (!f1.exists() || !"254dd3cda4ac3b7f56505b097029afd6a9f2f450e91ee3a476b0c451391ab891".equals(FileUtil.getHash(f1)))
+        if (!f1.exists() || !"4c918e1fa36289d13dc3981290496f1d".equals(CryptoUtil.hashMD5(f1)))
             return false;
-        if (!f2.exists() || !"2646a9347bd43e2f5c9a15683de498e00f83ab74cd98f07522b23d58ed6e8cf7".equals(FileUtil.getHash(f2)))
+        if (!f2.exists() || !"94f008fced55194eba97e86b8ead0bc1".equals(CryptoUtil.hashMD5(f2)))
             return false;
         return true;
     }
