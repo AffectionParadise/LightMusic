@@ -1,10 +1,11 @@
 package net.doge.sdk.entity.playlist.info;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
@@ -12,11 +13,10 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.CryptoUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import net.doge.util.common.CryptoUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -817,17 +817,17 @@ public class PlaylistInfoReq {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(playlistInfoBody);
-            total.set(Integer.parseInt(ReUtil.get("（(\\d+)）", doc.select("span.number").text(), 1)));
+            total.set(Integer.parseInt(RegexUtil.getGroup1("（(\\d+)）", doc.select("span.number").text())));
             Elements songArray = doc.select("li.p_rel");
             for (int i = (page - 1) * limit, len = Math.min(page * limit, songArray.size()); i < len; i++) {
                 Element elem = songArray.get(i);
                 Elements na = elem.select(".s_title.lt a");
                 Elements aa = elem.select(".s_soner.lt a");
 
-                String songId = ReUtil.get("http://5sing.kugou.com/(.*?).html", na.attr("href"), 1).replaceFirst("/", "_");
+                String songId = RegexUtil.getGroup1("http://5sing.kugou.com/(.*?).html", na.attr("href")).replaceFirst("/", "_");
                 String name = na.text();
                 String artist = aa.text();
-                String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", aa.attr("href"), 1);
+                String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", aa.attr("href"));
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
                 netMusicInfo.setSource(NetMusicSource.FS);

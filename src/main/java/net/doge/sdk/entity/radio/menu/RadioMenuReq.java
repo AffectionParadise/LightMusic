@@ -1,18 +1,18 @@
 package net.doge.sdk.entity.radio.menu;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
 import net.doge.constant.model.RadioType;
+import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -122,7 +122,7 @@ public class RadioMenuReq {
                 Element a = radio.select(isGame ? "div.text a" : "dd a").first();
                 Element img = radio.select("img").first();
 
-                String radioId = ReUtil.get(isGame ? "game/(\\d+)/" : "subject/(\\d+)/", a.attr("href"), 1);
+                String radioId = RegexUtil.getGroup1(isGame ? "game/(\\d+)/" : "subject/(\\d+)/", a.attr("href"));
                 String radioName = a.text().trim();
                 String coverImgThumbUrl = img.attr("src");
 
@@ -232,9 +232,9 @@ public class RadioMenuReq {
                 Element a = artist.select("span.name a").first();
                 Element img = artist.select("div.avatar").first();
 
-                String artistId = ReUtil.get("celebrity/(\\d+)/", a.attr("href"), 1);
+                String artistId = RegexUtil.getGroup1("celebrity/(\\d+)/", a.attr("href"));
                 String artistName = a.text();
-                String coverImgThumbUrl = ReUtil.get("url\\((.*?)\\)", img.attr("style"), 1);
+                String coverImgThumbUrl = RegexUtil.getGroup1("url\\((.*?)\\)", img.attr("style"));
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetMusicSource.DB);

@@ -1,12 +1,12 @@
 package net.doge.sdk.entity.album.menu;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -44,7 +44,7 @@ public class AlbumMenuReq {
                 Element a = album.select("dd a").first();
                 Element img = album.select("img").first();
 
-                String albumId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+                String albumId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                 String albumName = a.text();
                 String coverImgThumbUrl = img.attr("src");
 

@@ -1,12 +1,12 @@
 package net.doge.sdk.entity.radio.tag;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.SdkCommon;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
+import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -204,7 +204,7 @@ public class HotRadioTag {
                 Element tag = tags.get(i);
 
                 String name = tag.text();
-                String id = ReUtil.get("type=(\\d+)", tag.attr("href"), 1);
+                String id = RegexUtil.getGroup1("type=(\\d+)", tag.attr("href"));
 
                 if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
                 Tags.radioTag.get(name)[6] = id;

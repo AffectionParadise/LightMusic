@@ -1,19 +1,19 @@
 package net.doge.sdk.entity.radio.rcmd;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
 import net.doge.constant.model.RadioType;
-import net.doge.sdk.common.Tags;
+import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -672,7 +672,7 @@ public class HotRadioReq {
                     .body();
             Document doc = Jsoup.parse(radioInfoBody);
             Elements rs = doc.select("div.item");
-            String ts = ReUtil.get("共(\\d+)条", doc.select("span.count").text(), 1);
+            String ts = RegexUtil.getGroup1("共(\\d+)条", doc.select("span.count").text());
             t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
             t -= t / rn * 5;
             for (int i = 0, len = rs.size(); i < len; i++) {
@@ -681,9 +681,9 @@ public class HotRadioReq {
                 Elements p = radio.select("div.bd p");
                 Elements img = radio.select("div.pic img");
 
-                String radioId = ReUtil.get("/subject/(\\d+)/", a.attr("href"), 1);
+                String radioId = RegexUtil.getGroup1("/subject/(\\d+)/", a.attr("href"));
                 String radioName = a.text().trim();
-                String dj = ReUtil.get("导演: (.*?) ", p.text(), 1);
+                String dj = RegexUtil.getGroup1("导演: (.*?) ", p.text());
                 String coverImgThumbUrl = img.attr("src");
                 String category = "电影";
 

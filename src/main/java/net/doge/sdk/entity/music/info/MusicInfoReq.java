@@ -1,9 +1,10 @@
 package net.doge.sdk.entity.music.info;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.constant.system.SimplePath;
@@ -11,11 +12,10 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.CryptoUtil;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.ui.ImageUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -317,7 +317,7 @@ public class MusicInfoReq {
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(songBody);
-                String dataStr = ReUtil.get("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+                String dataStr = RegexUtil.getGroup1("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html());
                 // json 字段带引号
                 if (StringUtil.notEmpty(dataStr)) dataStr = dataStr.replaceAll(" (\\w+):", "'$1':");
                 JSONObject data = JSONObject.parseObject(dataStr);
@@ -325,7 +325,7 @@ public class MusicInfoReq {
                 Elements a = doc.select(".m-3.text-center h5 a");
 
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(a.text());
-                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(RegexUtil.getGroup1("user-(\\d+)\\.htm", a.attr("href")));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
                         String picUrl = data.getString("pic");
@@ -349,7 +349,7 @@ public class MusicInfoReq {
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(songBody);
-                String dataStr = ReUtil.get("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+                String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());
                 if (StringUtil.notEmpty(dataStr)) {
                     dataStr = dataStr.replaceFirst("base64_decode\\(\"(.*?)\"\\)", "\"\"");
                     // json 字段带引号
@@ -360,7 +360,7 @@ public class MusicInfoReq {
                 Elements a = doc.select(".m-3.text-center h5 a");
 
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(a.text());
-                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(ReUtil.get("user-(\\d+)\\.htm", a.attr("href"), 1));
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(RegexUtil.getGroup1("user-(\\d+)\\.htm", a.attr("href")));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.submit(() -> {
                         String picUrl = data.getString("cover");

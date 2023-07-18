@@ -1,9 +1,10 @@
 package net.doge.sdk.entity.artist.search;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetArtistInfo;
@@ -11,9 +12,8 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -299,7 +299,7 @@ public class ArtistSearchReq {
                 Element a = artist.select(".content a").first();
                 Element img = artist.select(".pic img").first();
 
-                String artistId = ReUtil.get("celebrity/(\\d+)/", a.attr("href"), 1);
+                String artistId = RegexUtil.getGroup1("celebrity/(\\d+)/", a.attr("href"));
                 String artistName = a.text();
                 String coverImgThumbUrl = img.attr("src");
 

@@ -1,19 +1,19 @@
 package net.doge.sdk.entity.radio.search;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
 import net.doge.constant.model.RadioType;
+import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -204,11 +204,11 @@ public class RadioSearchReq {
                     Elements a = result.select("h3 a");
                     Elements span = result.select(".title h3 span");
 
-                    String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String radioId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String radioName = a.text().trim();
                     String dj = result.select("span.subject-cast").text();
                     String coverImgThumbUrl = result.select("div.pic img").attr("src");
-                    String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
+                    String category = RegexUtil.getGroup1("\\[(.*?)\\]", span.text());
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setSource(NetMusicSource.DB);
@@ -247,11 +247,11 @@ public class RadioSearchReq {
                     Elements a = result.select("h3 a");
                     Elements span = result.select(".title h3 span");
 
-                    String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String radioId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String radioName = a.text().trim();
                     String dj = result.select("span.subject-cast").text();
                     String coverImgThumbUrl = result.select("div.pic img").attr("src");
-                    String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
+                    String category = RegexUtil.getGroup1("\\[(.*?)\\]", span.text());
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setType(RadioType.BOOK);
@@ -291,11 +291,11 @@ public class RadioSearchReq {
                     Elements a = result.select("h3 a");
                     Elements span = result.select(".title h3 span");
 
-                    String radioId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String radioId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String radioName = a.text().trim();
                     String dj = result.select("span.subject-cast").text();
                     String coverImgThumbUrl = result.select("div.pic img").attr("src");
-                    String category = ReUtil.get("\\[(.*?)\\]", span.text(), 1);
+                    String category = RegexUtil.getGroup1("\\[(.*?)\\]", span.text());
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setType(RadioType.GAME);

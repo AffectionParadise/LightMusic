@@ -1,20 +1,20 @@
 package net.doge.sdk.entity.comment;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.*;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.sdk.util.BvAvConverter;
+import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -531,9 +531,9 @@ public class CommentReq {
             Document doc = Jsoup.parse(commentInfoBody);
             Elements comments = doc.select("li.media.post");
             Elements ap = doc.select("a.page-link");
-            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
             if (StringUtil.isEmpty(ts))
-                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total = Integer.parseInt(ts) * limit;
             else total = comments.size();
@@ -544,7 +544,7 @@ public class CommentReq {
                 if (msg == null) continue;
 
                 String username = comment.select(".username").text();
-                String userId = ReUtil.get("user-(\\d+)\\.htm", comment.select(".username a").attr("href"), 1);
+                String userId = RegexUtil.getGroup1("user-(\\d+)\\.htm", comment.select(".username a").attr("href"));
                 String profileUrl = "https://www.hifini.com/" + comment.select("img").attr("src");
                 String content = msg.ownText();
                 if (StringUtil.isEmpty(content)) content = msg.text().trim();
@@ -570,7 +570,7 @@ public class CommentReq {
                 if (bq.isEmpty()) continue;
 
                 username = bq.select("a").text().trim();
-                userId = ReUtil.get("user-(\\d+)\\.htm", comment.select("a").attr("href"), 1);
+                userId = RegexUtil.getGroup1("user-(\\d+)\\.htm", comment.select("a").attr("href"));
                 profileUrl = "https://www.hifini.com/" + bq.select("img").attr("src");
                 content = bq.first().ownText();
 
@@ -600,9 +600,9 @@ public class CommentReq {
             Document doc = Jsoup.parse(commentInfoBody);
             Elements comments = doc.select("li.media.post");
             Elements ap = doc.select("a.page-link");
-            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
             if (StringUtil.isEmpty(ts))
-                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total = Integer.parseInt(ts) * limit;
             else total = comments.size();
@@ -613,7 +613,7 @@ public class CommentReq {
                 if (msg == null) continue;
 
                 String username = comment.select(".username").text();
-                String userId = ReUtil.get("user-(\\d+)\\.htm", comment.select(".username a").attr("href"), 1);
+                String userId = RegexUtil.getGroup1("user-(\\d+)\\.htm", comment.select(".username a").attr("href"));
                 String profileUrl = "http://www.gggmusic.com/" + comment.select("img").attr("src");
                 String content = msg.ownText();
                 String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
@@ -638,7 +638,7 @@ public class CommentReq {
                 if (bq.isEmpty()) continue;
 
                 username = bq.select("a").text().trim();
-                userId = ReUtil.get("user-(\\d+)\\.htm", comment.select("a").attr("href"), 1);
+                userId = RegexUtil.getGroup1("user-(\\d+)\\.htm", comment.select("a").attr("href"));
                 profileUrl = "http://www.gggmusic.com/" + bq.select("img").attr("src");
                 content = bq.first().ownText();
 
@@ -920,7 +920,7 @@ public class CommentReq {
                         .body();
                 Document doc = Jsoup.parse(commentInfoBody);
                 Elements comments = doc.select("li.comment-item");
-                String ts = ReUtil.get("\\((\\d+)\\)", doc.select("div#content h1").text(), 1);
+                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#content h1").text());
                 total = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) : comments.size();
                 for (int i = 0, len = comments.size(); i < len; i++) {
                     Element comment = comments.get(i);
@@ -930,12 +930,12 @@ public class CommentReq {
                     Element d = comment.select("span.digg span").first();
                     Elements rating = comment.select("div.user-info span");
 
-                    String userId = ReUtil.get("/people/(.*?)/", a.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("/people/(.*?)/", a.attr("href"));
                     String username = a.text();
                     String content = sht.text();
                     String time = TimeUtil.strToPhrase(t.text().replaceAll("年|月", "-").replace("日", ""));
                     Integer likedCount = Integer.parseInt(d.text());
-                    String r = ReUtil.get("allstar(\\d+)", rating.size() > 2 ? rating.get(2).className() : "", 1);
+                    String r = RegexUtil.getGroup1("allstar(\\d+)", rating.size() > 2 ? rating.get(2).className() : "");
                     Integer score = StringUtil.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
@@ -961,7 +961,7 @@ public class CommentReq {
                         .body();
                 Document doc = Jsoup.parse(commentInfoBody);
                 Elements comments = doc.select(isRadio && !isBook ? "div.comment-item" : "li.comment-item");
-                String ts = ReUtil.get("\\((\\d+)\\)", doc.select("li.is-active").text(), 1);
+                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("li.is-active").text());
                 total = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) : comments.size();
                 for (int i = 0, len = comments.size(); i < len; i++) {
                     Element comment = comments.get(i);
@@ -972,14 +972,14 @@ public class CommentReq {
                     Element v = comment.select("span.vote-count").first();
                     Element rating = comment.select("span.comment-info span").get(isRadio && !isBook ? 1 : 0);
 
-                    String userId = ReUtil.get("/people/(.*?)/", a.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("/people/(.*?)/", a.attr("href"));
                     String username = a.text();
                     String src = img.attr("src");
                     String profileUrl = src.contains("/user") ? src.replaceFirst("normal", "large") : src.replaceFirst(isRadio ? "/u" : "/up", "/ul");
                     String content = cnt.text();
                     String time = TimeUtil.strToPhrase(t.text().trim());
                     Integer likedCount = Integer.parseInt(v.text());
-                    String r = ReUtil.get("(\\d+) ", rating.className(), 1);
+                    String r = RegexUtil.getGroup1("(\\d+) ", rating.className());
                     Integer score = StringUtil.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
 
                     NetCommentInfo commentInfo = new NetCommentInfo();

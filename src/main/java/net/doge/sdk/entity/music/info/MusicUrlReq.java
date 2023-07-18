@@ -1,6 +1,5 @@
 package net.doge.sdk.entity.music.info;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -14,8 +13,9 @@ import net.doge.sdk.entity.music.info.trackurl.KWTrackUrlReq;
 import net.doge.sdk.entity.music.info.trackurl.QQTrackUrlReq;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.StringUtil;
 import net.doge.util.common.CryptoUtil;
+import net.doge.util.common.RegexUtil;
+import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -264,7 +264,7 @@ public class MusicUrlReq {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(songBody);
-            String dataStr = ReUtil.get("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+            String dataStr = RegexUtil.getGroup1("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html());
             if (StringUtil.notEmpty(dataStr)) {
                 // json 字段带引号
                 JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));
@@ -280,10 +280,10 @@ public class MusicUrlReq {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(songBody);
-            String dataStr = ReUtil.get("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html(), 1);
+            String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());
             if (StringUtil.notEmpty(dataStr)) {
                 String base64Pattern = "base64_decode\\(\"(.*?)\"\\)";
-                String base64Str = ReUtil.get(base64Pattern, dataStr, 1);
+                String base64Str = RegexUtil.getGroup1(base64Pattern, dataStr);
                 if (StringUtil.notEmpty(base64Str))
                     dataStr = dataStr.replaceFirst(base64Pattern, String.format("\"%s\"", CryptoUtil.base64Decode(base64Str)));
 

@@ -1,20 +1,20 @@
 package net.doge.sdk.entity.music.search;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
-import net.doge.sdk.common.Tags;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -521,9 +521,9 @@ public class MusicSearchReq {
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".media.thread.tap");
             Elements ap = doc.select("a.page-link");
-            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
             if (StringUtil.isEmpty(ts))
-                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) t = Integer.parseInt(ts) * limit;
             else t = songs.size();
@@ -533,7 +533,7 @@ public class MusicSearchReq {
                 Elements a = song.select(".subject.break-all a");
                 Element span = song.select(".username.text-grey.mr-1").first();
 
-                String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                 String songName = a.text();
                 String artist = span.text();
                 String artistId = span.attr("uid");
@@ -561,9 +561,9 @@ public class MusicSearchReq {
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".media.thread.tap");
             Elements ap = doc.select("a.page-link");
-            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
             if (StringUtil.isEmpty(ts))
-                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) t = Integer.parseInt(ts) * limit;
             else t = songs.size();
@@ -572,7 +572,7 @@ public class MusicSearchReq {
 
                 Elements a = song.select(".subject.break-all a");
 
-                String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                 String songName = a.text();
 
                 NetMusicInfo musicInfo = new NetMusicInfo();

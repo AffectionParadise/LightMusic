@@ -1,21 +1,21 @@
 package net.doge.sdk.entity.music.rcmd;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
-import net.doge.sdk.common.Tags;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -425,9 +425,9 @@ public class HotMusicRecommendReq {
                 Document doc = Jsoup.parse(musicInfoBody);
                 Elements songs = doc.select(".media.thread.tap");
                 Elements ap = doc.select("a.page-link");
-                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+                String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
                 if (StringUtil.isEmpty(ts))
-                    ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                    ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
                 boolean hasTs = StringUtil.notEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();
@@ -437,7 +437,7 @@ public class HotMusicRecommendReq {
                     Elements a = song.select(".subject.break-all a");
                     Element span = song.select(".username.text-grey.mr-1").first();
 
-                    String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                    String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                     String songName = a.text();
                     String artist = span.text();
                     String artistId = span.attr("uid");
@@ -467,9 +467,9 @@ public class HotMusicRecommendReq {
                 Document doc = Jsoup.parse(musicInfoBody);
                 Elements songs = doc.select(".media.thread.tap");
                 Elements ap = doc.select("a.page-link");
-                String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+                String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
                 if (StringUtil.isEmpty(ts))
-                    ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                    ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
                 boolean hasTs = StringUtil.notEmpty(ts);
                 if (hasTs) t = Integer.parseInt(ts) * limit;
                 else t = songs.size();
@@ -478,7 +478,7 @@ public class HotMusicRecommendReq {
 
                     Elements a = song.select(".subject.break-all a");
 
-                    String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                    String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                     String songName = a.text();
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
@@ -511,10 +511,10 @@ public class HotMusicRecommendReq {
                     Elements a = song.select("h3 a");
                     Elements pa = song.select("p.m_z a");
 
-                    String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("/(.*?/.*?).html", a.attr("href")).replaceFirst("/", "_");
                     String songName = a.text();
-                    String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
-                    String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+                    String artist = RegexUtil.getGroup1("音乐人：(.*)", pa.text());
+                    String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.FS);
@@ -546,10 +546,10 @@ public class HotMusicRecommendReq {
                     Elements a = song.select("h3 a");
                     Elements pa = song.select("p.m_z a");
 
-                    String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("/(.*?/.*?).html", a.attr("href")).replaceFirst("/", "_");
                     String songName = a.text();
-                    String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
-                    String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+                    String artist = RegexUtil.getGroup1("音乐人：(.*)", pa.text());
+                    String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.FS);
@@ -581,10 +581,10 @@ public class HotMusicRecommendReq {
                     Elements a = song.select("h3 a");
                     Elements pa = song.select("p.m_z a");
 
-                    String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("/(.*?/.*?).html", a.attr("href")).replaceFirst("/", "_");
                     String songName = a.text();
-                    String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
-                    String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+                    String artist = RegexUtil.getGroup1("音乐人：(.*)", pa.text());
+                    String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.FS);
@@ -616,10 +616,10 @@ public class HotMusicRecommendReq {
                     Elements a = song.select("h3 a");
                     Elements pa = song.select("p.m_z a");
 
-                    String songId = ReUtil.get("/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("/(.*?/.*?).html", a.attr("href")).replaceFirst("/", "_");
                     String songName = a.text();
-                    String artist = ReUtil.get("音乐人：(.*)", pa.text(), 1);
-                    String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+                    String artist = RegexUtil.getGroup1("音乐人：(.*)", pa.text());
+                    String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.FS);
@@ -645,7 +645,7 @@ public class HotMusicRecommendReq {
             Elements songs = doc.select("tr");
             if (!songs.isEmpty()) {
                 Elements em = doc.select(".page_num em");
-                t = Integer.parseInt(ReUtil.get("\\d+/(\\d+)", em.text(), 1)) * limit;
+                t = Integer.parseInt(RegexUtil.getGroup1("\\d+/(\\d+)", em.text())) * limit;
                 for (int i = 0, len = songs.size(); i < len; i++) {
                     Element song = songs.get(i);
                     Elements td = song.select("td");
@@ -655,10 +655,10 @@ public class HotMusicRecommendReq {
                     Elements a = song.select(".aleft a");
                     Elements pa = td.get(2).select("a");
 
-                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("http://5sing.kugou.com/(.*?/.*?).html", a.attr("href")).replaceFirst("/", "_");
                     String songName = a.text();
                     String artist = pa.text();
-                    String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+                    String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.FS);
@@ -684,7 +684,7 @@ public class HotMusicRecommendReq {
             Elements songs = doc.select("tr");
             if (!songs.isEmpty()) {
                 Elements em = doc.select(".page_num em");
-                t = Integer.parseInt(ReUtil.get("\\d+/(\\d+)", em.text(), 1)) * limit;
+                t = Integer.parseInt(RegexUtil.getGroup1("\\d+/(\\d+)", em.text())) * limit;
                 for (int i = 0, len = songs.size(); i < len; i++) {
                     Element song = songs.get(i);
                     Elements td = song.select("td");
@@ -694,10 +694,10 @@ public class HotMusicRecommendReq {
                     Elements a = song.select(".aleft a");
                     Elements pa = td.get(2).select("a");
 
-                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?/.*?).html", a.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("http://5sing.kugou.com/(.*?/.*?).html", a.attr("href")).replaceFirst("/", "_");
                     String songName = a.text();
                     String artist = pa.text();
-                    String artistId = ReUtil.get("http://5sing.kugou.com/(\\d+)", pa.attr("href"), 1);
+                    String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.FS);

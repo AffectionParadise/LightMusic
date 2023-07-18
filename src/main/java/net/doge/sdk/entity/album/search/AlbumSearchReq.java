@@ -1,6 +1,5 @@
 package net.doge.sdk.entity.album.search;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
@@ -13,6 +12,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import org.jsoup.Jsoup;
@@ -327,7 +327,7 @@ public class AlbumSearchReq {
                     Elements result = doc.select("div.result");
                     Elements a = result.select("h3 a");
 
-                    String albumId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String albumId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String albumName = a.text().trim();
                     String artist = result.select("span.subject-cast").text();
                     String coverImgThumbUrl = result.select("div.pic img").attr("src");
@@ -357,7 +357,7 @@ public class AlbumSearchReq {
 //                Element a = album.select(".title a").first();
 //                Element img = album.select(".item-root img").first();
 //
-//                String albumId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+//                String albumId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
 //                String albumName = a.text();
 //                String artist = album.select(".meta.abstract").text();
 //                String coverImgThumbUrl = img.attr("src");

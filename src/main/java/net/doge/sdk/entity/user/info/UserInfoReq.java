@@ -1,6 +1,5 @@
 package net.doge.sdk.entity.user.info;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -13,6 +12,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.AreaUtil;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import org.jsoup.Jsoup;
@@ -200,7 +200,7 @@ public class UserInfoReq {
                 if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
                 GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
-                String bgUrl = ReUtil.get("background-image: url\\([\"'](.*?)[\"']\\)", userInfoBody, 1);
+                String bgUrl = RegexUtil.getGroup1("background-image: url\\([\"'](.*?)[\"']\\)", userInfoBody);
                 String bgImgUrl = (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl;
                 if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
                 GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
@@ -263,7 +263,7 @@ public class UserInfoReq {
             if (!userInfo.hasFollow()) userInfo.setFollow(follow);
             if (!userInfo.hasFollowed()) userInfo.setFollowed(followed);
 
-            String bgImgUrl = ReUtil.get("background-image:url\\((.*?)\\)", bgImgElem.attr("style"), 1);
+            String bgImgUrl = RegexUtil.getGroup1("background-image:url\\((.*?)\\)", bgImgElem.attr("style"));
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
@@ -274,7 +274,7 @@ public class UserInfoReq {
                     .cookie(SdkCommon.HK_COOKIE)
                     .execute()
                     .body();
-            JSONObject userInfoJson = JSONObject.parseObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
+            JSONObject userInfoJson = JSONObject.parseObject(RegexUtil.getGroup1("\"author_info\":(\\{.*?\\})", userInfoBody));
 
             if (!userInfo.hasSign()) userInfo.setSign(userInfoJson.getString("wishes"));
             if (!userInfo.hasFollowed()) userInfo.setFollowed(userInfoJson.getIntValue("fansCnt"));
@@ -293,7 +293,7 @@ public class UserInfoReq {
             Document doc = Jsoup.parse(userInfoBody);
 
             if (!userInfo.hasAccAge()) {
-                String dt = ReUtil.get("(\\d+\\-\\d+\\-\\d+)加入", doc.select("div.pl").text(), 1);
+                String dt = RegexUtil.getGroup1("(\\d+\\-\\d+\\-\\d+)加入", doc.select("div.pl").text());
                 userInfo.setAccAge(TimeUtil.getAccAge(TimeUtil.dateToMs(dt)));
             }
             if (!userInfo.hasGender()) userInfo.setGender("保密");
@@ -327,9 +327,9 @@ public class UserInfoReq {
                 if (StringUtil.notEmpty(s)) userInfo.setProgramCount(Integer.parseInt(s));
             }
             if (!userInfo.hasFollow())
-                userInfo.setFollow(Integer.parseInt(ReUtil.get("(\\d+)", a.first().text(), 1)));
+                userInfo.setFollow(Integer.parseInt(RegexUtil.getGroup1("(\\d+)", a.first().text())));
             if (!userInfo.hasFollowed())
-                userInfo.setFollowed(Integer.parseInt(ReUtil.get("(\\d+)", a.last().text(), 1)));
+                userInfo.setFollowed(Integer.parseInt(RegexUtil.getGroup1("(\\d+)", a.last().text())));
 
             String avatarUrl = doc.select("a.people-avatar img").attr("src").replaceFirst("\\.thumb\\.\\d+_\\d+_\\w+", "");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
@@ -455,9 +455,9 @@ public class UserInfoReq {
             Document doc = Jsoup.parse(userInfoBody);
             Elements songs = doc.select(".media.thread.tap");
             Elements ap = doc.select("a.page-link");
-            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
             if (StringUtil.isEmpty(ts))
-                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total.set(Integer.parseInt(ts) * limit);
             else total.set(songs.size());
@@ -469,7 +469,7 @@ public class UserInfoReq {
                 if (a.isEmpty()) continue;
                 Element span = song.select(".username.text-grey.mr-1").first();
 
-                String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                 String songName = a.text();
                 String artist = span.text();
                 String artistId = span.attr("uid");
@@ -493,9 +493,9 @@ public class UserInfoReq {
             Document doc = Jsoup.parse(userInfoBody);
             Elements songs = doc.select(".media.thread.tap");
             Elements ap = doc.select("a.page-link");
-            String ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text(), 1);
+            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
             if (StringUtil.isEmpty(ts))
-                ts = ReUtil.get("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text(), 1);
+                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total.set(Integer.parseInt(ts) * limit);
             else total.set(songs.size());
@@ -506,7 +506,7 @@ public class UserInfoReq {
                 // 用户没有帖子直接跳过
                 if (a.isEmpty()) continue;
 
-                String songId = ReUtil.get("thread-(.*?)\\.htm", a.attr("href"), 1);
+                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                 String songName = a.text();
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -576,23 +576,23 @@ public class UserInfoReq {
                         break;
                     case 2:
                         pageElem = doc.select(".page_list span");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.last().text());
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
                         pageElem = doc.select(".page_message a");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.last().attr("href"));
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
                     case 6:
                         pageElem = doc.select("span.page_list a");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"));
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
                         pageElem = doc.select(".page span");
-                        pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        pageText = pageElem.size() <= 1 ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text());
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                 }
@@ -608,7 +608,7 @@ public class UserInfoReq {
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     Element song = songArray.get(i);
 
-                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?)\\.html", song.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("http://5sing.kugou.com/(.*?)\\.html", song.attr("href")).replaceFirst("/", "_");
                     String name = song.text();
                     String artist = userInfo.getName();
                     String artistId = userId;
@@ -652,23 +652,23 @@ public class UserInfoReq {
                         break;
                     case 2:
                         pageElem = doc.select(".page_list span");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.last().text());
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
                         pageElem = doc.select(".page_message a");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.last().attr("href"));
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
                     case 6:
                         pageElem = doc.select("span.page_list a");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"));
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
                         pageElem = doc.select(".page span");
-                        pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        pageText = pageElem.size() <= 1 ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text());
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                 }
@@ -684,7 +684,7 @@ public class UserInfoReq {
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     Element song = songArray.get(i);
 
-                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?)\\.html", song.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("http://5sing.kugou.com/(.*?)\\.html", song.attr("href")).replaceFirst("/", "_");
                     String name = song.text();
                     String artist = userInfo.getName();
                     String artistId = userId;
@@ -728,23 +728,23 @@ public class UserInfoReq {
                         break;
                     case 2:
                         pageElem = doc.select(".page_list span");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.last().text());
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 3:
                         pageElem = doc.select(".page_message a");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.last().attr("href"), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.last().attr("href"));
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 4:
                     case 6:
                         pageElem = doc.select("span.page_list a");
-                        pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"), 1);
+                        pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.get(pageElem.size() - 1).attr("href"));
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                     case 5:
                         pageElem = doc.select(".page span");
-                        pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                        pageText = pageElem.size() <= 1 ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text());
                         t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                         break;
                 }
@@ -760,7 +760,7 @@ public class UserInfoReq {
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     Element song = songArray.get(i);
 
-                    String songId = ReUtil.get("http://5sing.kugou.com/(.*?)\\.html", song.attr("href"), 1).replaceFirst("/", "_");
+                    String songId = RegexUtil.getGroup1("http://5sing.kugou.com/(.*?)\\.html", song.attr("href")).replaceFirst("/", "_");
                     String name = song.text();
                     String artist = userInfo.getName();
                     String artistId = userId;
@@ -931,7 +931,7 @@ public class UserInfoReq {
                 String gender = "保密";
                 String avatarThumbUrl = "https://www.hifini.com/" + tc.select("img").attr("src");
                 String avatarUrl = avatarThumbUrl;
-                Integer programCount = Integer.parseInt(ReUtil.get("主题数：(\\d+)", sm.text(), 1));
+                Integer programCount = Integer.parseInt(RegexUtil.getGroup1("主题数：(\\d+)", sm.text()));
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.HF);
@@ -966,7 +966,7 @@ public class UserInfoReq {
                 String gender = "保密";
                 String avatarThumbUrl = "http://www.gggmusic.com/" + tc.select("img").attr("src");
                 String avatarUrl = avatarThumbUrl;
-                Integer programCount = Integer.parseInt(ReUtil.get("主题数：(\\d+)", sm.text(), 1));
+                Integer programCount = Integer.parseInt(RegexUtil.getGroup1("主题数：(\\d+)", sm.text()));
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.GG);
@@ -1097,7 +1097,7 @@ public class UserInfoReq {
                         .cookie(SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
-                JSONObject data = JSONObject.parseObject(ReUtil.get("\"author_info\":(\\{.*?\\})", userInfoBody, 1));
+                JSONObject data = JSONObject.parseObject(RegexUtil.getGroup1("\"author_info\":(\\{.*?\\})", userInfoBody));
 
                 String userId = data.getString("id");
                 String userName = data.getString("name");

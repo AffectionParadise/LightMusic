@@ -1,15 +1,15 @@
 package net.doge.sdk.entity.music.search;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.util.common.StringUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.util.common.RegexUtil;
+import net.doge.util.common.StringUtil;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -156,7 +156,7 @@ public class SearchSuggestionReq {
                 JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");
                 for (int i = 0, len = data.size(); i < len; i++) {
-                    res.add(ReUtil.get("RELWORD=(.*?)\\r\\n", data.getString(i), 1));
+                    res.add(RegexUtil.getGroup1("RELWORD=(.*?)\\r\\n", data.getString(i)));
                 }
             }
             return res;

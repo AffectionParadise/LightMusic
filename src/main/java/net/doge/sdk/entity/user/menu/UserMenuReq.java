@@ -1,20 +1,19 @@
 package net.doge.sdk.entity.user.menu;
 
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
 import net.doge.constant.model.RadioType;
+import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.*;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -412,7 +411,7 @@ public class UserMenuReq {
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements rs = doc.select("div.item");
-            String ts = ReUtil.get("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text(), 1);
+            String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
             total = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
             total += total / rn * 5;
             for (int i = 0, len = rs.size(); i < len; i++) {
@@ -421,7 +420,7 @@ public class UserMenuReq {
                 Element intro = radio.select("li.intro").first();
                 Element img = radio.select("div.pic img").first();
 
-                String radioId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+                String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                 String radioName = a.text();
                 String coverImgThumbUrl = img.attr("src");
                 String[] sp = intro.text().split(" / ");
@@ -759,7 +758,7 @@ public class UserMenuReq {
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements rs = doc.select("div.item");
-            String ts = ReUtil.get("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text(), 1);
+            String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
             t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
             t += t / rn * 5;
             for (int i = 0, len = rs.size(); i < len; i++) {
@@ -768,7 +767,7 @@ public class UserMenuReq {
                 Element intro = radio.select("li.intro").first();
                 Element img = radio.select("div.pic img").first();
 
-                String radioId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+                String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                 String radioName = a.text();
                 String coverImgThumbUrl = img.attr("src");
                 String[] sp = intro.text().split(" / ");
@@ -1106,7 +1105,7 @@ public class UserMenuReq {
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
                 Elements rs = doc.select("div.item");
-                String ts = ReUtil.get("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text(), 1);
+                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
                 t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
                 t += t / rn * 5;
                 for (int i = 0, len = rs.size(); i < len; i++) {
@@ -1115,7 +1114,7 @@ public class UserMenuReq {
                     Element intro = radio.select("li.intro").first();
                     Element img = radio.select("div.pic img").first();
 
-                    String radioId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+                    String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                     String radioName = a.text();
                     String dj = StringUtil.shorten(intro.text(), 100);
                     String coverImgThumbUrl = img.attr("src");
@@ -1148,7 +1147,7 @@ public class UserMenuReq {
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
                 Elements rs = doc.select("li.subject-item");
-                String ts = ReUtil.get("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text(), 1);
+                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
                 t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
                 t += t / rn * 5;
                 for (int i = 0, len = rs.size(); i < len; i++) {
@@ -1157,7 +1156,7 @@ public class UserMenuReq {
                     Element pub = radio.select("div.pub").first();
                     Element img = radio.select("div.pic img").first();
 
-                    String radioId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+                    String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                     String radioName = a.text();
                     String dj = pub.text().trim();
                     String coverImgThumbUrl = img.attr("src");
@@ -1531,23 +1530,23 @@ public class UserMenuReq {
                     break;
                 case 2:
                     pageElem = doc.select(".page_list span");
-                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                    pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.last().text());
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 3:
                     pageElem = doc.select("a.page_t_next");
-                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.attr("href"), 1);
+                    pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.attr("href"));
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 4:
                 case 6:
                     pageElem = doc.select(".msg_page_list a");
-                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"), 1);
+                    pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"));
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 5:
                     pageElem = doc.select(".page span");
-                    pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                    pageText = pageElem.size() <= 1 ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text());
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
             }
@@ -1567,7 +1566,7 @@ public class UserMenuReq {
                     Elements img = user.select("dt.lt img");
                     Elements la = user.select("label a");
 
-                    String userId = ReUtil.get("/(\\d+)", a.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("/(\\d+)", a.attr("href"));
                     String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
@@ -1596,7 +1595,7 @@ public class UserMenuReq {
                     Elements a = user.select("a");
                     Elements img = user.select("img");
 
-                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", a.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", a.attr("href"));
                     String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
@@ -1620,7 +1619,7 @@ public class UserMenuReq {
                     Element user = userArray.get(i);
                     Elements img = user.select("img");
 
-                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", user.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", user.attr("href"));
                     String userName = user.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
@@ -1870,23 +1869,23 @@ public class UserMenuReq {
                     break;
                 case 2:
                     pageElem = doc.select(".page_list span");
-                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.last().text(), 1);
+                    pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.last().text());
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 3:
                     pageElem = doc.select("a.page_t_next");
-                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.attr("href"), 1);
+                    pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.attr("href"));
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 4:
                 case 6:
                     pageElem = doc.select(".msg_page_list a");
-                    pageText = pageElem.isEmpty() ? "" : ReUtil.get("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"), 1);
+                    pageText = pageElem.isEmpty() ? "" : RegexUtil.getGroup1("/(\\d+)\\.html", pageElem.get(pageElem.size() - 2).attr("href"));
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
                 case 5:
                     pageElem = doc.select(".page span");
-                    pageText = pageElem.size() <= 1 ? "" : ReUtil.get("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text(), 1);
+                    pageText = pageElem.size() <= 1 ? "" : RegexUtil.getGroup1("第\\d+/(\\d+)页", pageElem.get(pageElem.size() - 3).text());
                     t = StringUtil.notEmpty(pageText) ? Integer.parseInt(pageText) * limit : limit;
                     break;
             }
@@ -1906,7 +1905,7 @@ public class UserMenuReq {
                     Elements img = user.select("dt.lt img");
                     Elements la = user.select("label a");
 
-                    String userId = ReUtil.get("/(\\d+)", a.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("/(\\d+)", a.attr("href"));
                     String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
@@ -1935,7 +1934,7 @@ public class UserMenuReq {
                     Elements a = user.select("a");
                     Elements img = user.select("img");
 
-                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", a.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", a.attr("href"));
                     String userName = a.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
@@ -1959,7 +1958,7 @@ public class UserMenuReq {
                     Element user = userArray.get(i);
                     Elements img = user.select("img");
 
-                    String userId = ReUtil.get("http://5sing.kugou.com/(\\d+)", user.attr("href"), 1);
+                    String userId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", user.attr("href"));
                     String userName = user.attr("title");
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");

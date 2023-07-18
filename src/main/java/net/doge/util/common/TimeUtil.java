@@ -1,7 +1,6 @@
 package net.doge.util.common;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ReUtil;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @Author yzx
- * @Description 音频时长格式转换工具类
+ * @Description 时间转换工具类
  * @Date 2020/12/15
  */
 public class TimeUtil {
@@ -221,7 +220,7 @@ public class TimeUtil {
      * @return
      */
     public static double toSeconds(String s) {
-        List<String> groups = ReUtil.findAll("(\\d+)", s, 0);
+        List<String> groups = RegexUtil.findAllGroup1("(\\d+)", s);
         Collections.reverse(groups);
         double res = 0, u = 1;
         for (String g : groups) {
@@ -239,7 +238,7 @@ public class TimeUtil {
      */
     public static double chineseToSeconds(String s) {
         s = s.replaceFirst("时长：", "");
-        List<String> groups = ReUtil.findAll("(\\d+)", s, 0);
+        List<String> groups = RegexUtil.findAllGroup1("(\\d+)", s);
         if (groups.size() == 1) {
             if (s.contains("秒")) return Integer.parseInt(groups.get(0));
             else if (s.contains("分")) return Integer.parseInt(groups.get(0)) * 60;

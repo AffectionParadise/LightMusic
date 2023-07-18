@@ -1,12 +1,12 @@
 package net.doge.sdk.entity.music.info.trackurl;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.StringUtil;
 import net.doge.util.common.CryptoUtil;
+import net.doge.util.common.RegexUtil;
+import net.doge.util.common.StringUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -162,10 +162,10 @@ public class KWTrackUrlReq {
                 .execute();
         String setCookie = resp.header(Header.SET_COOKIE);
         if (StringUtil.notEmpty(setCookie)) {
-            String kwToken = ReUtil.get("kw_token=(.*?);", setCookie, 1);
+            String kwToken = RegexUtil.getGroup1("kw_token=(.*?);", setCookie);
             csrf = kwToken;
         }
-        String trackUrl = ReUtil.get("url=(.*?)\r\n", resp.body(), 1);
+        String trackUrl = RegexUtil.getGroup1("url=(.*?)\r\n", resp.body());
         return trackUrl;
     }
 

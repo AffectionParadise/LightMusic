@@ -1,10 +1,11 @@
 package net.doge.sdk.entity.artist.info;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetAlbumInfo;
@@ -14,10 +15,9 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -759,7 +759,7 @@ public class ArtistInfoReq {
             for (int i = (page - 1) * limit, len = Math.min(page * limit, programs.size()); i < len; i++) {
                 Element program = programs.get(i);
 
-                String songId = ReUtil.get("id=(\\d+)", program.attr("href"), 1);
+                String songId = RegexUtil.getGroup1("id=(\\d+)", program.attr("href"));
                 String name = program.text().trim();
                 // 部分音频的艺术家不一致，干脆先不记录！
 //                String artist = a.text();
@@ -1232,7 +1232,7 @@ public class ArtistInfoReq {
                     .body();
             Document doc = Jsoup.parse(imgInfoBody);
             Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
-            String t = ReUtil.get("共(\\d+)张", doc.select("span.count").text(), 1);
+            String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
             total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
             for (int i = 0, len = imgs.size(); i < len; i++) {
                 Element img = imgs.get(i);

@@ -1,7 +1,8 @@
 package net.doge.sdk.entity.radio.info;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
@@ -9,9 +10,8 @@ import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -521,7 +521,7 @@ public class RadioInfoReq {
                         .body();
                 Document doc = Jsoup.parse(imgInfoBody);
                 Elements imgs = doc.select("div.pholist ul img");
-                String t = ReUtil.get("共(\\d+)张", doc.select("span.count").text(), 1);
+                String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
                 total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
                 for (int i = 0, len = imgs.size(); i < len; i++) {
                     Element img = imgs.get(i);
@@ -534,7 +534,7 @@ public class RadioInfoReq {
                         .body();
                 Document doc = Jsoup.parse(imgInfoBody);
                 Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
-                String t = ReUtil.get("共(\\d+)张", doc.select("span.count").text(), 1);
+                String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
                 total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
                 for (int i = 0, len = imgs.size(); i < len; i++) {
                     Element img = imgs.get(i);
@@ -564,7 +564,7 @@ public class RadioInfoReq {
                     .body();
             Document doc = Jsoup.parse(imgInfoBody);
             Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
-            String t = ReUtil.get("共(\\d+)张", doc.select("span.count").text(), 1);
+            String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
             total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
             for (int i = 0, len = imgs.size(); i < len; i++) {
                 Element img = imgs.get(i);

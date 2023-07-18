@@ -1,20 +1,20 @@
 package net.doge.sdk.entity.playlist.rcmd;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
-import net.doge.sdk.common.Tags;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -643,7 +643,7 @@ public class HighQualityPlaylistReq {
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                String playlistId = ReUtil.get("id=(\\d+)", playlistJson.getString("actionUrl"), 1);
+                String playlistId = RegexUtil.getGroup1("id=(\\d+)", playlistJson.getString("actionUrl"));
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("subTitle");
                 String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title");
@@ -892,10 +892,10 @@ public class HighQualityPlaylistReq {
                     Elements img = elem.select(".imgbox img");
                     Elements lc = elem.select(".lcount");
 
-                    String playlistId = ReUtil.get("dj/(.*?)\\.html", a.attr("href"), 1);
+                    String playlistId = RegexUtil.getGroup1("dj/(.*?)\\.html", a.attr("href"));
                     String playlistName = a.text();
                     String creator = author.text();
-                    String creatorId = ReUtil.get("/(\\d+)/dj", a.attr("href"), 1);
+                    String creatorId = RegexUtil.getGroup1("/(\\d+)/dj", a.attr("href"));
                     Long playCount = Long.parseLong(lc.text());
                     String coverImgThumbUrl = img.attr("src");
 

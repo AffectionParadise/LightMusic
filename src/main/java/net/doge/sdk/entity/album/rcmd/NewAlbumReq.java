@@ -1,6 +1,5 @@
 package net.doge.sdk.entity.album.rcmd;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONArray;
@@ -13,6 +12,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import org.jsoup.Jsoup;
@@ -729,7 +729,7 @@ public class NewAlbumReq {
                 Elements pl = album.select("div.pl2 p.pl");
                 Elements img = album.select("td img");
 
-                String albumId = ReUtil.get("/subject/(\\d+)/", a.attr("href"), 1);
+                String albumId = RegexUtil.getGroup1("/subject/(\\d+)/", a.attr("href"));
                 String albumName = a.text().trim();
                 String[] sp = pl.text().split(" / ");
                 String artist = sp[0];
@@ -772,7 +772,7 @@ public class NewAlbumReq {
                     Elements pl = album.select("div.pl2 p.pl");
                     Elements img = album.select("td img");
 
-                    String albumId = ReUtil.get("/subject/(\\d+)/", a.attr("href"), 1);
+                    String albumId = RegexUtil.getGroup1("/subject/(\\d+)/", a.attr("href"));
                     String albumName = a.text().trim();
                     String[] sp = pl.text().split(" / ");
                     String artist = sp[0];

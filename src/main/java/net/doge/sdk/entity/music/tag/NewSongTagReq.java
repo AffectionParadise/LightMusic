@@ -1,12 +1,12 @@
 package net.doge.sdk.entity.music.tag;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.SdkCommon;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
+import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -114,7 +114,7 @@ public class NewSongTagReq {
 
                 String name = a.text();
                 if ("全部".equals(name)) continue;
-                String id = ReUtil.get("&l=(.*)", a.attr("href"), 1);
+                String id = RegexUtil.getGroup1("&l=(.*)", a.attr("href"));
 
                 if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
                 Tags.newSongTag.get(name)[6] = " " + id;
@@ -126,7 +126,7 @@ public class NewSongTagReq {
 
                 String name = a.text();
                 if ("全部".equals(name)) continue;
-                String id = ReUtil.get("s=(.*?)&l=", a.attr("href"), 1);
+                String id = RegexUtil.getGroup1("s=(.*?)&l=", a.attr("href"));
 
                 if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
                 Tags.newSongTag.get(name)[6] = id + " ";

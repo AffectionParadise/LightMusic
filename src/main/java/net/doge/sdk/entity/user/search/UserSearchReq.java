@@ -1,6 +1,5 @@
 package net.doge.sdk.entity.user.search;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -11,6 +10,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -344,12 +344,12 @@ public class UserSearchReq {
                     Elements info = result.select(".title .info");
                     Elements img = result.select("div.pic img");
 
-                    String userId = ReUtil.get("sid: (\\d+)", a.attr("onclick"), 1);
+                    String userId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String userName = a.text().trim();
                     String gender = "保密";
                     String sr = img.attr("src");
                     String avatarThumbUrl = sr.contains("/user") ? sr.replaceFirst("normal", "large") : sr.replaceFirst("/up", "/ul");
-                    Integer followed = Integer.parseInt(ReUtil.get("(\\d+)人关注", info.text(), 1));
+                    Integer followed = Integer.parseInt(RegexUtil.getGroup1("(\\d+)人关注", info.text()));
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.DB);

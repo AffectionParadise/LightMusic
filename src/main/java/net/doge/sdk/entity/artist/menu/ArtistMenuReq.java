@@ -1,7 +1,8 @@
 package net.doge.sdk.entity.artist.menu;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetArtistInfo;
@@ -10,9 +11,8 @@ import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -281,7 +281,7 @@ public class ArtistMenuReq {
                     .execute()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
-            String ts = ReUtil.get("（(\\d+)）", doc.select("div#content > h1").text(), 1);
+            String ts = RegexUtil.getGroup1("（(\\d+)）", doc.select("div#content > h1").text());
             int tn = Integer.parseInt(ts);
             t.set(tn -= tn / rn * 15);
             Elements us = doc.select("dl.obu");
@@ -290,7 +290,7 @@ public class ArtistMenuReq {
                 Elements a = user.select("dd a");
                 Elements img = user.select("img");
 
-                String userId = ReUtil.get("/people/(.*?)/", a.attr("href"), 1);
+                String userId = RegexUtil.getGroup1("/people/(.*?)/", a.attr("href"));
                 String userName = a.text();
                 String gender = "保密";
                 String src = img.attr("src");
@@ -365,7 +365,7 @@ public class ArtistMenuReq {
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements cs = doc.select("div.partners.item");
-            String ts = ReUtil.get("共(\\d+)条", doc.select("span.count").text(), 1);
+            String ts = RegexUtil.getGroup1("共(\\d+)条", doc.select("span.count").text());
             t = StringUtil.isEmpty(ts) ? cs.size() : Integer.parseInt(ts);
             t += t / limit * 10;
             for (int i = 0, len = cs.size(); i < len; i++) {
@@ -373,7 +373,7 @@ public class ArtistMenuReq {
                 Element a = artist.select("div.info a").first();
                 Element img = artist.select("div.pic img").first();
 
-                String artistId = ReUtil.get("celebrity/(\\d+)/", a.attr("href"), 1);
+                String artistId = RegexUtil.getGroup1("celebrity/(\\d+)/", a.attr("href"));
                 String artistName = a.text();
                 String coverImgThumbUrl = img.attr("src");
 
@@ -480,7 +480,7 @@ public class ArtistMenuReq {
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements rs = doc.select("div.grid_view > ul > li > dl");
-            String ts = ReUtil.get("共(\\d+)条", doc.select("span.count").text(), 1);
+            String ts = RegexUtil.getGroup1("共(\\d+)条", doc.select("span.count").text());
             t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
             t += t / limit * 10;
             for (int i = 0, len = rs.size(); i < len; i++) {
@@ -490,11 +490,11 @@ public class ArtistMenuReq {
                 Element img = radio.select("img").first();
                 Elements dl = radio.select("dl > dd > dl");
 
-                String radioId = ReUtil.get("subject/(\\d+)/", a.attr("href"), 1);
+                String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                 String radioName = a.text();
                 String dj = dl.text().trim();
                 String coverImgThumbUrl = img.attr("src");
-                String category = ReUtil.get("(\\d+)", span.text(), 1);
+                String category = RegexUtil.getGroup1("(\\d+)", span.text());
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setSource(NetMusicSource.DB);

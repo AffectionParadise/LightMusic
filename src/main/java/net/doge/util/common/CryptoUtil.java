@@ -12,6 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+/**
+ * @Author yzx
+ * @Description 加解密工具类
+ * @Date 2020/12/15
+ */
 public class CryptoUtil {
     /**
      * 字符串转为 32 位 MD5

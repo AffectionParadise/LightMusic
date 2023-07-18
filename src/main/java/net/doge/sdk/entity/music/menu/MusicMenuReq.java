@@ -1,7 +1,8 @@
 package net.doge.sdk.entity.music.menu;
 
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
@@ -10,8 +11,7 @@ import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -144,7 +144,7 @@ public class MusicMenuReq {
             for (int i = 0, len = songs.size(); i < len; i++) {
                 Element song = songs.get(i);
 
-                String songId = ReUtil.get("thread-(.*?)\\.htm", song.attr("href"), 1);
+                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", song.attr("href"));
                 String songName = song.text();
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -168,7 +168,7 @@ public class MusicMenuReq {
             for (int i = 0, len = songs.size(); i < len; i++) {
                 Element song = songs.get(i);
 
-                String songId = ReUtil.get("thread-(.*?)\\.htm", song.attr("href"), 1);
+                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", song.attr("href"));
                 String songName = song.text();
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
