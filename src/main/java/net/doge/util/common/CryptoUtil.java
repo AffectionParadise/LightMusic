@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
@@ -99,15 +100,13 @@ public class CryptoUtil {
         Deflater deflater = new Deflater();
         deflater.setInput(input);
 
-        // Compress the data
+        // 压缩数据
         deflater.finish();
         byte[] compressedBytes = new byte[input.length];
         int compressedLength = deflater.deflate(compressedBytes);
 
-        // Copy the compressed data to a new array with the correct length
-        byte[] result = new byte[compressedLength];
-        System.arraycopy(compressedBytes, 0, result, 0, compressedLength);
-        return result;
+        // 拷贝有效数据
+        return Arrays.copyOf(compressedBytes, compressedLength);
     }
 
     /**

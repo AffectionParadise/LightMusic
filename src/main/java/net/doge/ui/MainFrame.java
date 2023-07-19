@@ -20086,7 +20086,7 @@ public class MainFrame extends JFrame {
             lrcDelayScrollTimer.stop();
             lrcScrollAnimation = true;
         });
-        globalPanelTimer = new Timer(0, e -> {
+        globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.submit(() -> {
                 float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
                 globalPanel.setOpacity(opacity);

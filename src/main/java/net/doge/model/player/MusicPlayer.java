@@ -360,11 +360,6 @@ public class MusicPlayer {
         return mp != null ? mp.getCurrentTime().toSeconds() : 0;
     }
 
-    // 获取当前进度字符串
-    public String getCurrTimeString() {
-        return TimeUtil.format(getCurrTimeSeconds());
-    }
-
     // 获取总时间秒
     public double getDurationSeconds() {
         return musicInfo.getDuration();

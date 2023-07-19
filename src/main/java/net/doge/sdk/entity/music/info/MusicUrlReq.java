@@ -212,7 +212,6 @@ public class MusicUrlReq {
 //            String sip = data.getJSONArray("sip").getString(0);
 //            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
 //            return StringUtil.isEmpty(url) ? "" : sip + url;
-            // sq hr hq mp3
             return new QQTrackUrlReq().getTrackUrl(songId, "hq");
         }
 
