@@ -10,6 +10,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -26,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserSearchReq {
     // 关键词搜索用户 API
-    private final String SEARCH_USER_API = SdkCommon.prefix + "/cloudsearch?type=1002&keywords=%s&offset=%s&limit=%s";
+    private final String SEARCH_USER_API = SdkCommon.PREFIX + "/cloudsearch?type=1002&keywords=%s&offset=%s&limit=%s";
     // 关键词搜索用户 API (喜马拉雅)
     private final String SEARCH_USER_XM_API
             = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&core=user&device=iPhone";
@@ -64,7 +65,7 @@ public class UserSearchReq {
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject result = userInfoJson.getJSONObject("result");
-            if (!result.isEmpty()) {
+            if (JsonUtil.notEmpty(result)) {
                 t = result.getIntValue("userprofileCount");
                 JSONArray userArray = result.getJSONArray("userprofiles");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
@@ -103,8 +104,8 @@ public class UserSearchReq {
             LinkedList<NetUserInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String userInfoBody = HttpRequest.post(String.format(SdkCommon.qqSearchApi))
-                    .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 8))
+            String userInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+                    .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 8))
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -150,7 +151,7 @@ public class UserSearchReq {
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject result = userInfoJson.getJSONObject("data").getJSONObject("user");
-            if (result != null) {
+            if (JsonUtil.notEmpty(result)) {
                 t = result.getIntValue("total");
                 JSONArray userArray = result.getJSONArray("docs");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
@@ -249,7 +250,7 @@ public class UserSearchReq {
             JSONObject data = JSONObject.parseObject(userInfoBody);
             t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
             JSONArray userArray = data.getJSONArray("list");
-            if (userArray != null) {
+            if (JsonUtil.notEmpty(userArray)) {
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 
@@ -334,7 +335,7 @@ public class UserSearchReq {
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("items");
-            if (userArray != null) {
+            if (JsonUtil.notEmpty(userArray)) {
                 int to = userInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = userArray.size(); i < len; i++) {
@@ -380,7 +381,7 @@ public class UserSearchReq {
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray userArray = data.getJSONArray("object_list");
-            if (userArray != null && !userArray.isEmpty()) {
+            if (JsonUtil.notEmpty(userArray)) {
                 t = data.getIntValue("total");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
@@ -424,7 +425,7 @@ public class UserSearchReq {
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray userArray = data.getJSONArray("result");
-            if (userArray != null) {
+            if (JsonUtil.notEmpty(userArray)) {
                 t = data.getIntValue("numResults");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);

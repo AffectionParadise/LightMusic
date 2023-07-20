@@ -77,69 +77,65 @@ public class LoadingPanel extends JComponent implements MouseListener {
     }
 
     public void start() {
-        if (!isShowing()) {
-            addMouseListener(this);
-            setVisible(true);
-            ticker = buildTicker();
-            animation = new Thread(new Animator(true));
-            animation.start();
-        }
+        if (isShowing()) return;
+        addMouseListener(this);
+        setVisible(true);
+        ticker = buildTicker();
+        animation = new Thread(new Animator(true));
+        animation.start();
     }
 
     public void stop() {
-        if (animation != null) {
-            animation.stop();
-            animation = null;
-            animation = new Thread(new Animator(false));
-            animation.start();
-        }
+        if (animation == null) return;
+        animation.stop();
+        animation = null;
+        animation = new Thread(new Animator(false));
+        animation.start();
     }
 
     public void interrupt() {
-        if (animation != null) {
-            animation.interrupt();
-            animation = null;
+        if (animation == null) return;
+        animation.interrupt();
+        animation = null;
 
-            removeMouseListener(this);
-            setVisible(false);
-        }
+        removeMouseListener(this);
+        setVisible(false);
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        if (started) {
-            int width = getWidth();
-            int height = getHeight();
+        if (!started) return;
+        int width = getWidth();
+        int height = getHeight();
 
-            double maxY = 0.0;
+        double maxY = 0.0;
 
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHints(hints);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHints(hints);
 
-            g2.setColor(ImageUtil.getAvgRGB(f.globalPanel.getBackgroundImage(), shield));
-            g2.fillRect(0, 0, width, height);
+        g2.setColor(ImageUtil.getAvgRGB(f.globalPanel.getBackgroundImage(), shield));
+        g2.fillRect(0, 0, width, height);
 
-            for (int i = 0; i < ticker.length; i++) {
-                int channel = 224 - 128 / (i + 1);
-                g2.setColor(new Color(channel, channel, channel, alphaLevel));
-                g2.fill(ticker[i]);
+        for (int i = 0; i < ticker.length; i++) {
+            int channel = 224 - 128 / (i + 1);
+            g2.setColor(new Color(channel, channel, channel, alphaLevel));
+            g2.fill(ticker[i]);
 
-                Rectangle2D bounds = ticker[i].getBounds2D();
-                if (bounds.getMaxY() > maxY) {
-                    maxY = bounds.getMaxY();
-                }
+            Rectangle2D bounds = ticker[i].getBounds2D();
+            if (bounds.getMaxY() > maxY) {
+                maxY = bounds.getMaxY();
             }
+        }
 
-            if (text != null && text.length() > 0) {
-                FontRenderContext context = g2.getFontRenderContext();
+        if (text != null && text.length() > 0) {
+            FontRenderContext context = g2.getFontRenderContext();
 //                TextLayout layout = new TextLayout(text, getFont(), context);
-                // 自定义字体
-                TextLayout layout = new TextLayout(text, font, context);
-                Rectangle2D bounds = layout.getBounds();
-                g2.setColor(f.currUIStyle.getTextColor());
-                layout.draw(g2, (float) (width - bounds.getWidth()) / 2,
-                        (float) (maxY + layout.getLeading() + 2 * layout.getAscent()));
-            }
+            // 自定义字体
+            TextLayout layout = new TextLayout(text, font, context);
+            Rectangle2D bounds = layout.getBounds();
+            g2.setColor(f.currUIStyle.getTextColor());
+            layout.draw(g2, (float) (width - bounds.getWidth()) / 2,
+                    (float) (maxY + layout.getLeading() + 2 * layout.getAscent()));
         }
     }
 

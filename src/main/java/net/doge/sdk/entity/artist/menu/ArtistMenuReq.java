@@ -11,6 +11,7 @@ import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -27,16 +28,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ArtistMenuReq {
     // 相似歌手 API
-    private final String SIMILAR_ARTIST_API = SdkCommon.prefix + "/simi/artist?id=%s";
+    private final String SIMILAR_ARTIST_API = SdkCommon.PREFIX + "/simi/artist?id=%s";
     // 相似歌手 API (酷狗)(POST)
     private final String SIMILAR_ARTIST_KG_API = "http://kmr.service.kugou.com/v1/author/similar";
     // 相似歌手 API (QQ)
-    private final String SIMILAR_ARTIST_QQ_API = SdkCommon.prefixQQ33 + "/singer/sim?singermid=%s";
+    private final String SIMILAR_ARTIST_QQ_API = SdkCommon.PREFIX_QQ + "/singer/sim?singermid=%s";
 
     // 歌手粉丝 API
-    private final String ARTIST_FANS_API = SdkCommon.prefix + "/artist/fans?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_FANS_API = SdkCommon.PREFIX + "/artist/fans?id=%s&offset=%s&limit=%s";
     // 歌手粉丝总数 API
-    private final String ARTIST_FANS_TOTAL_API = SdkCommon.prefix + "/artist/follow/count?id=%s";
+    private final String ARTIST_FANS_TOTAL_API = SdkCommon.PREFIX + "/artist/follow/count?id=%s";
     // 社团职员 API (猫耳)
     private final String ORGANIZATION_STAFFS_ME_API = "https://www.missevan.com/organization/staff?organization_id=%s&page=%s";
     // 歌手粉丝 API (豆瓣)
@@ -75,7 +76,7 @@ public class ArtistMenuReq {
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONArray artistArray = artistInfoJson.getJSONArray("artists");
-            if (artistArray != null) {
+            if (JsonUtil.notEmpty(artistArray)) {
                 t = artistArray.size();
                 for (int i = 0, len = artistArray.size(); i < len; i++) {
                     JSONObject artistJson = artistArray.getJSONObject(i);
@@ -141,7 +142,7 @@ public class ArtistMenuReq {
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONArray artistArray = artistInfoJson.getJSONObject("data").getJSONArray("list");
-            if (artistArray != null) {
+            if (JsonUtil.notEmpty(artistArray)) {
                 t = artistArray.size();
                 for (int i = 0, len = artistArray.size(); i < len; i++) {
                     JSONObject artistJson = artistArray.getJSONObject(i);

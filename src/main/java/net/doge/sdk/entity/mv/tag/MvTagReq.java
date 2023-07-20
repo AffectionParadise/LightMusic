@@ -16,7 +16,7 @@ public class MvTagReq {
     // MV 标签 API (KG)
     private final String MV_TAG_KG_API = "http://mobileservice.kugou.com/api/v5/video/recommend_channel?version=9108&type=2";
     // MV 标签 API (QQ)
-    private final String MV_TAG_QQ_API = SdkCommon.prefixQQ33 + "/mv/category";
+    private final String MV_TAG_QQ_API = SdkCommon.PREFIX_QQ + "/mv/category";
 
     /**
      * 加载 MV 标签

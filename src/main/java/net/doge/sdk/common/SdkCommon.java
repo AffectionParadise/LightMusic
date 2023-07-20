@@ -21,13 +21,13 @@ public class SdkCommon {
     public static final String BI_COOKIE = "buvid3=F51EB532-B946-AA99-7E6B-3F0766C74A0129044infoc; i-wanna-go-back=-1; b_ut=5; CURRENT_PID=073ebfd0-eb4f-11ed-a6e3-637f2da26e5c; rpdid=|(um~RRuY|R)0J'uY)JkmY|u~; _uuid=7EB1D5C2-A8410-BD5D-B1110-2510576A922F948945infoc; PVID=1; nostalgia_conf=-1; hit-new-style-dyn=1; hit-dyn-v2=1; CURRENT_BLACKGAP=0; buvid_fp_plain=undefined; header_theme_version=CLOSE; CURRENT_FNVAL=4048; LIVE_BUVID=AUTO5916858943957456; fingerprint=59063f7bf1a66ec6fcf18dbd44b40de2; buvid_fp=8dee2d178a96c5f04ea99e061b587c02; CURRENT_QUALITY=0; b_nut=1688878222; bp_video_offset_381984701=816214846225776600; innersign=0; b_lsid=CECD36A6_18939707B67; sid=8sud6tli; FEED_LIVE_VERSION=V_LIVE_2; buvid4=0F6C5D17-B0F8-D451-14F1-3FDDFAB2E51A25016-023070914-wTMxKM%2BXYt%2FSW3zMLO3brQ%3D%3D; home_feed_column=4; browser_resolution=1103-961";
 
     // 域名
-    public static final String host = "localhost";
+    public static final String HOST = "localhost";
 
-    public static final String prefix = String.format("http://%s:3000", host);
-    public static final String prefixQQ33 = String.format("http://%s:3300", host);
-    public static final String qqSearchApi = "https://u.y.qq.com/cgi-bin/musicu.fcg";
-    public static final String qqSearchJson = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
-    public static final String prefixMg = String.format("http://%s:3400", host);
+    public static final String PREFIX = String.format("http://%s:3000", HOST);
+    public static final String PREFIX_QQ = String.format("http://%s:3300", HOST);
+    public static final String QQ_SEARCH_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
+    public static final String QQ_SEARCH_JSON = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
+    public static final String PREFIX_MG = String.format("http://%s:3400", HOST);
 
     // 构造酷我音乐请求
     public static HttpRequest kwRequest(String url) {

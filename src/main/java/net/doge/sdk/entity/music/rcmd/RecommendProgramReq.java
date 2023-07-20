@@ -27,13 +27,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendProgramReq {
     // 推荐节目 API
-    private final String RECOMMEND_PROGRAM_API = SdkCommon.prefix + "/program/recommend";
+    private final String RECOMMEND_PROGRAM_API = SdkCommon.PREFIX + "/program/recommend";
     // 推荐个性节目 API
-    private final String PERSONALIZED_PROGRAM_API = SdkCommon.prefix + "/personalized/djprogram";
+    private final String PERSONALIZED_PROGRAM_API = SdkCommon.PREFIX + "/personalized/djprogram";
     // 24 小时节目榜 API
-    private final String PROGRAM_24_HOURS_TOPLIST_API = SdkCommon.prefix + "/dj/program/toplist/hours";
+    private final String PROGRAM_24_HOURS_TOPLIST_API = SdkCommon.PREFIX + "/dj/program/toplist/hours";
     // 节目榜 API
-    private final String PROGRAM_TOPLIST_API = SdkCommon.prefix + "/dj/program/toplist?limit=200";
+    private final String PROGRAM_TOPLIST_API = SdkCommon.PREFIX + "/dj/program/toplist?limit=200";
     // 推荐节目 API (猫耳)
     private final String REC_PROGRAM_ME_API = "https://www.missevan.com/site/homepage";
     // 探索节目 API (猫耳)

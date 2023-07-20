@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.util.common.JsonUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,7 +19,7 @@ import java.util.concurrent.Future;
 
 public class NewAlbumTagReq {
     // 曲风 API
-    private final String STYLE_API = SdkCommon.prefix + "/style/list";
+    private final String STYLE_API = SdkCommon.PREFIX + "/style/list";
     // 专辑标签 API (豆瓣)
     private final String ALBUM_TAG_DB_API = "https://music.douban.com/tag/";
 
@@ -391,7 +392,7 @@ public class NewAlbumTagReq {
                 Tags.newAlbumTag.get(name)[2] = id;
                 // 子标签
                 JSONArray subTags = tag.getJSONArray("childrenTags");
-                if (subTags == null) continue;
+                if (JsonUtil.isEmpty(subTags)) continue;
                 for (int j = 0, s = subTags.size(); j < s; j++) {
                     JSONObject subTag = subTags.getJSONObject(j);
 
@@ -402,7 +403,7 @@ public class NewAlbumTagReq {
                     Tags.newAlbumTag.get(subName)[2] = subId;
                     // 孙子标签
                     JSONArray ssTags = subTag.getJSONArray("childrenTags");
-                    if (ssTags == null) continue;
+                    if (JsonUtil.isEmpty(ssTags)) continue;
                     for (int k = 0, l = ssTags.size(); k < l; k++) {
                         JSONObject ssTag = ssTags.getJSONObject(k);
 

@@ -6,6 +6,7 @@ import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.common.JsonUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,7 +19,7 @@ import java.util.concurrent.Future;
 
 public class RecPlaylistTagReq {
     // 曲风 API
-    private final String STYLE_API = SdkCommon.prefix + "/style/list";
+    private final String STYLE_API = SdkCommon.PREFIX + "/style/list";
     // 歌单标签 API (酷狗)
     private final String PLAYLIST_TAG_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_smarty=1";
     // 歌单标签 API (QQ)
@@ -58,7 +59,7 @@ public class RecPlaylistTagReq {
                 Tags.recPlaylistTag.get(name)[0] = id;
                 // 子标签
                 JSONArray subTags = tag.getJSONArray("childrenTags");
-                if (subTags == null) continue;
+                if (JsonUtil.isEmpty(subTags)) continue;
                 for (int j = 0, s = subTags.size(); j < s; j++) {
                     JSONObject subTag = subTags.getJSONObject(j);
 
@@ -69,7 +70,7 @@ public class RecPlaylistTagReq {
                     Tags.recPlaylistTag.get(subName)[0] = subId;
                     // 孙子标签
                     JSONArray ssTags = subTag.getJSONArray("childrenTags");
-                    if (ssTags == null) continue;
+                    if (JsonUtil.isEmpty(ssTags)) continue;
                     for (int k = 0, l = ssTags.size(); k < l; k++) {
                         JSONObject ssTag = ssTags.getJSONObject(k);
 

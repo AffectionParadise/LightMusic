@@ -12,6 +12,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -28,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RadioSearchReq {
     // 关键词搜索电台 API
-    private final String SEARCH_RADIO_API = SdkCommon.prefix + "/cloudsearch?type=1009&keywords=%s&offset=%s&limit=%s";
+    private final String SEARCH_RADIO_API = SdkCommon.PREFIX + "/cloudsearch?type=1009&keywords=%s&offset=%s&limit=%s";
     // 关键词搜索电台 API(喜马拉雅)
     private final String SEARCH_RADIO_XM_API
             = "https://www.ximalaya.com/revision/search/main?core=album&kw=%s&page=%s&spellchecker=true&rows=%s&condition=relation&device=iPhone&fq=&paidFilter=false";
@@ -61,7 +62,7 @@ public class RadioSearchReq {
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject result = radioInfoJson.getJSONObject("result");
-            if (!result.isEmpty()) {
+            if (JsonUtil.notEmpty(result)) {
                 t = result.getIntValue("djRadiosCount");
                 JSONArray radioArray = result.getJSONArray("djRadios");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
@@ -195,7 +196,7 @@ public class RadioSearchReq {
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
-            if (radioArray != null) {
+            if (JsonUtil.notEmpty(radioArray)) {
                 int to = radioInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
@@ -238,7 +239,7 @@ public class RadioSearchReq {
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
-            if (radioArray != null) {
+            if (JsonUtil.notEmpty(radioArray)) {
                 int to = radioInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
@@ -282,7 +283,7 @@ public class RadioSearchReq {
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
-            if (radioArray != null) {
+            if (JsonUtil.notEmpty(radioArray)) {
                 int to = radioInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {

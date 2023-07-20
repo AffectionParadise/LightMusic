@@ -1,14 +1,11 @@
 package net.doge.ui.component.dialog;
 
 import com.mpatric.mp3agic.ID3v1Genres;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.NotSupportedException;
-import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
-import net.doge.constant.ui.Colors;
 import net.doge.constant.player.Format;
+import net.doge.constant.ui.Colors;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
 import net.doge.ui.MainFrame;
@@ -21,10 +18,10 @@ import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.componentui.combobox.ComboBoxUI;
 import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.util.media.MusicUtil;
-import net.doge.util.system.FileUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import net.doge.util.media.MusicUtil;
+import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -32,7 +29,6 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @Author yzx
@@ -126,28 +122,18 @@ public class EditInfoDialog extends AbstractTitledDialog {
                         results[i] = ((CustomTextField) components[i]).getText();
                     }
                 }
-                try {
-                    MediaInfo mediaInfo = new MediaInfo(
-                            (String) results[6],
-                            (String) results[7],
-                            (String) results[8],
-                            (String) results[9],
-                            (String) results[10],
-                            (String) results[11],
-                            (BufferedImage) results[12]
-                    );
-                    MusicUtil.writeMP3Info(file.getAbsolutePath(), mediaInfo);
-                    // 歌曲信息更改后重新填充
-                    MusicUtil.fillAudioFileInfo(file);
-                } catch (InvalidDataException ex) {
-                    ex.printStackTrace();
-                } catch (UnsupportedTagException ex) {
-                    ex.printStackTrace();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                } catch (NotSupportedException ex) {
-                    ex.printStackTrace();
-                }
+                MediaInfo mediaInfo = new MediaInfo(
+                        (String) results[6],
+                        (String) results[7],
+                        (String) results[8],
+                        (String) results[9],
+                        (String) results[10],
+                        (String) results[11],
+                        (BufferedImage) results[12]
+                );
+                MusicUtil.writeMP3Info(file.getAbsolutePath(), mediaInfo);
+                // 歌曲信息更改后重新填充
+                MusicUtil.fillAudioFileInfo(file);
             }
             confirmed = true;
             dispose();

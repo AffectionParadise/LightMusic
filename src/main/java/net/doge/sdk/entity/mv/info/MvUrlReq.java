@@ -7,25 +7,26 @@ import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 
 public class MvUrlReq {
     // mlog id 转视频 id API
-    private final String MLOG_TO_VIDEO_API = SdkCommon.prefix + "/mlog/to/video?id=%s";
+    private final String MLOG_TO_VIDEO_API = SdkCommon.PREFIX + "/mlog/to/video?id=%s";
     // MV 视频链接 API
-    private final String MV_URL_API = SdkCommon.prefix + "/mv/url?id=%s";
+    private final String MV_URL_API = SdkCommon.PREFIX + "/mv/url?id=%s";
     // 视频链接 API
-    private final String VIDEO_URL_API = SdkCommon.prefix + "/video/url?id=%s";
+    private final String VIDEO_URL_API = SdkCommon.PREFIX + "/video/url?id=%s";
     // Mlog 链接 API
-//    private final String MLOG_URL_API = SdkCommon.prefix + "/mlog/url?id=%s";
+//    private final String MLOG_URL_API = SdkCommon.PREFIX + "/mlog/url?id=%s";
     // MV 视频链接获取 API (酷狗)
 //    private final String MV_URL_KG_API = "https://gateway.kugou.com/v2/interface/index?appid=1014&clienttime=%s&clientver=20000&cmd=123&dfid=-" +
 //            "&ext=mp4&hash=%s&ismp3=0&key=kugoumvcloud&mid=%s&pid=6&srcappid=2919&ssl=1&uuid=%s";
     private final String MV_URL_KG_API = "http://m.kugou.com/app/i/mv.php?cmd=100&hash=%s&ismp3=1&ext=mp4";
     // MV 视频链接获取 API (QQ)
-    private final String MV_URL_QQ_API = SdkCommon.prefixQQ33 + "/mv/url?id=%s";
+    private final String MV_URL_QQ_API = SdkCommon.PREFIX_QQ + "/mv/url?id=%s";
     // MV 视频链接获取 API (酷我)
     private final String MV_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=mv&httpsStatus=1";
     // MV 视频链接获取 API (千千)
@@ -38,7 +39,7 @@ public class MvUrlReq {
     private final String VIDEO_CID_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
     // MV 视频链接获取 API (哔哩哔哩)
     private final String VIDEO_URL_BI_API = "https://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=64";
-    
+
     /**
      * 根据 MV id 获取 MV 视频链接
      */
@@ -112,18 +113,14 @@ public class MvUrlReq {
 //                    .body();
 //            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
 //            return data.getJSONObject(mvId.toLowerCase()).getString("downurl");
-
             String mvBody = HttpRequest.get(String.format(MV_URL_KG_API, mvId))
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("mvdata");
-            JSONObject mvJson;
             // 高画质优先
-            mvJson = data.getJSONObject("rq");
-            if (mvJson.isEmpty()) mvJson = data.getJSONObject("sq");
-            if (mvJson.isEmpty()) mvJson = data.getJSONObject("sd");
-            if (mvJson.isEmpty()) mvJson = data.getJSONObject("le");
-            if (mvJson.isEmpty()) mvJson = data.getJSONObject("hd");
+            JSONObject mvJson = data.getJSONObject("rq");
+            if (JsonUtil.isEmpty(mvJson)) mvJson = data.getJSONObject("sq");
+            if (JsonUtil.isEmpty(mvJson)) mvJson = data.getJSONObject("le");
             return mvJson.getString("downurl");
         }
 
@@ -142,7 +139,7 @@ public class MvUrlReq {
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
-            if (data != null) return data.getString("url");
+            if (JsonUtil.notEmpty(data)) return data.getString("url");
         }
 
         // 咪咕 (暂时没有 MV url 的获取方式)

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * @Date 2020/12/21
  */
 public class FileUtil {
-    private static Pattern filePattern = Pattern.compile("[\\\\/:*?\"<>|]");
+    private static final Pattern FILE_PATTERN = Pattern.compile("[\\\\/:*?\"<>|]");
 
     /**
      * 获得不带后缀的文件路径
@@ -63,7 +63,7 @@ public class FileUtil {
      * 去掉文件名中的非法字符
      */
     public static String filterFileName(String fileName) {
-        return filePattern.matcher(fileName).replaceAll("");
+        return FILE_PATTERN.matcher(fileName).replaceAll("");
     }
 
     /**
@@ -145,14 +145,11 @@ public class FileUtil {
      * @return
      */
     public static long getCreationTime(File file) {
-        if (file == null) return 0;
-
         try {
             Path path = file.toPath();
             BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
-            long creationTime = attr.creationTime().toMillis();
-            return creationTime;
-        } catch (IOException e) {
+            return attr.creationTime().toMillis();
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -164,14 +161,11 @@ public class FileUtil {
      * @return
      */
     public static long getAccessTime(File file) {
-        if (file == null) return 0;
-
         try {
             Path path = file.toPath();
             BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
-            long accessTime = attr.lastAccessTime().toMillis();
-            return accessTime;
-        } catch (IOException e) {
+            return attr.lastAccessTime().toMillis();
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -187,9 +181,7 @@ public class FileUtil {
         File[] files = file.listFiles();
         long total = 0;
         if (files != null) {
-            for (int i = 0, len = files.length; i < len; i++) {
-                total += getDirOrFileSize(files[i]);
-            }
+            for (File f : files) total += getDirOrFileSize(f);
         }
         return total;
     }
@@ -239,8 +231,12 @@ public class FileUtil {
      * @param dest
      * @throws IOException
      */
-    public static void copy(String source, String dest) throws IOException {
-        Files.copy(Paths.get(source), new BufferedOutputStream(new FileOutputStream(dest)));
+    public static void copy(String source, String dest) {
+        try {
+            Files.copy(Paths.get(source), new BufferedOutputStream(new FileOutputStream(dest)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -254,9 +250,7 @@ public class FileUtil {
         try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
             StringBuilder sb = new StringBuilder();
             String s;
-            while ((s = reader.readLine()) != null) {
-                sb.append(s);
-            }
+            while ((s = reader.readLine()) != null) sb.append(s);
             return sb.toString();
         } catch (IOException e) {
             return null;

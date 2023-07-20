@@ -26,19 +26,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ArtistListReq {
     // 歌手榜 API
-    private final String ARTIST_RANKING_LIST_API = SdkCommon.prefix + "/toplist/artist?type=%s";
+    private final String ARTIST_RANKING_LIST_API = SdkCommon.PREFIX + "/toplist/artist?type=%s";
     // 热门歌手 API
-    private final String HOT_ARTIST_LIST_API = SdkCommon.prefix + "/top/artists?offset=%s&limit=%s";
+    private final String HOT_ARTIST_LIST_API = SdkCommon.PREFIX + "/top/artists?offset=%s&limit=%s";
     // 分类歌手 API
-    private final String CAT_ARTIST_API = SdkCommon.prefix + "/artist/list?type=%s&area=%s&initial=%s&offset=%s&limit=%s";
+    private final String CAT_ARTIST_API = SdkCommon.PREFIX + "/artist/list?type=%s&area=%s&initial=%s&offset=%s&limit=%s";
     // 曲风歌手 API
-    private final String STYLE_ARTIST_API = SdkCommon.prefix + "/style/artist?tagId=%s&cursor=%s&size=%s";
+    private final String STYLE_ARTIST_API = SdkCommon.PREFIX + "/style/artist?tagId=%s&cursor=%s&size=%s";
     // 热门歌手推荐 API (酷狗)
     private final String HOT_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=1&page=%s&pagesize=%s";
     // 飙升歌手推荐 API (酷狗)
     private final String UP_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=2&page=%s&pagesize=%s";
     // 推荐歌手 API (QQ)
-    private final String ARTIST_LIST_QQ_API = SdkCommon.prefixQQ33 + "/singer/list?sex=%s&genre=%s&index=%s&area=%s&pageNo=%s";
+    private final String ARTIST_LIST_QQ_API = SdkCommon.PREFIX_QQ + "/singer/list?sex=%s&genre=%s&index=%s&area=%s&pageNo=%s";
     // 歌手推荐 API (酷我)
     private final String ARTIST_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
     // 全部歌手 API (酷我)

@@ -13,6 +13,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -31,13 +32,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HighQualityPlaylistReq {
     // 精品歌单 API
     private final String HIGH_QUALITY_PLAYLIST_API
-            = SdkCommon.prefix + "/top/playlist/highquality?cat=%s&limit=100";
+            = SdkCommon.PREFIX + "/top/playlist/highquality?cat=%s&limit=100";
     // 网友精选碟(最热) API
     private final String HOT_PICKED_PLAYLIST_API
-            = SdkCommon.prefix + "/top/playlist?cat=%s&limit=%s&offset=%s";
+            = SdkCommon.PREFIX + "/top/playlist?cat=%s&limit=%s&offset=%s";
     // 网友精选碟(最新) API
     private final String NEW_PICKED_PLAYLIST_API
-            = SdkCommon.prefix + "/top/playlist?order=new&cat=%s&limit=%s&offset=%s";
+            = SdkCommon.PREFIX + "/top/playlist?order=new&cat=%s&limit=%s&offset=%s";
     // 推荐分类歌单(最热) API (酷狗)
     private final String CAT_PLAYLIST_KG_API
             = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=6&c=%s&p=%s";
@@ -109,8 +110,8 @@ public class HighQualityPlaylistReq {
 
                     String playlistId = playlistJson.getString("id");
                     String name = playlistJson.getString("name");
-                    String creator = ct != null ? ct.getString("nickname") : "";
-                    String creatorId = ct != null ? ct.getString("userId") : "";
+                    String creator = JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "";
+                    String creatorId = JsonUtil.notEmpty(ct) ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getIntValue("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
@@ -151,8 +152,8 @@ public class HighQualityPlaylistReq {
 
                     String playlistId = playlistJson.getString("id");
                     String name = playlistJson.getString("name");
-                    String creator = ct != null ? ct.getString("nickname") : "";
-                    String creatorId = ct != null ? ct.getString("userId") : "";
+                    String creator = JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "";
+                    String creatorId = JsonUtil.notEmpty(ct) ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getIntValue("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
@@ -193,8 +194,8 @@ public class HighQualityPlaylistReq {
 
                     String playlistId = playlistJson.getString("id");
                     String name = playlistJson.getString("name");
-                    String creator = ct != null ? ct.getString("nickname") : "";
-                    String creatorId = ct != null ? ct.getString("userId") : "";
+                    String creator = JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "";
+                    String creatorId = JsonUtil.notEmpty(ct) ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getIntValue("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");

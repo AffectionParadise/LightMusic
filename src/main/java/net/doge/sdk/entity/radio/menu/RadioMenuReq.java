@@ -23,7 +23,7 @@ import java.util.LinkedList;
 
 public class RadioMenuReq {
     // 电台订阅者 API
-    private final String RADIO_SUBSCRIBERS_API = SdkCommon.prefix + "/dj/subscriber?id=%s";
+    private final String RADIO_SUBSCRIBERS_API = SdkCommon.PREFIX + "/dj/subscriber?id=%s";
     
     // 电台 CV API (猫耳)
     private final String RADIO_CVS_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";

@@ -12,6 +12,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.AreaUtil;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -30,9 +31,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserInfoReq {
     // 用户信息 API
-    private final String USER_DETAIL_API = SdkCommon.prefix + "/user/detail?uid=%s";
+    private final String USER_DETAIL_API = SdkCommon.PREFIX + "/user/detail?uid=%s";
     // 用户歌曲 API
-    private final String USER_SONGS_API = SdkCommon.prefix + "/user/record?type=%s&uid=%s";
+    private final String USER_SONGS_API = SdkCommon.PREFIX + "/user/record?type=%s&uid=%s";
     // 用户信息 API (喜马拉雅)
     private final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic?uid=%s";
     // 用户节目 API (喜马拉雅)
@@ -386,7 +387,7 @@ public class UserInfoReq {
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray songArray = userInfoJson.getJSONArray(isAll ? "allData" : "weekData");
-            if (songArray != null) {
+            if (JsonUtil.notEmpty(songArray)) {
                 total.set(songArray.size());
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i).getJSONObject("song");
@@ -808,7 +809,7 @@ public class UserInfoReq {
             JSONObject data = userInfoJson.getJSONObject("data");
             total.set(data.getIntValue("totalSize"));
             JSONArray songArray = data.getJSONArray("data");
-            if (songArray != null) {
+            if (JsonUtil.notEmpty(songArray)) {
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
 

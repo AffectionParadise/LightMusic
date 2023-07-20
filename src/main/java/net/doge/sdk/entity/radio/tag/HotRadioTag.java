@@ -19,9 +19,9 @@ import java.util.concurrent.Future;
 
 public class HotRadioTag {
     // 分类热门电台标签 API
-    private final String HOT_RADIO_TAG_API = SdkCommon.prefix + "/dj/category/recommend";
+    private final String HOT_RADIO_TAG_API = SdkCommon.PREFIX + "/dj/category/recommend";
     // 分类推荐电台标签 API
-    private final String REC_RADIO_TAG_API = SdkCommon.prefix + "/dj/catelist";
+    private final String REC_RADIO_TAG_API = SdkCommon.PREFIX + "/dj/catelist";
     // 电台分类标签 API (喜马拉雅)
     private final String RADIO_TAG_XM_API = "https://www.ximalaya.com/revision/category/allCategoryInfo";
     // 排行榜标签 API (喜马拉雅)

@@ -16,9 +16,9 @@ import java.util.LinkedList;
 
 public class PlaylistMenuReq {
     // 歌单相似歌单 API
-    private final String SIMILAR_PLAYLIST_API = SdkCommon.prefix + "/related/playlist?id=%s";
+    private final String SIMILAR_PLAYLIST_API = SdkCommon.PREFIX + "/related/playlist?id=%s";
     // 歌单收藏者 API
-    private final String PLAYLIST_SUBSCRIBERS_API = SdkCommon.prefix + "/playlist/subscribers?id=%s&offset=%s&limit=%s";
+    private final String PLAYLIST_SUBSCRIBERS_API = SdkCommon.PREFIX + "/playlist/subscribers?id=%s&offset=%s&limit=%s";
 
     /**
      * 获取相关歌单（通过歌单）

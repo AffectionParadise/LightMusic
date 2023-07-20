@@ -8,6 +8,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 
@@ -21,9 +22,9 @@ import java.util.concurrent.Future;
 
 public class SearchSuggestionReq {
     // 搜索建议(简单) API
-    private final String SIMPLE_SEARCH_SUGGESTION_API = SdkCommon.prefix + "/search/suggest?keywords=%s&type=mobile";
+    private final String SIMPLE_SEARCH_SUGGESTION_API = SdkCommon.PREFIX + "/search/suggest?keywords=%s&type=mobile";
     // 搜索建议 API
-    private final String SEARCH_SUGGESTION_API = SdkCommon.prefix + "/search/suggest?keywords=%s";
+    private final String SEARCH_SUGGESTION_API = SdkCommon.PREFIX + "/search/suggest?keywords=%s";
     // 搜索建议 API (酷狗)
     private final String SEARCH_SUGGESTION_KG_API = "http://msearchcdn.kugou.com/new/app/i/search.php?cmd=302&keyword=%s";
     // 搜索建议 API (QQ)
@@ -58,9 +59,9 @@ public class SearchSuggestionReq {
                     .body();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
             JSONObject result = searchSuggestionJson.getJSONObject("result");
-            if (result != null) {
+            if (JsonUtil.notEmpty(result)) {
                 JSONArray searchSuggestionArray = result.getJSONArray("allMatch");
-                if (searchSuggestionArray != null) {
+                if (JsonUtil.notEmpty(searchSuggestionArray)) {
                     for (int i = 0, len = searchSuggestionArray.size(); i < len; i++) {
                         JSONObject keywordJson = searchSuggestionArray.getJSONObject(i);
                         res.add(keywordJson.getString("keyword"));
@@ -77,21 +78,21 @@ public class SearchSuggestionReq {
                     .body();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
             JSONObject result = searchSuggestionJson.getJSONObject("result");
-            if (result != null) {
+            if (JsonUtil.notEmpty(result)) {
                 JSONArray songArray = result.getJSONArray("songs");
-                if (songArray != null) {
+                if (JsonUtil.notEmpty(songArray)) {
                     for (int i = 0, len = songArray.size(); i < len; i++) {
                         res.add(songArray.getJSONObject(i).getString("name"));
                     }
                 }
                 JSONArray artistArray = result.getJSONArray("artists");
-                if (artistArray != null) {
+                if (JsonUtil.notEmpty(artistArray)) {
                     for (int i = 0, len = artistArray.size(); i < len; i++) {
                         res.add(artistArray.getJSONObject(i).getString("name"));
                     }
                 }
                 JSONArray albumArray = result.getJSONArray("albums");
-                if (albumArray != null) {
+                if (JsonUtil.notEmpty(albumArray)) {
                     for (int i = 0, len = albumArray.size(); i < len; i++) {
                         res.add(albumArray.getJSONObject(i).getString("name"));
                     }
@@ -126,7 +127,7 @@ public class SearchSuggestionReq {
                     .body();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
             JSONObject data = searchSuggestionJson.getJSONObject("data");
-            if (data != null) {
+            if (JsonUtil.notEmpty(data)) {
                 JSONArray songArray = data.getJSONObject("song").getJSONArray("itemlist");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     res.add(songArray.getJSONObject(i).getString("name"));

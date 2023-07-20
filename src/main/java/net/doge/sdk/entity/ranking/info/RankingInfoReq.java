@@ -1,6 +1,8 @@
 package net.doge.sdk.entity.ranking.info;
 
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
@@ -9,9 +11,8 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class RankingInfoReq {
     // 榜单信息 API (酷狗)
     private final String RANKING_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
     // 榜单信息 API (QQ)
-    private final String RANKING_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/top?id=%s&pageSize=%s";
+    private final String RANKING_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/top?id=%s&pageSize=%s";
     // 榜单信息 API (酷我)
     private final String RANKING_DETAIL_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
     // 榜单信息 API (咪咕)
@@ -143,12 +144,12 @@ public class RankingInfoReq {
                 String name = songJson.getString("songname");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
                 JSONArray artistArray = songJson.getJSONArray("authors");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("author_id") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 JSONArray mvdata = songJson.getJSONArray("mvdata");
-                String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
+                String mvId = JsonUtil.isEmpty(mvdata) ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -182,7 +183,7 @@ public class RankingInfoReq {
                 String name = songJson.getString("name");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = singerArray.isEmpty() ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
@@ -291,7 +292,7 @@ public class RankingInfoReq {
                 String name = songJson.getString("title");
                 String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QI);
                 JSONArray artistArray = songJson.getJSONArray("artist");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");

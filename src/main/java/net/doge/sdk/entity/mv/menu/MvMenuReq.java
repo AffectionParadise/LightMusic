@@ -10,6 +10,7 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import com.alibaba.fastjson2.JSONArray;
@@ -20,17 +21,17 @@ import java.util.LinkedList;
 
 public class MvMenuReq {
     // 相似 MV API
-    private final String SIMILAR_MV_API = SdkCommon.prefix + "/simi/mv?mvid=%s";
+    private final String SIMILAR_MV_API = SdkCommon.PREFIX + "/simi/mv?mvid=%s";
     // 视频相关视频 API
-    private final String RELATED_VIDEO_API = SdkCommon.prefix + "/related/allvideo?id=%s";
+    private final String RELATED_VIDEO_API = SdkCommon.PREFIX + "/related/allvideo?id=%s";
     // 歌曲相关视频 API
-    private final String RELATED_MLOG_API = SdkCommon.prefix + "/mlog/music/rcmd?songid=%s&limit=500";
+    private final String RELATED_MLOG_API = SdkCommon.PREFIX + "/mlog/music/rcmd?songid=%s&limit=500";
     // mlog id 转视频 id API
-    private final String MLOG_TO_VIDEO_API = SdkCommon.prefix + "/mlog/to/video?id=%s";
+    private final String MLOG_TO_VIDEO_API = SdkCommon.PREFIX + "/mlog/to/video?id=%s";
     // 相关 MV API (QQ)
-    private final String RELATED_MV_QQ_API = SdkCommon.prefixQQ33 + "/song/mv?id=%s";
+    private final String RELATED_MV_QQ_API = SdkCommon.PREFIX_QQ + "/song/mv?id=%s";
     // 相似 MV API (QQ)
-    private final String SIMILAR_MV_QQ_API = SdkCommon.prefixQQ33 + "/mv?id=%s";
+    private final String SIMILAR_MV_QQ_API = SdkCommon.PREFIX_QQ + "/mv?id=%s";
 
     // 相似视频 API (好看)
     private final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec?title=%s&vid=%s&act=pcRec&pd=pc";
@@ -40,7 +41,7 @@ public class MvMenuReq {
     private final String VIDEO_EPISODES_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
 
     // 歌曲信息 API (QQ)
-    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/song?songmid=%s";
+    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/song?songmid=%s";
     
     /**
      * 获取相关 MV (通过歌曲)
@@ -383,7 +384,7 @@ public class MvMenuReq {
                     .execute()
                     .body();
             JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
-            if (mvArray != null) {
+            if (JsonUtil.notEmpty(mvArray)) {
                 t = mvArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(page * limit, mvArray.size()); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);

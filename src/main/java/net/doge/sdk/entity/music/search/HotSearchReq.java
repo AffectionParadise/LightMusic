@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
 
 public class HotSearchReq {
     // 热搜 API
-    private final String HOT_SEARCH_API = SdkCommon.prefix + "/search/hot";
+    private final String HOT_SEARCH_API = SdkCommon.PREFIX + "/search/hot";
     // 热搜 API (酷狗)
     private final String HOT_SEARCH_KG_API = "http://gateway.kugou.com/api/v3/search/hot_tab?signature=ee44edb9d7155821412d220bcaf509dd&appid=1005&clientver=10026&plat=0";
     // 热搜 API (QQ)

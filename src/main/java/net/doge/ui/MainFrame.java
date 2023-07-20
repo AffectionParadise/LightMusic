@@ -2394,8 +2394,16 @@ public class MainFrame extends JFrame {
         });
     }
 
+    // 初始化 JavaFX
+    private void initJavaFX() {
+        Platform.setImplicitExit(false);
+        JFXPanel jfxPanel = new JFXPanel();
+        jfxPanel.setVisible(false);
+        add(jfxPanel);
+    }
+
     // 初始化 UI 管理器配置
-    private void UIManagerInit() {
+    private void initUIManager() {
         // 列表不按照行块为单位滚动，提升动画流畅性
         UIManager.put("List.lockToPositionOnScroll", false);
     }
@@ -2516,134 +2524,133 @@ public class MainFrame extends JFrame {
         setGlassPane(loading);
 
         // 初始化 JavaFX 组件
-        Platform.setImplicitExit(false);
-        add(new JFXPanel());
+        initJavaFX();
 
         // 初始化 UI 管理器配置
-        UIManagerInit();
+        initUIManager();
 
         // 初始化标题栏
-        titleBarInit();
+        initTitleBar();
 
         // 初始化主菜单
-        mainMenuInit();
+        initMainMenu();
 
         // 初始化标签页
-        tabbedPaneInit();
+        initTabbedPane();
 
         // 初始化收藏标签页
-        collectionTabbedPaneInit();
+        initCollectionTabbedPane();
 
         // 初始化收藏工具条
-        collectionToolBarInit();
+        initCollectionToolBar();
 
         // 初始化收藏列表
-        collectionListInit();
+        initCollectionList();
 
         // 初始化标签
-        labelInit();
+        initLabel();
 
         // 初始化个人音乐工具条
-        personalMusicToolBarInit();
+        initPersonalMusicToolBar();
 
         // 初始化本地音乐工具条
-        musicToolBarInit();
+        initMusicToolBar();
 
         // 初始化个人音乐列表
-        musicListInit();
+        initMusicList();
 
         // 初始化在线音乐工具条
-        netMusicToolBarInit();
+        initNetMusicToolBar();
 
         // 初始化在线音乐列表
-        netMusicListInit();
+        initNetMusicList();
 
         // 初始化描述盒子
-        descriptionPanelInit();
+        initDescriptionPanel();
 
         // 初始化歌单工具条
-        netPlaylistToolBarInit();
+        initNetPlaylistToolBar();
 
         // 初始化歌单列表
-        netPlaylistListInit();
+        initNetPlaylistList();
 
         // 初始化专辑工具条
-        netAlbumToolBarInit();
+        initNetAlbumToolBar();
 
         // 初始化专辑列表
-        netAlbumListInit();
+        initNetAlbumList();
 
         // 初始化歌手工具条
-        netArtistToolBarInit();
+        initNetArtistToolBar();
 
         // 初始化歌手列表
-        netArtistListInit();
+        initNetArtistList();
 
         // 初始化电台工具条
-        netRadioToolBarInit();
+        initNetRadioToolBar();
 
         // 初始化电台列表
-        netRadioListInit();
+        initNetRadioList();
 
         // 初始化 MV 工具条
-        netMvToolBarInit();
+        initNetMvToolBar();
 
         // 初始化 MV 列表
-        netMvListInit();
+        initNetMvList();
 
         // 初始化榜单工具条
-        netRankingToolBarInit();
+        initNetRankingToolBar();
 
         // 初始化榜单列表
-        netRankingListInit();
+        initNetRankingList();
 
         // 初始化用户工具条
-        netUserToolBarInit();
+        initNetUserToolBar();
 
         // 初始化用户列表
-        netUserListInit();
+        initNetUserList();
 
         // 初始化评论工具条
-        netCommentToolBarInit();
+        initNetCommentToolBar();
 
         // 初始化评论列表
-        netCommentListInit();
+        initNetCommentList();
 
         // 初始化乐谱工具条
-        netSheetToolBarInit();
+        initNetSheetToolBar();
 
         // 初始化乐谱列表
-        netSheetListInit();
+        initNetSheetList();
 
         // 初始化推荐工具条
-        recommendToolBarInit();
+        initRecommendToolBar();
 
         // 初始化推荐列表
-        itemRecommendListInit();
+        initItemRecommendList();
 
         // 初始化下载工具条
-        downloadToolBarInit();
+        initDownloadToolBar();
 
         // 初始化下载列表
-        downloadListInit();
+        initDownloadList();
 
         // 初始化播放队列工具条
-        playQueueToolBarInit();
+        initPlayQueueToolBar();
 
         // 初始化播放队列列表
-        playQueueInit();
+        initPlayQueue();
 
         // 初始化歌词列表
-        lrcListInit();
+        initLrcList();
 
         // 初始化动画 Timer
-        timerInit();
+        initTimer();
 
         // 初始化进度条
-        timeBarInit();
+        initTimeBar();
 
         // 初始化控制面板
-        controlPanelInit();
+        initControlPanel();
 
         // 加载全局快捷键监听器
         loadHotKeyListener();
@@ -2652,7 +2659,7 @@ public class MainFrame extends JFrame {
         updateMotto();
 
         // 初始化托盘
-        trayInit();
+        initTray();
 
         // 更新 LAF
         try {
@@ -2685,7 +2692,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化标题栏
-    private void titleBarInit() {
+    private void initTitleBar() {
         titleLabel.setText(TITLE);
         titleLabel.setIcon(titleIcon);
         titleLabel.setIconTextGap(15);
@@ -2934,7 +2941,7 @@ public class MainFrame extends JFrame {
         JSONObject config = JsonUtil.readJson(ConfigConstants.FILE_NAME);
         // 载入已保存的自定义风格(逆序加载，这样才能保持顺序一致)
         JSONArray styleArray = config.getJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
-        if (styleArray != null) {
+        if (JsonUtil.notEmpty(styleArray)) {
             for (int i = 0, len = styleArray.size(); i < len; i++) {
                 JSONObject styleObject = styleArray.getJSONObject(i);
                 UIStyle style = new UIStyle(
@@ -3006,9 +3013,9 @@ public class MainFrame extends JFrame {
         showTabText = config.getBooleanValue(ConfigConstants.SHOW_TAB_TEXT, true);
         updateTabSize();
         // 载入高斯模糊因子
-        BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, 3);
+        BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 载入暗角滤镜因子
-        BlurConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, 2);
+        BlurConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
         // 载入歌曲下载路径
         String musicDownPath = config.getString(ConfigConstants.MUSIC_DOWN_PATH);
         if (StringUtil.notEmpty(musicDownPath)) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
@@ -3120,12 +3127,12 @@ public class MainFrame extends JFrame {
         currSoundEffect = config.getIntValue(ConfigConstants.SOUND_EFFECT, 0);
         JSONArray edArray = config.getJSONArray(ConfigConstants.EQUALIZER_DATA);
         ed = new double[EqualizerData.BAND_NUM];
-        if (edArray != null) {
+        if (JsonUtil.notEmpty(edArray)) {
             for (int i = 0, s = edArray.size(); i < s; i++) ed[i] = edArray.getDoubleValue(i);
         }
         // 载入均衡数据
         JSONArray equalizerData = config.getJSONArray(ConfigConstants.EQUALIZER_DATA);
-        if (equalizerData != null) {
+        if (JsonUtil.notEmpty(equalizerData)) {
             ed = new double[EqualizerData.BAND_NUM];
             for (int i = 0, len = equalizerData.size(); i < len; i++) ed[i] = equalizerData.getDoubleValue(i);
         }
@@ -3157,7 +3164,7 @@ public class MainFrame extends JFrame {
 
         // 载入歌曲目录
         JSONArray catalogJsonArray = config.getJSONArray(ConfigConstants.CATALOGS);
-        if (catalogJsonArray != null) {
+        if (JsonUtil.notEmpty(catalogJsonArray)) {
             for (int i = 0, len = catalogJsonArray.size(); i < len; i++) {
                 String filePath = catalogJsonArray.getString(i);
                 catalogs.add(new File(filePath));
@@ -3169,7 +3176,7 @@ public class MainFrame extends JFrame {
 
         // 载入历史列表
         JSONArray historyJsonArray = config.getJSONArray(ConfigConstants.HISTORY);
-        if (historyJsonArray != null) {
+        if (JsonUtil.notEmpty(historyJsonArray)) {
             for (int i = 0, len = historyJsonArray.size(); i < len; i++) {
                 String s = historyJsonArray.getString(i);
                 // 判断是否为文件路径
@@ -3205,7 +3212,7 @@ public class MainFrame extends JFrame {
 
         // 载入下载任务列表
         JSONArray tasksJsonArray = config.getJSONArray(ConfigConstants.TASKS);
-        if (tasksJsonArray != null) {
+        if (JsonUtil.notEmpty(tasksJsonArray)) {
             for (int i = 0, len = tasksJsonArray.size(); i < len; i++) {
                 String s = tasksJsonArray.getString(i);
 
@@ -3229,16 +3236,12 @@ public class MainFrame extends JFrame {
                     task = new Task(downloadList, type, netMusicInfo, null);
 
                     task.setInvokeLater(() -> {
-                        try {
-                            String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleLrcFileName();
-                            // 写入歌曲信息
-                            if (netMusicInfo.isMp3()) MusicUtil.writeMP3Info(dest, netMusicInfo);
-                            // 自动下载歌词
-                            if (isAutoDownloadLrc && StringUtil.notEmpty(netMusicInfo.getLrc()))
-                                FileUtil.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleLrcFileName();
+                        // 写入歌曲信息
+                        if (netMusicInfo.isMp3()) MusicUtil.writeMP3Info(dest, netMusicInfo);
+                        // 自动下载歌词
+                        if (isAutoDownloadLrc && StringUtil.notEmpty(netMusicInfo.getLrc()))
+                            FileUtil.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
                     });
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
@@ -3264,7 +3267,7 @@ public class MainFrame extends JFrame {
 
         // 载入播放队列
         JSONArray playQueueJsonArray = config.getJSONArray(ConfigConstants.PLAY_QUEUE);
-        if (playQueueJsonArray != null) {
+        if (JsonUtil.notEmpty(playQueueJsonArray)) {
             for (int i = 0, len = playQueueJsonArray.size(); i < len; i++) {
                 String s = playQueueJsonArray.getString(i);
                 // 判断是否为文件路径
@@ -3313,7 +3316,7 @@ public class MainFrame extends JFrame {
 
         // 载入在线音乐搜索历史关键词
         JSONArray historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
-        if (historySearchJsonArray != null) {
+        if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3343,7 +3346,7 @@ public class MainFrame extends JFrame {
 
         // 载入歌单搜索历史关键词
         historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_PLAYLIST_HISTORY_SEARCH);
-        if (historySearchJsonArray != null) {
+        if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3373,7 +3376,7 @@ public class MainFrame extends JFrame {
 
         // 载入专辑搜索历史关键词
         historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_ALBUM_HISTORY_SEARCH);
-        if (historySearchJsonArray != null) {
+        if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3403,7 +3406,7 @@ public class MainFrame extends JFrame {
 
         // 载入歌手搜索历史关键词
         historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_ARTIST_HISTORY_SEARCH);
-        if (historySearchJsonArray != null) {
+        if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3433,7 +3436,7 @@ public class MainFrame extends JFrame {
 
         // 载入电台搜索历史关键词
         historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_RADIO_HISTORY_SEARCH);
-        if (historySearchJsonArray != null) {
+        if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3463,7 +3466,7 @@ public class MainFrame extends JFrame {
 
         // 载入 MV 搜索历史关键词
         historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_MV_HISTORY_SEARCH);
-        if (historySearchJsonArray != null) {
+        if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3493,7 +3496,7 @@ public class MainFrame extends JFrame {
 
         // 载入用户搜索历史关键词
         historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_USER_HISTORY_SEARCH);
-        if (historySearchJsonArray != null) {
+        if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword);
@@ -3524,13 +3527,13 @@ public class MainFrame extends JFrame {
         int styleIndex = config.getIntValue(ConfigConstants.CURR_UI_STYLE, 0);
         changeUIStyle(styles.get(styleIndex));
 
-        return !config.isEmpty();
+        return JsonUtil.notEmpty(config);
     }
 
     // 载入本地音乐列表
     public void loadLocalMusicList(JSONObject config) {
         JSONArray musicJsonArray = config.getJSONArray(ConfigConstants.MUSIC_LIST);
-        if (musicJsonArray != null) {
+        if (JsonUtil.notEmpty(musicJsonArray)) {
             for (int i = 0, len = musicJsonArray.size(); i < len; i++) {
                 String filePath = musicJsonArray.getString(i);
                 AudioFile audioFile = new AudioFile(filePath);
@@ -3547,7 +3550,7 @@ public class MainFrame extends JFrame {
     public void loadCollectedMusicList(JSONObject config) {
         // 载入收藏歌曲列表
         JSONArray collectionJsonArray = config.getJSONArray(ConfigConstants.COLLECTION);
-        if (collectionJsonArray != null) {
+        if (JsonUtil.notEmpty(collectionJsonArray)) {
             for (int i = 0, len = collectionJsonArray.size(); i < len; i++) {
                 String s = collectionJsonArray.getString(i);
                 // 判断是否为文件路径
@@ -3580,7 +3583,7 @@ public class MainFrame extends JFrame {
 
         // 载入收藏歌单列表
         JSONArray playlistCollectionJsonArray = config.getJSONArray(ConfigConstants.PLAYLIST_COLLECTION);
-        if (playlistCollectionJsonArray != null) {
+        if (JsonUtil.notEmpty(playlistCollectionJsonArray)) {
             for (int i = 0, len = playlistCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = playlistCollectionJsonArray.getJSONObject(i);
 
@@ -3600,7 +3603,7 @@ public class MainFrame extends JFrame {
 
         // 载入收藏专辑列表
         JSONArray albumCollectionJsonArray = config.getJSONArray(ConfigConstants.ALBUM_COLLECTION);
-        if (albumCollectionJsonArray != null) {
+        if (JsonUtil.notEmpty(albumCollectionJsonArray)) {
             for (int i = 0, len = albumCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = albumCollectionJsonArray.getJSONObject(i);
 
@@ -3620,7 +3623,7 @@ public class MainFrame extends JFrame {
 
         // 载入收藏歌手列表
         JSONArray artistCollectionJsonArray = config.getJSONArray(ConfigConstants.ARTIST_COLLECTION);
-        if (artistCollectionJsonArray != null) {
+        if (JsonUtil.notEmpty(artistCollectionJsonArray)) {
             for (int i = 0, len = artistCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = artistCollectionJsonArray.getJSONObject(i);
 
@@ -3641,7 +3644,7 @@ public class MainFrame extends JFrame {
 
         // 载入收藏电台列表
         JSONArray radioCollectionJsonArray = config.getJSONArray(ConfigConstants.RADIO_COLLECTION);
-        if (radioCollectionJsonArray != null) {
+        if (JsonUtil.notEmpty(radioCollectionJsonArray)) {
             for (int i = 0, len = radioCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = radioCollectionJsonArray.getJSONObject(i);
 
@@ -3663,7 +3666,7 @@ public class MainFrame extends JFrame {
 
         // 载入收藏 MV 列表
         JSONArray mvCollectionJsonArray = config.getJSONArray(ConfigConstants.MV_COLLECTION);
-        if (mvCollectionJsonArray != null) {
+        if (JsonUtil.notEmpty(mvCollectionJsonArray)) {
             for (int i = 0, len = mvCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = mvCollectionJsonArray.getJSONObject(i);
 
@@ -3687,7 +3690,7 @@ public class MainFrame extends JFrame {
 
         // 载入收藏榜单列表
         JSONArray rankingCollectionJsonArray = config.getJSONArray(ConfigConstants.RANKING_COLLECTION);
-        if (rankingCollectionJsonArray != null) {
+        if (JsonUtil.notEmpty(rankingCollectionJsonArray)) {
             for (int i = 0, len = rankingCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = rankingCollectionJsonArray.getJSONObject(i);
 
@@ -3707,7 +3710,7 @@ public class MainFrame extends JFrame {
 
         // 载入收藏用户列表
         JSONArray userCollectionJsonArray = config.getJSONArray(ConfigConstants.USER_COLLECTION);
-        if (userCollectionJsonArray != null) {
+        if (JsonUtil.notEmpty(userCollectionJsonArray)) {
             for (int i = 0, len = userCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = userCollectionJsonArray.getJSONObject(i);
 
@@ -4242,7 +4245,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化托盘
-    private void trayInit() {
+    private void initTray() {
         SystemTray systemTray = SystemTray.getSystemTray();
         // 显示图片必须设置
         trayIconImg.setImageAutoSize(true);
@@ -4296,13 +4299,22 @@ public class MainFrame extends JFrame {
     }
 
     // 初始主化菜单
-    private void mainMenuInit() {
-        openFileInit();
-        openDirInit();
-        closeSongInit();
-        clearCacheInit();
-        individuationMenuInit();
+    private void initMainMenu() {
+        initOpenFile();
+        initOpenDir();
+        initIndividuationMenu();
 
+        closeSong.setEnabled(false);
+        closeSong.addActionListener(e -> unload());
+        clearCache.addActionListener(e -> {
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
+                    String.format(ASK_CLEAR_CACHE_MSG, FileUtil.getUnitString(FileUtil.getDirOrFileSize(new File(SimplePath.CACHE_PATH)))), "是", "否");
+            confirmDialog.showDialog();
+            int response = confirmDialog.getResponse();
+            if (response != JOptionPane.YES_OPTION) return;
+            clearCache();
+            new TipDialog(THIS, CLEAR_CACHE_SUCCESS_MSG).showDialog();
+        });
         settingMenuItem.addActionListener(e -> new SettingDialog(THIS).showDialog());
         donateMenuItem.addActionListener(e -> new DonateDialog(THIS).showDialog());
         releaseMenuItem.addActionListener(e -> {
@@ -4333,123 +4345,101 @@ public class MainFrame extends JFrame {
     }
 
     // 打开文件
-    private void openFileInit() {
+    private void initOpenFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("选择歌曲文件");
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
-        String allSuffix = "";
+        StringBuilder allSuffix = new StringBuilder();
         for (String suffix : Format.AUDIO_TYPE_SUPPORTED) {
             filters.add(new FileChooser.ExtensionFilter(suffix.toUpperCase(), "*." + suffix));
-            allSuffix += "*." + suffix + ";";
+            allSuffix.append("*.").append(suffix).append(";");
         }
-        filters.add(0, new FileChooser.ExtensionFilter("音频文件", allSuffix));
+        filters.add(0, new FileChooser.ExtensionFilter("音频文件", allSuffix.toString()));
         // 添加歌曲菜单项也是同一个监听器
         addFileMenuItem.addActionListener(e -> {
             Platform.runLater(() -> {
                 List<File> files = fileChooser.showOpenMultipleDialog(null);
-                if (files != null) {
-                    // 添加选中的多个不重复的文件
-                    int audioFileCount = 0;
-                    for (File file : files) {
-                        if (file.exists()) {
-                            AudioFile audioFile = new AudioFile(file);
-                            globalExecutor.submit(() -> {
-                                MusicUtil.fillAudioFileInfo(audioFile);
-                                musicList.repaint();
-                            });
-                            musicListModel.addElement(audioFile);
-                            audioFileCount++;
-                        }
+                if (files == null) return;
+                // 添加选中的多个不重复的文件
+                int audioFileCount = 0;
+                for (File file : files) {
+                    if (file.exists()) {
+                        AudioFile audioFile = new AudioFile(file);
+                        globalExecutor.submit(() -> {
+                            MusicUtil.fillAudioFileInfo(audioFile);
+                            musicList.repaint();
+                        });
+                        musicListModel.addElement(audioFile);
+                        audioFileCount++;
                     }
-                    boolean f = musicList.getModel() == filterModel;
-                    filterPersonalMusic();
-                    if (!f) {
-                        musicList.setModel(musicListModel);
-                        countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
-                    }
-                    String msg = "成功添加 " + audioFileCount + " 首歌曲";
-                    new TipDialog(THIS, msg).showDialog();
                 }
+                boolean f = musicList.getModel() == filterModel;
+                filterPersonalMusic();
+                if (!f) {
+                    musicList.setModel(musicListModel);
+                    countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+                }
+                String msg = "成功添加 " + audioFileCount + " 首歌曲";
+                new TipDialog(THIS, msg).showDialog();
             });
         });
     }
 
     // 打开歌曲文件夹
-    private void openDirInit() {
+    private void initOpenDir() {
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("选择歌曲文件夹");
         // 添加歌曲文件夹菜单项也是同一个监听器
         addDirMenuItem.addActionListener(e -> {
             Platform.runLater(() -> {
                 File dir = dirChooser.showDialog(null);
-                if (dir != null) {
-                    // 文件夹不存在直接跳出
-                    if (!dir.exists()) return;
-                    // 播放列表不为空时，询问是否保留原播放列表
-                    ListModel model = musicList.getModel();
-                    if (musicListModel.getSize() != 0) {
-                        ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                                ASK_RETAIN_MUSIC_LIST_MSG, "是", "否", "取消");
-                        confirmDialog.showDialog();
-                        int response = confirmDialog.getResponse();
-                        if (response == JOptionPane.NO_OPTION) {
-                            musicList.setModel(emptyListModel);
-                            musicListModel.clear();
-                        } else if (response == JOptionPane.CANCEL_OPTION) return;
-                    }
-                    // 添加到歌曲目录
-                    if (!catalogs.contains(dir)) catalogs.add(dir);
-
-                    File[] files = dir.listFiles();
-                    int audioFileCount = 0;
-                    for (File file : files) {
-                        // 支持这种文件格式才添加
-                        if (player.support(FileUtil.getSuffix(file))) {
-                            audioFileCount++;
-                            AudioFile audioFile = new AudioFile(file);
-                            globalExecutor.submit(() -> {
-                                MusicUtil.fillAudioFileInfo(audioFile);
-                                musicList.repaint();
-                            });
-                            musicListModel.addElement(audioFile);
-                        }
-                    }
-                    musicList.setModel(model);
-                    boolean f = model == filterModel;
-                    filterPersonalMusic();
-                    if (!f) {
-                        musicList.setModel(musicListModel);
-                        countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
-                    }
-                    String msg = "成功添加 " + audioFileCount + " 首歌曲";
-                    new TipDialog(THIS, msg).showDialog();
+                if (dir == null) return;
+                // 文件夹不存在直接跳出
+                if (!dir.exists()) return;
+                // 播放列表不为空时，询问是否保留原播放列表
+                ListModel model = musicList.getModel();
+                if (musicListModel.getSize() != 0) {
+                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
+                            ASK_RETAIN_MUSIC_LIST_MSG, "是", "否", "取消");
+                    confirmDialog.showDialog();
+                    int response = confirmDialog.getResponse();
+                    if (response == JOptionPane.NO_OPTION) {
+                        musicList.setModel(emptyListModel);
+                        musicListModel.clear();
+                    } else if (response == JOptionPane.CANCEL_OPTION) return;
                 }
+                // 添加到歌曲目录
+                if (!catalogs.contains(dir)) catalogs.add(dir);
+
+                File[] files = dir.listFiles();
+                int audioFileCount = 0;
+                for (File file : files) {
+                    // 支持这种文件格式才添加
+                    if (player.support(FileUtil.getSuffix(file))) {
+                        audioFileCount++;
+                        AudioFile audioFile = new AudioFile(file);
+                        globalExecutor.submit(() -> {
+                            MusicUtil.fillAudioFileInfo(audioFile);
+                            musicList.repaint();
+                        });
+                        musicListModel.addElement(audioFile);
+                    }
+                }
+                musicList.setModel(model);
+                boolean f = model == filterModel;
+                filterPersonalMusic();
+                if (!f) {
+                    musicList.setModel(musicListModel);
+                    countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+                }
+                String msg = "成功添加 " + audioFileCount + " 首歌曲";
+                new TipDialog(THIS, msg).showDialog();
             });
         });
     }
 
-    // 初始化关闭歌曲文件
-    private void closeSongInit() {
-        closeSong.setEnabled(false);
-        closeSong.addActionListener(e -> unload());
-    }
-
-    // 初始化清空缓存
-    private void clearCacheInit() {
-        clearCache.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                    String.format(ASK_CLEAR_CACHE_MSG, FileUtil.getUnitString(FileUtil.getDirOrFileSize(new File(SimplePath.CACHE_PATH)))), "是", "否");
-            confirmDialog.showDialog();
-            int response = confirmDialog.getResponse();
-            if (response == JOptionPane.YES_OPTION) {
-                clearCache();
-                new TipDialog(THIS, CLEAR_CACHE_SUCCESS_MSG).showDialog();
-            }
-        });
-    }
-
     // 初始化个性化菜单
-    private void individuationMenuInit() {
+    private void initIndividuationMenu() {
         // 自定义风格
         styleCustomMenuItem.addActionListener(e -> customStyle());
         manageStyleMenuItem.addActionListener(e -> {
@@ -4489,7 +4479,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化标签页
-    private void tabbedPaneInit() {
+    private void initTabbedPane() {
         int gap = 10;
         personalMusicLabel.setIconTextGap(gap);
         netMusicLabel.setIconTextGap(gap);
@@ -4922,7 +4912,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化收藏标签页
-    private void collectionTabbedPaneInit() {
+    private void initCollectionTabbedPane() {
         // 组装标签面板
         int gap = 10;
         musicCollectionLabel.setIconTextGap(gap);
@@ -5151,7 +5141,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化收藏工具条
-    private void collectionToolBarInit() {
+    private void initCollectionToolBar() {
 //        collectionPageTextField.addFocusListener(
 //                new JTextFieldHintListener(collectionPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
@@ -5447,7 +5437,7 @@ public class MainFrame extends JFrame {
     private Object collectionOpenObj;
 
     // 初始化收藏列表
-    private void collectionListInit() {
+    private void initCollectionList() {
         collectionList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         collectionList.setModel(playlistCollectionModel);
         collectionList.addKeyListener(new KeyAdapter() {
@@ -6174,7 +6164,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化标签
-    private void labelInit() {
+    private void initLabel() {
         // 导出专辑图片事件
         saveAlbumImageMenuItem.addActionListener(e -> saveImg(player.getMusicInfo().getAlbumImage()));
         copySongNameMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, ""))));
@@ -6264,7 +6254,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化个人音乐工具栏
-    private void personalMusicToolBarInit() {
+    private void initPersonalMusicToolBar() {
         // 本地音乐事件
         localMusicButton.addActionListener(e -> {
             if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) return;
@@ -6399,7 +6389,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化本地音乐工具栏
-    private void musicToolBarInit() {
+    private void initMusicToolBar() {
         // 按钮悬浮和点击效果
         addToolButton.addMouseListener(new ButtonMouseListener(addToolButton, THIS));
         reimportToolButton.addMouseListener(new ButtonMouseListener(reimportToolButton, THIS));
@@ -6833,7 +6823,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化个人音乐列表
-    private void musicListInit() {
+    private void initMusicList() {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -7200,7 +7190,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线音乐工具栏
-    private void netMusicToolBarInit() {
+    private void initNetMusicToolBar() {
         searchTextField.addFocusListener(new TextFieldHintListener(searchTextField, "单曲/歌手/专辑/歌词/节目", currUIStyle.getForeColor()));
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -7532,7 +7522,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线音乐列表
-    private void netMusicListInit() {
+    private void initNetMusicList() {
         netMusicList.setModel(netMusicListModel);
         netMusicList.addKeyListener(new KeyAdapter() {
             @Override
@@ -8319,7 +8309,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化描述盒子
-    private void descriptionPanelInit() {
+    private void initDescriptionPanel() {
         // 描述标签垂直对齐方式
         playlistTagLabel.setVerticalAlignment(SwingConstants.TOP);
         playlistDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -9226,7 +9216,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线歌单工具栏
-    private void netPlaylistToolBarInit() {
+    private void initNetPlaylistToolBar() {
         netPlaylistSearchTextField.addFocusListener(new TextFieldHintListener(netPlaylistSearchTextField, "歌单", currUIStyle.getForeColor()));
         netPlaylistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -9698,7 +9688,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线歌单
-    private void netPlaylistListInit() {
+    private void initNetPlaylistList() {
         netPlaylistList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netPlaylistList.setModel(netPlaylistListModel);
         netPlaylistList.addMouseMotionListener(new MouseAdapter() {
@@ -10231,7 +10221,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线专辑工具栏
-    private void netAlbumToolBarInit() {
+    private void initNetAlbumToolBar() {
         netAlbumSearchTextField.addFocusListener(new TextFieldHintListener(netAlbumSearchTextField, "专辑", currUIStyle.getForeColor()));
         netAlbumSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -10700,7 +10690,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线专辑列表
-    private void netAlbumListInit() {
+    private void initNetAlbumList() {
         netAlbumList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netAlbumList.setModel(netAlbumListModel);
         netAlbumList.addMouseMotionListener(new MouseAdapter() {
@@ -11250,7 +11240,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化歌手工具栏
-    private void netArtistToolBarInit() {
+    private void initNetArtistToolBar() {
         netArtistSearchTextField.addFocusListener(new TextFieldHintListener(netArtistSearchTextField, "歌手", currUIStyle.getForeColor()));
         netArtistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -11729,7 +11719,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线歌手列表
-    private void netArtistListInit() {
+    private void initNetArtistList() {
         netArtistList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netArtistList.setModel(netArtistListModel);
         netArtistList.addMouseMotionListener(new MouseAdapter() {
@@ -12505,7 +12495,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化电台工具栏
-    private void netRadioToolBarInit() {
+    private void initNetRadioToolBar() {
         netRadioSearchTextField.addFocusListener(new TextFieldHintListener(netRadioSearchTextField, "电台", currUIStyle.getForeColor()));
         netRadioSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -12989,7 +12979,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线电台列表
-    private void netRadioListInit() {
+    private void initNetRadioList() {
         netRadioList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netRadioList.setModel(netRadioListModel);
         netRadioList.addMouseMotionListener(new MouseAdapter() {
@@ -13666,7 +13656,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化 MV 工具栏
-    private void netMvToolBarInit() {
+    private void initNetMvToolBar() {
         // 返回关键词面板事件
         netMvBackwardButton.addActionListener(e -> {
             // 删除标题标签
@@ -13985,7 +13975,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线 MV 列表
-    private void netMvListInit() {
+    private void initNetMvList() {
         netMvList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netMvList.setModel(netMvListModel);
         netMvList.addMouseMotionListener(new MouseAdapter() {
@@ -14441,7 +14431,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化榜单工具栏
-    private void netRankingToolBarInit() {
+    private void initNetRankingToolBar() {
         // 只能输入数字
         netRankingPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
@@ -14742,7 +14732,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线榜单列表
-    private void netRankingListInit() {
+    private void initNetRankingList() {
         netRankingList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netRankingList.setModel(netRankingListModel);
         netRankingList.addMouseMotionListener(new MouseAdapter() {
@@ -15015,7 +15005,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化用户工具栏
-    private void netUserToolBarInit() {
+    private void initNetUserToolBar() {
         netUserSearchTextField.addFocusListener(new TextFieldHintListener(netUserSearchTextField, "用户", currUIStyle.getForeColor()));
         netUserSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -15517,7 +15507,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线用户列表
-    private void netUserListInit() {
+    private void initNetUserList() {
         netUserList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netUserList.setModel(netUserListModel);
         netUserList.addMouseMotionListener(new MouseAdapter() {
@@ -16401,7 +16391,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化评论工具栏
-    private void netCommentToolBarInit() {
+    private void initNetCommentToolBar() {
         // 只能输入数字
         netCommentPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
@@ -16537,7 +16527,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线评论列表
-    private void netCommentListInit() {
+    private void initNetCommentList() {
         netCommentList.setModel(netCommentListModel);
         netCommentList.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -16827,7 +16817,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化乐谱工具栏
-    private void netSheetToolBarInit() {
+    private void initNetSheetToolBar() {
         // 只能输入数字
         netSheetPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
@@ -16950,7 +16940,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化在线乐谱列表
-    private void netSheetListInit() {
+    private void initNetSheetList() {
         netSheetList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         netSheetList.setModel(netSheetListModel);
         netSheetList.addKeyListener(new KeyAdapter() {
@@ -17061,7 +17051,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化推荐工具条
-    private void recommendToolBarInit() {
+    private void initRecommendToolBar() {
         // 只能输入数字
         netRecommendPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
         // 推荐后退按钮事件
@@ -18612,7 +18602,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化推荐歌单/专辑/歌手/电台列表
-    private void itemRecommendListInit() {
+    private void initItemRecommendList() {
         itemRecommendList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         itemRecommendList.setModel(playlistRecommendListModel);
         itemRecommendList.addMouseMotionListener(new MouseAdapter() {
@@ -19119,7 +19109,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化下载工具条
-    private void downloadToolBarInit() {
+    private void initDownloadToolBar() {
         // 按钮悬浮和点击效果
         restartSelectedTasksButton.addMouseListener(new ButtonMouseListener(restartSelectedTasksButton, THIS));
         cancelSelectedTasksButton.addMouseListener(new ButtonMouseListener(cancelSelectedTasksButton, THIS));
@@ -19191,7 +19181,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化下载列表
-    private void downloadListInit() {
+    private void initDownloadList() {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -19369,7 +19359,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化播放队列工具条
-    private void playQueueToolBarInit() {
+    private void initPlayQueueToolBar() {
         // 按钮悬浮和点击效果
         playQueueRemoveToolButton.addMouseListener(new ButtonMouseListener(playQueueRemoveToolButton, THIS));
         playQueueClearToolButton.addMouseListener(new ButtonMouseListener(playQueueClearToolButton, THIS));
@@ -19497,7 +19487,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化播放队列列表
-    private void playQueueInit() {
+    private void initPlayQueue() {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -19772,7 +19762,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化歌词列表
-    private void lrcListInit() {
+    private void initLrcList() {
         // 复制歌词
         copyMenuItem.addActionListener(e -> {
             Statement stmt = lrcList.getSelectedValue();
@@ -20038,7 +20028,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化动画 Timer
-    private void timerInit() {
+    private void initTimer() {
         final int specPiece = (int) ((SpectrumConstants.PLAYER_INTERVAL - 0.01) * 1000 / SpectrumConstants.TIMER_INTERVAL);
         spectrumTimer = new Timer(SpectrumConstants.TIMER_INTERVAL, e -> {
             spectrumExecutor.submit(() -> {
@@ -20100,7 +20090,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化进度条
-    private void timeBarInit() {
+    private void initTimeBar() {
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(0);
         // 释放时间条，播放器响应
@@ -20127,7 +20117,7 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化控制面板
-    private void controlPanelInit() {
+    private void initControlPanel() {
         // changePaneButton 图标遮罩 UI
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         changePaneButton.setIconTextGap(10);
@@ -22839,14 +22829,10 @@ public class MainFrame extends JFrame {
         Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
         task.setInvokeLater(() -> {
             // 写入歌曲信息
-            try {
-                if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
-                // 自动下载歌词
-                if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                    FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
+            // 自动下载歌词
+            if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
+                FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
         });
         task.start();
         downloadListModel.add(0, task);
@@ -22870,14 +22856,10 @@ public class MainFrame extends JFrame {
             Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
             task.setInvokeLater(() -> {
                 // 写入歌曲信息
-                try {
-                    if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
-                    // 自动下载歌词
-                    if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                        FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
+                // 自动下载歌词
+                if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
+                    FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
             });
             tasks.add(task);
             downloadListModel.add(0, task);

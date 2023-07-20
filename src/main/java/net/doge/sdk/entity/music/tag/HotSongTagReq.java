@@ -6,6 +6,7 @@ import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.SdkCommon;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.common.JsonUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.concurrent.Future;
 
 public class HotSongTagReq {
     // 曲风 API
-    private final String STYLE_API = SdkCommon.prefix + "/style/list";
+    private final String STYLE_API = SdkCommon.PREFIX + "/style/list";
 
     /**
      * 加载飙升歌曲标签
@@ -66,7 +67,7 @@ public class HotSongTagReq {
                 Tags.hotSongTag.get(name)[0] = id;
                 // 子标签
                 JSONArray subTags = tag.getJSONArray("childrenTags");
-                if (subTags == null) continue;
+                if (JsonUtil.isEmpty(subTags)) continue;
                 for (int j = 0, s = subTags.size(); j < s; j++) {
                     JSONObject subTag = subTags.getJSONObject(j);
 
@@ -77,7 +78,7 @@ public class HotSongTagReq {
                     Tags.hotSongTag.get(subName)[0] = subId;
                     // 孙子标签
                     JSONArray ssTags = subTag.getJSONArray("childrenTags");
-                    if (ssTags == null) continue;
+                    if (JsonUtil.isEmpty(ssTags)) continue;
                     for (int k = 0, l = ssTags.size(); k < l; k++) {
                         JSONObject ssTag = ssTags.getJSONObject(k);
 

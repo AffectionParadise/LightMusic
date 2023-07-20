@@ -11,6 +11,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -30,13 +31,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class UserMenuReq {
     // 用户歌单 API
-    private final String USER_PLAYLIST_API = SdkCommon.prefix + "/user/playlist?uid=%s&limit=1000";
+    private final String USER_PLAYLIST_API = SdkCommon.PREFIX + "/user/playlist?uid=%s&limit=1000";
     // 用户创建歌单 API (QQ)
-    private final String USER_CREATED_PLAYLIST_QQ_API = SdkCommon.prefixQQ33 + "/user/songlist?id=%s";
+    private final String USER_CREATED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/user/songlist?id=%s";
     // 用户收藏歌单 API (QQ)
-    private final String USER_COLLECTED_PLAYLIST_QQ_API = SdkCommon.prefixQQ33 + "/user/collect/songlist?id=%s&pageNo=%s&pageSize=%s";
+    private final String USER_COLLECTED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/user/collect/songlist?id=%s&pageNo=%s&pageSize=%s";
     // 用户收藏专辑 API (QQ)
-    private final String USER_COLLECTED_ALBUM_QQ_API = SdkCommon.prefixQQ33 + "/user/collect/album?id=%s&pageNo=%s&pageSize=%s";
+    private final String USER_COLLECTED_ALBUM_QQ_API = SdkCommon.PREFIX_QQ + "/user/collect/album?id=%s&pageNo=%s&pageSize=%s";
     // 用户创建音单 API (猫耳)
     private final String USER_CREATED_PLAYLIST_ME_API = "https://www.missevan.com/person/getuseralbum?user_id=%s&type=0&p=%s&page_size=%s";
     // 用户收藏音单 API (猫耳)
@@ -46,7 +47,7 @@ public class UserMenuReq {
     private final String USER_ALBUM_DT_API = "https://www.duitang.com/napi/album/list/by_user/?user_id=%s&start=%s&limit=%s";
 
     // 用户电台 API
-    private final String USER_RADIO_API = SdkCommon.prefix + "/user/audio?uid=%s";
+    private final String USER_RADIO_API = SdkCommon.PREFIX + "/user/audio?uid=%s";
     // 用户电台 API (喜马拉雅)
     private final String USER_RADIO_XM_API = "https://www.ximalaya.com/revision/user/pub?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户收藏电台 API (喜马拉雅)
@@ -70,7 +71,7 @@ public class UserMenuReq {
     private final String USER_VIDEO_BI_API = "https://api.bilibili.com/x/space/wbi/arc/search?order=%s&mid=%s&pn=%s&ps=%s";
 
     // 用户关注 API
-    private final String USER_FOLLOWS_API = SdkCommon.prefix + "/user/follows?uid=%s&limit=1000";
+    private final String USER_FOLLOWS_API = SdkCommon.PREFIX + "/user/follows?uid=%s&limit=1000";
     // 用户关注 API (喜马拉雅)
     private final String USER_FOLLOWS_XM_API = "https://www.ximalaya.com/revision/user/following?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户关注 API (猫耳)
@@ -83,7 +84,7 @@ public class UserMenuReq {
     private final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
 
     // 用户粉丝 API
-    private final String USER_FOLLOWEDS_API = SdkCommon.prefix + "/user/followeds?uid=%s&offset=%s&limit=%s";
+    private final String USER_FOLLOWEDS_API = SdkCommon.PREFIX + "/user/followeds?uid=%s&offset=%s&limit=%s";
     // 用户粉丝 API (喜马拉雅)
     private final String USER_FOLLOWEDS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户粉丝 API (猫耳)
@@ -261,7 +262,7 @@ public class UserMenuReq {
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
                 JSONArray playlistArray = data.getJSONArray("Datas");
-                if (playlistArray != null) {
+                if (JsonUtil.notEmpty(playlistArray)) {
                     t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -301,7 +302,7 @@ public class UserMenuReq {
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
                 JSONArray playlistArray = data.getJSONArray("Datas");
-                if (playlistArray != null) {
+                if (JsonUtil.notEmpty(playlistArray)) {
                     t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -608,7 +609,7 @@ public class UserMenuReq {
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
                 JSONArray playlistArray = data.getJSONArray("Datas");
-                if (playlistArray != null) {
+                if (JsonUtil.notEmpty(playlistArray)) {
                     t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -648,7 +649,7 @@ public class UserMenuReq {
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
                 JSONArray playlistArray = data.getJSONArray("Datas");
-                if (playlistArray != null) {
+                if (JsonUtil.notEmpty(playlistArray)) {
                     t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = playlistArray.size(); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -860,7 +861,7 @@ public class UserMenuReq {
                 Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
-                if (!category.isEmpty()) category += "、" + radioJson.getString("secondCategory");
+                if (StringUtil.notEmpty(category)) category += "、" + radioJson.getString("secondCategory");
                 String coverImgThumbUrl = radioJson.getString("picUrl");
 //                String createTime = TimeUtils.msToDate(radioJson.getLong("createTime"));
 
@@ -1046,7 +1047,7 @@ public class UserMenuReq {
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
                 JSONArray radioArray = data.getJSONArray("Datas");
-                if (radioArray != null) {
+                if (JsonUtil.notEmpty(radioArray)) {
                     t = data.getJSONObject("pagination").getIntValue("count");
                     for (int i = 0, len = radioArray.size(); i < len; i++) {
                         JSONObject radioJson = radioArray.getJSONObject(i);

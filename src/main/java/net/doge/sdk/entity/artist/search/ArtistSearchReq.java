@@ -12,6 +12,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -29,10 +30,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ArtistSearchReq {
     // 关键词搜索歌手 API
-    private final String SEARCH_ARTIST_API = SdkCommon.prefix + "/cloudsearch?type=100&keywords=%s&limit=%s&offset=%s";
+    private final String SEARCH_ARTIST_API = SdkCommon.PREFIX + "/cloudsearch?type=100&keywords=%s&limit=%s&offset=%s";
     private final String SEARCH_ARTIST_KW_API = "http://www.kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌手 API (咪咕)
-    private final String SEARCH_ARTIST_MG_API = SdkCommon.prefixMg + "/search?type=singer&keyword=%s&pageNo=%s&pageSize=%s";
+    private final String SEARCH_ARTIST_MG_API = SdkCommon.PREFIX_MG + "/search?type=singer&keyword=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌手 API (千千)
     private final String SEARCH_ARTIST_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=2&word=%s";
     // 关键词搜索声优 API (猫耳)
@@ -63,10 +64,10 @@ public class ArtistSearchReq {
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject result = artistInfoJson.getJSONObject("result");
-            if (result != null) {
+            if (JsonUtil.notEmpty(result)) {
                 t = result.getIntValue("artistCount");
                 JSONArray artistArray = result.getJSONArray("artists");
-                if (artistArray != null) {
+                if (JsonUtil.notEmpty(artistArray)) {
                     for (int i = 0, len = artistArray.size(); i < len; i++) {
                         JSONObject artistJson = artistArray.getJSONObject(i);
 
@@ -99,8 +100,8 @@ public class ArtistSearchReq {
             Integer t = 0;
 
             int lim = Math.min(40, limit);
-            String artistInfoBody = HttpRequest.post(String.format(SdkCommon.qqSearchApi))
-                    .body(String.format(SdkCommon.qqSearchJson, page, lim, keyword, 1))
+            String artistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+                    .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, lim, keyword, 1))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -183,7 +184,7 @@ public class ArtistSearchReq {
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
             // 咪咕可能接口异常，需要判空！
-            if (data != null) {
+            if (JsonUtil.notEmpty(data)) {
                 t = data.getIntValue("total");
                 JSONArray artistArray = data.getJSONArray("list");
                 for (int i = 0, len = artistArray.size(); i < len; i++) {

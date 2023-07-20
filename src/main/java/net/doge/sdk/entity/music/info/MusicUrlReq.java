@@ -14,6 +14,7 @@ import net.doge.sdk.entity.music.info.trackurl.QQTrackUrlReq;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.CryptoUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -24,10 +25,10 @@ import java.util.List;
 
 public class MusicUrlReq {
     // 歌曲 URL 获取 API
-    private final String GET_SONG_URL_API_NEW = SdkCommon.prefix + "/song/url/v1?id=%s&level=jymaster";
-    private final String GET_SONG_URL_API = SdkCommon.prefix + "/song/url?id=%s";
+    private final String GET_SONG_URL_API_NEW = SdkCommon.PREFIX + "/song/url/v1?id=%s&level=jymaster";
+    private final String GET_SONG_URL_API = SdkCommon.PREFIX + "/song/url?id=%s";
     // 歌曲 URL 获取 API (QQ)
-//    private final String GET_SONG_URL_QQ_API = prefixQQ33 + "/song/url?id=%s";
+//    private final String GET_SONG_URL_QQ_API = PREFIX_QQ + "/song/url?id=%s";
     // 歌曲 URL 获取 API (酷我)
 //    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
@@ -43,7 +44,7 @@ public class MusicUrlReq {
     // 歌曲信息 API (酷狗)
     private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
     // 歌曲信息 API (咪咕)
-    private final String SINGLE_SONG_DETAIL_MG_API = SdkCommon.prefixMg + "/song?cid=%s";
+    private final String SINGLE_SONG_DETAIL_MG_API = SdkCommon.PREFIX_MG + "/song?cid=%s";
     // 歌曲信息 API (音乐磁场)
     private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
@@ -171,16 +172,16 @@ public class MusicUrlReq {
                     .body();
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
             // 次选普通音质
-            if (data == null) {
+            if (JsonUtil.isEmpty(data)) {
                 songBody = HttpRequest.get(String.format(GET_SONG_URL_API, songId))
                         .execute()
                         .body();
                 data = JSONObject.parseObject(songBody).getJSONArray("data");
             }
-            if (data != null) {
+            if (JsonUtil.notEmpty(data)) {
                 JSONObject urlJson = data.getJSONObject(0);
                 // 排除试听部分，直接换源
-                if (urlJson.getJSONObject("freeTrialInfo") == null) {
+                if (JsonUtil.isEmpty(urlJson.getJSONObject("freeTrialInfo"))) {
                     String url = urlJson.getString("url");
                     if (StringUtil.notEmpty(url)) return url;
                 }
@@ -200,7 +201,7 @@ public class MusicUrlReq {
 
         // QQ(解锁付费音乐)
         else if (source == NetMusicSource.QQ) {
-//            String playUrlBody = HttpRequest.get(SdkCommon.qqSearchApi + "?format=json&data=" +
+//            String playUrlBody = HttpRequest.get(SdkCommon.QQ_SEARCH_API + "?format=json&data=" +
 //                            StringUtil.urlEncode(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
 //                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
 //                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
@@ -225,9 +226,9 @@ public class MusicUrlReq {
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {
 //                String urlBody = resp.body();
 //                JSONObject urlJson = JSONObject.parseObject(urlBody);
-//                if (urlJson != null) {
+//                if (JsonUtil.notEmpty(urlJson)) {
 //                    JSONObject data = urlJson.getJSONObject("data");
-//                    if (data != null) return data.getString("url");
+//                    if (JsonUtil.notEmpty(data)) return data.getString("url");
 //                }
 //            }
             return new KWTrackUrlReq().getTrackUrl(songId, "320k");

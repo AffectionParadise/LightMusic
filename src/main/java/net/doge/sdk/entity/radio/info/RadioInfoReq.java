@@ -10,6 +10,7 @@ import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -24,11 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RadioInfoReq {
     // 电台信息 API
-    private final String RADIO_DETAIL_API = SdkCommon.prefix + "/dj/detail?rid=%s";
+    private final String RADIO_DETAIL_API = SdkCommon.PREFIX + "/dj/detail?rid=%s";
     // 电台节目信息 API
-    private final String RADIO_PROGRAM_DETAIL_API = SdkCommon.prefix + "/dj/program?rid=%s&offset=%s&limit=%s";
+    private final String RADIO_PROGRAM_DETAIL_API = SdkCommon.PREFIX + "/dj/program?rid=%s&offset=%s&limit=%s";
     // 电台信息 API (QQ)
-    private final String RADIO_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/radio?id=%s";
+    private final String RADIO_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/radio?id=%s";
     // 电台信息 API (喜马拉雅)
     private final String RADIO_DETAIL_XM_API = "https://www.ximalaya.com/revision/album/v1/simple?albumId=%s";
     // 简短电台信息 API (喜马拉雅)
@@ -400,7 +401,7 @@ public class RadioInfoReq {
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray songArray = radioInfoJson.getJSONObject("data").getJSONArray("tracks");
-            if (songArray != null) {
+            if (JsonUtil.notEmpty(songArray)) {
                 total.set(songArray.size());
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);

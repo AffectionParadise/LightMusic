@@ -13,6 +13,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 
@@ -26,9 +27,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MvSearchReq {
     // 关键词搜索 MV API
-    private final String SEARCH_MV_API = SdkCommon.prefix + "/cloudsearch?type=1004&keywords=%s&limit=%s&offset=%s";
+    private final String SEARCH_MV_API = SdkCommon.PREFIX + "/cloudsearch?type=1004&keywords=%s&limit=%s&offset=%s";
     // 关键词搜索视频 API
-    private final String SEARCH_VIDEO_API = SdkCommon.prefix + "/cloudsearch?type=1014&keywords=%s&limit=%s&offset=%s";
+    private final String SEARCH_VIDEO_API = SdkCommon.PREFIX + "/cloudsearch?type=1014&keywords=%s&limit=%s&offset=%s";
     // 关键词搜索 MV API (酷狗)
     private final String SEARCH_MV_KG_API
             = "http://msearch.kugou.com/api/v3/search/mv?version=9108&keyword=%s&page=%s&pagesize=%s&sver=2";
@@ -61,7 +62,7 @@ public class MvSearchReq {
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject result = mvInfoJson.getJSONObject("result");
-            if (!result.isEmpty()) {
+            if (JsonUtil.notEmpty(result)) {
                 t = result.getIntValue("mvCount");
                 JSONArray mvArray = result.getJSONArray("mvs");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -103,7 +104,7 @@ public class MvSearchReq {
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject result = mvInfoJson.getJSONObject("result");
-            if (!result.isEmpty()) {
+            if (JsonUtil.notEmpty(result)) {
                 t = result.getIntValue("videoCount");
                 JSONArray mvArray = result.getJSONArray("videos");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -191,8 +192,8 @@ public class MvSearchReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.post(String.format(SdkCommon.qqSearchApi))
-                    .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 4))
+            String mvInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+                    .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 4))
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

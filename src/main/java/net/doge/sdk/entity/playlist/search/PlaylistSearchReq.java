@@ -10,6 +10,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -24,13 +25,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlaylistSearchReq {
     // 关键词搜索歌单 API
-    private final String SEARCH_PLAYLIST_API = SdkCommon.prefix + "/cloudsearch?type=1000&keywords=%s&limit=%s&offset=%s";
+    private final String SEARCH_PLAYLIST_API = SdkCommon.PREFIX + "/cloudsearch?type=1000&keywords=%s&limit=%s&offset=%s";
     // 关键词搜索歌单 API (酷狗)
     private final String SEARCH_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v3/search/special?filter=0&keyword=%s&page=%s&pagesize=%s";
     // 关键词搜索歌单 API (酷我)
     private final String SEARCH_PLAYLIST_KW_API = "http://www.kuwo.cn/api/www/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌单 API (咪咕)
-    private final String SEARCH_PLAYLIST_MG_API = SdkCommon.prefixMg + "/search?type=playlist&keyword=%s&pageNo=%s&pageSize=%s";
+    private final String SEARCH_PLAYLIST_MG_API = SdkCommon.PREFIX_MG + "/search?type=playlist&keyword=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索歌单 API (5sing)
     private final String SEARCH_PLAYLIST_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=0&type=1";
 
@@ -63,8 +64,8 @@ public class PlaylistSearchReq {
 
                     String playlistId = playlistJson.getString("id");
                     String name = playlistJson.getString("name");
-                    String creator = ct != null ? ct.getString("nickname") : "";
-                    String creatorId = ct != null ? ct.getString("userId") : "";
+                    String creator = JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "";
+                    String creatorId = JsonUtil.notEmpty(ct) ? ct.getString("userId") : "";
                     Long playCount = playlistJson.getLong("playCount");
                     Integer trackCount = playlistJson.getIntValue("trackCount");
                     String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
@@ -131,8 +132,8 @@ public class PlaylistSearchReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.post(String.format(SdkCommon.qqSearchApi))
-                    .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 3))
+            String playlistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+                    .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 3))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -216,7 +217,7 @@ public class PlaylistSearchReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
-            if (data != null) {
+            if (JsonUtil.notEmpty(data)) {
                 t = data.getIntValue("total");
                 JSONArray playlistArray = data.getJSONArray("list");
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
@@ -258,7 +259,7 @@ public class PlaylistSearchReq {
             JSONObject data = JSONObject.parseObject(playlistInfoBody);
             t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
             JSONArray playlistArray = data.getJSONArray("list");
-            if (playlistArray != null) {
+            if (JsonUtil.notEmpty(playlistArray)) {
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 

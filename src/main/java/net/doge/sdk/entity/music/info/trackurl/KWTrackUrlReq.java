@@ -6,7 +6,6 @@ import cn.hutool.http.HttpResponse;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -132,8 +131,6 @@ public class KWTrackUrlReq {
             8, 7, 11, 0, 4, 13, 2, 11,}
     };
 
-    private static String csrf = "";
-
     /**
      * 获取酷我音乐歌曲链接
      *
@@ -159,15 +156,8 @@ public class KWTrackUrlReq {
         HttpResponse resp = HttpRequest.get(url)
                 .header(Header.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)" +
                         " Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.50")
-                .header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
                 .header(Header.REFERER, "https://www.kuwo.cn/search/list?key=")
-                .header("csrf", csrf)
                 .execute();
-        String setCookie = resp.header(Header.SET_COOKIE);
-        if (StringUtil.notEmpty(setCookie)) {
-            String kwToken = RegexUtil.getGroup1("kw_token=(.*?);", setCookie);
-            csrf = kwToken;
-        }
         String trackUrl = RegexUtil.getGroup1("url=(.*?)\r\n", resp.body());
         return trackUrl;
     }

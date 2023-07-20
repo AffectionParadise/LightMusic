@@ -11,6 +11,7 @@ import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,22 +23,22 @@ import java.util.LinkedList;
 
 public class MusicMenuReq {
     // 相似歌曲 API
-    private final String SIMILAR_SONG_API = SdkCommon.prefix + "/simi/song?id=%s";
+    private final String SIMILAR_SONG_API = SdkCommon.PREFIX + "/simi/song?id=%s";
     // 相似歌曲 API (QQ)
-    private final String SIMILAR_SONG_QQ_API = SdkCommon.prefixQQ33 + "/song/similar?id=%s";
+    private final String SIMILAR_SONG_QQ_API = SdkCommon.PREFIX_QQ + "/song/similar?id=%s";
     // 相似歌曲 API (猫耳)
     private final String SIMILAR_SONG_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
 
     // 歌曲相关歌单 API
-    private final String RELATED_PLAYLIST_API = SdkCommon.prefix + "/simi/playlist?id=%s";
+    private final String RELATED_PLAYLIST_API = SdkCommon.PREFIX + "/simi/playlist?id=%s";
     // 相关歌单 API (QQ)
-    private final String RELATED_PLAYLIST_QQ_API = SdkCommon.prefixQQ33 + "/song/playlist?id=%s";
+    private final String RELATED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/song/playlist?id=%s";
 
     // 歌曲推荐电台 API (猫耳)
     private final String SONG_REC_RADIO_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
 
     // 歌曲信息 API (QQ)
-    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/song?songmid=%s";
+    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/song?songmid=%s";
     // 歌曲信息 API (音乐磁场)
     private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
@@ -61,10 +62,10 @@ public class MusicMenuReq {
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONArray songsArray = musicInfoJson.getJSONArray("songs");
-            t = songsArray.size();
-            for (int i = 0, len = songsArray.size(); i < len; i++) {
-                JSONObject songJson = songsArray.getJSONObject(i);
+            JSONArray songArray = musicInfoJson.getJSONArray("songs");
+            t = songArray.size();
+            for (int i = 0, len = songArray.size(); i < len; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("id");
                 String songName = songJson.getString("name").trim();
@@ -102,16 +103,16 @@ public class MusicMenuReq {
                     .execute()
                     .body();
             musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONArray songsArray = musicInfoJson.getJSONArray("data");
-            t = songsArray.size();
-            for (int i = 0, len = songsArray.size(); i < len; i++) {
-                JSONObject songJson = songsArray.getJSONObject(i);
+            JSONArray songArray = musicInfoJson.getJSONArray("data");
+            t = songArray.size();
+            for (int i = 0, len = songArray.size(); i < len; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("mid");
                 String songName = songJson.getString("name");
                 String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = singerArray.isEmpty() ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
@@ -187,10 +188,10 @@ public class MusicMenuReq {
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONArray songsArray = musicInfoJson.getJSONObject("info").getJSONArray("sounds");
-            t = songsArray.size();
-            for (int i = 0, len = songsArray.size(); i < len; i++) {
-                JSONObject songJson = songsArray.getJSONObject(i);
+            JSONArray songArray = musicInfoJson.getJSONObject("info").getJSONArray("sounds");
+            t = songArray.size();
+            for (int i = 0, len = songArray.size(); i < len; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("id");
                 String songName = songJson.getString("soundstr");

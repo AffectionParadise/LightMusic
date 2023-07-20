@@ -15,6 +15,7 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -29,30 +30,30 @@ import java.util.List;
 
 public class ArtistInfoReq {
     // 歌手信息 API
-    private final String ARTIST_DETAIL_API = SdkCommon.prefix + "/artists?id=%s";
+    private final String ARTIST_DETAIL_API = SdkCommon.PREFIX + "/artists?id=%s";
     // 歌手信息 API (酷狗)
     private final String ARTIST_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=%s";
     // 歌手信息 API (QQ)
-    private final String ARTIST_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/singer/desc?singermid=%s";
+    private final String ARTIST_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/singer/desc?singermid=%s";
     // 歌手图片 API (QQ)
     private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
     // 歌手信息 API (酷我)
     private final String ARTIST_DETAIL_KW_API = "https://kuwo.cn/api/www/artist/artist?artistid=%s&httpsStatus=1";
     // 歌手信息 API (咪咕)
-    private final String ARTIST_DETAIL_MG_API = SdkCommon.prefixMg + "/singer/desc?id=%s";
+    private final String ARTIST_DETAIL_MG_API = SdkCommon.PREFIX_MG + "/singer/desc?id=%s";
     // 歌手信息 API (千千)
     private final String ARTIST_DETAIL_QI_API = "https://music.91q.com/v1/artist/info?appid=16073360&artistCode=%s&timestamp=%s";
     // 歌手信息 API (豆瓣)
     private final String ARTIST_DETAIL_DB_API = "https://movie.douban.com/celebrity/%s/";
 
     // 歌手歌曲 API
-    private final String ARTIST_SONGS_API = SdkCommon.prefix + "/artist/songs?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_SONGS_API = SdkCommon.PREFIX + "/artist/songs?id=%s&offset=%s&limit=%s";
     // 歌手专辑 API
-    private final String ARTIST_ALBUMS_API = SdkCommon.prefix + "/artist/album?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_ALBUMS_API = SdkCommon.PREFIX + "/artist/album?id=%s&offset=%s&limit=%s";
     // 歌手 MV API
-    private final String ARTIST_MVS_API = SdkCommon.prefix + "/artist/mv?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_MVS_API = SdkCommon.PREFIX + "/artist/mv?id=%s&offset=%s&limit=%s";
     // 歌手视频 API
-//    private final String ARTIST_VIDEOS_API = SdkCommon.prefix + "/artist/video?id=%s&cursor=%s&size=%s";
+//    private final String ARTIST_VIDEOS_API = SdkCommon.PREFIX + "/artist/video?id=%s&cursor=%s&size=%s";
     // 歌手歌曲 API (酷狗)
     private final String ARTIST_SONGS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/song?&singerid=%s&page=%s&pagesize=%s";
     // 歌手专辑 API (酷狗)
@@ -60,11 +61,11 @@ public class ArtistInfoReq {
     // 歌手 MV API (酷狗)
     private final String ARTIST_MVS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/mv?&singerid=%s&page=%s&pagesize=%s";
     // 歌手歌曲 API (QQ)
-    private final String ARTIST_SONGS_QQ_API = SdkCommon.prefixQQ33 + "/singer/songs?singermid=%s&page=%s&num=%s";
+    private final String ARTIST_SONGS_QQ_API = SdkCommon.PREFIX_QQ + "/singer/songs?singermid=%s&page=%s&num=%s";
     // 歌手专辑 API (QQ)
-    private final String ARTIST_ALBUMS_QQ_API = SdkCommon.prefixQQ33 + "/singer/album?singermid=%s&pageNo=%s&pageSize=%s";
+    private final String ARTIST_ALBUMS_QQ_API = SdkCommon.PREFIX_QQ + "/singer/album?singermid=%s&pageNo=%s&pageSize=%s";
     // 歌手 MV API (QQ)
-    private final String ARTIST_MVS_QQ_API = SdkCommon.prefixQQ33 + "/singer/mv?singermid=%s&pageNo=%s&pageSize=%s";
+    private final String ARTIST_MVS_QQ_API = SdkCommon.PREFIX_QQ + "/singer/mv?singermid=%s&pageNo=%s&pageSize=%s";
     // 歌手歌曲 API (酷我)
     private final String ARTIST_SONGS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手专辑 API (酷我)
@@ -72,9 +73,9 @@ public class ArtistInfoReq {
     // 歌手 MV API (酷我)
     private final String ARTIST_MVS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMv?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手歌曲 API (咪咕)
-    private final String ARTIST_SONGS_MG_API = SdkCommon.prefixMg + "/singer/songs?id=%s&pageNo=%s";
+    private final String ARTIST_SONGS_MG_API = SdkCommon.PREFIX_MG + "/singer/songs?id=%s&pageNo=%s";
     // 歌手专辑 API (咪咕)
-    private final String ARTIST_ALBUMS_MG_API = SdkCommon.prefixMg + "/singer/albums?id=%s&pageNo=%s";
+    private final String ARTIST_ALBUMS_MG_API = SdkCommon.PREFIX_MG + "/singer/albums?id=%s&pageNo=%s";
     // 歌手歌曲 API (千千)
     private final String ARTIST_SONGS_QI_API = "https://music.91q.com/v1/artist/song?appid=16073360&artistCode=%s&pageNo=%s&pageSize=%s&timestamp=%s";
     // 歌手专辑 API (千千)
@@ -582,7 +583,7 @@ public class ArtistInfoReq {
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 JSONArray mvdata = songJson.getJSONArray("mvdata");
-                String mvId = mvdata == null ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
+                String mvId = JsonUtil.isEmpty(mvdata) ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
                 NetMusicInfo netMusicInfo = new NetMusicInfo();
                 netMusicInfo.setSource(NetMusicSource.KG);
@@ -615,7 +616,7 @@ public class ArtistInfoReq {
                 String name = songJson.getString("name");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = singerArray.isEmpty() ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
@@ -682,7 +683,7 @@ public class ArtistInfoReq {
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
             // 咪咕可能接口异常，需要判空！
-            if (data != null) {
+            if (JsonUtil.notEmpty(data)) {
                 total = data.getIntValue("totalPage") * limit;
                 JSONArray songArray = data.getJSONArray("list");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
@@ -728,7 +729,7 @@ public class ArtistInfoReq {
                 String name = songJson.getString("title");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QI);
                 JSONArray artistArray = songJson.getJSONArray("artist");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");
@@ -945,7 +946,7 @@ public class ArtistInfoReq {
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             // 咪咕可能接口异常，需要判空！
             JSONObject data = albumInfoJson.getJSONObject("data");
-            if (data != null) {
+            if (JsonUtil.notEmpty(data)) {
                 total = data.getIntValue("total");
                 JSONArray albumArray = data.getJSONArray("list");
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
@@ -993,7 +994,7 @@ public class ArtistInfoReq {
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.getJSONArray("artist");
-                String arId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String arId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getJSONArray("trackList").size();

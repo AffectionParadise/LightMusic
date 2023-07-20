@@ -10,6 +10,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.TimeUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -24,11 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GetRankingReq {
     // 获取榜单 API
-    private final String GET_RANKING_API = SdkCommon.prefix + "/toplist";
+    private final String GET_RANKING_API = SdkCommon.PREFIX + "/toplist";
     // 获取榜单 API (酷狗)
     private final String GET_RANKING_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/list?apiver=6&area_code=1";
     // 获取榜单 API (QQ)
-    private final String GET_RANKING_QQ_API = SdkCommon.prefixQQ33 + "/top/category";
+    private final String GET_RANKING_QQ_API = SdkCommon.PREFIX_QQ + "/top/category";
     // 获取榜单 API 2 (QQ)
     private final String GET_RANKING_QQ_API_2
             = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5";
@@ -325,7 +326,7 @@ public class GetRankingReq {
             JSONArray contentItemList = data.getJSONArray("contentItemList");
             for (int i = 0, len = contentItemList.size(); i < len; i++) {
                 JSONArray itemList = contentItemList.getJSONObject(i).getJSONArray("itemList");
-                if (itemList != null) {
+                if (JsonUtil.notEmpty(itemList)) {
                     for (int j = 0, s = itemList.size(); j < s; j++) {
                         JSONObject item = itemList.getJSONObject(j);
 

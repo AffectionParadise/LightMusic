@@ -33,22 +33,22 @@ public class HotRadioReq {
 //            = prefix + "/dj/personalize/recommend";
     // 今日优选电台 API
     private final String DAILY_RADIO_API
-            = SdkCommon.prefix + "/dj/today/perfered";
+            = SdkCommon.PREFIX + "/dj/today/perfered";
     // 热门电台 API
     private final String HOT_RADIO_API
-            = SdkCommon.prefix + "/dj/hot?limit=1000";
+            = SdkCommon.PREFIX + "/dj/hot?limit=1000";
     // 热门电台榜 API
     private final String RADIO_TOPLIST_API
-            = SdkCommon.prefix + "/dj/toplist?type=hot&limit=200";
+            = SdkCommon.PREFIX + "/dj/toplist?type=hot&limit=200";
     // 推荐电台 API
     private final String REC_RADIO_API
-            = SdkCommon.prefix + "/dj/recommend";
+            = SdkCommon.PREFIX + "/dj/recommend";
     // 分类热门电台 API
     private final String CAT_HOT_RADIO_API
-            = SdkCommon.prefix + "/dj/radio/hot?cateId=%s&offset=%s&limit=%s";
+            = SdkCommon.PREFIX + "/dj/radio/hot?cateId=%s&offset=%s&limit=%s";
     // 分类推荐电台 API
     private final String CAT_REC_RADIO_API
-            = SdkCommon.prefix + "/dj/recommend/type?type=%s";
+            = SdkCommon.PREFIX + "/dj/recommend/type?type=%s";
     // 分类电台榜 API (喜马拉雅)
     private final String CAT_RADIO_RANKING_XM_API
             = "https://www.ximalaya.com/revision/rank/v3/element?typeId=%s&clusterId=%s";

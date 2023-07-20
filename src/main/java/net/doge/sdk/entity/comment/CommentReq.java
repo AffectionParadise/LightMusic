@@ -12,6 +12,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.BvAvConverter;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -26,13 +27,13 @@ import java.util.List;
 
 public class CommentReq {
     // 获取评论 API
-    private final String GET_COMMENTS_API = SdkCommon.prefix + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=%s&cursor=%s";
+    private final String GET_COMMENTS_API = SdkCommon.PREFIX + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=%s&cursor=%s";
     // 获取评论 API (酷狗)
     private final String GET_COMMENTS_KG_API
             = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=%s&p=%s&pagesize=%s";
     // 获取评论 API (QQ)
     private final String GET_COMMENTS_QQ_API
-            = SdkCommon.prefixQQ33 + "/comment?type=%s&biztype=%s&id=%s&pageNo=%s&pageSize=%s";
+            = SdkCommon.PREFIX_QQ + "/comment?type=%s&biztype=%s&id=%s&pageNo=%s&pageSize=%s";
     // 获取热门评论 API (酷我)
     private final String GET_HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s" +
             "&uid=0&prod=newWeb&httpsStatus=1";
@@ -81,11 +82,11 @@ public class CommentReq {
             = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
 
     // mlog id 转视频 id API
-    private final String MLOG_TO_VIDEO_API = SdkCommon.prefix + "/mlog/to/video?id=%s";
+    private final String MLOG_TO_VIDEO_API = SdkCommon.PREFIX + "/mlog/to/video?id=%s";
     // 歌曲信息 API (QQ)
-    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/song?songmid=%s";
+    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/song?songmid=%s";
     // 专辑信息 API (QQ)
-    private final String ALBUM_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/album?albummid=%s";
+    private final String ALBUM_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/album?albummid=%s";
 
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
@@ -214,7 +215,7 @@ public class CommentReq {
 
                 // 被回复的评论
                 JSONArray beReplied = commentJson.getJSONArray("beReplied");
-                if (beReplied == null) continue;
+                if (JsonUtil.isEmpty(beReplied)) continue;
                 for (int j = 0, l = beReplied.size(); j < l; j++) {
                     commentJson = beReplied.getJSONObject(j);
 
@@ -252,8 +253,8 @@ public class CommentReq {
                     .body();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONArray commentArray = hotOnly ? commentInfoJson.getJSONArray("weightList") : commentInfoJson.getJSONArray("list");
-            total = hotOnly ? (commentArray != null ? commentArray.size() : 0) : commentInfoJson.getIntValue("count");
-            if (commentArray != null) {
+            total = hotOnly ? (JsonUtil.notEmpty(commentArray) ? commentArray.size() : 0) : commentInfoJson.getIntValue("count");
+            if (JsonUtil.notEmpty(commentArray)) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
 
@@ -292,7 +293,7 @@ public class CommentReq {
             int to = commentJson.getIntValue("commenttotal");
             total = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
             JSONArray commentArray = commentJson.getJSONArray("commentlist");
-            if (commentArray != null) {
+            if (JsonUtil.notEmpty(commentArray)) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject cj = commentArray.getJSONObject(i);
 
@@ -302,7 +303,7 @@ public class CommentReq {
                     JSONArray middleCommentContent = cj.getJSONArray("middlecommentcontent");
                     String content;
                     JSONObject cj2 = null;
-                    if (middleCommentContent != null) {
+                    if (JsonUtil.notEmpty(middleCommentContent)) {
                         cj2 = middleCommentContent.getJSONObject(0);
                         String sc = cj2.getString("subcommentcontent");
                         content = StringUtil.notEmpty(sc) ? sc.replace("\\n", "\n") : "";
@@ -331,20 +332,19 @@ public class CommentReq {
                     commentInfos.add(commentInfo);
 
                     // 被回复的评论
-                    if (middleCommentContent != null) {
-                        String uId = cj2.getString("encrypt_replyeduin");
-                        String uname = cj.getString("rootcommentnick");
-                        String rc = cj.getString("rootcommentcontent");
-                        String cnt = StringUtil.notEmpty(rc) ? rc.replace("\\n", "\n") : "";
+                    if (JsonUtil.isEmpty(middleCommentContent)) continue;
+                    String uId = cj2.getString("encrypt_replyeduin");
+                    String uname = cj.getString("rootcommentnick");
+                    String rc = cj.getString("rootcommentcontent");
+                    String cnt = StringUtil.notEmpty(rc) ? rc.replace("\\n", "\n") : "";
 
-                        NetCommentInfo ci = new NetCommentInfo();
-                        ci.setSource(NetMusicSource.QQ);
-                        ci.setSub(true);
-                        ci.setUserId(uId);
-                        ci.setUsername(StringUtil.isEmpty(uname) ? "null" : uname.substring(1));
-                        ci.setContent(StringUtil.isEmpty(cnt) ? "该评论已被删除" : cnt);
-                        commentInfos.add(ci);
-                    }
+                    NetCommentInfo ci = new NetCommentInfo();
+                    ci.setSource(NetMusicSource.QQ);
+                    ci.setSub(true);
+                    ci.setUserId(uId);
+                    ci.setUsername(StringUtil.isEmpty(uname) ? "null" : uname.substring(1));
+                    ci.setContent(StringUtil.isEmpty(cnt) ? "该评论已被删除" : cnt);
+                    commentInfos.add(ci);
                 }
             }
         }
@@ -378,7 +378,7 @@ public class CommentReq {
                 total = commentInfoJson.getIntValue("total");
                 commentArray = commentInfoJson.getJSONArray("rows");
             }
-            if (commentArray != null) {
+            if (JsonUtil.notEmpty(commentArray)) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
 
@@ -405,7 +405,7 @@ public class CommentReq {
 
                     // 被回复的评论
                     JSONObject reply = commentJson.getJSONObject("reply");
-                    if (reply == null) continue;
+                    if (JsonUtil.isEmpty(reply)) continue;
                     username = reply.getString("u_name");
                     profileUrl = reply.getString("u_pic");
                     content = reply.getString("msg");
@@ -453,7 +453,7 @@ public class CommentReq {
                 total = data.getIntValue("totalComment");
                 commentArray = data.getJSONArray("comments");
             }
-            if (commentArray != null) {
+            if (JsonUtil.notEmpty(commentArray)) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
 
@@ -486,7 +486,7 @@ public class CommentReq {
 
                     // 回复
                     JSONArray replies = commentJson.getJSONArray("replies");
-                    if (replies == null) continue;
+                    if (JsonUtil.isEmpty(replies)) continue;
                     for (int j = 0, s = replies.size(); j < s; j++) {
                         JSONObject cj = replies.getJSONObject(j);
 
@@ -1018,7 +1018,7 @@ public class CommentReq {
             int count = data.getJSONObject("page").getIntValue("count");
             total = (count % lim == 0 ? count / lim : count / lim + 1) * limit;
             JSONArray commentArray = data.getJSONArray("replies");
-            if (commentArray != null) {
+            if (JsonUtil.notEmpty(commentArray)) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
                     JSONObject commentJson = commentArray.getJSONObject(i);
                     JSONObject member = commentJson.getJSONObject("member");
@@ -1049,7 +1049,7 @@ public class CommentReq {
 
                     // 回复
                     JSONArray replies = commentJson.getJSONArray("replies");
-                    if (replies == null) continue;
+                    if (JsonUtil.isEmpty(replies)) continue;
                     for (int j = 0, s = replies.size(); j < s; j++) {
                         JSONObject cj = replies.getJSONObject(j);
                         JSONObject mem = cj.getJSONObject("member");

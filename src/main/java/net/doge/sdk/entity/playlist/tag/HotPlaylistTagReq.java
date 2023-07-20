@@ -19,9 +19,9 @@ import java.util.concurrent.Future;
 
 public class HotPlaylistTagReq {
     // 精品歌单标签 API
-    private final String HIGH_QUALITY_PLAYLIST_TAG_API = SdkCommon.prefix + "/playlist/highquality/tags";
+    private final String HIGH_QUALITY_PLAYLIST_TAG_API = SdkCommon.PREFIX + "/playlist/highquality/tags";
     // 网友精选碟标签 API
-    private final String PICKED_PLAYLIST_TAG_API = SdkCommon.prefix + "/playlist/catlist";
+    private final String PICKED_PLAYLIST_TAG_API = SdkCommon.PREFIX + "/playlist/catlist";
     // 歌单标签 API (酷狗)
     private final String PLAYLIST_TAG_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_smarty=1";
     // 歌单标签 API (QQ)

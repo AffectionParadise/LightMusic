@@ -22,17 +22,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewRadioReq {
     // 新晋电台 API
-    private final String NEW_RADIO_API = SdkCommon.prefix + "/dj/toplist?type=new&limit=200";
+    private final String NEW_RADIO_API = SdkCommon.PREFIX + "/dj/toplist?type=new&limit=200";
     // 推荐个性电台 API
-    private final String PERSONALIZED_RADIO_API = SdkCommon.prefix + "/personalized/djprogram";
+    private final String PERSONALIZED_RADIO_API = SdkCommon.PREFIX + "/personalized/djprogram";
     // 推荐电台 API
-    private final String RECOMMEND_RADIO_API = SdkCommon.prefix + "/dj/recommend";
+    private final String RECOMMEND_RADIO_API = SdkCommon.PREFIX + "/dj/recommend";
     // 付费精品电台 API
-    private final String PAY_RADIO_API = SdkCommon.prefix + "/dj/toplist/pay?limit=100";
+    private final String PAY_RADIO_API = SdkCommon.PREFIX + "/dj/toplist/pay?limit=100";
     // 付费精选电台 API
-    private final String PAY_GIFT_RADIO_API = SdkCommon.prefix + "/dj/paygift?offset=%s&limit=%s";
+    private final String PAY_GIFT_RADIO_API = SdkCommon.PREFIX + "/dj/paygift?offset=%s&limit=%s";
     // 推荐电台 API (QQ)
-    private final String RECOMMEND_RADIO_QQ_API = SdkCommon.prefixQQ33 + "/radio/category";
+    private final String RECOMMEND_RADIO_QQ_API = SdkCommon.PREFIX_QQ + "/radio/category";
     // 推荐广播剧 API (猫耳)
     private final String REC_RADIO_ME_API = "https://www.missevan.com/drama/site/recommend";
     // 夏日推荐 API (猫耳)

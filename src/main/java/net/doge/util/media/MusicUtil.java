@@ -1,6 +1,5 @@
 package net.doge.util.media;
 
-import cn.hutool.core.img.Img;
 import com.mpatric.mp3agic.*;
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.EncoderException;
@@ -11,13 +10,12 @@ import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.util.common.StringUtil;
-import net.doge.util.system.TerminateUtil;
 import net.doge.util.system.FileUtil;
+import net.doge.util.system.TerminateUtil;
 import net.doge.util.ui.ImageUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -53,45 +51,38 @@ public class MusicUtil {
      * @param sourcePath
      * @param netMusicInfo
      */
-    public static void writeMP3Info(String sourcePath, NetMusicInfo netMusicInfo) throws InvalidDataException, UnsupportedTagException, IOException, NotSupportedException {
-        if (!netMusicInfo.hasAlbumImage()) {
-            netMusicInfo.setInvokeLater(() -> {
-                try {
-                    startWrite(sourcePath, netMusicInfo);
-                } catch (IOException | InvalidDataException | UnsupportedTagException | NotSupportedException e) {
-                    e.printStackTrace();
-                }
-            });
-        } else startWrite(sourcePath, netMusicInfo);
+    public static void writeMP3Info(String sourcePath, NetMusicInfo netMusicInfo) {
+        if (!netMusicInfo.hasAlbumImage()) netMusicInfo.setInvokeLater(() -> startWrite(sourcePath, netMusicInfo));
+        else startWrite(sourcePath, netMusicInfo);
     }
 
-    private static void startWrite(String sourcePath, NetMusicInfo netMusicInfo) throws IOException, InvalidDataException, UnsupportedTagException, NotSupportedException {
+    private static void startWrite(String sourcePath, NetMusicInfo netMusicInfo) {
         String name = netMusicInfo.getName();
         String artist = netMusicInfo.getArtist();
         String albumName = netMusicInfo.getAlbumName();
         BufferedImage albumImg = netMusicInfo.getAlbumImage();
 
-        // 图片读取成 byte 数组
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        if (albumImg != null) Img.from(albumImg).write(baos);
-
         // 创建临时文件
         File destFile = new File(sourcePath);
         File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
         FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
-        // 将 tag 设置进 MP3 并保存文件
-        Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
-        ID3v2 tag = mp3file.getId3v2Tag();
-        // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
-        if (tag == null) tag = new ID3v24Tag();
-        if (albumImg != null) tag.setAlbumImage(baos.toByteArray(), "image/jpeg");
-        if (StringUtil.notEmpty(name)) tag.setTitle(name);
-        if (StringUtil.notEmpty(artist)) tag.setArtist(artist);
-        if (StringUtil.notEmpty(albumName)) tag.setAlbum(albumName);
-        mp3file.setId3v2Tag(tag);
-        mp3file.save(destFile.getAbsolutePath());
-        // 退出时将临时文件删除
-        tempFile.deleteOnExit();
+        try {
+            // 将 tag 设置进 MP3 并保存文件
+            Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
+            ID3v2 tag = mp3file.getId3v2Tag();
+            // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
+            if (tag == null) tag = new ID3v24Tag();
+            if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/jpeg");
+            if (StringUtil.notEmpty(name)) tag.setTitle(name);
+            if (StringUtil.notEmpty(artist)) tag.setArtist(artist);
+            if (StringUtil.notEmpty(albumName)) tag.setAlbum(albumName);
+            mp3file.setId3v2Tag(tag);
+            mp3file.save(destFile.getAbsolutePath());
+            // 退出时将临时文件删除
+            tempFile.deleteOnExit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -100,7 +91,7 @@ public class MusicUtil {
      * @param sourcePath
      * @param mediaInfo
      */
-    public static void writeMP3Info(String sourcePath, MediaInfo mediaInfo) throws InvalidDataException, UnsupportedTagException, IOException, NotSupportedException {
+    public static void writeMP3Info(String sourcePath, MediaInfo mediaInfo) {
         String title = mediaInfo.getTitle();
         String artist = mediaInfo.getArtist();
         String albumName = mediaInfo.getAlbum();
@@ -109,28 +100,28 @@ public class MusicUtil {
         String copyright = mediaInfo.getCopyright();
         BufferedImage albumImg = mediaInfo.getAlbumImage();
 
-        // 图片读取成 byte 数组
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        if (albumImg != null) Img.from(albumImg).write(baos);
-
         // 创建临时文件
         File destFile = new File(sourcePath);
         File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
         FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
-        // 将 tag 设置进 MP3 并保存文件
-        Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
-        ID3v2 tag = mp3file.getId3v2Tag();
-        // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
-        if (tag == null) tag = new ID3v24Tag();
-        if (albumImg != null) tag.setAlbumImage(baos.toByteArray(), "image/jpeg");
-        tag.setTitle(title);
-        tag.setArtist(artist);
-        tag.setAlbum(albumName);
-        if (StringUtil.notEmpty(genre)) tag.setGenreDescription(genre);
-        tag.setComment(comment);
-        tag.setCopyright(copyright);
-        mp3file.setId3v2Tag(tag);
-        mp3file.save(destFile.getAbsolutePath());
+        try {
+            // 将 tag 设置进 MP3 并保存文件
+            Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
+            ID3v2 tag = mp3file.getId3v2Tag();
+            // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
+            if (tag == null) tag = new ID3v24Tag();
+            if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/jpeg");
+            tag.setTitle(title);
+            tag.setArtist(artist);
+            tag.setAlbum(albumName);
+            if (StringUtil.notEmpty(genre)) tag.setGenreDescription(genre);
+            tag.setComment(comment);
+            tag.setCopyright(copyright);
+            mp3file.setId3v2Tag(tag);
+            mp3file.save(destFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

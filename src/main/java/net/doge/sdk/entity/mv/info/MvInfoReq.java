@@ -1,24 +1,25 @@
 package net.doge.sdk.entity.mv.info;
 
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 
 public class MvInfoReq {
     // MV 信息 API
-    private final String MV_DETAIL_API = SdkCommon.prefix + "/mv/detail?mvid=%s";
+    private final String MV_DETAIL_API = SdkCommon.PREFIX + "/mv/detail?mvid=%s";
     // MV 信息 API (酷狗)
     private final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash=%s";
     // MV 信息 API (QQ)
-    private final String MV_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/mv?id=%s";
+    private final String MV_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/mv?id=%s";
     // MV 信息 API (酷我)
     private final String MV_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
 
@@ -89,7 +90,7 @@ public class MvInfoReq {
             String name = s[1];
             String artist = s[0];
             JSONArray artistArray = mvJson.getJSONArray("authors");
-            String creatorId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("singerid") : "";
+            String creatorId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("singerid") : "";
             Long playCount = data.getLong("history_heat");
             Double duration = data.getDouble("mv_timelength") / 1000;
             String pubTime = data.getString("update");

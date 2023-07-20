@@ -10,15 +10,16 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.common.JsonUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 public class SheetReq {
     // 获取乐谱 API
-    private final String GET_SHEETS_API = SdkCommon.prefix + "/sheet/list?id=%s";
+    private final String GET_SHEETS_API = SdkCommon.PREFIX + "/sheet/list?id=%s";
     // 获取乐谱图片 API
-    private final String GET_SHEETS_IMG_API = SdkCommon.prefix + "/sheet/preview?id=%s";
+    private final String GET_SHEETS_IMG_API = SdkCommon.PREFIX + "/sheet/preview?id=%s";
 
     /**
      * 获取歌曲乐谱
@@ -36,7 +37,7 @@ public class SheetReq {
             JSONObject sheetInfoJson = JSONObject.parseObject(sheetInfoBody);
             JSONObject data = sheetInfoJson.getJSONObject("data");
             JSONArray sheetArray = data.getJSONArray("musicSheetSimpleInfoVOS");
-            if (sheetArray != null) {
+            if (JsonUtil.notEmpty(sheetArray)) {
                 total = sheetArray.size();
                 for (int i = 0, len = sheetArray.size(); i < len; i++) {
                     JSONObject sheetJson = sheetArray.getJSONObject(i);

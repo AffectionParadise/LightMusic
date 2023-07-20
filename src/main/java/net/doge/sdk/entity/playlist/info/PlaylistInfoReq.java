@@ -13,10 +13,7 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,19 +29,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlaylistInfoReq {
     // 歌单信息 API
-    private final String PLAYLIST_DETAIL_API = SdkCommon.prefix + "/playlist/detail?id=%s";
+    private final String PLAYLIST_DETAIL_API = SdkCommon.PREFIX + "/playlist/detail?id=%s";
     // 歌单歌曲 API
-    private final String PLAYLIST_SONGS_API = SdkCommon.prefix + "/playlist/track/all?id=%s&offset=%s&limit=%s";
+    private final String PLAYLIST_SONGS_API = SdkCommon.PREFIX + "/playlist/track/all?id=%s&offset=%s&limit=%s";
     // 歌单信息 API (酷狗)
     private final String PLAYLIST_DETAIL_KG_API = "https://mobiles.kugou.com/api/v5/special/info_v2?appid=1058&specialid=0&global_specialid=%s&format=jsonp&srcappid=2919&clientver=20000&clienttime=1586163242519&mid=1586163242519&uuid=1586163242519&dfid=-&signature=%s";
     private final String PLAYLIST_SONGS_KG_API = "https://mobiles.kugou.com/api/v5/special/song_v2?appid=1058&global_specialid=%s&specialid=0&plat=0&version=8000&page=%s&pagesize=%s&srcappid=2919&clientver=20000&clienttime=1586163263991&mid=1586163263991&uuid=1586163263991&dfid=-&signature=%s";
     //    private final String PLAYLIST_DETAIL_KG_API = "https://m.kugou.com/plist/list/%s?json=true&page=%s";
     // 歌单信息 API (QQ)
-    private final String PLAYLIST_DETAIL_QQ_API = SdkCommon.prefixQQ33 + "/songlist?id=%s";
+    private final String PLAYLIST_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/songlist?id=%s";
     // 歌单信息 API (酷我)
     private final String PLAYLIST_DETAIL_KW_API = "http://www.kuwo.cn/api/www/playlist/playListInfo?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌单信息 API (咪咕)
-//    private final String PLAYLIST_DETAIL_MG_API = prefixMg + "/playlist?id=%s";
+//    private final String PLAYLIST_DETAIL_MG_API = PREFIX_MG + "/playlist?id=%s";
     private final String PLAYLIST_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2021&resourceId=%s";
     // 歌单歌曲 API (咪咕)
     private final String PLAYLIST_SONGS_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/user/queryMusicListSongs.do?musicListId=%s&pageNo=%s&pageSize=%s";
@@ -83,13 +80,13 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
-            if (playlistJson != null && !playlistJson.isEmpty()) {
+            if (JsonUtil.notEmpty(playlistJson)) {
                 JSONObject ct = playlistJson.getJSONObject("creator");
 
                 String playlistId = playlistJson.getString("id");
                 String name = playlistJson.getString("name");
-                String creator = ct != null ? ct.getString("nickname") : "";
-                String creatorId = ct != null ? ct.getString("userId") : "";
+                String creator = JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "";
+                String creatorId = JsonUtil.notEmpty(ct) ? ct.getString("userId") : "";
                 Integer trackCount = playlistJson.getIntValue("trackCount");
                 Long playCount = playlistJson.getLong("playCount");
                 String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
@@ -126,7 +123,7 @@ public class PlaylistInfoReq {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
-                if (playlistJson != null && !playlistJson.isEmpty()) {
+                if (JsonUtil.notEmpty(playlistJson)) {
                     String playlistId = playlistJson.getString("specialid");
                     String name = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
@@ -159,7 +156,7 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
-            if (playlistJson != null && !playlistJson.isEmpty()) {
+            if (JsonUtil.notEmpty(playlistJson)) {
                 String playlistId = playlistJson.getString("disstid");
                 String name = playlistJson.getString("dissname");
                 String creator = playlistJson.getString("nickname");
@@ -191,7 +188,7 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
-            if (playlistJson != null && !playlistJson.isEmpty()) {
+            if (JsonUtil.notEmpty(playlistJson)) {
                 String playlistId = playlistJson.getString("id");
                 String name = playlistJson.getString("name");
                 String creator = playlistJson.getString("userName");
@@ -223,7 +220,7 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray resource = playlistInfoJson.getJSONArray("resource");
-            if (resource != null) {
+            if (JsonUtil.notEmpty(resource)) {
                 JSONObject playlistJson = resource.getJSONObject(0);
 
                 String playlistId = playlistJson.getString("musicListId");
@@ -259,7 +256,7 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
-            if (playlistJson != null && !playlistJson.isEmpty()) {
+            if (JsonUtil.notEmpty(playlistJson)) {
                 String playlistId = playlistJson.getString("id");
                 String name = playlistJson.getString("title");
                 Integer trackCount = playlistJson.getIntValue("trackCount");
@@ -287,7 +284,7 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("info");
-            if (playlistJson != null && !playlistJson.isEmpty()) {
+            if (JsonUtil.notEmpty(playlistJson)) {
                 JSONObject album = playlistJson.getJSONObject("album");
 
                 String playlistId = album.getString("id");
@@ -323,7 +320,7 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
-            if (playlistJson != null && !playlistJson.isEmpty()) {
+            if (JsonUtil.notEmpty(playlistJson)) {
                 JSONObject stat = playlistJson.getJSONObject("statistic");
 
                 String playlistId = playlistJson.getString("menuId");
@@ -382,9 +379,9 @@ public class PlaylistInfoReq {
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasCreator())
-                playlistInfo.setCreator(ct != null ? ct.getString("nickname") : "");
+                playlistInfo.setCreator(JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "");
             if (!playlistInfo.hasCreatorId())
-                playlistInfo.setCreatorId(ct != null ? ct.getString("userId") : "");
+                playlistInfo.setCreatorId(JsonUtil.notEmpty(ct) ? ct.getString("userId") : "");
             if (!playlistInfo.hasTag())
                 playlistInfo.setTag(SdkUtil.parseTags(playlistJson, NetMusicSource.NET_CLOUD));
             if (!playlistInfo.hasTrackCount())
@@ -514,7 +511,7 @@ public class PlaylistInfoReq {
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject info = playlistInfoJson.getJSONObject("info");
-            if (info == null) return;
+            if (JsonUtil.isEmpty(info)) return;
             JSONObject album = info.getJSONObject("album");
 
             String coverImgUrl = album.getString("front_cover");
@@ -565,9 +562,8 @@ public class PlaylistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            LinkedList<Future<?>> taskList = new LinkedList<>();
-
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+            // 歌曲列表
+            Runnable getMusicInfo = () -> {
                 String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_API, id, (page - 1) * limit, limit))
                         .execute()
                         .body();
@@ -597,16 +593,21 @@ public class PlaylistInfoReq {
 
                     netMusicInfos.add(netMusicInfo);
                 }
-            }));
-
-            taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
+            };
+            // 歌曲总数
+            Runnable getTotal = () -> {
                 // 网易云获取歌单歌曲总数需要额外请求歌单详情接口！
                 String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_API, id))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 total.set(playlistInfoJson.getJSONObject("playlist").getIntValue("trackCount"));
-            }));
+            };
+
+            LinkedList<Future<?>> taskList = new LinkedList<>();
+
+            taskList.add(GlobalExecutors.requestExecutor.submit(getMusicInfo));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getTotal));
 
             taskList.forEach(task -> {
                 try {
@@ -680,7 +681,7 @@ public class PlaylistInfoReq {
                 String name = songJson.getString("songname");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = singerArray.isEmpty() ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getString("albumname");
                 String albumId = songJson.getString("albummid");
                 Double duration = songJson.getDouble("interval");
@@ -791,7 +792,7 @@ public class PlaylistInfoReq {
                 String name = songJson.getString("title");
                 String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QI);
                 JSONArray artistArray = songJson.getJSONArray("artist");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");

@@ -1,6 +1,7 @@
 package net.doge.util.common;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 
@@ -12,6 +13,46 @@ import java.io.*;
  * @Date 2020/12/15
  */
 public class JsonUtil {
+    /**
+     * 判断 Json 对象是否为 null 或 {}
+     *
+     * @param obj
+     * @return
+     */
+    public static boolean isEmpty(JSONObject obj) {
+        return obj == null || obj.isEmpty();
+    }
+
+    /**
+     * 判断 Json 对象是否不为 null 和 {}
+     *
+     * @param obj
+     * @return
+     */
+    public static boolean notEmpty(JSONObject obj) {
+        return obj != null && !obj.isEmpty();
+    }
+
+    /**
+     * 判断 Json 数组是否为 null 或 {}
+     *
+     * @param array
+     * @return
+     */
+    public static boolean isEmpty(JSONArray array) {
+        return array == null || array.isEmpty();
+    }
+
+    /**
+     * 判断 Json 数组是否不为 null 或 {}
+     *
+     * @param array
+     * @return
+     */
+    public static boolean notEmpty(JSONArray array) {
+        return array != null && !array.isEmpty();
+    }
+
     /**
      * 读取 Json 文件，返回 JSONObject
      *

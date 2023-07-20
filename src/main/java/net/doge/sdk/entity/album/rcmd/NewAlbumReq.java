@@ -12,6 +12,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -30,25 +31,25 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewAlbumReq {
     // 新碟上架 API
-    private final String NEW_ALBUM_API = SdkCommon.prefix + "/top/album?area=%s";
+    private final String NEW_ALBUM_API = SdkCommon.PREFIX + "/top/album?area=%s";
     // 新碟上架(热门) API
-//    private final String HOT_ALBUM_API = SdkCommon.prefix + "/top/album?type=hot&area=%s";
+//    private final String HOT_ALBUM_API = SdkCommon.PREFIX + "/top/album?type=hot&area=%s";
     // 全部新碟 API
-    private final String ALL_NEW_ALBUM_API = SdkCommon.prefix + "/album/new?area=%s&offset=%s&limit=%s";
+    private final String ALL_NEW_ALBUM_API = SdkCommon.PREFIX + "/album/new?area=%s&offset=%s&limit=%s";
     // 最新专辑 API
-    private final String NEWEST_ALBUM_API = SdkCommon.prefix + "/album/newest";
+    private final String NEWEST_ALBUM_API = SdkCommon.PREFIX + "/album/newest";
     // 数字新碟上架 API
-    private final String NEWEST_DI_ALBUM_API = SdkCommon.prefix + "/album/list?limit=200";
+    private final String NEWEST_DI_ALBUM_API = SdkCommon.PREFIX + "/album/list?limit=200";
     // 数字专辑语种风格馆 API
-    private final String LANG_DI_ALBUM_API = SdkCommon.prefix + "/album/list/style?area=%s&limit=50";
+    private final String LANG_DI_ALBUM_API = SdkCommon.PREFIX + "/album/list/style?area=%s&limit=50";
     // 曲风专辑 API
-    private final String STYLE_ALBUM_API = SdkCommon.prefix + "/style/album?tagId=%s&cursor=%s&size=%s";
+    private final String STYLE_ALBUM_API = SdkCommon.PREFIX + "/style/album?tagId=%s&cursor=%s&size=%s";
     // 新碟推荐 API (QQ)
     private final String NEW_ALBUM_QQ_API
-            = SdkCommon.prefixQQ33 + "/new/album?type=%s&num=100";
+            = SdkCommon.PREFIX_QQ + "/new/album?type=%s&num=100";
     // 新碟推荐 API (咪咕)
     private final String NEW_ALBUM_MG_API
-            = SdkCommon.prefixMg + "/new/albums?pageNo=%s&pageSize=%s";
+            = SdkCommon.PREFIX_MG + "/new/albums?pageNo=%s&pageSize=%s";
     // 新专辑榜 API (咪咕)
     private final String NEW_ALBUM_RANKING_MG_API
             = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=23218151";
@@ -103,7 +104,7 @@ public class NewAlbumReq {
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONArray albumArray = albumInfoJson.getJSONArray("weekData");
                 JSONArray monthData = albumInfoJson.getJSONArray("monthData");
-                if (albumArray == null) albumArray = monthData;
+                if (JsonUtil.isEmpty(albumArray)) albumArray = monthData;
                 else albumArray.addAll(monthData);
                 t = albumArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
@@ -147,7 +148,7 @@ public class NewAlbumReq {
 //                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
 //                JSONArray albumArray = albumInfoJson.getJSONArray("weekData");
 //                JSONArray monthData = albumInfoJson.getJSONArray("monthData");
-//                if (albumArray == null) albumArray = monthData;
+//                if (JsonUtil.isEmpty(albumArray)) albumArray = monthData;
 //                else albumArray.addAll(monthData);
 //                t = albumArray.size();
 //                for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
@@ -517,7 +518,7 @@ public class NewAlbumReq {
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.getJSONArray("artist");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String releaseDate = albumJson.getString("releaseDate");
                 if (StringUtil.isEmpty(releaseDate)) releaseDate = albumJson.getString("pushTime");
@@ -560,7 +561,7 @@ public class NewAlbumReq {
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.getJSONArray("artist");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getIntValue("trackCount");
@@ -601,7 +602,7 @@ public class NewAlbumReq {
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.getJSONArray("artist");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
                 Integer songNum = albumJson.getIntValue("trackCount");

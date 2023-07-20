@@ -1,5 +1,6 @@
 package net.doge.util.ui;
 
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.ContrastFilter;
 import com.jhlabs.image.GaussianFilter;
@@ -203,6 +204,16 @@ public class ImageUtil {
         } catch (Exception e) {
 
         }
+    }
+
+    /**
+     * 将图片转为 bytes
+     *
+     * @param img 图片
+     * @return
+     */
+    public static byte[] toBytes(BufferedImage img) {
+        return ImgUtil.toBytes(img, ImgUtil.IMAGE_TYPE_JPEG);
     }
 
     /**

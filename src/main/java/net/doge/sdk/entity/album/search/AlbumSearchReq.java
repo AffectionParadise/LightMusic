@@ -12,6 +12,7 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -29,12 +30,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AlbumSearchReq {
     // 关键词搜索专辑 API
-    private final String SEARCH_ALBUM_API = SdkCommon.prefix + "/cloudsearch?type=10&keywords=%s&limit=%s&offset=%s";
+    private final String SEARCH_ALBUM_API = SdkCommon.PREFIX + "/cloudsearch?type=10&keywords=%s&limit=%s&offset=%s";
     // 关键词搜索专辑 API (酷狗)
     private final String SEARCH_ALBUM_KG_API = "http://msearch.kugou.com/api/v3/search/album?keyword=%s&page=%s&pagesize=%s";
     private final String SEARCH_ALBUM_KW_API = "http://www.kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索专辑 API (咪咕)
-    private final String SEARCH_ALBUM_MG_API = SdkCommon.prefixMg + "/search?type=album&keyword=%s&pageNo=%s&pageSize=%s";
+    private final String SEARCH_ALBUM_MG_API = SdkCommon.PREFIX_MG + "/search?type=album&keyword=%s&pageNo=%s&pageSize=%s";
     // 关键词搜索专辑 API (千千)
     private final String SEARCH_ALBUM_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=3&word=%s";
     // 关键词搜索专辑 API (豆瓣)
@@ -145,8 +146,8 @@ public class AlbumSearchReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.post(String.format(SdkCommon.qqSearchApi))
-                    .body(String.format(SdkCommon.qqSearchJson, page, limit, keyword, 2))
+            String albumInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+                    .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 2))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -233,7 +234,7 @@ public class AlbumSearchReq {
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             // 咪咕可能接口异常，需要判空！
             JSONObject data = albumInfoJson.getJSONObject("data");
-            if (data != null) {
+            if (JsonUtil.notEmpty(data)) {
                 t = data.getIntValue("total");
                 JSONArray albumArray = data.getJSONArray("list");
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
@@ -284,7 +285,7 @@ public class AlbumSearchReq {
                 String albumName = albumJson.getString("title");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.getJSONArray("artist");
-                String artistId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String rd = albumJson.getString("releaseDate");
                 String publishTime = StringUtil.notEmpty(rd) ? rd.split("T")[0] : "";
                 String coverImgThumbUrl = albumJson.getString("pic");
@@ -319,7 +320,7 @@ public class AlbumSearchReq {
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.getJSONArray("items");
-            if (albumArray != null) {
+            if (JsonUtil.notEmpty(albumArray)) {
                 int to = albumInfoJson.getIntValue("total");
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = albumArray.size(); i < len; i++) {

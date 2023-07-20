@@ -13,6 +13,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 
@@ -26,21 +27,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendMvReq {
     // MV 排行 API
-    private final String TOP_MV_API = SdkCommon.prefix + "/top/mv?area=%s&offset=%s&limit=%s";
+    private final String TOP_MV_API = SdkCommon.PREFIX + "/top/mv?area=%s&offset=%s&limit=%s";
     // 最新 MV API
-    private final String NEW_MV_API = SdkCommon.prefix + "/mv/first?area=%s&limit=100";
+    private final String NEW_MV_API = SdkCommon.PREFIX + "/mv/first?area=%s&limit=100";
     // 全部 MV API
-    private final String ALL_MV_API = SdkCommon.prefix + "/mv/all?area=%s&type=%s&offset=%s&limit=%s";
+    private final String ALL_MV_API = SdkCommon.PREFIX + "/mv/all?area=%s&type=%s&offset=%s&limit=%s";
     // 推荐 MV API
-    private final String RECOMMEND_MV_API = SdkCommon.prefix + "/personalized/mv?limit=100";
+    private final String RECOMMEND_MV_API = SdkCommon.PREFIX + "/personalized/mv?limit=100";
     // 网易出品 MV API
-    private final String EXCLUSIVE_MV_API = SdkCommon.prefix + "/mv/exclusive/rcmd?offset=%s&limit=%s";
+    private final String EXCLUSIVE_MV_API = SdkCommon.PREFIX + "/mv/exclusive/rcmd?offset=%s&limit=%s";
     // 推荐 MV API (酷狗)
     private final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
     // 推荐 MV API (QQ)
-    private final String RECOMMEND_MV_QQ_API = SdkCommon.prefixQQ33 + "/mv/list?area=%s&version=%s&pageNo=%s&pageSize=%s";
+    private final String RECOMMEND_MV_QQ_API = SdkCommon.PREFIX_QQ + "/mv/list?area=%s&version=%s&pageNo=%s&pageSize=%s";
     // 最新 MV API (QQ)
-    private final String NEW_MV_QQ_API = SdkCommon.prefixQQ33 + "/new/mv?type=%s";
+    private final String NEW_MV_QQ_API = SdkCommon.PREFIX_QQ + "/new/mv?type=%s";
     // 推荐 MV API (酷我)
     private final String RECOMMEND_MV_KW_API = "http://www.kuwo.cn/api/www/music/mvList?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 推荐 MV API (千千)
@@ -294,7 +295,7 @@ public class RecommendMvReq {
                     String mvName = mvJson.getString("videoname");
                     String artistName = mvJson.getString("singername");
                     JSONArray artistArray = mvJson.getJSONArray("authors");
-                    String creatorId = artistArray != null && !artistArray.isEmpty() ? artistArray.getJSONObject(0).getString("singerid") : "";
+                    String creatorId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("singerid") : "";
                     Long playCount = mvJson.getLong("playcount");
                     Double duration = mvJson.getDouble("duration") / 1000;
                     String pubTime = mvJson.getString("publish").split(" ")[0];

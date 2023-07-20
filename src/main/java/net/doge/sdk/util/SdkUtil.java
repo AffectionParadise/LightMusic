@@ -19,25 +19,25 @@ public class SdkUtil {
      * 解析歌曲艺术家
      */
     public static String parseArtists(JSONObject json, int source) {
-        JSONArray artistsArray;
+        JSONArray artistArray;
         if (source == NetMusicSource.QQ) {
-            artistsArray = json.getJSONArray("singer");
-            if (artistsArray == null) artistsArray = json.getJSONArray("singer_list");
-            if (artistsArray == null) artistsArray = json.getJSONArray("singers");
-            if (artistsArray == null) artistsArray = json.getJSONArray("ar");
+            artistArray = json.getJSONArray("singer");
+            if (artistArray == null) artistArray = json.getJSONArray("singer_list");
+            if (artistArray == null) artistArray = json.getJSONArray("singers");
+            if (artistArray == null) artistArray = json.getJSONArray("ar");
         } else if (source == NetMusicSource.KG) {
-            artistsArray = json.getJSONArray("authors");
+            artistArray = json.getJSONArray("authors");
         } else {
-            artistsArray = json.getJSONArray("artists");
-            if (artistsArray == null) artistsArray = json.getJSONArray("ar");
-            if (artistsArray == null) artistsArray = json.getJSONArray("artist");
-            if (artistsArray == null) artistsArray = json.getJSONArray("actors");
+            artistArray = json.getJSONArray("artists");
+            if (artistArray == null) artistArray = json.getJSONArray("ar");
+            if (artistArray == null) artistArray = json.getJSONArray("artist");
+            if (artistArray == null) artistArray = json.getJSONArray("actors");
         }
-        if (artistsArray == null) return "";
+        if (artistArray == null) return "";
 
         StringJoiner sj = new StringJoiner("、");
-        for (int i = 0, len = artistsArray.size(); i < len; i++) {
-            JSONObject artistJson = artistsArray.getJSONObject(i);
+        for (int i = 0, len = artistArray.size(); i < len; i++) {
+            JSONObject artistJson = artistArray.getJSONObject(i);
             String name = artistJson.getString("name");
             if (StringUtil.isEmpty(name)) name = artistJson.getString("singer_name");
             if (StringUtil.isEmpty(name)) name = artistJson.getString("author_name");
@@ -100,10 +100,10 @@ public class SdkUtil {
      * 解析视频作者
      */
     public static String parseCreators(JSONObject json) {
-        JSONArray artistsArray = json.getJSONArray("creator");
+        JSONArray artistArray = json.getJSONArray("creator");
         StringJoiner sj = new StringJoiner("、");
-        for (int i = 0, len = artistsArray.size(); i < len; i++) {
-            sj.add(artistsArray.getJSONObject(i).getString("userName"));
+        for (int i = 0, len = artistArray.size(); i < len; i++) {
+            sj.add(artistArray.getJSONObject(i).getString("userName"));
         }
         return sj.toString();
     }

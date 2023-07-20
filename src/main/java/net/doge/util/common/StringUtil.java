@@ -58,7 +58,7 @@ public class StringUtil {
      * @return
      */
     public static boolean isEmpty(String s) {
-        return null == s || s.isEmpty();
+        return s == null || s.isEmpty();
     }
 
     /**
@@ -68,7 +68,7 @@ public class StringUtil {
      * @return
      */
     public static boolean notEmpty(String s) {
-        return null != s && !s.isEmpty();
+        return s != null && !s.isEmpty();
     }
 
     /**

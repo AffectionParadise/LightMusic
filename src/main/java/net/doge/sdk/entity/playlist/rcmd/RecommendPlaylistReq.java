@@ -31,11 +31,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendPlaylistReq {
     // 推荐歌单 API
-    private final String RECOMMEND_PLAYLIST_API = SdkCommon.prefix + "/personalized?limit=100";
+    private final String RECOMMEND_PLAYLIST_API = SdkCommon.PREFIX + "/personalized?limit=100";
     // 发现歌单 API
     private final String DISCOVER_PLAYLIST_API = "https://music.163.com/discover/playlist/?order=hot&offset=%s&limit=%s";
     // 曲风歌单 API
-    private final String STYLE_PLAYLIST_API = SdkCommon.prefix + "/style/playlist?tagId=%s&cursor=%s&size=%s";
+    private final String STYLE_PLAYLIST_API = SdkCommon.PREFIX + "/style/playlist?tagId=%s&cursor=%s&size=%s";
     // 推荐歌单 API (每页固定 30 条)(酷狗)
     private final String RECOMMEND_PLAYLIST_KG_API
             = "http://m.kugou.com/plist/index?json=true&page=%s";
@@ -47,10 +47,10 @@ public class RecommendPlaylistReq {
             = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=7&c=%s&p=%s";
     // 每日推荐歌单 API (QQ)
     private final String DAILY_RECOMMEND_PLAYLIST_QQ_API
-            = SdkCommon.prefixQQ33 + "/recommend/playlist/u";
+            = SdkCommon.PREFIX_QQ + "/recommend/playlist/u";
     // 推荐歌单 API (QQ)
 //    private final String RECOMMEND_PLAYLIST_QQ_API
-//            = SdkCommon.prefixQQ33 + "/recommend/playlist?id=%s&pageNo=1&pageSize=120";
+//            = SdkCommon.PREFIX_QQ + "/recommend/playlist?id=%s&pageNo=1&pageSize=120";
     // 推荐歌单(最新) API (QQ)
     private final String NEW_PLAYLIST_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
