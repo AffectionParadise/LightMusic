@@ -15,8 +15,6 @@ import java.util.concurrent.Future;
 public class MvTagReq {
     // MV 标签 API (KG)
     private final String MV_TAG_KG_API = "http://mobileservice.kugou.com/api/v5/video/recommend_channel?version=9108&type=2";
-    // MV 标签 API (QQ)
-    private final String MV_TAG_QQ_API = SdkCommon.PREFIX_QQ + "/mv/category";
 
     /**
      * 加载 MV 标签
@@ -25,14 +23,14 @@ public class MvTagReq {
      */
     public void initMvTag() {
         // 网易云 网易云 酷狗 QQ QQ QQ 酷我 好看 哔哩哔哩
-        Tags.mvTag.put("默认", new String[]{"全部", "全部", "0", "15", "7", "0", "236682871", "", ""});
+        Tags.mvTag.put("默认", new String[]{"全部", "全部", "0", "15", "7", "all", "236682871", "", ""});
 
-        Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "0", "", "", ""});
-        Tags.mvTag.put("内地", new String[]{"内地", "全部", "", "16", "7", "1", "", "", ""});
-        Tags.mvTag.put("港台", new String[]{"港台", "全部", "", "17", "7", "2", "", "", ""});
-        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "18", "7", "3", "", "", ""});
-        Tags.mvTag.put("韩国", new String[]{"韩国", "全部", "", "19", "7", "4", "", "", ""});
-        Tags.mvTag.put("日本", new String[]{"日本", "全部", "", "20", "7", "5", "", "", ""});
+        Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "all", "", "", ""});
+        Tags.mvTag.put("内地", new String[]{"内地", "全部", "", "16", "7", "neidi", "", "", ""});
+        Tags.mvTag.put("港台", new String[]{"港台", "全部", "", "17", "7", "gangtai", "", "", ""});
+        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "18", "7", "oumei", "", "", ""});
+        Tags.mvTag.put("韩国", new String[]{"韩国", "全部", "", "19", "7", "korea", "", "", ""});
+        Tags.mvTag.put("日本", new String[]{"日本", "全部", "", "20", "7", "janpan", "", "", ""});
         Tags.mvTag.put("官方版", new String[]{"", "官方版", "", "", "", "", "", "", ""});
 //        Tags.mvTag.put("原生", new String[]{"", "原生", "", "", "", "","", "", ""});
         Tags.mvTag.put("现场版", new String[]{"", "现场版", "", "", "", "", "", "", ""});
@@ -251,11 +249,12 @@ public class MvTagReq {
         // QQ
         // MV 标签
         Runnable initMvTagQq = () -> {
-            String radioTagBody = HttpRequest.get(String.format(MV_TAG_QQ_API))
+            String radioTagBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
-            JSONArray tags = radioTagJson.getJSONObject("data").getJSONArray("version");
+            JSONArray tags = radioTagJson.getJSONObject("mv_tag").getJSONObject("data").getJSONArray("version");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tagJson = tags.getJSONObject(i);
 

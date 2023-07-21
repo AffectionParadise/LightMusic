@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -104,7 +104,7 @@ public class UserSearchReq {
             LinkedList<NetUserInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String userInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+            String userInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 8))
                     .execute()
                     .body();

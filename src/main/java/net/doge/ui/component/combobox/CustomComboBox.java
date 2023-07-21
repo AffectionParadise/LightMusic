@@ -2,7 +2,7 @@ package net.doge.ui.component.combobox;
 
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.component.button.CustomButton;
-import net.doge.ui.componentui.combobox.ComboBoxUI;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
 
 import javax.swing.*;
 import java.awt.*;

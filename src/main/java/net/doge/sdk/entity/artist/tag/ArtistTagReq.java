@@ -16,9 +16,6 @@ import java.util.concurrent.Future;
 public class ArtistTagReq {
     // 曲风 API
     private final String STYLE_API = SdkCommon.PREFIX + "/style/list";
-    
-    // 歌手标签 API (QQ)
-    private final String ARTIST_TAG_QQ_API = SdkCommon.PREFIX_QQ + "/singer/category";
 
     /**
      * 加载歌手标签
@@ -118,11 +115,13 @@ public class ArtistTagReq {
         // QQ + 网易云 + 千千
         // 分类歌手标签
         Runnable initArtistTagQq = () -> {
-            String artistTagBody = HttpRequest.get(String.format(ARTIST_TAG_QQ_API))
+            String artistTagBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
+                            "\"param\":{\"area\":-100,\"sex\":-100,\"genre\":-100,\"index\":-100,\"sin\":0,\"cur_page\":1}}}"))
                     .execute()
                     .body();
             JSONObject artistTagJson = JSONObject.parseObject(artistTagBody);
-            JSONObject data = artistTagJson.getJSONObject("data");
+            JSONObject data = artistTagJson.getJSONObject("singerList").getJSONObject("data").getJSONObject("tags");
             // 流派
             JSONArray genre = data.getJSONArray("genre");
             for (int i = 0, len = genre.size(); i < len; i++) {

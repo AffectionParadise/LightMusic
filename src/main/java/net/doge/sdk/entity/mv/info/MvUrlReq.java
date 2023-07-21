@@ -3,7 +3,7 @@ package net.doge.sdk.entity.mv.info;
 import cn.hutool.http.HttpRequest;
 import net.doge.constant.player.Format;
 import net.doge.constant.model.MvInfoType;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
@@ -25,8 +25,6 @@ public class MvUrlReq {
 //    private final String MV_URL_KG_API = "https://gateway.kugou.com/v2/interface/index?appid=1014&clienttime=%s&clientver=20000&cmd=123&dfid=-" +
 //            "&ext=mp4&hash=%s&ismp3=0&key=kugoumvcloud&mid=%s&pid=6&srcappid=2919&ssl=1&uuid=%s";
     private final String MV_URL_KG_API = "http://m.kugou.com/app/i/mv.php?cmd=100&hash=%s&ismp3=1&ext=mp4";
-    // MV 视频链接获取 API (QQ)
-    private final String MV_URL_QQ_API = SdkCommon.PREFIX_QQ + "/mv/url?id=%s";
     // MV 视频链接获取 API (酷我)
     private final String MV_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=mv&httpsStatus=1";
     // MV 视频链接获取 API (千千)
@@ -126,11 +124,18 @@ public class MvUrlReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvBody = HttpRequest.get(String.format(MV_URL_QQ_API, mvId))
+            String mvBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"getMvUrl\":{\"module\":\"gosrf.Stream.MvUrlProxy\",\"method\":\"GetMvUrls\"," +
+                            "\"param\":{\"vids\":[\"%s\"],\"request_typet\":10001}}}", mvId))
                     .execute()
                     .body();
-            JSONArray mp4Array = JSONObject.parseObject(mvBody).getJSONObject("data").getJSONArray(mvId);
-            return mp4Array.getString(mp4Array.size() - 1);
+            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("getMvUrl").getJSONObject("data").getJSONObject(mvId);
+            JSONArray mp4Array = data.getJSONArray("mp4");
+            for (int i = mp4Array.size() - 1; i >= 0; i--) {
+                JSONArray freeFlowUrl = mp4Array.getJSONObject(i).getJSONArray("freeflow_url");
+                if (JsonUtil.isEmpty(freeFlowUrl)) continue;
+                return freeFlowUrl.getString(freeFlowUrl.size() - 1);
+            }
         }
 
         // 酷我

@@ -1,7 +1,7 @@
 package net.doge.ui.component.dialog;
 
 import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.UIStyleConstants;
+import net.doge.constant.model.UIStyleConstants;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
@@ -9,10 +9,10 @@ import net.doge.ui.component.checkbox.CustomCheckBox;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.list.CustomList;
-import net.doge.ui.component.list.CustomScrollPane;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.ui.renderer.system.StyleListRenderer;
+import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.component.list.renderer.system.StyleListRenderer;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

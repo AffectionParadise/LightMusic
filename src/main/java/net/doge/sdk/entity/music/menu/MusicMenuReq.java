@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.model.entity.NetRadioInfo;
@@ -24,26 +24,20 @@ import java.util.LinkedList;
 public class MusicMenuReq {
     // 相似歌曲 API
     private final String SIMILAR_SONG_API = SdkCommon.PREFIX + "/simi/song?id=%s";
-    // 相似歌曲 API (QQ)
-    private final String SIMILAR_SONG_QQ_API = SdkCommon.PREFIX_QQ + "/song/similar?id=%s";
     // 相似歌曲 API (猫耳)
     private final String SIMILAR_SONG_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
 
     // 歌曲相关歌单 API
     private final String RELATED_PLAYLIST_API = SdkCommon.PREFIX + "/simi/playlist?id=%s";
-    // 相关歌单 API (QQ)
-    private final String RELATED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/song/playlist?id=%s";
 
     // 歌曲推荐电台 API (猫耳)
     private final String SONG_REC_RADIO_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
 
-    // 歌曲信息 API (QQ)
-    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/song?songmid=%s";
     // 歌曲信息 API (音乐磁场)
     private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
     private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
-    
+
     /**
      * 获取相似歌曲
      *
@@ -93,17 +87,21 @@ public class MusicMenuReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             // 先根据 mid 获取 id
-            String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, id))
+            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            id = musicInfoJson.getJSONObject("data").getJSONObject("track_info").getString("id");
+            id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
-            musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_QQ_API, id))
+            musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
+                            "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"simsongs\":{\"module\":\"rcmusic.similarSongRadioServer\"," +
+                            "\"method\":\"get_simsongs\",\"param\":{\"songid\":%s}}}", id))
                     .execute()
                     .body();
-            musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONArray songArray = musicInfoJson.getJSONArray("data");
+            musicInfoJson = JSONObject.parseObject(musicInfoBody).getJSONObject("simsongs").getJSONObject("data");
+            JSONArray songArray = musicInfoJson.getJSONArray("songInfoList");
             t = songArray.size();
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
@@ -259,17 +257,21 @@ public class MusicMenuReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             // 先根据 mid 获取 id
-            String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, id))
+            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            id = musicInfoJson.getJSONObject("data").getJSONObject("track_info").getString("id");
+            id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
-            String playlistInfoBody = HttpRequest.get(String.format(RELATED_PLAYLIST_QQ_API, id))
+            String playlistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
+                            "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"gedan\":{\"module\":\"music.mb_gedan_recommend_svr\"," +
+                            "\"method\":\"get_related_gedan\",\"param\":{\"sin\":0,\"last_id\":0,\"song_type\":1,\"song_id\":%s}}}", id))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONArray playlistArray = playlistInfoJson.getJSONArray("data");
+            JSONArray playlistArray = playlistInfoJson.getJSONObject("gedan").getJSONObject("data").getJSONArray("vec_gedan");
             t = playlistArray.size();
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);

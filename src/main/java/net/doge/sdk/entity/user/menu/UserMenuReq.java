@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.RadioType;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.*;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -34,6 +34,8 @@ public class UserMenuReq {
     private final String USER_PLAYLIST_API = SdkCommon.PREFIX + "/user/playlist?uid=%s&limit=1000";
     // 用户创建歌单 API (QQ)
     private final String USER_CREATED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/user/songlist?id=%s";
+//    private final String USER_CREATED_PLAYLIST_QQ_API = "https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?" +
+//            "hostUin=0&hostuin=%s&sin=0&size=200&g_tk=5381&loginUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0";
     // 用户收藏歌单 API (QQ)
     private final String USER_COLLECTED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/user/collect/songlist?id=%s&pageNo=%s&pageSize=%s";
     // 用户收藏专辑 API (QQ)
@@ -382,7 +384,8 @@ public class UserMenuReq {
                 String albumId = albumJson.getString("albummid");
                 String albumName = albumJson.getString("albumname");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
-                String artistId = albumJson.getJSONArray("singer").getJSONObject(0).getString("mid");
+                JSONArray singerArray = albumJson.getJSONArray("singer");
+                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
                 Integer songNum = albumJson.getIntValue("songnum");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
@@ -729,7 +732,8 @@ public class UserMenuReq {
                 String albumId = albumJson.getString("albummid");
                 String albumName = albumJson.getString("albumname");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
-                String artistId = albumJson.getJSONArray("singer").getJSONObject(0).getString("mid");
+                JSONArray singerArray = albumJson.getJSONArray("singer");
+                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
                 Integer songNum = albumJson.getIntValue("songnum");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);

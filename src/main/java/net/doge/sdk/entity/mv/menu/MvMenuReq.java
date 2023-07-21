@@ -4,7 +4,7 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.MvInfoType;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
@@ -28,10 +28,6 @@ public class MvMenuReq {
     private final String RELATED_MLOG_API = SdkCommon.PREFIX + "/mlog/music/rcmd?songid=%s&limit=500";
     // mlog id 转视频 id API
     private final String MLOG_TO_VIDEO_API = SdkCommon.PREFIX + "/mlog/to/video?id=%s";
-    // 相关 MV API (QQ)
-    private final String RELATED_MV_QQ_API = SdkCommon.PREFIX_QQ + "/song/mv?id=%s";
-    // 相似 MV API (QQ)
-    private final String SIMILAR_MV_QQ_API = SdkCommon.PREFIX_QQ + "/mv?id=%s";
 
     // 相似视频 API (好看)
     private final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec?title=%s&vid=%s&act=pcRec&pd=pc";
@@ -40,9 +36,6 @@ public class MvMenuReq {
     // 视频分集 API (哔哩哔哩)
     private final String VIDEO_EPISODES_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
 
-    // 歌曲信息 API (QQ)
-    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/song?songmid=%s";
-    
     /**
      * 获取相关 MV (通过歌曲)
      *
@@ -99,17 +92,21 @@ public class MvMenuReq {
         // QQ(程序分页)
         else if (source == NetMusicSource.QQ) {
             // 先根据 mid 获取 id
-            String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, id))
+            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            id = musicInfoJson.getJSONObject("data").getJSONObject("track_info").getString("id");
+            id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
-            String mvInfoBody = HttpRequest.get(String.format(RELATED_MV_QQ_API, id))
+            String mvInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
+                            "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"video\":{\"module\":\"MvService.MvInfoProServer\"," +
+                            "\"method\":\"GetSongRelatedMv\",\"param\":{\"songid\":%s,\"songtype\":1,\"lastmvid\":0,\"num\":10}}}", id))
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
-            JSONArray mvArray = mvInfoJson.getJSONArray("data");
+            JSONArray mvArray = mvInfoJson.getJSONObject("video").getJSONObject("data").getJSONArray("list");
             t = mvArray.size();
             for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
@@ -117,7 +114,8 @@ public class MvMenuReq {
                 String mvId = mvJson.getString("vid");
                 String mvName = mvJson.getString("title").trim();
                 String artistName = SdkUtil.parseArtists(mvJson, NetMusicSource.QQ);
-                String creatorId = mvJson.getJSONArray("singers").getJSONObject(0).getString("mid");
+                JSONArray singerArray = mvJson.getJSONArray("singers");
+                String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String coverImgUrl = mvJson.getString("picurl");
                 Long playCount = mvJson.getLong("playcnt");
 
@@ -244,11 +242,18 @@ public class MvMenuReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvInfoBody = HttpRequest.get(String.format(SIMILAR_MV_QQ_API, id))
+            String mvInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
+                            "\"method\":\"get_video_info_batch\",\"param\":{\"vidlist\":[\"%s\"],\"required\":[\"vid\",\"type\",\"sid\"," +
+                            "\"cover_pic\",\"duration\",\"singers\",\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\"," +
+                            "\"isfav\",\"gmid\"]}},\"other\":{\"module\":\"video.VideoLogicServer\",\"method\":\"rec_video_byvid\"," +
+                            "\"param\":{\"vid\":\"%s\",\"required\":[\"vid\",\"type\",\"sid\",\"cover_pic\",\"duration\",\"singers\"," +
+                            "\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\",\"isfav\",\"gmid\",\"uploader_headurl\"," +
+                            "\"uploader_nick\",\"uploader_encuin\",\"uploader_uin\",\"uploader_hasfollow\",\"uploader_follower_num\"],\"support\":1}}}", id, id))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
-            JSONArray mvArray = data.getJSONArray("recommend");
+            JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("other").getJSONObject("data");
+            JSONArray mvArray = data.getJSONArray("list");
             t = mvArray.size();
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);

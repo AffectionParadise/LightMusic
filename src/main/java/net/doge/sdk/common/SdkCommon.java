@@ -25,7 +25,7 @@ public class SdkCommon {
 
     public static final String PREFIX = String.format("http://%s:3000", HOST);
     public static final String PREFIX_QQ = String.format("http://%s:3300", HOST);
-    public static final String QQ_SEARCH_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
+    public static final String QQ_MAIN_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     public static final String QQ_SEARCH_JSON = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
     public static final String PREFIX_MG = String.format("http://%s:3400", HOST);
 

@@ -1,6 +1,6 @@
 package net.doge.model.entity;
 
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import lombok.Data;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;

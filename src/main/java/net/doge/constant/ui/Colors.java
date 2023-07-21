@@ -4,7 +4,7 @@ import java.awt.*;
 
 /**
  * @Author yzx
- * @Description
+ * @Description 颜色
  * @Date 2020/12/12
  */
 public class Colors {
@@ -14,8 +14,6 @@ public class Colors {
     public static final Color LIGHT_GRAY = new Color(230, 230, 230);
     public static final Color GRAY = new Color(210, 210, 210);
     public static final Color THEME = new Color(18, 150, 219);
-
-//    public static final Color HXH = new Color(91, 96, 188);
 
     public static final Color SPRING_GREEN = new Color(60, 179, 113);
     public static final Color WHITE_SMOKE = new Color(230, 230, 230);

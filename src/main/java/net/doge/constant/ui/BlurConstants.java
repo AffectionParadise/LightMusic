@@ -2,7 +2,7 @@ package net.doge.constant.ui;
 
 /**
  * @Author yzx
- * @Description 模糊类型
+ * @Description 模糊参数
  * @Date 2020/12/7
  */
 public class BlurConstants {

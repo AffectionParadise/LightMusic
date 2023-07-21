@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetRankingInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -29,7 +29,9 @@ public class GetRankingReq {
     // 获取榜单 API (酷狗)
     private final String GET_RANKING_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/list?apiver=6&area_code=1";
     // 获取榜单 API (QQ)
-    private final String GET_RANKING_QQ_API = SdkCommon.PREFIX_QQ + "/top/category";
+    private final String GET_RANKING_QQ_API = "https://u.y.qq.com/cgi-bin/musicu.fcg?_=1577086820633&data={%22comm%22:{%22g_tk%22:5381,%22uin%22:123456," +
+            "%22format%22:%22json%22,%22inCharset%22:%22utf-8%22,%22outCharset%22:%22utf-8%22,%22notice%22:0,%22platform%22:%22h5%22,%22needNewCode%22:1," +
+            "%22ct%22:23,%22cv%22:0},%22topList%22:{%22module%22:%22musicToplist.ToplistInfoServer%22,%22method%22:%22GetAll%22,%22param%22:{}}}";
     // 获取榜单 API 2 (QQ)
     private final String GET_RANKING_QQ_API_2
             = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5";
@@ -44,7 +46,7 @@ public class GetRankingReq {
     private final String GET_RANKING_QI_API = "https://music.91q.com/v1/bd/category?appid=16073360&timestamp=%s";
     // 获取榜单 API (猫耳)
     private final String GET_RANKING_ME_API = "https://www.missevan.com/mobileWeb/albumList";
-    
+
     /**
      * 获取所有榜单
      */
@@ -134,21 +136,22 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(String.format(GET_RANKING_QQ_API))
+            String rankingInfoBody = HttpRequest.get(GET_RANKING_QQ_API)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-            JSONArray data = rankingInfoJson.getJSONArray("data");
-            for (int i = 0, len = data.size(); i < len; i++) {
-                JSONArray rankingArray = data.getJSONObject(i).getJSONArray("list");
+            JSONArray group = rankingInfoJson.getJSONObject("topList").getJSONObject("data").getJSONArray("group");
+            for (int i = 0, len = group.size(); i < len; i++) {
+                JSONArray rankingArray = group.getJSONObject(i).getJSONArray("toplist");
                 for (int j = 0, s = rankingArray.size(); j < s; j++) {
                     JSONObject rankingJson = rankingArray.getJSONObject(j);
 
                     String rankingId = rankingJson.getString("topId");
-                    String rankingName = rankingJson.getString("label");
-                    String coverImgUrl = rankingJson.getString("picUrl").replaceFirst("http:", "https:");
+                    String rankingName = rankingJson.getString("title");
+                    String coverImgUrl = rankingJson.getString("headPicUrl").replaceFirst("http:", "https:");
                     Long playCount = rankingJson.getLong("listenNum");
                     String updateTime = rankingJson.getString("updateTime");
+                    String updateFre = rankingJson.getString("updateTips");
 
                     NetRankingInfo rankingInfo = new NetRankingInfo();
                     rankingInfo.setSource(NetMusicSource.QQ);
@@ -157,6 +160,7 @@ public class GetRankingReq {
                     rankingInfo.setCoverImgUrl(coverImgUrl);
                     rankingInfo.setPlayCount(playCount);
                     rankingInfo.setUpdateTime(updateTime);
+                    rankingInfo.setUpdateFre(updateFre);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgUrl);
                         rankingInfo.setCoverImgThumb(coverImgThumb);
@@ -435,15 +439,15 @@ public class GetRankingReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankings));
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKg));
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq));
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsQq2));
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+        }
+        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw));
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKw2));
 //        taskList.add(GlobalExecutors.requestExecutor.submit(getRecRankingsKw));
+        }
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsMg));
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL)

@@ -15,7 +15,7 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
-import net.doge.ui.listener.ButtonMouseListener;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;

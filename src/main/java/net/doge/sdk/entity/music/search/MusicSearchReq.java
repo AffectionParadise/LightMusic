@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -304,7 +304,7 @@ public class MusicSearchReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 0))
                     .execute()
                     .body();
@@ -345,7 +345,7 @@ public class MusicSearchReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 7))
                     .execute()
                     .body();
@@ -697,6 +697,7 @@ public class MusicSearchReq {
         List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
 
         switch (type) {
+            // 歌词
             case 1:
                 if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyric));
@@ -705,22 +706,18 @@ public class MusicSearchReq {
                 if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyricQq));
                 break;
+            // 节目
             case 2:
                 if (dt) {
                     if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchVoice));
                     if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicXm));
-                    if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
-                        taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicHf));
-                    if (src == NetMusicSource.GG || src == NetMusicSource.ALL)
-                        taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicGg));
-                    if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
-                        taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicFs));
                 }
                 if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchProgramMe));
                 break;
+            // 常规
             default:
                 if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusic));
@@ -734,6 +731,12 @@ public class MusicSearchReq {
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicMg));
                 if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicQi));
+                if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicHf));
+                if (src == NetMusicSource.GG || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicGg));
+                if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicFs));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();

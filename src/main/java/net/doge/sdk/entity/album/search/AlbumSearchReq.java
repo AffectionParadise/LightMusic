@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -146,7 +146,7 @@ public class AlbumSearchReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+            String albumInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 2))
                     .execute()
                     .body();
@@ -160,7 +160,8 @@ public class AlbumSearchReq {
                 String albumId = albumJson.getString("albumMID");
                 String albumName = albumJson.getString("albumName");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
-                String artistId = albumJson.getJSONArray("singer_list").getJSONObject(0).getString("mid");
+                JSONArray singerArray = albumJson.getJSONArray("singer_list");
+                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String publishTime = albumJson.getString("publicTime");
                 Integer songNum = albumJson.getIntValue("song_count");
                 String coverImgThumbUrl = albumJson.getString("albumPic").replaceFirst("http:", "https:");

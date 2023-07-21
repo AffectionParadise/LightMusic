@@ -2,11 +2,14 @@ package net.doge.constant.lyric;
 
 /**
  * @Author yzx
- * @Description 表示歌词加载中、不存在或不支持滚动的常数
+ * @Description 当前歌词状态
  * @Date 2020/12/7
  */
 public class NextLrc {
+    // 无
     public static final int NOT_EXISTS = -1;
+    // 不支持滚动
     public static final int BAD_FORMAT = -2;
+    // 加载中
     public static final int LOADING = -3;
 }

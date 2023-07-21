@@ -7,7 +7,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
@@ -37,7 +37,7 @@ public class PlaylistInfoReq {
     private final String PLAYLIST_SONGS_KG_API = "https://mobiles.kugou.com/api/v5/special/song_v2?appid=1058&global_specialid=%s&specialid=0&plat=0&version=8000&page=%s&pagesize=%s&srcappid=2919&clientver=20000&clienttime=1586163263991&mid=1586163263991&uuid=1586163263991&dfid=-&signature=%s";
     //    private final String PLAYLIST_DETAIL_KG_API = "https://m.kugou.com/plist/list/%s?json=true&page=%s";
     // 歌单信息 API (QQ)
-    private final String PLAYLIST_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/songlist?id=%s";
+    private final String PLAYLIST_DETAIL_QQ_API = "https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&disstid=%s&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0";
     // 歌单信息 API (酷我)
     private final String PLAYLIST_DETAIL_KW_API = "http://www.kuwo.cn/api/www/playlist/playListInfo?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌单信息 API (咪咕)
@@ -152,11 +152,13 @@ public class PlaylistInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
+                    .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
-            if (JsonUtil.notEmpty(playlistJson)) {
+            JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
+            if (JsonUtil.notEmpty(cdlist)) {
+                JSONObject playlistJson = cdlist.getJSONObject(0);
                 String playlistId = playlistJson.getString("disstid");
                 String name = playlistJson.getString("dissname");
                 String creator = playlistJson.getString("nickname");
@@ -416,10 +418,13 @@ public class PlaylistInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
+                    .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONObject data = playlistInfoJson.getJSONObject("data");
+            JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
+            if (JsonUtil.isEmpty(cdlist)) return;
+            JSONObject data = cdlist.getJSONObject(0);
 
             String coverImgUrl = data.getString("logo");
             String description = data.getString("desc").replace("<br>", "\n");
@@ -668,37 +673,41 @@ public class PlaylistInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
+                    .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONObject data = playlistInfoJson.getJSONObject("data");
-            total.set(data.getIntValue("songnum"));
-            JSONArray songArray = data.getJSONArray("songlist");
-            for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
-                JSONObject songJson = songArray.getJSONObject(i);
+            JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
+            if (JsonUtil.notEmpty(cdlist)) {
+                JSONObject data = cdlist.getJSONObject(0);
+                total.set(data.getIntValue("songnum"));
+                JSONArray songArray = data.getJSONArray("songlist");
+                for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
 
-                String songId = songJson.getString("songmid");
-                String name = songJson.getString("songname");
-                String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
-                JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
-                String albumName = songJson.getString("albumname");
-                String albumId = songJson.getString("albummid");
-                Double duration = songJson.getDouble("interval");
-                String mvId = songJson.getString("vid");
+                    String songId = songJson.getString("songmid");
+                    String name = songJson.getString("songname");
+                    String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
+                    JSONArray singerArray = songJson.getJSONArray("singer");
+                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String albumName = songJson.getString("albumname");
+                    String albumId = songJson.getString("albummid");
+                    Double duration = songJson.getDouble("interval");
+                    String mvId = songJson.getString("vid");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.QQ);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artists);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                    NetMusicInfo netMusicInfo = new NetMusicInfo();
+                    netMusicInfo.setSource(NetMusicSource.QQ);
+                    netMusicInfo.setId(songId);
+                    netMusicInfo.setName(name);
+                    netMusicInfo.setArtist(artists);
+                    netMusicInfo.setArtistId(artistId);
+                    netMusicInfo.setAlbumName(albumName);
+                    netMusicInfo.setAlbumId(albumId);
+                    netMusicInfo.setDuration(duration);
+                    netMusicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                    netMusicInfos.add(netMusicInfo);
+                }
             }
         }
 

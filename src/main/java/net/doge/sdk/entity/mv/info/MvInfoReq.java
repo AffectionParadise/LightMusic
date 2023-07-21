@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
@@ -18,8 +18,6 @@ public class MvInfoReq {
     private final String MV_DETAIL_API = SdkCommon.PREFIX + "/mv/detail?mvid=%s";
     // MV 信息 API (酷狗)
     private final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash=%s";
-    // MV 信息 API (QQ)
-    private final String MV_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/mv?id=%s";
     // MV 信息 API (酷我)
     private final String MV_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
 
@@ -112,14 +110,23 @@ public class MvInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvBody = HttpRequest.get(String.format(MV_DETAIL_QQ_API, mvId))
+            String mvBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
+                            "\"method\":\"get_video_info_batch\",\"param\":{\"vidlist\":[\"%s\"],\"required\":[\"vid\",\"type\",\"sid\"," +
+                            "\"cover_pic\",\"duration\",\"singers\",\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\"," +
+                            "\"isfav\",\"gmid\"]}},\"other\":{\"module\":\"video.VideoLogicServer\",\"method\":\"rec_video_byvid\"," +
+                            "\"param\":{\"vid\":\"%s\",\"required\":[\"vid\",\"type\",\"sid\",\"cover_pic\",\"duration\",\"singers\"," +
+                            "\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\",\"isfav\",\"gmid\",\"uploader_headurl\"," +
+                            "\"uploader_nick\",\"uploader_encuin\",\"uploader_uin\",\"uploader_hasfollow\",\"uploader_follower_num\"],\"support\":1}}}", mvId, mvId))
                     .execute()
                     .body();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
-            JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
+            JSONObject data = mvJson.getJSONObject("mvinfo").getJSONObject("data").getJSONObject(mvId);
+
             String name = data.getString("name");
             String artists = SdkUtil.parseArtists(data, NetMusicSource.QQ);
-            String creatorId = data.getJSONArray("singers").getJSONObject(0).getString("mid");
+            JSONArray singerArray = mvJson.getJSONArray("singers");
+            String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
             Long playCount = data.getLong("playcnt");
             Double duration = data.getDouble("duration");
             String pubTime = TimeUtil.msToDate(data.getLong("pubdate") * 1000);

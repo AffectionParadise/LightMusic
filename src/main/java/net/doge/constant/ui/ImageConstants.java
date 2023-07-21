@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * @Author yzx
- * @Description 图片宽度相关参数
+ * @Description 图片参数
  * @Date 2020/12/7
  */
 public class ImageConstants {

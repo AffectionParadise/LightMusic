@@ -11,7 +11,7 @@ import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.player.Format;
 import net.doge.constant.player.PlayerStatus;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.ui.SpectrumConstants;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.NetMusicInfo;

@@ -2,7 +2,7 @@ package net.doge.constant.ui;
 
 /**
  * @Author yzx
- * @Description 频谱相关参数
+ * @Description 频谱参数
  * @Date 2020/12/14
  */
 public class SpectrumConstants {

@@ -1,7 +1,7 @@
 package net.doge.model.entity;
 
 import lombok.Data;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.model.RadioType;
 import net.doge.util.common.StringUtil;
 

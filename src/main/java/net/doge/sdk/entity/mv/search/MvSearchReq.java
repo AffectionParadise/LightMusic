@@ -7,7 +7,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.MvInfoType;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -39,7 +39,7 @@ public class MvSearchReq {
     private final String SEARCH_MV_HK_API = "https://haokan.baidu.com/haokan/ui-search/pc/search/video?query=%s&pn=%s&rn=%s&type=video";
     // 关键词搜索 MV API (哔哩哔哩)
     private final String SEARCH_MV_BI_API = "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%s&page=%s";
-    
+
     /**
      * 根据关键词获取 MV
      */
@@ -192,7 +192,7 @@ public class MvSearchReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+            String mvInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 4))
                     .execute()
                     .body();
@@ -206,7 +206,8 @@ public class MvSearchReq {
                 String mvId = mvJson.getString("v_id");
                 String mvName = mvJson.getString("mv_name").trim();
                 String artistName = SdkUtil.parseArtists(mvJson, NetMusicSource.QQ);
-                String creatorId = mvJson.getJSONArray("singer_list").getJSONObject(0).getString("mid");
+                JSONArray singerArray = mvJson.getJSONArray("singer_list");
+                String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 Long playCount = mvJson.getLong("play_count");
                 Double duration = mvJson.getDouble("duration");
                 String pubTime = mvJson.getString("publish_date");

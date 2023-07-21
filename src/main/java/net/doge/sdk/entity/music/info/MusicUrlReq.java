@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.player.Format;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
@@ -27,8 +27,6 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API
     private final String GET_SONG_URL_API_NEW = SdkCommon.PREFIX + "/song/url/v1?id=%s&level=jymaster";
     private final String GET_SONG_URL_API = SdkCommon.PREFIX + "/song/url?id=%s";
-    // 歌曲 URL 获取 API (QQ)
-//    private final String GET_SONG_URL_QQ_API = PREFIX_QQ + "/song/url?id=%s";
     // 歌曲 URL 获取 API (酷我)
 //    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
@@ -201,7 +199,7 @@ public class MusicUrlReq {
 
         // QQ(解锁付费音乐)
         else if (source == NetMusicSource.QQ) {
-//            String playUrlBody = HttpRequest.get(SdkCommon.QQ_SEARCH_API + "?format=json&data=" +
+//            String playUrlBody = HttpRequest.get(SdkCommon.QQ_MAIN_API + "?format=json&data=" +
 //                            StringUtil.urlEncode(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
 //                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
 //                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +

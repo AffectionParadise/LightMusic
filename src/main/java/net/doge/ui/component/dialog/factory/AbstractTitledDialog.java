@@ -4,7 +4,7 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.listener.ButtonMouseListener;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

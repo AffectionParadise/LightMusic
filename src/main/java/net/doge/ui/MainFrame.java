@@ -27,6 +27,8 @@ import net.doge.constant.lyric.JapaneseType;
 import net.doge.constant.lyric.LyricType;
 import net.doge.constant.lyric.NextLrc;
 import net.doge.constant.meta.SoftInfo;
+import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.model.UIStyleConstants;
 import net.doge.constant.player.*;
 import net.doge.constant.system.*;
 import net.doge.constant.tab.CollectionTabIndex;
@@ -61,7 +63,8 @@ import net.doge.ui.component.dialog.*;
 import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.list.CustomList;
-import net.doge.ui.component.list.CustomScrollPane;
+import net.doge.ui.component.list.renderer.entity.*;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.menu.*;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.panel.GlobalPanel;
@@ -72,23 +75,22 @@ import net.doge.ui.component.tabbedpane.CustomTabbedPane;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.component.toolbar.CustomToolBar;
-import net.doge.ui.componentui.button.ChangePaneButtonUI;
-import net.doge.ui.componentui.combobox.ComboBoxUI;
-import net.doge.ui.componentui.list.ListUI;
-import net.doge.ui.componentui.list.ScrollBarUI;
-import net.doge.ui.componentui.menu.CheckMenuItemUI;
-import net.doge.ui.componentui.menu.MenuItemUI;
-import net.doge.ui.componentui.menu.MenuUI;
-import net.doge.ui.componentui.menu.RadioButtonMenuItemUI;
-import net.doge.ui.componentui.slider.SliderUI;
-import net.doge.ui.componentui.tabbedpane.TabbedPaneUI;
-import net.doge.ui.listener.ButtonMouseListener;
-import net.doge.ui.listener.ChangePaneButtonMouseListener;
-import net.doge.ui.listener.ScrollPaneListener;
-import net.doge.ui.listener.TextFieldHintListener;
-import net.doge.ui.renderer.entity.*;
-import net.doge.ui.renderer.system.DownloadListRenderer;
-import net.doge.ui.renderer.system.LrcListRenderer;
+import net.doge.ui.component.button.ui.ChangePaneButtonUI;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
+import net.doge.ui.component.list.ui.ListUI;
+import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.component.menu.ui.CheckMenuItemUI;
+import net.doge.ui.component.menu.ui.MenuItemUI;
+import net.doge.ui.component.menu.ui.MenuUI;
+import net.doge.ui.component.menu.ui.RadioButtonMenuItemUI;
+import net.doge.ui.component.slider.ui.SliderUI;
+import net.doge.ui.component.tabbedpane.ui.TabbedPaneUI;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
+import net.doge.ui.component.button.listener.ChangePaneButtonMouseListener;
+import net.doge.ui.component.scrollpane.listener.ScrollPaneListener;
+import net.doge.ui.component.textfield.listener.TextFieldHintListener;
+import net.doge.ui.component.list.renderer.system.DownloadListRenderer;
+import net.doge.ui.component.list.renderer.system.LrcListRenderer;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
@@ -712,23 +714,23 @@ public class MainFrame extends JFrame {
     // 当前排序方式
     private int currSortMethod = -1;
     // 当前排序顺序
-    private int currSortOrder = SortMethod.ASCENDING;
+    private int currSortOrder;
     // 当前播放曲目的索引
     private int currSong;
     // 播放失败后重试次数
     private int retry = 0;
     // 当前播放模式
-    private int currPlayMode = PlayMode.LIST_CYCLE;
+    private int currPlayMode;
     // 随机播放序列
     private List<Integer> shuffleList = new LinkedList<>();
     // 当前随机播放索引
     private int shuffleIndex;
     // 当前中文歌词类型
-    private int currChineseType = ChineseType.SIMPLIFIED;
+    private int currChineseType;
     // 当前日文歌词类型
-    private int currJapaneseType = JapaneseType.KANA;
+    private int currJapaneseType;
     // 当前歌词类型
-    private int currLrcType = LyricType.ORIGINAL;
+    private int currLrcType;
     // 歌词显示比率(源)
     private double originalRatio;
     // 搜索每页大小
@@ -3113,8 +3115,7 @@ public class MainFrame extends JFrame {
         int ei = 0;
         while (mis.hasMoreElements()) {
             CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) mis.nextElement();
-            mi.setSelected(currSpecStyle == ei);
-            ei++;
+            mi.setSelected(currSpecStyle == ei++);
         }
         // 载入均衡
         currBalance = config.containsKey(ConfigConstants.BALANCE) ? config.getDoubleValue(ConfigConstants.BALANCE) : DEFAULT_BALANCE;
@@ -3125,38 +3126,24 @@ public class MainFrame extends JFrame {
         if (isMute) muteButton.setIcon(ImageUtil.dye(muteIcon, currUIStyle.getIconColor()));
         // 载入音效
         currSoundEffect = config.getIntValue(ConfigConstants.SOUND_EFFECT, 0);
+        // 载入均衡数据
         JSONArray edArray = config.getJSONArray(ConfigConstants.EQUALIZER_DATA);
         ed = new double[EqualizerData.BAND_NUM];
         if (JsonUtil.notEmpty(edArray)) {
             for (int i = 0, s = edArray.size(); i < s; i++) ed[i] = edArray.getDoubleValue(i);
-        }
-        // 载入均衡数据
-        JSONArray equalizerData = config.getJSONArray(ConfigConstants.EQUALIZER_DATA);
-        if (JsonUtil.notEmpty(equalizerData)) {
-            ed = new double[EqualizerData.BAND_NUM];
-            for (int i = 0, len = equalizerData.size(); i < len; i++) ed[i] = equalizerData.getDoubleValue(i);
         }
         // 载入迷你窗口位置
         miniX = config.getIntValue(ConfigConstants.MINIX, -0x3f3f3f3f);
         miniY = config.getIntValue(ConfigConstants.MINIY, -0x3f3f3f3f);
         // 载入中文类型
         currChineseType = config.getIntValue(ConfigConstants.CHINESE_TYPE, ChineseType.SIMPLIFIED);
-        if (currChineseType == ChineseType.SIMPLIFIED)
-            switchChineseButton.setIcon(ImageUtil.dye(simpChineseIcon, currUIStyle.getIconColor()));
-        else
-            switchChineseButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
+        switchChineseButton.setIcon(ImageUtil.dye(currChineseType == ChineseType.SIMPLIFIED ? simpChineseIcon : tradChineseIcon, currUIStyle.getIconColor()));
         // 载入日文类型
         currJapaneseType = config.getIntValue(ConfigConstants.JAPANESE_TYPE, JapaneseType.KANA);
-        if (currJapaneseType == JapaneseType.KANA)
-            switchJapaneseButton.setIcon(ImageUtil.dye(kanaIcon, currUIStyle.getIconColor()));
-        else
-            switchJapaneseButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
+        switchJapaneseButton.setIcon(ImageUtil.dye(currJapaneseType == JapaneseType.KANA ? kanaIcon : romajiIcon, currUIStyle.getIconColor()));
         // 载入歌词类型
         currLrcType = config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL);
-        if (currLrcType == LyricType.ORIGINAL)
-            switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
-        else if (currLrcType == LyricType.TRANSLATION)
-            switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
+        switchLrcTypeButton.setIcon(ImageUtil.dye(currLrcType == LyricType.ORIGINAL ? originalIcon : translationIcon, currUIStyle.getIconColor()));
         // 载入排序顺序
         currSortOrder = config.getIntValue(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
         ascendingMenuItem.setSelected(currSortOrder == SortMethod.ASCENDING);
@@ -5479,7 +5466,7 @@ public class MainFrame extends JFrame {
             Object o = collectionList.getSelectedValue();
             // 打开的是 MV
             if (o instanceof NetMvInfo) {
-                playMv(MvType.COLLECTION);
+                playMv(MvCompSourceType.COLLECTION);
                 return;
             }
             collectionOpenObj = o;
@@ -7112,7 +7099,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 右键菜单播放 MV
-        playMvMenuItem.addActionListener(e -> playMv(MvType.MUSIC_LIST));
+        playMvMenuItem.addActionListener(e -> playMv(MvCompSourceType.MUSIC_LIST));
         // 右键菜单下载
         downloadMenuItem.addActionListener(e -> {
             List values = musicList.getSelectedValuesList();
@@ -7626,7 +7613,7 @@ public class MainFrame extends JFrame {
         });
         // 播放在线音乐的 MV
         netMusicPlayMvMenuItem.addActionListener(e -> {
-            playMv(MvType.NET_MUSIC_LIST);
+            playMv(MvCompSourceType.NET_MUSIC_LIST);
         });
         // 下载在线音乐
         netMusicDownloadMenuItem.addActionListener(e -> {
@@ -14008,7 +13995,7 @@ public class MainFrame extends JFrame {
         // 打开 MV
         Runnable playMvAction = () -> {
             try {
-                playMv(MvType.MV_LIST);
+                playMv(MvCompSourceType.MV_LIST);
             } catch (IORuntimeException ioRuntimeException) {
                 // 无网络连接
                 new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -18636,7 +18623,7 @@ public class MainFrame extends JFrame {
             Object o = itemRecommendList.getSelectedValue();
             // 打开的是 MV
             if (o instanceof NetMvInfo) {
-                playMv(MvType.MV_RECOMMEND_LIST);
+                playMv(MvCompSourceType.MV_RECOMMEND_LIST);
                 return;
             }
             // 检查收藏按钮
@@ -19284,7 +19271,7 @@ public class MainFrame extends JFrame {
             Task task = downloadList.getSelectedValue();
             if (task.isFinished()) {
                 if (task.isMusic()) playExecutor.submit(() -> playSelected(downloadList, false));
-                else playMv(MvType.DOWNLOAD_LIST);
+                else playMv(MvCompSourceType.DOWNLOAD_LIST);
             } else {
                 new TipDialog(THIS, WAIT_FOR_TASK_COMPLETED_MSG).showDialog();
             }
@@ -19629,7 +19616,7 @@ public class MainFrame extends JFrame {
         playQueueNextPlayMenuItem.addActionListener(e -> nextPlay(playQueue));
         // 播放 MV 菜单项
         playQueuePlayMvMenuItem.addActionListener(e -> {
-            playMv(MvType.PLAY_QUEUE);
+            playMv(MvCompSourceType.PLAY_QUEUE);
         });
         // 收藏/取消收藏菜单项
         playQueueCollectMenuItem.addActionListener(e -> {
@@ -20161,7 +20148,7 @@ public class MainFrame extends JFrame {
         mvButton.setEnabled(false);
         mvButton.addMouseListener(new ButtonMouseListener(mvButton, THIS));
         mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth() + 10, mvIcon.getIconHeight() + 10));
-        mvButton.addActionListener(e -> playMv(MvType.PLAYING));
+        mvButton.addActionListener(e -> playMv(MvCompSourceType.PLAYING));
         // 收藏
         collectButton.setEnabled(false);
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, THIS));
@@ -22891,7 +22878,7 @@ public class MainFrame extends JFrame {
     // 播放 MV
     private void playMv(int mvType) {
         // 播放下载列表的 MV
-        if (mvType == MvType.DOWNLOAD_LIST) {
+        if (mvType == MvCompSourceType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
             NetMvInfo mvInfo = task.getNetMvInfo();
             String dest = task.getDest();
@@ -22912,15 +22899,15 @@ public class MainFrame extends JFrame {
         dialog.showDialog();
 
         // 右键歌曲播放其 MV
-        if (mvType != MvType.MV_LIST && mvType != MvType.MV_RECOMMEND_LIST && mvType != MvType.COLLECTION) {
+        if (mvType != MvCompSourceType.MV_LIST && mvType != MvCompSourceType.MV_RECOMMEND_LIST && mvType != MvCompSourceType.COLLECTION) {
             NetMusicInfo musicInfo = null;
-            if (mvType == MvType.NET_MUSIC_LIST) {
+            if (mvType == MvCompSourceType.NET_MUSIC_LIST) {
                 musicInfo = netMusicList.getSelectedValue();
-            } else if (mvType == MvType.MUSIC_LIST) {
+            } else if (mvType == MvCompSourceType.MUSIC_LIST) {
                 musicInfo = (NetMusicInfo) musicList.getSelectedValue();
-            } else if (mvType == MvType.PLAY_QUEUE) {
+            } else if (mvType == MvCompSourceType.PLAY_QUEUE) {
                 musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-            } else if (mvType == MvType.PLAYING) {
+            } else if (mvType == MvCompSourceType.PLAYING) {
                 musicInfo = player.getNetMusicInfo();
             }
 
@@ -22961,9 +22948,9 @@ public class MainFrame extends JFrame {
         else {
             NetMvInfo mvInfo = null;
             File file = null;
-            if (mvType == MvType.MV_LIST) mvInfo = netMvList.getSelectedValue();
-            else if (mvType == MvType.MV_RECOMMEND_LIST) mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
-            else if (mvType == MvType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            if (mvType == MvCompSourceType.MV_LIST) mvInfo = netMvList.getSelectedValue();
+            else if (mvType == MvCompSourceType.MV_RECOMMEND_LIST) mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+            else if (mvType == MvCompSourceType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
             try {
                 MusicServerUtil.fillMvInfo(mvInfo);
                 String url = mvInfo.getUrl();

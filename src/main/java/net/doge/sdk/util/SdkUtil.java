@@ -2,7 +2,7 @@ package net.doge.sdk.util;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.common.StringUtil;
@@ -25,6 +25,7 @@ public class SdkUtil {
             if (artistArray == null) artistArray = json.getJSONArray("singer_list");
             if (artistArray == null) artistArray = json.getJSONArray("singers");
             if (artistArray == null) artistArray = json.getJSONArray("ar");
+            if (artistArray == null) artistArray = json.getJSONArray("singerinfo");
         } else if (source == NetMusicSource.KG) {
             artistArray = json.getJSONArray("authors");
         } else {
@@ -41,6 +42,7 @@ public class SdkUtil {
             String name = artistJson.getString("name");
             if (StringUtil.isEmpty(name)) name = artistJson.getString("singer_name");
             if (StringUtil.isEmpty(name)) name = artistJson.getString("author_name");
+            if (StringUtil.isEmpty(name)) name = artistJson.getString("singername");
             sj.add(name);
         }
         return sj.toString();

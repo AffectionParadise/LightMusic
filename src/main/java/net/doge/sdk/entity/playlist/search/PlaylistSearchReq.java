@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -132,7 +132,7 @@ public class PlaylistSearchReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_SEARCH_API))
+            String playlistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 3))
                     .execute()
                     .body();

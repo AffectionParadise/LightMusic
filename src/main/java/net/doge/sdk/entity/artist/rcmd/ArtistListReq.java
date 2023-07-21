@@ -5,7 +5,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.sdk.common.Tags;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.sdk.common.CommonResult;
@@ -37,8 +37,6 @@ public class ArtistListReq {
     private final String HOT_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=1&page=%s&pagesize=%s";
     // 飙升歌手推荐 API (酷狗)
     private final String UP_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=2&page=%s&pagesize=%s";
-    // 推荐歌手 API (QQ)
-    private final String ARTIST_LIST_QQ_API = SdkCommon.PREFIX_QQ + "/singer/list?sex=%s&genre=%s&index=%s&area=%s&pageNo=%s";
     // 歌手推荐 API (酷我)
     private final String ARTIST_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
     // 全部歌手 API (酷我)
@@ -313,16 +311,18 @@ public class ArtistListReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
-                final int num = 80;
-                String[] split = s[4].split(" ");
-                String artistInfoBody = HttpRequest.get(String.format(ARTIST_LIST_QQ_API, split[0], split[1], split[2], split[3], (page - 1) / 4 + 1))
+                final int lim = 80, p = (page - 1) / 4 + 1;
+                String[] sp = s[4].split(" ");
+                String artistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                        .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
+                                "\"param\":{\"sex\":%s,\"genre\":%s,\"index\":%s,\"area\":%s,\"sin\":%s,\"cur_page\":%s}}}", sp[0], sp[1], sp[2], sp[3], (p - 1) * lim, p))
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-                JSONObject data = artistInfoJson.getJSONObject("data");
+                JSONObject data = artistInfoJson.getJSONObject("singerList").getJSONObject("data");
                 t = data.getIntValue("total");
-                JSONArray artistArray = data.getJSONArray("list");
-                for (int i = (page - 1) * limit % num, len = Math.min(artistArray.size(), (page - 1) * limit % num + limit); i < len; i++) {
+                JSONArray artistArray = data.getJSONArray("singerlist");
+                for (int i = (page - 1) * limit % lim, len = Math.min(artistArray.size(), (page - 1) * limit % lim + limit); i < len; i++) {
                     JSONObject artistJson = artistArray.getJSONObject(i);
 
                     String artistId = artistJson.getString("singer_mid");

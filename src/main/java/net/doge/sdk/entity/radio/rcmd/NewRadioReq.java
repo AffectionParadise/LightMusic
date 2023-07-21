@@ -2,7 +2,7 @@ package net.doge.sdk.entity.radio.rcmd;
 
 import cn.hutool.http.HttpRequest;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -31,8 +31,6 @@ public class NewRadioReq {
     private final String PAY_RADIO_API = SdkCommon.PREFIX + "/dj/toplist/pay?limit=100";
     // 付费精选电台 API
     private final String PAY_GIFT_RADIO_API = SdkCommon.PREFIX + "/dj/paygift?offset=%s&limit=%s";
-    // 推荐电台 API (QQ)
-    private final String RECOMMEND_RADIO_QQ_API = SdkCommon.PREFIX_QQ + "/radio/category";
     // 推荐广播剧 API (猫耳)
     private final String REC_RADIO_ME_API = "https://www.missevan.com/drama/site/recommend";
     // 夏日推荐 API (猫耳)
@@ -268,13 +266,17 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(RECOMMEND_RADIO_QQ_API))
+            String radioInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
+                            "\"param\":{\"id\":99,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
+                            "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}")
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
-            JSONArray data = radioInfoJson.getJSONArray("data");
-            for (int i = 0, len = data.size(); i < len; i++) {
-                JSONArray radioArray = data.getJSONObject(i).getJSONArray("list");
+            JSONObject data = radioInfoJson.getJSONObject("radiolist").getJSONObject("data");
+            JSONArray radioList = data.getJSONArray("radio_list");
+            for (int i = 0, len = radioList.size(); i < len; i++) {
+                JSONArray radioArray = radioList.getJSONObject(i).getJSONArray("list");
                 for (int j = 0, l = radioArray.size(); j < l; j++, t++) {
                     if (t >= (page - 1) * limit && t < page * limit) {
                         JSONObject radioJson = radioArray.getJSONObject(j);

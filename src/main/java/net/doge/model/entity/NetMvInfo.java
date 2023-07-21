@@ -2,7 +2,7 @@ package net.doge.model.entity;
 
 import net.doge.constant.player.Format;
 import net.doge.constant.model.MvInfoType;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import lombok.Data;
 import net.doge.util.system.FileUtil;
 import net.doge.util.common.StringUtil;

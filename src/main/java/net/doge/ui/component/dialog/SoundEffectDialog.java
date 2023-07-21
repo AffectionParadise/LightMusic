@@ -8,8 +8,8 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
-import net.doge.ui.componentui.combobox.ComboBoxUI;
-import net.doge.ui.componentui.slider.VSliderUI;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
+import net.doge.ui.component.slider.ui.VSliderUI;
 
 import javax.swing.*;
 import java.awt.*;

@@ -2,8 +2,8 @@ package net.doge.ui.component.combobox;
 
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
-import net.doge.ui.component.list.CustomScrollPane;
-import net.doge.ui.componentui.list.ScrollBarUI;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
+import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

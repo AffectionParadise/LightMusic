@@ -7,7 +7,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -45,9 +45,6 @@ public class RecommendPlaylistReq {
     // 推荐分类歌单(最新) API (酷狗)
     private final String NEW_CAT_PLAYLIST_KG_API
             = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=7&c=%s&p=%s";
-    // 每日推荐歌单 API (QQ)
-    private final String DAILY_RECOMMEND_PLAYLIST_QQ_API
-            = SdkCommon.PREFIX_QQ + "/recommend/playlist/u";
     // 推荐歌单 API (QQ)
 //    private final String RECOMMEND_PLAYLIST_QQ_API
 //            = SdkCommon.PREFIX_QQ + "/recommend/playlist?id=%s&pageNo=1&pageSize=120";
@@ -333,11 +330,12 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(DAILY_RECOMMEND_PLAYLIST_QQ_API)
+            String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body("{\"comm\":{\"ct\":24},\"recomPlaylist\":{\"method\":\"get_hot_recommend\",\"param\":{\"async\":1,\"cmd\":2},\"module\":\"playlist.HotRecommendServer\"}}")
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
+            JSONArray playlistArray = playlistInfoJson.getJSONObject("recomPlaylist").getJSONObject("data").getJSONArray("v_hot");
             t = playlistArray.size();
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);

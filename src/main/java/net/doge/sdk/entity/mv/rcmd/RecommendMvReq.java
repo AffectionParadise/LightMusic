@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -38,10 +38,8 @@ public class RecommendMvReq {
     private final String EXCLUSIVE_MV_API = SdkCommon.PREFIX + "/mv/exclusive/rcmd?offset=%s&limit=%s";
     // 推荐 MV API (酷狗)
     private final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
-    // 推荐 MV API (QQ)
-    private final String RECOMMEND_MV_QQ_API = SdkCommon.PREFIX_QQ + "/mv/list?area=%s&version=%s&pageNo=%s&pageSize=%s";
     // 最新 MV API (QQ)
-    private final String NEW_MV_QQ_API = SdkCommon.PREFIX_QQ + "/new/mv?type=%s";
+    private final String NEW_MV_QQ_API = "https://c.y.qq.com/mv/fcgi-bin/getmv_by_tag?cmd=shoubo&format=json&lan=%s";
     // 推荐 MV API (酷我)
     private final String RECOMMEND_MV_KW_API = "http://www.kuwo.cn/api/www/music/mvList?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 推荐 MV API (千千)
@@ -329,11 +327,14 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
-                String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_QQ_API, s[3], s[4], page, limit))
+                String mvInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                        .body(String.format("{\"comm\":{\"ct\":24},\"mv_list\":{\"module\":\"MvService.MvInfoProServer\"," +
+                                "\"method\":\"GetAllocMvInfo\",\"param\":{\"area_id\":%s,\"version_id\":%s,\"start\":%s,\"size\":%s," +
+                                "\"order\":1}}}", s[3], s[4], (page - 1) * limit, limit))
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
-                JSONObject data = mvInfoJson.getJSONObject("data");
+                JSONObject data = mvInfoJson.getJSONObject("mv_list").getJSONObject("data");
                 t = data.getIntValue("total");
                 JSONArray mvArray = data.getJSONArray("list");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -342,7 +343,8 @@ public class RecommendMvReq {
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title").trim();
                     String artistName = SdkUtil.parseArtists(mvJson, NetMusicSource.QQ);
-                    String creatorId = mvJson.getJSONArray("singers").getJSONObject(0).getString("mid");
+                    JSONArray singerArray = mvJson.getJSONArray("singers");
+                    String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                     Long playCount = mvJson.getLong("playcnt");
                     Double duration = mvJson.getDouble("duration");
                     String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
@@ -378,7 +380,7 @@ public class RecommendMvReq {
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
-                JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("list");
+                JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("mvlist");
                 t = mvArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
@@ -386,7 +388,8 @@ public class RecommendMvReq {
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("mvtitle").trim();
                     String artistName = SdkUtil.parseArtists(mvJson, NetMusicSource.QQ);
-                    String creatorId = mvJson.getJSONArray("singers").getJSONObject(0).getString("mid");
+                    JSONArray singerArray = mvJson.getJSONArray("singers");
+                    String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                     Long playCount = mvJson.getLong("listennum");
                     String pubTime = mvJson.getString("pub_date");
                     String coverImgUrl = mvJson.getString("picurl");

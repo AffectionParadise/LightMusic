@@ -7,7 +7,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.model.entity.NetMusicInfo;
@@ -60,12 +60,8 @@ public class ArtistInfoReq {
     private final String ARTIST_ALBUMS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/album?&singerid=%s&page=%s&pagesize=%s";
     // 歌手 MV API (酷狗)
     private final String ARTIST_MVS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/mv?&singerid=%s&page=%s&pagesize=%s";
-    // 歌手歌曲 API (QQ)
-    private final String ARTIST_SONGS_QQ_API = SdkCommon.PREFIX_QQ + "/singer/songs?singermid=%s&page=%s&num=%s";
-    // 歌手专辑 API (QQ)
-    private final String ARTIST_ALBUMS_QQ_API = SdkCommon.PREFIX_QQ + "/singer/album?singermid=%s&pageNo=%s&pageSize=%s";
     // 歌手 MV API (QQ)
-    private final String ARTIST_MVS_QQ_API = SdkCommon.PREFIX_QQ + "/singer/mv?singermid=%s&pageNo=%s&pageSize=%s";
+    private final String ARTIST_MVS_QQ_API = "http://c.y.qq.com/mv/fcgi-bin/fcg_singer_mv.fcg?singermid=%s&order=time&begin=%s&num=%s&cid=205360581";
     // 歌手歌曲 API (酷我)
     private final String ARTIST_SONGS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手专辑 API (酷我)
@@ -602,13 +598,15 @@ public class ArtistInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_SONGS_QQ_API, id, page, limit))
+            String artistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singer\":{\"method\":\"get_singer_detail_info\",\"param\":" +
+                            "{\"sort\":5,\"singermid\":\"%s\",\"sin\":%s,\"num\":%s},\"module\":\"music.web_singer_info_svr\"}}", id, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-            JSONObject data = artistInfoJson.getJSONObject("data");
-            total = data.getIntValue("total");
-            JSONArray songArray = data.getJSONArray("list");
+            JSONObject data = artistInfoJson.getJSONObject("singer").getJSONObject("data");
+            total = data.getIntValue("total_song");
+            JSONArray songArray = data.getJSONArray("songlist");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
@@ -865,11 +863,14 @@ public class ArtistInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_QQ_API, artistId, page, limit))
+            String albumInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerAlbum\":{\"method\":\"get_singer_album\",\"param\":" +
+                            "{\"singermid\":\"%s\",\"order\":\"time\",\"begin\":%s,\"num\":%s,\"exstatus\":1}," +
+                            "\"module\":\"music.web_singer_info_svr\"}}", artistId, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
-            JSONObject data = albumInfoJson.getJSONObject("data");
+            JSONObject data = albumInfoJson.getJSONObject("singerAlbum").getJSONObject("data");
             total = Math.max(total, data.getIntValue("total"));
             JSONArray albumArray = data.getJSONArray("list");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
@@ -878,7 +879,8 @@ public class ArtistInfoReq {
                 String albumId = albumJson.getString("album_mid");
                 String albumName = albumJson.getString("album_name");
                 String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
-                String arId = albumJson.getJSONArray("singers").getJSONObject(0).getString("singer_mid");
+                JSONArray singerArray = albumJson.getJSONArray("singers");
+                String arId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("singer_mid");
                 String publishTime = albumJson.getString("pub_time");
                 Integer songNum = albumJson.getJSONObject("latest_song").getIntValue("song_count");
                 String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
@@ -1139,7 +1141,7 @@ public class ArtistInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_QQ_API, artistId, page, limit))
+            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_QQ_API, artistId, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

@@ -31,14 +31,14 @@ public class NewSongTagReq {
      */
     public void initNewSongTag() {
         // 网易云 网易云 酷狗 QQ 音乐磁场 咕咕咕音乐 5sing
-        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "0", "", "", " "});
+        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "5", "", "", " "});
 
-        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "0", "forum-1", "forum-1", ""});
+        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "5", "forum-1", "forum-1", ""});
         Tags.newSongTag.put("内地", new String[]{"", "", "", "1", "", "", ""});
-        Tags.newSongTag.put("港台", new String[]{"", "", "", "2", "", "", ""});
-        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "3", "forum-10", "forum-3", ""});
+        Tags.newSongTag.put("港台", new String[]{"", "", "", "6", "", "", ""});
+        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "2", "forum-10", "forum-3", ""});
         Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "4", "", "", ""});
-        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "5", "", "", ""});
+        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "3", "", "", ""});
         Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "forum-15", "forum-7", ""});
 
         // 音乐磁场

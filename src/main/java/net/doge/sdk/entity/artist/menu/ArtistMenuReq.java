@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.model.entity.NetUserInfo;
@@ -32,7 +32,7 @@ public class ArtistMenuReq {
     // 相似歌手 API (酷狗)(POST)
     private final String SIMILAR_ARTIST_KG_API = "http://kmr.service.kugou.com/v1/author/similar";
     // 相似歌手 API (QQ)
-    private final String SIMILAR_ARTIST_QQ_API = SdkCommon.PREFIX_QQ + "/singer/sim?singermid=%s";
+    private final String SIMILAR_ARTIST_QQ_API = "http://c.y.qq.com/v8/fcg-bin/fcg_v8_simsinger.fcg?singer_mid=%s&num=10&utf8=1";
 
     // 歌手粉丝 API
     private final String ARTIST_FANS_API = SdkCommon.PREFIX + "/artist/fans?id=%s&offset=%s&limit=%s";
@@ -141,7 +141,7 @@ public class ArtistMenuReq {
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-            JSONArray artistArray = artistInfoJson.getJSONObject("data").getJSONArray("list");
+            JSONArray artistArray = artistInfoJson.getJSONObject("singers").getJSONArray("items");
             if (JsonUtil.notEmpty(artistArray)) {
                 t = artistArray.size();
                 for (int i = 0, len = artistArray.size(); i < len; i++) {

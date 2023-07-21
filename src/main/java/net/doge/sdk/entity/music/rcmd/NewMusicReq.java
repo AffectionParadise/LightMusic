@@ -6,7 +6,7 @@ import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -37,8 +37,6 @@ public class NewMusicReq {
     private final String FAST_NEW_SONG_API = SdkCommon.PREFIX + "/top/song?type=%s";
     // 推荐新歌(华语) API (酷狗)
     private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong?version=9108&type=%s&page=%s&pagesize=%s";
-    // 推荐新歌 API (QQ)
-    private final String RECOMMEND_NEW_SONG_QQ_API = SdkCommon.PREFIX_QQ + "/new/songs?type=%s";
     // 新歌榜 API (酷我)
     private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)
@@ -244,11 +242,13 @@ public class NewMusicReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
-                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_QQ_API, s[3]))
+                String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                        .body(String.format("{\"comm\":{\"ct\":24},\"new_song\":{\"module\":\"newsong.NewSongServer\"," +
+                                "\"method\":\"get_new_song_info\",\"param\":{\"type\":%s}}}", s[3]))
                         .execute()
                         .body();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-                JSONArray songArray = musicInfoJson.getJSONObject("data").getJSONArray("list");
+                JSONArray songArray = musicInfoJson.getJSONObject("new_song").getJSONObject("data").getJSONArray("songlist");
                 t = songArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);

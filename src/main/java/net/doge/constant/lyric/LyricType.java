@@ -6,6 +6,8 @@ package net.doge.constant.lyric;
  * @Date 2020/12/7
  */
 public class LyricType {
+    // 原歌词
     public static final int ORIGINAL = 0;
+    // 翻译
     public static final int TRANSLATION = 1;
 }

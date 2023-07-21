@@ -5,7 +5,7 @@ import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -44,9 +44,6 @@ public class NewAlbumReq {
     private final String LANG_DI_ALBUM_API = SdkCommon.PREFIX + "/album/list/style?area=%s&limit=50";
     // 曲风专辑 API
     private final String STYLE_ALBUM_API = SdkCommon.PREFIX + "/style/album?tagId=%s&cursor=%s&size=%s";
-    // 新碟推荐 API (QQ)
-    private final String NEW_ALBUM_QQ_API
-            = SdkCommon.PREFIX_QQ + "/new/album?type=%s&num=100";
     // 新碟推荐 API (咪咕)
     private final String NEW_ALBUM_MG_API
             = SdkCommon.PREFIX_MG + "/new/albums?pageNo=%s&pageSize=%s";
@@ -80,7 +77,7 @@ public class NewAlbumReq {
 
     // 歌曲封面信息 API (QQ)
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
-    
+
     /**
      * 获取新碟上架
      */
@@ -377,11 +374,13 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
-                String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_QQ_API, s[3]))
+                String albumInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                        .body(String.format("{\"comm\":{\"ct\":24},\"new_album\":{\"module\":\"newalbum.NewAlbumServer\",\"method\":\"get_new_album_info\"," +
+                                "\"param\":{\"area\":%s,\"sin\":0,\"num\":100}}}", s[3]))
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
-                JSONArray albumArray = albumInfoJson.getJSONObject("data").getJSONArray("list");
+                JSONArray albumArray = albumInfoJson.getJSONObject("new_album").getJSONObject("data").getJSONArray("albums");
                 t = albumArray.size();
                 for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
                     JSONObject albumJson = albumArray.getJSONObject(i);
@@ -389,7 +388,8 @@ public class NewAlbumReq {
                     String albumId = albumJson.getString("mid");
                     String albumName = albumJson.getString("name");
                     String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
-                    String artistId = albumJson.getJSONArray("singers").getJSONObject(0).getString("mid");
+                    JSONArray singerArray = albumJson.getJSONArray("singers");
+                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                     String publishTime = albumJson.getString("release_time");
 //            Integer songNum = albumJson.getJSONObject("ex").getIntValue("track_nums");
                     String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);

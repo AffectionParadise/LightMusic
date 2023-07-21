@@ -2,7 +2,7 @@ package net.doge.sdk.entity.playlist.menu;
 
 import cn.hutool.http.HttpRequest;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;

@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
@@ -28,8 +28,6 @@ public class RadioInfoReq {
     private final String RADIO_DETAIL_API = SdkCommon.PREFIX + "/dj/detail?rid=%s";
     // 电台节目信息 API
     private final String RADIO_PROGRAM_DETAIL_API = SdkCommon.PREFIX + "/dj/program?rid=%s&offset=%s&limit=%s";
-    // 电台信息 API (QQ)
-    private final String RADIO_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/radio?id=%s";
     // 电台信息 API (喜马拉雅)
     private final String RADIO_DETAIL_XM_API = "https://www.ximalaya.com/revision/album/v1/simple?albumId=%s";
     // 简短电台信息 API (喜马拉雅)
@@ -46,7 +44,7 @@ public class RadioInfoReq {
     private final String BOOK_RADIO_DETAIL_DB_API = "https://book.douban.com/subject/%s/";
     // 游戏电台信息 API (豆瓣)
     private final String GAME_RADIO_DETAIL_DB_API = "https://www.douban.com/game/%s/";
-    
+
     // 获取电台照片 API (豆瓣)
     private final String GET_RADIO_IMG_DB_API
             = "https://movie.douban.com/subject/%s/photos?type=S&start=%s&sortby=like&size=a&subtype=a";
@@ -229,6 +227,7 @@ public class RadioInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(radioInfo.getCoverImgUrl())));
+            radioInfo.setTag("");
             radioInfo.setDescription("");
         }
 
@@ -396,11 +395,14 @@ public class RadioInfoReq {
 
         // QQ(程序分页)
         else if (source == NetMusicSource.QQ) {
-            String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_QQ_API, radioId))
+            String radioInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
+                            "\"param\":{\"id\":%s,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
+                            "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}", radioId))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
-            JSONArray songArray = radioInfoJson.getJSONObject("data").getJSONArray("tracks");
+            JSONArray songArray = radioInfoJson.getJSONObject("songlist").getJSONObject("data").getJSONArray("tracks");
             if (JsonUtil.notEmpty(songArray)) {
                 total.set(songArray.size());
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
@@ -409,7 +411,8 @@ public class RadioInfoReq {
                     String songId = songJson.getString("mid");
                     String name = songJson.getString("name");
                     String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
-                    String artistId = songJson.getJSONObject("singer").getString("mid");
+                    JSONArray singerArray = songJson.getJSONArray("singer");
+                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                     String albumName = songJson.getJSONObject("album").getString("name");
                     String albumId = songJson.getJSONObject("album").getString("mid");
                     Double duration = songJson.getDouble("interval");
@@ -502,7 +505,7 @@ public class RadioInfoReq {
 
         return new CommonResult<>(musicInfos, total.get());
     }
-    
+
     /**
      * 获取电台照片链接
      */

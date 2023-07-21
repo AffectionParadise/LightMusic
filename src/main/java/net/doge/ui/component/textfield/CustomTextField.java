@@ -3,7 +3,7 @@ package net.doge.ui.component.textfield;
 import lombok.Data;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
-import net.doge.ui.listener.TextFieldHintListener;
+import net.doge.ui.component.textfield.listener.TextFieldHintListener;
 
 import javax.swing.*;
 import java.awt.*;

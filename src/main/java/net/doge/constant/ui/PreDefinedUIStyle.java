@@ -1,11 +1,12 @@
 package net.doge.constant.ui;
 
+import net.doge.constant.model.UIStyleConstants;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.ui.UIStyle;
 
 /**
  * @Author yzx
- * @Description 预设样式
+ * @Description 预设主题
  * @Date 2020/12/12
  */
 public class PreDefinedUIStyle {

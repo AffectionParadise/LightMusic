@@ -1,6 +1,6 @@
 package net.doge.sdk.common;
 
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

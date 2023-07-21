@@ -8,7 +8,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.system.NetMusicSource;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -33,8 +33,6 @@ public class MusicInfoReq {
     private final String SINGLE_PROGRAM_DETAIL_API = SdkCommon.PREFIX + "/dj/program/detail?id=%s";
     // 歌曲信息 API (酷狗)
     private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
-    // 歌曲信息 API (QQ)
-    private final String SINGLE_SONG_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/song?songmid=%s";
     // 歌曲封面信息 API (QQ)
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
     // 歌曲信息 API (酷我)
@@ -188,10 +186,11 @@ public class MusicInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_QQ_API, songId))
+            String songBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                    .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", songId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("songinfo").getJSONObject("data");
             JSONObject trackInfo = data.getJSONObject("track_info");
             JSONArray singer = trackInfo.getJSONArray("singer");
             JSONObject album = trackInfo.getJSONObject("album");
