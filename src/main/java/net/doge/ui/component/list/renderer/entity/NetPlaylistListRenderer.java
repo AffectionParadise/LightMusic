@@ -3,20 +3,21 @@ package net.doge.ui.component.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */
@@ -88,10 +89,11 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 180, tw = pw - 20;
+        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getName(), tw));
-        String creator = netPlaylistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(netPlaylistInfo.getCreator(), tw)) : "";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netPlaylistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String creator = netPlaylistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(netPlaylistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
         String playCount = netPlaylistInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netPlaylistInfo.getPlayCount())) : "";
         String trackCount = netPlaylistInfo.hasTrackCount() ? StringUtil.textToHtml(netPlaylistInfo.getTrackCount() + " 歌曲") : "";
 

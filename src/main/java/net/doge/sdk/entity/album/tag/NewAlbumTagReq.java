@@ -377,7 +377,7 @@ public class NewAlbumTagReq {
         final int c = 6;
         // 网易云曲风
         Runnable initAlbumTag = () -> {
-            String tagBody = HttpRequest.get(String.format(STYLE_API))
+            String tagBody = HttpRequest.get(STYLE_API)
                     .execute()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
@@ -420,7 +420,7 @@ public class NewAlbumTagReq {
         // 豆瓣
         // 分类专辑标签
         Runnable initAlbumTagDb = () -> {
-            String albumTagBody = HttpRequest.get(String.format(ALBUM_TAG_DB_API))
+            String albumTagBody = HttpRequest.get(ALBUM_TAG_DB_API)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(albumTagBody);

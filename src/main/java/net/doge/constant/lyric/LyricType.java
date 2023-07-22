@@ -1,7 +1,7 @@
 package net.doge.constant.lyric;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 歌词类型
  * @Date 2020/12/7
  */

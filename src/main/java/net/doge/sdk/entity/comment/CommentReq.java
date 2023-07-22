@@ -106,7 +106,7 @@ public class CommentReq {
 
             if (source == NetMusicSource.QQ) {
                 // QQ 需要先通过 mid 获取 id
-                String songInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                String songInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                         .execute()
                         .body();

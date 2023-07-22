@@ -1,7 +1,7 @@
 package net.doge.constant.player;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 播放器状态
  * @Date 2020/12/7
  */

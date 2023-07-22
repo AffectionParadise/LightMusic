@@ -13,7 +13,7 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 默认的风格列表显示渲染器
  * @Date 2020/12/7
  */

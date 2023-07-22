@@ -1,7 +1,7 @@
 package net.doge.util.collection;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/15
  */

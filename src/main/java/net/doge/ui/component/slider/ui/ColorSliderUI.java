@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 颜色滑动条自定义 UI
  * @Date 2020/12/13
  */

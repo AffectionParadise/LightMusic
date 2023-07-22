@@ -3,20 +3,21 @@ package net.doge.ui.component.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetSheetInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */
@@ -106,9 +107,9 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         outerPanel.add(pageSizeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 180, tw = pw - 20;
+        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netSheetInfo.getName(), tw));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netSheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String difficulty = netSheetInfo.hasDifficulty() ? StringUtil.textToHtml(netSheetInfo.getDifficulty() + "难度") : "";
         String musicKey = netSheetInfo.hasMusicKey() ? StringUtil.textToHtml(netSheetInfo.getMusicKey() + "调") : "";
         String playVersion = netSheetInfo.hasPlayVersion() ? StringUtil.textToHtml(netSheetInfo.getPlayVersion()) : "";

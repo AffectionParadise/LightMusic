@@ -61,7 +61,7 @@ public class NewSongTagReq {
         final int c = 7;
         // 网易云曲风
         Runnable initNewSongTag = () -> {
-            String tagBody = HttpRequest.get(String.format(STYLE_API))
+            String tagBody = HttpRequest.get(STYLE_API)
                     .execute()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
@@ -103,7 +103,7 @@ public class NewSongTagReq {
 
         // 5sing
         Runnable initNewSongTagFs = () -> {
-            String tagBody = HttpRequest.get(String.format(SONG_TAG_API_FS))
+            String tagBody = HttpRequest.get(SONG_TAG_API_FS)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(tagBody);

@@ -41,7 +41,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 设置对话框
  * @Date 2020/12/15
  */

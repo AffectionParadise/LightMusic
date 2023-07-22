@@ -3,21 +3,22 @@ package net.doge.ui.component.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */
@@ -95,10 +96,10 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
         outerPanel.add(pubTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 180, tw = pw - 20;
+        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getName(), tw));
-        String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netMvInfo.getArtist(), tw));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netMvInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netMvInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw));
         String duration = StringUtil.textToHtml(netMvInfo.hasDuration() ? TimeUtil.format(netMvInfo.getDuration()) : "--:--");
         String playCount = netMvInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netMvInfo.getPlayCount())) : "";
         String pubTime = netMvInfo.hasPubTime() ? StringUtil.textToHtml(netMvInfo.getPubTime()) : "";

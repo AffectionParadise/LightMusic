@@ -59,7 +59,7 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(String.format(RECOMMEND_PROGRAM_API))
+            String programInfoBody = HttpRequest.get(RECOMMEND_PROGRAM_API)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -99,7 +99,7 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(String.format(PERSONALIZED_PROGRAM_API))
+            String programInfoBody = HttpRequest.get(PERSONALIZED_PROGRAM_API)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -139,7 +139,7 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(String.format(PROGRAM_24_HOURS_TOPLIST_API))
+            String programInfoBody = HttpRequest.get(PROGRAM_24_HOURS_TOPLIST_API)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -179,7 +179,7 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(String.format(PROGRAM_TOPLIST_API))
+            String programInfoBody = HttpRequest.get(PROGRAM_TOPLIST_API)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -221,7 +221,7 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(String.format(REC_PROGRAM_ME_API))
+            String programInfoBody = HttpRequest.get(REC_PROGRAM_ME_API)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);

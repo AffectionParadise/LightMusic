@@ -1,7 +1,7 @@
 package net.doge.constant.ui;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 频谱参数
  * @Date 2020/12/14
  */

@@ -3,24 +3,25 @@ package net.doge.ui.component.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.constant.ui.Fonts;
-import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.Fonts;
+import net.doge.constant.ui.ImageConstants;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.AudioFile;
-import net.doge.model.player.MusicPlayer;
 import net.doge.model.entity.NetMusicInfo;
+import net.doge.model.player.MusicPlayer;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */
@@ -112,11 +113,15 @@ public class MusicListRenderer extends DefaultListCellRenderer {
 
         final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[netMusicInfo.getSource()]);
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : netMusicInfo.getName(), maxWidth));
-        String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? file.hasArtist() ? file.getArtist() : ""
-                : netMusicInfo.hasArtist() ? netMusicInfo.getArtist() : "", maxWidth));
-        String albumName = StringUtil.textToHtml(StringUtil.wrapLineByWidth(isFile ? (file.hasAlbum() ? file.getAlbum() : "")
-                : netMusicInfo.hasAlbumName() ? netMusicInfo.getAlbumName() : "", maxWidth));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : netMusicInfo.getName(), RendererConstants.STRING_MAX_LENGTH),
+                maxWidth));
+        String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(isFile ? file.hasArtist() ? file.getArtist() : "" : netMusicInfo.hasArtist() ? netMusicInfo.getArtist() : "", RendererConstants.STRING_MAX_LENGTH),
+                maxWidth));
+        String albumName = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(isFile ? (file.hasAlbum() ? file.getAlbum() : "") : netMusicInfo.hasAlbumName() ? netMusicInfo.getAlbumName() : "", RendererConstants.STRING_MAX_LENGTH),
+                maxWidth));
         String duration = StringUtil.textToHtml(isFile ? file.hasDuration() ? TimeUtil.format(file.getDuration()) : "--:--"
                 : netMusicInfo.hasDuration() ? TimeUtil.format(netMusicInfo.getDuration()) : "--:--");
 

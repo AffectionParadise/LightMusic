@@ -106,7 +106,7 @@ public class ArtistMenuReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            String artistInfoBody = HttpRequest.post(String.format(SIMILAR_ARTIST_KG_API))
+            String artistInfoBody = HttpRequest.post(SIMILAR_ARTIST_KG_API)
                     .body("{\"clientver\":\"9108\",\"mid\":\"286974383886022203545511837994020015101\"," +
                             "\"clienttime\":\"1545746019\",\"key\":\"4c8b684568f03eeef985ae271561bcd8\"," +
                             "\"appid\":\"1005\",\"data\":[{\"author_id\":" + id + "}]}")

@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 抽象迷你对话框
  * @Date 2021/1/5
  */

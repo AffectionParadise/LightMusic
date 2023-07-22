@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 迷你模式对话框
  * @Date 2020/12/15
  */

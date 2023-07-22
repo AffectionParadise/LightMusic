@@ -20,8 +20,6 @@ import java.util.List;
 public class RankingInfoReq {
     // 榜单信息 API (酷狗)
     private final String RANKING_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
-    // 榜单信息 API (QQ)
-    private final String RANKING_DETAIL_QQ_API = SdkCommon.PREFIX_QQ + "/top?id=%s&pageSize=%s";
     // 榜单信息 API (酷我)
     private final String RANKING_DETAIL_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
     // 榜单信息 API (咪咕)
@@ -63,15 +61,17 @@ public class RankingInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_QQ_API, id, 1))
+            String rankingInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
+                            "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", id, 0, 1))
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-            JSONObject data = rankingInfoJson.getJSONObject("data");
+            JSONObject data = rankingInfoJson.getJSONObject("detail").getJSONObject("data").getJSONObject("data");
 
             GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
             // QQ 需要额外补全榜单描述
-            rankingInfo.setDescription(data.getJSONObject("info").getString("desc").replace("<br>", "\n"));
+            rankingInfo.setDescription(data.getString("intro").replace("<br>", "\n"));
         }
 
         // 酷我
@@ -142,7 +142,7 @@ public class RankingInfoReq {
                 String hash = songJson.getString("hash");
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
-                String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.KG);
                 JSONArray artistArray = songJson.getJSONArray("authors");
                 String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
@@ -156,7 +156,7 @@ public class RankingInfoReq {
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
-                musicInfo.setArtist(artists);
+                musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
 //                musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
@@ -169,19 +169,21 @@ public class RankingInfoReq {
 
         // QQ(程序分页)
         else if (source == NetMusicSource.QQ) {
-            String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_QQ_API, rankingId, 1000))
+            String rankingInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
+                            "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", rankingId, 0, 1000))
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-            JSONObject data = rankingInfoJson.getJSONObject("data");
-            total = data.getIntValue("total");
-            JSONArray songArray = data.getJSONArray("list");
+            JSONObject data = rankingInfoJson.getJSONObject("detail").getJSONObject("data");
+            total = data.getJSONObject("data").getIntValue("totalNum");
+            JSONArray songArray = data.getJSONArray("songInfoList");
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("mid");
                 String name = songJson.getString("name");
-                String artists = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
                 String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
@@ -193,7 +195,7 @@ public class RankingInfoReq {
                 musicInfo.setSource(NetMusicSource.QQ);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
-                musicInfo.setArtist(artists);
+                musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
@@ -290,7 +292,7 @@ public class RankingInfoReq {
 
                 String songId = songJson.getString("TSID");
                 String name = songJson.getString("title");
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QI);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QI);
                 JSONArray artistArray = songJson.getJSONArray("artist");
                 String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = songJson.getString("albumTitle");

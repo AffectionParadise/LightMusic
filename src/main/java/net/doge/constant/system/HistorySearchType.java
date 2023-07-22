@@ -1,7 +1,7 @@
 package net.doge.constant.system;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 搜索历史类型
  * @Date 2020/12/7
  */

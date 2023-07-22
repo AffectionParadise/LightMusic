@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 自定义标签页面板
  * @Date 2020/12/13
  */

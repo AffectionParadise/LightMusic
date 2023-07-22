@@ -1,5 +1,6 @@
 package net.doge.sdk.entity.artist.search;
 
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
@@ -33,7 +34,7 @@ public class ArtistSearchReq {
     private final String SEARCH_ARTIST_API = SdkCommon.PREFIX + "/cloudsearch?type=100&keywords=%s&limit=%s&offset=%s";
     private final String SEARCH_ARTIST_KW_API = "http://www.kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌手 API (咪咕)
-    private final String SEARCH_ARTIST_MG_API = SdkCommon.PREFIX_MG + "/search?type=singer&keyword=%s&pageNo=%s&pageSize=%s";
+    private final String SEARCH_ARTIST_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=1&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索歌手 API (千千)
     private final String SEARCH_ARTIST_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=2&word=%s";
     // 关键词搜索声优 API (猫耳)
@@ -100,7 +101,7 @@ public class ArtistSearchReq {
             Integer t = 0;
 
             int lim = Math.min(40, limit);
-            String artistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, lim, keyword, 1))
                     .execute()
                     .body();
@@ -179,22 +180,21 @@ public class ArtistSearchReq {
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_MG_API, encodedKeyword, page, limit))
+                    .header(Header.REFERER,"https://m.music.migu.cn/")
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-            JSONObject data = artistInfoJson.getJSONObject("data");
-            // 咪咕可能接口异常，需要判空！
-            if (JsonUtil.notEmpty(data)) {
-                t = data.getIntValue("total");
-                JSONArray artistArray = data.getJSONArray("list");
+            t = artistInfoJson.getIntValue("pgt");
+            JSONArray artistArray = artistInfoJson.getJSONArray("artists");
+            if (JsonUtil.notEmpty(artistArray)) {
                 for (int i = 0, len = artistArray.size(); i < len; i++) {
                     JSONObject artistJson = artistArray.getJSONObject(i);
 
                     String artistId = artistJson.getString("id");
-                    String artistName = artistJson.getString("name");
-                    Integer songNum = artistJson.getIntValue("songCount");
-                    Integer albumNum = artistJson.getIntValue("albumCount");
-                    String coverImgThumbUrl = artistJson.getString("picUrl");
+                    String artistName = artistJson.getString("title");
+                    Integer songNum = artistJson.getIntValue("songNum");
+                    Integer albumNum = artistJson.getIntValue("albumNum");
+                    String coverImgThumbUrl = artistJson.getString("artistPicM");
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
                     artistInfo.setSource(NetMusicSource.MG);

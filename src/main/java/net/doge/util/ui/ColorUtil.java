@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 颜色工具类
  * @Date 2020/12/15
  */

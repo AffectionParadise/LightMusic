@@ -16,7 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 播放速率对话框
  * @Date 2020/12/15
  */

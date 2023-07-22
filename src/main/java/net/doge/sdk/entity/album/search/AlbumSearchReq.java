@@ -1,5 +1,6 @@
 package net.doge.sdk.entity.album.search;
 
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
@@ -35,7 +36,7 @@ public class AlbumSearchReq {
     private final String SEARCH_ALBUM_KG_API = "http://msearch.kugou.com/api/v3/search/album?keyword=%s&page=%s&pagesize=%s";
     private final String SEARCH_ALBUM_KW_API = "http://www.kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索专辑 API (咪咕)
-    private final String SEARCH_ALBUM_MG_API = SdkCommon.PREFIX_MG + "/search?type=album&keyword=%s&pageNo=%s&pageSize=%s";
+    private final String SEARCH_ALBUM_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=4&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索专辑 API (千千)
     private final String SEARCH_ALBUM_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=3&word=%s";
     // 关键词搜索专辑 API (豆瓣)
@@ -77,7 +78,7 @@ public class AlbumSearchReq {
 
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
-                String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.NET_CLOUD);
+                String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.NET_CLOUD);
                 String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("publishTime"));
                 Integer songNum = albumJson.getIntValue("size");
@@ -146,7 +147,7 @@ public class AlbumSearchReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 2))
                     .execute()
                     .body();
@@ -159,7 +160,7 @@ public class AlbumSearchReq {
 
                 String albumId = albumJson.getString("albumMID");
                 String albumName = albumJson.getString("albumName");
-                String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
+                String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QQ);
                 JSONArray singerArray = albumJson.getJSONArray("singer_list");
                 String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String publishTime = albumJson.getString("publicTime");
@@ -230,24 +231,24 @@ public class AlbumSearchReq {
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_MG_API, encodedKeyword, page, limit))
+                    .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
-            // 咪咕可能接口异常，需要判空！
-            JSONObject data = albumInfoJson.getJSONObject("data");
-            if (JsonUtil.notEmpty(data)) {
-                t = data.getIntValue("total");
-                JSONArray albumArray = data.getJSONArray("list");
+            t = albumInfoJson.getIntValue("pgt");
+            JSONArray albumArray = albumInfoJson.getJSONArray("albums");
+            if (JsonUtil.notEmpty(albumArray)) {
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
                     String albumId = albumJson.getString("id");
-                    String albumName = albumJson.getString("name");
-                    String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.MG);
-                    String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
-                    String publishTime = albumJson.getString("publishTime");
-                    Integer songNum = albumJson.getIntValue("songCount");
-                    String coverImgThumbUrl = albumJson.getString("picUrl");
+                    String albumName = albumJson.getString("title");
+                    String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.MG);
+                    JSONArray singerArray = albumJson.getJSONArray("singer");
+                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("id");
+                    String publishTime = albumJson.getString("publishDate");
+                    Integer songNum = albumJson.getIntValue("songNum");
+                    String coverImgThumbUrl = albumJson.getString("albumPicM");
 
                     NetAlbumInfo albumInfo = new NetAlbumInfo();
                     albumInfo.setSource(NetMusicSource.MG);
@@ -284,7 +285,7 @@ public class AlbumSearchReq {
 
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
-                String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QI);
+                String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QI);
                 JSONArray artistArray = albumJson.getJSONArray("artist");
                 String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String rd = albumJson.getString("releaseDate");

@@ -46,7 +46,7 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearch = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            String hotSearchBody = HttpRequest.get(String.format(HOT_SEARCH_API))
+            String hotSearchBody = HttpRequest.get(HOT_SEARCH_API)
                     .execute()
                     .body();
             JSONObject hotSearchJson = JSONObject.parseObject(hotSearchBody);
@@ -63,7 +63,7 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearchKg = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            String hotSearchBody = HttpRequest.get(String.format(HOT_SEARCH_KG_API))
+            String hotSearchBody = HttpRequest.get(HOT_SEARCH_KG_API)
                     .header("dfid", "1ssiv93oVqMp27cirf2CvoF1")
                     .header("mid", "156798703528610303473757548878786007104")
                     .header("clienttime", "1584257267")
@@ -84,7 +84,7 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearchQq = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            String hotSearchBody = HttpRequest.post(String.format(HOT_SEARCH_QQ_API))
+            String hotSearchBody = HttpRequest.post(HOT_SEARCH_QQ_API)
                     .body("{\"comm\":{\"ct\":\"19\",\"cv\":\"1803\",\"guid\":\"0\",\"patch\":\"118\",\"psrf_access_token_expiresAt\":0,\"psrf_qqaccess_token\":\"\",\"psrf_qqopenid\":\"\",\"psrf_qqunionid\":\"\",\"tmeAppID\":\"qqmusic\",\"tmeLoginType\":0,\"uin\":\"0\",\"wid\":\"0\"},\"hotkey\":{\"method\":\"GetHotkeyForQQMusicPC\",\"module\":\"tencent_musicsoso_hotkey.HotkeyService\",\"param\":{\"search_id\":\"\",\"uin\":0}}}")
                     .execute()
                     .body();
@@ -100,7 +100,7 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearchKw = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            HttpResponse resp = HttpRequest.get(String.format(HOT_SEARCH_KW_API)).execute();
+            HttpResponse resp = HttpRequest.get(HOT_SEARCH_KW_API).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 JSONArray hotkeys = JSONObject.parseObject(resp.body()).getJSONArray("tagvalue");
                 for (int i = 0, len = hotkeys.size(); i < len; i++) {
@@ -114,7 +114,7 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearchMg = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            HttpResponse resp = HttpRequest.get(String.format(HOT_SEARCH_MG_API)).execute();
+            HttpResponse resp = HttpRequest.get(HOT_SEARCH_MG_API).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 JSONObject data = JSONObject.parseObject(resp.body()).getJSONObject("data");
                 JSONArray hotkeys = data.getJSONArray("hotwords").getJSONObject(0).getJSONArray("hotwordList");
@@ -133,7 +133,7 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearchFs = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            String body = HttpRequest.get(String.format(HOT_SEARCH_FS_API))
+            String body = HttpRequest.get(HOT_SEARCH_FS_API)
                     .execute()
                     .body();
             Elements hotkeys = Jsoup.parse(body).select(".hot_search a");

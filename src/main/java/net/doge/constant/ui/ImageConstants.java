@@ -6,7 +6,7 @@ import net.doge.util.ui.ImageUtil;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 图片参数
  * @Date 2020/12/7
  */

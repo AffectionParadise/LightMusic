@@ -51,7 +51,7 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(NEW_RADIO_API))
+            String radioInfoBody = HttpRequest.get(NEW_RADIO_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -94,7 +94,7 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(PERSONALIZED_RADIO_API))
+            String radioInfoBody = HttpRequest.get(PERSONALIZED_RADIO_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -140,7 +140,7 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(RECOMMEND_RADIO_API))
+            String radioInfoBody = HttpRequest.get(RECOMMEND_RADIO_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -183,7 +183,7 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(PAY_RADIO_API))
+            String radioInfoBody = HttpRequest.get(PAY_RADIO_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -266,7 +266,7 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String radioInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                             "\"param\":{\"id\":99,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
                             "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}")
@@ -313,7 +313,7 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(REC_RADIO_ME_API))
+            String radioInfoBody = HttpRequest.get(REC_RADIO_ME_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -349,7 +349,7 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(SUMMER_RADIO_ME_API))
+            String radioInfoBody = HttpRequest.get(SUMMER_RADIO_ME_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -388,7 +388,7 @@ public class NewRadioReq {
 //            LinkedList<NetRadioInfo> res = new LinkedList<>();
 //            Integer t = 0;
 //
-//            String radioInfoBody = HttpRequest.get(String.format(CHANNEL_ME_API))
+//            String radioInfoBody = HttpRequest.get(CHANNEL_ME_API)
 //                    .execute()
 //                    .body();
 //            Document doc = Jsoup.parse(radioInfoBody);

@@ -1,7 +1,7 @@
 package net.doge.constant.system;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 排序方式
  * @Date 2020/12/11
  */

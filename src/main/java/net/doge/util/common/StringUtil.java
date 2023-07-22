@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 字符串工具类
  * @Date 2020/12/15
  */

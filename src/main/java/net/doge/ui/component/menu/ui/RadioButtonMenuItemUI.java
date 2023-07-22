@@ -6,7 +6,7 @@ import javax.swing.plaf.basic.BasicRadioButtonMenuItemUI;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 单选菜单项元素标签自定义 UI
  * @Date 2020/12/13
  */

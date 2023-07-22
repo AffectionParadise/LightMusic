@@ -2,6 +2,7 @@ package net.doge.ui.component.list.renderer.system;
 
 import lombok.Data;
 import net.doge.constant.ui.Fonts;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.label.CustomLabel;
@@ -13,7 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 默认的风格列表显示渲染器
  * @Date 2020/12/7
  */
@@ -76,9 +77,9 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         outerPanel.add(inUseLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 180, tw = pw - 20;
+        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(style.getStyleName(), tw));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(style.getStyleName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String type = StringUtil.textToHtml(style.isCustom() ? "自定义" : "预设");
         String inUse = StringUtil.textToHtml(f.currUIStyle == style ? "使用中" : "");
 

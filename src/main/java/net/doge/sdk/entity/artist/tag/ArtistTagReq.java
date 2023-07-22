@@ -72,7 +72,7 @@ public class ArtistTagReq {
         final int c = 9;
         // 网易云曲风
         Runnable initStyleArtistTag = () -> {
-            String tagBody = HttpRequest.get(String.format(STYLE_API))
+            String tagBody = HttpRequest.get(STYLE_API)
                     .execute()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
@@ -115,9 +115,9 @@ public class ArtistTagReq {
         // QQ + 网易云 + 千千
         // 分类歌手标签
         Runnable initArtistTagQq = () -> {
-            String artistTagBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
-                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
-                            "\"param\":{\"area\":-100,\"sex\":-100,\"genre\":-100,\"index\":-100,\"sin\":0,\"cur_page\":1}}}"))
+            String artistTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
+                            "\"param\":{\"area\":-100,\"sex\":-100,\"genre\":-100,\"index\":-100,\"sin\":0,\"cur_page\":1}}}")
                     .execute()
                     .body();
             JSONObject artistTagJson = JSONObject.parseObject(artistTagBody);

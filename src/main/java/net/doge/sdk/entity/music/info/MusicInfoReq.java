@@ -38,7 +38,8 @@ public class MusicInfoReq {
     // 歌曲信息 API (酷我)
     private final String SINGLE_SONG_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
     // 歌曲信息 API (咪咕)
-    private final String SINGLE_SONG_DETAIL_MG_API = SdkCommon.PREFIX_MG + "/song?cid=%s";
+    private final String SINGLE_SONG_DETAIL_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/songs?copyrightId=%s";
+    private final String SINGLE_SONG_DETAIL_MG_API_2 = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
     // 歌曲信息 API (喜马拉雅)
     private final String SINGLE_SONG_DETAIL_XM_API = "https://www.ximalaya.com/revision/track/simple?trackId=%s";
     // 歌曲信息 API (千千)
@@ -76,7 +77,7 @@ public class MusicInfoReq {
     // 歌手图片 API (QQ)
     private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
     // 专辑信息 API (咪咕)
-    private final String ALBUM_DETAIL_MG_API = SdkCommon.PREFIX_MG + "/album?id=%s";
+    private final String ALBUM_DETAIL_MG_API = "http://music.migu.cn/v3/music/album/%s";
 
     /**
      * 补充 NetMusicInfo 歌曲时长
@@ -88,10 +89,11 @@ public class MusicInfoReq {
         // 咪咕
         if (source == NetMusicSource.MG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
+                    .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
                     .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDoubleValue("duration"));
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("items").getJSONObject(0);
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(TimeUtil.toSeconds(data.getString("length")));
         }
     }
 
@@ -139,7 +141,7 @@ public class MusicInfoReq {
                 JSONObject songJson = array.getJSONObject(0);
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(songJson.getDouble("dt") / 1000);
                 if (!musicInfo.hasArtist())
-                    musicInfo.setArtist(SdkUtil.parseArtists(songJson, NetMusicSource.NET_CLOUD));
+                    musicInfo.setArtist(SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD));
                 if (!musicInfo.hasArtistId())
                     musicInfo.setArtistId(songJson.getJSONArray("ar").getJSONObject(0).getString("id"));
                 if (!musicInfo.hasAlbumName())
@@ -166,7 +168,7 @@ public class MusicInfoReq {
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             // 时长是毫秒，转为秒
             if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDoubleValue("timelength") / 1000);
-            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtists(data, NetMusicSource.KG));
+            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data, NetMusicSource.KG));
             if (!musicInfo.hasArtistId()) {
                 JSONArray artistArray = data.getJSONArray("authors");
                 if (JsonUtil.notEmpty(artistArray))
@@ -186,7 +188,7 @@ public class MusicInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String songBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String songBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", songId))
                     .execute()
                     .body();
@@ -196,9 +198,9 @@ public class MusicInfoReq {
             JSONObject album = trackInfo.getJSONObject("album");
 
             if (!musicInfo.hasDuration()) musicInfo.setDuration(trackInfo.getDouble("interval"));
-            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtists(trackInfo, NetMusicSource.QQ));
+            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(trackInfo, NetMusicSource.QQ));
             if (!musicInfo.hasArtistId())
-                musicInfo.setArtistId(singer.getJSONObject(0).getString("mid"));
+                musicInfo.setArtistId(JsonUtil.isEmpty(singer) ? "" : singer.getJSONObject(0).getString("mid"));
             if (!musicInfo.hasAlbumName())
                 musicInfo.setAlbumName(album.getString("name"));
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(album.getString("mid"));
@@ -241,32 +243,43 @@ public class MusicInfoReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
+                    .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
                     .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("items").getJSONObject(0);
 
-            String albumId = data.getJSONObject("album").getString("id");
-            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtists(data, NetMusicSource.MG));
-            if (!musicInfo.hasArtistId())
-                musicInfo.setArtistId(data.getJSONArray("artists").getJSONObject(0).getString("id"));
+            JSONArray albumArray = data.getJSONArray("albums");
+            String albumId = JsonUtil.isEmpty(albumArray) ? "" : albumArray.getJSONObject(0).getString("albumId");
+            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data, NetMusicSource.MG));
+            if (!musicInfo.hasArtistId()) {
+                JSONArray singerArray = data.getJSONArray("singers");
+                musicInfo.setArtistId(JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("artistId"));
+            }
             // 咪咕的专辑名称需要额外请求专辑信息接口！
             if (!musicInfo.hasAlbumName()) {
-                String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, albumId))
-                        .execute()
-                        .body();
-                JSONObject albumData = JSONObject.parseObject(albumBody).getJSONObject("data");
-                musicInfo.setAlbumName(albumData.getString("name"));
+                GlobalExecutors.imageExecutor.submit(() -> {
+                    String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, albumId))
+                            .execute()
+                            .body();
+                    Document doc = Jsoup.parse(albumBody);
+                    musicInfo.setAlbumName(doc.select(".content .title").text());
+                });
             }
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumId);
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(TimeUtil.toSeconds(data.getString("length")));
             if (!musicInfo.hasAlbumImage()) {
                 GlobalExecutors.imageExecutor.submit(() -> {
-                    BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("picUrl"));
+                    // 封面图片需要调用另一个歌曲信息的接口
+                    String songInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API_2, songId))
+                            .execute()
+                            .body();
+                    JSONObject songJson = JSONObject.parseObject(songInfoBody).getJSONArray("resource").getJSONObject(0);
+                    JSONArray imgArray = songJson.getJSONArray("albumImgs");
+                    BufferedImage albumImage = SdkUtil.getImageFromUrl(JsonUtil.isEmpty(imgArray) ? "" : imgArray.getJSONObject(0).getString("img"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
                 });
             }
-            if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyric"));
         }
 
         // 千千
@@ -276,7 +289,7 @@ public class MusicInfoReq {
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
 
-            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtists(data, NetMusicSource.QI));
+            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data, NetMusicSource.QI));
             if (!musicInfo.hasArtistId()) {
                 JSONArray artistArray = data.getJSONArray("artist");
                 if (JsonUtil.notEmpty(artistArray))
@@ -592,11 +605,16 @@ public class MusicInfoReq {
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-//            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
-//                    .execute()
-//                    .body();
-//            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-//            netMusicInfo.setLrc(data.getString("lyric"));
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API_2, id))
+                    .execute()
+                    .body();
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
+            // 先获取歌词 url，再获取歌词
+            String lrcUrl = data.getString("lrcUrl");
+            String lrcStr = HttpRequest.get(lrcUrl).execute().body();
+            netMusicInfo.setLrc(lrcStr);
+            netMusicInfo.setTrans("");
+            netMusicInfo.setRoma("");
         }
 
         // 千千

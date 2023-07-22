@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.Objects;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 在线音乐
  * @Date 2020/12/7
  */
@@ -214,12 +214,10 @@ public class NetMusicInfo {
     }
 
     public String toSimpleString() {
-        return StringUtil.shorten(name
-                + (StringUtil.notEmpty(artist) ? separator + artist : ""), 230);
+        return StringUtil.shorten(name + (StringUtil.notEmpty(artist) ? separator + artist : ""), 230);
     }
 
     public String toKeywords() {
-        return name
-                + (StringUtil.notEmpty(artist) ? " " + artist.replace("、", " ") : "");
+        return name + (StringUtil.notEmpty(artist) ? " " + artist.replace("、", " ") : "");
     }
 }

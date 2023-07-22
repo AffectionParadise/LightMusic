@@ -124,7 +124,7 @@ public class MvUrlReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"getMvUrl\":{\"module\":\"gosrf.Stream.MvUrlProxy\",\"method\":\"GetMvUrls\"," +
                             "\"param\":{\"vids\":[\"%s\"],\"request_typet\":10001}}}", mvId))
                     .execute()

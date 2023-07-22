@@ -1,7 +1,7 @@
 package net.doge.constant.tab;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 收藏标签页
  * @Date 2020/12/7
  */

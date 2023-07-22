@@ -313,7 +313,7 @@ public class ArtistListReq {
             if (StringUtil.notEmpty(s[4])) {
                 final int lim = 80, p = (page - 1) / 4 + 1;
                 String[] sp = s[4].split(" ");
-                String artistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                                 "\"param\":{\"sex\":%s,\"genre\":%s,\"index\":%s,\"area\":%s,\"sin\":%s,\"cur_page\":%s}}}", sp[0], sp[1], sp[2], sp[3], (p - 1) * lim, p))
                         .execute()
@@ -440,7 +440,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_LIST_MG_API))
+            String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API)
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -473,7 +473,7 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_LIST_MG_API_2))
+            String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API_2)
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

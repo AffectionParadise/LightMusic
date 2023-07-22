@@ -57,7 +57,7 @@ public class HotPlaylistTagReq {
         // 网易云
         // 精品歌单标签
         Runnable initHighQualityPlaylistTag = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(HIGH_QUALITY_PLAYLIST_TAG_API))
+            String playlistTagBody = HttpRequest.get(HIGH_QUALITY_PLAYLIST_TAG_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -73,7 +73,7 @@ public class HotPlaylistTagReq {
         };
         // 网友精选碟标签
         Runnable initPickedPlaylistTag = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PICKED_PLAYLIST_TAG_API))
+            String playlistTagBody = HttpRequest.get(PICKED_PLAYLIST_TAG_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -90,7 +90,7 @@ public class HotPlaylistTagReq {
 
         // 酷狗
         Runnable initHotPlaylistTagKg = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_KG_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KG_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -133,7 +133,7 @@ public class HotPlaylistTagReq {
 
         // 酷我
         Runnable initHotPlaylistTagKw = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_KW_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KW_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -154,7 +154,7 @@ public class HotPlaylistTagReq {
 
         // 咪咕
         Runnable initHotPlaylistTagMg = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_MG_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_MG_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -196,7 +196,7 @@ public class HotPlaylistTagReq {
 
         // 猫耳
         Runnable initHotPlaylistTagMe = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_ME_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_ME_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -217,7 +217,7 @@ public class HotPlaylistTagReq {
         };
         // 猫耳探索
         Runnable initExpPlaylistTagMe = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(EXP_PLAYLIST_TAG_ME_API))
+            String playlistTagBody = HttpRequest.get(EXP_PLAYLIST_TAG_ME_API)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(playlistTagBody);
@@ -236,7 +236,7 @@ public class HotPlaylistTagReq {
 
         // 5sing
         Runnable initHotPlaylistTagFs = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_FS_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_FS_API)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(playlistTagBody);

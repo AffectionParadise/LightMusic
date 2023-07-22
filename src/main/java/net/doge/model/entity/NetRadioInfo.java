@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 电台
  * @Date 2020/12/7
  */

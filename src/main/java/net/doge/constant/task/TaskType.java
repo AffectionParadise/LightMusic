@@ -1,7 +1,7 @@
 package net.doge.constant.task;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 任务类型
  * @Date 2020/12/7
  */

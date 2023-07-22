@@ -3,7 +3,7 @@ package net.doge.util.ui;
 import net.doge.constant.ui.SpectrumConstants;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/9
  */

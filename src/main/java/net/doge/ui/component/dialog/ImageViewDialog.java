@@ -30,7 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 图片浏览的对话框
  * @Date 2020/12/15
  */

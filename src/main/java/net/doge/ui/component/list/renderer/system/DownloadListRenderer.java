@@ -5,6 +5,7 @@ import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.task.Task;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
@@ -21,7 +22,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */
@@ -90,7 +91,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
 
         final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
         String type = StringUtil.textToHtml(TaskType.NAMES[task.getType()]);
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(task.getName(), maxWidth));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(task.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
         String percentStr = StringUtil.textToHtml(String.format("%.2f %%", percent));
         String size = StringUtil.textToHtml(StringUtil.wrapLineByWidth(

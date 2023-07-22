@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 下载任务
  * @Date 2022/1/21
  */

@@ -6,13 +6,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 时间转换工具类
  * @Date 2020/12/15
  */
@@ -221,10 +220,9 @@ public class TimeUtil {
      */
     public static double toSeconds(String s) {
         List<String> groups = RegexUtil.findAllGroup1("(\\d+)", s);
-        Collections.reverse(groups);
         double res = 0, u = 1;
-        for (String g : groups) {
-            res += Integer.parseInt(g) * u;
+        for (int i = groups.size() - 1; i >= 0; i--) {
+            res += Integer.parseInt(groups.get(i)) * u;
             u *= 60;
         }
         return res;

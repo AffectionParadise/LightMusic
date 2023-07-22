@@ -231,7 +231,7 @@ public class MvTagReq {
         // 酷狗
         // MV 标签
         Runnable initMvTagKg = () -> {
-            String radioTagBody = HttpRequest.get(String.format(MV_TAG_KG_API))
+            String radioTagBody = HttpRequest.get(MV_TAG_KG_API)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -249,7 +249,7 @@ public class MvTagReq {
         // QQ
         // MV 标签
         Runnable initMvTagQq = () -> {
-            String radioTagBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String radioTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
                     .execute()
                     .body();

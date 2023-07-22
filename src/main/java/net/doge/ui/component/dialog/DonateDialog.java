@@ -13,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 捐赠对话框
  * @Date 2021/1/5
  */
@@ -21,9 +21,7 @@ public class DonateDialog extends AbstractTitledDialog {
     private DialogButton yes;
 
     private String thankMsg = "同时感谢以下本项目使用到的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
-            "https://github.com/Binaryify/NeteaseCloudMusicApi\n" +
-            "https://github.com/jsososo/QQMusicApi\n" +
-            "https://github.com/jsososo/MiguMusicApi";
+            "https://github.com/Binaryify/NeteaseCloudMusicApi";
 
     // 收款码
     private ImageIcon weixinIcon = new ImageIcon(SimplePath.ICON_PATH + "weixin.png");

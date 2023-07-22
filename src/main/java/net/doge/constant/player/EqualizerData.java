@@ -1,7 +1,7 @@
 package net.doge.constant.player;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 均衡器参数
  * @Date 2020/12/7
  */

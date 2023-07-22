@@ -16,7 +16,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 音效对话框
  * @Date 2020/12/15
  */

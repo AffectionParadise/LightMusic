@@ -15,7 +15,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 关于对话框
  * @Date 2021/1/5
  */

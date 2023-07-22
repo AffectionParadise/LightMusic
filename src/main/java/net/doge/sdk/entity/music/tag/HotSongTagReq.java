@@ -52,7 +52,7 @@ public class HotSongTagReq {
         final int c = 3;
         // 网易云曲风
         Runnable initHotSongTag = () -> {
-            String tagBody = HttpRequest.get(String.format(STYLE_API))
+            String tagBody = HttpRequest.get(STYLE_API)
                     .execute()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);

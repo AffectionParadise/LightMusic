@@ -70,7 +70,7 @@ public class MvSearchReq {
 
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = SdkUtil.parseArtists(mvJson, NetMusicSource.NET_CLOUD);
+                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
                     String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getDouble("duration") / 1000;
@@ -113,7 +113,7 @@ public class MvSearchReq {
                     Integer type = mvJson.getIntValue("type");
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title");
-                    String creators = SdkUtil.parseCreators(mvJson);
+                    String creators = SdkUtil.parseCreator(mvJson);
                     String creatorId = mvJson.getJSONArray("creator").getJSONObject(0).getString("userId");
                     Long playCount = mvJson.getLong("playTime");
                     Double duration = mvJson.getDouble("durationms") / 1000;
@@ -192,7 +192,7 @@ public class MvSearchReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 4))
                     .execute()
                     .body();
@@ -205,7 +205,7 @@ public class MvSearchReq {
 
                 String mvId = mvJson.getString("v_id");
                 String mvName = mvJson.getString("mv_name").trim();
-                String artistName = SdkUtil.parseArtists(mvJson, NetMusicSource.QQ);
+                String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.QQ);
                 JSONArray singerArray = mvJson.getJSONArray("singer_list");
                 String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 Long playCount = mvJson.getLong("play_count");

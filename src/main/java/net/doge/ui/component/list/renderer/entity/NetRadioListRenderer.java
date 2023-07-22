@@ -3,20 +3,21 @@ package net.doge.ui.component.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */
@@ -97,10 +98,11 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = 180, tw = pw - 20;
+        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.getName(), tw));
-        String dj = StringUtil.textToHtml(StringUtil.wrapLineByWidth(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", tw));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netRadioInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String dj = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", RendererConstants.STRING_MAX_LENGTH), tw));
         String category = netRadioInfo.hasCategory() ? StringUtil.textToHtml(netRadioInfo.getCategory()) : "";
         String trackCount = netRadioInfo.hasTrackCount() ? StringUtil.textToHtml(netRadioInfo.getTrackCount() + " 节目") : "";
         String playCount = netRadioInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netRadioInfo.getPlayCount())) : "";

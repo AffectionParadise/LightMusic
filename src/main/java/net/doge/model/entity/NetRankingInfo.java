@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 榜单
  * @Date 2020/12/7
  */

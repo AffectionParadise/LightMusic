@@ -8,7 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 滚动条的监听器
  * @Date 2021/1/10
  */

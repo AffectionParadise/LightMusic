@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 音乐工具类
  * @Date 2020/12/11
  */

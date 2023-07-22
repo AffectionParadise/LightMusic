@@ -5,7 +5,7 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 选项卡面板自定义 UI
  * @Date 2020/12/13
  */

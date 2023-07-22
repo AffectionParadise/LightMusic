@@ -17,7 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 桌面歌词对话框
  * @Date 2021/1/5
  */

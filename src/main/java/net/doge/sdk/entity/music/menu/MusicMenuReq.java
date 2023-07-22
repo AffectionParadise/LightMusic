@@ -63,7 +63,7 @@ public class MusicMenuReq {
 
                 String songId = songJson.getString("id");
                 String songName = songJson.getString("name").trim();
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
                 String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("id");
@@ -87,14 +87,14 @@ public class MusicMenuReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             // 先根据 mid 获取 id
-            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
-            musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"simsongs\":{\"module\":\"rcmusic.similarSongRadioServer\"," +
                             "\"method\":\"get_simsongs\",\"param\":{\"songid\":%s}}}", id))
@@ -108,7 +108,7 @@ public class MusicMenuReq {
 
                 String songId = songJson.getString("mid");
                 String songName = songJson.getString("name");
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
                 String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
@@ -257,14 +257,14 @@ public class MusicMenuReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             // 先根据 mid 获取 id
-            String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
-            String playlistInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"gedan\":{\"module\":\"music.mb_gedan_recommend_svr\"," +
                             "\"method\":\"get_related_gedan\",\"param\":{\"sin\":0,\"last_id\":0,\"song_type\":1,\"song_id\":%s}}}", id))

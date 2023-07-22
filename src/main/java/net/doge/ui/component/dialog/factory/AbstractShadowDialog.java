@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 抽象阴影对话框
  * @Date 2021/1/5
  */

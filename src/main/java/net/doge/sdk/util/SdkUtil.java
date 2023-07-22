@@ -18,7 +18,7 @@ public class SdkUtil {
     /**
      * 解析歌曲艺术家
      */
-    public static String parseArtists(JSONObject json, int source) {
+    public static String parseArtist(JSONObject json, int source) {
         JSONArray artistArray;
         if (source == NetMusicSource.QQ) {
             artistArray = json.getJSONArray("singer");
@@ -101,7 +101,7 @@ public class SdkUtil {
     /**
      * 解析视频作者
      */
-    public static String parseCreators(JSONObject json) {
+    public static String parseCreator(JSONObject json) {
         JSONArray artistArray = json.getJSONArray("creator");
         StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = artistArray.size(); i < len; i++) {
@@ -113,23 +113,16 @@ public class SdkUtil {
     /**
      * 连接 Json 数组中的所有字符串
      */
-    public static String joinStrings(JSONArray array, int limit) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0, len = array.size(); i < len; i++) {
-            sb.append(array.getString(i));
-            if (i != len - 1) sb.append("、");
-            if (limit > 0 && i >= limit) {
-                sb.append("...");
-                break;
-            }
-        }
-        return sb.toString();
+    public static String joinString(JSONArray array) {
+        StringJoiner sj = new StringJoiner("、");
+        for (int i = 0, len = array.size(); i < len; i++) sj.add(array.getString(i));
+        return sj.toString();
     }
 
     /**
      * 解析歌单标签
      */
-    public static String parseTags(JSONObject json, int source) {
+    public static String parseTag(JSONObject json, int source) {
         JSONArray tagArray;
         StringJoiner sj = new StringJoiner("、");
         if (source == NetMusicSource.NET_CLOUD) {

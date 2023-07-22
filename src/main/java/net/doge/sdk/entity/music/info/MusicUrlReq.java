@@ -3,8 +3,8 @@ package net.doge.sdk.entity.music.info;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.player.Format;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.player.Format;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
@@ -30,6 +30,8 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API (酷我)
 //    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
+    // 歌曲 URL 获取 API (咪咕)
+    private final String GET_SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
@@ -41,8 +43,6 @@ public class MusicUrlReq {
 
     // 歌曲信息 API (酷狗)
     private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
-    // 歌曲信息 API (咪咕)
-    private final String SINGLE_SONG_DETAIL_MG_API = SdkCommon.PREFIX_MG + "/song?cid=%s";
     // 歌曲信息 API (音乐磁场)
     private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
@@ -234,11 +234,18 @@ public class MusicUrlReq {
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
+            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, songId))
                     .execute()
                     .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-            return data.getString("320");
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
+            JSONArray rateFormats = data.getJSONArray("rateFormats");
+            rateFormats.addAll(data.getJSONArray("newRateFormats"));
+            for (int i = rateFormats.size() - 1; i >= 0; i--) {
+                JSONObject urlJson = rateFormats.getJSONObject(i);
+                String url = urlJson.getString("url");
+                if (StringUtil.isEmpty(url)) continue;
+                return url.replaceFirst("ftp://[^/]+", "https://freetyst.nf.migu.cn");
+            }
         }
 
         // 千千

@@ -1,7 +1,7 @@
 package net.doge.constant.window;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 窗口状态
  * @Date 2020/12/7
  */

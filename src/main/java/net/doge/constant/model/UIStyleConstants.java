@@ -1,7 +1,7 @@
 package net.doge.constant.model;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/12
  */

@@ -61,7 +61,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author yzx
+ * @Author Doge
  * @description
  * @date 2020/12/19
  */
@@ -515,8 +515,8 @@ public class MusicServerUtil {
     /**
      * 根据专辑 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInAlbum(String albumId, int source, int limit, int page) {
-        return new AlbumInfoReq().getMusicInfoInAlbum(albumId, source, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInAlbum(NetAlbumInfo albumInfo, int limit, int page) {
+        return new AlbumInfoReq().getMusicInfoInAlbum(albumInfo, limit, page);
     }
 
     /**
@@ -529,8 +529,8 @@ public class MusicServerUtil {
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
      */
-    public static CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo netArtistInfo, int limit, int page) {
-        return new ArtistInfoReq().getAlbumInfoInArtist(netArtistInfo, limit, page);
+    public static CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
+        return new ArtistInfoReq().getAlbumInfoInArtist(artistInfo, limit, page);
     }
 
     /**

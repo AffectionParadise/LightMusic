@@ -3,7 +3,7 @@ package net.doge.constant.ui;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 颜色
  * @Date 2020/12/12
  */

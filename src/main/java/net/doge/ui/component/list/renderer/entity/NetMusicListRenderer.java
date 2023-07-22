@@ -7,6 +7,7 @@ import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.RendererConstants;
 import net.doge.model.player.MusicPlayer;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.ui.component.label.CustomLabel;
@@ -19,7 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */
@@ -100,9 +101,11 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
 
         final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * layout.getHgap()) / innerPanel.getComponentCount();
         String source = StringUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]);
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(musicInfo.getName(), maxWidth));
-        String artist = musicInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(musicInfo.getArtist(), maxWidth)) : "";
-        String albumName = musicInfo.hasAlbumName() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(musicInfo.getAlbumName(), maxWidth)) : "";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
+        String artist = musicInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(musicInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
+        String albumName = musicInfo.hasAlbumName() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(musicInfo.getAlbumName(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
         String duration = StringUtil.textToHtml(musicInfo.hasDuration() ? TimeUtil.format(musicInfo.getDuration()) : "--:--");
 
         iconLabel.setText(source);

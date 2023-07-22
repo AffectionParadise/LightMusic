@@ -14,7 +14,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 加解密工具类
  * @Date 2020/12/15
  */

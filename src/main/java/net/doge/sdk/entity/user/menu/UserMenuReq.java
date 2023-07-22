@@ -1,5 +1,6 @@
 package net.doge.sdk.entity.user.menu;
 
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -33,13 +34,12 @@ public class UserMenuReq {
     // 用户歌单 API
     private final String USER_PLAYLIST_API = SdkCommon.PREFIX + "/user/playlist?uid=%s&limit=1000";
     // 用户创建歌单 API (QQ)
-    private final String USER_CREATED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/user/songlist?id=%s";
-//    private final String USER_CREATED_PLAYLIST_QQ_API = "https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?" +
-//            "hostUin=0&hostuin=%s&sin=0&size=200&g_tk=5381&loginUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0";
+    private final String USER_CREATED_PLAYLIST_QQ_API = "https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?" +
+            "hostUin=0&hostuin=%s&sin=0&size=200&g_tk=5381&loginUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0";
     // 用户收藏歌单 API (QQ)
-    private final String USER_COLLECTED_PLAYLIST_QQ_API = SdkCommon.PREFIX_QQ + "/user/collect/songlist?id=%s&pageNo=%s&pageSize=%s";
+    private final String USER_COLLECTED_PLAYLIST_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg?ct=20&cid=205360956&userid=%s&reqtype=3&sin=%s&ein=%s";
     // 用户收藏专辑 API (QQ)
-    private final String USER_COLLECTED_ALBUM_QQ_API = SdkCommon.PREFIX_QQ + "/user/collect/album?id=%s&pageNo=%s&pageSize=%s";
+    private final String USER_COLLECTED_ALBUM_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg?ct=20&cid=205360956&userid=%s&reqtype=2&sin=%s&ein=%s";
     // 用户创建音单 API (猫耳)
     private final String USER_CREATED_PLAYLIST_ME_API = "https://www.missevan.com/person/getuseralbum?user_id=%s&type=0&p=%s&page_size=%s";
     // 用户收藏音单 API (猫耳)
@@ -156,36 +156,40 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, uid))
+                        .header(Header.REFERER, "https://y.qq.com/portal/profile.html")
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-                JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
-                t = playlistArray.size();
-                for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
-                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+                JSONObject data = playlistInfoJson.getJSONObject("data");
+                if (JsonUtil.notEmpty(data)) {
+                    JSONArray playlistArray = data.getJSONArray("disslist");
+                    t = playlistArray.size();
+                    for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
+                        JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                    String playlistId = playlistJson.getString("tid");
-                    if ("0".equals(playlistId)) continue;
-                    String playlistName = playlistJson.getString("diss_name");
-                    String creator = netCommentInfo.getUsername();
-                    Long playCount = playlistJson.getLong("listen_num");
-                    Integer trackCount = playlistJson.getIntValue("song_cnt");
-                    String coverImgThumbUrl = playlistJson.getString("diss_cover");
+                        String playlistId = playlistJson.getString("tid");
+                        if ("0".equals(playlistId)) continue;
+                        String playlistName = playlistJson.getString("diss_name");
+                        String creator = netCommentInfo.getUsername();
+                        Long playCount = playlistJson.getLong("listen_num");
+                        Integer trackCount = playlistJson.getIntValue("song_cnt");
+                        String coverImgThumbUrl = playlistJson.getString("diss_cover");
 
-                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                    playlistInfo.setSource(NetMusicSource.QQ);
-                    playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
-                    playlistInfo.setCreator(creator);
-                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    playlistInfo.setPlayCount(playCount);
-                    playlistInfo.setTrackCount(trackCount);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                        playlistInfo.setCoverImgThumb(coverImgThumb);
-                    });
+                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                        playlistInfo.setSource(NetMusicSource.QQ);
+                        playlistInfo.setId(playlistId);
+                        playlistInfo.setName(playlistName);
+                        playlistInfo.setCreator(creator);
+                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                        playlistInfo.setPlayCount(playCount);
+                        playlistInfo.setTrackCount(trackCount);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                            playlistInfo.setCoverImgThumb(coverImgThumb);
+                        });
 
-                    r.add(playlistInfo);
+                        r.add(playlistInfo);
+                    }
                 }
 
                 return new CommonResult<>(r, t);
@@ -195,38 +199,40 @@ public class UserMenuReq {
                 LinkedList<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, page, limit))
+                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, (page - 1) * limit, page * limit))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
-                JSONArray playlistArray = data.getJSONArray("list");
-                t = data.getIntValue("total");
-                for (int i = 0, len = playlistArray.size(); i < len; i++) {
-                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+                JSONArray playlistArray = data.getJSONArray("cdlist");
+                if (JsonUtil.notEmpty(playlistArray)) {
+                    t = data.getIntValue("totaldiss");
+                    for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                        JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                    String playlistId = playlistJson.getString("dissid");
-                    if ("0".equals(playlistId)) continue;
-                    String playlistName = playlistJson.getString("dissname");
-                    String creator = playlistJson.getString("nickname");
-                    Long playCount = playlistJson.getLong("listennum");
-                    Integer trackCount = playlistJson.getIntValue("songnum");
-                    String coverImgThumbUrl = playlistJson.getString("logo");
+                        String playlistId = playlistJson.getString("dissid");
+                        if ("0".equals(playlistId)) continue;
+                        String playlistName = playlistJson.getString("dissname");
+                        String creator = playlistJson.getString("nickname");
+                        Long playCount = playlistJson.getLong("listennum");
+                        Integer trackCount = playlistJson.getIntValue("songnum");
+                        String coverImgThumbUrl = playlistJson.getString("logo");
 
-                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                    playlistInfo.setSource(NetMusicSource.QQ);
-                    playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
-                    playlistInfo.setCreator(creator);
-                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    playlistInfo.setPlayCount(playCount);
-                    playlistInfo.setTrackCount(trackCount);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                        playlistInfo.setCoverImgThumb(coverImgThumb);
-                    });
+                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                        playlistInfo.setSource(NetMusicSource.QQ);
+                        playlistInfo.setId(playlistId);
+                        playlistInfo.setName(playlistName);
+                        playlistInfo.setCreator(creator);
+                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                        playlistInfo.setPlayCount(playCount);
+                        playlistInfo.setTrackCount(trackCount);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                            playlistInfo.setCoverImgThumb(coverImgThumb);
+                        });
 
-                    r.add(playlistInfo);
+                        r.add(playlistInfo);
+                    }
                 }
 
                 return new CommonResult<>(r, t);
@@ -371,39 +377,41 @@ public class UserMenuReq {
 
         // QQ
         if (source == NetMusicSource.QQ) {
-            String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, page, limit))
+            String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, (page - 1) * limit, page * limit - 1))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            total = data.getIntValue("total");
-            JSONArray albumArray = data.getJSONArray("list");
-            for (int i = 0, len = albumArray.size(); i < len; i++) {
-                JSONObject albumJson = albumArray.getJSONObject(i);
+            total = data.getIntValue("totalalbum");
+            JSONArray albumArray = data.getJSONArray("albumlist");
+            if (JsonUtil.notEmpty(albumArray)) {
+                for (int i = 0, len = albumArray.size(); i < len; i++) {
+                    JSONObject albumJson = albumArray.getJSONObject(i);
 
-                String albumId = albumJson.getString("albummid");
-                String albumName = albumJson.getString("albumname");
-                String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
-                JSONArray singerArray = albumJson.getJSONArray("singer");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
-                String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
-                Integer songNum = albumJson.getIntValue("songnum");
-                String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
+                    String albumId = albumJson.getString("albummid");
+                    String albumName = albumJson.getString("albumname");
+                    String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QQ);
+                    JSONArray singerArray = albumJson.getJSONArray("singer");
+                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
+                    Integer songNum = albumJson.getIntValue("songnum");
+                    String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
 
-                NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.QQ);
-                albumInfo.setId(albumId);
-                albumInfo.setName(albumName);
-                albumInfo.setArtist(artist);
-                albumInfo.setArtistId(artistId);
-                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                albumInfo.setPublishTime(publishTime);
-                albumInfo.setSongNum(songNum);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                    albumInfo.setCoverImgThumb(coverImgThumb);
-                });
-                res.add(albumInfo);
+                    NetAlbumInfo albumInfo = new NetAlbumInfo();
+                    albumInfo.setSource(NetMusicSource.QQ);
+                    albumInfo.setId(albumId);
+                    albumInfo.setName(albumName);
+                    albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
+                    albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    albumInfo.setPublishTime(publishTime);
+                    albumInfo.setSongNum(songNum);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        albumInfo.setCoverImgThumb(coverImgThumb);
+                    });
+                    res.add(albumInfo);
+                }
             }
         }
 
@@ -504,36 +512,40 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, uid))
+                        .header(Header.REFERER, "https://y.qq.com/portal/profile.html")
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-                JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
-                t = playlistArray.size();
-                for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
-                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+                JSONObject data = playlistInfoJson.getJSONObject("data");
+                if (JsonUtil.notEmpty(data)) {
+                    JSONArray playlistArray = data.getJSONArray("disslist");
+                    t = playlistArray.size();
+                    for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
+                        JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                    String playlistId = playlistJson.getString("tid");
-                    if ("0".equals(playlistId)) continue;
-                    String playlistName = playlistJson.getString("diss_name");
-                    String creator = netUserInfo.getName();
-                    Long playCount = playlistJson.getLong("listen_num");
-                    Integer trackCount = playlistJson.getIntValue("song_cnt");
-                    String coverImgThumbUrl = playlistJson.getString("diss_cover");
+                        String playlistId = playlistJson.getString("tid");
+                        if ("0".equals(playlistId)) continue;
+                        String playlistName = playlistJson.getString("diss_name");
+                        String creator = netUserInfo.getName();
+                        Long playCount = playlistJson.getLong("listen_num");
+                        Integer trackCount = playlistJson.getIntValue("song_cnt");
+                        String coverImgThumbUrl = playlistJson.getString("diss_cover");
 
-                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                    playlistInfo.setSource(NetMusicSource.QQ);
-                    playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
-                    playlistInfo.setCreator(creator);
-                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    playlistInfo.setPlayCount(playCount);
-                    playlistInfo.setTrackCount(trackCount);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                        playlistInfo.setCoverImgThumb(coverImgThumb);
-                    });
+                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                        playlistInfo.setSource(NetMusicSource.QQ);
+                        playlistInfo.setId(playlistId);
+                        playlistInfo.setName(playlistName);
+                        playlistInfo.setCreator(creator);
+                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                        playlistInfo.setPlayCount(playCount);
+                        playlistInfo.setTrackCount(trackCount);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                            playlistInfo.setCoverImgThumb(coverImgThumb);
+                        });
 
-                    r.add(playlistInfo);
+                        r.add(playlistInfo);
+                    }
                 }
 
                 return new CommonResult<>(r, t);
@@ -543,38 +555,40 @@ public class UserMenuReq {
                 LinkedList<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, page, limit))
+                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, (page - 1) * limit, page * limit))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
-                JSONArray playlistArray = data.getJSONArray("list");
-                t = data.getIntValue("total");
-                for (int i = 0, len = playlistArray.size(); i < len; i++) {
-                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+                JSONArray playlistArray = data.getJSONArray("cdlist");
+                if (JsonUtil.notEmpty(playlistArray)) {
+                    t = data.getIntValue("totaldiss");
+                    for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                        JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                    String playlistId = playlistJson.getString("dissid");
-                    if ("0".equals(playlistId)) continue;
-                    String playlistName = playlistJson.getString("dissname");
-                    String creator = playlistJson.getString("nickname");
-                    Long playCount = playlistJson.getLong("listennum");
-                    Integer trackCount = playlistJson.getIntValue("songnum");
-                    String coverImgThumbUrl = playlistJson.getString("logo");
+                        String playlistId = playlistJson.getString("dissid");
+                        if ("0".equals(playlistId)) continue;
+                        String playlistName = playlistJson.getString("dissname");
+                        String creator = playlistJson.getString("nickname");
+                        Long playCount = playlistJson.getLong("listennum");
+                        Integer trackCount = playlistJson.getIntValue("songnum");
+                        String coverImgThumbUrl = playlistJson.getString("logo");
 
-                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                    playlistInfo.setSource(NetMusicSource.QQ);
-                    playlistInfo.setId(playlistId);
-                    playlistInfo.setName(playlistName);
-                    playlistInfo.setCreator(creator);
-                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    playlistInfo.setPlayCount(playCount);
-                    playlistInfo.setTrackCount(trackCount);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                        playlistInfo.setCoverImgThumb(coverImgThumb);
-                    });
+                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                        playlistInfo.setSource(NetMusicSource.QQ);
+                        playlistInfo.setId(playlistId);
+                        playlistInfo.setName(playlistName);
+                        playlistInfo.setCreator(creator);
+                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                        playlistInfo.setPlayCount(playCount);
+                        playlistInfo.setTrackCount(trackCount);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                            playlistInfo.setCoverImgThumb(coverImgThumb);
+                        });
 
-                    r.add(playlistInfo);
+                        r.add(playlistInfo);
+                    }
                 }
 
                 return new CommonResult<>(r, t);
@@ -719,39 +733,41 @@ public class UserMenuReq {
 
         // QQ
         if (source == NetMusicSource.QQ) {
-            String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, page, limit))
+            String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, (page - 1) * limit, page * limit - 1))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            t = data.getIntValue("total");
-            JSONArray albumArray = data.getJSONArray("list");
-            for (int i = 0, len = albumArray.size(); i < len; i++) {
-                JSONObject albumJson = albumArray.getJSONObject(i);
+            t = data.getIntValue("totalalbum");
+            JSONArray albumArray = data.getJSONArray("albumlist");
+            if (JsonUtil.notEmpty(albumArray)) {
+                for (int i = 0, len = albumArray.size(); i < len; i++) {
+                    JSONObject albumJson = albumArray.getJSONObject(i);
 
-                String albumId = albumJson.getString("albummid");
-                String albumName = albumJson.getString("albumname");
-                String artist = SdkUtil.parseArtists(albumJson, NetMusicSource.QQ);
-                JSONArray singerArray = albumJson.getJSONArray("singer");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
-                String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
-                Integer songNum = albumJson.getIntValue("songnum");
-                String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
+                    String albumId = albumJson.getString("albummid");
+                    String albumName = albumJson.getString("albumname");
+                    String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QQ);
+                    JSONArray singerArray = albumJson.getJSONArray("singer");
+                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
+                    Integer songNum = albumJson.getIntValue("songnum");
+                    String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
 
-                NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.QQ);
-                albumInfo.setId(albumId);
-                albumInfo.setName(albumName);
-                albumInfo.setArtist(artist);
-                albumInfo.setArtistId(artistId);
-                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                albumInfo.setPublishTime(publishTime);
-                albumInfo.setSongNum(songNum);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                    albumInfo.setCoverImgThumb(coverImgThumb);
-                });
-                res.add(albumInfo);
+                    NetAlbumInfo albumInfo = new NetAlbumInfo();
+                    albumInfo.setSource(NetMusicSource.QQ);
+                    albumInfo.setId(albumId);
+                    albumInfo.setName(albumName);
+                    albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
+                    albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    albumInfo.setPublishTime(publishTime);
+                    albumInfo.setSongNum(songNum);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        albumInfo.setCoverImgThumb(coverImgThumb);
+                    });
+                    res.add(albumInfo);
+                }
             }
         }
 

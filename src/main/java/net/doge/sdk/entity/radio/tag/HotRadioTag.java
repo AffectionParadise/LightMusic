@@ -74,7 +74,7 @@ public class HotRadioTag {
         // 网易云
         // 分类热门电台标签
         Runnable initHotRadioTag = () -> {
-            String radioTagBody = HttpRequest.get(String.format(HOT_RADIO_TAG_API))
+            String radioTagBody = HttpRequest.get(HOT_RADIO_TAG_API)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -91,7 +91,7 @@ public class HotRadioTag {
         };
         // 分类推荐电台标签
         Runnable initRecRadioTag = () -> {
-            String radioTagBody = HttpRequest.get(String.format(REC_RADIO_TAG_API))
+            String radioTagBody = HttpRequest.get(REC_RADIO_TAG_API)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -110,7 +110,7 @@ public class HotRadioTag {
         // 喜马拉雅
         // 电台分类标签
         Runnable initRadioTagXm = () -> {
-            String radioTagBody = HttpRequest.get(String.format(RADIO_TAG_XM_API))
+            String radioTagBody = HttpRequest.get(RADIO_TAG_XM_API)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -143,7 +143,7 @@ public class HotRadioTag {
         };
         // 排行榜标签
         Runnable initRankingTagXm = () -> {
-            String radioTagBody = HttpRequest.get(String.format(RADIO_RANKING_TAG_XM_API))
+            String radioTagBody = HttpRequest.get(RADIO_RANKING_TAG_XM_API)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -169,7 +169,7 @@ public class HotRadioTag {
         // 猫耳
         // 广播剧标签
         Runnable initRadioTagMe = () -> {
-            String radioTagBody = HttpRequest.get(String.format(RADIO_TAG_ME_API))
+            String radioTagBody = HttpRequest.get(RADIO_TAG_ME_API)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -195,7 +195,7 @@ public class HotRadioTag {
         // 豆瓣
         // 分类电台标签
         Runnable initRadioTagDb = () -> {
-            String radioTagBody = HttpRequest.get(String.format(RADIO_TAG_DB_API))
+            String radioTagBody = HttpRequest.get(RADIO_TAG_DB_API)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(radioTagBody);
@@ -212,7 +212,7 @@ public class HotRadioTag {
         };
         // 分类游戏电台标签
         Runnable initGameRadioTagDb = () -> {
-            String radioTagBody = HttpRequest.get(String.format(GAME_RADIO_TAG_DB_API))
+            String radioTagBody = HttpRequest.get(GAME_RADIO_TAG_DB_API)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(radioTagBody);

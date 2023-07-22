@@ -94,7 +94,7 @@ public class HotRadioReq {
         String[] s = Tags.radioTag.get(tag);
         // 网易云(程序分页)
 //        // 个性电台推荐
-//        String radioInfoBody = HttpRequest.get(String.format(PERSONAL_RADIO_API))
+//        String radioInfoBody = HttpRequest.get(PERSONAL_RADIO_API)
 //                .execute()
 //                .body();
 //        JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -115,7 +115,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(DAILY_RADIO_API))
+            String radioInfoBody = HttpRequest.get(DAILY_RADIO_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -160,7 +160,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(HOT_RADIO_API))
+            String radioInfoBody = HttpRequest.get(HOT_RADIO_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -202,7 +202,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(RADIO_TOPLIST_API))
+            String radioInfoBody = HttpRequest.get(RADIO_TOPLIST_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -244,7 +244,7 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(REC_RADIO_API))
+            String radioInfoBody = HttpRequest.get(REC_RADIO_API)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -719,9 +719,9 @@ public class HotRadioReq {
 
                     String radioId = radioJson.getString("id");
                     String radioName = radioJson.getString("title");
-                    String dj = SdkUtil.joinStrings(radioJson.getJSONArray("actors"), 4);
+                    String dj = SdkUtil.joinString(radioJson.getJSONArray("actors"));
                     String coverImgThumbUrl = radioJson.getString("cover_url");
-                    String category = SdkUtil.joinStrings(radioJson.getJSONArray("types"), -1);
+                    String category = SdkUtil.joinString(radioJson.getJSONArray("types"));
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
                     radioInfo.setSource(NetMusicSource.DB);

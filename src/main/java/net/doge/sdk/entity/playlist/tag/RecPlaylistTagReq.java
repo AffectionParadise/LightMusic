@@ -44,7 +44,7 @@ public class RecPlaylistTagReq {
         final int c = 5;
         // 网易云曲风
         Runnable initRecPlaylistTag = () -> {
-            String tagBody = HttpRequest.get(String.format(STYLE_API))
+            String tagBody = HttpRequest.get(STYLE_API)
                     .execute()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
@@ -86,7 +86,7 @@ public class RecPlaylistTagReq {
 
         // 酷狗
         Runnable initRecPlaylistTagKg = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_KG_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KG_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -129,7 +129,7 @@ public class RecPlaylistTagReq {
 
         // 猫耳
         Runnable initRecPlaylistTagMe = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_ME_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_ME_API)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -151,7 +151,7 @@ public class RecPlaylistTagReq {
 
         // 5sing
         Runnable initRecPlaylistTagFs = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PLAYLIST_TAG_FS_API))
+            String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_FS_API)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(playlistTagBody);

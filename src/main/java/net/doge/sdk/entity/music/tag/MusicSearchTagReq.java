@@ -28,7 +28,7 @@ public class MusicSearchTagReq {
         final int c = 1;
         // 猫耳
         Runnable initProgramSearchTagMe = () -> {
-            String playlistTagBody = HttpRequest.get(String.format(PROGRAM_SEARCH_TAG_ME_API))
+            String playlistTagBody = HttpRequest.get(PROGRAM_SEARCH_TAG_ME_API)
                     .execute()
                     .body();
             JSONArray tags = JSONArray.parseArray(playlistTagBody);

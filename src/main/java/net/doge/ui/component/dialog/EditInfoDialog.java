@@ -31,7 +31,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 编辑歌曲信息的对话框
  * @Date 2020/12/15
  */

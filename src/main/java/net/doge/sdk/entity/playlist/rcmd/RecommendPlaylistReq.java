@@ -741,7 +741,7 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(REC_PLAYLIST_ME_API))
+            String playlistInfoBody = HttpRequest.get(REC_PLAYLIST_ME_API)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

@@ -1,7 +1,7 @@
 package net.doge.constant.system;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description MV 播放界面组件来源类型
  * @Date 2020/12/7
  */

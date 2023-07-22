@@ -1,7 +1,7 @@
 package net.doge.constant.meta;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 软件信息
  * @Date 2020/12/7
  */

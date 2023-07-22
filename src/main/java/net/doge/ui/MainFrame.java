@@ -5174,8 +5174,7 @@ public class MainFrame extends JFrame {
                         // 这是专辑里的歌
                         else if (o instanceof NetAlbumInfo) {
                             NetAlbumInfo albumInfo = (NetAlbumInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
-                                    albumInfo.getId(), albumInfo.getSource(), limit, netMusicInCollectionCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5611,8 +5610,7 @@ public class MainFrame extends JFrame {
                     // 得到专辑的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
-                                    albumInfo.getId(), albumInfo.getSource(), limit, netMusicInCollectionCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInCollectionCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10442,8 +10440,7 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
-                                albumInfo.getId(), albumInfo.getSource(), limit, netMusicInAlbumCurrPage);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInAlbumCurrPage);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10752,8 +10749,7 @@ public class MainFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到专辑的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
-                                albumInfo.getId(), albumInfo.getSource(), limit, netMusicInAlbumCurrPage = 1);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInAlbumCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10868,8 +10864,7 @@ public class MainFrame extends JFrame {
                 netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
             else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
-                        netAlbumInfo.getId(), netAlbumInfo.getSource(), netAlbumInfo.hasSongNum() ? netAlbumInfo.getSongNum() : 10000, 1);
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(netAlbumInfo, netAlbumInfo.hasSongNum() ? netAlbumInfo.getSongNum() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -17107,8 +17102,7 @@ public class MainFrame extends JFrame {
                         // 这是专辑里的歌
                         else if (o instanceof NetAlbumInfo) {
                             NetAlbumInfo albumInfo = (NetAlbumInfo) o;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
-                                    albumInfo.getId(), albumInfo.getSource(), limit, netMusicInRecommendCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18766,8 +18760,7 @@ public class MainFrame extends JFrame {
                     // 得到专辑的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(
-                                    albumInfo.getId(), albumInfo.getSource(), limit, netMusicInRecommendCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInRecommendCurrPage = 1);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -22949,7 +22942,8 @@ public class MainFrame extends JFrame {
             NetMvInfo mvInfo = null;
             File file = null;
             if (mvType == MvCompSourceType.MV_LIST) mvInfo = netMvList.getSelectedValue();
-            else if (mvType == MvCompSourceType.MV_RECOMMEND_LIST) mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+            else if (mvType == MvCompSourceType.MV_RECOMMEND_LIST)
+                mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             else if (mvType == MvCompSourceType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
             try {
                 MusicServerUtil.fillMvInfo(mvInfo);

@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 自定义淡入淡出式对话框
  * @Date 2021/1/5
  */

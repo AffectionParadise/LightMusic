@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 抽象含标题对话框
  * @Date 2021/1/5
  */

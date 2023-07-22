@@ -1,7 +1,7 @@
 package net.doge.constant.config;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 配置属性类
  * @Date 2020/12/15
  */

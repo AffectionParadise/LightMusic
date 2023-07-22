@@ -28,7 +28,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 颜色选择对话框
  * @Date 2020/12/15
  */

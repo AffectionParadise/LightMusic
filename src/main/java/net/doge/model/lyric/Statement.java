@@ -3,7 +3,7 @@ package net.doge.model.lyric;
 import net.doge.util.common.StringUtil;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/7
  */

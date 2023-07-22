@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 快捷键工具类
  * @Date 2020/12/15
  */

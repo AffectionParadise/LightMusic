@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 对话框中的按钮自定义 UI
  * @Date 2020/12/13
  */

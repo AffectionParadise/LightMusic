@@ -339,7 +339,7 @@ public class HighQualityPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_KG_API))
+            String playlistInfoBody = HttpRequest.get(HOT_PLAYLIST_KG_API)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

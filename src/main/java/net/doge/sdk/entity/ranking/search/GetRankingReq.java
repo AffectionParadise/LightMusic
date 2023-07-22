@@ -59,7 +59,7 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(String.format(GET_RANKING_API))
+            String rankingInfoBody = HttpRequest.get(GET_RANKING_API)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
@@ -98,7 +98,7 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(String.format(GET_RANKING_KG_API))
+            String rankingInfoBody = HttpRequest.get(GET_RANKING_KG_API)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
@@ -175,7 +175,7 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(String.format(GET_RANKING_QQ_API_2))
+            String rankingInfoBody = HttpRequest.get(GET_RANKING_QQ_API_2)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
@@ -210,7 +210,7 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_RANKING_KW_API)).execute();
+            HttpResponse resp = SdkCommon.kwRequest(GET_RANKING_KW_API).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String rankingInfoBody = resp.body();
                 JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
@@ -248,7 +248,7 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(GET_RANKING_KW_API_2)).execute();
+            HttpResponse resp = HttpRequest.get(GET_RANKING_KW_API_2).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String rankingInfoBody = resp.body();
                 JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
@@ -283,7 +283,7 @@ public class GetRankingReq {
 //            LinkedList<NetRankingInfo> res = new LinkedList<>();
 //            Integer t = 0;
 //
-//            HttpResponse resp = kwRequest(String.format(GET_REC_RANKING_KW_API))
+//            HttpResponse resp = kwRequest(GET_REC_RANKING_KW_API)
 //                    .header(Header.REFERER, "http://www.kuwo.cn/rankList")
 //                    .execute();
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {
@@ -322,7 +322,7 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(String.format(GET_RANKING_MG_API))
+            String rankingInfoBody = HttpRequest.get(GET_RANKING_MG_API)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
@@ -402,7 +402,7 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(String.format(GET_RANKING_ME_API))
+            String rankingInfoBody = HttpRequest.get(GET_RANKING_ME_API)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);

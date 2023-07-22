@@ -1,5 +1,6 @@
 package net.doge.sdk.entity.music.rcmd;
 
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
@@ -40,7 +41,7 @@ public class NewMusicReq {
     // 新歌榜 API (酷我)
     private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)
-    private final String RECOMMEND_NEW_SONG_MG_API = SdkCommon.PREFIX_MG + "/new/songs?pageNo=%s&pageSize=%s";
+    private final String RECOMMEND_NEW_SONG_MG_API = "http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23853978&pageNo=%s&pageSize=%s";
     // 推荐新歌 API (千千)
     private final String RECOMMEND_NEW_SONG_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
     // 推荐新歌 API (音乐磁场)
@@ -91,7 +92,7 @@ public class NewMusicReq {
                 else songJson = jsonObject;
                 String songId = songJson.getString("id");
                 String songName = songJson.getString("name").trim();
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
                 String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("id");
@@ -130,7 +131,7 @@ public class NewMusicReq {
                     else songJson = jsonObject;
                     String songId = songJson.getString("id");
                     String songName = songJson.getString("name").trim();
-                    String artist = SdkUtil.parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("album").getString("name");
                     String albumId = songJson.getJSONObject("album").getString("id");
@@ -169,7 +170,7 @@ public class NewMusicReq {
 
                     String songId = songJson.getString("id");
                     String songName = songJson.getString("name").trim();
-                    String artist = SdkUtil.parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("al").getString("name");
                     String albumId = songJson.getJSONObject("al").getString("id");
@@ -212,7 +213,7 @@ public class NewMusicReq {
                     String hash = songJson.getString("hash");
                     String songId = songJson.getString("album_audio_id");
                     String name = songJson.getString("songname");
-                    String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
+                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.KG);
                     JSONArray artistArray = songJson.getJSONArray("authors");
                     String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("author_id") : "";
                     String albumId = songJson.getString("album_id");
@@ -224,7 +225,7 @@ public class NewMusicReq {
                     musicInfo.setHash(hash);
                     musicInfo.setId(songId);
                     musicInfo.setName(name);
-                    musicInfo.setArtist(artists);
+                    musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
@@ -242,7 +243,7 @@ public class NewMusicReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
-                String musicInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+                String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"comm\":{\"ct\":24},\"new_song\":{\"module\":\"newsong.NewSongServer\"," +
                                 "\"method\":\"get_new_song_info\",\"param\":{\"type\":%s}}}", s[3]))
                         .execute()
@@ -255,7 +256,7 @@ public class NewMusicReq {
 
                     String songId = songJson.getString("mid");
                     String songName = songJson.getString("name");
-                    String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
+                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
                     JSONArray singerArray = songJson.getJSONArray("singer");
                     String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                     String albumName = songJson.getJSONObject("album").getString("name");
@@ -327,20 +328,23 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_MG_API, page, limit))
+            String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_MG_API, page - 1, limit))
+                    .header(Header.REFERER, "https://m.music.migu.cn/")
+                    .setFollowRedirects(true)
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getIntValue("total");
-            JSONArray songArray = data.getJSONArray("list");
+            JSONObject data = musicInfoJson.getJSONObject("result");
+            t = data.getIntValue("totalCount");
+            JSONArray songArray = data.getJSONArray("results");
             for (int i = 0, len = songArray.size(); i < len; i++) {
-                JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject songJson = songArray.getJSONObject(i).getJSONObject("songData");
 
-                String songId = songJson.getString("cid");
-                String songName = songJson.getString("name");
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.MG);
-                String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                String songId = songJson.getString("copyrightId");
+                String songName = songJson.getString("songName");
+                String artist = SdkUtil.joinString(songJson.getJSONArray("singerName"));
+                JSONArray singerIdArray = songJson.getJSONArray("singerId");
+                String artistId = JsonUtil.isEmpty(singerIdArray) ? "" : singerIdArray.getString(0);
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.MG);
@@ -371,7 +375,7 @@ public class NewMusicReq {
 
                 String songId = songJson.getString("TSID");
                 String songName = songJson.getString("title");
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QI);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QI);
                 JSONArray artistArray = songJson.getJSONArray("artist");
                 String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
                 String albumName = songJson.getString("albumTitle");

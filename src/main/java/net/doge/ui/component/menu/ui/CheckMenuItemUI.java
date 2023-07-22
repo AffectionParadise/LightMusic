@@ -5,7 +5,7 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 菜单项元素标签自定义 UI
  * @Date 2020/12/13
  */

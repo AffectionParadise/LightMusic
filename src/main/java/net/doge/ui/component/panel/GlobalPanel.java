@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description
  * @Date 2020/12/12
  */

@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 为 ChangePaneButton 设定的自定义 UI，图标添加遮罩
  * @Date 2020/12/13
  */

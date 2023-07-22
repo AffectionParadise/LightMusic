@@ -394,7 +394,7 @@ public class UserInfoReq {
 
                     String songId = songJson.getString("id");
                     String name = songJson.getString("name").trim();
-                    String artist = SdkUtil.parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("al").getString("name");
                     String albumId = songJson.getJSONObject("al").getString("id");

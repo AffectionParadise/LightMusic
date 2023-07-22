@@ -46,7 +46,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 播放 MV 的对话框
  * @Date 2020/12/15
  */

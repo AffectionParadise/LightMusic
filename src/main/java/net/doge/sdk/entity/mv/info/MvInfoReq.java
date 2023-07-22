@@ -56,7 +56,7 @@ public class MvInfoReq {
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
             String name = data.getString("name").trim();
-            String artists = SdkUtil.parseArtists(data, NetMusicSource.NET_CLOUD);
+            String artist = SdkUtil.parseArtist(data, NetMusicSource.NET_CLOUD);
             String creatorId = data.getJSONArray("artists").getJSONObject(0).getString("id");
             Long playCount = data.getLong("playCount");
             Double duration = data.getDouble("duration") / 1000;
@@ -64,7 +64,7 @@ public class MvInfoReq {
             String coverImgUrl = data.getString("cover");
 
             netMvInfo.setName(name);
-            netMvInfo.setArtist(artists);
+            netMvInfo.setArtist(artist);
             netMvInfo.setCreatorId(creatorId);
             netMvInfo.setPlayCount(playCount);
             netMvInfo.setDuration(duration);
@@ -110,7 +110,7 @@ public class MvInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
                             "\"method\":\"get_video_info_batch\",\"param\":{\"vidlist\":[\"%s\"],\"required\":[\"vid\",\"type\",\"sid\"," +
                             "\"cover_pic\",\"duration\",\"singers\",\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\"," +
@@ -124,7 +124,7 @@ public class MvInfoReq {
             JSONObject data = mvJson.getJSONObject("mvinfo").getJSONObject("data").getJSONObject(mvId);
 
             String name = data.getString("name");
-            String artists = SdkUtil.parseArtists(data, NetMusicSource.QQ);
+            String artist = SdkUtil.parseArtist(data, NetMusicSource.QQ);
             JSONArray singerArray = mvJson.getJSONArray("singers");
             String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
             Long playCount = data.getLong("playcnt");
@@ -133,7 +133,7 @@ public class MvInfoReq {
             String coverImgUrl = data.getString("cover_pic");
 
             netMvInfo.setName(name);
-            netMvInfo.setArtist(artists);
+            netMvInfo.setArtist(artist);
             netMvInfo.setCreatorId(creatorId);
             netMvInfo.setPlayCount(playCount);
             netMvInfo.setDuration(duration);

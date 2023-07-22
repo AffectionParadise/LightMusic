@@ -38,10 +38,6 @@ public class HotMusicRecommendReq {
     // TOP500 API (酷狗)
     private final String TOP500_KG_API
             = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=8888&page=%s&pagesize=%s";
-    // 流行指数榜 API (QQ)
-    private final String POPULAR_MUSIC_QQ_API = SdkCommon.PREFIX_QQ + "/top?id=4&pageNo=%s&pageSize=%s";
-    // 热歌榜 API (QQ)
-    private final String HOT_MUSIC_QQ_API = SdkCommon.PREFIX_QQ + "/top?id=26&pageNo=%s&pageSize=%s";
     // 飙升榜 API (酷我)
     private final String UP_MUSIC_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=93&pn=%s&rn=%s&httpsStatus=1";
     // 热歌榜 API (酷我)
@@ -99,7 +95,7 @@ public class HotMusicRecommendReq {
 
                     String songId = songJson.getString("id");
                     String songName = songJson.getString("name").trim();
-                    String artist = SdkUtil.parseArtists(songJson, NetMusicSource.NET_CLOUD);
+                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
                     String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
                     String albumName = songJson.getJSONObject("al").getString("name");
                     String albumId = songJson.getJSONObject("al").getString("id");
@@ -141,7 +137,7 @@ public class HotMusicRecommendReq {
                 String hash = songJson.getString("hash");
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
-                String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.KG);
                 JSONArray artistArray = songJson.getJSONArray("authors");
                 String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
@@ -155,7 +151,7 @@ public class HotMusicRecommendReq {
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
-                musicInfo.setArtist(artists);
+                musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
 //                musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
@@ -184,7 +180,7 @@ public class HotMusicRecommendReq {
                 String hash = songJson.getString("hash");
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
-                String artists = SdkUtil.parseArtists(songJson, NetMusicSource.KG);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.KG);
                 JSONArray artistArray = songJson.getJSONArray("authors");
                 String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("author_id") : "";
 //                String albumName = songJson.getString("remark");
@@ -198,7 +194,7 @@ public class HotMusicRecommendReq {
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
-                musicInfo.setArtist(artists);
+                musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
 //                musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
@@ -216,19 +212,21 @@ public class HotMusicRecommendReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(String.format(POPULAR_MUSIC_QQ_API, page, limit))
+            String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
+                            "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", 4, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getIntValue("total");
-            JSONArray songArray = data.getJSONArray("list");
+            JSONObject data = musicInfoJson.getJSONObject("detail").getJSONObject("data");
+            t = data.getJSONObject("data").getIntValue("totalNum");
+            JSONArray songArray = data.getJSONArray("songInfoList");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String id = songJson.getString("mid");
                 String name = songJson.getString("name");
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
                 String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
@@ -256,19 +254,21 @@ public class HotMusicRecommendReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_QQ_API, page, limit))
+            String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
+                            "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", 26, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getIntValue("total");
-            JSONArray songArray = data.getJSONArray("list");
+            JSONObject data = musicInfoJson.getJSONObject("detail").getJSONObject("data");
+            t = data.getJSONObject("data").getIntValue("totalNum");
+            JSONArray songArray = data.getJSONArray("songInfoList");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String id = songJson.getString("mid");
                 String name = songJson.getString("name");
-                String artist = SdkUtil.parseArtists(songJson, NetMusicSource.QQ);
+                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
                 JSONArray singerArray = songJson.getJSONArray("singer");
                 String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
                 String albumName = songJson.getJSONObject("album").getString("name");
@@ -380,7 +380,7 @@ public class HotMusicRecommendReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(String.format(HOT_MUSIC_MG_API))
+            String rankingInfoBody = HttpRequest.get(HOT_MUSIC_MG_API)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);

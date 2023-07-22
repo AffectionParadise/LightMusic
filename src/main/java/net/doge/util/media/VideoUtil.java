@@ -5,7 +5,7 @@ import net.doge.util.system.TerminateUtil;
 import java.io.File;
 
 /**
- * @Author yzx
+ * @Author Doge
  * @Description 视频工具类
  * @Date 2020/12/11
  */

@@ -104,7 +104,7 @@ public class UserSearchReq {
             LinkedList<NetUserInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String userInfoBody = HttpRequest.post(String.format(SdkCommon.QQ_MAIN_API))
+            String userInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 8))
                     .execute()
                     .body();
