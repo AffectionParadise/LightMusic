@@ -31,4 +31,15 @@ public class RegexUtil {
     public static List<String> findAllGroup1(String regex, CharSequence content) {
         return ReUtil.findAllGroup1(regex, content);
     }
+
+    /**
+     * 测试字符串是否完全匹配模式
+     *
+     * @param regex
+     * @param content
+     * @return
+     */
+    public static boolean test(String regex, CharSequence content) {
+        return ReUtil.isMatch(regex, content);
+    }
 }

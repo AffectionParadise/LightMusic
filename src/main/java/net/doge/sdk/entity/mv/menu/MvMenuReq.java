@@ -2,6 +2,9 @@ package net.doge.sdk.entity.mv.menu;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
@@ -9,25 +12,27 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class MvMenuReq {
     // 相似 MV API
-    private final String SIMILAR_MV_API = SdkCommon.PREFIX + "/simi/mv?mvid=%s";
+    private final String SIMILAR_MV_API = "https://music.163.com/weapi/discovery/simiMV";
     // 视频相关视频 API
-    private final String RELATED_VIDEO_API = SdkCommon.PREFIX + "/related/allvideo?id=%s";
+    private final String RELATED_VIDEO_API = "https://music.163.com/weapi/cloudvideo/v1/allvideo/rcmd";
     // 歌曲相关视频 API
-    private final String RELATED_MLOG_API = SdkCommon.PREFIX + "/mlog/music/rcmd?songid=%s&limit=500";
+    private final String RELATED_MLOG_API = "https://interface.music.163.com/eapi/mlog/rcmd/feed/list";
     // mlog id 转视频 id API
-    private final String MLOG_TO_VIDEO_API = SdkCommon.PREFIX + "/mlog/to/video?id=%s";
+    private final String MLOG_TO_VIDEO_API = "https://music.163.com/weapi/mlog/video/convert/id";
 
     // 相似视频 API (好看)
     private final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec?title=%s&vid=%s&act=pcRec&pd=pc";
@@ -50,7 +55,9 @@ public class MvMenuReq {
 
         // 网易云(程序分页)
         if (source == NetMusicSource.NET_CLOUD) {
-            String mvInfoBody = HttpRequest.get(String.format(RELATED_MLOG_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_MLOG_API,
+                            String.format("{\"id\":\"0\",\"type\":2,\"rcmdType\":20,\"limit\":500,\"extInfo\":\"{'songId':'%s'}\"}", id), options)
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -61,8 +68,9 @@ public class MvMenuReq {
                 JSONObject mlogBaseData = resource.getJSONObject("mlogBaseData");
 
                 String mvId = mlogBaseData.getString("id");
-                String mvName = mlogBaseData.getString("originalTitle").trim();
+                String mvName = mlogBaseData.getString("originalTitle");
                 if (StringUtil.isEmpty(mvName)) mvName = mlogBaseData.getString("text");
+                mvName = mvName.trim();
                 String artistName = resource.getJSONObject("userProfile").getString("nickname");
                 String creatorId = resource.getJSONObject("userProfile").getString("userId");
                 String coverImgUrl = mlogBaseData.getString("coverUrl");
@@ -161,7 +169,8 @@ public class MvMenuReq {
             if (isVideo || isMlog) {
                 // Mlog 需要先获取视频 id，并转为视频类型
                 if (isMlog) {
-                    String body = HttpRequest.get(String.format(MLOG_TO_VIDEO_API, id))
+                    Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                    String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
                             .execute()
                             .body();
                     id = JSONObject.parseObject(body).getString("data");
@@ -169,7 +178,9 @@ public class MvMenuReq {
                     netMvInfo.setType(MvInfoType.VIDEO);
                 }
 
-                String mvInfoBody = HttpRequest.get(String.format(RELATED_VIDEO_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_VIDEO_API,
+                                String.format("{\"id\":\"%s\",\"type\":%s}", id, RegexUtil.test("^\\d+$", id) ? 0 : 1), options)
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -205,7 +216,8 @@ public class MvMenuReq {
             }
             // MV
             else {
-                String mvInfoBody = HttpRequest.get(String.format(SIMILAR_MV_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String mvInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_MV_API, String.format("{\"mvid\":\"%s\"}", id), options)
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

@@ -1,21 +1,25 @@
 package net.doge.sdk.entity.mv.info;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 public class MvInfoReq {
     // MV 信息 API
-    private final String MV_DETAIL_API = SdkCommon.PREFIX + "/mv/detail?mvid=%s";
+    private final String MV_DETAIL_API = "https://music.163.com/api/v1/mv/detail";
     // MV 信息 API (酷狗)
     private final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash=%s";
     // MV 信息 API (酷我)
@@ -50,7 +54,8 @@ public class MvInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String mvBody = HttpRequest.get(String.format(MV_DETAIL_API, mvId))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String mvBody = SdkCommon.ncRequest(Method.POST, MV_DETAIL_API, String.format("{\"id\":\"%s\"}", mvId), options)
                     .execute()
                     .body();
             JSONObject mvJson = JSONObject.parseObject(mvBody);

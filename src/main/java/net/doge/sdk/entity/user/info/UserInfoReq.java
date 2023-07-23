@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.user.info;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -9,6 +10,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.AreaUtil;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
@@ -24,6 +27,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,9 +35,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserInfoReq {
     // 用户信息 API
-    private final String USER_DETAIL_API = SdkCommon.PREFIX + "/user/detail?uid=%s";
+    private final String USER_DETAIL_API = "https://music.163.com/weapi/v1/user/detail/%s";
     // 用户歌曲 API
-    private final String USER_SONGS_API = SdkCommon.PREFIX + "/user/record?type=%s&uid=%s";
+    private final String USER_SONGS_API = "https://music.163.com/weapi/v1/play/record";
     // 用户信息 API (喜马拉雅)
     private final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic?uid=%s";
     // 用户节目 API (喜马拉雅)
@@ -91,7 +95,8 @@ public class UserInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_API, uid))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_API, uid), "{}", options)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -382,7 +387,9 @@ public class UserInfoReq {
 
         // 网易云(程序分页)
         if (source == NetMusicSource.NET_CLOUD) {
-            String userInfoBody = HttpRequest.get(String.format(USER_SONGS_API, recordType ^ 1, userId))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, USER_SONGS_API,
+                            String.format("{\"uid\":\"%s\",\"type\":%s}", userId, recordType ^ 1), options)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -846,7 +853,8 @@ public class UserInfoReq {
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
-                String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_API, id), "{}", options)
                         .execute()
                         .body();
                 JSONObject userJson = JSONObject.parseObject(userInfoBody).getJSONObject("profile");

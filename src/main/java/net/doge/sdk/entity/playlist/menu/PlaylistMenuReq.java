@@ -1,24 +1,32 @@
 package net.doge.sdk.entity.playlist.menu;
 
-import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.common.RegexUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class PlaylistMenuReq {
     // 歌单相似歌单 API
-    private final String SIMILAR_PLAYLIST_API = SdkCommon.PREFIX + "/related/playlist?id=%s";
+    private final String SIMILAR_PLAYLIST_API = "https://music.163.com/playlist?id=%s";
     // 歌单收藏者 API
-    private final String PLAYLIST_SUBSCRIBERS_API = SdkCommon.PREFIX + "/playlist/subscribers?id=%s&offset=%s&limit=%s";
+    private final String PLAYLIST_SUBSCRIBERS_API = "https://music.163.com/weapi/playlist/subscribers";
 
     /**
      * 获取相关歌单（通过歌单）
@@ -34,22 +42,24 @@ public class PlaylistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String playlistInfoBody = HttpRequest.get(String.format(SIMILAR_PLAYLIST_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistInfoBody = SdkCommon.ncRequest(Method.GET, String.format(SIMILAR_PLAYLIST_API, id), "{}", options)
                     .execute()
                     .body();
-            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
+            Document doc = Jsoup.parse(playlistInfoBody);
+            Elements playlistArray = doc.select(".m-rctlist.f-cb li");
             t = playlistArray.size();
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
-                JSONObject playlistJson = playlistArray.getJSONObject(i);
+                Element playlist = playlistArray.get(i);
+                Elements a = playlist.select(".f-thide a");
+                Elements ca = playlist.select("a.nm.nm.f-thide.s-fc3");
+                Elements img = playlist.select(".cver.u-cover.u-cover-3 img");
 
-                String playlistId = playlistJson.getString("id");
-                String playlistName = playlistJson.getString("name");
-                String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                String creatorId = playlistJson.getJSONObject("creator").getString("userId");
-//                Long playCount = playlistJson.getLong("playCount");
-//                Integer trackCount = playlistJson.getIntValue("trackCount");
-                String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
+                String playlistId = RegexUtil.getGroup1("/playlist\\?id=(\\d+)", a.attr("href"));
+                String playlistName = a.text();
+                String creator = ca.text();
+                String creatorId = RegexUtil.getGroup1("/user/home\\?id=(\\d+)", ca.attr("href"));
+                String coverImgThumbUrl = img.attr("src").replaceFirst("param=\\d+y\\d+", "param=500y500");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                 playlistInfo.setId(playlistId);
@@ -57,8 +67,6 @@ public class PlaylistMenuReq {
                 playlistInfo.setCreator(creator);
                 playlistInfo.setCreatorId(creatorId);
                 playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-//                playlistInfo.setPlayCount(playCount);
-//                playlistInfo.setTrackCount(trackCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
@@ -85,7 +93,9 @@ public class PlaylistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String userInfoBody = HttpRequest.get(String.format(PLAYLIST_SUBSCRIBERS_API, id, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_SUBSCRIBERS_API,
+                            String.format("{\"id\":\"%s\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);

@@ -2,6 +2,7 @@ package net.doge.sdk.entity.comment;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -10,6 +11,8 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.*;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.BvAvConverter;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
@@ -29,13 +32,12 @@ import java.util.Map;
 
 public class CommentReq {
     // 获取评论 API
-    private final String GET_COMMENTS_API = SdkCommon.PREFIX + "/comment/new?type=%s&id=%s&pageNo=%s&pageSize=%s&sortType=%s&cursor=%s";
+    private final String GET_COMMENTS_API = "https://music.163.com/api/v2/resource/comments";
     // 获取评论 API (酷狗)
     private final String GET_COMMENTS_KG_API
             = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=%s&p=%s&pagesize=%s";
     // 获取评论 API (QQ)
-    private final String GET_COMMENTS_QQ_API
-            = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg?biztype=%s&topid=%s&loginUin=0&cmd=%s&pagenum=%s&pagesize=%s";
+    private final String GET_COMMENTS_QQ_API = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg?biztype=%s&topid=%s&loginUin=0&cmd=%s&pagenum=%s&pagesize=%s";
     // 获取热门评论 API (酷我)
     private final String GET_HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
     // 获取最新评论 API (酷我)
@@ -74,11 +76,12 @@ public class CommentReq {
     private final String GET_SONG_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
 
     // mlog id 转视频 id API
-    private final String MLOG_TO_VIDEO_API = SdkCommon.PREFIX + "/mlog/to/video?id=%s";
+    private final String MLOG_TO_VIDEO_API = "https://music.163.com/weapi/mlog/video/convert/id";
     // 专辑信息 API (QQ)
     private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg?_=1689937314930&cv=4747474&ct=24&format=json" +
             "&inCharset=utf-8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=0&g_tk_new_20200303=5381&g_tk=5381&cmd=get_album_buy_page" +
-            "&albummid=%s&albumid=0";;
+            "&albummid=%s&albumid=0";
+    ;
 
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
@@ -152,7 +155,8 @@ public class CommentReq {
 
             // Mlog 需要先获取视频 id，并转为视频类型
             if (isMlog) {
-                String body = HttpRequest.get(String.format(MLOG_TO_VIDEO_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
                         .execute()
                         .body();
                 id = JSONObject.parseObject(body).getString("data");
@@ -170,7 +174,30 @@ public class CommentReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD && StringUtil.notEmpty(typeStr[0])) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_API, typeStr[0], id, page, limit, hotOnly ? 2 : 3, cursor))
+            HashMap<String, String> resourceType = new HashMap<>();
+            resourceType.put("0", "R_SO_4_");
+            resourceType.put("1", "R_MV_5_");
+            resourceType.put("2", "A_PL_0_");
+            resourceType.put("3", "R_AL_3_");
+            resourceType.put("4", "A_DJ_1_");
+            resourceType.put("5", "R_VI_62_");
+            resourceType.put("6", "A_EV_2_");
+            resourceType.put("7", "A_DR_14_");
+            String threadId = resourceType.get(typeStr[0]) + id;
+            int sortType = hotOnly ? 2 : 3;
+            String cur = "";
+            switch (sortType) {
+                case 2:
+                    cur = "normalHot#" + (page - 1) * limit;
+                    break;
+                case 3:
+                    cur = StringUtil.isEmpty(cursor) ? "0" : cursor;
+                    break;
+            }
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/v2/resource/comments");
+            String commentInfoBody = SdkCommon.ncRequest(Method.POST, GET_COMMENTS_API,
+                            String.format("{\"threadId\":\"%s\",\"showInner\":true,\"pageNo\":%s,\"pageSize\":%s,\"cursor\":\"%s\",\"sortType\":%s}",
+                                    threadId, page, limit, cur, sortType), options)
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(commentInfoBody).getJSONObject("data");

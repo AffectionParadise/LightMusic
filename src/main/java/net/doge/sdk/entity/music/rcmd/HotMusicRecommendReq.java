@@ -3,6 +3,7 @@ package net.doge.sdk.entity.music.rcmd;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -11,6 +12,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
@@ -24,6 +27,7 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class HotMusicRecommendReq {
     // 曲风歌曲(最热) API
-    private final String STYLE_HOT_SONG_API = SdkCommon.PREFIX + "/style/song?tagId=%s&sort=0&cursor=%s&size=%s";
+    private final String STYLE_HOT_SONG_API = "https://music.163.com/api/style-tag/home/song";
     // 飙升榜 API (酷狗)
     private final String UP_MUSIC_KG_API
             = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=6666&page=%s&pagesize=%s";
@@ -83,7 +87,9 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String musicInfoBody = HttpRequest.get(String.format(STYLE_HOT_SONG_API, s[0], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_HOT_SONG_API,
+                                String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[0], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

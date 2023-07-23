@@ -1,5 +1,7 @@
 package net.doge.util.collection;
 
+import java.util.Random;
+
 /**
  * @Author Doge
  * @Description
@@ -31,5 +33,42 @@ public class ArrayUtil {
             longs[i] = longs[len - i - 1];
             longs[len - i - 1] = t;
         }
+    }
+
+    /**
+     * 反转数组
+     *
+     * @param bytes
+     */
+    public static void reverse(byte[] bytes) {
+        for (int i = 0, len = bytes.length; i < len / 2; i++) {
+            byte t = bytes[i];
+            bytes[i] = bytes[len - i - 1];
+            bytes[len - i - 1] = t;
+        }
+    }
+
+    /**
+     * 随机选取数组中一个元素
+     *
+     * @param array
+     */
+    public static String randomChoose(String[] array) {
+        Random rand = new Random();
+        int num = rand.nextInt(array.length);
+        return array[num];
+    }
+
+    /**
+     * 随机生成指定位 bytes
+     *
+     * @param n
+     * @return
+     */
+    public static byte[] randomBytes(int n) {
+        byte[] bytes = new byte[n];
+        Random random = new Random();
+        for (int i = 0; i < n; i++) bytes[i] = (byte) random.nextInt(128);
+        return bytes;
     }
 }

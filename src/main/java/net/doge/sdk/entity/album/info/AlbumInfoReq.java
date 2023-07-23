@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.album.info;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -9,6 +10,8 @@ import net.doge.model.entity.NetAlbumInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
@@ -22,10 +25,11 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class AlbumInfoReq {
     // 专辑信息 API
-    private final String ALBUM_DETAIL_API = SdkCommon.PREFIX + "/album?id=%s";
+    private final String ALBUM_DETAIL_API = "https://music.163.com/weapi/v1/album/%s";
     // 专辑信息 API (酷狗)
     private final String ALBUM_DETAIL_KG_API = "http://mobilecdn.kugou.com/api/v3/album/info?version=9108&albumid=%s";
     // 专辑歌曲 API (酷狗)
@@ -74,7 +78,8 @@ public class AlbumInfoReq {
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
-                String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -287,7 +292,8 @@ public class AlbumInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -442,7 +448,8 @@ public class AlbumInfoReq {
 
         // 网易云 (程序分页)
         if (source == NetMusicSource.NET_CLOUD) {
-            String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

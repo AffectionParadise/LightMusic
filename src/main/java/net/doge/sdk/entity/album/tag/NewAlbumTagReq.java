@@ -1,11 +1,14 @@
 package net.doge.sdk.entity.album.tag;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.util.common.JsonUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,12 +17,13 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class NewAlbumTagReq {
     // 曲风 API
-    private final String STYLE_API = SdkCommon.PREFIX + "/style/list";
+    private final String STYLE_API = "https://music.163.com/api/tag/list/get";
     // 专辑标签 API (豆瓣)
     private final String ALBUM_TAG_DB_API = "https://music.douban.com/tag/";
 
@@ -377,7 +381,8 @@ public class NewAlbumTagReq {
         final int c = 6;
         // 网易云曲风
         Runnable initAlbumTag = () -> {
-            String tagBody = HttpRequest.get(STYLE_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
                     .execute()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);

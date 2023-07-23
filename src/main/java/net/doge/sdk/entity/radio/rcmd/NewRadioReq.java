@@ -1,20 +1,24 @@
 package net.doge.sdk.entity.radio.rcmd;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -22,22 +26,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewRadioReq {
     // 新晋电台 API
-    private final String NEW_RADIO_API = SdkCommon.PREFIX + "/dj/toplist?type=new&limit=200";
+    private final String NEW_RADIO_API = "https://music.163.com/api/djradio/toplist";
     // 推荐个性电台 API
-    private final String PERSONALIZED_RADIO_API = SdkCommon.PREFIX + "/personalized/djprogram";
+    private final String PERSONALIZED_RADIO_API = "https://music.163.com/weapi/personalized/djprogram";
     // 推荐电台 API
-    private final String RECOMMEND_RADIO_API = SdkCommon.PREFIX + "/dj/recommend";
+    private final String RECOMMEND_RADIO_API = "https://music.163.com/weapi/djradio/recommend/v1";
     // 付费精品电台 API
-    private final String PAY_RADIO_API = SdkCommon.PREFIX + "/dj/toplist/pay?limit=100";
+    private final String PAY_RADIO_API = "https://music.163.com/api/djradio/toplist/pay";
     // 付费精选电台 API
-    private final String PAY_GIFT_RADIO_API = SdkCommon.PREFIX + "/dj/paygift?offset=%s&limit=%s";
+    private final String PAY_GIFT_RADIO_API = "https://music.163.com/weapi/djradio/home/paygift/list?_nmclfl=1";
     // 推荐广播剧 API (猫耳)
     private final String REC_RADIO_ME_API = "https://www.missevan.com/drama/site/recommend";
     // 夏日推荐 API (猫耳)
     private final String SUMMER_RADIO_ME_API = "https://www.missevan.com/dramaapi/summerdrama";
     // 频道 API (猫耳)
 //    private final String CHANNEL_ME_API = "https://www.missevan.com/explore/channels?type=0";
-    
+
     /**
      * 获取新晋电台
      */
@@ -51,7 +55,8 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(NEW_RADIO_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, NEW_RADIO_API, "{\"type\":0,\"offset\":0,\"limit\":200}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -94,7 +99,8 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(PERSONALIZED_RADIO_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_RADIO_API, "{}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -140,7 +146,8 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(RECOMMEND_RADIO_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_API, "{}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -183,7 +190,8 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(PAY_RADIO_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_RADIO_API, "{\"limit\":100}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -224,7 +232,9 @@ public class NewRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(PAY_GIFT_RADIO_API, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_GIFT_RADIO_API,
+                            String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);

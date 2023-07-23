@@ -298,10 +298,9 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         cursors.add("");
         // 默认显示第一张
         GlobalExecutors.imageExecutor.submit(() -> {
-            if (!showImg(p)) {
-                requestFailed();
-                close();
-            }
+            if (showImg(p)) return;
+            requestFailed();
+            close();
         });
     }
 
@@ -360,7 +359,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
             String next = results.cursor;
             if (ListUtil.search(cursors, next) < 0) cursors.add(next);
         }
-        String url = results.data.get(di);
+        String url = results.data.size() > di ? results.data.get(di) : "";
         BufferedImage img = ImageUtil.readByUrl(url);
         // 单独处理 Webp 类型图片
 //            if (img == null) img = ImageUtils.readWebp(url);

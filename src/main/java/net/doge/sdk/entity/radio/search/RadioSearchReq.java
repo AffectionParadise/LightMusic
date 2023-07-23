@@ -2,14 +2,17 @@ package net.doge.sdk.entity.radio.search;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.model.RadioType;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.model.RadioType;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -22,6 +25,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -29,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RadioSearchReq {
     // 关键词搜索电台 API
-    private final String SEARCH_RADIO_API = SdkCommon.PREFIX + "/cloudsearch?type=1009&keywords=%s&offset=%s&limit=%s";
+    private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索电台 API(喜马拉雅)
     private final String SEARCH_RADIO_XM_API
             = "https://www.ximalaya.com/revision/search/main?core=album&kw=%s&page=%s&spellchecker=true&rows=%s&condition=relation&device=iPhone&fq=&paidFilter=false";
@@ -57,7 +61,9 @@ public class RadioSearchReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_API, encodedKeyword, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":1009,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);

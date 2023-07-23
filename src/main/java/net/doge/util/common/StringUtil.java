@@ -420,4 +420,15 @@ public class StringUtil {
         while (st < len && ArrayUtil.inArray(cs, chars[len - 1])) len--;
         return st > 0 || len < chars.length ? str.substring(st, len) : str;
     }
+
+    /**
+     * 用 padStr 填充字符串 str 到指定长度
+     * @param str
+     * @param len
+     * @param padStr
+     * @return
+     */
+    public static String padPre(String str, int len, String padStr) {
+        return StrUtil.padPre(str, len, padStr);
+    }
 }

@@ -20,8 +20,11 @@ import java.awt.*;
 public class DonateDialog extends AbstractTitledDialog {
     private DialogButton yes;
 
-    private String thankMsg = "同时感谢以下本项目使用到的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
-            "https://github.com/Binaryify/NeteaseCloudMusicApi";
+    private String thankMsg = "同时感谢以下为本项目提供思路的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
+            "https://github.com/Binaryify/NeteaseCloudMusicApi\n" +
+            "https://github.com/jsososo/QQMusicApi\n" +
+            "https://github.com/QiuYaohong/kuwoMusicApi\n" +
+            "https://github.com/jsososo/MiguMusicApi";
 
     // 收款码
     private ImageIcon weixinIcon = new ImageIcon(SimplePath.ICON_PATH + "weixin.png");

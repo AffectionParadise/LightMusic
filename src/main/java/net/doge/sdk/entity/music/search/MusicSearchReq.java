@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.music.search;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -12,6 +9,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -22,20 +21,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicSearchReq {
-    // 关键词搜索歌曲 API
-    private final String SEARCH_MUSIC_API = SdkCommon.PREFIX + "/cloudsearch?keywords=%s&limit=%s&offset=%s";
-    // 关键词搜索声音 API
-    private final String SEARCH_VOICE_API = SdkCommon.PREFIX + "/search?type=2000&keywords=%s&limit=%s&offset=%s";
-    // 关键词搜索歌曲 API (搜歌词)
-    private final String SEARCH_MUSIC_BY_LYRIC_API = SdkCommon.PREFIX + "/search?type=1006&keywords=%s&limit=%s&offset=%s";
+    // 关键词搜索歌曲/声音/歌词 API
+    private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
+    private final String SEARCH_VOICE_API = "https://music.163.com/api/search/voice/get";
     // 关键词搜索歌曲 API (酷狗)
     private final String SEARCH_MUSIC_KG_API = "http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword=%s&page=%s&pagesize=%s&showtype=1";
     // 关键词搜索歌曲 API (搜歌词) (酷狗)
@@ -79,7 +74,9 @@ public class MusicSearchReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_API, encodedKeyword, limit, (page - 1) * limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String musicInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":1,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -121,7 +118,9 @@ public class MusicSearchReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_BY_LYRIC_API, encodedKeyword, limit, (page - 1) * limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String musicInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":1006,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -136,22 +135,21 @@ public class MusicSearchReq {
                         String songId = songJson.getString("id");
                         String songName = songJson.getString("name").trim();
                         String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
-                        String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
-                        String albumName = songJson.getJSONObject("album").getString("name");
-                        String albumId = songJson.getJSONObject("album").getString("id");
-                        Double duration = songJson.getDouble("duration") / 1000;
-                        String mvId = songJson.getString("mvid");
-                        String lrcMatch = songJson.getJSONObject("lyrics").getString("txt").replace("\n", " / ");
-//                        JSONArray lyrics = songJson.getJSONArray("lyrics");
-//                        String lrcMatch = null;
-//                        if (JsonUtil.notEmpty(lyrics)) {
-//                            StringBuilder sb = new StringBuilder();
-//                            for (int j = 0, size = lyrics.size(); j < size; j++) {
-//                                sb.append(lyrics.get(j));
-//                                if (j != size - 1) sb.append(" / ");
-//                            }
-//                            lrcMatch = StringUtils.removeHTMLLabel(sb.toString());
-//                        }
+                        String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
+                        String albumName = songJson.getJSONObject("al").getString("name");
+                        String albumId = songJson.getJSONObject("al").getString("id");
+                        Double duration = songJson.getDouble("dt") / 1000;
+                        String mvId = songJson.getString("mv");
+//                        String lrcMatch = songJson.getJSONObject("lyrics").getString("txt").replace("\n", " / ");
+                        JSONArray lyrics = songJson.getJSONArray("lyrics");
+                        String lrcMatch = null;
+                        if (JsonUtil.notEmpty(lyrics)) {
+                            StringJoiner sj = new StringJoiner(" / ");
+                            for (int j = 0, size = lyrics.size(); j < size; j++) {
+                                sj.add(lyrics.getString(j));
+                            }
+                            lrcMatch = StringUtil.removeHTMLLabel(sj.toString());
+                        }
 
                         NetMusicInfo musicInfo = new NetMusicInfo();
                         musicInfo.setId(songId);
@@ -176,7 +174,9 @@ public class MusicSearchReq {
             Integer t = 0;
 
             final int lim = Math.min(20, limit);
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_VOICE_API, encodedKeyword, lim, (page - 1) * lim))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String musicInfoBody = SdkCommon.ncRequest(Method.POST, SEARCH_VOICE_API,
+                            String.format("{\"keyword\":\"%s\",\"scene\":\"normal\",\"offset\":%s,\"limit\":%s}", keyword, (page - 1) * lim, lim), options)
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

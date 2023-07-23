@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.music.info;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -12,6 +9,8 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.*;
 import net.doge.util.ui.ImageUtil;
@@ -23,14 +22,15 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class MusicInfoReq {
     // 歌曲信息 API (单首)
-    private final String SINGLE_SONG_DETAIL_API = SdkCommon.PREFIX + "/song/detail?ids=%s";
+    private final String SINGLE_SONG_DETAIL_API = "https://music.163.com/api/v3/song/detail";
     // 节目信息 API
-    private final String SINGLE_PROGRAM_DETAIL_API = SdkCommon.PREFIX + "/dj/program/detail?id=%s";
+    private final String SINGLE_PROGRAM_DETAIL_API = "https://music.163.com/api/dj/program/detail";
     // 歌曲信息 API (酷狗)
     private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
     // 歌曲封面信息 API (QQ)
@@ -58,7 +58,7 @@ public class MusicInfoReq {
     private final String SINGLE_SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
 
     // 歌词 API
-    private final String LYRIC_API = SdkCommon.PREFIX + "/lyric?id=%s";
+    private final String LYRIC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
     // 歌词 API (酷狗)
 //    private final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=lrc&charset=utf8";
     // 歌词 API (QQ)
@@ -111,7 +111,8 @@ public class MusicInfoReq {
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             if (isProgram) {
-                String songBody = HttpRequest.get(String.format(SINGLE_PROGRAM_DETAIL_API, musicInfo.getProgramId()))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String songBody = SdkCommon.ncRequest(Method.POST, SINGLE_PROGRAM_DETAIL_API, String.format("{\"id\":\"%s\"}", musicInfo.getProgramId()), options)
                         .execute()
                         .body();
                 JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("program");
@@ -133,7 +134,8 @@ public class MusicInfoReq {
                     });
                 }
             } else {
-                String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_API, songId))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String songBody = SdkCommon.ncRequest(Method.POST, SINGLE_SONG_DETAIL_API, String.format("{\"c\":\"[{'id':'%s'}]\"}", songId), options)
                         .execute()
                         .body();
                 JSONArray array = JSONObject.parseObject(songBody).getJSONArray("songs");
@@ -257,13 +259,11 @@ public class MusicInfoReq {
             }
             // 咪咕的专辑名称需要额外请求专辑信息接口！
             if (!musicInfo.hasAlbumName()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
-                    String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, albumId))
-                            .execute()
-                            .body();
-                    Document doc = Jsoup.parse(albumBody);
-                    musicInfo.setAlbumName(doc.select(".content .title").text());
-                });
+                String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, albumId))
+                        .execute()
+                        .body();
+                Document doc = Jsoup.parse(albumBody);
+                musicInfo.setAlbumName(doc.select(".content .title").text());
             }
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumId);
             if (!musicInfo.hasDuration()) musicInfo.setDuration(TimeUtil.toSeconds(data.getString("length")));
@@ -500,7 +500,9 @@ public class MusicInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String lrcBody = HttpRequest.get(String.format(LYRIC_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/song/lyric/v1");
+            String lrcBody = SdkCommon.ncRequest(Method.POST, LYRIC_API,
+                            String.format("{\"id\":\"%s\",\"cp\":false,\"tv\":0,\"lv\":0,\"rv\":0,\"kv\":0,\"yv\":0,\"ytv\":0,\"yrv\":0}", id), options)
                     .execute()
                     .body();
             JSONObject lrcJson = JSONObject.parseObject(lrcBody);

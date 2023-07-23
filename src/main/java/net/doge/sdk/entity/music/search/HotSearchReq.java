@@ -3,24 +3,24 @@ package net.doge.sdk.entity.music.search;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.SdkCommon;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class HotSearchReq {
     // 热搜 API
-    private final String HOT_SEARCH_API = SdkCommon.PREFIX + "/search/hot";
+    private final String HOT_SEARCH_API = "https://music.163.com/weapi/search/hot";
     // 热搜 API (酷狗)
     private final String HOT_SEARCH_KG_API = "http://gateway.kugou.com/api/v3/search/hot_tab?signature=ee44edb9d7155821412d220bcaf509dd&appid=1005&clientver=10026&plat=0";
     // 热搜 API (QQ)
@@ -46,7 +46,8 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearch = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            String hotSearchBody = HttpRequest.get(HOT_SEARCH_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String hotSearchBody = SdkCommon.ncRequest(Method.POST, HOT_SEARCH_API, "{\"type\":1111}", options)
                     .execute()
                     .body();
             JSONObject hotSearchJson = JSONObject.parseObject(hotSearchBody);

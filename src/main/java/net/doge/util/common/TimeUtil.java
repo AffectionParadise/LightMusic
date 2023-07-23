@@ -161,6 +161,26 @@ public class TimeUtil {
     }
 
     /**
+     * 获取当前年份
+     *
+     * @param
+     * @return
+     */
+    public static int currYear() {
+        return DateUtil.year(new Date());
+    }
+
+    /**
+     * 获取当前月份
+     *
+     * @param
+     * @return
+     */
+    public static int currMonth() {
+        return DateUtil.month(new Date()) + 1;
+    }
+
+    /**
      * 转换年为 xx 后
      *
      * @param year 年

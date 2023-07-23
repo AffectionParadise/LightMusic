@@ -1,12 +1,14 @@
 package net.doge.sdk.entity.playlist.tag;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.util.common.StringUtil;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,14 +16,15 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class HotPlaylistTagReq {
     // 精品歌单标签 API
-    private final String HIGH_QUALITY_PLAYLIST_TAG_API = SdkCommon.PREFIX + "/playlist/highquality/tags";
+    private final String HIGH_QUALITY_PLAYLIST_TAG_API = "https://music.163.com/api/playlist/highquality/tags";
     // 网友精选碟标签 API
-    private final String PICKED_PLAYLIST_TAG_API = SdkCommon.PREFIX + "/playlist/catlist";
+    private final String PICKED_PLAYLIST_TAG_API = "https://music.163.com/weapi/playlist/catalogue";
     // 歌单标签 API (酷狗)
     private final String PLAYLIST_TAG_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_smarty=1";
     // 歌单标签 API (QQ)
@@ -57,7 +60,8 @@ public class HotPlaylistTagReq {
         // 网易云
         // 精品歌单标签
         Runnable initHighQualityPlaylistTag = () -> {
-            String playlistTagBody = HttpRequest.get(HIGH_QUALITY_PLAYLIST_TAG_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistTagBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_TAG_API, "{}", options)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -68,12 +72,13 @@ public class HotPlaylistTagReq {
                 String name = tagJson.getString("name");
 
                 if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[0] = StringUtil.urlEncode(name);
+                Tags.hotPlaylistTag.get(name)[0] = name;
             }
         };
         // 网友精选碟标签
         Runnable initPickedPlaylistTag = () -> {
-            String playlistTagBody = HttpRequest.get(PICKED_PLAYLIST_TAG_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistTagBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_TAG_API, "{}", options)
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -84,7 +89,7 @@ public class HotPlaylistTagReq {
                 String name = tagJson.getString("name");
 
                 if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[1] = StringUtil.urlEncode(name);
+                Tags.hotPlaylistTag.get(name)[1] = name;
             }
         };
 

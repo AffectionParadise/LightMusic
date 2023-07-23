@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.music.menu;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -10,6 +11,8 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
@@ -20,15 +23,16 @@ import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class MusicMenuReq {
     // 相似歌曲 API
-    private final String SIMILAR_SONG_API = SdkCommon.PREFIX + "/simi/song?id=%s";
+    private final String SIMILAR_SONG_API = "https://music.163.com/weapi/v1/discovery/simiSong";
     // 相似歌曲 API (猫耳)
     private final String SIMILAR_SONG_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
 
     // 歌曲相关歌单 API
-    private final String RELATED_PLAYLIST_API = SdkCommon.PREFIX + "/simi/playlist?id=%s";
+    private final String RELATED_PLAYLIST_API = "https://music.163.com/weapi/discovery/simiPlaylist";
 
     // 歌曲推荐电台 API (猫耳)
     private final String SONG_REC_RADIO_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
@@ -52,7 +56,8 @@ public class MusicMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String musicInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_SONG_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -220,7 +225,8 @@ public class MusicMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String playlistInfoBody = HttpRequest.get(String.format(RELATED_PLAYLIST_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_PLAYLIST_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

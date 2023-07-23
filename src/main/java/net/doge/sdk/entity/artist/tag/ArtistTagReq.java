@@ -1,21 +1,25 @@
 package net.doge.sdk.entity.artist.tag;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.SdkCommon;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.util.common.JsonUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class ArtistTagReq {
     // 曲风 API
-    private final String STYLE_API = SdkCommon.PREFIX + "/style/list";
+    private final String STYLE_API = "https://music.163.com/api/tag/list/get";
 
     /**
      * 加载歌手标签
@@ -72,7 +76,8 @@ public class ArtistTagReq {
         final int c = 9;
         // 网易云曲风
         Runnable initStyleArtistTag = () -> {
-            String tagBody = HttpRequest.get(STYLE_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
                     .execute()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
@@ -147,7 +152,7 @@ public class ArtistTagReq {
                 Tags.artistTag.get(name)[4] = String.format("-100 -100 %s -100", id);
 
                 // 网易云
-                Tags.artistTag.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : name);
+                Tags.artistTag.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : String.valueOf((int) name.toUpperCase().charAt(0)));
 
                 // 酷我
                 if (!"#".equals(name)) Tags.artistTag.get(name)[6] = String.format("0 %s", name);

@@ -3,6 +3,7 @@ package net.doge.sdk.entity.album.rcmd;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -11,6 +12,8 @@ import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -25,6 +28,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -32,19 +36,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewAlbumReq {
     // 新碟上架 API
-    private final String NEW_ALBUM_API = SdkCommon.PREFIX + "/top/album?area=%s";
+    private final String NEW_ALBUM_API = "https://music.163.com/api/discovery/new/albums/area";
     // 新碟上架(热门) API
 //    private final String HOT_ALBUM_API = SdkCommon.PREFIX + "/top/album?type=hot&area=%s";
     // 全部新碟 API
-    private final String ALL_NEW_ALBUM_API = SdkCommon.PREFIX + "/album/new?area=%s&offset=%s&limit=%s";
+    private final String ALL_NEW_ALBUM_API = "https://music.163.com/weapi/album/new";
     // 最新专辑 API
-    private final String NEWEST_ALBUM_API = SdkCommon.PREFIX + "/album/newest";
+    private final String NEWEST_ALBUM_API = "https://music.163.com/api/discovery/newAlbum";
     // 数字新碟上架 API
-    private final String NEWEST_DI_ALBUM_API = SdkCommon.PREFIX + "/album/list?limit=200";
+    private final String NEWEST_DI_ALBUM_API = "https://music.163.com/weapi/vipmall/albumproduct/list";
     // 数字专辑语种风格馆 API
-    private final String LANG_DI_ALBUM_API = SdkCommon.PREFIX + "/album/list/style?area=%s&limit=50";
+    private final String LANG_DI_ALBUM_API = "https://music.163.com/weapi/vipmall/appalbum/album/style";
     // 曲风专辑 API
-    private final String STYLE_ALBUM_API = SdkCommon.PREFIX + "/style/album?tagId=%s&cursor=%s&size=%s";
+    private final String STYLE_ALBUM_API = "https://music.163.com/api/style-tag/home/album";
     // 新碟推荐 API (咪咕)
     private final String NEW_ALBUM_MG_API = "http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23854016&pageNo=%s&pageSize=%s&type=2003";
     // 新专辑榜 API (咪咕)
@@ -88,7 +92,11 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_API, s[0]))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEW_ALBUM_API,
+                                String.format("{\"area\":\"%s\",\"type\":\"new\",\"offset\":0,\"limit\":50,\"year\":%s,\"month\":%s,\"total\":false,\"rcmd\":true}",
+                                        s[0], TimeUtil.currYear(), TimeUtil.currMonth()),
+                                options)
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -174,7 +182,10 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String albumInfoBody = HttpRequest.get(String.format(ALL_NEW_ALBUM_API, s[0], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String albumInfoBody = SdkCommon.ncRequest(Method.POST, ALL_NEW_ALBUM_API,
+                                String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[0], (page - 1) * limit, limit),
+                                options)
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -214,7 +225,8 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(NEWEST_ALBUM_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_ALBUM_API, "{}", options)
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -253,7 +265,9 @@ public class NewAlbumReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(NEWEST_DI_ALBUM_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_DI_ALBUM_API,
+                            "{\"area\":\"ALL\",\"offset\":0,\"limit\":200,\"total\":true,\"type\":\"\"}", options)
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -289,13 +303,16 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                String albumInfoBody = HttpRequest.get(String.format(LANG_DI_ALBUM_API, s[1]))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String albumInfoBody = SdkCommon.ncRequest(Method.POST, LANG_DI_ALBUM_API,
+                                String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit),
+                                options)
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONArray albumArray = albumInfoJson.getJSONArray("albumProducts");
-                t = albumArray.size();
-                for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
+                t = albumInfoJson.getBooleanValue("hasNextPage") ? page * limit + 1 : page * limit;
+                for (int i = 0, len = albumArray.size(); i < len; i++) {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
                     String albumId = albumJson.getString("albumId");
@@ -324,7 +341,9 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
-                String albumInfoBody = HttpRequest.get(String.format(STYLE_ALBUM_API, s[2], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String albumInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ALBUM_API,
+                                String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

@@ -1,15 +1,18 @@
 package net.doge.sdk.entity.radio.rcmd;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.model.RadioType;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.model.RadioType;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.RegexUtil;
@@ -22,6 +25,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -29,60 +33,43 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class HotRadioReq {
     //    // 个性电台推荐 API
-//    private final String PERSONAL_RADIO_API
-//            = prefix + "/dj/personalize/recommend";
+//    private final String PERSONAL_RADIO_API = prefix + "/dj/personalize/recommend";
     // 今日优选电台 API
-    private final String DAILY_RADIO_API
-            = SdkCommon.PREFIX + "/dj/today/perfered";
+    private final String DAILY_RADIO_API = "https://music.163.com/weapi/djradio/home/today/perfered";
     // 热门电台 API
-    private final String HOT_RADIO_API
-            = SdkCommon.PREFIX + "/dj/hot?limit=1000";
+    private final String HOT_RADIO_API = "https://music.163.com/weapi/djradio/hot/v1";
     // 热门电台榜 API
-    private final String RADIO_TOPLIST_API
-            = SdkCommon.PREFIX + "/dj/toplist?type=hot&limit=200";
+    private final String RADIO_TOPLIST_API = "https://music.163.com/api/djradio/toplist";
     // 推荐电台 API
-    private final String REC_RADIO_API
-            = SdkCommon.PREFIX + "/dj/recommend";
+    private final String RECOMMEND_RADIO_API = "https://music.163.com/weapi/djradio/recommend/v1";
     // 分类热门电台 API
-    private final String CAT_HOT_RADIO_API
-            = SdkCommon.PREFIX + "/dj/radio/hot?cateId=%s&offset=%s&limit=%s";
+    private final String CAT_HOT_RADIO_API = "https://music.163.com/api/djradio/hot";
     // 分类推荐电台 API
-    private final String CAT_REC_RADIO_API
-            = SdkCommon.PREFIX + "/dj/recommend/type?type=%s";
+    private final String CAT_REC_RADIO_API = "https://music.163.com/weapi/djradio/recommend";
     // 分类电台榜 API (喜马拉雅)
-    private final String CAT_RADIO_RANKING_XM_API
-            = "https://www.ximalaya.com/revision/rank/v3/element?typeId=%s&clusterId=%s";
+    private final String CAT_RADIO_RANKING_XM_API = "https://www.ximalaya.com/revision/rank/v3/element?typeId=%s&clusterId=%s";
     // 分类电台 API (喜马拉雅)
     private final String CAT_RADIO_XM_API
             = "https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=%s&subcategory=%s&meta=&sort=0&page=%s&perPage=%s&useCache=false";
     // 频道电台 API (喜马拉雅)
-    private final String CHANNEL_RADIO_XM_API
-            = "https://www.ximalaya.com/revision/metadata/v2/channel/albums?groupId=%s&pageNum=%s&pageSize=%s&sort=1&metadata=";
+    private final String CHANNEL_RADIO_XM_API = "https://www.ximalaya.com/revision/metadata/v2/channel/albums?groupId=%s&pageNum=%s&pageSize=%s&sort=1&metadata=";
     // 周榜电台 API (猫耳)
-    private final String WEEK_RADIO_ME_API
-            = "https://www.missevan.com/reward/drama-reward-rank?period=1&page=%s&page_size=%s";
+    private final String WEEK_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank?period=1&page=%s&page_size=%s";
     // 月榜电台 API (猫耳)
-    private final String MONTH_RADIO_ME_API
-            = "https://www.missevan.com/reward/drama-reward-rank?period=2&page=%s&page_size=%s";
+    private final String MONTH_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank?period=2&page=%s&page_size=%s";
     // 总榜电台 API (猫耳)
-    private final String ALL_TIME_RADIO_ME_API
-            = "https://www.missevan.com/reward/drama-reward-rank?period=3&page=%s&page_size=%s";
+    private final String ALL_TIME_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank?period=3&page=%s&page_size=%s";
     // 广播剧分类电台 API (猫耳)
-    private final String CAT_RADIO_ME_API
-            = "https://www.missevan.com/dramaapi/filter?filters=%s_0_%s_%s_0&page=%s&order=1&page_size=%s";
+    private final String CAT_RADIO_ME_API = "https://www.missevan.com/dramaapi/filter?filters=%s_0_%s_%s_0&page=%s&order=1&page_size=%s";
     // Top 250 电台 API (豆瓣)
-    private final String TOP_RADIO_DB_API
-            = "https://movie.douban.com/top250?start=%s&filter=";
+    private final String TOP_RADIO_DB_API = "https://movie.douban.com/top250?start=%s&filter=";
     // 分类电台 API (豆瓣)
-    private final String CAT_RADIO_DB_API
-            = "https://movie.douban.com/j/chart/top_list?type=%s&interval_id=100:90&action=&start=%s&limit=%s";
+    private final String CAT_RADIO_DB_API = "https://movie.douban.com/j/chart/top_list?type=%s&interval_id=100:90&action=&start=%s&limit=%s";
     // 分类电台总数 API (豆瓣)
-    private final String CAT_RADIO_TOTAL_DB_API
-            = "https://movie.douban.com/j/chart/top_list_count?type=%s&interval_id=100:90";
+    private final String CAT_RADIO_TOTAL_DB_API = "https://movie.douban.com/j/chart/top_list_count?type=%s&interval_id=100:90";
     // 分类游戏电台 API (豆瓣)
-    private final String CAT_GAME_RADIO_DB_API
-            = "https://www.douban.com/j/ilmen/game/search?genres=%s&platforms=%s&more=%s&sort=rating";
-    
+    private final String CAT_GAME_RADIO_DB_API = "https://www.douban.com/j/ilmen/game/search?genres=%s&platforms=%s&more=%s&sort=rating";
+
     /**
      * 获取个性电台 + 今日优选 + 热门电台 + 热门电台榜
      */
@@ -115,7 +102,8 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(DAILY_RADIO_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, DAILY_RADIO_API, "{\"page\":0}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -160,7 +148,8 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(HOT_RADIO_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_API, "{\"offset\":0,\"limit\":1000}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -202,7 +191,8 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(RADIO_TOPLIST_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_TOPLIST_API, "{\"type\":1,\"offset\":0,\"limit\":200}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -244,7 +234,8 @@ public class HotRadioReq {
             LinkedList<NetRadioInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String radioInfoBody = HttpRequest.get(REC_RADIO_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_API, "{}", options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -287,7 +278,9 @@ public class HotRadioReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String radioInfoBody = HttpRequest.get(String.format(CAT_HOT_RADIO_API, s[0], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_HOT_RADIO_API,
+                                String.format("{\"cateId\":\"%s\",\"offset\":%s,\"limit\":%s}", s[0], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -331,7 +324,8 @@ public class HotRadioReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                String radioInfoBody = HttpRequest.get(String.format(CAT_REC_RADIO_API, s[1]))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_REC_RADIO_API, String.format("{\"cateId\":\"%s\"}", s[1]), options)
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);

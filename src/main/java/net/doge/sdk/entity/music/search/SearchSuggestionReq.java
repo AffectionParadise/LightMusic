@@ -1,30 +1,26 @@
 package net.doge.sdk.entity.music.search;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class SearchSuggestionReq {
     // 搜索建议(简单) API
-    private final String SIMPLE_SEARCH_SUGGESTION_API = SdkCommon.PREFIX + "/search/suggest?keywords=%s&type=mobile";
+    private final String SIMPLE_SEARCH_SUGGESTION_API = "https://music.163.com/weapi/search/suggest/keyword";
     // 搜索建议 API
-    private final String SEARCH_SUGGESTION_API = SdkCommon.PREFIX + "/search/suggest?keywords=%s";
+    private final String SEARCH_SUGGESTION_API = "https://music.163.com/weapi/search/suggest/web";
     // 搜索建议 API (酷狗)
     private final String SEARCH_SUGGESTION_KG_API = "http://msearchcdn.kugou.com/new/app/i/search.php?cmd=302&keyword=%s";
     // 搜索建议 API (QQ)
@@ -54,7 +50,8 @@ public class SearchSuggestionReq {
         Callable<List<String>> getSimpleSearchSuggestion = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            String searchSuggestionBody = HttpRequest.get(String.format(SIMPLE_SEARCH_SUGGESTION_API, encodedKeyword))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SIMPLE_SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
                     .execute()
                     .body();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
@@ -73,7 +70,8 @@ public class SearchSuggestionReq {
         Callable<List<String>> getSearchSuggestion = () -> {
             LinkedList<String> res = new LinkedList<>();
 
-            String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_API, encodedKeyword))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
                     .execute()
                     .body();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);

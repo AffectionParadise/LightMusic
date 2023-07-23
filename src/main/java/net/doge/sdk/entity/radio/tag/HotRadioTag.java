@@ -1,11 +1,14 @@
 package net.doge.sdk.entity.radio.tag;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,14 +17,15 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class HotRadioTag {
     // 分类热门电台标签 API
-    private final String HOT_RADIO_TAG_API = SdkCommon.PREFIX + "/dj/category/recommend";
+    private final String HOT_RADIO_TAG_API = "https://music.163.com/weapi/djradio/home/category/recommend";
     // 分类推荐电台标签 API
-    private final String REC_RADIO_TAG_API = SdkCommon.PREFIX + "/dj/catelist";
+    private final String RECOMMEND_RADIO_TAG_API = "https://music.163.com/weapi/djradio/category/get";
     // 电台分类标签 API (喜马拉雅)
     private final String RADIO_TAG_XM_API = "https://www.ximalaya.com/revision/category/allCategoryInfo";
     // 排行榜标签 API (喜马拉雅)
@@ -74,7 +78,8 @@ public class HotRadioTag {
         // 网易云
         // 分类热门电台标签
         Runnable initHotRadioTag = () -> {
-            String radioTagBody = HttpRequest.get(HOT_RADIO_TAG_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioTagBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_TAG_API, "{}", options)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -91,7 +96,8 @@ public class HotRadioTag {
         };
         // 分类推荐电台标签
         Runnable initRecRadioTag = () -> {
-            String radioTagBody = HttpRequest.get(REC_RADIO_TAG_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioTagBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_TAG_API, "{}", options)
                     .execute()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);

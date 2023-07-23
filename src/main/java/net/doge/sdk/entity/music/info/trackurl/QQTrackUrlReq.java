@@ -29,9 +29,9 @@ public class QQTrackUrlReq {
                 + time + "\",\n\t\"sign_2\":\t\"" + CryptoUtil.hashMD5(s6.replace("\\", "") + s7.replace("\\", "")
                 + lowerCase + time + "NDRjZGIzNzliNzEx").toLowerCase() + "\"\n}";
 
-        byte[] aesBytes = CryptoUtil.AESEncrypt(s8, "6480fedae539deb2");
-        s8 = CryptoUtil.byte2hex(aesBytes);
-        byte[] encodedBytes = CryptoUtil.byte2hex(s8.getBytes(StandardCharsets.UTF_8)).getBytes(StandardCharsets.UTF_8);
+        byte[] aesBytes = CryptoUtil.aesEncrypt(s8, "6480fedae539deb2");
+        s8 = CryptoUtil.bytesToHex(aesBytes);
+        byte[] encodedBytes = CryptoUtil.bytesToHex(s8.getBytes(StandardCharsets.UTF_8)).getBytes(StandardCharsets.UTF_8);
         byte[] compressedBytes = CryptoUtil.compress(encodedBytes);
         String[] urls = {
                 "http://app.kzti.top:1030/client/cgi-bin/api.fcg",

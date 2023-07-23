@@ -2,14 +2,17 @@ package net.doge.sdk.entity.user.menu;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.model.RadioType;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.model.RadioType;
 import net.doge.model.entity.*;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -24,6 +27,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -32,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class UserMenuReq {
     // 用户歌单 API
-    private final String USER_PLAYLIST_API = SdkCommon.PREFIX + "/user/playlist?uid=%s&limit=1000";
+    private final String USER_PLAYLIST_API = "https://music.163.com/api/user/playlist";
     // 用户创建歌单 API (QQ)
     private final String USER_CREATED_PLAYLIST_QQ_API = "https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?" +
             "hostUin=0&hostuin=%s&sin=0&size=200&g_tk=5381&loginUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0";
@@ -49,7 +53,7 @@ public class UserMenuReq {
     private final String USER_ALBUM_DT_API = "https://www.duitang.com/napi/album/list/by_user/?user_id=%s&start=%s&limit=%s";
 
     // 用户电台 API
-    private final String USER_RADIO_API = SdkCommon.PREFIX + "/user/audio?uid=%s";
+    private final String USER_RADIO_API = "https://music.163.com/weapi/djradio/get/byuser";
     // 用户电台 API (喜马拉雅)
     private final String USER_RADIO_XM_API = "https://www.ximalaya.com/revision/user/pub?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户收藏电台 API (喜马拉雅)
@@ -73,7 +77,7 @@ public class UserMenuReq {
     private final String USER_VIDEO_BI_API = "https://api.bilibili.com/x/space/wbi/arc/search?order=%s&mid=%s&pn=%s&ps=%s";
 
     // 用户关注 API
-    private final String USER_FOLLOWS_API = SdkCommon.PREFIX + "/user/follows?uid=%s&limit=1000";
+    private final String USER_FOLLOWS_API = "https://music.163.com/weapi/user/getfollows/%s";
     // 用户关注 API (喜马拉雅)
     private final String USER_FOLLOWS_XM_API = "https://www.ximalaya.com/revision/user/following?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户关注 API (猫耳)
@@ -86,7 +90,7 @@ public class UserMenuReq {
     private final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
 
     // 用户粉丝 API
-    private final String USER_FOLLOWEDS_API = SdkCommon.PREFIX + "/user/followeds?uid=%s&offset=%s&limit=%s";
+    private final String USER_FOLLOWEDS_API = "https://music.163.com/eapi/user/getfolloweds/%s";
     // 用户粉丝 API (喜马拉雅)
     private final String USER_FOLLOWEDS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户粉丝 API (猫耳)
@@ -115,13 +119,15 @@ public class UserMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String playlistInfoBody = HttpRequest.get(String.format(USER_PLAYLIST_API, uid))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, USER_PLAYLIST_API,
+                            String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", uid, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlist");
-            total.set(playlistArray.size());
-            for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
+            total.set(playlistInfoJson.getBooleanValue("more") ? page * limit + 1 : page * limit);
+            for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                 String playlistId = playlistJson.getString("id");
@@ -471,7 +477,9 @@ public class UserMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String playlistInfoBody = HttpRequest.get(String.format(USER_PLAYLIST_API, uid))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, USER_PLAYLIST_API,
+                            String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", uid, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -865,7 +873,8 @@ public class UserMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_API, uid))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, USER_RADIO_API, String.format("{\"userId\":\"%s\"}", uid), options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -1409,13 +1418,15 @@ public class UserMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FOLLOWS_API, id),
+                            String.format("{\"offset\":%s,\"limit\":%s,\"order\":true}", (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("follow");
-            t = userArray.size();
-            for (int i = (page - 1) * limit, len = Math.min(userArray.size(), page * limit); i < len; i++) {
+            t = userInfoJson.getBooleanValue("more") ? page * limit + 1 : page * limit;
+            for (int i = 0, len = userArray.size(); i < len; i++) {
                 JSONObject userJson = userArray.getJSONObject(i);
 
                 String userId = userJson.getString("userId");
@@ -1748,7 +1759,9 @@ public class UserMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_API, id, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/user/getfolloweds");
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FOLLOWEDS_API, id),
+                            String.format("{\"userId\":\"%s\",\"time\":0,\"offset\":%s,\"limit\":%s,\"getcounts\":true}", id, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);

@@ -3,6 +3,7 @@ package net.doge.sdk.entity.mv.search;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -11,6 +12,8 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -20,19 +23,17 @@ import net.doge.util.common.TimeUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MvSearchReq {
-    // 关键词搜索 MV API
-    private final String SEARCH_MV_API = SdkCommon.PREFIX + "/cloudsearch?type=1004&keywords=%s&limit=%s&offset=%s";
-    // 关键词搜索视频 API
-    private final String SEARCH_VIDEO_API = SdkCommon.PREFIX + "/cloudsearch?type=1014&keywords=%s&limit=%s&offset=%s";
+    // 关键词搜索 MV / 视频 API
+    private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索 MV API (酷狗)
-    private final String SEARCH_MV_KG_API
-            = "http://msearch.kugou.com/api/v3/search/mv?version=9108&keyword=%s&page=%s&pagesize=%s&sver=2";
+    private final String SEARCH_MV_KG_API = "http://msearch.kugou.com/api/v3/search/mv?version=9108&keyword=%s&page=%s&pagesize=%s&sver=2";
     // 关键词搜索 MV API (酷我)
     private final String SEARCH_MV_KW_API = "http://www.kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索 MV API (好看)
@@ -57,7 +58,9 @@ public class MvSearchReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.get(String.format(SEARCH_MV_API, encodedKeyword, limit, (page - 1) * limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String mvInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":1004,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -99,7 +102,9 @@ public class MvSearchReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.get(String.format(SEARCH_VIDEO_API, encodedKeyword, limit, (page - 1) * limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String mvInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":1014,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

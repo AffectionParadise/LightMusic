@@ -1,16 +1,19 @@
 package net.doge.sdk.entity.radio.menu;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.model.RadioType;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.model.RadioType;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
@@ -20,16 +23,17 @@ import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class RadioMenuReq {
     // 电台订阅者 API
-    private final String RADIO_SUBSCRIBERS_API = SdkCommon.PREFIX + "/dj/subscriber?id=%s";
-    
+    private final String RADIO_SUBSCRIBERS_API = "https://music.163.com/api/djradio/subscriber";
+
     // 电台 CV API (猫耳)
     private final String RADIO_CVS_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
     // 电台演职员 API (豆瓣)
     private final String RADIO_ARTISTS_DB_API = "https://movie.douban.com/subject/%s/celebrities";
-    
+
     // 相似电台 API (猫耳)
     private final String SIMILAR_RADIO_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
     // 相似电台 API (豆瓣)
@@ -53,7 +57,9 @@ public class RadioMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String userInfoBody = HttpRequest.get(String.format(RADIO_SUBSCRIBERS_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_SUBSCRIBERS_API,
+                            String.format("{\"id\":\"%s\",\"time\":-1,\"limit\":1000,\"total\":true}", id), options)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);

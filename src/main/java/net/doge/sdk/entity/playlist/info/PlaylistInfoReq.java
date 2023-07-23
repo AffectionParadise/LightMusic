@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.playlist.info;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -12,6 +9,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.*;
 import org.jsoup.Jsoup;
@@ -22,6 +21,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -29,9 +29,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlaylistInfoReq {
     // 歌单信息 API
-    private final String PLAYLIST_DETAIL_API = SdkCommon.PREFIX + "/playlist/detail?id=%s";
+    private final String PLAYLIST_DETAIL_API = "https://music.163.com/api/v6/playlist/detail";
     // 歌单歌曲 API
-    private final String PLAYLIST_SONGS_API = SdkCommon.PREFIX + "/playlist/track/all?id=%s&offset=%s&limit=%s";
+    private final String BATCH_SONGS_DETAIL_API = "https://music.163.com/api/v3/song/detail";
     // 歌单信息 API (酷狗)
     private final String PLAYLIST_DETAIL_KG_API = "https://mobiles.kugou.com/api/v5/special/info_v2?appid=1058&specialid=0&global_specialid=%s&format=jsonp&srcappid=2919&clientver=20000&clienttime=1586163242519&mid=1586163242519&uuid=1586163242519&dfid=-&signature=%s";
     private final String PLAYLIST_SONGS_KG_API = "https://mobiles.kugou.com/api/v5/special/song_v2?appid=1058&global_specialid=%s&specialid=0&plat=0&version=8000&page=%s&pagesize=%s&srcappid=2919&clientver=20000&clienttime=1586163263991&mid=1586163263991&uuid=1586163263991&dfid=-&signature=%s";
@@ -75,7 +75,8 @@ public class PlaylistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -367,7 +368,8 @@ public class PlaylistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -569,7 +571,18 @@ public class PlaylistInfoReq {
         if (source == NetMusicSource.NET_CLOUD) {
             // 歌曲列表
             Runnable getMusicInfo = () -> {
-                String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_API, id, (page - 1) * limit, limit))
+                // 先获取 trackId 列表
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String trackIdBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
+                        .execute()
+                        .body();
+                JSONArray trackIdArray = JSONObject.parseObject(trackIdBody).getJSONObject("playlist").getJSONArray("trackIds");
+                StringJoiner sj = new StringJoiner(",");
+                for (int i = (page - 1) * limit, s = Math.min(trackIdArray.size(), page * limit); i < s; i++)
+                    sj.add(String.format("{'id':'%s'}", trackIdArray.getJSONObject(i).getString("id")));
+                String ids = sj.toString();
+
+                String playlistInfoBody = SdkCommon.ncRequest(Method.POST, BATCH_SONGS_DETAIL_API, String.format("{\"c\":\"[%s]\"}", ids), options)
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -602,7 +615,8 @@ public class PlaylistInfoReq {
             // 歌曲总数
             Runnable getTotal = () -> {
                 // 网易云获取歌单歌曲总数需要额外请求歌单详情接口！
-                String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

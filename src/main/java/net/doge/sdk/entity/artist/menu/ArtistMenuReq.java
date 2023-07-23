@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.artist.menu;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -10,6 +11,8 @@ import net.doge.model.entity.NetRadioInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
@@ -22,22 +25,23 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ArtistMenuReq {
     // 相似歌手 API
-    private final String SIMILAR_ARTIST_API = SdkCommon.PREFIX + "/simi/artist?id=%s";
+    private final String SIMILAR_ARTIST_API = "https://music.163.com/weapi/discovery/simiArtist";
     // 相似歌手 API (酷狗)(POST)
     private final String SIMILAR_ARTIST_KG_API = "http://kmr.service.kugou.com/v1/author/similar";
     // 相似歌手 API (QQ)
     private final String SIMILAR_ARTIST_QQ_API = "http://c.y.qq.com/v8/fcg-bin/fcg_v8_simsinger.fcg?singer_mid=%s&num=10&utf8=1";
 
     // 歌手粉丝 API
-    private final String ARTIST_FANS_API = SdkCommon.PREFIX + "/artist/fans?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_FANS_API = "https://music.163.com/weapi/artist/fans/get";
     // 歌手粉丝总数 API
-    private final String ARTIST_FANS_TOTAL_API = SdkCommon.PREFIX + "/artist/follow/count?id=%s";
+    private final String ARTIST_FANS_TOTAL_API = "https://music.163.com/weapi/artist/follow/count/get";
     // 社团职员 API (猫耳)
     private final String ORGANIZATION_STAFFS_ME_API = "https://www.missevan.com/organization/staff?organization_id=%s&page=%s";
     // 歌手粉丝 API (豆瓣)
@@ -71,7 +75,8 @@ public class ArtistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String artistInfoBody = HttpRequest.get(String.format(SIMILAR_ARTIST_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String artistInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_ARTIST_API, String.format("{\"artistid\":\"%s\"}", id), options)
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -183,7 +188,9 @@ public class ArtistMenuReq {
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             Runnable getFans = () -> {
-                String userInfoBody = HttpRequest.get(String.format(ARTIST_FANS_API, id, (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String userInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_FANS_API,
+                                String.format("{\"id\":\"%s\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -220,7 +227,8 @@ public class ArtistMenuReq {
             };
 
             Runnable getFansCnt = () -> {
-                String tBody = HttpRequest.get(String.format(ARTIST_FANS_TOTAL_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String tBody = SdkCommon.ncRequest(Method.POST, ARTIST_FANS_TOTAL_API, String.format("{\"id\":\"%s\"}", id), options)
                         .execute()
                         .body();
                 t.set(JSONObject.parseObject(tBody).getJSONObject("data").getIntValue("fansCnt"));

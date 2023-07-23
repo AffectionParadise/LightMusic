@@ -1,25 +1,28 @@
 package net.doge.sdk.entity.sheet;
 
-import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetSheetInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import net.doge.util.common.JsonUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class SheetReq {
     // 获取乐谱 API
-    private final String GET_SHEETS_API = SdkCommon.PREFIX + "/sheet/list?id=%s";
+    private final String GET_SHEETS_API = "https://interface3.music.163.com/eapi/music/sheet/list/v1";
     // 获取乐谱图片 API
-    private final String GET_SHEETS_IMG_API = SdkCommon.PREFIX + "/sheet/preview?id=%s";
+    private final String GET_SHEETS_IMG_API = "https://interface3.music.163.com/eapi//music/sheet/preview/info?id=%s";
 
     /**
      * 获取歌曲乐谱
@@ -31,7 +34,8 @@ public class SheetReq {
         Integer total = 0;
 
         if (source == NetMusicSource.NET_CLOUD) {
-            String sheetInfoBody = HttpRequest.get(String.format(GET_SHEETS_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String sheetInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_API, String.format("{\"id\":\"%s\",\"abTest\":\"b\"}", id), options)
                     .execute()
                     .body();
             JSONObject sheetInfoJson = JSONObject.parseObject(sheetInfoBody);
@@ -85,7 +89,8 @@ public class SheetReq {
         Integer total = 0;
 
         if (source == NetMusicSource.NET_CLOUD) {
-            String imgInfoBody = HttpRequest.get(String.format(GET_SHEETS_IMG_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api//music/sheet/preview/info");
+            String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_API, id), String.format("{\"id\":\"%s\"}", id), options)
                     .execute()
                     .body();
             JSONObject imgInfoJson = JSONObject.parseObject(imgInfoBody);

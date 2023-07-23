@@ -50,6 +50,16 @@ public class CryptoUtil {
     }
 
     /**
+     * Base 64 解码 bytes
+     *
+     * @param s
+     * @return
+     */
+    public static byte[] base64DecodeToBytes(String s) {
+        return Base64Decoder.decode(s);
+    }
+
+    /**
      * Base 64 编码 bytes
      *
      * @param bytes
@@ -66,7 +76,7 @@ public class CryptoUtil {
      * @param key
      * @return
      */
-    public static byte[] AESEncrypt(String data, String key) {
+    public static byte[] aesEncrypt(String data, String key) {
         try {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
@@ -83,7 +93,7 @@ public class CryptoUtil {
      * @param bytes
      * @return
      */
-    public static String byte2hex(byte[] bytes) {
+    public static String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) sb.append(String.format("%02x", b));
         return sb.toString();

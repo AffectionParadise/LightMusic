@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.playlist.rcmd;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -12,6 +9,8 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.RegexUtil;
@@ -24,6 +23,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,20 +31,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendPlaylistReq {
     // 推荐歌单 API
-    private final String RECOMMEND_PLAYLIST_API = SdkCommon.PREFIX + "/personalized?limit=100";
+    private final String RECOMMEND_PLAYLIST_API = "https://music.163.com/weapi/personalized/playlist";
     // 发现歌单 API
     private final String DISCOVER_PLAYLIST_API = "https://music.163.com/discover/playlist/?order=hot&offset=%s&limit=%s";
     // 曲风歌单 API
-    private final String STYLE_PLAYLIST_API = SdkCommon.PREFIX + "/style/playlist?tagId=%s&cursor=%s&size=%s";
+    private final String STYLE_PLAYLIST_API = "https://music.163.com/api/style-tag/home/playlist";
     // 推荐歌单 API (每页固定 30 条)(酷狗)
-    private final String RECOMMEND_PLAYLIST_KG_API
-            = "http://m.kugou.com/plist/index?json=true&page=%s";
+    private final String RECOMMEND_PLAYLIST_KG_API = "http://m.kugou.com/plist/index?json=true&page=%s";
     // 推荐分类歌单(推荐) API (酷狗)
-    private final String RECOMMEND_CAT_PLAYLIST_KG_API
-            = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=5&c=%s&p=%s";
+    private final String RECOMMEND_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=5&c=%s&p=%s";
     // 推荐分类歌单(最新) API (酷狗)
-    private final String NEW_CAT_PLAYLIST_KG_API
-            = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=7&c=%s&p=%s";
+    private final String NEW_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=7&c=%s&p=%s";
     // 推荐歌单 API (QQ)
 //    private final String RECOMMEND_PLAYLIST_QQ_API
 //            = SdkCommon.PREFIX_QQ + "/recommend/playlist?id=%s&pageNo=1&pageSize=120";
@@ -53,17 +50,13 @@ public class RecommendPlaylistReq {
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
     private final String RECOMMEND_PLAYLIST_KW_API = "https://kuwo.cn/api/www/rcm/index/playlist?loginUid=0&httpsStatus=1";
     // 推荐歌单(最新) API (酷我)
-    private final String NEW_PLAYLIST_KW_API
-            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=new";
+    private final String NEW_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=new";
     // 推荐歌单 API(最新) (咪咕)
-    private final String REC_NEW_PLAYLIST_MG_API
-            = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=2";
+    private final String REC_NEW_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=2";
     // 推荐歌单(最热) API (咪咕)
-    private final String RECOMMEND_PLAYLIST_MG_API
-            = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&startIndex=%s";
+    private final String RECOMMEND_PLAYLIST_MG_API = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&startIndex=%s";
     // 最新歌单 API (咪咕)
-    private final String NEW_PLAYLIST_MG_API
-            = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127272&startIndex=%s";
+    private final String NEW_PLAYLIST_MG_API = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127272&startIndex=%s";
     // 推荐歌单 API (千千)
     private final String REC_PLAYLIST_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
     // 推荐歌单 API (猫耳)
@@ -134,7 +127,8 @@ public class RecommendPlaylistReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(RECOMMEND_PLAYLIST_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PLAYLIST_API, "{\"n\":1000,\"limit\":100,\"total\":true}", options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -170,7 +164,9 @@ public class RecommendPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String playlistInfoBody = HttpRequest.get(String.format(STYLE_PLAYLIST_API, s[0], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String playlistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_PLAYLIST_API,
+                                String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[0], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

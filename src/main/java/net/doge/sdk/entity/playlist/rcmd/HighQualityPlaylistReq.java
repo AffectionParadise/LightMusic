@@ -3,6 +3,7 @@ package net.doge.sdk.entity.playlist.rcmd;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -11,6 +12,8 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -24,6 +27,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,23 +35,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class HighQualityPlaylistReq {
     // 精品歌单 API
-    private final String HIGH_QUALITY_PLAYLIST_API
-            = SdkCommon.PREFIX + "/top/playlist/highquality?cat=%s&limit=100";
-    // 网友精选碟(最热) API
-    private final String HOT_PICKED_PLAYLIST_API
-            = SdkCommon.PREFIX + "/top/playlist?cat=%s&limit=%s&offset=%s";
-    // 网友精选碟(最新) API
-    private final String NEW_PICKED_PLAYLIST_API
-            = SdkCommon.PREFIX + "/top/playlist?order=new&cat=%s&limit=%s&offset=%s";
+    private final String HIGH_QUALITY_PLAYLIST_API = "https://music.163.com/api/playlist/highquality/list";
+    // 网友精选碟(最热/最新) API
+    private final String PICKED_PLAYLIST_API = "https://music.163.com/weapi/playlist/list";
     // 推荐分类歌单(最热) API (酷狗)
-    private final String CAT_PLAYLIST_KG_API
-            = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=6&c=%s&p=%s";
+    private final String CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=6&c=%s&p=%s";
     // 推荐分类歌单(热藏) API (酷狗)
-    private final String HOT_COLLECTED_CAT_PLAYLIST_KG_API
-            = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=3&c=%s&p=%s";
+    private final String HOT_COLLECTED_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=3&c=%s&p=%s";
     // 推荐分类歌单(飙升) API (酷狗)
-    private final String UP_CAT_PLAYLIST_KG_API
-            = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=8&c=%s&p=%s";
+    private final String UP_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=8&c=%s&p=%s";
     // 热门歌单 API (酷狗)
     private final String HOT_PLAYLIST_KG_API
             = "http://mobilecdnbj.kugou.com/api/v5/special/recommend?recommend_expire=0&sign=52186982747e1404d426fa3f2a1e8ee4&plat=0&uid=0&version=9108&page=1&area_code=1&appid=1005&mid=286974383886022203545511837994020015101&_t=1545746286";
@@ -55,23 +51,17 @@ public class HighQualityPlaylistReq {
     private final String CAT_PLAYLIST_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
     // 热门歌单 API (酷我)
-    private final String HOT_PLAYLIST_KW_API
-            = "https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot&httpsStatus=1";
+    private final String HOT_PLAYLIST_KW_API = "https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot&httpsStatus=1";
     // 默认歌单(热门) API (酷我)
-    private final String DEFAULT_PLAYLIST_KW_API
-            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot";
+    private final String DEFAULT_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot";
     // 分类歌单 API (酷我)
-    private final String CAT_PLAYLIST_KW_API
-            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagPlayList?loginUid=0&loginSid=0&appUid=76039576&id=%s&pn=%s&rn=%s";
+    private final String CAT_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagPlayList?loginUid=0&loginSid=0&appUid=76039576&id=%s&pn=%s&rn=%s";
     // 分类歌单 API 2 (酷我)
-    private final String CAT_PLAYLIST_KW_API_2
-            = "http://mobileinterfaces.kuwo.cn/er.s?type=get_pc_qz_data&f=web&id=%s&prod=pc";
+    private final String CAT_PLAYLIST_KW_API_2 = "http://mobileinterfaces.kuwo.cn/er.s?type=get_pc_qz_data&f=web&id=%s&prod=pc";
     // 推荐歌单 API(最热) (咪咕)
-    private final String REC_HOT_PLAYLIST_MG_API
-            = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=1";
+    private final String REC_HOT_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=1";
     // 分类歌单 API (咪咕)
-    private final String CAT_PLAYLIST_MG_API
-            = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?tagId=%s&pageNumber=%s&templateVersion=1";
+    private final String CAT_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?tagId=%s&pageNumber=%s&templateVersion=1";
     // 分类歌单 API (千千)
     private final String CAT_PLAYLIST_QI_API = "https://music.91q.com/v1/tracklist/list?appid=16073360&pageNo=%s&pageSize=%s&subCateId=%s&timestamp=%s";
     // 分类歌单 API (猫耳)
@@ -98,7 +88,9 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String playlistInfoBody = HttpRequest.get(String.format(HIGH_QUALITY_PLAYLIST_API, s[0]))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String playlistInfoBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_API,
+                                String.format("{\"cat\":\"%s\",\"lasttime\":0,\"limit\":%s,\"total\":true}", s[0], limit), options)
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -140,7 +132,9 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                String playlistInfoBody = HttpRequest.get(String.format(HOT_PICKED_PLAYLIST_API, s[1], limit, (page - 1) * limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_API,
+                                String.format("{\"cat\":\"%s\",\"order\":\"hot\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -182,7 +176,9 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                String playlistInfoBody = HttpRequest.get(String.format(NEW_PICKED_PLAYLIST_API, s[1], limit, (page - 1) * limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_API,
+                                String.format("{\"cat\":\"%s\",\"order\":\"new\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

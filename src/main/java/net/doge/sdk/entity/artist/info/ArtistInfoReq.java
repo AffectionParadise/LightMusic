@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.artist.info;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -14,6 +11,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
@@ -27,11 +26,12 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 public class ArtistInfoReq {
     // 歌手信息 API
-    private final String ARTIST_DETAIL_API = SdkCommon.PREFIX + "/artists?id=%s";
+    private final String ARTIST_DETAIL_API = "https://music.163.com/api/artist/head/info/get";
     // 歌手信息 API (酷狗)
     private final String ARTIST_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=%s";
     // 歌手信息 API (QQ)
@@ -48,11 +48,11 @@ public class ArtistInfoReq {
     private final String ARTIST_DETAIL_DB_API = "https://movie.douban.com/celebrity/%s/";
 
     // 歌手歌曲 API
-    private final String ARTIST_SONGS_API = SdkCommon.PREFIX + "/artist/songs?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_SONGS_API = "https://music.163.com/api/v1/artist/songs";
     // 歌手专辑 API
-    private final String ARTIST_ALBUMS_API = SdkCommon.PREFIX + "/artist/album?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_ALBUMS_API = "https://music.163.com/weapi/artist/albums/%s";
     // 歌手 MV API
-    private final String ARTIST_MVS_API = SdkCommon.PREFIX + "/artist/mv?id=%s&offset=%s&limit=%s";
+    private final String ARTIST_MVS_API = "https://music.163.com/weapi/artist/mvs";
     // 歌手视频 API
 //    private final String ARTIST_VIDEOS_API = SdkCommon.PREFIX + "/artist/video?id=%s&cursor=%s&size=%s";
     // 歌手歌曲 API (酷狗)
@@ -89,8 +89,7 @@ public class ArtistInfoReq {
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
 
     // 获取歌手照片 API (豆瓣)
-    private final String GET_ARTISTS_IMG_DB_API
-            = "https://movie.douban.com/celebrity/%s/photos/?type=C&start=%s&sortby=like&size=a&subtype=a";
+    private final String GET_ARTISTS_IMG_DB_API = "https://movie.douban.com/celebrity/%s/photos/?type=C&start=%s&sortby=like&size=a&subtype=a";
 
     /**
      * 根据歌手 id 预加载歌手信息
@@ -124,15 +123,16 @@ public class ArtistInfoReq {
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
-                String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-                JSONObject artistJson = artistInfoJson.getJSONObject("artist");
+                JSONObject artistJson = artistInfoJson.getJSONObject("data").getJSONObject("artist");
 
                 String artistId = artistJson.getString("id");
                 String name = artistJson.getString("name");
-                String coverImgThumbUrl = artistJson.getString("img1v1Url");
+                String coverImgThumbUrl = artistJson.getString("avatar");
                 Integer songNum = artistJson.getIntValue("musicSize");
                 Integer albumNum = artistJson.getIntValue("albumSize");
                 Integer mvNum = artistJson.getIntValue("mvSize");
@@ -351,19 +351,21 @@ public class ArtistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-            JSONObject artistJson = artistInfoJson.getJSONObject("artist");
+            JSONObject artistJson = artistInfoJson.getJSONObject("data").getJSONObject("artist");
 
-            String coverImgUrl = artistJson.getString("img1v1Url");
+            String coverImgUrl = artistJson.getString("avatar");
             String description = artistJson.getString("briefDesc");
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(artistJson.getIntValue("musicSize"));
+            if (!artistInfo.hasAlbumNum()) artistInfo.setSongNum(artistJson.getIntValue("albumSize"));
             if (!artistInfo.hasMvNum()) artistInfo.setMvNum(artistJson.getIntValue("mvSize"));
         }
 
@@ -567,7 +569,10 @@ public class ArtistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_SONGS_API, id, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_SONGS_API,
+                            String.format("{\"id\":\"%s\",\"private_cloud\":true,\"work_type\":1,\"order\":\"hot\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit),
+                            options)
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -833,7 +838,10 @@ public class ArtistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_API, artistId, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ARTIST_ALBUMS_API, artistId),
+                            String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit),
+                            options)
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -1077,7 +1085,10 @@ public class ArtistInfoReq {
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             // 歌手 MV
-            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_API, artistId, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String mvInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_MVS_API,
+                            String.format("{\"artistId\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", artistId, (page - 1) * limit, limit),
+                            options)
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

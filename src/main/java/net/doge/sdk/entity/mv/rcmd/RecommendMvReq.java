@@ -3,6 +3,7 @@ package net.doge.sdk.entity.mv.rcmd;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -11,6 +12,8 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -20,6 +23,7 @@ import net.doge.util.common.TimeUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -27,15 +31,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendMvReq {
     // MV 排行 API
-    private final String TOP_MV_API = SdkCommon.PREFIX + "/top/mv?area=%s&offset=%s&limit=%s";
+    private final String TOP_MV_API = "https://music.163.com/weapi/mv/toplist";
     // 最新 MV API
-    private final String NEW_MV_API = SdkCommon.PREFIX + "/mv/first?area=%s&limit=100";
+    private final String NEW_MV_API = "https://interface.music.163.com/weapi/mv/first";
     // 全部 MV API
-    private final String ALL_MV_API = SdkCommon.PREFIX + "/mv/all?area=%s&type=%s&offset=%s&limit=%s";
+    private final String ALL_MV_API = "https://interface.music.163.com/api/mv/all";
     // 推荐 MV API
-    private final String RECOMMEND_MV_API = SdkCommon.PREFIX + "/personalized/mv?limit=100";
+    private final String RECOMMEND_MV_API = "https://music.163.com/weapi/personalized/mv";
     // 网易出品 MV API
-    private final String EXCLUSIVE_MV_API = SdkCommon.PREFIX + "/mv/exclusive/rcmd?offset=%s&limit=%s";
+    private final String EXCLUSIVE_MV_API = "https://interface.music.163.com/api/mv/exclusive/rcmd";
     // 推荐 MV API (酷狗)
     private final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
     // 最新 MV API (QQ)
@@ -81,7 +85,9 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String mvInfoBody = HttpRequest.get(String.format(TOP_MV_API, s[0].replace("全部", ""), (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String mvInfoBody = SdkCommon.ncRequest(Method.POST, TOP_MV_API, String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
+                                s[0].replace("全部", ""), (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -124,7 +130,8 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String mvInfoBody = HttpRequest.get(String.format(NEW_MV_API, s[0]))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String mvInfoBody = SdkCommon.ncRequest(Method.POST, NEW_MV_API, String.format("{\"area\":\"%s\",\"limit\":100,\"total\":true}", s[0]), options)
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -162,7 +169,10 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0]) || StringUtil.notEmpty(s[1])) {
-                String mvInfoBody = HttpRequest.get(String.format(ALL_MV_API, s[0], s[1], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String mvInfoBody = SdkCommon.ncRequest(Method.POST, ALL_MV_API,
+                                String.format("{\"tags\":\"{'area':'%s','type':'%s','order':'上升最快'}\",\"offset\":%s,\"limit\":%s,\"total\":true}",
+                                        s[0], s[1], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -201,7 +211,8 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.get(RECOMMEND_MV_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String mvInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_MV_API, "{}", options)
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -239,7 +250,9 @@ public class RecommendMvReq {
             LinkedList<NetMvInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.get(String.format(EXCLUSIVE_MV_API, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String mvInfoBody = SdkCommon.ncRequest(Method.POST, EXCLUSIVE_MV_API,
+                            String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

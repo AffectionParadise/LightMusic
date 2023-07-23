@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.radio.info;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -9,6 +10,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
@@ -21,13 +24,14 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RadioInfoReq {
     // 电台信息 API
-    private final String RADIO_DETAIL_API = SdkCommon.PREFIX + "/dj/detail?rid=%s";
+    private final String RADIO_DETAIL_API = "https://music.163.com/api/djradio/v2/get";
     // 电台节目信息 API
-    private final String RADIO_PROGRAM_DETAIL_API = SdkCommon.PREFIX + "/dj/program?rid=%s&offset=%s&limit=%s";
+    private final String RADIO_PROGRAM_DETAIL_API = "https://music.163.com/weapi/dj/program/byradio";
     // 电台信息 API (喜马拉雅)
     private final String RADIO_DETAIL_XM_API = "https://www.ximalaya.com/revision/album/v1/simple?albumId=%s";
     // 简短电台信息 API (喜马拉雅)
@@ -46,14 +50,11 @@ public class RadioInfoReq {
     private final String GAME_RADIO_DETAIL_DB_API = "https://www.douban.com/game/%s/";
 
     // 获取电台照片 API (豆瓣)
-    private final String GET_RADIO_IMG_DB_API
-            = "https://movie.douban.com/subject/%s/photos?type=S&start=%s&sortby=like&size=a&subtype=a";
+    private final String GET_RADIO_IMG_DB_API = "https://movie.douban.com/subject/%s/photos?type=S&start=%s&sortby=like&size=a&subtype=a";
     // 获取电台海报 API (豆瓣)
-    private final String GET_RADIO_POSTER_DB_API
-            = "https://movie.douban.com/subject/%s/photos?type=R&start=%s&sortby=like&size=a&subtype=a";
+    private final String GET_RADIO_POSTER_DB_API = "https://movie.douban.com/subject/%s/photos?type=R&start=%s&sortby=like&size=a&subtype=a";
     // 获取游戏电台照片 API (豆瓣)
-    private final String GET_GAME_RADIO_IMG_DB_API
-            = "https://www.douban.com/game/%s/photos/?type=all&start=%s&sortby=hot";
+    private final String GET_GAME_RADIO_IMG_DB_API = "https://www.douban.com/game/%s/photos/?type=all&start=%s&sortby=hot";
 
     /**
      * 根据电台 id 预加载电台信息
@@ -75,7 +76,8 @@ public class RadioInfoReq {
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NET_CLOUD) {
-                String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_API, id))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -202,7 +204,8 @@ public class RadioInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_API, id))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -359,7 +362,9 @@ public class RadioInfoReq {
 
         // 网易云(接口分页)
         if (source == NetMusicSource.NET_CLOUD) {
-            String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_DETAIL_API, radioId, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_PROGRAM_DETAIL_API,
+                            String.format("{\"radioId\":\"%s\",\"offset\":%s,\"limit\":%s,\"asc\":false}", radioId, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);

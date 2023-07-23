@@ -1,24 +1,24 @@
 package net.doge.sdk.entity.playlist.search;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlaylistSearchReq {
     // 关键词搜索歌单 API
-    private final String SEARCH_PLAYLIST_API = SdkCommon.PREFIX + "/cloudsearch?type=1000&keywords=%s&limit=%s&offset=%s";
+    private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索歌单 API (酷狗)
     private final String SEARCH_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v3/search/special?filter=0&keyword=%s&page=%s&pagesize=%s";
     // 关键词搜索歌单 API (酷我)
@@ -51,7 +51,9 @@ public class PlaylistSearchReq {
             LinkedList<NetPlaylistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_API, encodedKeyword, limit, (page - 1) * limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":1000,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

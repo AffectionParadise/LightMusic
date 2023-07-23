@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.music.rcmd;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -12,6 +9,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -24,6 +23,7 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,11 +31,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewMusicReq {
     // 推荐新歌 API
-    private final String RECOMMEND_NEW_SONG_API = SdkCommon.PREFIX + "/personalized/newsong?limit=100";
+    private final String RECOMMEND_NEW_SONG_API = "https://music.163.com/api/personalized/newsong";
     // 曲风歌曲(最新) API
-    private final String STYLE_NEW_SONG_API = SdkCommon.PREFIX + "/style/song?tagId=%s&sort=1&cursor=%s&size=%s";
+    private final String STYLE_NEW_SONG_API = "https://music.163.com/api/style-tag/home/song";
     // 新歌速递 API
-    private final String FAST_NEW_SONG_API = SdkCommon.PREFIX + "/top/song?type=%s";
+    private final String FAST_NEW_SONG_API = "https://music.163.com/weapi/v1/discovery/new/songs";
     // 推荐新歌(华语) API (酷狗)
     private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong?version=9108&type=%s&page=%s&pagesize=%s";
     // 新歌榜 API (酷我)
@@ -79,7 +79,8 @@ public class NewMusicReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(RECOMMEND_NEW_SONG_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String musicInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_NEW_SONG_API, "{\"type\":\"recommend\",\"limit\":100,\"areaId\":0}", options)
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -118,7 +119,8 @@ public class NewMusicReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String musicInfoBody = HttpRequest.get(String.format(FAST_NEW_SONG_API, s[0]))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String musicInfoBody = SdkCommon.ncRequest(Method.POST, FAST_NEW_SONG_API, String.format("{\"areaId\":\"%s\",\"total\":true}", s[0]), options)
                         .execute()
                         .body();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -158,7 +160,9 @@ public class NewMusicReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                String musicInfoBody = HttpRequest.get(String.format(STYLE_NEW_SONG_API, s[1], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_NEW_SONG_API,
+                                String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":1}", s[1], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

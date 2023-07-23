@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.music.info;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.model.NetMusicSource;
@@ -9,6 +10,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.music.info.trackurl.KWTrackUrlReq;
 import net.doge.sdk.entity.music.info.trackurl.QQTrackUrlReq;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
@@ -22,11 +25,11 @@ import org.jsoup.nodes.Document;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MusicUrlReq {
     // 歌曲 URL 获取 API
-    private final String GET_SONG_URL_API_NEW = SdkCommon.PREFIX + "/song/url/v1?id=%s&level=jymaster";
-    private final String GET_SONG_URL_API = SdkCommon.PREFIX + "/song/url?id=%s";
+    private final String GET_SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
     // 歌曲 URL 获取 API (酷我)
 //    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
@@ -165,17 +168,13 @@ public class MusicUrlReq {
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             // 首选高音质接口
-            String songBody = HttpRequest.get(String.format(GET_SONG_URL_API_NEW, songId))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/song/enhance/player/url/v1");
+            // standard, exhigh, lossless, hires, jyeffect(高清环绕声), sky(沉浸环绕声), jymaster(超清母带)
+            String songBody = SdkCommon.ncRequest(Method.POST, GET_SONG_URL_API,
+                            String.format("{\"ids\":\"['%s']\",\"level\":\"jymaster\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", songId), options)
                     .execute()
                     .body();
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
-            // 次选普通音质
-            if (JsonUtil.isEmpty(data)) {
-                songBody = HttpRequest.get(String.format(GET_SONG_URL_API, songId))
-                        .execute()
-                        .body();
-                data = JSONObject.parseObject(songBody).getJSONArray("data");
-            }
             if (JsonUtil.notEmpty(data)) {
                 JSONObject urlJson = data.getJSONObject(0);
                 // 排除试听部分，直接换源

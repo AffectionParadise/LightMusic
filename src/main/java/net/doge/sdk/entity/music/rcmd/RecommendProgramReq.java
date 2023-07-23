@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.music.rcmd;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -9,6 +10,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -20,6 +23,7 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -27,13 +31,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendProgramReq {
     // 推荐节目 API
-    private final String RECOMMEND_PROGRAM_API = SdkCommon.PREFIX + "/program/recommend";
+    private final String RECOMMEND_PROGRAM_API = "https://music.163.com/weapi/program/recommend/v1";
     // 推荐个性节目 API
-    private final String PERSONALIZED_PROGRAM_API = SdkCommon.PREFIX + "/personalized/djprogram";
+    private final String PERSONALIZED_PROGRAM_API = "https://music.163.com/weapi/personalized/djprogram";
     // 24 小时节目榜 API
-    private final String PROGRAM_24_HOURS_TOPLIST_API = SdkCommon.PREFIX + "/dj/program/toplist/hours";
+    private final String PROGRAM_24_HOURS_TOPLIST_API = "https://music.163.com/api/djprogram/toplist/hours";
     // 节目榜 API
-    private final String PROGRAM_TOPLIST_API = SdkCommon.PREFIX + "/dj/program/toplist?limit=200";
+    private final String PROGRAM_TOPLIST_API = "https://music.163.com/api/program/toplist/v1";
     // 推荐节目 API (猫耳)
     private final String REC_PROGRAM_ME_API = "https://www.missevan.com/site/homepage";
     // 探索节目 API (猫耳)
@@ -42,7 +46,7 @@ public class RecommendProgramReq {
     private final String INDEX_CAT_PROGRAM_ME_API = "https://www.missevan.com/sound/m?order=1&id=%s&p=%s&pagesize=%s";
     // 首页分类节目 API (最新)(猫耳)
     private final String INDEX_CAT_NEW_PROGRAM_ME_API = "https://www.missevan.com/sound/m?order=0&id=%s&p=%s&pagesize=%s";
-    
+
     /**
      * 获取推荐节目
      */
@@ -59,7 +63,8 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(RECOMMEND_PROGRAM_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String programInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PROGRAM_API, "{\"cateId\":\"\",\"offset\":0,\"limit\":10}", options)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -99,7 +104,8 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(PERSONALIZED_PROGRAM_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String programInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_PROGRAM_API, "{}", options)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -139,7 +145,8 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(PROGRAM_24_HOURS_TOPLIST_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_24_HOURS_TOPLIST_API, "{\"limit\":100}", options)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -179,7 +186,8 @@ public class RecommendProgramReq {
             LinkedList<NetMusicInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String programInfoBody = HttpRequest.get(PROGRAM_TOPLIST_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_TOPLIST_API, "{\"offset\":0,\"limit\":200}", options)
                     .execute()
                     .body();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);

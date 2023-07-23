@@ -3,21 +3,25 @@ package net.doge.sdk.entity.ranking.search;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
+import cn.hutool.http.Method;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetRankingInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.TimeUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -25,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GetRankingReq {
     // 获取榜单 API
-    private final String GET_RANKING_API = SdkCommon.PREFIX + "/toplist";
+    private final String GET_RANKING_API = "https://music.163.com/api/toplist";
     // 获取榜单 API (酷狗)
     private final String GET_RANKING_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/list?apiver=6&area_code=1";
     // 获取榜单 API (QQ)
@@ -59,7 +63,8 @@ public class GetRankingReq {
             LinkedList<NetRankingInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(GET_RANKING_API)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String rankingInfoBody = SdkCommon.ncRequest(Method.POST, GET_RANKING_API, "{}", options)
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);

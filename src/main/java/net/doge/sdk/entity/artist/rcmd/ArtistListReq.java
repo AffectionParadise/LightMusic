@@ -1,24 +1,24 @@
 package net.doge.sdk.entity.artist.rcmd;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.sdk.common.Tags;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -26,13 +26,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ArtistListReq {
     // 歌手榜 API
-    private final String ARTIST_RANKING_LIST_API = SdkCommon.PREFIX + "/toplist/artist?type=%s";
+    private final String ARTIST_RANKING_LIST_API = "https://music.163.com/weapi/toplist/artist";
     // 热门歌手 API
-    private final String HOT_ARTIST_LIST_API = SdkCommon.PREFIX + "/top/artists?offset=%s&limit=%s";
+    private final String HOT_ARTIST_LIST_API = "https://music.163.com/weapi/artist/top";
     // 分类歌手 API
-    private final String CAT_ARTIST_API = SdkCommon.PREFIX + "/artist/list?type=%s&area=%s&initial=%s&offset=%s&limit=%s";
+    private final String CAT_ARTIST_API = "https://music.163.com/api/v1/artist/list";
     // 曲风歌手 API
-    private final String STYLE_ARTIST_API = SdkCommon.PREFIX + "/style/artist?tagId=%s&cursor=%s&size=%s";
+    private final String STYLE_ARTIST_API = "https://music.163.com/api/style-tag/home/artist";
     // 热门歌手推荐 API (酷狗)
     private final String HOT_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=1&page=%s&pagesize=%s";
     // 飙升歌手推荐 API (酷狗)
@@ -76,7 +76,9 @@ public class ArtistListReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                String artistInfoBody = HttpRequest.get(String.format(ARTIST_RANKING_LIST_API, s[0]))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_RANKING_LIST_API,
+                                String.format("{\"type\":\"%s\",\"offset\":0,\"limit\":100,\"total\":true}", s[0]), options)
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -112,7 +114,9 @@ public class ArtistListReq {
             LinkedList<NetArtistInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String artistInfoBody = HttpRequest.get(String.format(HOT_ARTIST_LIST_API, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            String artistInfoBody = SdkCommon.ncRequest(Method.POST, HOT_ARTIST_LIST_API,
+                            String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -148,8 +152,11 @@ public class ArtistListReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                String[] split = s[1].split(" ");
-                String artistInfoBody = HttpRequest.get(String.format(CAT_ARTIST_API, split[0], split[1], split[2], (page - 1) * limit, limit))
+                String[] sp = s[1].split(" ");
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String artistInfoBody = SdkCommon.ncRequest(Method.POST, CAT_ARTIST_API,
+                                String.format("{\"type\":\"%s\",\"area\":\"%s\",\"initial\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
+                                        sp[0], sp[1], sp[2], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -186,7 +193,9 @@ public class ArtistListReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
-                String artistInfoBody = HttpRequest.get(String.format(STYLE_ARTIST_API, s[2], (page - 1) * limit, limit))
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                String artistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ARTIST_API,
+                                String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

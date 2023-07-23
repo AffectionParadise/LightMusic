@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.user.search;
 
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -8,6 +9,8 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -20,6 +23,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -27,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserSearchReq {
     // 关键词搜索用户 API
-    private final String SEARCH_USER_API = SdkCommon.PREFIX + "/cloudsearch?type=1002&keywords=%s&offset=%s&limit=%s";
+    private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索用户 API (喜马拉雅)
     private final String SEARCH_USER_XM_API
             = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&core=user&device=iPhone";
@@ -60,7 +64,9 @@ public class UserSearchReq {
             LinkedList<NetUserInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_API, encodedKeyword, (page - 1) * limit, limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":1002,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);

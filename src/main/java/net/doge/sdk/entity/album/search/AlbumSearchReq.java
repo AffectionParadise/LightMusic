@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.album.search;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -11,6 +8,8 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -24,6 +23,7 @@ import org.jsoup.select.Elements;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AlbumSearchReq {
     // 关键词搜索专辑 API
-    private final String SEARCH_ALBUM_API = SdkCommon.PREFIX + "/cloudsearch?type=10&keywords=%s&limit=%s&offset=%s";
+    private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索专辑 API (酷狗)
     private final String SEARCH_ALBUM_KG_API = "http://msearch.kugou.com/api/v3/search/album?keyword=%s&page=%s&pagesize=%s";
     private final String SEARCH_ALBUM_KW_API = "http://www.kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
@@ -65,7 +65,9 @@ public class AlbumSearchReq {
             LinkedList<NetAlbumInfo> res = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_API, encodedKeyword, limit, (page - 1) * limit))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
+            String albumInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
+                            String.format("{\"s\":\"%s\",\"type\":10,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
