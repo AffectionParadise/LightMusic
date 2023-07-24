@@ -73,8 +73,8 @@ public class MvSearchReq {
 
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
-                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getDouble("duration") / 1000;
                     String coverImgUrl = mvJson.getString("cover");
@@ -118,8 +118,8 @@ public class MvSearchReq {
                     Integer type = mvJson.getIntValue("type");
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title");
-                    String creators = SdkUtil.parseCreator(mvJson);
-                    String creatorId = mvJson.getJSONArray("creator").getJSONObject(0).getString("userId");
+                    String creator = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playTime");
                     Double duration = mvJson.getDouble("durationms") / 1000;
                     String coverImgUrl = mvJson.getString("coverUrl");
@@ -129,7 +129,7 @@ public class MvSearchReq {
                     mvInfo.setType(type == 1 ? MvInfoType.VIDEO : MvInfoType.MV);
                     mvInfo.setId(mvId);
                     mvInfo.setName(mvName);
-                    mvInfo.setArtist(creators);
+                    mvInfo.setArtist(creator);
                     mvInfo.setCreatorId(creatorId);
                     mvInfo.setPlayCount(playCount);
                     mvInfo.setDuration(duration);
@@ -210,9 +210,8 @@ public class MvSearchReq {
 
                 String mvId = mvJson.getString("v_id");
                 String mvName = mvJson.getString("mv_name").trim();
-                String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.QQ);
-                JSONArray singerArray = mvJson.getJSONArray("singer_list");
-                String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artistName = SdkUtil.parseArtist(mvJson);
+                String creatorId = SdkUtil.parseArtistId(mvJson);
                 Long playCount = mvJson.getLong("play_count");
                 Double duration = mvJson.getDouble("duration");
                 String pubTime = mvJson.getString("publish_date");

@@ -53,7 +53,7 @@ public class ArrayUtil {
      *
      * @param array
      */
-    public static String randomChoose(String[] array) {
+    public static <T> T randomChoose(T[] array) {
         Random rand = new Random();
         int num = rand.nextInt(array.length);
         return array[num];
@@ -70,5 +70,16 @@ public class ArrayUtil {
         Random random = new Random();
         for (int i = 0; i < n; i++) bytes[i] = (byte) random.nextInt(128);
         return bytes;
+    }
+
+    /**
+     * 连接多个数组
+     *
+     * @param arrays
+     * @param <T>
+     * @return
+     */
+    public static <T> T[] concat(T[]... arrays) {
+        return cn.hutool.core.util.ArrayUtil.addAll(arrays);
     }
 }

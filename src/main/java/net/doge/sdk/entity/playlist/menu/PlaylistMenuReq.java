@@ -42,7 +42,7 @@ public class PlaylistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApiPC();
             String playlistInfoBody = SdkCommon.ncRequest(Method.GET, String.format(SIMILAR_PLAYLIST_API, id), "{}", options)
                     .execute()
                     .body();

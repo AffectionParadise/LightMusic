@@ -254,7 +254,7 @@ public class RadioInfoReq {
             JSONObject radioJson = radioInfoJson.getJSONObject("data").getJSONObject("albumPageMainInfo");
 
             String coverImgUrl = "https:" + radioJson.getString("cover");
-            String tag = SdkUtil.parseTag(radioJson, NetMusicSource.XM);
+            String tag = SdkUtil.parseTag(radioJson);
             String description = radioJson.getString("shortIntro");
 
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
@@ -278,7 +278,7 @@ public class RadioInfoReq {
 
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
-            if (!radioInfo.hasTag()) radioInfo.setTag(SdkUtil.parseTag(drama, NetMusicSource.ME));
+            if (!radioInfo.hasTag()) radioInfo.setTag(SdkUtil.parseTag(drama));
             if (!radioInfo.hasDescription()) radioInfo.setDescription(StringUtil.removeHTMLLabel(description));
             if (!radioInfo.hasDj()) radioInfo.setDj(drama.getString("author"));
             if (!radioInfo.hasDjId()) radioInfo.setDjId(drama.getString("user_id"));
@@ -415,9 +415,8 @@ public class RadioInfoReq {
 
                     String songId = songJson.getString("mid");
                     String name = songJson.getString("name");
-                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
-                    JSONArray singerArray = songJson.getJSONArray("singer");
-                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String artist = SdkUtil.parseArtist(songJson);
+                    String artistId = SdkUtil.parseArtistId(songJson);
                     String albumName = songJson.getJSONObject("album").getString("name");
                     String albumId = songJson.getJSONObject("album").getString("mid");
                     Double duration = songJson.getDouble("interval");

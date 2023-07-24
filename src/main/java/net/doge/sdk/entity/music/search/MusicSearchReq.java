@@ -90,8 +90,8 @@ public class MusicSearchReq {
 
                         String songId = songJson.getString("id");
                         String songName = songJson.getString("name").trim();
-                        String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
-                        String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
+                        String artist = SdkUtil.parseArtist(songJson);
+                        String artistId = SdkUtil.parseArtistId(songJson);
                         String albumName = songJson.getJSONObject("al").getString("name");
                         String albumId = songJson.getJSONObject("al").getString("id");
                         Double duration = songJson.getDouble("dt") / 1000;
@@ -134,8 +134,8 @@ public class MusicSearchReq {
 
                         String songId = songJson.getString("id");
                         String songName = songJson.getString("name").trim();
-                        String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
-                        String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
+                        String artist = SdkUtil.parseArtist(songJson);
+                        String artistId = SdkUtil.parseArtistId(songJson);
                         String albumName = songJson.getJSONObject("al").getString("name");
                         String albumId = songJson.getJSONObject("al").getString("id");
                         Double duration = songJson.getDouble("dt") / 1000;
@@ -320,9 +320,8 @@ public class MusicSearchReq {
 
                 String songId = songJson.getString("mid");
                 String songName = songJson.getString("name");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
-                JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
@@ -361,9 +360,8 @@ public class MusicSearchReq {
 
                 String songId = songJson.getString("mid");
                 String songName = songJson.getString("name");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
-                JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
@@ -533,9 +531,8 @@ public class MusicSearchReq {
 
                     String songId = songJson.getString("TSID");
                     String songName = songJson.getString("title");
-                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QI);
-                    JSONArray artistArray = songJson.getJSONArray("artist");
-                    String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                    String artist = SdkUtil.parseArtist(songJson);
+                    String artistId = SdkUtil.parseArtistId(songJson);
                     String albumName = songJson.getString("albumTitle");
                     String albumId = songJson.getString("albumAssetCode");
                     Double duration = songJson.getDouble("duration");

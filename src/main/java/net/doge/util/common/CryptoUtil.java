@@ -5,10 +5,13 @@ import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.crypto.digest.DigestUtil;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -73,15 +76,38 @@ public class CryptoUtil {
      * AES 加密，返回 bytes
      *
      * @param data
+     * @param mode
+     * @param key
+     * @param iv
+     * @return
+     */
+    public static byte[] aesEncrypt(byte[] data, String mode, byte[] key, byte[] iv) {
+        try {
+            Cipher cipher = Cipher.getInstance("AES/" + mode + "/PKCS5Padding");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+            if (iv != null) {
+                IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
+            } else cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+            return cipher.doFinal(data);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * RSA 加密，返回 bytes
+     *
+     * @param data
      * @param key
      * @return
      */
-    public static byte[] aesEncrypt(String data, String key) {
+    public static byte[] rsaEncrypt(byte[] data, byte[] key) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            return cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+            PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(key));
+            Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            return cipher.doFinal(data);
         } catch (Exception e) {
             return null;
         }

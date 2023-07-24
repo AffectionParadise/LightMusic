@@ -386,10 +386,8 @@ public class PlaylistInfoReq {
                 playlistInfo.setCreator(JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "");
             if (!playlistInfo.hasCreatorId())
                 playlistInfo.setCreatorId(JsonUtil.notEmpty(ct) ? ct.getString("userId") : "");
-            if (!playlistInfo.hasTag())
-                playlistInfo.setTag(SdkUtil.parseTag(playlistJson, NetMusicSource.NET_CLOUD));
-            if (!playlistInfo.hasTrackCount())
-                playlistInfo.setTrackCount(playlistJson.getIntValue("trackCount"));
+            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(playlistJson));
+            if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(playlistJson.getIntValue("trackCount"));
         }
 
         // 酷狗
@@ -434,7 +432,7 @@ public class PlaylistInfoReq {
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
-            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(data, NetMusicSource.QQ));
+            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(data));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(data.getIntValue("songnum"));
         }
 
@@ -469,7 +467,7 @@ public class PlaylistInfoReq {
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
-            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(data, NetMusicSource.MG));
+            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(data));
         }
 
         // 千千
@@ -486,7 +484,7 @@ public class PlaylistInfoReq {
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
-            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(playlistJson, NetMusicSource.QI));
+            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(playlistJson));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(playlistJson.getIntValue("trackCount"));
         }
 
@@ -527,7 +525,7 @@ public class PlaylistInfoReq {
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
-            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(info, NetMusicSource.ME));
+            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(info));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(album.getIntValue("music_count"));
         }
 
@@ -592,8 +590,8 @@ public class PlaylistInfoReq {
 
                     String songId = songJson.getString("id");
                     String name = songJson.getString("name").trim();
-                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
-                    String artistId = songJson.getJSONArray("ar").getJSONObject(0).getString("id");
+                    String artist = SdkUtil.parseArtist(songJson);
+                    String artistId = SdkUtil.parseArtistId(songJson);
                     String albumName = songJson.getJSONObject("al").getString("name");
                     String albumId = songJson.getJSONObject("al").getString("id");
                     Double duration = songJson.getDouble("dt") / 1000;
@@ -701,9 +699,8 @@ public class PlaylistInfoReq {
 
                     String songId = songJson.getString("songmid");
                     String name = songJson.getString("songname");
-                    String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
-                    JSONArray singerArray = songJson.getJSONArray("singer");
-                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String artist = SdkUtil.parseArtist(songJson);
+                    String artistId = SdkUtil.parseArtistId(songJson);
                     String albumName = songJson.getString("albumname");
                     String albumId = songJson.getString("albummid");
                     Double duration = songJson.getDouble("interval");
@@ -776,8 +773,8 @@ public class PlaylistInfoReq {
 
                 String songId = songJson.getString("copyrightId");
                 String name = songJson.getString("songName");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.MG);
-                String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumId");
                 Double duration = TimeUtil.toSeconds(songJson.getString("length"));
@@ -813,9 +810,8 @@ public class PlaylistInfoReq {
 
                 String songId = songJson.getString("TSID");
                 String name = songJson.getString("title");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QI);
-                JSONArray artistArray = songJson.getJSONArray("artist");
-                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");

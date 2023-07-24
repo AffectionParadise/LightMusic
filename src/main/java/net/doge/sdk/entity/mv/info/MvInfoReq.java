@@ -2,7 +2,6 @@ package net.doge.sdk.entity.mv.info;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
@@ -11,7 +10,6 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.JsonUtil;
 import net.doge.util.common.TimeUtil;
 
 import java.awt.image.BufferedImage;
@@ -61,8 +59,8 @@ public class MvInfoReq {
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
             String name = data.getString("name").trim();
-            String artist = SdkUtil.parseArtist(data, NetMusicSource.NET_CLOUD);
-            String creatorId = data.getJSONArray("artists").getJSONObject(0).getString("id");
+            String artist = SdkUtil.parseArtist(data);
+            String creatorId = SdkUtil.parseArtistId(data);
             Long playCount = data.getLong("playCount");
             Double duration = data.getDouble("duration") / 1000;
             String pubTime = data.getString("publishTime");
@@ -92,8 +90,7 @@ public class MvInfoReq {
             String[] s = data.getString("filename").split(" - ");
             String name = s[1];
             String artist = s[0];
-            JSONArray artistArray = mvJson.getJSONArray("authors");
-            String creatorId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("singerid") : "";
+            String creatorId = SdkUtil.parseArtistId(mvJson);
             Long playCount = data.getLong("history_heat");
             Double duration = data.getDouble("mv_timelength") / 1000;
             String pubTime = data.getString("update");
@@ -129,9 +126,8 @@ public class MvInfoReq {
             JSONObject data = mvJson.getJSONObject("mvinfo").getJSONObject("data").getJSONObject(mvId);
 
             String name = data.getString("name");
-            String artist = SdkUtil.parseArtist(data, NetMusicSource.QQ);
-            JSONArray singerArray = mvJson.getJSONArray("singers");
-            String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+            String artist = SdkUtil.parseArtist(data);
+            String creatorId = SdkUtil.parseArtistId(data);
             Long playCount = data.getLong("playcnt");
             Double duration = data.getDouble("duration");
             String pubTime = TimeUtil.msToDate(data.getLong("pubdate") * 1000);

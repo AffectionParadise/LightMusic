@@ -80,8 +80,8 @@ public class AlbumSearchReq {
 
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
-                String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.NET_CLOUD);
-                String artistId = albumJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                String artist = SdkUtil.parseArtist(albumJson);
+                String artistId = SdkUtil.parseArtistId(albumJson);
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("publishTime"));
                 Integer songNum = albumJson.getIntValue("size");
                 String coverImgThumbUrl = albumJson.getString("picUrl");
@@ -162,9 +162,8 @@ public class AlbumSearchReq {
 
                 String albumId = albumJson.getString("albumMID");
                 String albumName = albumJson.getString("albumName");
-                String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QQ);
-                JSONArray singerArray = albumJson.getJSONArray("singer_list");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artist = SdkUtil.parseArtist(albumJson);
+                String artistId = SdkUtil.parseArtistId(albumJson);
                 String publishTime = albumJson.getString("publicTime");
                 Integer songNum = albumJson.getIntValue("song_count");
                 String coverImgThumbUrl = albumJson.getString("albumPic").replaceFirst("http:", "https:");
@@ -204,7 +203,7 @@ public class AlbumSearchReq {
 
                     String albumId = albumJson.getString("albumid");
                     String albumName = StringUtil.removeHTMLLabel(albumJson.getString("album"));
-                    String artist = albumJson.getString("artist");
+                    String artist = albumJson.getString("artist").replace("&", "、");
                     String artistId = albumJson.getString("artistid");
                     String publishTime = albumJson.getString("releaseDate");
                     String coverImgThumbUrl = albumJson.getString("pic");
@@ -245,9 +244,8 @@ public class AlbumSearchReq {
 
                     String albumId = albumJson.getString("id");
                     String albumName = albumJson.getString("title");
-                    String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.MG);
-                    JSONArray singerArray = albumJson.getJSONArray("singer");
-                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("id");
+                    String artist = SdkUtil.parseArtist(albumJson);
+                    String artistId = SdkUtil.parseArtistId(albumJson);
                     String publishTime = albumJson.getString("publishDate");
                     Integer songNum = albumJson.getIntValue("songNum");
                     String coverImgThumbUrl = albumJson.getString("albumPicM");
@@ -287,9 +285,8 @@ public class AlbumSearchReq {
 
                 String albumId = albumJson.getString("albumAssetCode");
                 String albumName = albumJson.getString("title");
-                String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QI);
-                JSONArray artistArray = albumJson.getJSONArray("artist");
-                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artist = SdkUtil.parseArtist(albumJson);
+                String artistId = SdkUtil.parseArtistId(albumJson);
                 String rd = albumJson.getString("releaseDate");
                 String publishTime = StringUtil.notEmpty(rd) ? rd.split("T")[0] : "";
                 String coverImgThumbUrl = albumJson.getString("pic");

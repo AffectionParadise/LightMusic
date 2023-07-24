@@ -2,9 +2,9 @@ package net.doge.sdk.util;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -16,36 +16,69 @@ import java.util.StringJoiner;
 
 public class SdkUtil {
     /**
-     * 解析歌曲艺术家
+     * 获取艺术家数组
+     *
+     * @param json
+     * @return
      */
-    public static String parseArtist(JSONObject json, int source) {
-        JSONArray artistArray;
-        if (source == NetMusicSource.QQ) {
-            artistArray = json.getJSONArray("singer");
-            if (artistArray == null) artistArray = json.getJSONArray("singer_list");
-            if (artistArray == null) artistArray = json.getJSONArray("singers");
-            if (artistArray == null) artistArray = json.getJSONArray("ar");
-            if (artistArray == null) artistArray = json.getJSONArray("singerinfo");
-        } else if (source == NetMusicSource.KG) {
-            artistArray = json.getJSONArray("authors");
-        } else {
-            artistArray = json.getJSONArray("artists");
-            if (artistArray == null) artistArray = json.getJSONArray("ar");
-            if (artistArray == null) artistArray = json.getJSONArray("artist");
-            if (artistArray == null) artistArray = json.getJSONArray("actors");
+    private static JSONArray getArtistArray(JSONObject json) {
+        String[] artistKeys = {"artists", "artist", "authors", "singer", "singer_list", "singers", "ar", "singerinfo", "creator", "actors"};
+        JSONArray artistArray = null;
+        for (String key : artistKeys) {
+            if (!json.containsKey(key)) continue;
+            artistArray = json.getJSONArray(key);
+            break;
         }
-        if (artistArray == null) return "";
+        return artistArray;
+    }
+
+    /**
+     * 解析歌曲艺术家名称
+     *
+     * @param json
+     * @return
+     */
+    public static String parseArtist(JSONObject json) {
+        JSONArray artistArray = getArtistArray(json);
+        if (JsonUtil.isEmpty(artistArray)) return "";
+
+        // 获取艺术家名称 key
+        JSONObject first = artistArray.getJSONObject(0);
+        String[] nameKeys = {"name", "singer_name", "author_name", "singername", "userName"};
+        String nameKey = null;
+        for (String key : nameKeys) {
+            if (!first.containsKey(key)) continue;
+            nameKey = key;
+            break;
+        }
 
         StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = artistArray.size(); i < len; i++) {
-            JSONObject artistJson = artistArray.getJSONObject(i);
-            String name = artistJson.getString("name");
-            if (StringUtil.isEmpty(name)) name = artistJson.getString("singer_name");
-            if (StringUtil.isEmpty(name)) name = artistJson.getString("author_name");
-            if (StringUtil.isEmpty(name)) name = artistJson.getString("singername");
+            String name = artistArray.getJSONObject(i).getString(nameKey);
             sj.add(name);
         }
         return sj.toString();
+    }
+
+    /**
+     * 解析歌曲艺术家 id
+     *
+     * @param json
+     * @return
+     */
+    public static String parseArtistId(JSONObject json) {
+        JSONArray artistArray = getArtistArray(json);
+        if (JsonUtil.isEmpty(artistArray)) return "";
+
+        // 获取艺术家 id
+        JSONObject first = artistArray.getJSONObject(0);
+        String[] idKeys = {"id", "mid", "author_id", "artistId", "artistCode", "singermid", "singer_mid", "singerid", "userId"};
+        for (String key : idKeys) {
+            if (!first.containsKey(key)) continue;
+            return json.getString(key);
+        }
+
+        return "";
     }
 
     /**
@@ -99,18 +132,6 @@ public class SdkUtil {
     }
 
     /**
-     * 解析视频作者
-     */
-    public static String parseCreator(JSONObject json) {
-        JSONArray artistArray = json.getJSONArray("creator");
-        StringJoiner sj = new StringJoiner("、");
-        for (int i = 0, len = artistArray.size(); i < len; i++) {
-            sj.add(artistArray.getJSONObject(i).getString("userName"));
-        }
-        return sj.toString();
-    }
-
-    /**
      * 连接 Json 数组中的所有字符串
      */
     public static String joinString(JSONArray array) {
@@ -122,41 +143,26 @@ public class SdkUtil {
     /**
      * 解析歌单标签
      */
-    public static String parseTag(JSONObject json, int source) {
-        JSONArray tagArray;
+    public static String parseTag(JSONObject json) {
+        // 获取标签数组
+        String[] tagKeys = {"tags", "tagList"};
+        JSONArray tagArray = null;
+        for (String key : tagKeys) {
+            if (!json.containsKey(key)) continue;
+            tagArray = json.getJSONArray(key);
+            break;
+        }
+        if (JsonUtil.isEmpty(tagArray)) return "";
+
         StringJoiner sj = new StringJoiner("、");
-        if (source == NetMusicSource.NET_CLOUD) {
-            tagArray = json.getJSONArray("tags");
-            for (int i = 0, len = tagArray.size(); i < len; i++) {
-                sj.add(tagArray.getString(i));
-            }
-        } else if (source == NetMusicSource.QQ) {
-            tagArray = json.getJSONArray("tags");
-            for (int i = 0, len = tagArray.size(); i < len; i++) {
-                JSONObject tagJson = tagArray.getJSONObject(i);
-                sj.add(tagJson.getString("name"));
-            }
-        } else if (source == NetMusicSource.MG) {
-            tagArray = json.getJSONArray("tags");
-            for (int i = 0, len = tagArray.size(); i < len; i++) {
-                JSONObject tagJson = tagArray.getJSONObject(i);
-                sj.add(tagJson.getString("tagName"));
-            }
-        } else if (source == NetMusicSource.XM) {
-            tagArray = json.getJSONArray("tags");
-            for (int i = 0, len = tagArray.size(); i < len; i++) {
-                sj.add(tagArray.getString(i));
-            }
-        } else if (source == NetMusicSource.QI) {
-            tagArray = json.getJSONArray("tagList");
-            for (int i = 0, len = tagArray.size(); i < len; i++) {
-                sj.add(tagArray.getString(i));
-            }
-        } else if (source == NetMusicSource.ME) {
-            tagArray = json.getJSONArray("tags");
-            for (int i = 0, len = tagArray.size(); i < len; i++) {
-                JSONObject tagJson = tagArray.getJSONObject(i);
-                sj.add(tagJson.getString("name"));
+        for (int i = 0, len = tagArray.size(); i < len; i++) {
+            Object obj = tagArray.get(i);
+            if (obj instanceof String) sj.add(tagArray.getString(i));
+            else if (obj instanceof JSONObject) {
+                JSONObject tagJson = (JSONObject) obj;
+                String name = tagJson.getString("name");
+                if (StringUtil.isEmpty(name)) name = tagJson.getString("tagName");
+                if (StringUtil.notEmpty(name)) sj.add(name);
             }
         }
         return sj.toString();

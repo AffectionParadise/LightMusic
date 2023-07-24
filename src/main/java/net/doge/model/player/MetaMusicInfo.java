@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/7
  */
 @Data
-public class SimpleMusicInfo {
+public class MetaMusicInfo {
     // 音频格式
     private String format;
     // 时长(秒)

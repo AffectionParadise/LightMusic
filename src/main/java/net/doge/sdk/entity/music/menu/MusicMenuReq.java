@@ -14,7 +14,6 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -68,8 +67,8 @@ public class MusicMenuReq {
 
                 String songId = songJson.getString("id");
                 String songName = songJson.getString("name").trim();
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.NET_CLOUD);
-                String artistId = songJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("id");
                 Double duration = songJson.getDouble("duration") / 1000;
@@ -113,9 +112,8 @@ public class MusicMenuReq {
 
                 String songId = songJson.getString("mid");
                 String songName = songJson.getString("name");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
-                JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");

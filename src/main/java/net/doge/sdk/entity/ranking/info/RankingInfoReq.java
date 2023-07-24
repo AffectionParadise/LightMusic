@@ -142,9 +142,8 @@ public class RankingInfoReq {
                 String hash = songJson.getString("hash");
                 String songId = songJson.getString("album_audio_id");
                 String name = songJson.getString("songname");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.KG);
-                JSONArray artistArray = songJson.getJSONArray("authors");
-                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("author_id") : "";
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
 //                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
@@ -183,9 +182,8 @@ public class RankingInfoReq {
 
                 String songId = songJson.getString("mid");
                 String name = songJson.getString("name");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QQ);
-                JSONArray singerArray = songJson.getJSONArray("singer");
-                String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getJSONObject("album").getString("name");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
@@ -292,9 +290,8 @@ public class RankingInfoReq {
 
                 String songId = songJson.getString("TSID");
                 String name = songJson.getString("title");
-                String artist = SdkUtil.parseArtist(songJson, NetMusicSource.QI);
-                JSONArray artistArray = songJson.getJSONArray("artist");
-                String artistId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("artistCode") : "";
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getString("albumTitle");
                 String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");

@@ -285,7 +285,7 @@ public class MusicServerUtil {
      * 获取歌手照片链接
      */
     public static CommonResult<String> getArtistImgUrls(NetArtistInfo artistInfo, int page) {
-        return new ArtistInfoReq().getArtistImgUrls(artistInfo, page);
+        return new ArtistMenuReq().getArtistImgUrls(artistInfo, page);
     }
 
     /**
@@ -530,14 +530,14 @@ public class MusicServerUtil {
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
      */
     public static CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
-        return new ArtistInfoReq().getAlbumInfoInArtist(artistInfo, limit, page);
+        return new ArtistMenuReq().getAlbumInfoInArtist(artistInfo, limit, page);
     }
 
     /**
      * 根据歌手 id 获取里面 MV 的粗略信息，分页，返回 NetMvInfo
      */
     public static CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo netArtistInfo, int limit, int page) {
-        return new ArtistInfoReq().getMvInfoInArtist(netArtistInfo, limit, page);
+        return new ArtistMenuReq().getMvInfoInArtist(netArtistInfo, limit, page);
     }
 
     /**

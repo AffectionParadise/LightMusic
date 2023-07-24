@@ -396,9 +396,8 @@ public class UserMenuReq {
 
                     String albumId = albumJson.getString("albummid");
                     String albumName = albumJson.getString("albumname");
-                    String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QQ);
-                    JSONArray singerArray = albumJson.getJSONArray("singer");
-                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String artist = SdkUtil.parseArtist(albumJson);
+                    String artistId = SdkUtil.parseArtistId(albumJson);
                     String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
                     Integer songNum = albumJson.getIntValue("songnum");
                     String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
@@ -754,9 +753,8 @@ public class UserMenuReq {
 
                     String albumId = albumJson.getString("albummid");
                     String albumName = albumJson.getString("albumname");
-                    String artist = SdkUtil.parseArtist(albumJson, NetMusicSource.QQ);
-                    JSONArray singerArray = albumJson.getJSONArray("singer");
-                    String artistId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String artist = SdkUtil.parseArtist(albumJson);
+                    String artistId = SdkUtil.parseArtistId(albumJson);
                     String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
                     Integer songNum = albumJson.getIntValue("songnum");
                     String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);

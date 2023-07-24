@@ -24,8 +24,7 @@ public class SearchSuggestionReq {
     // 搜索建议 API (酷狗)
     private final String SEARCH_SUGGESTION_KG_API = "http://msearchcdn.kugou.com/new/app/i/search.php?cmd=302&keyword=%s";
     // 搜索建议 API (QQ)
-    private final String SEARCH_SUGGESTION_QQ_API
-            = "https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&format=json&key=%s" +
+    private final String SEARCH_SUGGESTION_QQ_API = "https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&format=json&key=%s" +
             "&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
     // 搜索建议 API (酷我)
     private final String SEARCH_SUGGESTION_KW_API = "http://www.kuwo.cn/api/www/search/searchKey?key=%s&httpsStatus=1";

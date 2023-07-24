@@ -121,9 +121,8 @@ public class MvMenuReq {
 
                 String mvId = mvJson.getString("vid");
                 String mvName = mvJson.getString("title").trim();
-                String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.QQ);
-                JSONArray singerArray = mvJson.getJSONArray("singers");
-                String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                String artistName = SdkUtil.parseArtist(mvJson);
+                String creatorId = SdkUtil.parseArtistId(mvJson);
                 String coverImgUrl = mvJson.getString("picurl");
                 Long playCount = mvJson.getLong("playcnt");
 
@@ -191,8 +190,8 @@ public class MvMenuReq {
 
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title").trim();
-                    String artistName = SdkUtil.parseCreator(mvJson);
-                    String creatorId = mvJson.getJSONArray("creator").getJSONObject(0).getString("userId");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     String coverImgUrl = mvJson.getString("coverUrl");
                     Long playCount = mvJson.getLong("playTime");
                     Double duration = mvJson.getDouble("durationms") / 1000;
@@ -228,8 +227,8 @@ public class MvMenuReq {
 
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
-                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     String coverImgUrl = mvJson.getString("cover");
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getDouble("duration") / 1000;

@@ -35,7 +35,7 @@ public class MusicPlayer {
     // 播放界面
     private MainFrame f;
     // 当前载入的文件的信息
-    private SimpleMusicInfo musicInfo = new SimpleMusicInfo();
+    private MetaMusicInfo musicInfo = new MetaMusicInfo();
     // 载入的本地音乐信息
     private AudioFile audioFile;
     // 载入的在线音乐信息，如果是本地音乐则为 null

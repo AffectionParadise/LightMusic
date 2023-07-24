@@ -16,7 +16,6 @@ import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 
@@ -98,8 +97,8 @@ public class RecommendMvReq {
 
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
-                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
                     String pubTime = mvJson.getJSONObject("mv").getString("publishTime");
@@ -141,8 +140,8 @@ public class RecommendMvReq {
                     JSONObject mvJson = mvArray.getJSONObject(i);
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
-                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playCount");
                     String coverImgUrl = mvJson.getString("cover");
 
@@ -182,8 +181,8 @@ public class RecommendMvReq {
                     JSONObject mvJson = mvArray.getJSONObject(i);
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
-                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
-                    String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playCount");
                     Double duration = mvJson.getDouble("duration") / 1000;
                     String coverImgUrl = mvJson.getString("cover");
@@ -222,8 +221,8 @@ public class RecommendMvReq {
                 JSONObject mvJson = mvArray.getJSONObject(i);
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("name").trim();
-                String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
-                String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                String artistName = SdkUtil.parseArtist(mvJson);
+                String creatorId = SdkUtil.parseArtistId(mvJson);
                 Long playCount = mvJson.getLong("playCount");
                 Double duration = mvJson.getDouble("duration") / 1000;
                 String coverImgUrl = mvJson.getString("picUrl");
@@ -262,8 +261,8 @@ public class RecommendMvReq {
                 JSONObject mvJson = mvArray.getJSONObject(i);
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("name").trim();
-                String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.NET_CLOUD);
-                String creatorId = mvJson.getJSONArray("artists").getJSONObject(0).getString("id");
+                String artistName = SdkUtil.parseArtist(mvJson);
+                String creatorId = SdkUtil.parseArtistId(mvJson);
                 Long playCount = mvJson.getLong("playCount");
 //                Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
                 String coverImgUrl = mvJson.getString("cover");
@@ -305,8 +304,7 @@ public class RecommendMvReq {
                     String mvId = mvJson.getString("mvhash");
                     String mvName = mvJson.getString("videoname");
                     String artistName = mvJson.getString("singername");
-                    JSONArray artistArray = mvJson.getJSONArray("authors");
-                    String creatorId = JsonUtil.notEmpty(artistArray) ? artistArray.getJSONObject(0).getString("singerid") : "";
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playcount");
                     Double duration = mvJson.getDouble("duration") / 1000;
                     String pubTime = mvJson.getString("publish").split(" ")[0];
@@ -355,9 +353,8 @@ public class RecommendMvReq {
 
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title").trim();
-                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.QQ);
-                    JSONArray singerArray = mvJson.getJSONArray("singers");
-                    String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playcnt");
                     Double duration = mvJson.getDouble("duration");
                     String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
@@ -400,9 +397,8 @@ public class RecommendMvReq {
 
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("mvtitle").trim();
-                    String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.QQ);
-                    JSONArray singerArray = mvJson.getJSONArray("singers");
-                    String creatorId = JsonUtil.isEmpty(singerArray) ? "" : singerArray.getJSONObject(0).getString("mid");
+                    String artistName = SdkUtil.parseArtist(mvJson);
+                    String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("listennum");
                     String pubTime = mvJson.getString("pub_date");
                     String coverImgUrl = mvJson.getString("picurl");
@@ -490,8 +486,8 @@ public class RecommendMvReq {
 
                 String mvId = mvJson.getString("assetCode");
                 String mvName = mvJson.getString("title").trim();
-                String artistName = SdkUtil.parseArtist(mvJson, NetMusicSource.QI);
-                String creatorId = mvJson.getJSONArray("artist").getJSONObject(0).getString("artistCode");
+                String artistName = SdkUtil.parseArtist(mvJson);
+                String creatorId = SdkUtil.parseArtistId(mvJson);
                 Long playCount = mvJson.getLong("playnum");
                 String coverImgUrl = mvJson.getString("pic");
                 Double duration = mvJson.getDouble("duration") / 1000;

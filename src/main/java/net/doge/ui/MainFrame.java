@@ -47,7 +47,7 @@ import net.doge.model.entity.*;
 import net.doge.model.lyric.LrcData;
 import net.doge.model.lyric.Statement;
 import net.doge.model.player.MusicPlayer;
-import net.doge.model.player.SimpleMusicInfo;
+import net.doge.model.player.MetaMusicInfo;
 import net.doge.model.task.Task;
 import net.doge.model.ui.UIStyle;
 import net.doge.sdk.common.CommonResult;
@@ -20590,18 +20590,18 @@ public class MainFrame extends JFrame {
             collectButton.setToolTipText(COLLECT_TIP);
         }
 
-        SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
+        MetaMusicInfo metaMusicInfo = player.getMusicInfo();
         // 设置歌曲名称
-        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + simpleMusicInfo.getName()));
+        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + metaMusicInfo.getName()));
         songNameLabel.setVisible(false);
         songNameLabel.setVisible(true);
         // 设置艺术家
-        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + simpleMusicInfo.getArtist(), 50)));
+        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + metaMusicInfo.getArtist(), 50)));
         artistLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         artistLabel.setVisible(false);
         artistLabel.setVisible(true);
         // 设置专辑名称
-        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + simpleMusicInfo.getAlbumName()));
+        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + metaMusicInfo.getAlbumName()));
         albumLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         albumLabel.setVisible(false);
         albumLabel.setVisible(true);
@@ -20656,8 +20656,8 @@ public class MainFrame extends JFrame {
 
     // 显示专辑图片
     public void showAlbumImage() {
-        SimpleMusicInfo simpleMusicInfo = player.getMusicInfo();
-        BufferedImage albumImage = simpleMusicInfo.getAlbumImage();
+        MetaMusicInfo metaMusicInfo = player.getMusicInfo();
+        BufferedImage albumImage = metaMusicInfo.getAlbumImage();
         if (albumImage == null) albumImage = defaultAlbumImage;
         boolean isDefault = albumImage == defaultAlbumImage;
         saveAlbumImageMenuItem.setEnabled(!isDefault);
@@ -20821,7 +20821,7 @@ public class MainFrame extends JFrame {
 
         // 部分无法提前获取时长的歌曲，等待播放时更新时长
         mp.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
-            SimpleMusicInfo musicInfo = player.getMusicInfo();
+            MetaMusicInfo musicInfo = player.getMusicInfo();
             if (musicInfo.hasDuration()) return;
             double duration = newValue.toSeconds();
             musicInfo.setDuration(duration);

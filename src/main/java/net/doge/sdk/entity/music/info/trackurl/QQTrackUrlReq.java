@@ -29,7 +29,8 @@ public class QQTrackUrlReq {
                 + time + "\",\n\t\"sign_2\":\t\"" + CryptoUtil.hashMD5(s6.replace("\\", "") + s7.replace("\\", "")
                 + lowerCase + time + "NDRjZGIzNzliNzEx").toLowerCase() + "\"\n}";
 
-        byte[] aesBytes = CryptoUtil.aesEncrypt(s8, "6480fedae539deb2");
+        String key = "6480fedae539deb2";
+        byte[] aesBytes = CryptoUtil.aesEncrypt(s8.getBytes(StandardCharsets.UTF_8), "ECB", key.getBytes(StandardCharsets.UTF_8), null);
         s8 = CryptoUtil.bytesToHex(aesBytes);
         byte[] encodedBytes = CryptoUtil.bytesToHex(s8.getBytes(StandardCharsets.UTF_8)).getBytes(StandardCharsets.UTF_8);
         byte[] compressedBytes = CryptoUtil.compress(encodedBytes);
