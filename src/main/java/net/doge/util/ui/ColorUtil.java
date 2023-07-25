@@ -45,7 +45,6 @@ public class ColorUtil {
      * @return
      */
     public static Color hexToColor(String hex) {
-        if (StringUtil.isEmpty(hex)) return null;
         try {
             return cn.hutool.core.img.ColorUtil.hexToColor(hex);
         } catch (Exception e) {
@@ -94,27 +93,25 @@ public class ColorUtil {
         int R = (rgb >> 16) & 0xFF, G = (rgb >> 8) & 0xFF, B = rgb & 0xFF;
         float R_1 = R / 255f, G_1 = G / 255f, B_1 = B / 255f;
         float max = Math.max(R_1, Math.max(G_1, B_1)), min = Math.min(R_1, Math.min(G_1, B_1));
-        float C_max = max, C_min = min;
-        float diff = C_max - C_min;
+        float diff = max - min;
         float hue = 0f;
         if (diff == 0f) hue = 0f;
         else {
-            if (C_max == R_1) {
+            if (max == R_1) {
                 hue = (((G_1 - B_1) / diff) % 6) * 60f;
             }
-            if (C_max == G_1) {
+            if (max == G_1) {
                 hue = (((B_1 - R_1) / diff) + 2f) * 60f;
             }
-            if (C_max == B_1) {
+            if (max == B_1) {
                 hue = (((R_1 - G_1) / diff) + 4f) * 60f;
             }
         }
         if (hue < 0) hue += 360;
         float saturation;
-        if (C_max == 0f) saturation = 0f;
-        else saturation = diff / C_max;
-        float value = C_max;
-        return new HSV(hue, saturation * 100, value * 100);
+        if (max == 0f) saturation = 0f;
+        else saturation = diff / max;
+        return new HSV(hue, saturation * 100, max * 100);
     }
 
     /**

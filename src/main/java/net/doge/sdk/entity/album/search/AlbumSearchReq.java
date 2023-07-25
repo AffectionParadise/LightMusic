@@ -55,14 +55,14 @@ public class AlbumSearchReq {
      */
     public CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetAlbumInfo> albumInfos = new LinkedList<>();
+        List<NetAlbumInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncode(keyword);
+        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetAlbumInfo>> searchAlbums = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
@@ -72,7 +72,7 @@ public class AlbumSearchReq {
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject result = albumInfoJson.getJSONObject("result");
-            if (!result.containsKey("albums")) return new CommonResult<>(albumInfos, 0);
+            if (!result.containsKey("albums")) return new CommonResult<>(r, 0);
             t = result.getIntValue("albumCount");
             JSONArray albumArray = result.getJSONArray("albums");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
@@ -98,14 +98,14 @@ public class AlbumSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsKg = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_KG_API, encodedKeyword, page, limit))
@@ -139,14 +139,14 @@ public class AlbumSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsQq = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
@@ -181,14 +181,14 @@ public class AlbumSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsKw = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_ALBUM_KW_API, encodedKeyword, page, limit)).execute();
@@ -220,15 +220,15 @@ public class AlbumSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsMg = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_MG_API, encodedKeyword, page, limit))
@@ -263,15 +263,15 @@ public class AlbumSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsQi = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SEARCH_ALBUM_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword))).execute();
@@ -305,14 +305,14 @@ public class AlbumSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 豆瓣
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsDb = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             final int lim = Math.min(20, limit);
@@ -345,7 +345,7 @@ public class AlbumSearchReq {
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
 //            String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_DB_API, encodedKeyword, (page - 1) * lim))
@@ -375,14 +375,14 @@ public class AlbumSearchReq {
 //                    albumInfo.setCoverImgThumb(coverImgThumb);
 //                });
 //
-//                res.add(albumInfo);
+//                r.add(albumInfo);
 //            }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 堆糖
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsDt = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
@@ -415,12 +415,12 @@ public class AlbumSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsDt2 = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API_2, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
@@ -454,9 +454,9 @@ public class AlbumSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetAlbumInfo>>> taskList = new LinkedList<>();
@@ -492,8 +492,8 @@ public class AlbumSearchReq {
                 e.printStackTrace();
             }
         });
-        albumInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(albumInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

@@ -85,11 +85,10 @@ public class NetAlbumInfo {
     }
 
     private void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
     /**
@@ -108,8 +107,8 @@ public class NetAlbumInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetAlbumInfo) {
-            NetAlbumInfo netAlbumInfo = (NetAlbumInfo) o;
-            return hashCode() == netAlbumInfo.hashCode();
+            NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+            return hashCode() == albumInfo.hashCode();
         }
         return false;
     }

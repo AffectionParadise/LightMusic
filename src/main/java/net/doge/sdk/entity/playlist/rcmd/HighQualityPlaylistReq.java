@@ -76,7 +76,7 @@ public class HighQualityPlaylistReq {
      */
     public CommonResult<NetPlaylistInfo> getHighQualityPlaylists(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
+        List<NetPlaylistInfo> res = new LinkedList<>();
 
         final String defaultTag = "默认";
         String[] s = Tags.hotPlaylistTag.get(tag);
@@ -84,7 +84,7 @@ public class HighQualityPlaylistReq {
         // 网易云
         // 精品歌单(程序分页)
         Callable<CommonResult<NetPlaylistInfo>> getHighQualityPlaylists = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -121,14 +121,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 网友精选碟(最热)(接口分页)
         Callable<CommonResult<NetPlaylistInfo>> getHotPickedPlaylists = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -165,14 +165,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 网友精选碟(最新)(接口分页)
         Callable<CommonResult<NetPlaylistInfo>> getNewPickedPlaylists = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -209,16 +209,16 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗
         // 推荐歌单(最热)
         Callable<CommonResult<NetPlaylistInfo>> getTagPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -249,14 +249,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(热藏)
         Callable<CommonResult<NetPlaylistInfo>> getHotCollectedTagPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -287,14 +287,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(飙升)
         Callable<CommonResult<NetPlaylistInfo>> getUpTagPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -325,14 +325,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 热门歌单(这个接口不分页，分开处理)
         Callable<CommonResult<NetPlaylistInfo>> getHotPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(HOT_PLAYLIST_KG_API)
@@ -365,15 +365,15 @@ public class HighQualityPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         // 分类推荐歌单(接口分页)
         Callable<CommonResult<NetPlaylistInfo>> getCatPlaylistsQq = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -381,14 +381,14 @@ public class HighQualityPlaylistReq {
                 boolean isAll = "10000000".equals(cat);
                 String url;
                 if (isAll) {
-                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncode(String.format(
+                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_playlist_by_tag\"," +
                                     "\"param\":{\"id\":10000000,\"sin\":%s,\"size\":%s,\"order\":5,\"cur_page\":%s}," +
                                     "\"module\":\"playlist.PlayListPlazaServer\"}}", (page - 1) * limit, limit, page));
                 } else {
-                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncode(String.format(
+                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_category_content\"," +
@@ -430,7 +430,7 @@ public class HighQualityPlaylistReq {
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(playlistInfo);
+                        r.add(playlistInfo);
                     }
                 } else {
                     JSONObject data = playlistInfoJson.getJSONObject("playlist").getJSONObject("data").getJSONObject("content");
@@ -457,17 +457,17 @@ public class HighQualityPlaylistReq {
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(playlistInfo);
+                        r.add(playlistInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         // 热门歌单
         Callable<CommonResult<NetPlaylistInfo>> getHotPlaylistsKw = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(HOT_PLAYLIST_KW_API, page, limit))
@@ -502,14 +502,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 默认歌单(热门)(接口分页)
         Callable<CommonResult<NetPlaylistInfo>> getDefaultPlaylistsKw = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(DEFAULT_PLAYLIST_KW_API, page, limit)).execute();
@@ -542,14 +542,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类歌单(接口分页)
         Callable<CommonResult<NetPlaylistInfo>> getCatPlaylistsKw = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
@@ -580,7 +580,7 @@ public class HighQualityPlaylistReq {
                                         playlistInfo.setCoverImgThumb(coverImgThumb);
                                     });
 
-                                    res.add(playlistInfo);
+                                    r.add(playlistInfo);
                                 }
                             }
                         }
@@ -616,18 +616,18 @@ public class HighQualityPlaylistReq {
                                 playlistInfo.setCoverImgThumb(coverImgThumb);
                             });
 
-                            res.add(playlistInfo);
+                            r.add(playlistInfo);
                         }
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕
         // 推荐歌单(最热)
         Callable<CommonResult<NetPlaylistInfo>> getRecHotPlaylistsMg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(REC_HOT_PLAYLIST_MG_API, page, limit))
@@ -659,13 +659,13 @@ public class HighQualityPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(每页固定 10 条)
 //        Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsMg = () -> {
-//            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+//            List<NetPlaylistInfo> res = new LinkedList<>();
 //            Integer t = 0;
 //
 //            String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_MG_API, (page - 1) * 10))
@@ -706,7 +706,7 @@ public class HighQualityPlaylistReq {
 //        };
         // 分类歌单(每页 10 条)
         Callable<CommonResult<NetPlaylistInfo>> getCatPlaylistsMg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[5])) {
@@ -739,16 +739,16 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         // 分类歌单
         Callable<CommonResult<NetPlaylistInfo>> getCatPlaylistsQi = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -778,16 +778,16 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         // 分类歌单
         Callable<CommonResult<NetPlaylistInfo>> getCatPlaylistsMe = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[7])) {
@@ -820,14 +820,14 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 探索歌单
         Callable<CommonResult<NetPlaylistInfo>> getExpPlaylistsMe = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[8])) {
@@ -861,16 +861,16 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 5sing
         // 分类歌单(最热)
         Callable<CommonResult<NetPlaylistInfo>> getHotPlaylistsFs = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[9])) {
@@ -909,10 +909,10 @@ public class HighQualityPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
@@ -965,8 +965,8 @@ public class HighQualityPlaylistReq {
                 e.printStackTrace();
             }
         });
-        playlistInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(playlistInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

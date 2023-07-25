@@ -37,17 +37,17 @@ public class SearchSuggestionReq {
      * @return
      */
     public Set<String> getSearchSuggestion(String keyword) {
-        Set<String> results = new LinkedHashSet<>();
+        Set<String> res = new LinkedHashSet<>();
 
         // 关键词为空时直接跳出
-        if (StringUtil.isEmpty(keyword.trim())) return results;
+        if (StringUtil.isEmpty(keyword.trim())) return res;
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncode(keyword);
+        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
 
         // 网易云
         Callable<List<String>> getSimpleSearchSuggestion = () -> {
-            LinkedList<String> res = new LinkedList<>();
+            List<String> r = new LinkedList<>();
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SIMPLE_SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
@@ -60,14 +60,14 @@ public class SearchSuggestionReq {
                 if (JsonUtil.notEmpty(searchSuggestionArray)) {
                     for (int i = 0, len = searchSuggestionArray.size(); i < len; i++) {
                         JSONObject keywordJson = searchSuggestionArray.getJSONObject(i);
-                        res.add(keywordJson.getString("keyword"));
+                        r.add(keywordJson.getString("keyword"));
                     }
                 }
             }
-            return res;
+            return r;
         };
         Callable<List<String>> getSearchSuggestion = () -> {
-            LinkedList<String> res = new LinkedList<>();
+            List<String> r = new LinkedList<>();
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
@@ -79,28 +79,28 @@ public class SearchSuggestionReq {
                 JSONArray songArray = result.getJSONArray("songs");
                 if (JsonUtil.notEmpty(songArray)) {
                     for (int i = 0, len = songArray.size(); i < len; i++) {
-                        res.add(songArray.getJSONObject(i).getString("name"));
+                        r.add(songArray.getJSONObject(i).getString("name"));
                     }
                 }
                 JSONArray artistArray = result.getJSONArray("artists");
                 if (JsonUtil.notEmpty(artistArray)) {
                     for (int i = 0, len = artistArray.size(); i < len; i++) {
-                        res.add(artistArray.getJSONObject(i).getString("name"));
+                        r.add(artistArray.getJSONObject(i).getString("name"));
                     }
                 }
                 JSONArray albumArray = result.getJSONArray("albums");
                 if (JsonUtil.notEmpty(albumArray)) {
                     for (int i = 0, len = albumArray.size(); i < len; i++) {
-                        res.add(albumArray.getJSONObject(i).getString("name"));
+                        r.add(albumArray.getJSONObject(i).getString("name"));
                     }
                 }
             }
-            return res;
+            return r;
         };
 
         // 酷狗
         Callable<List<String>> getSearchSuggestionKg = () -> {
-            LinkedList<String> res = new LinkedList<>();
+            List<String> r = new LinkedList<>();
 
             String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_KG_API, encodedKeyword))
                     .execute()
@@ -109,14 +109,14 @@ public class SearchSuggestionReq {
             JSONArray data = searchSuggestionJson.getJSONArray("data");
             for (int i = 0, len = data.size(); i < len; i++) {
                 JSONObject keywordJson = data.getJSONObject(i);
-                res.add(keywordJson.getString("keyword"));
+                r.add(keywordJson.getString("keyword"));
             }
-            return res;
+            return r;
         };
 
         // QQ
         Callable<List<String>> getSearchSuggestionQq = () -> {
-            LinkedList<String> res = new LinkedList<>();
+            List<String> r = new LinkedList<>();
 
             String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_QQ_API, encodedKeyword))
                     .header(Header.REFERER, "https://y.qq.com/portal/player.html")
@@ -127,52 +127,52 @@ public class SearchSuggestionReq {
             if (JsonUtil.notEmpty(data)) {
                 JSONArray songArray = data.getJSONObject("song").getJSONArray("itemlist");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
-                    res.add(songArray.getJSONObject(i).getString("name"));
+                    r.add(songArray.getJSONObject(i).getString("name"));
                 }
                 JSONArray artistArray = data.getJSONObject("singer").getJSONArray("itemlist");
                 for (int i = 0, len = artistArray.size(); i < len; i++) {
-                    res.add(artistArray.getJSONObject(i).getString("name"));
+                    r.add(artistArray.getJSONObject(i).getString("name"));
                 }
                 JSONArray albumArray = data.getJSONObject("album").getJSONArray("itemlist");
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
-                    res.add(albumArray.getJSONObject(i).getString("name"));
+                    r.add(albumArray.getJSONObject(i).getString("name"));
                 }
                 JSONArray mvArray = data.getJSONObject("mv").getJSONArray("itemlist");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
-                    res.add(mvArray.getJSONObject(i).getString("name"));
+                    r.add(mvArray.getJSONObject(i).getString("name"));
                 }
             }
-            return res;
+            return r;
         };
 
         // 酷我
         Callable<List<String>> getSearchSuggestionKw = () -> {
-            LinkedList<String> res = new LinkedList<>();
+            List<String> r = new LinkedList<>();
 
             HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_SUGGESTION_KW_API, encodedKeyword)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");
                 for (int i = 0, len = data.size(); i < len; i++) {
-                    res.add(RegexUtil.getGroup1("RELWORD=(.*?)\\r\\n", data.getString(i)));
+                    r.add(RegexUtil.getGroup1("RELWORD=(.*?)\\r\\n", data.getString(i)));
                 }
             }
-            return res;
+            return r;
         };
 
         // 千千
         Callable<List<String>> getSearchSuggestionQi = () -> {
-            LinkedList<String> res = new LinkedList<>();
+            List<String> r = new LinkedList<>();
 
             HttpResponse resp = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SEARCH_SUGGESTION_QI_API, System.currentTimeMillis(), encodedKeyword))).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");
                 for (int i = 0, len = data.size(); i < len; i++) {
-                    res.add(data.getString(i));
+                    r.add(data.getString(i));
                 }
             }
-            return res;
+            return r;
         };
 
         List<Future<List<String>>> taskList = new LinkedList<>();
@@ -186,7 +186,7 @@ public class SearchSuggestionReq {
 
         taskList.forEach(task -> {
             try {
-                results.addAll(task.get());
+                res.addAll(task.get());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -194,6 +194,6 @@ public class SearchSuggestionReq {
             }
         });
 
-        return results;
+        return res;
     }
 }

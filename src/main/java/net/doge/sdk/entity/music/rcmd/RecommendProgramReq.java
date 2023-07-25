@@ -52,7 +52,7 @@ public class RecommendProgramReq {
      */
     public CommonResult<NetMusicInfo> getRecommendPrograms(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetMusicInfo> musicInfos = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
 
         final String defaultTag = "默认";
         String[] s = Tags.programTag.get(tag);
@@ -60,7 +60,7 @@ public class RecommendProgramReq {
         // 网易云(程序分页)
         // 推荐节目
         Callable<CommonResult<NetMusicInfo>> getRecommendPrograms = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -95,13 +95,13 @@ public class RecommendProgramReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐个性节目
         Callable<CommonResult<NetMusicInfo>> getPersonalizedPrograms = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -136,13 +136,13 @@ public class RecommendProgramReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 24 小时节目榜
         Callable<CommonResult<NetMusicInfo>> get24HoursPrograms = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -177,13 +177,13 @@ public class RecommendProgramReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 节目榜
         Callable<CommonResult<NetMusicInfo>> getProgramsRanking = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -218,15 +218,15 @@ public class RecommendProgramReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         // 推荐节目
         Callable<CommonResult<NetMusicInfo>> getRecProgramsMe = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String programInfoBody = HttpRequest.get(REC_PROGRAM_ME_API)
@@ -248,7 +248,7 @@ public class RecommendProgramReq {
                 musicInfo.setId(id);
                 musicInfo.setName(name);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
             // 右侧节目
             programArray = info.getJSONObject("sounds").getJSONArray("day3");
@@ -266,13 +266,13 @@ public class RecommendProgramReq {
                 musicInfo.setName(name);
                 musicInfo.setDuration(duration);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 探索节目(从网页解析，每页不超过 20 条)
         Callable<CommonResult<NetMusicInfo>> getExpProgramsMe = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -301,14 +301,14 @@ public class RecommendProgramReq {
                     musicInfo.setArtistId(artistId);
                     musicInfo.setDuration(duration);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 首页分类节目(从网页解析，每页不超过 20 条)
         Callable<CommonResult<NetMusicInfo>> getIndexCatProgramsMe = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -332,14 +332,14 @@ public class RecommendProgramReq {
                     musicInfo.setName(name);
                     musicInfo.setDuration(duration);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 首页分类节目(最新)(从网页解析，每页不超过 20 条)
         Callable<CommonResult<NetMusicInfo>> getIndexCatNewProgramsMe = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -363,14 +363,14 @@ public class RecommendProgramReq {
                     musicInfo.setName(name);
                     musicInfo.setDuration(duration);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 首页分类节目侧边榜单
         Callable<CommonResult<NetMusicInfo>> getIndexCatProgramsRankingMe = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -392,10 +392,10 @@ public class RecommendProgramReq {
                     musicInfo.setId(id);
                     musicInfo.setName(name);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
@@ -434,8 +434,8 @@ public class RecommendProgramReq {
                 e.printStackTrace();
             }
         });
-        musicInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(musicInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GetRankingReq {
+public class RankingSearchReq {
     // 获取榜单 API
     private final String GET_RANKING_API = "https://music.163.com/api/toplist";
     // 获取榜单 API (酷狗)
@@ -56,11 +56,11 @@ public class GetRankingReq {
      */
     public CommonResult<NetRankingInfo> getRankings(int src) {
         AtomicInteger total = new AtomicInteger();
-        List<NetRankingInfo> rankingInfos = new LinkedList<>();
+        List<NetRankingInfo> res = new LinkedList<>();
 
         // 网易云
         Callable<CommonResult<NetRankingInfo>> getRankings = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -93,14 +93,14 @@ public class GetRankingReq {
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(rankingInfo);
+                r.add(rankingInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗
         Callable<CommonResult<NetRankingInfo>> getRankingsKg = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_KG_API)
@@ -131,14 +131,14 @@ public class GetRankingReq {
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(rankingInfo);
+                r.add(rankingInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         Callable<CommonResult<NetRankingInfo>> getRankingsQq = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_QQ_API)
@@ -171,13 +171,13 @@ public class GetRankingReq {
                         rankingInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(rankingInfo);
+                    r.add(rankingInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         Callable<CommonResult<NetRankingInfo>> getRankingsQq2 = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_QQ_API_2)
@@ -204,15 +204,15 @@ public class GetRankingReq {
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(rankingInfo);
+                r.add(rankingInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         // 所有榜单
         Callable<CommonResult<NetRankingInfo>> getRankingsKw = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.kwRequest(GET_RANKING_KW_API).execute();
@@ -243,14 +243,14 @@ public class GetRankingReq {
                             rankingInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(rankingInfo);
+                        r.add(rankingInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         Callable<CommonResult<NetRankingInfo>> getRankingsKw2 = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(GET_RANKING_KW_API_2).execute();
@@ -278,14 +278,14 @@ public class GetRankingReq {
                         rankingInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(rankingInfo);
+                    r.add(rankingInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐榜单
 //        Callable<CommonResult<NetRankingInfo>> getRecRankingsKw = () -> {
-//            LinkedList<NetRankingInfo> res = new LinkedList<>();
+//            List<NetRankingInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
 //            HttpResponse resp = kwRequest(GET_REC_RANKING_KW_API)
@@ -316,15 +316,15 @@ public class GetRankingReq {
 //                        rankingInfo.setCoverImgThumb(coverImgThumb);
 //                    });
 //
-//                    res.add(rankingInfo);
+//                    r.add(rankingInfo);
 //                }
 //            }
-//            return new CommonResult<>(res, t);
+//            return new CommonResult<>(r, t);
 //        };
 
         // 咪咕
         Callable<CommonResult<NetRankingInfo>> getRankingsMg = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_MG_API)
@@ -361,17 +361,17 @@ public class GetRankingReq {
                                 rankingInfo.setCoverImgThumb(coverImgThumb);
                             });
 
-                            res.add(rankingInfo);
+                            r.add(rankingInfo);
                         }
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         Callable<CommonResult<NetRankingInfo>> getRankingsQi = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(GET_RANKING_QI_API, System.currentTimeMillis())))
@@ -397,14 +397,14 @@ public class GetRankingReq {
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(rankingInfo);
+                r.add(rankingInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         Callable<CommonResult<NetRankingInfo>> getRankingsMe = () -> {
-            LinkedList<NetRankingInfo> res = new LinkedList<>();
+            List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_ME_API)
@@ -433,9 +433,9 @@ public class GetRankingReq {
                     rankingInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(rankingInfo);
+                r.add(rankingInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetRankingInfo>>> taskList = new LinkedList<>();
@@ -472,8 +472,8 @@ public class GetRankingReq {
                 e.printStackTrace();
             }
         });
-        rankingInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(rankingInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

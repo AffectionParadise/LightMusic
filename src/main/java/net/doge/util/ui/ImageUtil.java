@@ -36,14 +36,15 @@ public class ImageUtil {
     private static final ShadowFilter shadowFilter = new ShadowFilter();
     // 边框阴影过滤器
     private static final ShadowFilter borderShadowFilter = new ShadowFilter();
-    private static final int thickness = 30;
+    // 阴影厚度
+    private static final int SHADOW_THICKNESS = 30;
 
     static {
         shadowFilter.setRadius(10);
         shadowFilter.setDistance(0);
         shadowFilter.setOpacity(0.65f);
 
-        borderShadowFilter.setRadius(thickness);
+        borderShadowFilter.setRadius(SHADOW_THICKNESS);
         borderShadowFilter.setDistance(0);
         borderShadowFilter.setOpacity(0.65f);
     }
@@ -391,7 +392,7 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static BufferedImage doBlur(BufferedImage img) {
+    public static BufferedImage gaussianBlur(BufferedImage img) {
         if (img == null) return null;
         gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
         return gaussianFilter.filter(img, null);
@@ -480,7 +481,7 @@ public class ImageUtil {
      * @param q
      * @return
      */
-    public static BufferedImage quality(BufferedImage img, float q) {
+    public static BufferedImage quality(BufferedImage img, double q) {
         try {
             return Thumbnails.of(img).scale(1f).outputQuality(q).asBufferedImage();
         } catch (Exception e) {
@@ -562,12 +563,24 @@ public class ImageUtil {
     public static BufferedImage cropCenter(BufferedImage img) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
+        if (w < h) return region(img, 0, (h - w) / 2, w, w);
+        else if (w > h) return region(img, (w - h) / 2, 0, h, h);
+        return img;
+    }
+
+    /**
+     * 裁剪图片
+     *
+     * @param img
+     * @param x   左上角 x
+     * @param y   左上角 y
+     * @param w   宽
+     * @param h   高
+     * @return
+     */
+    public static BufferedImage region(BufferedImage img, int x, int y, int w, int h) {
         try {
-            if (w < h)
-                return Thumbnails.of(img).scale(1f).sourceRegion(0, (h - w) / 2, w, w).asBufferedImage();
-            else if (w > h)
-                return Thumbnails.of(img).scale(1f).sourceRegion((w - h) / 2, 0, h, h).asBufferedImage();
-            return img;
+            return Thumbnails.of(img).scale(1f).sourceRegion(x, y, w, h).asBufferedImage();
         } catch (Exception e) {
             return null;
         }
@@ -614,7 +627,7 @@ public class ImageUtil {
      */
     public static BufferedImage toGradient(BufferedImage img, int w, int h) {
         Color mc = ColorUtil.getBestSwatch(img, 2);
-        Color ca = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.28f), -30), cb = ColorUtil.hslDarken(mc, 0.1f);
+        Color ca = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.2f), -20), cb = ColorUtil.hslDarken(mc, 0.2f);
         return linearGradient(w, h, ca, cb);
     }
 
@@ -654,9 +667,9 @@ public class ImageUtil {
     public static BufferedImage borderShadow(BufferedImage img) {
         if (img == null) return null;
         int ow = img.getWidth(), oh = img.getHeight();
-        BufferedImage newImg = createTranslucentImage(ow + 2 * thickness, oh + 2 * thickness);
+        BufferedImage newImg = createTranslucentImage(ow + 2 * SHADOW_THICKNESS, oh + 2 * SHADOW_THICKNESS);
         Graphics2D g = newImg.createGraphics();
-        g.drawImage(img, thickness, thickness, null);
+        g.drawImage(img, SHADOW_THICKNESS, SHADOW_THICKNESS, null);
         g.dispose();
         newImg = borderShadowFilter.filter(newImg, null);
         newImg = width(newImg, ow);

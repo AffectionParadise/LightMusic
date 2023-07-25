@@ -75,7 +75,7 @@ public class UIStyle {
     public void setStyleImgPath(String styleImgPath) {
         this.styleImgPath = styleImgPath;
         if (StringUtil.isEmpty(styleImgPath)) return;
-        GlobalExecutors.imageExecutor.execute(() -> {
+        GlobalExecutors.requestExecutor.execute(() -> {
             img = ImageUtil.read(styleImgPath);
             if (img == null) return;
             imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.MV_COVER_WIDTH), 10);
@@ -89,7 +89,7 @@ public class UIStyle {
     public void setBgColor(Color bgColor) {
         this.bgColor = bgColor;
         if (bgColor == null) return;
-        GlobalExecutors.imageExecutor.execute(() -> {
+        GlobalExecutors.requestExecutor.execute(() -> {
             img = ImageUtil.dyeRect(2, 1, bgColor);
             imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.MV_COVER_WIDTH), 10);
             callback();

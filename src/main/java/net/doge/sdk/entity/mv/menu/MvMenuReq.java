@@ -22,6 +22,7 @@ import net.doge.util.common.TimeUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class MvMenuReq {
@@ -50,7 +51,7 @@ public class MvMenuReq {
         int source = netMusicInfo.getSource();
         String id = netMusicInfo.getId();
 
-        LinkedList<NetMvInfo> res = new LinkedList<>();
+        List<NetMvInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云(程序分页)
@@ -155,11 +156,11 @@ public class MvMenuReq {
         int source = netMvInfo.getSource();
         String id = netMvInfo.getId();
         String bvid = netMvInfo.getBvid();
-        String name = StringUtil.urlEncode(netMvInfo.getName());
+        String name = StringUtil.urlEncodeAll(netMvInfo.getName());
         boolean isVideo = netMvInfo.isVideo();
         boolean isMlog = netMvInfo.isMlog();
 
-        LinkedList<NetMvInfo> res = new LinkedList<>();
+        List<NetMvInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -390,7 +391,7 @@ public class MvMenuReq {
         int source = netMvInfo.getSource();
         String bvid = netMvInfo.getBvid();
 
-        LinkedList<NetMvInfo> res = new LinkedList<>();
+        List<NetMvInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 哔哩哔哩

@@ -74,19 +74,19 @@ public class NeteaseReqBuilder {
             case NeteaseReqOptConstants.E_API:
                 headers.put("X-Real-IP", "127:0:0:1");
                 headers.put("X-Forwarded-For", "127:0:0:1");
-                String requestId = String.format("%s_%s", System.currentTimeMillis() / 1000, StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0"));
+                String requestId = System.currentTimeMillis() / 1000 + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
                 headers.put("Cookie", String.format(
                         "osver=undefined; deviceId=undefined; appver=8.9.70; versioncode=140; mobilename=undefined; " +
                                 "buildver=1690071476; resolution=1920x1080; __csrf=; os=android; channel=undefined; requestId=%s; MUSIC_A=%s",
                         requestId,
                         anonymousToken
                 ));
-                body = NeteaseCrypto.eApi(options.get(NeteaseReqOptEnum.URL), data);
+                body = NeteaseCrypto.eApi(options.get(NeteaseReqOptEnum.PATH), data);
                 url = url.replaceFirst("\\w*api", "eapi");
                 break;
         }
         return HttpUtil.createRequest(method, url)
-                .body(body)
-                .headerMap(headers, false);
+                .headerMap(headers, true)
+                .body(body);
     }
 }

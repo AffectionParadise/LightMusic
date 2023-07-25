@@ -68,7 +68,7 @@ public class NewMusicReq {
      */
     public CommonResult<NetMusicInfo> getNewMusic(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetMusicInfo> musicInfos = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
 
         final String defaultTag = "默认";
         String[] s = Tags.newSongTag.get(tag);
@@ -76,7 +76,7 @@ public class NewMusicReq {
         // 网易云(程序分页)
         // 推荐新歌
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSong = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -109,13 +109,13 @@ public class NewMusicReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 新歌速递
         Callable<CommonResult<NetMusicInfo>> getFastNewSong = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -149,14 +149,14 @@ public class NewMusicReq {
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
                     musicInfo.setMvId(mvId);
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 曲风歌曲(最新)
         Callable<CommonResult<NetMusicInfo>> getStyleNewSong = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -190,17 +190,17 @@ public class NewMusicReq {
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
                     musicInfo.setMvId(mvId);
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
 
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗
         // 华语新歌(接口分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongKg = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -234,15 +234,15 @@ public class NewMusicReq {
                     musicInfo.setDuration(duration);
                     musicInfo.setMvId(mvId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ(程序分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongQq = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -277,15 +277,15 @@ public class NewMusicReq {
                     musicInfo.setDuration(duration);
                     musicInfo.setMvId(mvId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我(接口分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongKw = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.kwRequest(String.format(NEW_SONG_KW_API, page, limit)).execute();
@@ -319,15 +319,15 @@ public class NewMusicReq {
                     musicInfo.setDuration(duration);
                     musicInfo.setMvId(mvId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕(接口分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongMg = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_MG_API, page - 1, limit))
@@ -355,14 +355,14 @@ public class NewMusicReq {
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千(程序分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongQi = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(RECOMMEND_NEW_SONG_QI_API, System.currentTimeMillis())))
@@ -393,14 +393,14 @@ public class NewMusicReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 音乐磁场
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongHf = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
@@ -435,15 +435,15 @@ public class NewMusicReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咕咕咕音乐
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongGg = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[5])) {
@@ -472,16 +472,16 @@ public class NewMusicReq {
                     musicInfo.setId(songId);
                     musicInfo.setName(songName);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 5sing
         // 最新上传(原唱)
         Callable<CommonResult<NetMusicInfo>> getLatestYcSongFs = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -510,14 +510,14 @@ public class NewMusicReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 网站推荐(原唱)
         Callable<CommonResult<NetMusicInfo>> getWebsiteRecYcSongFs = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -546,14 +546,14 @@ public class NewMusicReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 候选推荐(原唱)
         Callable<CommonResult<NetMusicInfo>> getCandiRecYcSongFs = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -582,14 +582,14 @@ public class NewMusicReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 最新上传(翻唱)
         Callable<CommonResult<NetMusicInfo>> getLatestFcSongFs = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -618,14 +618,14 @@ public class NewMusicReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 网站推荐(翻唱)
         Callable<CommonResult<NetMusicInfo>> getWebsiteRecFcSongFs = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -654,14 +654,14 @@ public class NewMusicReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 候选推荐(翻唱)
         Callable<CommonResult<NetMusicInfo>> getCandiRecFcSongFs = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -690,14 +690,14 @@ public class NewMusicReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 所有伴奏(伴奏)
         Callable<CommonResult<NetMusicInfo>> getAllBzSongFs = () -> {
-            LinkedList<NetMusicInfo> res = new LinkedList<>();
+            List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(ALL_BZ_MUSIC_FS_API, page))
@@ -728,9 +728,9 @@ public class NewMusicReq {
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
 
-                res.add(musicInfo);
+                r.add(musicInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
@@ -785,8 +785,8 @@ public class NewMusicReq {
                 e.printStackTrace();
             }
         });
-        musicInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(musicInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

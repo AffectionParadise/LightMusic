@@ -30,9 +30,9 @@ public class Task {
     // 下载类型
     private int type;
     // 音乐信息(类型为 MUSIC 时)
-    private NetMusicInfo netMusicInfo;
+    private NetMusicInfo musicInfo;
     // MV 信息(类型为 MV 时)
-    private NetMvInfo netMvInfo;
+    private NetMvInfo mvInfo;
     // url
     private String url;
     // 文件路径
@@ -52,13 +52,13 @@ public class Task {
     // 完成后调用
     private Runnable invokeLater;
 
-    public Task(JList downloadList, int type, NetMusicInfo netMusicInfo, NetMvInfo netMvInfo) {
+    public Task(JList downloadList, int type, NetMusicInfo musicInfo, NetMvInfo mvInfo) {
         this.downloadList = downloadList;
         this.type = type;
-        this.netMusicInfo = netMusicInfo;
-        this.netMvInfo = netMvInfo;
-        this.name = type == TaskType.MUSIC ? netMusicInfo.toSimpleString() : netMvInfo.toSimpleString();
-        this.dest = type == TaskType.MUSIC ? SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleFileName() : SimplePath.DOWNLOAD_MV_PATH + netMvInfo.toSimpleFileName();
+        this.musicInfo = musicInfo;
+        this.mvInfo = mvInfo;
+        this.name = type == TaskType.MUSIC ? musicInfo.toSimpleString() : mvInfo.toSimpleString();
+        this.dest = type == TaskType.MUSIC ? SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName() : SimplePath.DOWNLOAD_MV_PATH + mvInfo.toSimpleFileName();
     }
 
     public void setPercent(double percent) {
@@ -83,7 +83,7 @@ public class Task {
 
     private Map<String, Object> getHeaders() {
         Map<String, Object> headers = null;
-        if (isMv() && netMvInfo.getSource() == NetMusicSource.BI || isMusic() && netMusicInfo.getSource() == NetMusicSource.BI) {
+        if (isMv() && mvInfo.getSource() == NetMusicSource.BI || isMusic() && musicInfo.getSource() == NetMusicSource.BI) {
             headers = new HashMap<>();
             headers.put("referer", "https://www.bilibili.com/");
         }
@@ -147,15 +147,15 @@ public class Task {
     private void prepareInfo() {
         if (type == TaskType.MUSIC) {
             // 先补全音乐信息、url
-            MusicServerUtil.fillMusicInfo(netMusicInfo);
-            MusicServerUtil.fillMusicUrl(netMusicInfo);
-            MusicServerUtil.fillLrc(netMusicInfo);
-            url = netMusicInfo.getUrl();
-            dest = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleFileName();
+            MusicServerUtil.fillMusicInfo(musicInfo);
+            MusicServerUtil.fillMusicUrl(musicInfo);
+            MusicServerUtil.fillLrc(musicInfo);
+            url = musicInfo.getUrl();
+            dest = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
         } else if (type == TaskType.MV) {
-            MusicServerUtil.fillMvInfo(netMvInfo);
-            url = netMvInfo.getUrl();
-            dest = SimplePath.DOWNLOAD_MV_PATH + netMvInfo.toSimpleFileName();
+            MusicServerUtil.fillMvInfo(mvInfo);
+            url = mvInfo.getUrl();
+            dest = SimplePath.DOWNLOAD_MV_PATH + mvInfo.toSimpleFileName();
         }
     }
 

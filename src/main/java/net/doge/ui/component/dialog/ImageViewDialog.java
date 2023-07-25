@@ -297,7 +297,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
 
         cursors.add("");
         // 默认显示第一张
-        GlobalExecutors.imageExecutor.submit(() -> {
+        GlobalExecutors.requestExecutor.execute(() -> {
             if (showImg(p)) return;
             requestFailed();
             close();

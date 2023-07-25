@@ -1,6 +1,5 @@
 package net.doge.util.common;
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
@@ -92,7 +91,7 @@ public class JsonUtil {
      */
     public static void saveJson(JSONObject object, String dest) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(dest));
-        String jsonString = JSON.toJSONString(object, JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue);
+        String jsonString = JSONObject.toJSONString(object, JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue);
         writer.write(jsonString, 0, jsonString.length());
         writer.close();
     }

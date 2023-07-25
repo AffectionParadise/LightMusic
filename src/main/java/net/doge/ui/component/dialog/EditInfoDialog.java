@@ -20,7 +20,7 @@ import net.doge.ui.component.combobox.ui.ComboBoxUI;
 import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.doge.util.media.MusicUtil;
+import net.doge.util.media.MediaUtil;
 import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -131,9 +131,9 @@ public class EditInfoDialog extends AbstractTitledDialog {
                         (String) results[11],
                         (BufferedImage) results[12]
                 );
-                MusicUtil.writeMP3Info(file.getAbsolutePath(), mediaInfo);
+                MediaUtil.writeMP3Info(file.getAbsolutePath(), mediaInfo);
                 // 歌曲信息更改后重新填充
-                MusicUtil.fillAudioFileInfo(file);
+                MediaUtil.fillAudioFileInfo(file);
             }
             confirmed = true;
             dispose();
@@ -169,10 +169,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
         String title = file.getSongName();
         String artist = file.getArtist();
         String album = file.getAlbum();
-        String genre = MusicUtil.getGenre(file);
-        String comment = MusicUtil.getComment(file);
-        String copyright = MusicUtil.getCopyright(file);
-        BufferedImage albumImage = MusicUtil.getAlbumImage(file);
+        String genre = MediaUtil.getGenre(file);
+        String comment = MediaUtil.getComment(file);
+        String copyright = MediaUtil.getCopyright(file);
+        BufferedImage albumImage = MediaUtil.getAlbumImage(file);
 
         results[0] = fileName;
         results[1] = fileSize;

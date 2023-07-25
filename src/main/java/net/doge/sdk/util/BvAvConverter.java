@@ -76,6 +76,7 @@ public class BvAvConverter {
 
     /**
      * Bv 号转 Av
+     *
      * @param bv
      * @return
      */
@@ -94,6 +95,7 @@ public class BvAvConverter {
 
     /**
      * Av 号转 Bv
+     *
      * @param av
      * @return
      */
@@ -102,15 +104,13 @@ public class BvAvConverter {
         BigInteger temp = new BigInteger(av);
         temp = temp.xor(xorV);
         temp = temp.add(subV);
-        String res = "bv";
-        for (int i = 0; i < power.length; i++) {
-            String t = temp.divide(base.pow(power[i])).mod(base).toString();
+        StringBuilder res = new StringBuilder("bv");
+        for (int p : power) {
+            String t = temp.divide(base.pow(p)).mod(base).toString();
             for (Entry<Character, String> entry : charMap.entrySet()) {
-                if(entry.getValue().equals(t)) {
-                    res += entry.getKey();
-                }
+                if (entry.getValue().equals(t)) res.append(entry.getKey());
             }
         }
-        return res;
+        return res.toString();
     }
 }

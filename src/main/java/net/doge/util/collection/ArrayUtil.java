@@ -12,40 +12,29 @@ public class ArrayUtil {
      * 判断数据是否在数组
      *
      * @param chars
-     * @param c
+     * @param ch
      * @return
      */
-    public static boolean inArray(char[] chars, char c) {
-        for (char ch : chars) {
-            if (ch == c) return true;
-        }
-        return false;
+    public static boolean inArray(char[] chars, char ch) {
+        return cn.hutool.core.util.ArrayUtil.indexOf(chars, ch) > -1;
     }
 
     /**
-     * 反转数组
+     * 原地反转数组，返回原数组
      *
      * @param longs
      */
-    public static void reverse(long[] longs) {
-        for (int i = 0, len = longs.length; i < len / 2; i++) {
-            long t = longs[i];
-            longs[i] = longs[len - i - 1];
-            longs[len - i - 1] = t;
-        }
+    public static long[] reverse(long[] longs) {
+        return cn.hutool.core.util.ArrayUtil.reverse(longs);
     }
 
     /**
-     * 反转数组
+     * 原地反转数组，返回原数组
      *
      * @param bytes
      */
-    public static void reverse(byte[] bytes) {
-        for (int i = 0, len = bytes.length; i < len / 2; i++) {
-            byte t = bytes[i];
-            bytes[i] = bytes[len - i - 1];
-            bytes[len - i - 1] = t;
-        }
+    public static byte[] reverse(byte[] bytes) {
+        return cn.hutool.core.util.ArrayUtil.reverse(bytes);
     }
 
     /**

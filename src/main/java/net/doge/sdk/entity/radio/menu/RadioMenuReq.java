@@ -23,6 +23,7 @@ import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class RadioMenuReq {
@@ -48,11 +49,11 @@ public class RadioMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getRadioSubscribers(NetRadioInfo netRadioInfo, int limit, int page) {
-        int source = netRadioInfo.getSource();
-        String id = netRadioInfo.getId();
+    public CommonResult<NetUserInfo> getRadioSubscribers(NetRadioInfo radioInfo, int limit, int page) {
+        int source = radioInfo.getSource();
+        String id = radioInfo.getId();
 
-        LinkedList<NetUserInfo> res = new LinkedList<>();
+        List<NetUserInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -110,7 +111,7 @@ public class RadioMenuReq {
         boolean isBook = radioInfo.isBook();
         boolean isGame = radioInfo.isGame();
 
-        LinkedList<NetRadioInfo> res = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 豆瓣
@@ -186,12 +187,12 @@ public class RadioMenuReq {
      *
      * @return
      */
-    public CommonResult<NetArtistInfo> getRadioArtists(NetRadioInfo netRadioInfo) {
-        int source = netRadioInfo.getSource();
-        String id = netRadioInfo.getId();
-        boolean isBook = netRadioInfo.isBook();
+    public CommonResult<NetArtistInfo> getRadioArtists(NetRadioInfo radioInfo) {
+        int source = radioInfo.getSource();
+        String id = radioInfo.getId();
+        boolean isBook = radioInfo.isBook();
 
-        LinkedList<NetArtistInfo> res = new LinkedList<>();
+        List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 猫耳

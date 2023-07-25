@@ -43,7 +43,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) value;
+        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
@@ -53,7 +53,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         CustomLabel trackCountLabel = new CustomLabel();
 
         iconLabel.setIconTextGap(0);
-        iconLabel.setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : playlistIcon);
+        iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -91,11 +91,11 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
 
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netPlaylistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String creator = netPlaylistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                StringUtil.shorten(netPlaylistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
-        String playCount = netPlaylistInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netPlaylistInfo.getPlayCount())) : "";
-        String trackCount = netPlaylistInfo.hasTrackCount() ? StringUtil.textToHtml(netPlaylistInfo.getTrackCount() + " 歌曲") : "";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String creator = playlistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(playlistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+        String playCount = playlistInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(playlistInfo.getPlayCount())) : "";
+        String trackCount = playlistInfo.hasTrackCount() ? StringUtil.textToHtml(playlistInfo.getTrackCount() + " 歌曲") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

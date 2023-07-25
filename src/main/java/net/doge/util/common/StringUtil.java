@@ -1,6 +1,7 @@
 package net.doge.util.common;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.moji4j.MojiConverter;
 import net.doge.constant.ui.Fonts;
@@ -16,8 +17,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import javax.swing.*;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -365,17 +364,23 @@ public class StringUtil {
     }
 
     /**
-     * url 编码
+     * url 编码（会处理所有冲突的字符）
      *
      * @param s
      * @return
      */
-    public static String urlEncode(String s) {
-        try {
-            return URLEncoder.encode(s, "utf-8");
-        } catch (Exception e) {
-            return null;
-        }
+    public static String urlEncodeAll(String s) {
+        return URLUtil.encodeAll(s);
+    }
+
+    /**
+     * url 编码（处理空白字符）
+     *
+     * @param s
+     * @return
+     */
+    public static String urlEncodeBlank(String s) {
+        return URLUtil.encodeBlank(s);
     }
 
     /**
@@ -385,11 +390,7 @@ public class StringUtil {
      * @return
      */
     public static String urlDecode(String s) {
-        try {
-            return URLDecoder.decode(s, "utf-8");
-        } catch (Exception e) {
-            return null;
-        }
+        return URLUtil.decode(s);
     }
 
     /**
@@ -423,6 +424,7 @@ public class StringUtil {
 
     /**
      * 用 padStr 填充字符串 str 到指定长度
+     *
      * @param str
      * @param len
      * @param padStr

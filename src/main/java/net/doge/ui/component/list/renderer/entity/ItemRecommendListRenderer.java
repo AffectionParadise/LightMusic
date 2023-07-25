@@ -57,7 +57,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value instanceof NetPlaylistInfo) {
-            NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) value;
+            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel iconLabel = new CustomLabel();
@@ -67,7 +67,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             CustomLabel trackCountLabel = new CustomLabel();
 
             iconLabel.setIconTextGap(0);
-            iconLabel.setIcon(netPlaylistInfo.hasCoverImgThumb() ? new ImageIcon(netPlaylistInfo.getCoverImgThumb()) : playlistIcon);
+            iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(textColor);
@@ -105,11 +105,11 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
             String source = "<html></html>";
-            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netPlaylistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String creator = netPlaylistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                    StringUtil.shorten(netPlaylistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
-            String playCount = netPlaylistInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netPlaylistInfo.getPlayCount())) : "";
-            String trackCount = netPlaylistInfo.hasTrackCount() ? StringUtil.textToHtml(netPlaylistInfo.getTrackCount() + " 歌曲") : "";
+            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String creator = playlistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                    StringUtil.shorten(playlistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+            String playCount = playlistInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(playlistInfo.getPlayCount())) : "";
+            String trackCount = playlistInfo.hasTrackCount() ? StringUtil.textToHtml(playlistInfo.getTrackCount() + " 歌曲") : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -124,7 +124,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             return outerPanel;
         } else if (value instanceof NetAlbumInfo) {
-            NetAlbumInfo netAlbumInfo = (NetAlbumInfo) value;
+            NetAlbumInfo albumInfo = (NetAlbumInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel iconLabel = new CustomLabel();
@@ -134,7 +134,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             CustomLabel publishTimeLabel = new CustomLabel();
 
             iconLabel.setIconTextGap(0);
-            iconLabel.setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : albumIcon);
+            iconLabel.setIcon(albumInfo.hasCoverImgThumb() ? new ImageIcon(albumInfo.getCoverImgThumb()) : albumIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(textColor);
@@ -172,11 +172,11 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
             String source = "<html></html>";
-            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netAlbumInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String artist = netAlbumInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                    StringUtil.shorten(netAlbumInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
-            String songNum = netAlbumInfo.hasSongNum() ? StringUtil.textToHtml(netAlbumInfo.isPhoto() ? netAlbumInfo.getSongNum() + " 图片" : netAlbumInfo.getSongNum() + " 歌曲") : "";
-            String publishTime = netAlbumInfo.hasPublishTime() ? StringUtil.textToHtml(netAlbumInfo.getPublishTime() + " 发行") : "";
+            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(albumInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String artist = albumInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                    StringUtil.shorten(albumInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+            String songNum = albumInfo.hasSongNum() ? StringUtil.textToHtml(albumInfo.isPhoto() ? albumInfo.getSongNum() + " 图片" : albumInfo.getSongNum() + " 歌曲") : "";
+            String publishTime = albumInfo.hasPublishTime() ? StringUtil.textToHtml(albumInfo.getPublishTime() + " 发行") : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -191,7 +191,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             return outerPanel;
         } else if (value instanceof NetArtistInfo) {
-            NetArtistInfo netArtistInfo = (NetArtistInfo) value;
+            NetArtistInfo artistInfo = (NetArtistInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel iconLabel = new CustomLabel();
@@ -201,7 +201,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             CustomLabel mvNumLabel = new CustomLabel();
 
             iconLabel.setIconTextGap(0);
-            iconLabel.setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : artistIcon);
+            iconLabel.setIcon(artistInfo.hasCoverImgThumb() ? new ImageIcon(artistInfo.getCoverImgThumb()) : artistIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(textColor);
@@ -239,10 +239,10 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
             String source = "<html></html>";
-            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netArtistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String songNum = netArtistInfo.hasSongNum() ? StringUtil.textToHtml(netArtistInfo.fromME() ? netArtistInfo.getSongNum() + " 电台" : netArtistInfo.getSongNum() + " 歌曲") : "";
-            String albumNum = netArtistInfo.hasAlbumNum() ? StringUtil.textToHtml(netArtistInfo.getAlbumNum() + " 专辑") : "";
-            String mvNum = netArtistInfo.hasMvNum() ? StringUtil.textToHtml(netArtistInfo.getMvNum() + " MV") : "";
+            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(artistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String songNum = artistInfo.hasSongNum() ? StringUtil.textToHtml(artistInfo.fromME() ? artistInfo.getSongNum() + " 电台" : artistInfo.getSongNum() + " 歌曲") : "";
+            String albumNum = artistInfo.hasAlbumNum() ? StringUtil.textToHtml(artistInfo.getAlbumNum() + " 专辑") : "";
+            String mvNum = artistInfo.hasMvNum() ? StringUtil.textToHtml(artistInfo.getMvNum() + " MV") : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -257,7 +257,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             return outerPanel;
         } else if (value instanceof NetRadioInfo) {
-            NetRadioInfo netRadioInfo = (NetRadioInfo) value;
+            NetRadioInfo radioInfo = (NetRadioInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel iconLabel = new CustomLabel();
@@ -269,7 +269,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 //        CustomLabel createTimeLabel = new CustomLabel();
 
             iconLabel.setIconTextGap(0);
-            iconLabel.setIcon(netRadioInfo.hasCoverImgThumb() ? new ImageIcon(netRadioInfo.getCoverImgThumb()) : radioIcon);
+            iconLabel.setIcon(radioInfo.hasCoverImgThumb() ? new ImageIcon(radioInfo.getCoverImgThumb()) : radioIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(textColor);
@@ -314,13 +314,13 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
             String source = "<html></html>";
-            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netRadioInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(radioInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
             String dj = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                    StringUtil.shorten(netRadioInfo.hasDj() ? netRadioInfo.getDj() : "", RendererConstants.STRING_MAX_LENGTH), tw));
-            String category = netRadioInfo.hasCategory() ? StringUtil.textToHtml(netRadioInfo.getCategory()) : "";
-            String trackCount = netRadioInfo.hasTrackCount() ? StringUtil.textToHtml(netRadioInfo.getTrackCount() + " 节目") : "";
-            String playCount = netRadioInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netRadioInfo.getPlayCount())) : "";
-//        String createTime = netRadioInfo.hasCreateTime() ? netRadioInfo.getCreateTime() : "";
+                    StringUtil.shorten(radioInfo.hasDj() ? radioInfo.getDj() : "", RendererConstants.STRING_MAX_LENGTH), tw));
+            String category = radioInfo.hasCategory() ? StringUtil.textToHtml(radioInfo.getCategory()) : "";
+            String trackCount = radioInfo.hasTrackCount() ? StringUtil.textToHtml(radioInfo.getTrackCount() + " 节目") : "";
+            String playCount = radioInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(radioInfo.getPlayCount())) : "";
+//        String createTime = radioInfo.hasCreateTime() ? radioInfo.getCreateTime() : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -337,7 +337,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             return outerPanel;
         } else if (value instanceof NetMvInfo) {
-            NetMvInfo netMvInfo = (NetMvInfo) value;
+            NetMvInfo mvInfo = (NetMvInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel iconLabel = new CustomLabel();
@@ -348,7 +348,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             CustomLabel pubTimeLabel = new CustomLabel();
 
             iconLabel.setIconTextGap(0);
-            iconLabel.setIcon(netMvInfo.hasCoverImgThumb() ? new ImageIcon(netMvInfo.getCoverImgThumb()) : mvIcon);
+            iconLabel.setIcon(mvInfo.hasCoverImgThumb() ? new ImageIcon(mvInfo.getCoverImgThumb()) : mvIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(textColor);
@@ -391,11 +391,11 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
             String source = "<html></html>";
-            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netMvInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netMvInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String duration = StringUtil.textToHtml(netMvInfo.hasDuration() ? TimeUtil.format(netMvInfo.getDuration()) : "--:--");
-            String playCount = netMvInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netMvInfo.getPlayCount())) : "";
-            String pubTime = netMvInfo.hasPubTime() ? StringUtil.textToHtml(netMvInfo.getPubTime()) : "";
+            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String duration = StringUtil.textToHtml(mvInfo.hasDuration() ? TimeUtil.format(mvInfo.getDuration()) : "--:--");
+            String playCount = mvInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(mvInfo.getPlayCount())) : "";
+            String pubTime = mvInfo.hasPubTime() ? StringUtil.textToHtml(mvInfo.getPubTime()) : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -411,7 +411,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             return outerPanel;
         } else if (value instanceof NetRankingInfo) {
-            NetRankingInfo netRankingInfo = (NetRankingInfo) value;
+            NetRankingInfo rankingInfo = (NetRankingInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel iconLabel = new CustomLabel();
@@ -421,7 +421,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             CustomLabel updateTimeLabel = new CustomLabel();
 
             iconLabel.setIconTextGap(0);
-            iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : rankingIcon);
+            iconLabel.setIcon(rankingInfo.hasCoverImgThumb() ? new ImageIcon(rankingInfo.getCoverImgThumb()) : rankingIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             iconLabel.setForeground(textColor);
@@ -459,10 +459,10 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
             String source = "<html></html>";
-            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netRankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String playCount = netRankingInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netRankingInfo.getPlayCount())) : "";
-            String updateFre = netRankingInfo.hasUpdateFre() ? StringUtil.textToHtml(netRankingInfo.getUpdateFre()) : "";
-            String updateTime = netRankingInfo.hasUpdateTime() ? StringUtil.textToHtml(netRankingInfo.getUpdateTime() + " 更新") : "";
+            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(rankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String playCount = rankingInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(rankingInfo.getPlayCount())) : "";
+            String updateFre = rankingInfo.hasUpdateFre() ? StringUtil.textToHtml(rankingInfo.getUpdateFre()) : "";
+            String updateTime = rankingInfo.hasUpdateTime() ? StringUtil.textToHtml(rankingInfo.getUpdateTime() + " 更新") : "";
 
             iconLabel.setText(source);
             nameLabel.setText(name);
@@ -477,7 +477,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             return outerPanel;
         } else if (value instanceof NetUserInfo) {
-            NetUserInfo netUserInfo = (NetUserInfo) value;
+            NetUserInfo userInfo = (NetUserInfo) value;
 
             CustomPanel outerPanel = new CustomPanel();
             CustomLabel avatarLabel = new CustomLabel();
@@ -490,7 +490,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             CustomLabel playlistCountLabel = new CustomLabel();
 
             avatarLabel.setIconTextGap(0);
-            avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : userIcon);
+            avatarLabel.setIcon(userInfo.hasAvatarThumb() ? new ImageIcon(userInfo.getAvatarThumb()) : userIcon);
 
             outerPanel.setForeground(isSelected ? selectedColor : foreColor);
             avatarLabel.setForeground(textColor);
@@ -537,16 +537,16 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 
             final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
             String source = "<html></html>";
-            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netUserInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String gender = netUserInfo.hasGender() ? StringUtil.textToHtml(netUserInfo.getGender()) : "";
-            boolean hasRadioCount = netUserInfo.hasRadioCount(), hasProgramCount = netUserInfo.hasProgramCount();
-            String playlistCount = netUserInfo.hasPlaylistCount() ? StringUtil.textToHtml(netUserInfo.getPlaylistCount() + " 歌单")
-                    : hasRadioCount && hasProgramCount ? StringUtil.textToHtml(netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目")
-                    : hasRadioCount ? StringUtil.textToHtml(netUserInfo.getRadioCount() + " 电台")
-                    : hasProgramCount ? StringUtil.textToHtml(netUserInfo.getProgramCount() + (netUserInfo.fromDt() ? " 专辑" : netUserInfo.fromBI() ? " 视频" : " 节目"))
+            String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(userInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+            String gender = userInfo.hasGender() ? StringUtil.textToHtml(userInfo.getGender()) : "";
+            boolean hasRadioCount = userInfo.hasRadioCount(), hasProgramCount = userInfo.hasProgramCount();
+            String playlistCount = userInfo.hasPlaylistCount() ? StringUtil.textToHtml(userInfo.getPlaylistCount() + " 歌单")
+                    : hasRadioCount && hasProgramCount ? StringUtil.textToHtml(userInfo.getRadioCount() + " 电台，" + userInfo.getProgramCount() + " 节目")
+                    : hasRadioCount ? StringUtil.textToHtml(userInfo.getRadioCount() + " 电台")
+                    : hasProgramCount ? StringUtil.textToHtml(userInfo.getProgramCount() + (userInfo.fromDt() ? " 专辑" : userInfo.fromBI() ? " 视频" : " 节目"))
                     : "";
-            String follow = netUserInfo.hasFollow() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollow()) + " 关注") : "";
-            String followed = netUserInfo.hasFollowed() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollowed()) + " 粉丝") : "";
+            String follow = userInfo.hasFollow() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(userInfo.getFollow()) + " 关注") : "";
+            String followed = userInfo.hasFollowed() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(userInfo.getFollowed()) + " 粉丝") : "";
 
             avatarLabel.setText(source);
             nameLabel.setText(name);

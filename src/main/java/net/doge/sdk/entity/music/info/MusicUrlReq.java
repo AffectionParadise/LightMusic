@@ -12,8 +12,8 @@ import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
-import net.doge.sdk.entity.music.info.trackurl.KWTrackUrlReq;
-import net.doge.sdk.entity.music.info.trackurl.QQTrackUrlReq;
+import net.doge.sdk.entity.music.info.trackurl.KwTrackUrlReq;
+import net.doge.sdk.entity.music.info.trackurl.QqTrackUrlReq;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.CryptoUtil;
@@ -210,7 +210,7 @@ public class MusicUrlReq {
 //            String sip = data.getJSONArray("sip").getString(0);
 //            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
 //            return StringUtil.isEmpty(url) ? "" : sip + url;
-            return new QQTrackUrlReq().getTrackUrl(songId, "hq");
+            return new QqTrackUrlReq().getTrackUrl(songId, "hq");
         }
 
         // 酷我(解锁付费音乐)
@@ -228,7 +228,7 @@ public class MusicUrlReq {
 //                    if (JsonUtil.notEmpty(data)) return data.getString("url");
 //                }
 //            }
-            return new KWTrackUrlReq().getTrackUrl(songId, "320k");
+            return new KwTrackUrlReq().getTrackUrl(songId, "320k");
         }
 
         // 咪咕
@@ -241,9 +241,10 @@ public class MusicUrlReq {
             rateFormats.addAll(data.getJSONArray("newRateFormats"));
             for (int i = rateFormats.size() - 1; i >= 0; i--) {
                 JSONObject urlJson = rateFormats.getJSONObject(i);
-                String url = urlJson.getString("url");
-                if (StringUtil.isEmpty(url)) continue;
-                return url.replaceFirst("ftp://[^/]+", "https://freetyst.nf.migu.cn");
+                String ftp = urlJson.getString("url");
+                if (StringUtil.isEmpty(ftp)) continue;
+                String url = ftp.replaceFirst("ftp://[^/]+", "https://freetyst.nf.migu.cn");
+                return StringUtil.urlEncodeBlank(url);
             }
         }
 
@@ -272,7 +273,7 @@ public class MusicUrlReq {
             if (StringUtil.notEmpty(dataStr)) {
                 // json 字段带引号
                 JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));
-                String url = data.getString("url").replace(" ", "%20");
+                String url = StringUtil.urlEncodeBlank(data.getString("url"));
                 if (url.startsWith("http")) return url;
                 return SdkUtil.getRedirectUrl("https://www.hifini.com/" + url);
             }
@@ -293,7 +294,7 @@ public class MusicUrlReq {
 
                 // json 字段带引号
                 JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));
-                String url = data.getString("url").replace(" ", "%20");
+                String url = StringUtil.urlEncodeBlank(data.getString("url"));
                 if (url.startsWith("http")) return url;
                 else {
                     // 获取重定向之后的 url
@@ -359,8 +360,7 @@ public class MusicUrlReq {
         List<NetMusicInfo> data = result.data;
         List<MusicCandidate> candidates = new LinkedList<>();
         MusicInfoReq musicInfoReq = new MusicInfoReq();
-        for (int i = 0, size = data.size(); i < size; i++) {
-            NetMusicInfo info = data.get(i);
+        for (NetMusicInfo info : data) {
             // 部分歌曲没有时长，先填充时长，准备判断
             if (!info.hasDuration()) musicInfoReq.fillDuration(info);
             double nameSimi = StringUtil.similar(info.getName(), musicInfo.getName());

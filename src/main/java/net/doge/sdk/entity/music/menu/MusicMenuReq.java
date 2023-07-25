@@ -22,6 +22,7 @@ import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class MusicMenuReq {
@@ -50,7 +51,7 @@ public class MusicMenuReq {
         int source = netMusicInfo.getSource();
         String id = netMusicInfo.getId();
 
-        LinkedList<NetMusicInfo> res = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -214,11 +215,11 @@ public class MusicMenuReq {
      *
      * @return
      */
-    public CommonResult<NetPlaylistInfo> getRelatedPlaylists(NetMusicInfo netMusicInfo) {
-        int source = netMusicInfo.getSource();
-        String id = netMusicInfo.getId();
+    public CommonResult<NetPlaylistInfo> getRelatedPlaylists(NetMusicInfo musicInfo) {
+        int source = musicInfo.getSource();
+        String id = musicInfo.getId();
 
-        LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+        List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -316,7 +317,7 @@ public class MusicMenuReq {
         int source = musicInfo.getSource();
         String id = musicInfo.getId();
 
-        LinkedList<NetRadioInfo> res = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 猫耳

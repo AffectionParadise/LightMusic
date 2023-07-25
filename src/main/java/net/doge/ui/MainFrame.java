@@ -19,7 +19,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.config.ConfigConstants;
 import net.doge.constant.lyric.ChineseType;
@@ -29,7 +28,10 @@ import net.doge.constant.lyric.NextLrc;
 import net.doge.constant.meta.SoftInfo;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.model.UIStyleConstants;
-import net.doge.constant.player.*;
+import net.doge.constant.player.EqualizerData;
+import net.doge.constant.player.Format;
+import net.doge.constant.player.PlayMode;
+import net.doge.constant.player.PlayerStatus;
 import net.doge.constant.system.*;
 import net.doge.constant.tab.CollectionTabIndex;
 import net.doge.constant.tab.PersonalMusicTabIndex;
@@ -46,8 +48,8 @@ import net.doge.exception.NoPrivilegeException;
 import net.doge.model.entity.*;
 import net.doge.model.lyric.LrcData;
 import net.doge.model.lyric.Statement;
-import net.doge.model.player.MusicPlayer;
 import net.doge.model.player.MetaMusicInfo;
+import net.doge.model.player.MusicPlayer;
 import net.doge.model.task.Task;
 import net.doge.model.ui.UIStyle;
 import net.doge.sdk.common.CommonResult;
@@ -57,47 +59,46 @@ import net.doge.ui.component.button.ChangePaneButton;
 import net.doge.ui.component.button.CustomButton;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.button.TabButton;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
+import net.doge.ui.component.button.listener.ChangePaneButtonMouseListener;
+import net.doge.ui.component.button.ui.ChangePaneButtonUI;
 import net.doge.ui.component.checkbox.CustomCheckBox;
 import net.doge.ui.component.combobox.CustomComboBox;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
 import net.doge.ui.component.dialog.*;
 import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.list.CustomList;
 import net.doge.ui.component.list.renderer.entity.*;
-import net.doge.ui.component.scrollpane.CustomScrollPane;
-import net.doge.ui.component.menu.*;
-import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.component.panel.GlobalPanel;
-import net.doge.ui.component.panel.LoadingPanel;
-import net.doge.ui.component.panel.SpectrumPanel;
-import net.doge.ui.component.slider.CustomSlider;
-import net.doge.ui.component.tabbedpane.CustomTabbedPane;
-import net.doge.ui.component.textfield.CustomTextField;
-import net.doge.ui.component.textfield.SafeDocument;
-import net.doge.ui.component.toolbar.CustomToolBar;
-import net.doge.ui.component.button.ui.ChangePaneButtonUI;
-import net.doge.ui.component.combobox.ui.ComboBoxUI;
+import net.doge.ui.component.list.renderer.system.DownloadListRenderer;
+import net.doge.ui.component.list.renderer.system.LrcListRenderer;
 import net.doge.ui.component.list.ui.ListUI;
-import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.component.menu.*;
 import net.doge.ui.component.menu.ui.CheckMenuItemUI;
 import net.doge.ui.component.menu.ui.MenuItemUI;
 import net.doge.ui.component.menu.ui.MenuUI;
 import net.doge.ui.component.menu.ui.RadioButtonMenuItemUI;
-import net.doge.ui.component.slider.ui.SliderUI;
-import net.doge.ui.component.tabbedpane.ui.TabbedPaneUI;
-import net.doge.ui.component.button.listener.ButtonMouseListener;
-import net.doge.ui.component.button.listener.ChangePaneButtonMouseListener;
+import net.doge.ui.component.panel.CustomPanel;
+import net.doge.ui.component.panel.GlobalPanel;
+import net.doge.ui.component.panel.LoadingPanel;
+import net.doge.ui.component.panel.SpectrumPanel;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.scrollpane.listener.ScrollPaneListener;
+import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.component.slider.CustomSlider;
+import net.doge.ui.component.slider.ui.SliderUI;
+import net.doge.ui.component.tabbedpane.CustomTabbedPane;
+import net.doge.ui.component.tabbedpane.ui.TabbedPaneUI;
+import net.doge.ui.component.textfield.CustomTextField;
+import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.ui.component.textfield.listener.TextFieldHintListener;
-import net.doge.ui.component.list.renderer.system.DownloadListRenderer;
-import net.doge.ui.component.list.renderer.system.LrcListRenderer;
+import net.doge.ui.component.toolbar.CustomToolBar;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.doge.util.media.MusicUtil;
-import net.doge.util.media.VideoUtil;
+import net.doge.util.media.MediaUtil;
 import net.doge.util.system.FileUtil;
 import net.doge.util.system.KeyUtil;
 import net.doge.util.system.TerminateUtil;
@@ -2383,7 +2384,7 @@ public class MainFrame extends JFrame {
 
     // 更新格言
     private void updateMotto() {
-        globalExecutor.submit(() -> {
+        globalExecutor.execute(() -> {
             try {
                 motto = MusicServerUtil.getMotto();
                 if (player.loadedMusic()) return;
@@ -2450,7 +2451,7 @@ public class MainFrame extends JFrame {
             public void componentResized(ComponentEvent e) {
                 if (x == 0x3f3f3f3f && y == 0x3f3f3f3f) setLocationRelativeTo(null);
                 else if (windowState != WindowState.MAXIMIZED) setLocation(x, y);
-                globalExecutor.submit(() -> {
+                globalExecutor.execute(() -> {
                     int w = getWidth(), h = getHeight();
                     // 窗口圆角
                     SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
@@ -2686,7 +2687,7 @@ public class MainFrame extends JFrame {
         // 加载上一次播放的歌曲
         if (currSong > -1) {
             playQueue.setSelectedIndex(currSong);
-            playExecutor.submit(() -> playSelected(playQueue, false, false));
+            playExecutor.execute(() -> playSelected(playQueue, false, false));
         }
 
         // 首次使用显示指南
@@ -2846,12 +2847,12 @@ public class MainFrame extends JFrame {
     }
 
     public boolean keyEnabled;
-    public LinkedList<Integer> playOrPauseKeys;
-    public LinkedList<Integer> playLastKeys;
-    public LinkedList<Integer> playNextKeys;
-    public LinkedList<Integer> backwardKeys;
-    public LinkedList<Integer> forwardKeys;
-    public LinkedList<Integer> videoFullScreenKeys;
+    public List<Integer> playOrPauseKeys;
+    public List<Integer> playLastKeys;
+    public List<Integer> playNextKeys;
+    public List<Integer> backwardKeys;
+    public List<Integer> forwardKeys;
+    public List<Integer> videoFullScreenKeys;
     public final LinkedList<Integer> currKeys = new LinkedList<>();
 
     // 加载全局快捷键监听器，AWTEventListener
@@ -3169,27 +3170,27 @@ public class MainFrame extends JFrame {
                 // 判断是否为文件路径
                 if (!JSON.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
-                    globalExecutor.submit(() -> {
-                        MusicUtil.fillAudioFileInfo(audioFile);
+                    globalExecutor.execute(() -> {
+                        MediaUtil.fillAudioFileInfo(audioFile);
                         musicList.repaint();
                     });
                     historyModel.addElement(audioFile);
                 } else {
                     JSONObject jsonObject = JSONObject.parseObject(s);
-                    NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
-                    netMusicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
-                    netMusicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
-                    netMusicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
-                    netMusicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-                    netMusicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
-                    netMusicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
-                    netMusicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
-                    historyModel.addElement(netMusicInfo);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    musicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
+                    musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
+                    musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
+                    musicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
+                    musicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                    musicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
+                    musicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
+                    musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
+                    musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
+                    musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
+                    historyModel.addElement(musicInfo);
                 }
             }
         }
@@ -3214,33 +3215,33 @@ public class MainFrame extends JFrame {
                 Task task = null;
                 if (type == TaskType.MUSIC) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MUSIC_INFO);
-                    NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jo.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jo.getString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setId(jo.getString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setName(jo.getString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jo.getString(ConfigConstants.NET_MUSIC_ARTIST));
-                    task = new Task(downloadList, type, netMusicInfo, null);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(jo.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    musicInfo.setFormat(jo.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    musicInfo.setId(jo.getString(ConfigConstants.NET_MUSIC_ID));
+                    musicInfo.setName(jo.getString(ConfigConstants.NET_MUSIC_NAME));
+                    musicInfo.setArtist(jo.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                    task = new Task(downloadList, type, musicInfo, null);
 
                     task.setInvokeLater(() -> {
-                        String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + netMusicInfo.toSimpleLrcFileName();
+                        String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
                         // 写入歌曲信息
-                        if (netMusicInfo.isMp3()) MusicUtil.writeMP3Info(dest, netMusicInfo);
+                        if (musicInfo.isMp3()) MediaUtil.writeMP3Info(dest, musicInfo);
                         // 自动下载歌词
-                        if (isAutoDownloadLrc && StringUtil.notEmpty(netMusicInfo.getLrc()))
-                            FileUtil.writeStr(netMusicInfo.getLrc(), destLrcPath, false);
+                        if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
+                            FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
                     });
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
-                    NetMvInfo netMvInfo = new NetMvInfo();
-                    netMvInfo.setSource(jo.getIntValue(ConfigConstants.NET_MV_SOURCE));
-                    netMvInfo.setType(jo.getIntValue(ConfigConstants.NET_MV_TYPE));
-                    netMvInfo.setFormat(jo.getString(ConfigConstants.NET_MV_FORMAT));
-                    netMvInfo.setId(jo.getString(ConfigConstants.NET_MV_ID));
-                    netMvInfo.setBvid(jo.getString(ConfigConstants.NET_MV_BVID));
-                    netMvInfo.setName(jo.getString(ConfigConstants.NET_MV_NAME));
-                    netMvInfo.setArtist(jo.getString(ConfigConstants.NET_MV_ARTIST));
-                    task = new Task(downloadList, type, null, netMvInfo);
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(jo.getIntValue(ConfigConstants.NET_MV_SOURCE));
+                    mvInfo.setType(jo.getIntValue(ConfigConstants.NET_MV_TYPE));
+                    mvInfo.setFormat(jo.getString(ConfigConstants.NET_MV_FORMAT));
+                    mvInfo.setId(jo.getString(ConfigConstants.NET_MV_ID));
+                    mvInfo.setBvid(jo.getString(ConfigConstants.NET_MV_BVID));
+                    mvInfo.setName(jo.getString(ConfigConstants.NET_MV_NAME));
+                    mvInfo.setArtist(jo.getString(ConfigConstants.NET_MV_ARTIST));
+                    task = new Task(downloadList, type, null, mvInfo);
                 }
                 // 考虑到下载路径可能更换，沿用任务原来的路径
                 task.setDest(dest);
@@ -3260,27 +3261,27 @@ public class MainFrame extends JFrame {
                 // 判断是否为文件路径
                 if (!JSON.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
-                    globalExecutor.submit(() -> {
-                        MusicUtil.fillAudioFileInfo(audioFile);
+                    globalExecutor.execute(() -> {
+                        MediaUtil.fillAudioFileInfo(audioFile);
                         playQueue.repaint();
                     });
                     playQueueModel.addElement(audioFile);
                 } else {
                     JSONObject jsonObject = JSONObject.parseObject(s);
-                    NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
-                    netMusicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
-                    netMusicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
-                    netMusicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
-                    netMusicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-                    netMusicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
-                    netMusicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
-                    netMusicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
-                    playQueueModel.addElement(netMusicInfo);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    musicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
+                    musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
+                    musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
+                    musicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
+                    musicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                    musicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
+                    musicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
+                    musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
+                    musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
+                    musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
+                    playQueueModel.addElement(musicInfo);
                 }
             }
         }
@@ -3524,8 +3525,8 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = musicJsonArray.size(); i < len; i++) {
                 String filePath = musicJsonArray.getString(i);
                 AudioFile audioFile = new AudioFile(filePath);
-                globalExecutor.submit(() -> {
-                    MusicUtil.fillAudioFileInfo(audioFile);
+                globalExecutor.execute(() -> {
+                    MediaUtil.fillAudioFileInfo(audioFile);
                     musicList.repaint();
                 });
                 musicListModel.addElement(audioFile);
@@ -3543,27 +3544,27 @@ public class MainFrame extends JFrame {
                 // 判断是否为文件路径
                 if (!JSON.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
-                    globalExecutor.submit(() -> {
-                        MusicUtil.fillAudioFileInfo(audioFile);
+                    globalExecutor.execute(() -> {
+                        MediaUtil.fillAudioFileInfo(audioFile);
                         musicList.repaint();
                     });
                     collectionModel.addElement(audioFile);
                 } else {
                     JSONObject jsonObject = JSONObject.parseObject(s);
-                    NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    netMusicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
-                    netMusicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
-                    netMusicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
-                    netMusicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
-                    netMusicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
-                    netMusicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
-                    netMusicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
-                    netMusicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-                    netMusicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
-                    netMusicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
-                    netMusicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
-                    collectionModel.addElement(netMusicInfo);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                    musicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
+                    musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
+                    musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
+                    musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
+                    musicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
+                    musicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                    musicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
+                    musicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
+                    musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
+                    musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
+                    musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
+                    collectionModel.addElement(musicInfo);
                 }
             }
         }
@@ -3574,17 +3575,17 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = playlistCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = playlistCollectionJsonArray.getJSONObject(i);
 
-                NetPlaylistInfo netPlaylistInfo = new NetPlaylistInfo();
-                netPlaylistInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_PLAYLIST_SOURCE));
-                netPlaylistInfo.setId(jsonObject.getString(ConfigConstants.NET_PLAYLIST_ID));
-                netPlaylistInfo.setName(jsonObject.getString(ConfigConstants.NET_PLAYLIST_NAME));
-                netPlaylistInfo.setCreator(jsonObject.getString(ConfigConstants.NET_PLAYLIST_CREATOR));
-                netPlaylistInfo.setCreatorId(jsonObject.getString(ConfigConstants.NET_PLAYLIST_CREATOR_ID));
-                netPlaylistInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL));
-                netPlaylistInfo.setTrackCount(jsonObject.getIntValue(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, -1));
-                netPlaylistInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_PLAYLIST_PLAY_COUNT, -1));
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_PLAYLIST_SOURCE));
+                playlistInfo.setId(jsonObject.getString(ConfigConstants.NET_PLAYLIST_ID));
+                playlistInfo.setName(jsonObject.getString(ConfigConstants.NET_PLAYLIST_NAME));
+                playlistInfo.setCreator(jsonObject.getString(ConfigConstants.NET_PLAYLIST_CREATOR));
+                playlistInfo.setCreatorId(jsonObject.getString(ConfigConstants.NET_PLAYLIST_CREATOR_ID));
+                playlistInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL));
+                playlistInfo.setTrackCount(jsonObject.getIntValue(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, -1));
+                playlistInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_PLAYLIST_PLAY_COUNT, -1));
 
-                playlistCollectionModel.addElement(netPlaylistInfo);
+                playlistCollectionModel.addElement(playlistInfo);
             }
         }
 
@@ -3594,17 +3595,17 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = albumCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = albumCollectionJsonArray.getJSONObject(i);
 
-                NetAlbumInfo netAlbumInfo = new NetAlbumInfo();
-                netAlbumInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_ALBUM_SOURCE));
-                netAlbumInfo.setId(jsonObject.getString(ConfigConstants.NET_ALBUM_ID));
-                netAlbumInfo.setName(jsonObject.getString(ConfigConstants.NET_ALBUM_NAME));
-                netAlbumInfo.setArtist(jsonObject.getString(ConfigConstants.NET_ALBUM_ARTIST));
-                netAlbumInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_ALBUM_ARTIST_ID));
-                netAlbumInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL));
-                netAlbumInfo.setSongNum(jsonObject.getIntValue(ConfigConstants.NET_ALBUM_SONG_NUM, -1));
-                netAlbumInfo.setPublishTime(jsonObject.getString(ConfigConstants.NET_ALBUM_PUBLISH_TIME));
+                NetAlbumInfo albumInfo = new NetAlbumInfo();
+                albumInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_ALBUM_SOURCE));
+                albumInfo.setId(jsonObject.getString(ConfigConstants.NET_ALBUM_ID));
+                albumInfo.setName(jsonObject.getString(ConfigConstants.NET_ALBUM_NAME));
+                albumInfo.setArtist(jsonObject.getString(ConfigConstants.NET_ALBUM_ARTIST));
+                albumInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_ALBUM_ARTIST_ID));
+                albumInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL));
+                albumInfo.setSongNum(jsonObject.getIntValue(ConfigConstants.NET_ALBUM_SONG_NUM, -1));
+                albumInfo.setPublishTime(jsonObject.getString(ConfigConstants.NET_ALBUM_PUBLISH_TIME));
 
-                albumCollectionModel.addElement(netAlbumInfo);
+                albumCollectionModel.addElement(albumInfo);
             }
         }
 
@@ -3614,18 +3615,18 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = artistCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = artistCollectionJsonArray.getJSONObject(i);
 
-                NetArtistInfo netArtistInfo = new NetArtistInfo();
-                netArtistInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_SOURCE));
-                netArtistInfo.setOrganization(jsonObject.getBooleanValue(ConfigConstants.NET_ARTIST_IS_ORGANIZATION));
-                netArtistInfo.setId(jsonObject.getString(ConfigConstants.NET_ARTIST_ID));
-                netArtistInfo.setName(jsonObject.getString(ConfigConstants.NET_ARTIST_NAME));
-                netArtistInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_ARTIST_COVER_IMG_URL));
-                netArtistInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_ARTIST_COVER_IMG_THUMB_URL));
-                netArtistInfo.setSongNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_SONG_NUM, -1));
-                netArtistInfo.setAlbumNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_ALBUM_NUM, -1));
-                netArtistInfo.setMvNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_MV_NUM, -1));
+                NetArtistInfo artistInfo = new NetArtistInfo();
+                artistInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_SOURCE));
+                artistInfo.setOrganization(jsonObject.getBooleanValue(ConfigConstants.NET_ARTIST_IS_ORGANIZATION));
+                artistInfo.setId(jsonObject.getString(ConfigConstants.NET_ARTIST_ID));
+                artistInfo.setName(jsonObject.getString(ConfigConstants.NET_ARTIST_NAME));
+                artistInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_ARTIST_COVER_IMG_URL));
+                artistInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_ARTIST_COVER_IMG_THUMB_URL));
+                artistInfo.setSongNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_SONG_NUM, -1));
+                artistInfo.setAlbumNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_ALBUM_NUM, -1));
+                artistInfo.setMvNum(jsonObject.getIntValue(ConfigConstants.NET_ARTIST_MV_NUM, -1));
 
-                artistCollectionModel.addElement(netArtistInfo);
+                artistCollectionModel.addElement(artistInfo);
             }
         }
 
@@ -3635,19 +3636,19 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = radioCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = radioCollectionJsonArray.getJSONObject(i);
 
-                NetRadioInfo netRadioInfo = new NetRadioInfo();
-                netRadioInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RADIO_SOURCE));
-                netRadioInfo.setId(jsonObject.getString(ConfigConstants.NET_RADIO_ID));
-                netRadioInfo.setName(jsonObject.getString(ConfigConstants.NET_RADIO_NAME));
-                netRadioInfo.setDj(jsonObject.getString(ConfigConstants.NET_RADIO_DJ));
-                netRadioInfo.setDjId(jsonObject.getString(ConfigConstants.NET_RADIO_DJ_ID));
-                netRadioInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RADIO_COVER_IMG_URL));
-                netRadioInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL));
-                netRadioInfo.setCategory(jsonObject.getString(ConfigConstants.NET_RADIO_CATEGORY));
-                netRadioInfo.setTrackCount(jsonObject.getIntValue(ConfigConstants.NET_RADIO_TRACK_COUNT, -1));
-                netRadioInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RADIO_PLAY_COUNT, -1));
+                NetRadioInfo radioInfo = new NetRadioInfo();
+                radioInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RADIO_SOURCE));
+                radioInfo.setId(jsonObject.getString(ConfigConstants.NET_RADIO_ID));
+                radioInfo.setName(jsonObject.getString(ConfigConstants.NET_RADIO_NAME));
+                radioInfo.setDj(jsonObject.getString(ConfigConstants.NET_RADIO_DJ));
+                radioInfo.setDjId(jsonObject.getString(ConfigConstants.NET_RADIO_DJ_ID));
+                radioInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RADIO_COVER_IMG_URL));
+                radioInfo.setCoverImgThumbUrl(jsonObject.getString(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL));
+                radioInfo.setCategory(jsonObject.getString(ConfigConstants.NET_RADIO_CATEGORY));
+                radioInfo.setTrackCount(jsonObject.getIntValue(ConfigConstants.NET_RADIO_TRACK_COUNT, -1));
+                radioInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RADIO_PLAY_COUNT, -1));
 
-                radioCollectionModel.addElement(netRadioInfo);
+                radioCollectionModel.addElement(radioInfo);
             }
         }
 
@@ -3657,21 +3658,21 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = mvCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = mvCollectionJsonArray.getJSONObject(i);
 
-                NetMvInfo netMvInfo = new NetMvInfo();
-                netMvInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MV_SOURCE));
-                netMvInfo.setType(jsonObject.getIntValue(ConfigConstants.NET_MV_TYPE));
-                netMvInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MV_FORMAT));
-                netMvInfo.setId(jsonObject.getString(ConfigConstants.NET_MV_ID));
-                netMvInfo.setBvid(jsonObject.getString(ConfigConstants.NET_MV_BVID));
-                netMvInfo.setName(jsonObject.getString(ConfigConstants.NET_MV_NAME));
-                netMvInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MV_ARTIST));
-                netMvInfo.setCreatorId(jsonObject.getString(ConfigConstants.NET_MV_CREATOR_ID));
-                netMvInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MV_DURATION));
-                netMvInfo.setPubTime(jsonObject.getString(ConfigConstants.NET_MV_PUB_TIME));
-                netMvInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_MV_COVER_IMG_URL));
-                netMvInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_MV_PLAY_COUNT, -1));
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MV_SOURCE));
+                mvInfo.setType(jsonObject.getIntValue(ConfigConstants.NET_MV_TYPE));
+                mvInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MV_FORMAT));
+                mvInfo.setId(jsonObject.getString(ConfigConstants.NET_MV_ID));
+                mvInfo.setBvid(jsonObject.getString(ConfigConstants.NET_MV_BVID));
+                mvInfo.setName(jsonObject.getString(ConfigConstants.NET_MV_NAME));
+                mvInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MV_ARTIST));
+                mvInfo.setCreatorId(jsonObject.getString(ConfigConstants.NET_MV_CREATOR_ID));
+                mvInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MV_DURATION));
+                mvInfo.setPubTime(jsonObject.getString(ConfigConstants.NET_MV_PUB_TIME));
+                mvInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_MV_COVER_IMG_URL));
+                mvInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_MV_PLAY_COUNT, -1));
 
-                mvCollectionModel.addElement(netMvInfo);
+                mvCollectionModel.addElement(mvInfo);
             }
         }
 
@@ -3681,17 +3682,17 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = rankingCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = rankingCollectionJsonArray.getJSONObject(i);
 
-                NetRankingInfo netRankingInfo = new NetRankingInfo();
-                netRankingInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RANKING_SOURCE));
-                netRankingInfo.setId(jsonObject.getString(ConfigConstants.NET_RANKING_ID));
-                netRankingInfo.setName(jsonObject.getString(ConfigConstants.NET_RANKING_NAME));
-                netRankingInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RANKING_PLAY_COUNT, -1));
-                netRankingInfo.setDescription(jsonObject.getString(ConfigConstants.NET_RANKING_DESCRIPTION));
-                netRankingInfo.setUpdateFre(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_FRE));
-                netRankingInfo.setUpdateTime(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_TIME));
-                netRankingInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RANKING_COVER_IMG_URL));
+                NetRankingInfo rankingInfo = new NetRankingInfo();
+                rankingInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RANKING_SOURCE));
+                rankingInfo.setId(jsonObject.getString(ConfigConstants.NET_RANKING_ID));
+                rankingInfo.setName(jsonObject.getString(ConfigConstants.NET_RANKING_NAME));
+                rankingInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RANKING_PLAY_COUNT, -1));
+                rankingInfo.setDescription(jsonObject.getString(ConfigConstants.NET_RANKING_DESCRIPTION));
+                rankingInfo.setUpdateFre(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_FRE));
+                rankingInfo.setUpdateTime(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_TIME));
+                rankingInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RANKING_COVER_IMG_URL));
 
-                rankingCollectionModel.addElement(netRankingInfo);
+                rankingCollectionModel.addElement(rankingInfo);
             }
         }
 
@@ -3701,20 +3702,20 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = userCollectionJsonArray.size(); i < len; i++) {
                 JSONObject jsonObject = userCollectionJsonArray.getJSONObject(i);
 
-                NetUserInfo netUserInfo = new NetUserInfo();
-                netUserInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_USER_SOURCE));
-                netUserInfo.setId(jsonObject.getString(ConfigConstants.NET_USER_ID));
-                netUserInfo.setName(jsonObject.getString(ConfigConstants.NET_USER_NAME));
-                netUserInfo.setGender(jsonObject.getString(ConfigConstants.NET_USER_GENDER));
-                netUserInfo.setAvatarUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_URL));
-                netUserInfo.setAvatarThumbUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_THUMB_URL));
-                netUserInfo.setFollow(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOW, -1));
-                netUserInfo.setFollowed(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOWED, -1));
-                netUserInfo.setPlaylistCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PLAYLIST_COUNT, -1));
-                netUserInfo.setRadioCount(jsonObject.getIntValue(ConfigConstants.NET_USER_RADIO_COUNT, -1));
-                netUserInfo.setProgramCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PROGRAM_COUNT, -1));
+                NetUserInfo userInfo = new NetUserInfo();
+                userInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_USER_SOURCE));
+                userInfo.setId(jsonObject.getString(ConfigConstants.NET_USER_ID));
+                userInfo.setName(jsonObject.getString(ConfigConstants.NET_USER_NAME));
+                userInfo.setGender(jsonObject.getString(ConfigConstants.NET_USER_GENDER));
+                userInfo.setAvatarUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_URL));
+                userInfo.setAvatarThumbUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_THUMB_URL));
+                userInfo.setFollow(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOW, -1));
+                userInfo.setFollowed(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOWED, -1));
+                userInfo.setPlaylistCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PLAYLIST_COUNT, -1));
+                userInfo.setRadioCount(jsonObject.getIntValue(ConfigConstants.NET_USER_RADIO_COUNT, -1));
+                userInfo.setProgramCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PROGRAM_COUNT, -1));
 
-                userCollectionModel.addElement(netUserInfo);
+                userCollectionModel.addElement(userInfo);
             }
         }
     }
@@ -3868,20 +3869,20 @@ public class MainFrame extends JFrame {
                 AudioFile file = (AudioFile) o;
                 historyJsonArray.add(file.getPath());
             } else if (o instanceof NetMusicInfo) {
-                NetMusicInfo netMusicInfo = (NetMusicInfo) o;
+                NetMusicInfo musicInfo = (NetMusicInfo) o;
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, netMusicInfo.getSource());
-                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
-                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
-                jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
+                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
+                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_NAME, musicInfo.getName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, musicInfo.getArtist());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, musicInfo.getArtistId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, musicInfo.getAlbumName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
+                jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
                 historyJsonArray.add(jsonObject);
             }
         }
@@ -3906,26 +3907,26 @@ public class MainFrame extends JFrame {
             jsonObject.put(ConfigConstants.TASK_TOTAL, task.getTotal());
             // 如果是音乐下载任务，需要额外记录音乐信息
             if (task.isMusic()) {
-                NetMusicInfo netMusicInfo = task.getNetMusicInfo();
+                NetMusicInfo musicInfo = task.getMusicInfo();
                 JSONObject jo = new JSONObject();
-                jo.put(ConfigConstants.NET_MUSIC_SOURCE, netMusicInfo.getSource());
-                jo.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
-                jo.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
-                jo.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
-                jo.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
+                jo.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
+                jo.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
+                jo.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
+                jo.put(ConfigConstants.NET_MUSIC_NAME, musicInfo.getName());
+                jo.put(ConfigConstants.NET_MUSIC_ARTIST, musicInfo.getArtist());
                 jsonObject.put(ConfigConstants.TASK_MUSIC_INFO, jo);
             }
             // 如果是 MV 下载任务，需要额外记录 MV 信息
             else if (task.getType() == TaskType.MV) {
-                NetMvInfo netMvInfo = task.getNetMvInfo();
+                NetMvInfo mvInfo = task.getMvInfo();
                 JSONObject jo = new JSONObject();
-                jo.put(ConfigConstants.NET_MV_SOURCE, netMvInfo.getSource());
-                jo.put(ConfigConstants.NET_MV_TYPE, netMvInfo.getType());
-                jo.put(ConfigConstants.NET_MV_FORMAT, netMvInfo.getFormat());
-                jo.put(ConfigConstants.NET_MV_ID, netMvInfo.getId());
-                jo.put(ConfigConstants.NET_MV_BVID, netMvInfo.getBvid());
-                jo.put(ConfigConstants.NET_MV_NAME, netMvInfo.getName());
-                jo.put(ConfigConstants.NET_MV_ARTIST, netMvInfo.getArtist());
+                jo.put(ConfigConstants.NET_MV_SOURCE, mvInfo.getSource());
+                jo.put(ConfigConstants.NET_MV_TYPE, mvInfo.getType());
+                jo.put(ConfigConstants.NET_MV_FORMAT, mvInfo.getFormat());
+                jo.put(ConfigConstants.NET_MV_ID, mvInfo.getId());
+                jo.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvid());
+                jo.put(ConfigConstants.NET_MV_NAME, mvInfo.getName());
+                jo.put(ConfigConstants.NET_MV_ARTIST, mvInfo.getArtist());
                 jsonObject.put(ConfigConstants.TASK_MV_INFO, jo);
             }
             tasksJsonArray.add(jsonObject);
@@ -3940,20 +3941,20 @@ public class MainFrame extends JFrame {
                 AudioFile file = (AudioFile) o;
                 playQueueJsonArray.add(file.getPath());
             } else if (o instanceof NetMusicInfo) {
-                NetMusicInfo netMusicInfo = (NetMusicInfo) o;
+                NetMusicInfo musicInfo = (NetMusicInfo) o;
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, netMusicInfo.getSource());
-                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
-                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
-                jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
+                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
+                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_NAME, musicInfo.getName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, musicInfo.getArtist());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, musicInfo.getArtistId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, musicInfo.getAlbumName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
+                jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
                 playQueueJsonArray.add(jsonObject);
             }
         }
@@ -4045,20 +4046,20 @@ public class MainFrame extends JFrame {
                 AudioFile file = (AudioFile) o;
                 collectionJsonArray.add(file.getPath());
             } else if (o instanceof NetMusicInfo) {
-                NetMusicInfo netMusicInfo = (NetMusicInfo) o;
+                NetMusicInfo musicInfo = (NetMusicInfo) o;
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, netMusicInfo.getSource());
-                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, netMusicInfo.getFormat());
-                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, netMusicInfo.getHash());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ID, netMusicInfo.getId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, netMusicInfo.getProgramId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_NAME, netMusicInfo.getName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, netMusicInfo.getArtist());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, netMusicInfo.getArtistId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, netMusicInfo.getAlbumName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, netMusicInfo.getAlbumId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, netMusicInfo.getDuration());
-                jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, netMusicInfo.getMvId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
+                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
+                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_NAME, musicInfo.getName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, musicInfo.getArtist());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, musicInfo.getArtistId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, musicInfo.getAlbumName());
+                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
+                jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
                 collectionJsonArray.add(jsonObject);
             }
         }
@@ -4067,17 +4068,17 @@ public class MainFrame extends JFrame {
         // 存入收藏歌单列表
         JSONArray playlistCollectionJsonArray = new JSONArray();
         for (int i = 0, len = playlistCollectionModel.getSize(); i < len; i++) {
-            NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) playlistCollectionModel.get(i);
+            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) playlistCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_SOURCE, netPlaylistInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_ID, netPlaylistInfo.getId());
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_NAME, netPlaylistInfo.getName());
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR, netPlaylistInfo.getCreator());
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR_ID, netPlaylistInfo.getCreatorId());
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL, netPlaylistInfo.getCoverImgThumbUrl());
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, netPlaylistInfo.getTrackCount());
-            jsonObject.put(ConfigConstants.NET_PLAYLIST_PLAY_COUNT, netPlaylistInfo.getPlayCount());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_SOURCE, playlistInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_ID, playlistInfo.getId());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_NAME, playlistInfo.getName());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR, playlistInfo.getCreator());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_CREATOR_ID, playlistInfo.getCreatorId());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_COVER_IMG_THUMB_URL, playlistInfo.getCoverImgThumbUrl());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_TRACK_COUNT, playlistInfo.getTrackCount());
+            jsonObject.put(ConfigConstants.NET_PLAYLIST_PLAY_COUNT, playlistInfo.getPlayCount());
             playlistCollectionJsonArray.add(jsonObject);
         }
         config.put(ConfigConstants.PLAYLIST_COLLECTION, playlistCollectionJsonArray);
@@ -4085,17 +4086,17 @@ public class MainFrame extends JFrame {
         // 存入收藏专辑列表
         JSONArray albumCollectionJsonArray = new JSONArray();
         for (int i = 0, len = albumCollectionModel.getSize(); i < len; i++) {
-            NetAlbumInfo netAlbumInfo = (NetAlbumInfo) albumCollectionModel.get(i);
+            NetAlbumInfo albumInfo = (NetAlbumInfo) albumCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_ALBUM_SOURCE, netAlbumInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_ALBUM_ID, netAlbumInfo.getId());
-            jsonObject.put(ConfigConstants.NET_ALBUM_NAME, netAlbumInfo.getName());
-            jsonObject.put(ConfigConstants.NET_ALBUM_ARTIST, netAlbumInfo.getArtist());
-            jsonObject.put(ConfigConstants.NET_ALBUM_ARTIST_ID, netAlbumInfo.getArtistId());
-            jsonObject.put(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL, netAlbumInfo.getCoverImgThumbUrl());
-            jsonObject.put(ConfigConstants.NET_ALBUM_SONG_NUM, netAlbumInfo.getSongNum());
-            jsonObject.put(ConfigConstants.NET_ALBUM_PUBLISH_TIME, netAlbumInfo.getPublishTime());
+            jsonObject.put(ConfigConstants.NET_ALBUM_SOURCE, albumInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_ALBUM_ID, albumInfo.getId());
+            jsonObject.put(ConfigConstants.NET_ALBUM_NAME, albumInfo.getName());
+            jsonObject.put(ConfigConstants.NET_ALBUM_ARTIST, albumInfo.getArtist());
+            jsonObject.put(ConfigConstants.NET_ALBUM_ARTIST_ID, albumInfo.getArtistId());
+            jsonObject.put(ConfigConstants.NET_ALBUM_COVER_IMG_THUMB_URL, albumInfo.getCoverImgThumbUrl());
+            jsonObject.put(ConfigConstants.NET_ALBUM_SONG_NUM, albumInfo.getSongNum());
+            jsonObject.put(ConfigConstants.NET_ALBUM_PUBLISH_TIME, albumInfo.getPublishTime());
             albumCollectionJsonArray.add(jsonObject);
         }
         config.put(ConfigConstants.ALBUM_COLLECTION, albumCollectionJsonArray);
@@ -4103,18 +4104,18 @@ public class MainFrame extends JFrame {
         // 存入收藏歌手列表
         JSONArray artistCollectionJsonArray = new JSONArray();
         for (int i = 0, len = artistCollectionModel.getSize(); i < len; i++) {
-            NetArtistInfo netArtistInfo = (NetArtistInfo) artistCollectionModel.get(i);
+            NetArtistInfo artistInfo = (NetArtistInfo) artistCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_ARTIST_SOURCE, netArtistInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_ARTIST_IS_ORGANIZATION, netArtistInfo.isOrganization());
-            jsonObject.put(ConfigConstants.NET_ARTIST_ID, netArtistInfo.getId());
-            jsonObject.put(ConfigConstants.NET_ARTIST_NAME, netArtistInfo.getName());
-            jsonObject.put(ConfigConstants.NET_ARTIST_COVER_IMG_URL, netArtistInfo.getCoverImgUrl());
-            jsonObject.put(ConfigConstants.NET_ARTIST_COVER_IMG_THUMB_URL, netArtistInfo.getCoverImgThumbUrl());
-            jsonObject.put(ConfigConstants.NET_ARTIST_SONG_NUM, netArtistInfo.getSongNum());
-            jsonObject.put(ConfigConstants.NET_ARTIST_ALBUM_NUM, netArtistInfo.getAlbumNum());
-            jsonObject.put(ConfigConstants.NET_ARTIST_MV_NUM, netArtistInfo.getMvNum());
+            jsonObject.put(ConfigConstants.NET_ARTIST_SOURCE, artistInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_ARTIST_IS_ORGANIZATION, artistInfo.isOrganization());
+            jsonObject.put(ConfigConstants.NET_ARTIST_ID, artistInfo.getId());
+            jsonObject.put(ConfigConstants.NET_ARTIST_NAME, artistInfo.getName());
+            jsonObject.put(ConfigConstants.NET_ARTIST_COVER_IMG_URL, artistInfo.getCoverImgUrl());
+            jsonObject.put(ConfigConstants.NET_ARTIST_COVER_IMG_THUMB_URL, artistInfo.getCoverImgThumbUrl());
+            jsonObject.put(ConfigConstants.NET_ARTIST_SONG_NUM, artistInfo.getSongNum());
+            jsonObject.put(ConfigConstants.NET_ARTIST_ALBUM_NUM, artistInfo.getAlbumNum());
+            jsonObject.put(ConfigConstants.NET_ARTIST_MV_NUM, artistInfo.getMvNum());
             artistCollectionJsonArray.add(jsonObject);
         }
         config.put(ConfigConstants.ARTIST_COLLECTION, artistCollectionJsonArray);
@@ -4122,19 +4123,19 @@ public class MainFrame extends JFrame {
         // 存入收藏电台列表
         JSONArray radioCollectionJsonArray = new JSONArray();
         for (int i = 0, len = radioCollectionModel.getSize(); i < len; i++) {
-            NetRadioInfo netRadioInfo = (NetRadioInfo) radioCollectionModel.get(i);
+            NetRadioInfo radioInfo = (NetRadioInfo) radioCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_RADIO_SOURCE, netRadioInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_RADIO_ID, netRadioInfo.getId());
-            jsonObject.put(ConfigConstants.NET_RADIO_NAME, netRadioInfo.getName());
-            jsonObject.put(ConfigConstants.NET_RADIO_DJ, netRadioInfo.getDj());
-            jsonObject.put(ConfigConstants.NET_RADIO_DJ_ID, netRadioInfo.getDjId());
-            jsonObject.put(ConfigConstants.NET_RADIO_COVER_IMG_URL, netRadioInfo.getCoverImgUrl());
-            jsonObject.put(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL, netRadioInfo.getCoverImgThumbUrl());
-            jsonObject.put(ConfigConstants.NET_RADIO_CATEGORY, netRadioInfo.getCategory());
-            jsonObject.put(ConfigConstants.NET_RADIO_TRACK_COUNT, netRadioInfo.getTrackCount());
-            jsonObject.put(ConfigConstants.NET_RADIO_PLAY_COUNT, netRadioInfo.getPlayCount());
+            jsonObject.put(ConfigConstants.NET_RADIO_SOURCE, radioInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_RADIO_ID, radioInfo.getId());
+            jsonObject.put(ConfigConstants.NET_RADIO_NAME, radioInfo.getName());
+            jsonObject.put(ConfigConstants.NET_RADIO_DJ, radioInfo.getDj());
+            jsonObject.put(ConfigConstants.NET_RADIO_DJ_ID, radioInfo.getDjId());
+            jsonObject.put(ConfigConstants.NET_RADIO_COVER_IMG_URL, radioInfo.getCoverImgUrl());
+            jsonObject.put(ConfigConstants.NET_RADIO_COVER_IMG_THUMB_URL, radioInfo.getCoverImgThumbUrl());
+            jsonObject.put(ConfigConstants.NET_RADIO_CATEGORY, radioInfo.getCategory());
+            jsonObject.put(ConfigConstants.NET_RADIO_TRACK_COUNT, radioInfo.getTrackCount());
+            jsonObject.put(ConfigConstants.NET_RADIO_PLAY_COUNT, radioInfo.getPlayCount());
             radioCollectionJsonArray.add(jsonObject);
         }
         config.put(ConfigConstants.RADIO_COLLECTION, radioCollectionJsonArray);
@@ -4142,21 +4143,21 @@ public class MainFrame extends JFrame {
         // 存入收藏 MV 列表
         JSONArray mvCollectionJsonArray = new JSONArray();
         for (int i = 0, len = mvCollectionModel.getSize(); i < len; i++) {
-            NetMvInfo netMvInfo = (NetMvInfo) mvCollectionModel.get(i);
+            NetMvInfo mvInfo = (NetMvInfo) mvCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_MV_SOURCE, netMvInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_MV_TYPE, netMvInfo.getType());
-            jsonObject.put(ConfigConstants.NET_MV_FORMAT, netMvInfo.getFormat());
-            jsonObject.put(ConfigConstants.NET_MV_ID, netMvInfo.getId());
-            jsonObject.put(ConfigConstants.NET_MV_BVID, netMvInfo.getBvid());
-            jsonObject.put(ConfigConstants.NET_MV_NAME, netMvInfo.getName());
-            jsonObject.put(ConfigConstants.NET_MV_ARTIST, netMvInfo.getArtist());
-            jsonObject.put(ConfigConstants.NET_MV_CREATOR_ID, netMvInfo.getCreatorId());
-            jsonObject.put(ConfigConstants.NET_MV_DURATION, netMvInfo.getDuration());
-            jsonObject.put(ConfigConstants.NET_MV_PUB_TIME, netMvInfo.getPubTime());
-            jsonObject.put(ConfigConstants.NET_MV_COVER_IMG_URL, netMvInfo.getCoverImgUrl());
-            jsonObject.put(ConfigConstants.NET_MV_PLAY_COUNT, netMvInfo.getPlayCount());
+            jsonObject.put(ConfigConstants.NET_MV_SOURCE, mvInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_MV_TYPE, mvInfo.getType());
+            jsonObject.put(ConfigConstants.NET_MV_FORMAT, mvInfo.getFormat());
+            jsonObject.put(ConfigConstants.NET_MV_ID, mvInfo.getId());
+            jsonObject.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvid());
+            jsonObject.put(ConfigConstants.NET_MV_NAME, mvInfo.getName());
+            jsonObject.put(ConfigConstants.NET_MV_ARTIST, mvInfo.getArtist());
+            jsonObject.put(ConfigConstants.NET_MV_CREATOR_ID, mvInfo.getCreatorId());
+            jsonObject.put(ConfigConstants.NET_MV_DURATION, mvInfo.getDuration());
+            jsonObject.put(ConfigConstants.NET_MV_PUB_TIME, mvInfo.getPubTime());
+            jsonObject.put(ConfigConstants.NET_MV_COVER_IMG_URL, mvInfo.getCoverImgUrl());
+            jsonObject.put(ConfigConstants.NET_MV_PLAY_COUNT, mvInfo.getPlayCount());
             mvCollectionJsonArray.add(jsonObject);
         }
         config.put(ConfigConstants.MV_COLLECTION, mvCollectionJsonArray);
@@ -4164,17 +4165,17 @@ public class MainFrame extends JFrame {
         // 存入收藏榜单列表
         JSONArray rankingCollectionJsonArray = new JSONArray();
         for (int i = 0, len = rankingCollectionModel.getSize(); i < len; i++) {
-            NetRankingInfo netRankingInfo = (NetRankingInfo) rankingCollectionModel.get(i);
+            NetRankingInfo rankingInfo = (NetRankingInfo) rankingCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_RANKING_SOURCE, netRankingInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_RANKING_ID, netRankingInfo.getId());
-            jsonObject.put(ConfigConstants.NET_RANKING_NAME, netRankingInfo.getName());
-            jsonObject.put(ConfigConstants.NET_RANKING_DESCRIPTION, netRankingInfo.getDescription());
-            jsonObject.put(ConfigConstants.NET_RANKING_PLAY_COUNT, netRankingInfo.getPlayCount());
-            jsonObject.put(ConfigConstants.NET_RANKING_UPDATE_FRE, netRankingInfo.getUpdateFre());
-            jsonObject.put(ConfigConstants.NET_RANKING_UPDATE_TIME, netRankingInfo.getUpdateTime());
-            jsonObject.put(ConfigConstants.NET_RANKING_COVER_IMG_URL, netRankingInfo.getCoverImgUrl());
+            jsonObject.put(ConfigConstants.NET_RANKING_SOURCE, rankingInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_RANKING_ID, rankingInfo.getId());
+            jsonObject.put(ConfigConstants.NET_RANKING_NAME, rankingInfo.getName());
+            jsonObject.put(ConfigConstants.NET_RANKING_DESCRIPTION, rankingInfo.getDescription());
+            jsonObject.put(ConfigConstants.NET_RANKING_PLAY_COUNT, rankingInfo.getPlayCount());
+            jsonObject.put(ConfigConstants.NET_RANKING_UPDATE_FRE, rankingInfo.getUpdateFre());
+            jsonObject.put(ConfigConstants.NET_RANKING_UPDATE_TIME, rankingInfo.getUpdateTime());
+            jsonObject.put(ConfigConstants.NET_RANKING_COVER_IMG_URL, rankingInfo.getCoverImgUrl());
             rankingCollectionJsonArray.add(jsonObject);
         }
         config.put(ConfigConstants.RANKING_COLLECTION, rankingCollectionJsonArray);
@@ -4182,20 +4183,20 @@ public class MainFrame extends JFrame {
         // 存入收藏用户列表
         JSONArray userCollectionJsonArray = new JSONArray();
         for (int i = 0, len = userCollectionModel.getSize(); i < len; i++) {
-            NetUserInfo netUserInfo = (NetUserInfo) userCollectionModel.get(i);
+            NetUserInfo userInfo = (NetUserInfo) userCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_USER_SOURCE, netUserInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_USER_ID, netUserInfo.getId());
-            jsonObject.put(ConfigConstants.NET_USER_NAME, netUserInfo.getName());
-            jsonObject.put(ConfigConstants.NET_USER_GENDER, netUserInfo.getGender());
-            jsonObject.put(ConfigConstants.NET_USER_AVATAR_URL, netUserInfo.getAvatarUrl());
-            jsonObject.put(ConfigConstants.NET_USER_AVATAR_THUMB_URL, netUserInfo.getAvatarThumbUrl());
-            jsonObject.put(ConfigConstants.NET_USER_FOLLOW, netUserInfo.getFollow());
-            jsonObject.put(ConfigConstants.NET_USER_FOLLOWED, netUserInfo.getFollowed());
-            jsonObject.put(ConfigConstants.NET_USER_PLAYLIST_COUNT, netUserInfo.getPlaylistCount());
-            jsonObject.put(ConfigConstants.NET_USER_RADIO_COUNT, netUserInfo.getRadioCount());
-            jsonObject.put(ConfigConstants.NET_USER_PROGRAM_COUNT, netUserInfo.getProgramCount());
+            jsonObject.put(ConfigConstants.NET_USER_SOURCE, userInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_USER_ID, userInfo.getId());
+            jsonObject.put(ConfigConstants.NET_USER_NAME, userInfo.getName());
+            jsonObject.put(ConfigConstants.NET_USER_GENDER, userInfo.getGender());
+            jsonObject.put(ConfigConstants.NET_USER_AVATAR_URL, userInfo.getAvatarUrl());
+            jsonObject.put(ConfigConstants.NET_USER_AVATAR_THUMB_URL, userInfo.getAvatarThumbUrl());
+            jsonObject.put(ConfigConstants.NET_USER_FOLLOW, userInfo.getFollow());
+            jsonObject.put(ConfigConstants.NET_USER_FOLLOWED, userInfo.getFollowed());
+            jsonObject.put(ConfigConstants.NET_USER_PLAYLIST_COUNT, userInfo.getPlaylistCount());
+            jsonObject.put(ConfigConstants.NET_USER_RADIO_COUNT, userInfo.getRadioCount());
+            jsonObject.put(ConfigConstants.NET_USER_PROGRAM_COUNT, userInfo.getProgramCount());
             userCollectionJsonArray.add(jsonObject);
         }
         config.put(ConfigConstants.USER_COLLECTION, userCollectionJsonArray);
@@ -4203,7 +4204,7 @@ public class MainFrame extends JFrame {
 
     // 检查更新
     private void checkUpdate(boolean mute) {
-        globalExecutor.submit(() -> {
+        globalExecutor.execute(() -> {
             TipDialog td = null;
             if (!mute) td = new TipDialog(THIS, UPDATE_CHECKING_MSG, 0);
             try {
@@ -4352,8 +4353,8 @@ public class MainFrame extends JFrame {
                 for (File file : files) {
                     if (file.exists()) {
                         AudioFile audioFile = new AudioFile(file);
-                        globalExecutor.submit(() -> {
-                            MusicUtil.fillAudioFileInfo(audioFile);
+                        globalExecutor.execute(() -> {
+                            MediaUtil.fillAudioFileInfo(audioFile);
                             musicList.repaint();
                         });
                         musicListModel.addElement(audioFile);
@@ -4405,8 +4406,8 @@ public class MainFrame extends JFrame {
                     if (player.support(FileUtil.getSuffix(file))) {
                         audioFileCount++;
                         AudioFile audioFile = new AudioFile(file);
-                        globalExecutor.submit(() -> {
-                            MusicUtil.fillAudioFileInfo(audioFile);
+                        globalExecutor.execute(() -> {
+                            MediaUtil.fillAudioFileInfo(audioFile);
                             musicList.repaint();
                         });
                         musicListModel.addElement(audioFile);
@@ -4650,13 +4651,13 @@ public class MainFrame extends JFrame {
                 if (netMusicListModel.isEmpty() && netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
                     netLeftBox.remove(netMusicScrollPane);
                     netLeftBox.add(netMusicKeywordsPanelScrollPane);
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         updateHotSearch();
                         // 更新 LAF，防止组件样式不正确
                         SwingUtilities.updateComponentTreeUI(netMusicRefreshHotSearchButton);
                     });
                 } else if (netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         updateHotSearch();
                         // 更新 LAF，防止组件样式不正确
                         SwingUtilities.updateComponentTreeUI(netMusicRefreshHotSearchButton);
@@ -4988,7 +4989,7 @@ public class MainFrame extends JFrame {
 
                 for (int i = 0, s = playlistCollectionModel.size(); i < s; i++) {
                     int finalI = i;
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         NetPlaylistInfo playlistInfo = (NetPlaylistInfo) playlistCollectionModel.get(finalI);
                         if (playlistInfo.isIntegrated()) return;
                         playlistInfo.setInvokeLater(() -> updateRenderer(collectionList));
@@ -5009,7 +5010,7 @@ public class MainFrame extends JFrame {
 
                 for (int i = 0, s = albumCollectionModel.size(); i < s; i++) {
                     int finalI = i;
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         NetAlbumInfo albumInfo = (NetAlbumInfo) albumCollectionModel.get(finalI);
                         if (albumInfo.isIntegrated()) return;
                         albumInfo.setInvokeLater(() -> updateRenderer(collectionList));
@@ -5030,7 +5031,7 @@ public class MainFrame extends JFrame {
 
                 for (int i = 0, s = artistCollectionModel.size(); i < s; i++) {
                     int finalI = i;
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         NetArtistInfo artistInfo = (NetArtistInfo) artistCollectionModel.get(finalI);
                         if (artistInfo.isIntegrated()) return;
                         artistInfo.setInvokeLater(() -> updateRenderer(collectionList));
@@ -5051,7 +5052,7 @@ public class MainFrame extends JFrame {
 
                 for (int i = 0, s = radioCollectionModel.size(); i < s; i++) {
                     int finalI = i;
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         NetRadioInfo radioInfo = (NetRadioInfo) radioCollectionModel.get(finalI);
                         if (radioInfo.isIntegrated()) return;
                         radioInfo.setInvokeLater(() -> updateRenderer(collectionList));
@@ -5072,7 +5073,7 @@ public class MainFrame extends JFrame {
 
                 for (int i = 0, s = mvCollectionModel.size(); i < s; i++) {
                     int finalI = i;
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         NetMvInfo mvInfo = (NetMvInfo) mvCollectionModel.get(finalI);
                         if (mvInfo.isIntegrated()) return;
                         mvInfo.setInvokeLater(() -> updateRenderer(collectionList));
@@ -5093,7 +5094,7 @@ public class MainFrame extends JFrame {
 
                 for (int i = 0, s = rankingCollectionModel.size(); i < s; i++) {
                     int finalI = i;
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         NetRankingInfo rankingInfo = (NetRankingInfo) rankingCollectionModel.get(finalI);
                         if (rankingInfo.isIntegrated()) return;
                         rankingInfo.setInvokeLater(() -> updateRenderer(collectionList));
@@ -5114,7 +5115,7 @@ public class MainFrame extends JFrame {
 
                 for (int i = 0, s = userCollectionModel.size(); i < s; i++) {
                     int finalI = i;
-                    globalExecutor.submit(() -> {
+                    globalExecutor.execute(() -> {
                         NetUserInfo userInfo = (NetUserInfo) userCollectionModel.get(finalI);
                         if (userInfo.isIntegrated()) return;
                         userInfo.setInvokeLater(() -> updateRenderer(collectionList));
@@ -5165,7 +5166,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForPlaylistCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForPlaylistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistCollectionModel);
@@ -5185,7 +5186,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForAlbumCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForAlbumCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumCollectionModel);
@@ -5205,7 +5206,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForArtistCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForArtistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistCollectionModel);
@@ -5225,7 +5226,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRadioCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForRadioCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioCollectionModel);
@@ -5246,7 +5247,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRankingCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForRankingCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRankingCollectionModel);
@@ -5267,7 +5268,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForUserCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForUserCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForUserCollectionModel);
@@ -5472,7 +5473,7 @@ public class MainFrame extends JFrame {
             // 检查收藏按钮
             checkDescriptionCollectionStatus(collectionItemDescriptionCollectionButton, o);
             loadingAndRun(() -> {
-                LinkedList<Future<?>> taskList = new LinkedList<>();
+                List<Future<?>> taskList = new LinkedList<>();
                 // 打开的是歌单
                 if (o instanceof NetPlaylistInfo) {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
@@ -5485,7 +5486,7 @@ public class MainFrame extends JFrame {
                         collectionItemTagLabel.setVisible(true);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(null);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillPlaylistInfo(playlistInfo);
                                 updateRenderer(collectionList);
@@ -5540,7 +5541,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForPlaylistCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForPlaylistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistCollectionModel);
@@ -5581,7 +5582,7 @@ public class MainFrame extends JFrame {
                         collectionItemTagLabel.setVisible(false);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(null);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillAlbumInfo(albumInfo);
                                 updateRenderer(collectionList);
@@ -5633,7 +5634,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForAlbumCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForAlbumCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumCollectionModel);
@@ -5674,7 +5675,7 @@ public class MainFrame extends JFrame {
                         collectionItemTagLabel.setVisible(true);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(null);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillArtistInfo(artistInfo);
                                 updateRenderer(collectionList);
@@ -5729,7 +5730,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForArtistCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForArtistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistCollectionModel);
@@ -5770,7 +5771,7 @@ public class MainFrame extends JFrame {
                         collectionItemTagLabel.setVisible(true);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(null);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillRadioInfo(radioInfo);
                                 updateRenderer(collectionList);
@@ -5828,7 +5829,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRadioCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForRadioCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioCollectionModel);
@@ -5869,7 +5870,7 @@ public class MainFrame extends JFrame {
                         collectionItemTagLabel.setVisible(false);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(null);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillRankingInfo(rankingInfo);
                                 updateRenderer(collectionList);
@@ -5921,7 +5922,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRankingCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForRankingCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRankingCollectionModel);
@@ -5963,7 +5964,7 @@ public class MainFrame extends JFrame {
                         collectionItemTagLabel.setVisible(true);
                         collectionItemDescriptionLabel.setText(LOADING_MSG);
                         collectionItemDescriptionLabel.setIcon(icon);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillUserInfo(userInfo);
                                 updateRenderer(collectionList);
@@ -6037,7 +6038,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForUserCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForUserCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForUserCollectionModel);
@@ -6151,7 +6152,7 @@ public class MainFrame extends JFrame {
     // 初始化标签
     private void initLabel() {
         // 导出专辑图片事件
-        saveAlbumImageMenuItem.addActionListener(e -> saveImg(player.getMusicInfo().getAlbumImage()));
+        saveAlbumImageMenuItem.addActionListener(e -> saveImg(player.getMetaMusicInfo().getAlbumImage()));
         copySongNameMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, ""))));
         copyArtistMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(artistLabel.getText().replaceFirst(ARTIST_LABEL, ""))));
         copyAlbumMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(albumLabel.getText().replaceFirst(ALBUM_NAME_LABEL, ""))));
@@ -6428,8 +6429,8 @@ public class MainFrame extends JFrame {
                     if (!player.support(FileUtil.getSuffix(file))) continue;
                     audioFileCount++;
                     AudioFile audioFile = new AudioFile(file);
-                    globalExecutor.submit(() -> {
-                        MusicUtil.fillAudioFileInfo(audioFile);
+                    globalExecutor.execute(() -> {
+                        MediaUtil.fillAudioFileInfo(audioFile);
                         musicList.repaint();
                     });
                     musicListModel.addElement(audioFile);
@@ -6941,7 +6942,7 @@ public class MainFrame extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    playExecutor.submit(() -> playSelected(musicList, false));
+                    playExecutor.execute(() -> playSelected(musicList, false));
                 }
             }
         });
@@ -6977,7 +6978,7 @@ public class MainFrame extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 // 鼠标左键双击播放
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    playExecutor.submit(() -> playSelected(musicList, false));
+                    playExecutor.execute(() -> playSelected(musicList, false));
                 }
                 // 鼠标右键弹出菜单
                 else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -7042,7 +7043,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 右键菜单播放
-        playMenuItem.addActionListener(e -> playExecutor.submit(() -> playSelected(musicList, false)));
+        playMenuItem.addActionListener(e -> playExecutor.execute(() -> playSelected(musicList, false)));
         // 下一首播放
         nextPlayMenuItem.addActionListener(e -> nextPlay(musicList));
         // 右键菜单打开文件所在位置
@@ -7290,7 +7291,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListModel);
@@ -7349,7 +7350,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListModel);
@@ -7513,7 +7514,7 @@ public class MainFrame extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    playExecutor.submit(() -> playSelected(netMusicList, false));
+                    playExecutor.execute(() -> playSelected(netMusicList, false));
                 }
             }
         });
@@ -7549,7 +7550,7 @@ public class MainFrame extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 // 鼠标左键双击播放
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    playExecutor.submit(() -> playSelected(netMusicList, false));
+                    playExecutor.execute(() -> playSelected(netMusicList, false));
                 }
                 // 右键弹出菜单
                 else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -7575,7 +7576,7 @@ public class MainFrame extends JFrame {
         });
         // 播放在线音乐
         netMusicPlayMenuItem.addActionListener(e -> {
-            playExecutor.submit(() -> playSelected(netMusicList, false));
+            playExecutor.execute(() -> playSelected(netMusicList, false));
         });
         // 下一首播放
         netMusicNextPlayMenuItem.addActionListener(e -> nextPlay(netMusicList));
@@ -7640,22 +7641,22 @@ public class MainFrame extends JFrame {
         });
         // 查看相似歌曲
         netMusicSimilarSongMenuItem.addActionListener(e -> {
-            NetMusicInfo netMusicInfo;
+            NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                     || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
                     && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
-            } else if (selectedIndex == TabIndex.PLAY_QUEUE) netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-            else netMusicInfo = netMusicList.getSelectedValue();
+                musicInfo = (NetMusicInfo) musicList.getSelectedValue();
+            } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+            else musicInfo = netMusicList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     // 获取相似歌曲
-                    CommonResult<NetMusicInfo> result = MusicServerUtil.getSimilarSongs(currMusicMusicInfo = netMusicInfo);
-                    List<NetMusicInfo> netMusicInfos = result.data;
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getSimilarSongs(currMusicMusicInfo = musicInfo);
+                    List<NetMusicInfo> musicInfos = result.data;
                     netMusicCurrPage = netMusicMaxPage = 1;
                     // 标题
-                    netMusicTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的相似歌曲"));
+                    netMusicTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的相似歌曲"));
                     netMusicToolBar.removeAll();
                     netMusicToolBar.add(netMusicBackwardButton);
                     netMusicToolBar.add(Box.createHorizontalGlue());
@@ -7671,14 +7672,14 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMusicList.setModel(emptyListModel);
                     netMusicListModel.clear();
-                    netMusicInfos.forEach(musicInfo -> {
-                        globalExecutor.submit(() -> updateCollection(musicInfo));
+                    musicInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        musicInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             netMusicList.repaint();
                             collectionList.repaint();
                         });
-                        netMusicListModel.addElement(musicInfo);
+                        netMusicListModel.addElement(info);
                     });
                     netMusicList.setModel(netMusicListModel);
                     netMusicBackwardButton.setEnabled(true);
@@ -7707,23 +7708,23 @@ public class MainFrame extends JFrame {
         });
         // 查看相关歌单
         netMusicRelatedPlaylistMenuItem.addActionListener(e -> {
-            NetMusicInfo netMusicInfo;
+            NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                     || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
                     && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
-            } else if (selectedIndex == TabIndex.PLAY_QUEUE) netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-            else netMusicInfo = netMusicList.getSelectedValue();
+                musicInfo = (NetMusicInfo) musicList.getSelectedValue();
+            } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+            else musicInfo = netMusicList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForPlaylist();
                     // 搜索相关歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo = netMusicInfo);
-                    List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo = musicInfo);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的相关歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的相关歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -7739,8 +7740,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netPlaylistList.setModel(emptyListModel);
                     netPlaylistListModel.clear();
-                    netPlaylistInfos.forEach(playlistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(playlistInfo));
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
                         playlistInfo.setInvokeLater(() -> {
                             updateRenderer(netPlaylistList);
@@ -7778,29 +7779,29 @@ public class MainFrame extends JFrame {
         });
         // 查看歌手/作者
         netMusicAuthorMenuItem.addActionListener(e -> {
-            NetMusicInfo netMusicInfo;
-            if (currPane == MusicPane.LYRIC) netMusicInfo = player.getNetMusicInfo();
+            NetMusicInfo musicInfo;
+            if (currPane == MusicPane.LYRIC) musicInfo = player.getMusicInfo();
             else {
                 int selectedIndex = tabbedPane.getSelectedIndex();
                 if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                         || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
                         && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                    netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
+                    musicInfo = (NetMusicInfo) musicList.getSelectedValue();
                 } else if (selectedIndex == TabIndex.PLAY_QUEUE)
-                    netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-                else netMusicInfo = netMusicList.getSelectedValue();
+                    musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+                else musicInfo = netMusicList.getSelectedValue();
             }
             loadingAndRun(() -> {
                 try {
-                    if (netMusicInfo.isProgram()) {
+                    if (musicInfo.isProgram()) {
                         clearRequestForUser();
                         // 获取作者
-                        currAuthorMusicInfo = netMusicInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netMusicInfo.getArtistId(), netMusicInfo.getSource());
-                        List<NetUserInfo> netUserInfos = result.data;
+                        currAuthorMusicInfo = musicInfo;
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(musicInfo.getArtistId(), musicInfo.getSource());
+                        List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的作者"));
+                        netUserTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的作者"));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -7817,8 +7818,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netUserList.setModel(emptyListModel);
                         netUserListModel.clear();
-                        netUserInfos.forEach(userInfo -> {
-                            globalExecutor.submit(() -> updateCollection(userInfo));
+                        userInfos.forEach(userInfo -> {
+                            globalExecutor.execute(() -> updateCollection(userInfo));
                             // 设置图片加载后重绘的事件
                             userInfo.setInvokeLater(() -> {
                                 updateRenderer(netUserList);
@@ -7844,9 +7845,9 @@ public class MainFrame extends JFrame {
                     } else {
                         clearRequestForArtist();
                         // 获取歌手
-                        currArtistMusicInfo = netMusicInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(netMusicInfo.getArtistId(), netMusicInfo.getSource());
-                        List<NetArtistInfo> netArtistInfos = result.data;
+                        currArtistMusicInfo = musicInfo;
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(musicInfo.getArtistId(), musicInfo.getSource());
+                        List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
                         netArtistTitleLabel.setText(StringUtil.textToHtml(currArtistMusicInfo.toSimpleString() + " 的歌手"));
@@ -7865,8 +7866,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netArtistList.setModel(emptyListModel);
                         netArtistListModel.clear();
-                        netArtistInfos.forEach(artistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(artistInfo));
+                        artistInfos.forEach(artistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
                             artistInfo.setInvokeLater(() -> {
                                 updateRenderer(netArtistList);
@@ -7905,30 +7906,30 @@ public class MainFrame extends JFrame {
         });
         // 查看专辑/电台
         netMusicAlbumMenuItem.addActionListener(e -> {
-            NetMusicInfo netMusicInfo;
-            if (currPane == MusicPane.LYRIC) netMusicInfo = player.getNetMusicInfo();
+            NetMusicInfo musicInfo;
+            if (currPane == MusicPane.LYRIC) musicInfo = player.getMusicInfo();
             else {
                 int selectedIndex = tabbedPane.getSelectedIndex();
                 if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                         || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
                         && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                    netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
+                    musicInfo = (NetMusicInfo) musicList.getSelectedValue();
                 } else if (selectedIndex == TabIndex.PLAY_QUEUE)
-                    netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-                else netMusicInfo = netMusicList.getSelectedValue();
+                    musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+                else musicInfo = netMusicList.getSelectedValue();
             }
             loadingAndRun(() -> {
                 try {
-                    if (netMusicInfo.isProgram()) {
+                    if (musicInfo.isProgram()) {
                         clearRequestForRadio();
                         // 获取歌曲电台
-                        currRadioMusicInfo = netMusicInfo;
-                        CommonResult<NetRadioInfo> result = MusicServerUtil.getRadioInfo(netMusicInfo.getAlbumId(), netMusicInfo.getSource());
-                        List<NetRadioInfo> netRadioInfos = result.data;
+                        currRadioMusicInfo = musicInfo;
+                        CommonResult<NetRadioInfo> result = MusicServerUtil.getRadioInfo(musicInfo.getAlbumId(), musicInfo.getSource());
+                        List<NetRadioInfo> radioInfos = result.data;
                         int total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netRadioTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的电台"));
+                        netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的电台"));
                         netRadioToolBar.removeAll();
                         netRadioToolBar.add(netRadioBackwardButton);
                         netRadioToolBar.add(Box.createHorizontalGlue());
@@ -7945,8 +7946,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netRadioList.setModel(emptyListModel);
                         netRadioListModel.clear();
-                        netRadioInfos.forEach(radioInfo -> {
-                            globalExecutor.submit(() -> updateCollection(radioInfo));
+                        radioInfos.forEach(radioInfo -> {
+                            globalExecutor.execute(() -> updateCollection(radioInfo));
                             // 设置图片加载后重绘的事件
                             radioInfo.setInvokeLater(() -> {
                                 updateRenderer(netRadioList);
@@ -7972,13 +7973,13 @@ public class MainFrame extends JFrame {
                     } else {
                         clearRequestForAlbum();
                         // 查看歌曲专辑
-                        currAlbumMusicInfo = netMusicInfo;
-                        CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfo(netMusicInfo.getAlbumId(), netMusicInfo.getSource());
-                        List<NetAlbumInfo> netAlbumInfos = result.data;
+                        currAlbumMusicInfo = musicInfo;
+                        CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfo(musicInfo.getAlbumId(), musicInfo.getSource());
+                        List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netAlbumTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的专辑"));
+                        netAlbumTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的专辑"));
                         netAlbumToolBar.removeAll();
                         netAlbumToolBar.add(netAlbumBackwardButton);
                         netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -7994,8 +7995,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netAlbumList.setModel(emptyListModel);
                         netAlbumListModel.clear();
-                        netAlbumInfos.forEach(albumInfo -> {
-                            globalExecutor.submit(() -> updateCollection(albumInfo));
+                        albumInfos.forEach(albumInfo -> {
+                            globalExecutor.execute(() -> updateCollection(albumInfo));
                             // 设置图片加载后重绘的事件
                             albumInfo.setInvokeLater(() -> {
                                 updateRenderer(netAlbumList);
@@ -8034,25 +8035,25 @@ public class MainFrame extends JFrame {
         });
         // 查看推荐电台
         netMusicRecRadioMenuItem.addActionListener(e -> {
-            NetMusicInfo netMusicInfo;
+            NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                     || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
                     && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
-            } else if (selectedIndex == TabIndex.PLAY_QUEUE) netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-            else netMusicInfo = netMusicList.getSelectedValue();
+                musicInfo = (NetMusicInfo) musicList.getSelectedValue();
+            } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+            else musicInfo = netMusicList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForRadio();
                     // 获取歌曲推荐电台
-                    currRecRadioMusicInfo = netMusicInfo;
-                    CommonResult<NetRadioInfo> result = MusicServerUtil.getRecRadios(netMusicInfo);
-                    List<NetRadioInfo> netRadioInfos = result.data;
+                    currRecRadioMusicInfo = musicInfo;
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getRecRadios(musicInfo);
+                    List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的推荐电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的推荐电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -8069,8 +8070,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netRadioList.setModel(emptyListModel);
                     netRadioListModel.clear();
-                    netRadioInfos.forEach(radioInfo -> {
-                        globalExecutor.submit(() -> updateCollection(radioInfo));
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
                         // 设置图片加载后重绘的事件
                         radioInfo.setInvokeLater(() -> {
                             updateRenderer(netRadioList);
@@ -8108,24 +8109,24 @@ public class MainFrame extends JFrame {
         });
         // 查看相关 MV
         netMusicRelatedMvMenuItem.addActionListener(e -> {
-            NetMusicInfo netMusicInfo;
+            NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
                     || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
                     && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
-                netMusicInfo = (NetMusicInfo) musicList.getSelectedValue();
-            } else if (selectedIndex == TabIndex.PLAY_QUEUE) netMusicInfo = (NetMusicInfo) playQueue.getSelectedValue();
-            else netMusicInfo = netMusicList.getSelectedValue();
+                musicInfo = (NetMusicInfo) musicList.getSelectedValue();
+            } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
+            else musicInfo = netMusicList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForMv();
                     // 获取相关 MV
-                    CommonResult<NetMvInfo> result = MusicServerUtil.getRelatedMvs(currMvMusicInfo = netMusicInfo, limit, netMvCurrPage = 1);
-                    List<NetMvInfo> netMvInfos = result.data;
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getRelatedMvs(currMvMusicInfo = musicInfo, limit, netMvCurrPage = 1);
+                    List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(netMusicInfo.toSimpleString() + " 的相关 MV"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的相关 MV"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -8141,8 +8142,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
-                    netMvInfos.forEach(mvInfo -> {
-                        globalExecutor.submit(() -> updateCollection(mvInfo));
+                    mvInfos.forEach(mvInfo -> {
+                        globalExecutor.execute(() -> updateCollection(mvInfo));
                         // 设置图片加载后重绘的事件
                         mvInfo.setInvokeLater(() -> {
                             updateRenderer(netMvList);
@@ -8201,7 +8202,7 @@ public class MainFrame extends JFrame {
 
         // 搜索建议面板
         // 刷新搜索建议按钮
-        netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.submit(() -> updateSearchSuggestion()));
+        netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.execute(() -> updateSearchSuggestion()));
         netMusicRefreshSearchSuggestionButton.setPreferredSize(new Dimension(30, 30));
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshSearchSuggestionButton.addMouseListener(new ButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
@@ -8221,7 +8222,7 @@ public class MainFrame extends JFrame {
         netMusicSearchSuggestionPanel.add(netMusicSearchSuggestionInnerPanel2);
         // 热搜面板
         // 刷新热门搜索按钮
-        netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.submit(() -> updateHotSearch()));
+        netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.execute(() -> updateHotSearch()));
         netMusicRefreshHotSearchButton.setPreferredSize(new Dimension(30, 30));
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshHotSearchButton.addMouseListener(new ButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
@@ -8376,7 +8377,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -8421,7 +8422,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -8466,7 +8467,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -8511,7 +8512,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -8556,7 +8557,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -8601,7 +8602,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -8646,7 +8647,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -8705,7 +8706,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(finalUrl);
                             return new CommonResult<>(res, 1);
                         }
@@ -8770,7 +8771,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(finalUrl);
                             return new CommonResult<>(res, 1);
                         }
@@ -8816,7 +8817,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
                         @Override
                         public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                            LinkedList<String> res = new LinkedList<>();
+                            List<String> res = new LinkedList<>();
                             res.add(url);
                             return new CommonResult<>(res, 1);
                         }
@@ -9329,7 +9330,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetPlaylistInfo> result = netPlaylistIdCheckBox.isSelected() ?
                                 MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
                                 : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
-                        List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                        List<NetPlaylistInfo> playlistInfos = result.data;
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -9340,8 +9341,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netPlaylistList.setModel(emptyListModel);
                         netPlaylistListModel.clear();
-                        netPlaylistInfos.forEach(playlistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(playlistInfo));
+                        playlistInfos.forEach(playlistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(playlistInfo));
                             // 设置图片加载后重绘的事件
                             playlistInfo.setInvokeLater(() -> {
                                 updateRenderer(netPlaylistList);
@@ -9389,7 +9390,7 @@ public class MainFrame extends JFrame {
                                 : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, limit, netPlaylistCurrPage)
                                 : netPlaylistIdCheckBox.isSelected() ? MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
                                 : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
-                        List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                        List<NetPlaylistInfo> playlistInfos = result.data;
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -9399,8 +9400,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netPlaylistList.setModel(emptyListModel);
                         netPlaylistListModel.clear();
-                        netPlaylistInfos.forEach(playlistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(playlistInfo));
+                        playlistInfos.forEach(playlistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(playlistInfo));
                             // 设置图片加载后重绘的事件
                             playlistInfo.setInvokeLater(() -> {
                                 updateRenderer(netPlaylistList);
@@ -9449,7 +9450,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForPlaylistModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForPlaylistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForPlaylistModel);
@@ -9719,7 +9720,7 @@ public class MainFrame extends JFrame {
                     playlistCoverAndNameLabel.setText(LOADING_MSG);
                     playlistTagLabel.setText(LOADING_MSG);
                     playlistDescriptionLabel.setText(LOADING_MSG);
-                    GlobalExecutors.imageExecutor.execute(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillPlaylistInfo(playlistInfo);
                             updateRenderer(netPlaylistList);
@@ -9773,7 +9774,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForPlaylistModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForPlaylistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForPlaylistModel);
@@ -9858,14 +9859,14 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         netPlaylistPlayAllMenuItem.addActionListener(e -> {
-            NetPlaylistInfo netPlaylistInfo;
+            NetPlaylistInfo playlistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistInfo = netPlaylistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_PLAYLIST) playlistInfo = netPlaylistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netPlaylistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
-            else netPlaylistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
+                playlistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
+            else playlistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(netPlaylistInfo, netPlaylistInfo.hasTrackCount() ? netPlaylistInfo.getTrackCount() : 10000, 1);
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, playlistInfo.hasTrackCount() ? playlistInfo.getTrackCount() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -9874,12 +9875,12 @@ public class MainFrame extends JFrame {
                 playQueue.setModel(emptyListModel);
                 playQueueModel.clear();
                 musicInfos.forEach(musicInfo -> {
-                    globalExecutor.submit(() -> updateCollection(musicInfo));
+                    globalExecutor.execute(() -> updateCollection(musicInfo));
                     playQueueModel.addElement(musicInfo);
                 });
                 playQueue.setModel(playQueueModel);
                 playQueue.setSelectedIndex(0);
-                playExecutor.submit(() -> playSelected(playQueue, true));
+                playExecutor.execute(() -> playSelected(playQueue, true));
             });
         });
         // 收藏歌单
@@ -9925,31 +9926,31 @@ public class MainFrame extends JFrame {
         });
         // 查看评论
         netPlaylistCommentMenuItem.addActionListener(e -> {
-            NetPlaylistInfo netPlaylistInfo;
+            NetPlaylistInfo playlistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistInfo = netPlaylistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_PLAYLIST) playlistInfo = netPlaylistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netPlaylistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
-            else netPlaylistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
-            getComments(netPlaylistInfo, true);
+                playlistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
+            else playlistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
+            getComments(playlistInfo, true);
         });
         // 查看相似歌单
         netPlaylistSimilarPlaylistMenuItem.addActionListener(e -> {
-            NetPlaylistInfo netPlaylistInfo;
+            NetPlaylistInfo playlistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistInfo = netPlaylistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_PLAYLIST) playlistInfo = netPlaylistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netPlaylistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
-            else netPlaylistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
+                playlistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
+            else playlistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForPlaylist();
                     // 搜索相似歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo = netPlaylistInfo);
-                    List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo = playlistInfo);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netPlaylistInfo.getName() + " 的相似歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + " 的相似歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -9965,16 +9966,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netPlaylistList.setModel(emptyListModel);
                     netPlaylistListModel.clear();
-                    netPlaylistInfos.forEach(playlistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(playlistInfo));
+                    playlistInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        playlistInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netPlaylistList);
                             updateRenderer(collectionList);
                             netPlaylistList.repaint();
                             collectionList.repaint();
                         });
-                        netPlaylistListModel.addElement(playlistInfo);
+                        netPlaylistListModel.addElement(info);
                     });
                     netPlaylistList.setModel(netPlaylistListModel);
                     netPlaylistBackwardButton.setEnabled(true);
@@ -10003,22 +10004,22 @@ public class MainFrame extends JFrame {
         });
         // 查看创建者
         netPlaylistCreatorMenuItem.addActionListener(e -> {
-            NetPlaylistInfo netPlaylistInfo;
+            NetPlaylistInfo playlistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistInfo = netPlaylistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_PLAYLIST) playlistInfo = netPlaylistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netPlaylistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
-            else netPlaylistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
+                playlistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
+            else playlistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取歌单创建者
-                    currUserPlaylistInfo = netPlaylistInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netPlaylistInfo.getCreatorId(), netPlaylistInfo.getSource());
-                    List<NetUserInfo> netUserInfos = result.data;
+                    currUserPlaylistInfo = playlistInfo;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(playlistInfo.getCreatorId(), playlistInfo.getSource());
+                    List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(netPlaylistInfo.getName() + " 的创建者"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + " 的创建者"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -10035,8 +10036,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
                             updateRenderer(netUserList);
@@ -10073,22 +10074,22 @@ public class MainFrame extends JFrame {
         });
         // 查看收藏者
         netPlaylistSubscriberMenuItem.addActionListener(e -> {
-            NetPlaylistInfo netPlaylistInfo;
+            NetPlaylistInfo playlistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistInfo = netPlaylistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_PLAYLIST) playlistInfo = netPlaylistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netPlaylistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
-            else netPlaylistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
+                playlistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
+            else playlistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取歌单收藏者
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo = netPlaylistInfo, limit, netUserCurrPage = 1);
-                    List<NetUserInfo> netUserInfos = result.data;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo = playlistInfo, limit, netUserCurrPage = 1);
+                    List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(netPlaylistInfo.getName() + " 的收藏者"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + " 的收藏者"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -10105,8 +10106,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
                             updateRenderer(netUserList);
@@ -10329,7 +10330,7 @@ public class MainFrame extends JFrame {
                         // 搜索专辑并显示专辑列表
                         CommonResult<NetAlbumInfo> result = MusicServerUtil.searchAlbums(
                                 netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, limit, netAlbumCurrPage = 1);
-                        List<NetAlbumInfo> netAlbumInfos = result.data;
+                        List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -10340,8 +10341,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netAlbumList.setModel(emptyListModel);
                         netAlbumListModel.clear();
-                        netAlbumInfos.forEach(albumInfo -> {
-                            globalExecutor.submit(() -> updateCollection(albumInfo));
+                        albumInfos.forEach(albumInfo -> {
+                            globalExecutor.execute(() -> updateCollection(albumInfo));
                             // 设置图片加载后重绘的事件
                             albumInfo.setInvokeLater(() -> {
                                 updateRenderer(netAlbumList);
@@ -10390,7 +10391,7 @@ public class MainFrame extends JFrame {
                                 : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, limit, netAlbumCurrPage)
                                 : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getAlbumId(), currAlbumMusicInfo.getSource())
                                 : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, limit, netAlbumCurrPage);
-                        List<NetAlbumInfo> netAlbumInfos = result.data;
+                        List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -10400,8 +10401,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netAlbumList.setModel(emptyListModel);
                         netAlbumListModel.clear();
-                        netAlbumInfos.forEach(albumInfo -> {
-                            globalExecutor.submit(() -> updateCollection(albumInfo));
+                        albumInfos.forEach(albumInfo -> {
+                            globalExecutor.execute(() -> updateCollection(albumInfo));
                             // 设置图片加载后重绘的事件
                             albumInfo.setInvokeLater(() -> {
                                 updateRenderer(netAlbumList);
@@ -10451,7 +10452,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForAlbumModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForAlbumModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForAlbumModel);
@@ -10719,7 +10720,7 @@ public class MainFrame extends JFrame {
                     albumCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     albumCoverAndNameLabel.setText(LOADING_MSG);
                     albumDescriptionLabel.setText(LOADING_MSG);
-                    GlobalExecutors.imageExecutor.execute(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillAlbumInfo(albumInfo);
                             updateRenderer(netAlbumList);
@@ -10772,7 +10773,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForAlbumModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForAlbumModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForAlbumModel);
@@ -10857,14 +10858,14 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         netAlbumPlayAllMenuItem.addActionListener(e -> {
-            NetAlbumInfo netAlbumInfo;
+            NetAlbumInfo albumInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ALBUM) netAlbumInfo = netAlbumList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ALBUM) albumInfo = netAlbumList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
-            else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
+                albumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
+            else albumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(netAlbumInfo, netAlbumInfo.hasSongNum() ? netAlbumInfo.getSongNum() : 10000, 1);
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, albumInfo.hasSongNum() ? albumInfo.getSongNum() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -10873,12 +10874,12 @@ public class MainFrame extends JFrame {
                 playQueue.setModel(emptyListModel);
                 playQueueModel.clear();
                 musicInfos.forEach(musicInfo -> {
-                    globalExecutor.submit(() -> updateCollection(musicInfo));
+                    globalExecutor.execute(() -> updateCollection(musicInfo));
                     playQueueModel.addElement(musicInfo);
                 });
                 playQueue.setModel(playQueueModel);
                 playQueue.setSelectedIndex(0);
-                playExecutor.submit(() -> playSelected(playQueue, true));
+                playExecutor.execute(() -> playSelected(playQueue, true));
             });
         });
         // 收藏专辑
@@ -10924,33 +10925,33 @@ public class MainFrame extends JFrame {
         });
         // 查看评论
         netAlbumCommentMenuItem.addActionListener(e -> {
-            NetAlbumInfo netAlbumInfo;
+            NetAlbumInfo albumInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ALBUM) netAlbumInfo = netAlbumList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ALBUM) albumInfo = netAlbumList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
-            else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
-            getComments(netAlbumInfo, true);
+                albumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
+            else albumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
+            getComments(albumInfo, true);
         });
         // 查看歌手/作者
         netAlbumArtistMenuItem.addActionListener(e -> {
-            NetAlbumInfo netAlbumInfo;
+            NetAlbumInfo albumInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ALBUM) netAlbumInfo = netAlbumList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ALBUM) albumInfo = netAlbumList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
-            else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
+                albumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
+            else albumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
-                    if (netAlbumInfo.isPhoto()) {
+                    if (albumInfo.isPhoto()) {
                         clearRequestForUser();
                         // 获取歌手/作者
-                        currAuthorAlbumInfo = netAlbumInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
-                        List<NetUserInfo> netUserInfos = result.data;
+                        currAuthorAlbumInfo = albumInfo;
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(albumInfo.getArtistId(), albumInfo.getSource());
+                        List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(netAlbumInfo.toSimpleString() + " 的作者"));
+                        netUserTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + " 的作者"));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -10967,8 +10968,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netUserList.setModel(emptyListModel);
                         netUserListModel.clear();
-                        netUserInfos.forEach(userInfo -> {
-                            globalExecutor.submit(() -> updateCollection(userInfo));
+                        userInfos.forEach(userInfo -> {
+                            globalExecutor.execute(() -> updateCollection(userInfo));
                             // 设置图片加载后重绘的事件
                             userInfo.setInvokeLater(() -> {
                                 updateRenderer(netUserList);
@@ -10994,12 +10995,12 @@ public class MainFrame extends JFrame {
                     } else {
                         clearRequestForArtist();
                         // 搜索专辑歌手
-                        currArtistAlbumInfo = netAlbumInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(netAlbumInfo.getArtistId(), netAlbumInfo.getSource());
-                        List<NetArtistInfo> netArtistInfos = result.data;
+                        currArtistAlbumInfo = albumInfo;
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(albumInfo.getArtistId(), albumInfo.getSource());
+                        List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(netAlbumInfo.toSimpleString() + " 的歌手"));
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + " 的歌手"));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -11015,8 +11016,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netArtistList.setModel(emptyListModel);
                         netArtistListModel.clear();
-                        netArtistInfos.forEach(artistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(artistInfo));
+                        artistInfos.forEach(artistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
                             artistInfo.setInvokeLater(() -> {
                                 updateRenderer(netArtistList);
@@ -11055,21 +11056,21 @@ public class MainFrame extends JFrame {
         });
         // 查看相似专辑
         netAlbumSimilarMenuItem.addActionListener(e -> {
-            NetAlbumInfo netAlbumInfo;
+            NetAlbumInfo albumInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ALBUM) netAlbumInfo = netAlbumList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ALBUM) albumInfo = netAlbumList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
-            else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
+                albumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
+            else albumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo = netAlbumInfo);
-                    List<NetAlbumInfo> netAlbumInfos = result.data;
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo = albumInfo);
+                    List<NetAlbumInfo> albumInfos = result.data;
                     netAlbumCurrPage = netAlbumMaxPage = 1;
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netAlbumInfo.getName() + " 的相似专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(albumInfo.getName() + " 的相似专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -11085,16 +11086,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netAlbumList.setModel(emptyListModel);
                     netAlbumListModel.clear();
-                    netAlbumInfos.forEach(albumInfo -> {
-                        globalExecutor.submit(() -> updateCollection(albumInfo));
+                    albumInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        albumInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netAlbumList);
                             updateRenderer(collectionList);
                             netAlbumList.repaint();
                             collectionList.repaint();
                         });
-                        netAlbumListModel.addElement(albumInfo);
+                        netAlbumListModel.addElement(info);
                     });
                     netAlbumList.setModel(netAlbumListModel);
                     netAlbumBackwardButton.setEnabled(true);
@@ -11123,12 +11124,12 @@ public class MainFrame extends JFrame {
         });
         // 查看专辑照片
         netAlbumPhotosMenuItem.addActionListener(e -> {
-            NetAlbumInfo netAlbumInfo;
+            NetAlbumInfo albumInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ALBUM) netAlbumInfo = netAlbumList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ALBUM) albumInfo = netAlbumList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netAlbumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
-            else netAlbumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
+                albumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
+            else albumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             try {
 //                CommonResult<String> results = MusicServerUtils.getArtistImgUrls(netArtistInfo, 1);
 //                List<String> imgUrls = results.data;
@@ -11136,7 +11137,7 @@ public class MainFrame extends JFrame {
                 imageViewDialog = new ImageViewDialog(THIS, limit) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtil.getAlbumImgUrls(netAlbumInfo, pn, limit, cursor);
+                        return MusicServerUtil.getAlbumImgUrls(albumInfo, pn, limit, cursor);
                     }
 
                     @Override
@@ -11352,7 +11353,7 @@ public class MainFrame extends JFrame {
                         // 搜索歌手并显示歌手列表
                         CommonResult<NetArtistInfo> result = MusicServerUtil.searchArtists(
                                 netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, limit, netArtistCurrPage = 1);
-                        List<NetArtistInfo> netArtistInfos = result.data;
+                        List<NetArtistInfo> artistInfos = result.data;
                         Integer total = result.total;
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -11363,8 +11364,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netArtistList.setModel(emptyListModel);
                         netArtistListModel.clear();
-                        netArtistInfos.forEach(artistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(artistInfo));
+                        artistInfos.forEach(artistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
                             artistInfo.setInvokeLater(() -> {
                                 updateRenderer(netArtistList);
@@ -11417,7 +11418,7 @@ public class MainFrame extends JFrame {
                                 : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getArtistId(), currArtistAlbumInfo.getSource())
                                 : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getCreatorId(), currArtistMvInfo.getSource())
                                 : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, limit, netArtistCurrPage);
-                        List<NetArtistInfo> netArtistInfos = result.data;
+                        List<NetArtistInfo> artistInfos = result.data;
                         Integer total = result.total;
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -11427,8 +11428,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netArtistList.setModel(emptyListModel);
                         netArtistListModel.clear();
-                        netArtistInfos.forEach(artistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(artistInfo));
+                        artistInfos.forEach(artistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
                             artistInfo.setInvokeLater(() -> {
                                 updateRenderer(netArtistList);
@@ -11478,7 +11479,7 @@ public class MainFrame extends JFrame {
                         netMusicListForArtistModel.clear();
                         netMusicList.setModel(emptyListModel);
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForArtistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForArtistModel);
@@ -11747,7 +11748,7 @@ public class MainFrame extends JFrame {
                     artistCoverAndNameLabel.setText(LOADING_MSG);
                     artistTagLabel.setText(LOADING_MSG);
                     artistDescriptionLabel.setText(LOADING_MSG);
-                    GlobalExecutors.imageExecutor.execute(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillArtistInfo(artistInfo);
                             updateRenderer(netArtistList);
@@ -11803,7 +11804,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForArtistModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForArtistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForArtistModel);
@@ -11888,15 +11889,15 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         netArtistPlayAllMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
-                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(netArtistInfo, netArtistInfo.hasSongNum() ? netArtistInfo.getSongNum() : 10000, 1);
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, artistInfo.hasSongNum() ? artistInfo.getSongNum() : 10000, 1);
                     List<NetMusicInfo> musicInfos = result.data;
                     if (musicInfos.isEmpty()) {
                         new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -11905,12 +11906,12 @@ public class MainFrame extends JFrame {
                     playQueue.setModel(emptyListModel);
                     playQueueModel.clear();
                     musicInfos.forEach(musicInfo -> {
-                        globalExecutor.submit(() -> updateCollection(musicInfo));
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
                         playQueueModel.addElement(musicInfo);
                     });
                     playQueue.setModel(playQueueModel);
                     playQueue.setSelectedIndex(0);
-                    playExecutor.submit(() -> playSelected(playQueue, true));
+                    playExecutor.execute(() -> playSelected(playQueue, true));
                 } catch (Exception ex) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
                 }
@@ -11959,22 +11960,22 @@ public class MainFrame extends JFrame {
         });
         // 查看歌手专辑
         netArtistBrowseAlbumMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo = netArtistInfo, limit, netAlbumCurrPage = 1);
-                    List<NetAlbumInfo> netAlbumInfos = result.data;
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo = artistInfo, limit, netAlbumCurrPage = 1);
+                    List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -11990,8 +11991,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netAlbumList.setModel(emptyListModel);
                     netAlbumListModel.clear();
-                    netAlbumInfos.forEach(albumInfo -> {
-                        globalExecutor.submit(() -> updateCollection(albumInfo));
+                    albumInfos.forEach(albumInfo -> {
+                        globalExecutor.execute(() -> updateCollection(albumInfo));
                         // 设置图片加载后重绘的事件
                         albumInfo.setInvokeLater(() -> {
                             updateRenderer(netAlbumList);
@@ -12028,24 +12029,24 @@ public class MainFrame extends JFrame {
         });
         // 查看歌手 MV
         netArtistBrowseMvMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     // 网易云的 total 依赖于 mvNum 属性，需要先补全信息
-                    if (!netArtistInfo.hasMvNum()) MusicServerUtil.fillArtistInfo(netArtistInfo);
+                    if (!artistInfo.hasMvNum()) MusicServerUtil.fillArtistInfo(artistInfo);
                     clearRequestForMv();
                     // 搜索歌手 MV 并显示 MV 列表
-                    CommonResult<NetMvInfo> result = MusicServerUtil.getMvInfoInArtist(currMvArtistInfo = netArtistInfo, limit, netMvCurrPage = 1);
-                    List<NetMvInfo> netMvInfos = result.data;
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getMvInfoInArtist(currMvArtistInfo = artistInfo, limit, netMvCurrPage = 1);
+                    List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的 MV"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的 MV"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -12059,8 +12060,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
-                    netMvInfos.forEach(mvInfo -> {
-                        globalExecutor.submit(() -> updateCollection(mvInfo));
+                    mvInfos.forEach(mvInfo -> {
+                        globalExecutor.execute(() -> updateCollection(mvInfo));
                         // 设置图片加载后重绘的事件
                         mvInfo.setInvokeLater(() -> {
                             updateRenderer(netMvList);
@@ -12096,22 +12097,22 @@ public class MainFrame extends JFrame {
         });
         // 查看相似歌手
         netArtistSimilarArtistMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForArtist();
                     // 搜索相似歌手
-                    CommonResult<NetArtistInfo> result = MusicServerUtil.getSimilarArtists(currArtistArtistInfo = netArtistInfo, netArtistCurrPage = 1);
-                    List<NetArtistInfo> netArtistInfos = result.data;
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getSimilarArtists(currArtistArtistInfo = artistInfo, netArtistCurrPage = 1);
+                    List<NetArtistInfo> artistInfos = result.data;
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的相似歌手"));
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的相似歌手"));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -12127,16 +12128,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netArtistList.setModel(emptyListModel);
                     netArtistListModel.clear();
-                    netArtistInfos.forEach(artistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(artistInfo));
+                    artistInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        artistInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netArtistList);
                             updateRenderer(collectionList);
                             netArtistList.repaint();
                             collectionList.repaint();
                         });
-                        netArtistListModel.addElement(artistInfo);
+                        netArtistListModel.addElement(info);
                     });
                     netArtistList.setModel(netArtistListModel);
                     netArtistBackwardButton.setEnabled(true);
@@ -12165,23 +12166,23 @@ public class MainFrame extends JFrame {
         });
         // 查看歌手粉丝
         netArtistFansMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取歌手粉丝
-                    currUserArtistInfo = netArtistInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getArtistFans(netArtistInfo, limit, netUserCurrPage = 1);
-                    List<NetUserInfo> netUserInfos = result.data;
+                    currUserArtistInfo = artistInfo;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getArtistFans(artistInfo, limit, netUserCurrPage = 1);
+                    List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的粉丝"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的粉丝"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -12198,8 +12199,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
                             updateRenderer(netUserList);
@@ -12236,22 +12237,22 @@ public class MainFrame extends JFrame {
         });
         // 查看歌手合作人
         netArtistBuddyMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForArtist();
                     // 搜索歌手合作人
-                    CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistBuddies(currBuddyArtistInfo = netArtistInfo, netArtistCurrPage = 1, limit);
-                    List<NetArtistInfo> netArtistInfos = result.data;
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistBuddies(currBuddyArtistInfo = artistInfo, netArtistCurrPage = 1, limit);
+                    List<NetArtistInfo> artistInfos = result.data;
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的合作人"));
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的合作人"));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -12267,16 +12268,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netArtistList.setModel(emptyListModel);
                     netArtistListModel.clear();
-                    netArtistInfos.forEach(artistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(artistInfo));
+                    artistInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        artistInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netArtistList);
                             updateRenderer(collectionList);
                             netArtistList.repaint();
                             collectionList.repaint();
                         });
-                        netArtistListModel.addElement(artistInfo);
+                        netArtistListModel.addElement(info);
                     });
                     netArtistList.setModel(netArtistListModel);
                     netArtistBackwardButton.setEnabled(true);
@@ -12305,22 +12306,22 @@ public class MainFrame extends JFrame {
         });
         // 查看歌手电台
         netArtistRadiosMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForRadio();
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtil.getArtistRadios(currRadioArtistInfo = netArtistInfo, netRadioCurrPage = 1, limit);
-                    List<NetRadioInfo> netRadioInfos = result.data;
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getArtistRadios(currRadioArtistInfo = artistInfo, netRadioCurrPage = 1, limit);
+                    List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(netArtistInfo.getName() + " 的电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -12337,8 +12338,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netRadioList.setModel(emptyListModel);
                     netRadioListModel.clear();
-                    netRadioInfos.forEach(radioInfo -> {
-                        globalExecutor.submit(() -> updateCollection(radioInfo));
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
                         // 设置图片加载后重绘的事件
                         radioInfo.setInvokeLater(() -> {
                             updateRenderer(netRadioList);
@@ -12375,20 +12376,20 @@ public class MainFrame extends JFrame {
         });
         // 查看歌手照片
         netArtistPhotosMenuItem.addActionListener(e -> {
-            NetArtistInfo netArtistInfo;
+            NetArtistInfo artistInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) netArtistInfo = netArtistList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_ARTIST) artistInfo = netArtistList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netArtistInfo = (NetArtistInfo) collectionList.getSelectedValue();
-            else netArtistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
+                artistInfo = (NetArtistInfo) collectionList.getSelectedValue();
+            else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             try {
-//                CommonResult<String> results = MusicServerUtils.getArtistImgUrls(netArtistInfo, 1);
+//                CommonResult<String> results = MusicServerUtils.getArtistImgUrls(artistInfo, 1);
 //                List<String> imgUrls = results.data;
 //                Integer total = results.total;
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtil.getArtistImgUrls(netArtistInfo, pn);
+                        return MusicServerUtil.getArtistImgUrls(artistInfo, pn);
                     }
 
                     @Override
@@ -12606,7 +12607,7 @@ public class MainFrame extends JFrame {
                         // 搜索电台并显示电台列表
                         CommonResult<NetRadioInfo> result = MusicServerUtil.searchRadios(
                                 netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, limit, netRadioCurrPage = 1);
-                        List<NetRadioInfo> netRadioInfos = result.data;
+                        List<NetRadioInfo> radioInfos = result.data;
                         Integer total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -12617,8 +12618,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netRadioList.setModel(emptyListModel);
                         netRadioListModel.clear();
-                        netRadioInfos.forEach(radioInfo -> {
-                            globalExecutor.submit(() -> updateCollection(radioInfo));
+                        radioInfos.forEach(radioInfo -> {
+                            globalExecutor.execute(() -> updateCollection(radioInfo));
                             // 设置图片加载后重绘的事件
                             radioInfo.setInvokeLater(() -> {
                                 updateRenderer(netRadioList);
@@ -12666,7 +12667,7 @@ public class MainFrame extends JFrame {
                                 : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getAlbumId(), currRadioMusicInfo.getSource())
                                 : songRecRequest ? MusicServerUtil.getRecRadios(currRecRadioMusicInfo)
                                 : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, limit, netRadioCurrPage);
-                        List<NetRadioInfo> netRadioInfos = result.data;
+                        List<NetRadioInfo> radioInfos = result.data;
                         Integer total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -12676,8 +12677,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netRadioList.setModel(emptyListModel);
                         netRadioListModel.clear();
-                        netRadioInfos.forEach(radioInfo -> {
-                            globalExecutor.submit(() -> updateCollection(radioInfo));
+                        radioInfos.forEach(radioInfo -> {
+                            globalExecutor.execute(() -> updateCollection(radioInfo));
                             // 设置图片加载后重绘的事件
                             radioInfo.setInvokeLater(() -> {
                                 updateRenderer(netRadioList);
@@ -12726,7 +12727,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForRadioModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForRadioModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRadioModel);
@@ -13007,7 +13008,7 @@ public class MainFrame extends JFrame {
                     radioCoverAndNameLabel.setText(LOADING_MSG);
                     radioTagLabel.setText(LOADING_MSG);
                     radioDescriptionLabel.setText(LOADING_MSG);
-                    GlobalExecutors.imageExecutor.execute(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillRadioInfo(radioInfo);
                             updateRenderer(netRadioList);
@@ -13064,7 +13065,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForRadioModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForRadioModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRadioModel);
@@ -13150,15 +13151,15 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         netRadioPlayAllMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                        netRadioInfo, netRadioSortTypeComboBox.getSelectedIndex(), netRadioInfo.hasTrackCount() ? netRadioInfo.getTrackCount() : 10000, 1);
+                        radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), radioInfo.hasTrackCount() ? radioInfo.getTrackCount() : 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -13167,12 +13168,12 @@ public class MainFrame extends JFrame {
                 playQueue.setModel(emptyListModel);
                 playQueueModel.clear();
                 musicInfos.forEach(musicInfo -> {
-                    globalExecutor.submit(() -> updateCollection(musicInfo));
+                    globalExecutor.execute(() -> updateCollection(musicInfo));
                     playQueueModel.addElement(musicInfo);
                 });
                 playQueue.setModel(playQueueModel);
                 playQueue.setSelectedIndex(0);
-                playExecutor.submit(() -> playSelected(playQueue, true));
+                playExecutor.execute(() -> playSelected(playQueue, true));
             });
         });
         // 收藏电台
@@ -13218,32 +13219,32 @@ public class MainFrame extends JFrame {
         });
         // 查看评论
         netRadioCommentMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
-            getComments(netRadioInfo, true);
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+            getComments(radioInfo, true);
         });
         // 查看主播
         netRadioDjMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取电台主播
-                    currUserRadioInfo = netRadioInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netRadioInfo.getDjId(), netRadioInfo.getSource());
-                    List<NetUserInfo> netUserInfos = result.data;
+                    currUserRadioInfo = radioInfo;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(radioInfo.getDjId(), radioInfo.getSource());
+                    List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的主播"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的主播"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13260,8 +13261,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
                             updateRenderer(netUserList);
@@ -13298,22 +13299,22 @@ public class MainFrame extends JFrame {
         });
         // 查看订阅者
         netRadioSubscriberMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取电台订阅者
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo = netRadioInfo, limit, netUserCurrPage = 1);
-                    List<NetUserInfo> netUserInfos = result.data;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo = radioInfo, limit, netUserCurrPage = 1);
+                    List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的订阅者"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的订阅者"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13330,8 +13331,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
                             updateRenderer(netUserList);
@@ -13368,22 +13369,22 @@ public class MainFrame extends JFrame {
         });
         // 查看相似电台
         netRadioSimilarMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForRadio();
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtil.getSimilarRadios(currRadioRadioInfo = netRadioInfo);
-                    List<NetRadioInfo> netRadioInfos = result.data;
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getSimilarRadios(currRadioRadioInfo = radioInfo);
+                    List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRadioCurrPage = netRadioMaxPage = 1;
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的相似电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的相似电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -13400,16 +13401,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netRadioList.setModel(emptyListModel);
                     netRadioListModel.clear();
-                    netRadioInfos.forEach(radioInfo -> {
-                        globalExecutor.submit(() -> updateCollection(radioInfo));
+                    radioInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        radioInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netRadioList);
                             updateRenderer(collectionList);
                             netRadioList.repaint();
                             collectionList.repaint();
                         });
-                        netRadioListModel.addElement(radioInfo);
+                        netRadioListModel.addElement(info);
                     });
                     netRadioList.setModel(netRadioListModel);
                     netRadioBackwardButton.setEnabled(true);
@@ -13438,21 +13439,21 @@ public class MainFrame extends JFrame {
         });
         // 查看演职员/CV
         netRadioArtistsMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForArtist();
                     // 搜索演职员
-                    CommonResult<NetArtistInfo> result = MusicServerUtil.getRadioArtists(currArtistRadioInfo = netRadioInfo);
-                    List<NetArtistInfo> netArtistInfos = result.data;
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getRadioArtists(currArtistRadioInfo = radioInfo);
+                    List<NetArtistInfo> artistInfos = result.data;
                     netArtistCurrPage = netArtistMaxPage = 1;
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(netRadioInfo.getName() + " 的演职员"));
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的演职员"));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -13468,8 +13469,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netArtistList.setModel(emptyListModel);
                     netArtistListModel.clear();
-                    netArtistInfos.forEach(artistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(artistInfo));
+                    artistInfos.forEach(artistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(artistInfo));
                         // 设置图片加载后重绘的事件
                         artistInfo.setInvokeLater(() -> {
                             updateRenderer(netArtistList);
@@ -13506,17 +13507,17 @@ public class MainFrame extends JFrame {
         });
         // 查看电台照片
         netRadioPhotosMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             try {
-                imageViewDialog = new ImageViewDialog(THIS, netRadioInfo.isGame() ? 24 : 30) {
+                imageViewDialog = new ImageViewDialog(THIS, radioInfo.isGame() ? 24 : 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtil.getRadioImgUrls(netRadioInfo, pn);
+                        return MusicServerUtil.getRadioImgUrls(radioInfo, pn);
                     }
 
                     @Override
@@ -13539,17 +13540,17 @@ public class MainFrame extends JFrame {
         });
         // 查看电台海报
         netRadioPostersMenuItem.addActionListener(e -> {
-            NetRadioInfo netRadioInfo;
+            NetRadioInfo radioInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) netRadioInfo = netRadioList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RADIO) radioInfo = netRadioList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRadioInfo = (NetRadioInfo) collectionList.getSelectedValue();
-            else netRadioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
+                radioInfo = (NetRadioInfo) collectionList.getSelectedValue();
+            else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             try {
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtil.getRadioPosterUrls(netRadioInfo, pn);
+                        return MusicServerUtil.getRadioPosterUrls(radioInfo, pn);
                     }
 
                     @Override
@@ -13725,7 +13726,7 @@ public class MainFrame extends JFrame {
                         // 搜索 MV 并显示 MV 列表
                         CommonResult<NetMvInfo> result = MusicServerUtil.searchMvs(
                                 netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage = 1);
-                        List<NetMvInfo> netMvInfos = result.data;
+                        List<NetMvInfo> mvInfos = result.data;
                         Integer total = result.total;
                         netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -13736,8 +13737,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMvList.setModel(emptyListModel);
                         netMvListModel.clear();
-                        netMvInfos.forEach(mvInfo -> {
-                            globalExecutor.submit(() -> updateCollection(mvInfo));
+                        mvInfos.forEach(mvInfo -> {
+                            globalExecutor.execute(() -> updateCollection(mvInfo));
                             // 设置图片加载后重绘的事件
                             mvInfo.setInvokeLater(() -> {
                                 updateRenderer(netMvList);
@@ -13785,7 +13786,7 @@ public class MainFrame extends JFrame {
                                 : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, netMvCurrPage, limit)
                                 : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit, cursor)
                                 : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage);
-                        List<NetMvInfo> netMvInfos = result.data;
+                        List<NetMvInfo> mvInfos = result.data;
                         Integer total = result.total;
                         cursor = result.cursor;
                         netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -13796,8 +13797,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMvList.setModel(emptyListModel);
                         netMvListModel.clear();
-                        netMvInfos.forEach(mvInfo -> {
-                            globalExecutor.submit(() -> updateCollection(mvInfo));
+                        mvInfos.forEach(mvInfo -> {
+                            globalExecutor.execute(() -> updateCollection(mvInfo));
                             // 设置图片加载后重绘的事件
                             mvInfo.setInvokeLater(() -> {
                                 updateRenderer(netMvList);
@@ -14085,21 +14086,21 @@ public class MainFrame extends JFrame {
         });
         // 查看相似 MV
         netMvSimilarMvMenuItem.addActionListener(e -> {
-            NetMvInfo netMvInfo;
+            NetMvInfo mvInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_MV) netMvInfo = netMvList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_MV) mvInfo = netMvList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netMvInfo = (NetMvInfo) collectionList.getSelectedValue();
-            else netMvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+                mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForMv();
                     // 获取相似 MV
-                    CommonResult<NetMvInfo> result = MusicServerUtil.getSimilarMvs(currMvMvInfo = netMvInfo);
-                    List<NetMvInfo> netMvInfos = result.data;
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getSimilarMvs(currMvMvInfo = mvInfo);
+                    List<NetMvInfo> mvInfos = result.data;
                     netMvCurrPage = netMvMaxPage = 1;
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(netMvInfo.toSimpleString() + " 的相似 MV"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + " 的相似 MV"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -14115,16 +14116,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
-                    netMvInfos.forEach(mvInfo -> {
-                        globalExecutor.submit(() -> updateCollection(mvInfo));
+                    mvInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        mvInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netMvList);
                             updateRenderer(collectionList);
                             netMvList.repaint();
                             collectionList.repaint();
                         });
-                        netMvListModel.addElement(mvInfo);
+                        netMvListModel.addElement(info);
                     });
                     netMvList.setModel(netMvListModel);
                     netMvBackwardButton.setEnabled(true);
@@ -14153,22 +14154,22 @@ public class MainFrame extends JFrame {
         });
         // 查看视频分集
         netMvVideoEpisodeMenuItem.addActionListener(e -> {
-            NetMvInfo netMvInfo;
+            NetMvInfo mvInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_MV) netMvInfo = netMvList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_MV) mvInfo = netMvList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netMvInfo = (NetMvInfo) collectionList.getSelectedValue();
-            else netMvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+                mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForMv();
                     // 获取视频分集
-                    CommonResult<NetMvInfo> result = MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo = netMvInfo, netMvCurrPage = 1, limit);
-                    List<NetMvInfo> netMvInfos = result.data;
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo = mvInfo, netMvCurrPage = 1, limit);
+                    List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(netMvInfo.toSimpleString() + " 的分集"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + " 的分集"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -14184,16 +14185,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
-                    netMvInfos.forEach(mvInfo -> {
-                        globalExecutor.submit(() -> updateCollection(mvInfo));
+                    mvInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        mvInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netMvList);
                             updateRenderer(collectionList);
                             netMvList.repaint();
                             collectionList.repaint();
                         });
-                        netMvListModel.addElement(mvInfo);
+                        netMvListModel.addElement(info);
                     });
                     netMvList.setModel(netMvListModel);
                     netMvBackwardButton.setEnabled(true);
@@ -14222,23 +14223,23 @@ public class MainFrame extends JFrame {
         });
         // 查看 MV 歌手/发布者
         netMvCreatorMenuItem.addActionListener(e -> {
-            NetMvInfo netMvInfo;
+            NetMvInfo mvInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_MV) netMvInfo = netMvList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_MV) mvInfo = netMvList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netMvInfo = (NetMvInfo) collectionList.getSelectedValue();
-            else netMvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+                mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
-                    if (netMvInfo.isRealMV()) {
+                    if (mvInfo.isRealMV()) {
                         clearRequestForArtist();
                         // 查看歌手
-                        currArtistMvInfo = netMvInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
-                        List<NetArtistInfo> netArtistInfos = result.data;
+                        currArtistMvInfo = mvInfo;
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(mvInfo.getCreatorId(), mvInfo.getSource());
+                        List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(netMvInfo.toSimpleString() + " 的歌手"));
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + " 的歌手"));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -14254,8 +14255,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netArtistList.setModel(emptyListModel);
                         netArtistListModel.clear();
-                        netArtistInfos.forEach(artistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(artistInfo));
+                        artistInfos.forEach(artistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
                             artistInfo.setInvokeLater(() -> {
                                 updateRenderer(netArtistList);
@@ -14280,12 +14281,12 @@ public class MainFrame extends JFrame {
                     } else {
                         clearRequestForUser();
                         // 获取 MV 发布者
-                        currUserMvInfo = netMvInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netMvInfo.getCreatorId(), netMvInfo.getSource());
-                        List<NetUserInfo> netUserInfos = result.data;
+                        currUserMvInfo = mvInfo;
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(mvInfo.getCreatorId(), mvInfo.getSource());
+                        List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(netMvInfo.getName() + " 的发布者"));
+                        netUserTitleLabel.setText(StringUtil.textToHtml(mvInfo.getName() + " 的发布者"));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -14302,8 +14303,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netUserList.setModel(emptyListModel);
                         netUserListModel.clear();
-                        netUserInfos.forEach(userInfo -> {
-                            globalExecutor.submit(() -> updateCollection(userInfo));
+                        userInfos.forEach(userInfo -> {
+                            globalExecutor.execute(() -> updateCollection(userInfo));
                             // 设置图片加载后重绘的事件
                             userInfo.setInvokeLater(() -> {
                                 updateRenderer(netUserList);
@@ -14341,12 +14342,12 @@ public class MainFrame extends JFrame {
         });
         // 查看评论
         netMvCommentMenuItem.addActionListener(e -> {
-            NetMvInfo netMvInfo;
+            NetMvInfo mvInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_MV) netMvInfo = netMvList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) netMvInfo = (NetMvInfo) collectionList.getSelectedValue();
-            else netMvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
-            getComments(netMvInfo, true);
+            if (selectedIndex == TabIndex.NET_MV) mvInfo = netMvList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+            getComments(mvInfo, true);
         });
         // 复制名称
         netMvCopyNameMenuItem.addActionListener(e -> {
@@ -14437,7 +14438,7 @@ public class MainFrame extends JFrame {
                 try {
                     // 搜索榜单并显示榜单列表
                     CommonResult<NetRankingInfo> result = MusicServerUtil.getRankings(netRankingSourceComboBox.getSelectedIndex());
-                    List<NetRankingInfo> netRankingInfos = result.data;
+                    List<NetRankingInfo> rankingInfos = result.data;
 //                        Integer total = result.total;
 //                        netRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     netRankingMaxPage = 1;
@@ -14448,8 +14449,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netRankingList.setModel(emptyListModel);
                     netRankingListModel.clear();
-                    netRankingInfos.forEach(rankingInfo -> {
-                        globalExecutor.submit(() -> updateCollection(rankingInfo));
+                    rankingInfos.forEach(rankingInfo -> {
+                        globalExecutor.execute(() -> updateCollection(rankingInfo));
                         // 设置图片加载后重绘的事件
                         rankingInfo.setInvokeLater(() -> {
                             updateRenderer(netRankingList);
@@ -14498,7 +14499,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForRankingModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForRankingModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRankingModel);
@@ -14759,7 +14760,7 @@ public class MainFrame extends JFrame {
                     rankingCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     rankingCoverAndNameLabel.setText(LOADING_MSG);
                     rankingDescriptionLabel.setText(LOADING_MSG);
-                    GlobalExecutors.imageExecutor.execute(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillRankingInfo(rankingInfo);
                             updateRenderer(netRankingList);
@@ -14807,7 +14808,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForRankingModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForRankingModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRankingModel);
@@ -14892,15 +14893,15 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         netRankingPlayAllMenuItem.addActionListener(e -> {
-            NetRankingInfo netRankingInfo;
+            NetRankingInfo rankingInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RANKING) netRankingInfo = netRankingList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RANKING) rankingInfo = netRankingList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netRankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
-            else netRankingInfo = (NetRankingInfo) itemRecommendList.getSelectedValue();
+                rankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
+            else rankingInfo = (NetRankingInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                        netRankingInfo.getId(), netRankingInfo.getSource(), 1000, 1);
+                        rankingInfo.getId(), rankingInfo.getSource(), 1000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -14909,12 +14910,12 @@ public class MainFrame extends JFrame {
                 playQueue.setModel(emptyListModel);
                 playQueueModel.clear();
                 musicInfos.forEach(musicInfo -> {
-                    globalExecutor.submit(() -> updateCollection(musicInfo));
+                    globalExecutor.execute(() -> updateCollection(musicInfo));
                     playQueueModel.addElement(musicInfo);
                 });
                 playQueue.setModel(playQueueModel);
                 playQueue.setSelectedIndex(0);
-                playExecutor.submit(() -> playSelected(playQueue, true));
+                playExecutor.execute(() -> playSelected(playQueue, true));
             });
         });
         // 收藏榜单
@@ -14960,19 +14961,19 @@ public class MainFrame extends JFrame {
         });
         // 查看评论
         netRankingCommentMenuItem.addActionListener(e -> {
-            NetRankingInfo netRankingInfo;
+            NetRankingInfo rankingInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RANKING) netRankingInfo = netRankingList.getSelectedValue();
-            else netRankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
-            getComments(netRankingInfo, true);
+            if (selectedIndex == TabIndex.NET_RANKING) rankingInfo = netRankingList.getSelectedValue();
+            else rankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
+            getComments(rankingInfo, true);
         });
         // 复制名称
         netRankingCopyNameMenuItem.addActionListener(e -> {
-            NetRankingInfo netRankingInfo;
+            NetRankingInfo rankingInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RANKING) netRankingInfo = netRankingList.getSelectedValue();
-            else netRankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
-            copyToClipboard(netRankingInfo.toSimpleString());
+            if (selectedIndex == TabIndex.NET_RANKING) rankingInfo = netRankingList.getSelectedValue();
+            else rankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
+            copyToClipboard(rankingInfo.toSimpleString());
         });
         // 榜单列表右键菜单项
         netRankingPopupMenu.add(netRankingOpenMenuItem);
@@ -15117,7 +15118,7 @@ public class MainFrame extends JFrame {
                         // 搜索用户并显示用户列表
                         CommonResult<NetUserInfo> result = MusicServerUtil.searchUsers(
                                 netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, limit, netUserCurrPage = 1);
-                        List<NetUserInfo> netUserInfos = result.data;
+                        List<NetUserInfo> userInfos = result.data;
                         Integer total = result.total;
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -15128,8 +15129,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netUserList.setModel(emptyListModel);
                         netUserListModel.clear();
-                        netUserInfos.forEach(userInfo -> {
-                            globalExecutor.submit(() -> updateCollection(userInfo));
+                        userInfos.forEach(userInfo -> {
+                            globalExecutor.execute(() -> updateCollection(userInfo));
                             // 设置图片加载后重绘的事件
                             userInfo.setInvokeLater(() -> {
                                 updateRenderer(netUserList);
@@ -15187,7 +15188,7 @@ public class MainFrame extends JFrame {
                                 : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getArtistId(), currAuthorMusicInfo.getSource())
                                 : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getArtistId(), currAuthorAlbumInfo.getSource())
                                 : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, limit, netUserCurrPage);
-                        List<NetUserInfo> netUserInfos = result.data;
+                        List<NetUserInfo> userInfos = result.data;
                         Integer total = result.total;
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -15197,8 +15198,8 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netUserList.setModel(emptyListModel);
                         netUserListModel.clear();
-                        netUserInfos.forEach(userInfo -> {
-                            globalExecutor.submit(() -> updateCollection(userInfo));
+                        userInfos.forEach(userInfo -> {
+                            globalExecutor.execute(() -> updateCollection(userInfo));
                             // 设置图片加载后重绘的事件
                             userInfo.setInvokeLater(() -> {
                                 updateRenderer(netUserList);
@@ -15248,7 +15249,7 @@ public class MainFrame extends JFrame {
                     netMusicList.setModel(emptyListModel);
                     netMusicListForUserModel.clear();
                     musicInfos.forEach(musicInfo -> {
-                        globalExecutor.submit(() -> updateCollection(musicInfo));
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
                         netMusicListForUserModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListForUserModel);
@@ -15537,7 +15538,7 @@ public class MainFrame extends JFrame {
                     userTagLabel.setText(LOADING_MSG);
                     userDescriptionLabel.setText(LOADING_MSG);
                     userDescriptionLabel.setIcon(icon);
-                    GlobalExecutors.imageExecutor.execute(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         try {
                             MusicServerUtil.fillUserInfo(userInfo);
                             updateRenderer(netUserList);
@@ -15612,7 +15613,7 @@ public class MainFrame extends JFrame {
                         netMusicList.setModel(emptyListModel);
                         netMusicListForUserModel.clear();
                         musicInfos.forEach(musicInfo -> {
-                            globalExecutor.submit(() -> updateCollection(musicInfo));
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
                             netMusicListForUserModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForUserModel);
@@ -15697,15 +15698,15 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         netUserPlayAllMenuItem.addActionListener(e -> {
-            NetUserInfo netUserInfo;
+            NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
-            else netUserInfo = (NetUserInfo) itemRecommendList.getSelectedValue();
+                userInfo = (NetUserInfo) collectionList.getSelectedValue();
+            else userInfo = (NetUserInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                        netUserRecordTypeComboBox.getSelectedIndex(), netUserInfo, 10000, 1);
+                        netUserRecordTypeComboBox.getSelectedIndex(), userInfo, 10000, 1);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -15714,12 +15715,12 @@ public class MainFrame extends JFrame {
                 playQueue.setModel(emptyListModel);
                 playQueueModel.clear();
                 musicInfos.forEach(musicInfo -> {
-                    globalExecutor.submit(() -> updateCollection(musicInfo));
+                    globalExecutor.execute(() -> updateCollection(musicInfo));
                     playQueueModel.addElement(musicInfo);
                 });
                 playQueue.setModel(playQueueModel);
                 playQueue.setSelectedIndex(0);
-                playExecutor.submit(() -> playSelected(playQueue, true));
+                playExecutor.execute(() -> playSelected(playQueue, true));
             });
         });
         // 收藏用户
@@ -15765,20 +15766,20 @@ public class MainFrame extends JFrame {
         });
         // 查看用户歌单
         netUserPlaylistMenuItem.addActionListener(e -> {
-            NetUserInfo netUserInfo;
+            NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
-            else netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
+            else userInfo = (NetUserInfo) collectionList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForPlaylist();
                     // 搜索用户歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistUserInfo = netUserInfo, limit, netPlaylistCurrPage = 1);
-                    List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistUserInfo = userInfo, limit, netPlaylistCurrPage = 1);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -15794,8 +15795,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netPlaylistList.setModel(emptyListModel);
                     netPlaylistListModel.clear();
-                    netPlaylistInfos.forEach(playlistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(playlistInfo));
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
                         playlistInfo.setInvokeLater(() -> {
                             updateRenderer(netPlaylistList);
@@ -15832,20 +15833,20 @@ public class MainFrame extends JFrame {
         });
         // 查看用户专辑
         netUserAlbumMenuItem.addActionListener(e -> {
-            NetUserInfo netUserInfo;
+            NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
-            else netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
+            else userInfo = (NetUserInfo) collectionList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumUserInfo = netUserInfo, limit, netAlbumCurrPage = 1);
-                    List<NetAlbumInfo> netAlbumInfos = result.data;
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumUserInfo = userInfo, limit, netAlbumCurrPage = 1);
+                    List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -15861,8 +15862,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netAlbumList.setModel(emptyListModel);
                     netAlbumListModel.clear();
-                    netAlbumInfos.forEach(albumInfo -> {
-                        globalExecutor.submit(() -> updateCollection(albumInfo));
+                    albumInfos.forEach(albumInfo -> {
+                        globalExecutor.execute(() -> updateCollection(albumInfo));
                         // 设置图片加载后重绘的事件
                         albumInfo.setInvokeLater(() -> {
                             updateRenderer(netAlbumList);
@@ -15899,19 +15900,19 @@ public class MainFrame extends JFrame {
         });
         // 查看用户电台
         netUserRadioMenuItem.addActionListener(e -> {
-            NetUserInfo netUserInfo;
+            NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
-            else netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
+            else userInfo = (NetUserInfo) collectionList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtil.getUserRadios(currRadioUserInfo = netUserInfo, limit, netRadioCurrPage = 1);
-                    List<NetRadioInfo> netRadioInfos = result.data;
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getUserRadios(currRadioUserInfo = userInfo, limit, netRadioCurrPage = 1);
+                    List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的电台"));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -15928,8 +15929,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netRadioList.setModel(emptyListModel);
                     netRadioListModel.clear();
-                    netRadioInfos.forEach(radioInfo -> {
-                        globalExecutor.submit(() -> updateCollection(radioInfo));
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
                         // 设置图片加载后重绘的事件
                         radioInfo.setInvokeLater(() -> {
                             updateRenderer(netRadioList);
@@ -15966,22 +15967,22 @@ public class MainFrame extends JFrame {
         });
         // 查看用户视频
         netUserVideoMenuItem.addActionListener(e -> {
-            NetUserInfo netUserInfo;
+            NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
-            else netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
+            else userInfo = (NetUserInfo) collectionList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForMv();
                     // 获取用户视频
-                    CommonResult<NetMvInfo> result = MusicServerUtil.getUserVideos(currMvUserInfo = netUserInfo,
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getUserVideos(currMvUserInfo = userInfo,
                             netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage = 1, limit, cursor = "");
-                    List<NetMvInfo> netMvInfos = result.data;
+                    List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     cursor = result.cursor;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的视频"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的视频"));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -15993,12 +15994,12 @@ public class MainFrame extends JFrame {
                     netMvLeftBox.add(netMvCountPanel);
                     netMvCountPanel.setVisible(true);
                     netMvSourceComboBox.setVisible(false);
-                    netMvSortTypeComboBox.setVisible(netUserInfo.fromBI());
+                    netMvSortTypeComboBox.setVisible(userInfo.fromBI());
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMvList.setModel(emptyListModel);
                     netMvListModel.clear();
-                    netMvInfos.forEach(mvInfo -> {
-                        globalExecutor.submit(() -> updateCollection(mvInfo));
+                    mvInfos.forEach(mvInfo -> {
+                        globalExecutor.execute(() -> updateCollection(mvInfo));
                         // 设置图片加载后重绘的事件
                         mvInfo.setInvokeLater(() -> {
                             updateRenderer(netMvList);
@@ -16035,20 +16036,20 @@ public class MainFrame extends JFrame {
         });
         // 查看用户关注
         netUserFollowMenuItem.addActionListener(e -> {
-            NetUserInfo netUserInfo;
+            NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
-            else netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
+            else userInfo = (NetUserInfo) collectionList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取用户关注
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFollows(currFollowUserUserInfo = netUserInfo, limit, netUserCurrPage = 1);
-                    List<NetUserInfo> netUserInfos = result.data;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFollows(currFollowUserUserInfo = userInfo, limit, netUserCurrPage = 1);
+                    List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的关注"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的关注"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -16065,16 +16066,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        userInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netUserList);
                             updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
-                        netUserListModel.addElement(userInfo);
+                        netUserListModel.addElement(info);
                     });
                     netUserList.setModel(netUserListModel);
                     netUserBackwardButton.setEnabled(true);
@@ -16103,20 +16104,20 @@ public class MainFrame extends JFrame {
         });
         // 查看用户粉丝
         netUserFollowedMenuItem.addActionListener(e -> {
-            NetUserInfo netUserInfo;
+            NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) netUserInfo = netUserList.getSelectedValue();
-            else netUserInfo = (NetUserInfo) collectionList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
+            else userInfo = (NetUserInfo) collectionList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取用户粉丝
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFolloweds(currFollowedUserUserInfo = netUserInfo, limit, netUserCurrPage = 1);
-                    List<NetUserInfo> netUserInfos = result.data;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFolloweds(currFollowedUserUserInfo = userInfo, limit, netUserCurrPage = 1);
+                    List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(netUserInfo.getName() + " 的粉丝"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的粉丝"));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -16133,16 +16134,16 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(info -> {
+                        globalExecutor.execute(() -> updateCollection(info));
                         // 设置图片加载后重绘的事件
-                        userInfo.setInvokeLater(() -> {
+                        info.setInvokeLater(() -> {
                             updateRenderer(netUserList);
                             updateRenderer(collectionList);
                             netUserList.repaint();
                             collectionList.repaint();
                         });
-                        netUserListModel.addElement(userInfo);
+                        netUserListModel.addElement(info);
                     });
                     netUserList.setModel(netUserListModel);
                     netUserBackwardButton.setEnabled(true);
@@ -16246,7 +16247,7 @@ public class MainFrame extends JFrame {
                 CommonResult<NetCommentInfo> result = MusicServerUtil.getComments(
                         currCommentObjectInfo = info, (String) netCommentTypeComboBox.getSelectedItem(),
                         commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage, first ? cursor = "" : cursor);
-                List<NetCommentInfo> netCommentInfos = result.data;
+                List<NetCommentInfo> commentInfos = result.data;
                 Integer total = result.total;
                 cursor = result.cursor;
                 netCommentMaxPage = Math.max(total % commentLimit == 0 ? total / commentLimit : total / commentLimit + 1, 1);
@@ -16264,7 +16265,7 @@ public class MainFrame extends JFrame {
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                 netCommentList.setModel(emptyListModel);
                 netCommentListModel.clear();
-                netCommentInfos.forEach(commentInfo -> {
+                commentInfos.forEach(commentInfo -> {
                     // 设置图片加载后重绘的事件
                     commentInfo.setInvokeLater(() -> {
                         updateRenderer(netCommentList);
@@ -16319,7 +16320,7 @@ public class MainFrame extends JFrame {
             try {
                 // 获取乐谱并显示乐谱列表
                 CommonResult<NetSheetInfo> result = MusicServerUtil.getSheets(currSheetMusicInfo = info);
-                List<NetSheetInfo> netSheetInfos = result.data;
+                List<NetSheetInfo> sheetInfos = result.data;
                 netSheetCurrPage = netSheetMaxPage = 1;
                 // 更新标题和数量显示
                 netSheetTitleLabel.setText(StringUtil.textToHtml(info.toSimpleString() + " 的乐谱"));
@@ -16328,7 +16329,7 @@ public class MainFrame extends JFrame {
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                 netSheetList.setModel(emptyListModel);
                 netSheetListModel.clear();
-                netSheetInfos.forEach(SheetInfo -> {
+                sheetInfos.forEach(SheetInfo -> {
                     // 设置图片加载后重绘的事件
                     SheetInfo.setInvokeLater(() -> {
                         updateRenderer(netSheetList);
@@ -16560,13 +16561,13 @@ public class MainFrame extends JFrame {
         });
         // 复制评论
         netCommentCopyMenuItem.addActionListener(e -> {
-            NetCommentInfo netCommentInfo = netCommentList.getSelectedValue();
-            copyToClipboard(netCommentInfo.toSimpleString());
+            NetCommentInfo commentInfo = netCommentList.getSelectedValue();
+            copyToClipboard(commentInfo.toSimpleString());
         });
         // 导出用户头像
         netCommentSaveProfileMenuItem.addActionListener(e -> {
-            NetCommentInfo netCommentInfo = netCommentList.getSelectedValue();
-            if (netCommentInfo.hasProfileUrl()) {
+            NetCommentInfo commentInfo = netCommentList.getSelectedValue();
+            if (commentInfo.hasProfileUrl()) {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("保存图片");
                 ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
@@ -16577,21 +16578,21 @@ public class MainFrame extends JFrame {
                 Platform.runLater(() -> {
                     File outputFile = fileChooser.showSaveDialog(null);
                     if (outputFile != null) {
-                        ImageUtil.toFile(netCommentInfo.getProfileUrl(), outputFile);
+                        ImageUtil.toFile(commentInfo.getProfileUrl(), outputFile);
                     }
                 });
             }
         });
         // 查看用户
         netCommentUserMenuItem.addActionListener(e -> {
-            NetCommentInfo netCommentInfo = netCommentList.getSelectedValue();
+            NetCommentInfo commentInfo = netCommentList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForUser();
                     // 获取评论用户
-                    currUserCommentInfo = netCommentInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(netCommentInfo.getUserId(), netCommentInfo.getSource());
-                    List<NetUserInfo> netUserInfos = result.data;
+                    currUserCommentInfo = commentInfo;
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(commentInfo.getUserId(), commentInfo.getSource());
+                    List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
                     netUserTitleLabel.setText("发起评论的用户");
@@ -16611,8 +16612,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netUserList.setModel(emptyListModel);
                     netUserListModel.clear();
-                    netUserInfos.forEach(userInfo -> {
-                        globalExecutor.submit(() -> updateCollection(userInfo));
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
                         // 设置图片加载后重绘的事件
                         userInfo.setInvokeLater(() -> {
                             updateRenderer(netUserList);
@@ -16652,17 +16653,17 @@ public class MainFrame extends JFrame {
         });
         // 查看用户歌单
         netCommentPlaylistMenuItem.addActionListener(e -> {
-            NetCommentInfo netCommentInfo = netCommentList.getSelectedValue();
+            NetCommentInfo commentInfo = netCommentList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForPlaylist();
                     // 搜索用户歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo = netCommentInfo, limit, netPlaylistCurrPage = 1);
-                    List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo = commentInfo, limit, netPlaylistCurrPage = 1);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(netCommentInfo.getUsername() + " 的歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + " 的歌单"));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -16678,8 +16679,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netPlaylistList.setModel(emptyListModel);
                     netPlaylistListModel.clear();
-                    netPlaylistInfos.forEach(playlistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(playlistInfo));
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
                         playlistInfo.setInvokeLater(() -> {
                             updateRenderer(netPlaylistList);
@@ -16719,17 +16720,17 @@ public class MainFrame extends JFrame {
         });
         // 查看用户专辑
         netCommentAlbumMenuItem.addActionListener(e -> {
-            NetCommentInfo netCommentInfo = netCommentList.getSelectedValue();
+            NetCommentInfo commentInfo = netCommentList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
                     clearRequestForAlbum();
                     // 搜索用户专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumCommentInfo = netCommentInfo, limit, netAlbumCurrPage = 1);
-                    List<NetAlbumInfo> netAlbumInfos = result.data;
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumCommentInfo = commentInfo, limit, netAlbumCurrPage = 1);
+                    List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(netCommentInfo.getUsername() + " 的专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + " 的专辑"));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -16745,8 +16746,8 @@ public class MainFrame extends JFrame {
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netAlbumList.setModel(emptyListModel);
                     netAlbumListModel.clear();
-                    netAlbumInfos.forEach(albumInfo -> {
-                        globalExecutor.submit(() -> updateCollection(albumInfo));
+                    albumInfos.forEach(albumInfo -> {
+                        globalExecutor.execute(() -> updateCollection(albumInfo));
                         // 设置图片加载后重绘的事件
                         albumInfo.setInvokeLater(() -> {
                             updateRenderer(netAlbumList);
@@ -16984,8 +16985,8 @@ public class MainFrame extends JFrame {
         // 查看乐谱
         netSheetBrowseMenuItem.addActionListener(e -> {
             try {
-                NetSheetInfo netSheetInfo = netSheetList.getSelectedValue();
-//                CommonResult<String> results = MusicServerUtils.getSheetImgUrls(netSheetInfo);
+                NetSheetInfo sheetInfo = netSheetList.getSelectedValue();
+//                CommonResult<String> results = MusicServerUtils.getSheetImgUrls(sheetInfo);
 //                List<String> imgUrls = results.data;
 //                Integer total = results.total;
 //                if (imgUrls.isEmpty()) {
@@ -16995,7 +16996,7 @@ public class MainFrame extends JFrame {
                 imageViewDialog = new ImageViewDialog(THIS, 30) {
                     @Override
                     public CommonResult<String> requestImgUrls(int pn, int limit, String cursor) {
-                        return MusicServerUtil.getSheetImgUrls(netSheetInfo);
+                        return MusicServerUtil.getSheetImgUrls(sheetInfo);
                     }
 
                     @Override
@@ -17018,8 +17019,8 @@ public class MainFrame extends JFrame {
         });
         // 复制乐谱名称
         netSheetCopyNameMenuItem.addActionListener(e -> {
-            NetSheetInfo netSheetInfo = netSheetList.getSelectedValue();
-            copyToClipboard(netSheetInfo.toString());
+            NetSheetInfo sheetInfo = netSheetList.getSelectedValue();
+            copyToClipboard(sheetInfo.toString());
         });
         // 乐谱列表右键菜单项
         netSheetPopupMenu.add(netSheetBrowseMenuItem);
@@ -17086,7 +17087,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForPlaylistRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForPlaylistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistRecommendModel);
@@ -17113,7 +17114,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForAlbumRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForAlbumRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumRecommendModel);
@@ -17140,7 +17141,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForArtistRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForArtistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistRecommendModel);
@@ -17168,7 +17169,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRadioRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForRadioRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioRecommendModel);
@@ -17201,7 +17202,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                        List<NetPlaylistInfo> playlistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
@@ -17210,16 +17211,16 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         itemRecommendList.setModel(emptyListModel);
                         playlistRecommendListModel.clear();
-                        netPlaylistInfos.forEach(netPlaylistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
+                        playlistInfos.forEach(playlistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(playlistInfo));
                             // 设置图片加载后重绘的事件
-                            netPlaylistInfo.setInvokeLater(() -> {
+                            playlistInfo.setInvokeLater(() -> {
                                 updateRenderer(itemRecommendList);
                                 updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
-                            playlistRecommendListModel.addElement(netPlaylistInfo);
+                            playlistRecommendListModel.addElement(playlistInfo);
                         });
                         itemRecommendList.setModel(playlistRecommendListModel);
                         itemRecommendScrollPane.setVValue(0);
@@ -17250,7 +17251,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                        List<NetPlaylistInfo> playlistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
@@ -17259,16 +17260,16 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         itemRecommendList.setModel(emptyListModel);
                         playlistRecommendListModel.clear();
-                        netPlaylistInfos.forEach(netPlaylistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
+                        playlistInfos.forEach(playlistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(playlistInfo));
                             // 设置图片加载后重绘的事件
-                            netPlaylistInfo.setInvokeLater(() -> {
+                            playlistInfo.setInvokeLater(() -> {
                                 updateRenderer(itemRecommendList);
                                 updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
-                            playlistRecommendListModel.addElement(netPlaylistInfo);
+                            playlistRecommendListModel.addElement(playlistInfo);
                         });
                         itemRecommendList.setModel(playlistRecommendListModel);
                         itemRecommendScrollPane.setVValue(0);
@@ -17299,7 +17300,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetMusicInfo> netMusicInfos = result.data;
+                        List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
@@ -17308,7 +17309,7 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
                         netMusicRecommendListModel.clear();
-                        netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
+                        musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                         netMusicList.setModel(netMusicRecommendListModel);
                         netMusicScrollPane.setVValue(0);
                         if (netMusicRecommendListModel.isEmpty()) {
@@ -17338,7 +17339,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetMusicInfo> netMusicInfos = result.data;
+                        List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
@@ -17347,7 +17348,7 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
                         netMusicRecommendListModel.clear();
-                        netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
+                        musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                         netMusicList.setModel(netMusicRecommendListModel);
                         netMusicScrollPane.setVValue(0);
                         if (netMusicRecommendListModel.isEmpty()) {
@@ -17377,7 +17378,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetAlbumInfo> netAlbumInfos = result.data;
+                        List<NetAlbumInfo> albumInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -17387,16 +17388,16 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         itemRecommendList.setModel(emptyListModel);
                         albumRecommendListModel.clear();
-                        netAlbumInfos.forEach(netAlbumInfo -> {
-                            globalExecutor.submit(() -> updateCollection(netAlbumInfo));
+                        albumInfos.forEach(albumInfo -> {
+                            globalExecutor.execute(() -> updateCollection(albumInfo));
                             // 设置图片加载后重绘的事件
-                            netAlbumInfo.setInvokeLater(() -> {
+                            albumInfo.setInvokeLater(() -> {
                                 updateRenderer(itemRecommendList);
                                 updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
-                            albumRecommendListModel.addElement(netAlbumInfo);
+                            albumRecommendListModel.addElement(albumInfo);
                         });
                         itemRecommendList.setModel(albumRecommendListModel);
                         itemRecommendScrollPane.setVValue(0);
@@ -17427,7 +17428,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetArtistInfo> netArtistInfos = result.data;
+                        List<NetArtistInfo> artistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -17437,16 +17438,16 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         itemRecommendList.setModel(emptyListModel);
                         artistRecommendListModel.clear();
-                        netArtistInfos.forEach(netArtistInfo -> {
-                            globalExecutor.submit(() -> updateCollection(netArtistInfo));
+                        artistInfos.forEach(artistInfo -> {
+                            globalExecutor.execute(() -> updateCollection(artistInfo));
                             // 设置图片加载后重绘的事件
-                            netArtistInfo.setInvokeLater(() -> {
+                            artistInfo.setInvokeLater(() -> {
                                 updateRenderer(itemRecommendList);
                                 updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
-                            artistRecommendListModel.addElement(netArtistInfo);
+                            artistRecommendListModel.addElement(artistInfo);
                         });
                         itemRecommendList.setModel(artistRecommendListModel);
                         itemRecommendScrollPane.setVValue(0);
@@ -17477,7 +17478,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(
                                 netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage);
-                        List<NetRadioInfo> netRadioInfos = result.data;
+                        List<NetRadioInfo> radioInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -17487,16 +17488,16 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         itemRecommendList.setModel(emptyListModel);
                         radioRecommendListModel.clear();
-                        netRadioInfos.forEach(netRadioInfo -> {
-                            globalExecutor.submit(() -> updateCollection(netRadioInfo));
+                        radioInfos.forEach(radioInfo -> {
+                            globalExecutor.execute(() -> updateCollection(radioInfo));
                             // 设置图片加载后重绘的事件
-                            netRadioInfo.setInvokeLater(() -> {
+                            radioInfo.setInvokeLater(() -> {
                                 updateRenderer(itemRecommendList);
                                 updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
-                            radioRecommendListModel.addElement(netRadioInfo);
+                            radioRecommendListModel.addElement(radioInfo);
                         });
                         itemRecommendList.setModel(radioRecommendListModel);
                         itemRecommendScrollPane.setVValue(0);
@@ -17527,7 +17528,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetRadioInfo> netRadioInfos = result.data;
+                        List<NetRadioInfo> radioInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -17537,16 +17538,16 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         itemRecommendList.setModel(emptyListModel);
                         radioRecommendListModel.clear();
-                        netRadioInfos.forEach(netRadioInfo -> {
-                            globalExecutor.submit(() -> updateCollection(netRadioInfo));
+                        radioInfos.forEach(radioInfo -> {
+                            globalExecutor.execute(() -> updateCollection(radioInfo));
                             // 设置图片加载后重绘的事件
-                            netRadioInfo.setInvokeLater(() -> {
+                            radioInfo.setInvokeLater(() -> {
                                 updateRenderer(itemRecommendList);
                                 updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
-                            radioRecommendListModel.addElement(netRadioInfo);
+                            radioRecommendListModel.addElement(radioInfo);
                         });
                         itemRecommendList.setModel(radioRecommendListModel);
                         itemRecommendScrollPane.setVValue(0);
@@ -17577,7 +17578,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetMusicInfo> netMusicInfos = result.data;
+                        List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
@@ -17586,7 +17587,7 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
                         netMusicRecommendListModel.clear();
-                        netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
+                        musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                         netMusicList.setModel(netMusicRecommendListModel);
                         netMusicScrollPane.setVValue(0);
                         if (netMusicRecommendListModel.isEmpty()) {
@@ -17616,7 +17617,7 @@ public class MainFrame extends JFrame {
                     try {
                         CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
-                        List<NetMvInfo> netMvInfos = result.data;
+                        List<NetMvInfo> mvInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
@@ -17626,16 +17627,16 @@ public class MainFrame extends JFrame {
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         itemRecommendList.setModel(emptyListModel);
                         mvRecommendListModel.clear();
-                        netMvInfos.forEach(netMvInfo -> {
-                            globalExecutor.submit(() -> updateCollection(netMvInfo));
+                        mvInfos.forEach(mvInfo -> {
+                            globalExecutor.execute(() -> updateCollection(mvInfo));
                             // 设置图片加载后重绘的事件
-                            netMvInfo.setInvokeLater(() -> {
+                            mvInfo.setInvokeLater(() -> {
                                 updateRenderer(itemRecommendList);
                                 updateRenderer(collectionList);
                                 itemRecommendList.repaint();
                                 collectionList.repaint();
                             });
-                            mvRecommendListModel.addElement(netMvInfo);
+                            mvRecommendListModel.addElement(mvInfo);
                         });
                         itemRecommendList.setModel(mvRecommendListModel);
                         itemRecommendScrollPane.setVValue(0);
@@ -17821,7 +17822,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                    List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -17831,16 +17832,16 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     playlistRecommendListModel.clear();
-                    netPlaylistInfos.forEach(netPlaylistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
-                        netPlaylistInfo.setInvokeLater(() -> {
+                        playlistInfo.setInvokeLater(() -> {
                             updateRenderer(itemRecommendList);
                             updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
-                        playlistRecommendListModel.addElement(netPlaylistInfo);
+                        playlistRecommendListModel.addElement(playlistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
                     itemRecommendScrollPane.setVValue(0);
@@ -17886,7 +17887,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetPlaylistInfo> netPlaylistInfos = result.data;
+                    List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -17896,16 +17897,16 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     playlistRecommendListModel.clear();
-                    netPlaylistInfos.forEach(netPlaylistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(netPlaylistInfo));
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
                         // 设置图片加载后重绘的事件
-                        netPlaylistInfo.setInvokeLater(() -> {
+                        playlistInfo.setInvokeLater(() -> {
                             updateRenderer(itemRecommendList);
                             updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
-                        playlistRecommendListModel.addElement(netPlaylistInfo);
+                        playlistRecommendListModel.addElement(playlistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
                     itemRecommendScrollPane.setVValue(0);
@@ -17950,7 +17951,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetMusicInfo> netMusicInfos = result.data;
+                    List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -17960,7 +17961,7 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     netMusicList.setModel(emptyListModel);
                     netMusicRecommendListModel.clear();
-                    netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
+                    musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
                     netMusicScrollPane.setVValue(0);
                     // 删掉歌单列表/专辑列表
@@ -18004,7 +18005,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetMusicInfo> netMusicInfos = result.data;
+                    List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -18014,7 +18015,7 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     netMusicList.setModel(emptyListModel);
                     netMusicRecommendListModel.clear();
-                    netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
+                    musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
                     netMusicScrollPane.setVValue(0);
                     // 删掉歌单列表/专辑列表
@@ -18058,7 +18059,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetAlbumInfo> netAlbumInfos = result.data;
+                    List<NetAlbumInfo> albumInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -18068,16 +18069,16 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     albumRecommendListModel.clear();
-                    netAlbumInfos.forEach(netAlbumInfo -> {
-                        globalExecutor.submit(() -> updateCollection(netAlbumInfo));
+                    albumInfos.forEach(albumInfo -> {
+                        globalExecutor.execute(() -> updateCollection(albumInfo));
                         // 设置图片加载后重绘的事件
-                        netAlbumInfo.setInvokeLater(() -> {
+                        albumInfo.setInvokeLater(() -> {
                             updateRenderer(itemRecommendList);
                             updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
-                        albumRecommendListModel.addElement(netAlbumInfo);
+                        albumRecommendListModel.addElement(albumInfo);
                     });
                     itemRecommendList.setModel(albumRecommendListModel);
                     itemRecommendScrollPane.setVValue(0);
@@ -18121,7 +18122,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetArtistInfo> netArtistInfos = result.data;
+                    List<NetArtistInfo> artistInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -18131,16 +18132,16 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     artistRecommendListModel.clear();
-                    netArtistInfos.forEach(netArtistInfo -> {
-                        globalExecutor.submit(() -> updateCollection(netArtistInfo));
+                    artistInfos.forEach(artistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(artistInfo));
                         // 设置图片加载后重绘的事件
-                        netArtistInfo.setInvokeLater(() -> {
+                        artistInfo.setInvokeLater(() -> {
                             updateRenderer(itemRecommendList);
                             updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
-                        artistRecommendListModel.addElement(netArtistInfo);
+                        artistRecommendListModel.addElement(artistInfo);
                     });
                     itemRecommendList.setModel(artistRecommendListModel);
                     itemRecommendScrollPane.setVValue(0);
@@ -18176,7 +18177,7 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage = 1);
-                    List<NetRadioInfo> netRadioInfos = result.data;
+                    List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -18186,16 +18187,16 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     radioRecommendListModel.clear();
-                    netRadioInfos.forEach(netRadioInfo -> {
-                        globalExecutor.submit(() -> updateCollection(netRadioInfo));
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
                         // 设置图片加载后重绘的事件
-                        netRadioInfo.setInvokeLater(() -> {
+                        radioInfo.setInvokeLater(() -> {
                             updateRenderer(itemRecommendList);
                             updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
-                        radioRecommendListModel.addElement(netRadioInfo);
+                        radioRecommendListModel.addElement(radioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
                     itemRecommendScrollPane.setVValue(0);
@@ -18239,7 +18240,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetRadioInfo> netRadioInfos = result.data;
+                    List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -18249,16 +18250,16 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     radioRecommendListModel.clear();
-                    netRadioInfos.forEach(netRadioInfo -> {
-                        globalExecutor.submit(() -> updateCollection(netRadioInfo));
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
                         // 设置图片加载后重绘的事件
-                        netRadioInfo.setInvokeLater(() -> {
+                        radioInfo.setInvokeLater(() -> {
                             updateRenderer(itemRecommendList);
                             updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
-                        radioRecommendListModel.addElement(netRadioInfo);
+                        radioRecommendListModel.addElement(radioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
                     itemRecommendScrollPane.setVValue(0);
@@ -18302,7 +18303,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetMusicInfo> netMusicInfos = result.data;
+                    List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -18312,7 +18313,7 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     netMusicList.setModel(emptyListModel);
                     netMusicRecommendListModel.clear();
-                    netMusicInfos.forEach(netMusicInfo -> netMusicRecommendListModel.addElement(netMusicInfo));
+                    musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
                     netMusicScrollPane.setVValue(0);
                     // 删掉歌单列表/专辑列表
@@ -18357,7 +18358,7 @@ public class MainFrame extends JFrame {
 
                     CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
                             netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
-                    List<NetMvInfo> netMvInfos = result.data;
+                    List<NetMvInfo> mvInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 更新数量显示
@@ -18367,16 +18368,16 @@ public class MainFrame extends JFrame {
                     recommendCountPanel.setVisible(true);
                     itemRecommendList.setModel(emptyListModel);
                     mvRecommendListModel.clear();
-                    netMvInfos.forEach(netMvInfo -> {
-                        globalExecutor.submit(() -> updateCollection(netMvInfo));
+                    mvInfos.forEach(mvInfo -> {
+                        globalExecutor.execute(() -> updateCollection(mvInfo));
                         // 设置图片加载后重绘的事件
-                        netMvInfo.setInvokeLater(() -> {
+                        mvInfo.setInvokeLater(() -> {
                             updateRenderer(itemRecommendList);
                             updateRenderer(collectionList);
                             itemRecommendList.repaint();
                             collectionList.repaint();
                         });
-                        mvRecommendListModel.addElement(netMvInfo);
+                        mvRecommendListModel.addElement(mvInfo);
                     });
                     itemRecommendList.setModel(mvRecommendListModel);
                     itemRecommendScrollPane.setVValue(0);
@@ -18635,7 +18636,7 @@ public class MainFrame extends JFrame {
                         recommendItemTagLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setVisible(true);
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillPlaylistInfo(playlistInfo);
                                 updateRenderer(itemRecommendList);
@@ -18687,7 +18688,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForPlaylistRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForPlaylistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistRecommendModel);
@@ -18731,7 +18732,7 @@ public class MainFrame extends JFrame {
                         recommendItemTagLabel.setText("");
                         recommendItemTagLabel.setVisible(false);
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillAlbumInfo(albumInfo);
                                 updateRenderer(itemRecommendList);
@@ -18780,7 +18781,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForAlbumRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForAlbumRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumRecommendModel);
@@ -18824,7 +18825,7 @@ public class MainFrame extends JFrame {
                         recommendItemTagLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setVisible(true);
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillArtistInfo(artistInfo);
                                 updateRenderer(itemRecommendList);
@@ -18876,7 +18877,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForArtistRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForArtistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistRecommendModel);
@@ -18920,7 +18921,7 @@ public class MainFrame extends JFrame {
                         recommendItemTagLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setVisible(true);
                         recommendItemDescriptionLabel.setText(LOADING_MSG);
-                        GlobalExecutors.imageExecutor.execute(() -> {
+                        GlobalExecutors.requestExecutor.execute(() -> {
                             try {
                                 MusicServerUtil.fillRadioInfo(radioInfo);
                                 updateRenderer(itemRecommendList);
@@ -18973,7 +18974,7 @@ public class MainFrame extends JFrame {
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRadioRecommendModel.clear();
                             musicInfos.forEach(musicInfo -> {
-                                globalExecutor.submit(() -> updateCollection(musicInfo));
+                                globalExecutor.execute(() -> updateCollection(musicInfo));
                                 netMusicListForRadioRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioRecommendModel);
@@ -19248,7 +19249,7 @@ public class MainFrame extends JFrame {
                         restartTaskMenuItem.setEnabled(false);
                         Task t = tasks.get(0);
                         downloadNextPlayMenuItem.setEnabled(t.isMusic());
-                        downloadEditInfoMenuItem.setEnabled(t.isFinished() && t.isMusic() && t.getNetMusicInfo().isMp3());
+                        downloadEditInfoMenuItem.setEnabled(t.isFinished() && t.isMusic() && t.getMusicInfo().isMp3());
                         for (Task task : tasks) {
                             if (task.isProcessing()) cancelTaskMenuItem.setEnabled(true);
                             else restartTaskMenuItem.setEnabled(true);
@@ -19263,7 +19264,7 @@ public class MainFrame extends JFrame {
         downloadPlayMenuItem.addActionListener(e -> {
             Task task = downloadList.getSelectedValue();
             if (task.isFinished()) {
-                if (task.isMusic()) playExecutor.submit(() -> playSelected(downloadList, false));
+                if (task.isMusic()) playExecutor.execute(() -> playSelected(downloadList, false));
                 else playMv(MvCompSourceType.DOWNLOAD_LIST);
             } else {
                 new TipDialog(THIS, WAIT_FOR_TASK_COMPLETED_MSG).showDialog();
@@ -19285,7 +19286,7 @@ public class MainFrame extends JFrame {
             if (task.isMusic()) {
                 AudioFile file = new AudioFile(task.getDest());
                 if (file.exists()) {
-                    MusicUtil.fillAudioFileInfo(file);
+                    MediaUtil.fillAudioFileInfo(file);
                     editInfo(file);
                 } else new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
             }
@@ -19320,7 +19321,7 @@ public class MainFrame extends JFrame {
                 FileUtil.delete(task.getDest());
                 // 顺便删除歌词文件
                 if (!task.isMusic()) continue;
-                FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + task.getNetMusicInfo().toSimpleLrcFileName());
+                FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + task.getMusicInfo().toSimpleLrcFileName());
             }
             downloadList.setModel(downloadListModel);
             new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
@@ -19528,7 +19529,7 @@ public class MainFrame extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    playExecutor.submit(() -> playSelected(playQueue, false));
+                    playExecutor.execute(() -> playSelected(playQueue, false));
                 }
             }
         });
@@ -19537,7 +19538,7 @@ public class MainFrame extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 // 鼠标左键双击播放
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    playExecutor.submit(() -> playSelected(playQueue, false));
+                    playExecutor.execute(() -> playSelected(playQueue, false));
                 }
                 // 鼠标右键弹出菜单
                 else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -19603,7 +19604,7 @@ public class MainFrame extends JFrame {
         });
         // 播放菜单项
         playQueuePlayMenuItem.addActionListener(e -> {
-            playExecutor.submit(() -> playSelected(playQueue, false));
+            playExecutor.execute(() -> playSelected(playQueue, false));
         });
         // 下一首播放
         playQueueNextPlayMenuItem.addActionListener(e -> nextPlay(playQueue));
@@ -19762,8 +19763,8 @@ public class MainFrame extends JFrame {
             String lrcPath = "";
             // 在线音乐先将歌词存为临时文件再查看
             if (player.loadedNetMusic()) {
-                NetMusicInfo netMusicInfo = player.getNetMusicInfo();
-                lrcPath = new File(SimplePath.CACHE_PATH + netMusicInfo.toLrcFileName()).getAbsolutePath();
+                NetMusicInfo musicInfo = player.getMusicInfo();
+                lrcPath = new File(SimplePath.CACHE_PATH + musicInfo.toLrcFileName()).getAbsolutePath();
                 FileUtil.writeStr(lrcStr, lrcPath, false);
             }
             // 本地音乐直接打开 lrc 文件
@@ -19779,19 +19780,19 @@ public class MainFrame extends JFrame {
             String lrcPath = "";
             // 在线音乐先将歌词翻译存为临时文件再查看
             if (player.loadedNetMusic()) {
-                NetMusicInfo netMusicInfo = player.getNetMusicInfo();
-                lrcPath = new File(SimplePath.CACHE_PATH + netMusicInfo.toLrcTransFileName()).getAbsolutePath();
+                NetMusicInfo musicInfo = player.getMusicInfo();
+                lrcPath = new File(SimplePath.CACHE_PATH + musicInfo.toLrcTransFileName()).getAbsolutePath();
                 FileUtil.writeStr(transStr, lrcPath, false);
             }
             TerminateUtil.notepad(lrcPath);
         });
         // 下载歌词文件
         downloadLrcMenuItem.addActionListener(e -> {
-            downloadLrc(player.getNetMusicInfo());
+            downloadLrc(player.getMusicInfo());
         });
         // 下载歌词翻译文件
         downloadLrcTransMenuItem.addActionListener(e -> {
-            downloadLrcTrans(player.getNetMusicInfo());
+            downloadLrcTrans(player.getMusicInfo());
         });
         currLrcOffsetMenuItem.setEnabled(false);
 
@@ -19863,11 +19864,11 @@ public class MainFrame extends JFrame {
                     locateLrcMenuItem.setEnabled(nextLrc >= 0);
                     browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS && nextLrc != NextLrc.LOADING);
                     // 在线音乐歌词有翻译才能查看翻译
-                    browseLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getNetMusicInfo().hasTrans());
+                    browseLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getMusicInfo().hasTrans());
                     // 只允许下载在线音乐的歌词
                     downloadLrcMenuItem.setEnabled(player.loadedNetMusic() && nextLrc != NextLrc.NOT_EXISTS && nextLrc != NextLrc.LOADING);
                     // 在线音乐歌词有翻译才能下载翻译
-                    downloadLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getNetMusicInfo().hasTrans());
+                    downloadLrcTransMenuItem.setEnabled(player.loadedNetMusic() && player.getMusicInfo().hasTrans());
 
                     lrcPopupMenu.show(lrcList, e.getX(), e.getY());
                 }
@@ -20011,7 +20012,7 @@ public class MainFrame extends JFrame {
     private void initTimer() {
         final int specPiece = (int) ((SpectrumConstants.PLAYER_INTERVAL - 0.01) * 1000 / SpectrumConstants.TIMER_INTERVAL);
         spectrumTimer = new Timer(SpectrumConstants.TIMER_INTERVAL, e -> {
-            spectrumExecutor.submit(() -> {
+            spectrumExecutor.execute(() -> {
                 double[] specs = player.specs;
                 double[] specsOrigin = player.specsOrigin;
                 double[] specsGap = player.specsGap;
@@ -20026,7 +20027,7 @@ public class MainFrame extends JFrame {
         });
         final int LRC_TIMER_INTERVAL = 10, lrcPiece = 100 / LRC_TIMER_INTERVAL;
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
-            lrcExecutor.submit(() -> {
+            lrcExecutor.execute(() -> {
                 if (nextLrc >= 0) {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio;
                     if (currRatio < or) ratio = (or - currRatio) / lrcPiece + currRatio;
@@ -20040,7 +20041,7 @@ public class MainFrame extends JFrame {
             });
             if (lrcScrollAnimation) {
                 // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
-//                lrcScrollExecutor.submit(() -> {
+//                lrcScrollExecutor.execute(() -> {
                 Rectangle bounds = lrcList.getCellBounds(row, row);
                 if (bounds == null) return;
                 Insets insets = lrcScrollPane.getInsets();
@@ -20057,14 +20058,14 @@ public class MainFrame extends JFrame {
             lrcScrollAnimation = true;
         });
         globalPanelTimer = new Timer(10, e -> {
-            globalPanelExecutor.submit(() -> {
+            globalPanelExecutor.execute(() -> {
                 float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
                 globalPanel.setOpacity(opacity);
                 if (opacity >= 1) globalPanelTimer.stop();
             });
         });
         searchSuggestionTimer = new Timer(100, e -> {
-            globalExecutor.submit(() -> updateSearchSuggestion());
+            globalExecutor.execute(() -> updateSearchSuggestion());
             searchSuggestionTimer.stop();
         });
     }
@@ -20078,14 +20079,14 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (player.isEmpty()) return;
-                double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMusicInfo().getDuration();
+                double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMetaMusicInfo().getDuration();
                 player.seek(t);
                 seekLrc(t);
             }
         });
         // 改变时间条的值，当前时间标签的值随之改变
         timeBar.addChangeListener(e -> {
-            double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMusicInfo().getDuration();
+            double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMetaMusicInfo().getDuration();
             currTimeLabel.setText(TimeUtil.format(t));
         });
 
@@ -20147,7 +20148,7 @@ public class MainFrame extends JFrame {
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, THIS));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
         collectButton.addActionListener(e -> {
-            Object o = player.getNetMusicInfo();
+            Object o = player.getMusicInfo();
             if (o == null) o = player.getAudioFile();
             if (!hasBeenCollected(o)) {
                 collectionModel.add(0, o);
@@ -20166,16 +20167,16 @@ public class MainFrame extends JFrame {
         downloadButton.setEnabled(false);
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, THIS));
         downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + 10, downloadIcon.getIconHeight() + 10));
-        downloadButton.addActionListener(e -> singleDownload(player.getNetMusicInfo()));
+        downloadButton.addActionListener(e -> singleDownload(player.getMusicInfo()));
         // 评论
         commentButton.setToolTipText(COMMENT_TIP);
         commentButton.setEnabled(false);
         commentButton.addMouseListener(new ButtonMouseListener(commentButton, THIS));
         commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth() + 10, commentIcon.getIconHeight() + 10));
         commentButton.addActionListener(e -> {
-            NetMusicInfo netMusicInfo = player.getNetMusicInfo();
-            if (currPane != MusicPane.COMMENT || currCommentObjectInfo != netMusicInfo)
-                getComments(netMusicInfo, currPane != MusicPane.COMMENT);
+            NetMusicInfo musicInfo = player.getMusicInfo();
+            if (currPane != MusicPane.COMMENT || currCommentObjectInfo != musicInfo)
+                getComments(musicInfo, currPane != MusicPane.COMMENT);
         });
         // 乐谱
         sheetButton.setToolTipText(SHEET_TIP);
@@ -20183,9 +20184,9 @@ public class MainFrame extends JFrame {
         sheetButton.addMouseListener(new ButtonMouseListener(sheetButton, THIS));
         sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth() + 10, sheetIcon.getIconHeight() + 10));
         sheetButton.addActionListener(e -> {
-            NetMusicInfo netMusicInfo = player.getNetMusicInfo();
-            if (currPane != MusicPane.SHEET || currSheetMusicInfo != netMusicInfo)
-                getSheets(netMusicInfo, currPane != MusicPane.SHEET);
+            NetMusicInfo musicInfo = player.getMusicInfo();
+            if (currPane != MusicPane.SHEET || currSheetMusicInfo != musicInfo)
+                getSheets(musicInfo, currPane != MusicPane.SHEET);
         });
         lastButton.setToolTipText(LAST_TIP);
         lastButton.addMouseListener(new ButtonMouseListener(lastButton, THIS));
@@ -20407,7 +20408,7 @@ public class MainFrame extends JFrame {
                 currChineseType = ChineseType.SIMPLIFIED;
                 if (nextLrc >= 0)
                     // 切换简体只是重新加载歌词！
-                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
+                    loadLrc(player.getAudioFile(), player.getMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
                 switchChineseButton.setIcon(ImageUtil.dye(simpChineseIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
@@ -20422,8 +20423,8 @@ public class MainFrame extends JFrame {
                 currJapaneseType = JapaneseType.ROMAJI;
                 if (nextLrc >= 0) {
                     // 使用已有的罗马音歌词
-                    if (player.loadedNetMusic() && player.getNetMusicInfo().hasRoma()) {
-                        loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, false);
+                    if (player.loadedNetMusic() && player.getMusicInfo().hasRoma()) {
+                        loadLrc(player.getAudioFile(), player.getMusicInfo(), true, false);
                     } else {
                         for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
                     }
@@ -20435,7 +20436,7 @@ public class MainFrame extends JFrame {
                 currJapaneseType = JapaneseType.KANA;
                 if (nextLrc >= 0)
                     // 切换简体只是重新加载歌词！
-                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
+                    loadLrc(player.getAudioFile(), player.getMusicInfo(), true, currLrcType == LyricType.TRANSLATION);
                 switchJapaneseButton.setIcon(ImageUtil.dye(kanaIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
@@ -20450,7 +20451,7 @@ public class MainFrame extends JFrame {
                 currLrcType = LyricType.TRANSLATION;
                 if (nextLrc >= 0)
                     // 重新加载歌词
-                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, true);
+                    loadLrc(player.getAudioFile(), player.getMusicInfo(), true, true);
                 switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
             }
             // 切换到原歌词
@@ -20458,7 +20459,7 @@ public class MainFrame extends JFrame {
                 currLrcType = LyricType.ORIGINAL;
                 if (nextLrc >= 0)
                     // 重新加载歌词
-                    loadLrc(player.getAudioFile(), player.getNetMusicInfo(), true, false);
+                    loadLrc(player.getAudioFile(), player.getMusicInfo(), true, false);
                 switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
             }
             if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
@@ -20531,14 +20532,14 @@ public class MainFrame extends JFrame {
         synchronized (statusText) {
             statusText = st;
             String title = String.format(TITLE + "（%s：%s）", st,
-                    player.loadedNetMusic() ? player.getNetMusicInfo().toSimpleString() : player.getAudioFile());
+                    player.loadedNetMusic() ? player.getMusicInfo().toSimpleString() : player.getAudioFile());
             titleLabel.setText(StringUtil.textToHtml(StringUtil.shorten(title, 80)));
             setTitle(title);
         }
     }
 
     // 界面加载新文件
-    private void loadUI(AudioFile file, NetMusicInfo netMusicInfo) {
+    private void loadUI(AudioFile file, NetMusicInfo musicInfo) {
         // 设置标题
         updateTitle("加载中");
         // 重置当前播放时间
@@ -20567,22 +20568,22 @@ public class MainFrame extends JFrame {
         // 开启歌词动画
         if (!lrcTimer.isRunning()) lrcTimer.start();
 
-        boolean isNetMusic = netMusicInfo != null;
+        boolean isNetMusic = musicInfo != null;
 
         // 设置切换面板文字
         final int maxLen = 34;
         if (isNetMusic)
-            changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(netMusicInfo.toSimpleString(), maxLen)));
+            changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(musicInfo.toSimpleString(), maxLen)));
         else
             changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(file.toString(), maxLen)));
         if (miniDialog != null) miniDialog.infoLabel.setText(changePaneButton.getText());
         // 设置 MV、收藏、下载、评论、乐谱按钮
-        mvButton.setEnabled(isNetMusic && netMusicInfo.hasMv());
+        mvButton.setEnabled(isNetMusic && musicInfo.hasMv());
         collectButton.setEnabled(true);
         downloadButton.setEnabled(isNetMusic);
         commentButton.setEnabled(isNetMusic);
         sheetButton.setEnabled(isNetMusic);
-        if (isNetMusic && hasBeenCollected(netMusicInfo) || hasBeenCollected(file)) {
+        if (isNetMusic && hasBeenCollected(musicInfo) || hasBeenCollected(file)) {
             collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
             collectButton.setToolTipText(COLLECTED_TIP);
         } else {
@@ -20590,7 +20591,7 @@ public class MainFrame extends JFrame {
             collectButton.setToolTipText(COLLECT_TIP);
         }
 
-        MetaMusicInfo metaMusicInfo = player.getMusicInfo();
+        MetaMusicInfo metaMusicInfo = player.getMetaMusicInfo();
         // 设置歌曲名称
         songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + metaMusicInfo.getName()));
         songNameLabel.setVisible(false);
@@ -20656,7 +20657,7 @@ public class MainFrame extends JFrame {
 
     // 显示专辑图片
     public void showAlbumImage() {
-        MetaMusicInfo metaMusicInfo = player.getMusicInfo();
+        MetaMusicInfo metaMusicInfo = player.getMetaMusicInfo();
         BufferedImage albumImage = metaMusicInfo.getAlbumImage();
         if (albumImage == null) albumImage = defaultAlbumImage;
         boolean isDefault = albumImage == defaultAlbumImage;
@@ -20699,13 +20700,13 @@ public class MainFrame extends JFrame {
     }
 
     // 加载歌词(如果有)
-    private void loadLrc(AudioFile file, NetMusicInfo netMusicInfo, boolean reload, boolean loadTrans) {
+    private void loadLrc(AudioFile file, NetMusicInfo musicInfo, boolean reload, boolean loadTrans) {
         if (player.isEmpty()) return;
         clearLrc();
 
         LrcData lrcData, transData = null, romaData = null;
         String lrcPath = null, lrc = null;
-        boolean isFile = netMusicInfo == null;
+        boolean isFile = musicInfo == null;
         try {
             if (isFile) {
                 lrcPath = FileUtil.getPathWithoutSuffix(file) + ".lrc";
@@ -20714,18 +20715,18 @@ public class MainFrame extends JFrame {
                 lrcStr = null;
                 transStr = null;
             } else {
-                lrc = netMusicInfo.getLrc();
+                lrc = musicInfo.getLrc();
                 if (lrc.trim().isEmpty()) throw new NoLyricException("歌词是一个空串");
                 lrcData = new LrcData(lrc, false);
                 // 获取 lrc 文件内容
                 lrcStr = lrcData.getLrcStr();
                 // 将翻译内容也读出来
-                if (netMusicInfo.hasTrans()) {
-                    transData = new LrcData(netMusicInfo.getTrans(), false);
+                if (musicInfo.hasTrans()) {
+                    transData = new LrcData(musicInfo.getTrans(), false);
                     transStr = transData.getLrcStr();
                 } else transStr = null;
                 // 将罗马音也读出来
-                if (netMusicInfo.hasRoma()) romaData = new LrcData(netMusicInfo.getRoma(), false);
+                if (musicInfo.hasRoma()) romaData = new LrcData(musicInfo.getRoma(), false);
             }
             if (!isFile)
                 statements = loadTrans && transData != null && !transData.isEmpty() ? transData.getStatements() : lrcData.getStatements();
@@ -20739,7 +20740,7 @@ public class MainFrame extends JFrame {
             // 日文/罗马音切换，日文时不动
             if (currJapaneseType == JapaneseType.ROMAJI && !loadTrans) {
                 // 使用已有的罗马音歌词
-                if (!isFile && netMusicInfo.hasRoma() && !romaData.isEmpty()) statements = romaData.getStatements();
+                if (!isFile && musicInfo.hasRoma() && !romaData.isEmpty()) statements = romaData.getStatements();
                 else
                     for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
             }
@@ -20821,12 +20822,12 @@ public class MainFrame extends JFrame {
 
         // 部分无法提前获取时长的歌曲，等待播放时更新时长
         mp.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
-            MetaMusicInfo musicInfo = player.getMusicInfo();
+            MetaMusicInfo musicInfo = player.getMetaMusicInfo();
             if (musicInfo.hasDuration()) return;
             double duration = newValue.toSeconds();
             musicInfo.setDuration(duration);
             // 填充音乐时长
-            if (player.loadedNetMusic()) player.getNetMusicInfo().setDuration(duration);
+            if (player.loadedNetMusic()) player.getMusicInfo().setDuration(duration);
             else player.getAudioFile().setDuration(duration);
             // 刷新列表时长显示
             if (musicList.isShowing()) musicList.repaint();
@@ -20844,10 +20845,10 @@ public class MainFrame extends JFrame {
 
         mp.setOnError(() -> {
             MediaException.Type type = mp.getError().getType();
-            NetMusicInfo netMusicInfo = player.getNetMusicInfo();
+            NetMusicInfo musicInfo = player.getMusicInfo();
 
             // 耳机取下导致的播放异常 或者 转格式后的未知异常，重新播放
-            if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && netMusicInfo.isFlac()) {
+            if (type == MediaException.Type.PLAYBACK_HALTED || type == MediaException.Type.UNKNOWN && musicInfo.isFlac()) {
                 resetMp();
             }
             // 歌曲 url 过期后重新加载 url 再播放
@@ -20856,10 +20857,10 @@ public class MainFrame extends JFrame {
                     || type == MediaException.Type.UNKNOWN) {
                 // 重置标题
                 updateTitle("刷新 URL 中");
-                playExecutor.submit(() -> {
-                    String url = MusicServerUtil.fetchMusicUrl(netMusicInfo.getId(), netMusicInfo.getSource());
-                    if (StringUtil.notEmpty(url)) netMusicInfo.setUrl(url);
-                    else MusicServerUtil.fillAvailableMusicUrl(netMusicInfo);
+                playExecutor.execute(() -> {
+                    String url = MusicServerUtil.fetchMusicUrl(musicInfo.getId(), musicInfo.getSource());
+                    if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
+                    else MusicServerUtil.fillAvailableMusicUrl(musicInfo);
                     resetMp();
                 });
             }
@@ -20995,7 +20996,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
                 return;
             }
-            MusicUtil.fillAudioFileInfo(audioFile);
+            MediaUtil.fillAudioFileInfo(audioFile);
             obj = audioFile;
         }
 
@@ -21047,7 +21048,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
                 return false;
             }
-            MusicUtil.fillAudioFileInfo(audioFile);
+            MediaUtil.fillAudioFileInfo(audioFile);
             obj = audioFile;
         }
 
@@ -21071,7 +21072,7 @@ public class MainFrame extends JFrame {
         else if (model != playQueueModel) {
             pre = true;
             // 此处会造成性能问题，交给线程池处理，先开始播放
-            globalExecutor.submit(() -> {
+            globalExecutor.execute(() -> {
                 // 先判断两个列表元素是否完全一致
                 boolean isSame = model.size() == playQueueModel.size();
                 for (int i = 0, size = model.size(); isSame && i < size; i++) {
@@ -21119,7 +21120,7 @@ public class MainFrame extends JFrame {
                 return false;
             }
             // 如果歌曲信息不完整，获取歌曲文件的头信息
-            if (!file.isIntegrated()) MusicUtil.fillAudioFileInfo(file);
+            if (!file.isIntegrated()) MediaUtil.fillAudioFileInfo(file);
         }
         // 在线音乐
         else {
@@ -21159,7 +21160,7 @@ public class MainFrame extends JFrame {
                     } catch (Exception e) {
 
                     } finally {
-                        if (!finalMusicInfo.equals(player.getNetMusicInfo())) return;
+                        if (!finalMusicInfo.equals(player.getMusicInfo())) return;
                         loadLrc(null, finalMusicInfo, false, currLrcType == LyricType.TRANSLATION);
                     }
                 });
@@ -21185,7 +21186,7 @@ public class MainFrame extends JFrame {
                         // Flac 文件需要转换格式，并删除原来的文件
                         if (musicInfo.isFlac()) {
                             loading.setText("转换音频文件格式......");
-                            MusicUtil.convert(file, tmpFile);
+                            MediaUtil.convert(file, tmpFile);
                             file.delete();
                         }
                     }
@@ -21253,7 +21254,7 @@ public class MainFrame extends JFrame {
         // 选中上一曲
         currSong = currSong - 1 < 0 ? size - 1 : currSong - 1;
         playQueue.setSelectedIndex(currSong);
-        playExecutor.submit(() -> playSelected(playQueue, true));
+        playExecutor.execute(() -> playSelected(playQueue, true));
     }
 
     // 播放下一曲 / 顺序播放
@@ -21264,7 +21265,7 @@ public class MainFrame extends JFrame {
         // 选中下一曲
         currSong = (currSong + 1) % size;
         playQueue.setSelectedIndex(currSong);
-        playExecutor.submit(() -> playSelected(playQueue, true));
+        playExecutor.execute(() -> playSelected(playQueue, true));
     }
 
     // 生成随机播放序列
@@ -21283,7 +21284,7 @@ public class MainFrame extends JFrame {
         }
         // 选择随机列表下一首
         playQueue.setSelectedIndex(shuffleList.get(shuffleIndex++));
-        playExecutor.submit(() -> playSelected(playQueue, true));
+        playExecutor.execute(() -> playSelected(playQueue, true));
     }
 
     // 更新 currSong 的值，在播放队列歌曲发生变化后调用
@@ -22599,12 +22600,12 @@ public class MainFrame extends JFrame {
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
 //        // 按钮图标颜色
-//        if (!player.loadedMusic() || player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
+//        if (!player.loadedMusic() || player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMetaMusicInfo().getAlbumImage() == null)) {
 //            changePaneButton.setIcon(ImageUtil.dye(new ImageIcon(
 //                    ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), iconColor));
 //        }
 //        // 默认专辑图颜色
-//        if (player.loadedMusic() && (player.getMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMusicInfo().getAlbumImage() == null)) {
+//        if (player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMetaMusicInfo().getAlbumImage() == null)) {
 //            BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), iconColor));
 //            albumImageLabel.setIcon(new ImageIcon(albumImage));
 //        }
@@ -22702,7 +22703,7 @@ public class MainFrame extends JFrame {
             case PlayerStatus.EMPTY:
                 // 播放队列没有选中并且有歌曲在队列时自动选中第一首播放
                 if (playQueue.getSelectedIndex() == -1 && !playQueueModel.isEmpty()) playQueue.setSelectedIndex(0);
-                playExecutor.submit(() -> playSelected(playQueue, false));
+                playExecutor.execute(() -> playSelected(playQueue, false));
                 break;
             // 就绪状态
             case PlayerStatus.LOADED:
@@ -22774,7 +22775,7 @@ public class MainFrame extends JFrame {
 
     // 下载歌词
     private void downloadLrc(NetMusicInfo musicInfo) {
-        globalExecutor.submit(() -> {
+        globalExecutor.execute(() -> {
             try {
                 FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
                 FileUtil.writeStr(lrcStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName(), false);
@@ -22793,7 +22794,7 @@ public class MainFrame extends JFrame {
 
     // 下载歌词翻译
     private void downloadLrcTrans(NetMusicInfo musicInfo) {
-        globalExecutor.submit(() -> {
+        globalExecutor.execute(() -> {
             FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
             FileUtil.writeStr(transStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcTransFileName(), false);
             new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
@@ -22809,7 +22810,7 @@ public class MainFrame extends JFrame {
         Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
         task.setInvokeLater(() -> {
             // 写入歌曲信息
-            if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
+            if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
             // 自动下载歌词
             if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
                 FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
@@ -22836,7 +22837,7 @@ public class MainFrame extends JFrame {
             Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
             task.setInvokeLater(() -> {
                 // 写入歌曲信息
-                if (musicInfo.isMp3()) MusicUtil.writeMP3Info(destMusicPath, musicInfo);
+                if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
                 // 自动下载歌词
                 if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
                     FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
@@ -22852,7 +22853,7 @@ public class MainFrame extends JFrame {
 
     // 下载多部 MV
     public void multiDownloadMv(List<NetMvInfo> mvList) {
-        LinkedList<Task> tasks = new LinkedList<>();
+        List<Task> tasks = new LinkedList<>();
         // 避免造成性能问题
         downloadList.setModel(emptyListModel);
         for (int i = mvList.size() - 1; i >= 0; i--) {
@@ -22873,7 +22874,7 @@ public class MainFrame extends JFrame {
         // 播放下载列表的 MV
         if (mvType == MvCompSourceType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
-            NetMvInfo mvInfo = task.getNetMvInfo();
+            NetMvInfo mvInfo = task.getMvInfo();
             String dest = task.getDest();
             if (!new File(dest).exists()) {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
@@ -22901,19 +22902,19 @@ public class MainFrame extends JFrame {
             } else if (mvType == MvCompSourceType.PLAY_QUEUE) {
                 musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
             } else if (mvType == MvCompSourceType.PLAYING) {
-                musicInfo = player.getNetMusicInfo();
+                musicInfo = player.getMusicInfo();
             }
 
-            NetMvInfo netMvInfo = new NetMvInfo();
-            netMvInfo.setSource(musicInfo.getSource());
-            netMvInfo.setId(musicInfo.getMvId());
-            netMvInfo.setName(musicInfo.getName());
-            netMvInfo.setArtist(musicInfo.getArtist());
+            NetMvInfo mvInfo = new NetMvInfo();
+            mvInfo.setSource(musicInfo.getSource());
+            mvInfo.setId(musicInfo.getMvId());
+            mvInfo.setName(musicInfo.getName());
+            mvInfo.setArtist(musicInfo.getArtist());
 
             // 加载 MV url
             try {
-                MusicServerUtil.fillMvInfo(netMvInfo);
-                String url = netMvInfo.getUrl();
+                MusicServerUtil.fillMvInfo(mvInfo);
+                String url = mvInfo.getUrl();
                 if (StringUtil.isEmpty(url)) {
                     new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
                     return;
@@ -22921,7 +22922,7 @@ public class MainFrame extends JFrame {
                 if (player.isPlaying()) playOrPause();
                 dialog.close();
                 if (videoOnly) setVisible(false);
-                videoDialog = new VideoDialog(netMvInfo, null, THIS);
+                videoDialog = new VideoDialog(mvInfo, null, THIS);
                 videoDialog.showDialog();
                 videoDialog = null;
                 setVisible(true);
@@ -22975,7 +22976,7 @@ public class MainFrame extends JFrame {
                         dialog.setMessage("转换视频文件格式......");
                         dialog.updateSize();
                         dialog.setLocationRelativeTo(null);
-                        VideoUtil.convert(file, tmpFile);
+                        MediaUtil.convert(file, tmpFile);
                         // 转换成功后删除原文件
                         file.delete();
                     }
@@ -23103,8 +23104,8 @@ public class MainFrame extends JFrame {
             doStyleBlur(currUIStyle);
             return;
         }
-        blurExecutor.submit(() -> {
-            BufferedImage albumImage = player.getMusicInfo().getAlbumImage();
+        blurExecutor.execute(() -> {
+            BufferedImage albumImage = player.getMetaMusicInfo().getAlbumImage();
             if (albumImage == null) albumImage = defaultAlbumImage;
             if (blurType == BlurConstants.MC)
                 albumImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(albumImage));
@@ -23113,58 +23114,51 @@ public class MainFrame extends JFrame {
                 gw = windowWidth;
                 gh = windowHeight;
             }
-            try {
-                // 改变迷你窗口背景
-                if (miniDialog != null) {
-                    BufferedImage finalAlbumImage = albumImage;
-                    miniDialog.globalExecutor.submit(() -> miniDialog.doBlur(finalAlbumImage));
-                }
-                BufferedImage bufferedImage = albumImage;
-                // 截取中间的一部分(有的图片是长方形)
-                bufferedImage = ImageUtil.cropCenter(bufferedImage);
-                if (gsOn) {
-                    // 处理成 100 * 100 大小
-                    bufferedImage = ImageUtil.width(bufferedImage, 100);
-                    // 高斯模糊
-                    bufferedImage = ImageUtil.doBlur(bufferedImage);
-                }
-                // 放大至窗口大小
-                bufferedImage = ImageUtil.width(bufferedImage, gw);
-                if (gh > bufferedImage.getHeight())
-                    bufferedImage = ImageUtil.height(bufferedImage, gh);
-                // 裁剪中间的一部分
-                if (blurType == BlurConstants.CV) {
-                    int ih = bufferedImage.getHeight();
-                    bufferedImage = Thumbnails.of(bufferedImage)
-                            .scale(1f)
-                            .sourceRegion(0, (ih - gh) / 2, gw, gh)
-                            .outputQuality(0.1)
-                            .asBufferedImage();
-                }
-                // 线性渐变
-                if (blurType == BlurConstants.LG) bufferedImage = ImageUtil.toGradient(albumImage, gw, gh);
-                // 暗角滤镜
-                if (darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
-                // 设置圆角
-//                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
-                globalPanel.setBackgroundImage(bufferedImage);
-                if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
-                updateUpperComp();
-            } catch (IOException e) {
-                e.printStackTrace();
+            // 改变迷你窗口背景
+            if (miniDialog != null) {
+                BufferedImage finalAlbumImage = albumImage;
+                miniDialog.globalExecutor.execute(() -> miniDialog.doBlur(finalAlbumImage));
             }
+            BufferedImage bufferedImage = albumImage;
+            // 截取中间的一部分(有的图片是长方形)
+            bufferedImage = ImageUtil.cropCenter(bufferedImage);
+            if (gsOn) {
+                // 处理成 100 * 100 大小
+                bufferedImage = ImageUtil.width(bufferedImage, 100);
+                // 高斯模糊
+                bufferedImage = ImageUtil.gaussianBlur(bufferedImage);
+            }
+            // 放大至窗口大小
+            bufferedImage = ImageUtil.width(bufferedImage, gw);
+            if (gh > bufferedImage.getHeight())
+                bufferedImage = ImageUtil.height(bufferedImage, gh);
+            // 裁剪中间的一部分
+            if (blurType == BlurConstants.CV) {
+                int ih = bufferedImage.getHeight();
+                bufferedImage = ImageUtil.region(bufferedImage, 0, (ih - gh) / 2, gw, gh);
+                bufferedImage = ImageUtil.quality(bufferedImage, 0.1);
+            }
+            // 线性渐变
+            if (blurType == BlurConstants.LG) bufferedImage = ImageUtil.toGradient(bufferedImage, gw, gh);
+            // 暗角滤镜
+            if (darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
+            // 设置圆角
+//                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
+            globalPanel.setBackgroundImage(bufferedImage);
+            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
+            updateUpperComp();
         });
     }
 
     // 风格背景模糊
     private void doStyleBlur(UIStyle style) {
-        blurExecutor.submit(() -> {
+        blurExecutor.execute(() -> {
             BufferedImage styleImage = style.getImg();
             if (gsOn) {
                 // 缩小
                 styleImage = ImageUtil.width(styleImage, 100);
                 // 高斯模糊
-                styleImage = ImageUtil.doBlur(styleImage);
+                styleImage = ImageUtil.gaussianBlur(styleImage);
             }
             styleImage = ImageUtil.eraseTranslucency(styleImage);
             // 放大至窗口大小
@@ -23496,7 +23490,7 @@ public class MainFrame extends JFrame {
 
     // 弹出加载面板并执行
     private void loadingAndRun(Runnable runnable) {
-        globalExecutor.submit(() -> {
+        globalExecutor.execute(() -> {
             try {
                 loading.start();
                 loading.setText(LOADING_MSG);

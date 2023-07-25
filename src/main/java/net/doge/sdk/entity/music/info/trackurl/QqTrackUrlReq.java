@@ -7,7 +7,7 @@ import net.doge.util.common.CryptoUtil;
 
 import java.nio.charset.StandardCharsets;
 
-public class QQTrackUrlReq {
+public class QqTrackUrlReq {
     /**
      * 获取 QQ 音乐歌曲链接
      *

@@ -54,14 +54,14 @@ public class UserSearchReq {
      */
     public CommonResult<NetUserInfo> searchUsers(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetUserInfo> userInfos = new LinkedList<>();
+        List<NetUserInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncode(keyword);
+        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetUserInfo>> searchUsers = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
@@ -99,15 +99,15 @@ public class UserSearchReq {
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
-                    res.add(userInfo);
+                    r.add(userInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         Callable<CommonResult<NetUserInfo>> searchUsersQq = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String userInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
@@ -126,7 +126,7 @@ public class UserSearchReq {
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("pic");
                 Integer followed = userJson.getIntValue("fans_num");
-                Integer playlistCount = userJson.getIntValue("diss_num");
+//                Integer playlistCount = userJson.getIntValue("diss_num");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.QQ);
@@ -136,20 +136,20 @@ public class UserSearchReq {
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setAvatarUrl(avatarThumbUrl);
                 userInfo.setFollowed(followed);
-                userInfo.setPlaylistCount(playlistCount);
+//                userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
-                res.add(userInfo);
+                r.add(userInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 喜马拉雅
         Callable<CommonResult<NetUserInfo>> searchUsersXm = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_XM_API, encodedKeyword, page, limit))
@@ -190,15 +190,15 @@ public class UserSearchReq {
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
-                    res.add(userInfo);
+                    r.add(userInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         Callable<CommonResult<NetUserInfo>> searchUsersMe = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_ME_API, encodedKeyword, page, limit))
@@ -240,14 +240,14 @@ public class UserSearchReq {
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
-                res.add(userInfo);
+                r.add(userInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 5sing
         Callable<CommonResult<NetUserInfo>> searchUsersFs = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_FS_API, encodedKeyword, page))
@@ -282,15 +282,15 @@ public class UserSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(avatarThumbUrl);
                         userInfo.setAvatarThumb(coverImgThumb);
                     });
-                    res.add(userInfo);
+                    r.add(userInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 好看
         Callable<CommonResult<NetUserInfo>> searchUsersHk = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_HK_API, page, encodedKeyword, limit))
@@ -325,14 +325,14 @@ public class UserSearchReq {
                     userInfo.setAvatarThumb(avatarThumb);
                 });
 
-                res.add(userInfo);
+                r.add(userInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 豆瓣
         Callable<CommonResult<NetUserInfo>> searchUsersDb = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             final int lim = Math.min(20, limit);
@@ -370,15 +370,15 @@ public class UserSearchReq {
                         userInfo.setAvatarThumb(coverImgThumb);
                     });
 
-                    res.add(userInfo);
+                    r.add(userInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 堆糖
         Callable<CommonResult<NetUserInfo>> searchUsersDt = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis()))
@@ -413,15 +413,15 @@ public class UserSearchReq {
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
-                    res.add(userInfo);
+                    r.add(userInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 哔哩哔哩
         Callable<CommonResult<NetUserInfo>> searchUsersBi = () -> {
-            LinkedList<NetUserInfo> res = new LinkedList<>();
+            List<NetUserInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_BI_API, encodedKeyword, page))
@@ -458,10 +458,10 @@ public class UserSearchReq {
                         userInfo.setAvatarThumb(avatarThumb);
                     });
 
-                    res.add(userInfo);
+                    r.add(userInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetUserInfo>>> taskList = new LinkedList<>();
@@ -497,8 +497,8 @@ public class UserSearchReq {
                 e.printStackTrace();
             }
         });
-        userInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(userInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

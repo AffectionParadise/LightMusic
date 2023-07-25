@@ -80,7 +80,7 @@ public class NewAlbumReq {
      */
     public CommonResult<NetAlbumInfo> getNewAlbums(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetAlbumInfo> albumInfos = new LinkedList<>();
+        List<NetAlbumInfo> res = new LinkedList<>();
 
         final String defaultTag = "默认";
         String[] s = Tags.newAlbumTag.get(tag);
@@ -88,7 +88,7 @@ public class NewAlbumReq {
         // 网易云(程序分页)
         // 新蹀上架
         Callable<CommonResult<NetAlbumInfo>> getNewAlbums = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -129,17 +129,17 @@ public class NewAlbumReq {
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 新碟上架(热门)
 //        Callable<CommonResult<NetAlbumInfo>> getHotAlbums = () -> {
-//            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+//            List<NetAlbumInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
-//            if (StringUtils.notEmpty(s[0])) {
+//            if (StringUtil.notEmpty(s[0])) {
 //                String albumInfoBody = HttpRequest.get(String.format(HOT_ALBUM_API, s[0]))
 //                        .execute()
 //                        .body();
@@ -155,7 +155,7 @@ public class NewAlbumReq {
 //                    String albumId = albumJson.getString("id");
 //                    String albumName = albumJson.getString("name");
 //                    String artist = SdkUtil.parseArtist(albumJson);
-//                    String publishTime = TimeUtils.msToDate(albumJson.getLong("publishTime"));
+//                    String publishTime = TimeUtil.msToDate(albumJson.getLong("publishTime"));
 //                    Integer songNum = albumJson.getIntValue("size");
 //                    String coverImgThumbUrl = albumJson.getString("picUrl");
 //
@@ -171,14 +171,14 @@ public class NewAlbumReq {
 //                        albumInfo.setCoverImgThumb(coverImgThumb);
 //                    });
 //
-//                    res.add(albumInfo);
+//                    r.add(albumInfo);
 //                }
 //            }
-//            return new CommonResult<>(res, t);
+//            return new CommonResult<>(r, t);
 //        };
         // 全部新碟(接口分页，与上面两个分开处理)
         Callable<CommonResult<NetAlbumInfo>> getAllNewAlbums = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -215,14 +215,14 @@ public class NewAlbumReq {
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 最新专辑
         Callable<CommonResult<NetAlbumInfo>> getNewestAlbums = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -256,13 +256,13 @@ public class NewAlbumReq {
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 数字新碟上架
         Callable<CommonResult<NetAlbumInfo>> getNewestDiAlbums = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -293,13 +293,13 @@ public class NewAlbumReq {
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 数字专辑语种风格馆
         Callable<CommonResult<NetAlbumInfo>> getLangDiAlbums = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -330,14 +330,14 @@ public class NewAlbumReq {
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 曲风专辑
         Callable<CommonResult<NetAlbumInfo>> getStyleAlbums = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -374,15 +374,15 @@ public class NewAlbumReq {
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ(程序分页)
         Callable<CommonResult<NetAlbumInfo>> getNewAlbumsQq = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -419,16 +419,16 @@ public class NewAlbumReq {
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕
         // 新碟推荐(接口分页)
         Callable<CommonResult<NetAlbumInfo>> getNewAlbumsMg = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_MG_API, page - 1, limit))
@@ -466,13 +466,13 @@ public class NewAlbumReq {
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 新专辑榜(程序分页)
         Callable<CommonResult<NetAlbumInfo>> getNewAlbumsRankingMg = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(NEW_ALBUM_RANKING_MG_API)
@@ -507,15 +507,15 @@ public class NewAlbumReq {
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         // 首页新专辑
         Callable<CommonResult<NetAlbumInfo>> getIndexNewAlbumsQi = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(INDEX_NEW_ALBUM_QI_API, System.currentTimeMillis())))
@@ -551,13 +551,13 @@ public class NewAlbumReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 秀动发行
         Callable<CommonResult<NetAlbumInfo>> getXDAlbumsQi = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(XD_ALBUM_QI_API, page, limit, System.currentTimeMillis())))
@@ -591,13 +591,13 @@ public class NewAlbumReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 新专辑推荐
         Callable<CommonResult<NetAlbumInfo>> getNewAlbumsQi = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(NEW_ALBUM_QI_API, page, limit, System.currentTimeMillis())))
@@ -631,15 +631,15 @@ public class NewAlbumReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 堆糖
         // 推荐专辑
         Callable<CommonResult<NetAlbumInfo>> getRecAlbumsDt = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(REC_ALBUM_DT_API, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
@@ -673,14 +673,14 @@ public class NewAlbumReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
 
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类专辑
         Callable<CommonResult<NetAlbumInfo>> getCatAlbumsDt = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[5])) {
@@ -715,17 +715,17 @@ public class NewAlbumReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
 
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 豆瓣
         // Top 250
         Callable<CommonResult<NetAlbumInfo>> getTopAlbumsDb = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
             final int rn = 25;
 
@@ -760,13 +760,13 @@ public class NewAlbumReq {
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(albumInfo);
+                r.add(albumInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类专辑
         Callable<CommonResult<NetAlbumInfo>> getCatAlbumsDb = () -> {
-            LinkedList<NetAlbumInfo> res = new LinkedList<>();
+            List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
@@ -803,10 +803,10 @@ public class NewAlbumReq {
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(albumInfo);
+                    r.add(albumInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetAlbumInfo>>> taskList = new LinkedList<>();
@@ -877,8 +877,8 @@ public class NewAlbumReq {
                 e.printStackTrace();
             }
         });
-        albumInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(albumInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

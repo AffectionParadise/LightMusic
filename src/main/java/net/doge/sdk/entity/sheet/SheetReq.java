@@ -16,6 +16,7 @@ import net.doge.util.common.JsonUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class SheetReq {
@@ -30,7 +31,7 @@ public class SheetReq {
     public CommonResult<NetSheetInfo> getSheets(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         String id = musicInfo.getId();
-        LinkedList<NetSheetInfo> sheetInfos = new LinkedList<>();
+        List<NetSheetInfo> res = new LinkedList<>();
         Integer total = 0;
 
         if (source == NetMusicSource.NET_CLOUD) {
@@ -71,12 +72,12 @@ public class SheetReq {
                         sheetInfo.setCoverImg(coverImg);
                     });
 
-                    sheetInfos.add(sheetInfo);
+                    res.add(sheetInfo);
                 }
             }
         }
 
-        return new CommonResult<>(sheetInfos, total);
+        return new CommonResult<>(res, total);
     }
 
     /**
@@ -85,7 +86,7 @@ public class SheetReq {
     public CommonResult<String> getSheetImgUrls(NetSheetInfo sheetInfo) {
         int source = sheetInfo.getSource();
         String id = sheetInfo.getId();
-        LinkedList<String> imgUrls = new LinkedList<>();
+        List<String> res = new LinkedList<>();
         Integer total = 0;
 
         if (source == NetMusicSource.NET_CLOUD) {
@@ -98,10 +99,10 @@ public class SheetReq {
             total = imgArray.size();
             for (int i = 0, len = imgArray.size(); i < len; i++) {
                 JSONObject imgJson = imgArray.getJSONObject(i);
-                imgUrls.add(imgJson.getString("url"));
+                res.add(imgJson.getString("url"));
             }
         }
 
-        return new CommonResult<>(imgUrls, total);
+        return new CommonResult<>(res, total);
     }
 }

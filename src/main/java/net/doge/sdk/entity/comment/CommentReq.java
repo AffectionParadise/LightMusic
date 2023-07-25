@@ -88,7 +88,7 @@ public class CommentReq {
      */
     public CommonResult<NetCommentInfo> getComments(Object info, String type, int limit, int page, String cursor) {
         int total = 0;
-        List<NetCommentInfo> commentInfos = new LinkedList<>();
+        List<NetCommentInfo> res = new LinkedList<>();
 
         String id = null;
         String[] typeStr = null;
@@ -98,14 +98,14 @@ public class CommentReq {
         boolean isRadio = false, isBook = false, isGame = false;
 
         if (info instanceof NetMusicInfo) {
-            NetMusicInfo netMusicInfo = (NetMusicInfo) info;
+            NetMusicInfo musicInfo = (NetMusicInfo) info;
             // 网易云需要先判断是普通歌曲还是电台节目，酷狗歌曲获取评论需要 hash
-            boolean hasProgramId = netMusicInfo.hasProgramId();
-            boolean hasHash = netMusicInfo.hasHash();
-            id = hasProgramId ? netMusicInfo.getProgramId() : hasHash ? netMusicInfo.getHash() : netMusicInfo.getId();
-            source = netMusicInfo.getSource();
+            boolean hasProgramId = musicInfo.hasProgramId();
+            boolean hasHash = musicInfo.hasHash();
+            id = hasProgramId ? musicInfo.getProgramId() : hasHash ? musicInfo.getHash() : musicInfo.getId();
+            source = musicInfo.getSource();
             // 网易 QQ 酷我 猫耳
-            typeStr = new String[]{hasProgramId ? "4" : "0", "1", "15", "1"};
+            typeStr = new String[]{hasProgramId ? "A_DJ_1_" : "R_SO_4_", "1", "15", "1"};
 
             if (source == NetMusicSource.QQ) {
                 // QQ 需要先通过 mid 获取 id
@@ -117,16 +117,17 @@ public class CommentReq {
                 id = trackInfo.getString("id");
             }
         } else if (info instanceof NetPlaylistInfo) {
-            NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) info;
-            id = netPlaylistInfo.getId();
-            source = netPlaylistInfo.getSource();
+            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) info;
+            id = playlistInfo.getId();
+            source = playlistInfo.getSource();
             // 网易 QQ 酷我 猫耳
-            typeStr = new String[]{"2", "3", "8", "2"};
+            typeStr = new String[]{"A_PL_0_", "3", "8", "2"};
         } else if (info instanceof NetAlbumInfo) {
-            NetAlbumInfo netAlbumInfo = (NetAlbumInfo) info;
-            id = netAlbumInfo.getId();
-            source = netAlbumInfo.getSource();
-            typeStr = new String[]{"3", "2", ""};
+            NetAlbumInfo albumInfo = (NetAlbumInfo) info;
+            id = albumInfo.getId();
+            source = albumInfo.getSource();
+            // 网易 QQ 酷我 猫耳
+            typeStr = new String[]{"R_AL_3_", "2", "", ""};
 
             if (source == NetMusicSource.QQ) {
                 // QQ 需要先通过 mid 获取 id
@@ -136,22 +137,23 @@ public class CommentReq {
                 id = JSONObject.parseObject(songInfoBody).getJSONObject("data").getString("album_id");
             }
         } else if (info instanceof NetRadioInfo) {
-            NetRadioInfo netRadioInfo = (NetRadioInfo) info;
-            id = netRadioInfo.getId();
-            source = netRadioInfo.getSource();
+            NetRadioInfo radioInfo = (NetRadioInfo) info;
+            id = radioInfo.getId();
+            source = radioInfo.getSource();
             isRadio = true;
-            isBook = netRadioInfo.isBook();
-            isGame = netRadioInfo.isGame();
-            typeStr = new String[]{"7", "", "", ""};
+            isBook = radioInfo.isBook();
+            isGame = radioInfo.isGame();
+            // 网易 QQ 酷我 猫耳
+            typeStr = new String[]{"A_DR_14_", "", "", ""};
         } else if (info instanceof NetMvInfo) {
-            NetMvInfo netMvInfo = (NetMvInfo) info;
+            NetMvInfo mvInfo = (NetMvInfo) info;
             // 网易云需要判断是视频还是 MV 还是 Mlog
-            boolean isVideo = netMvInfo.isVideo();
-            boolean isMlog = netMvInfo.isMlog();
+            boolean isVideo = mvInfo.isVideo();
+            boolean isMlog = mvInfo.isMlog();
 
-            source = netMvInfo.getSource();
+            source = mvInfo.getSource();
             // 哔哩哔哩获取视频的 bvid
-            id = source == NetMusicSource.BI ? netMvInfo.getBvid() : netMvInfo.getId();
+            id = source == NetMusicSource.BI ? mvInfo.getBvid() : mvInfo.getId();
 
             // Mlog 需要先获取视频 id，并转为视频类型
             if (isMlog) {
@@ -160,30 +162,22 @@ public class CommentReq {
                         .execute()
                         .body();
                 id = JSONObject.parseObject(body).getString("data");
-                netMvInfo.setId(id);
-                netMvInfo.setType(MvInfoType.VIDEO);
+                mvInfo.setId(id);
+                mvInfo.setType(MvInfoType.VIDEO);
             }
-
-            typeStr = new String[]{isVideo || isMlog ? "5" : "1", "5", "7"};
+            // 网易 QQ 酷我 猫耳
+            typeStr = new String[]{isVideo || isMlog ? "R_VI_62_" : "R_MV_5_", "5", "7"};
         } else if (info instanceof NetRankingInfo) {
-            NetRankingInfo netRankingInfo = (NetRankingInfo) info;
-            id = netRankingInfo.getId();
-            source = netRankingInfo.getSource();
-            typeStr = new String[]{"2", "4", "2"};
+            NetRankingInfo rankingInfo = (NetRankingInfo) info;
+            id = rankingInfo.getId();
+            source = rankingInfo.getSource();
+            // 网易 QQ 酷我 猫耳
+            typeStr = new String[]{"A_PL_0_", "4", "2", ""};
         }
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD && StringUtil.notEmpty(typeStr[0])) {
-            HashMap<String, String> resourceType = new HashMap<>();
-            resourceType.put("0", "R_SO_4_");
-            resourceType.put("1", "R_MV_5_");
-            resourceType.put("2", "A_PL_0_");
-            resourceType.put("3", "R_AL_3_");
-            resourceType.put("4", "A_DJ_1_");
-            resourceType.put("5", "R_VI_62_");
-            resourceType.put("6", "A_EV_2_");
-            resourceType.put("7", "A_DR_14_");
-            String threadId = resourceType.get(typeStr[0]) + id;
+            String threadId = typeStr[0] + id;
             int sortType = hotOnly ? 2 : 3;
             String cur = "";
             switch (sortType) {
@@ -231,7 +225,7 @@ public class CommentReq {
                     finalCommentInfo.setProfile(profile);
                 });
 
-                commentInfos.add(commentInfo);
+                res.add(commentInfo);
 
                 // 被回复的评论
                 JSONArray beReplied = commentJson.getJSONArray("beReplied");
@@ -259,7 +253,7 @@ public class CommentReq {
                         finalCommentInfo1.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
                 }
             }
         }
@@ -296,7 +290,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
                 }
             }
         }
@@ -355,7 +349,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
 
                     // 被回复的评论
                     if (JsonUtil.isEmpty(middleCommentContent)) continue;
@@ -370,7 +364,7 @@ public class CommentReq {
                     ci.setUserId(uId);
                     ci.setUsername(StringUtil.isEmpty(uname) ? "null" : uname.substring(1));
                     ci.setContent(StringUtil.isEmpty(cnt) ? "该评论已被删除" : cnt);
-                    commentInfos.add(ci);
+                    res.add(ci);
                 }
             }
         }
@@ -380,16 +374,16 @@ public class CommentReq {
             String ref = "";
             switch (Integer.parseInt(typeStr[2])) {
                 case 15:
-                    ref = "http://www.kuwo.cn/play_detail/" + StringUtil.urlEncode(id);
+                    ref = "http://www.kuwo.cn/play_detail/" + StringUtil.urlEncodeAll(id);
                     break;
                 case 7:
-                    ref = "http://www.kuwo.cn/mvplay/" + StringUtil.urlEncode(id);
+                    ref = "http://www.kuwo.cn/mvplay/" + StringUtil.urlEncodeAll(id);
                     break;
                 case 8:
-                    ref = "http://www.kuwo.cn/playlist_detail/" + StringUtil.urlEncode(id);
+                    ref = "http://www.kuwo.cn/playlist_detail/" + StringUtil.urlEncodeAll(id);
                     break;
                 case 2:
-                    ref = "http://www.kuwo.cn/rankList/" + StringUtil.urlEncode(id);
+                    ref = "http://www.kuwo.cn/rankList/" + StringUtil.urlEncodeAll(id);
                     break;
             }
             String url = hotOnly ? GET_HOT_COMMENTS_KW_API : GET_NEW_COMMENTS_KW_API;
@@ -427,7 +421,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
 
                     // 被回复的评论
                     JSONObject reply = commentJson.getJSONObject("reply");
@@ -452,7 +446,7 @@ public class CommentReq {
                         rCommentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(rCommentInfo);
+                    res.add(rCommentInfo);
                 }
             }
         }
@@ -508,7 +502,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
 
                     // 回复
                     JSONArray replies = commentJson.getJSONArray("replies");
@@ -542,7 +536,7 @@ public class CommentReq {
                             ci.setProfile(profile);
                         });
 
-                        commentInfos.add(ci);
+                        res.add(ci);
                     }
                 }
             }
@@ -589,7 +583,7 @@ public class CommentReq {
                     commentInfo.setProfile(profile);
                 });
 
-                commentInfos.add(commentInfo);
+                res.add(commentInfo);
 
                 // 被回复的评论
                 Elements bq = msg.select("blockquote");
@@ -614,7 +608,7 @@ public class CommentReq {
                     ci.setProfile(profile);
                 });
 
-                commentInfos.add(ci);
+                res.add(ci);
             }
         }
 
@@ -657,7 +651,7 @@ public class CommentReq {
                     commentInfo.setProfile(profile);
                 });
 
-                commentInfos.add(commentInfo);
+                res.add(commentInfo);
 
                 // 被回复的评论
                 Elements bq = msg.select("blockquote");
@@ -682,7 +676,7 @@ public class CommentReq {
                     ci.setProfile(profile);
                 });
 
-                commentInfos.add(ci);
+                res.add(ci);
             }
         }
 
@@ -738,7 +732,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
 
                     // 回复
                     JSONArray replies = commentJson.getJSONArray("replys");
@@ -767,7 +761,7 @@ public class CommentReq {
                             ci.setProfile(profile);
                         });
 
-                        commentInfos.add(ci);
+                        res.add(ci);
                     }
                 }
             } else {
@@ -794,7 +788,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
                 }
             }
         }
@@ -833,7 +827,7 @@ public class CommentReq {
                     commentInfo.setProfile(profile);
                 });
 
-                commentInfos.add(commentInfo);
+                res.add(commentInfo);
 
                 JSONArray subComments = commentJson.getJSONArray("subcomments");
                 for (int j = 0, s = subComments.size(); j < s; j++) {
@@ -862,7 +856,7 @@ public class CommentReq {
                         ci.setProfile(profile);
                     });
 
-                    commentInfos.add(ci);
+                    res.add(ci);
                 }
             }
         }
@@ -901,7 +895,7 @@ public class CommentReq {
                     commentInfo.setProfile(profile);
                 });
 
-                commentInfos.add(commentInfo);
+                res.add(commentInfo);
 
                 // 回复
                 JSONArray replies = commentJson.getJSONArray("reply_list");
@@ -931,7 +925,7 @@ public class CommentReq {
                         ci.setProfile(profile);
                     });
 
-                    commentInfos.add(ci);
+                    res.add(ci);
                 }
             }
         }
@@ -973,7 +967,7 @@ public class CommentReq {
                     commentInfo.setLikedCount(likedCount);
                     commentInfo.setScore(score);
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
                 }
             } else {
                 String url;
@@ -1023,7 +1017,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
                 }
             }
         }
@@ -1071,7 +1065,7 @@ public class CommentReq {
                         commentInfo.setProfile(profile);
                     });
 
-                    commentInfos.add(commentInfo);
+                    res.add(commentInfo);
 
                     // 回复
                     JSONArray replies = commentJson.getJSONArray("replies");
@@ -1103,12 +1097,12 @@ public class CommentReq {
                             ci.setProfile(profile);
                         });
 
-                        commentInfos.add(ci);
+                        res.add(ci);
                     }
                 }
             }
         }
 
-        return new CommonResult<>(commentInfos, total, cursor);
+        return new CommonResult<>(res, total, cursor);
     }
 }

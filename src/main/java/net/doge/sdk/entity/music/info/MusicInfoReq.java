@@ -37,9 +37,9 @@ public class MusicInfoReq {
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
     // 歌曲信息 API (酷我)
     private final String SINGLE_SONG_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
-    // 歌曲信息 API (咪咕)
-    private final String SINGLE_SONG_DETAIL_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/songs?copyrightId=%s";
-    private final String SINGLE_SONG_DETAIL_MG_API_2 = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    // 歌曲信息 API (咪咕) (下面那个接口能获取无版权音乐的信息)
+//    private final String SINGLE_SONG_DETAIL_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/songs?copyrightId=%s";
+    private final String SINGLE_SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
     // 歌曲信息 API (喜马拉雅)
     private final String SINGLE_SONG_DETAIL_XM_API = "https://www.ximalaya.com/revision/track/simple?trackId=%s";
     // 歌曲信息 API (千千)
@@ -89,10 +89,10 @@ public class MusicInfoReq {
         // 咪咕
         if (source == NetMusicSource.MG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
-                    .header(Header.REFERER, "https://m.music.migu.cn/")
+//                    .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
                     .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("items").getJSONObject(0);
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
             if (!musicInfo.hasDuration()) musicInfo.setDuration(TimeUtil.toSeconds(data.getString("length")));
         }
     }
@@ -127,7 +127,7 @@ public class MusicInfoReq {
                 if (!musicInfo.hasAlbumId())
                     musicInfo.setAlbumId(songJson.getJSONObject("radio").getString("id"));
                 if (!musicInfo.hasAlbumImage()) {
-                    GlobalExecutors.imageExecutor.submit(() -> {
+                    GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage albumImage = SdkUtil.getImageFromUrl(songJson.getString("coverUrl"));
                         ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
@@ -147,7 +147,7 @@ public class MusicInfoReq {
                 if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(songJson.getJSONObject("al").getString("name"));
                 if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(songJson.getJSONObject("al").getString("id"));
                 if (!musicInfo.hasAlbumImage()) {
-                    GlobalExecutors.imageExecutor.submit(() -> {
+                    GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage albumImage = SdkUtil.getImageFromUrl(songJson.getJSONObject("al").getString("picUrl"));
                         ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
@@ -171,7 +171,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("img"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -196,7 +196,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(album.getString("name"));
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(album.getString("mid"));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     // QQ 的歌曲专辑图片需要额外请求接口获得！
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(String.format(SINGLE_SONG_IMG_QQ_API, album.getString("mid")));
                     // 有的歌曲没有专辑，先找备份专辑图片，如果还没有就将歌手的图片作为封面
@@ -223,7 +223,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album"));
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("albumid"));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("pic"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -234,36 +234,18 @@ public class MusicInfoReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
-                    .header(Header.REFERER, "https://m.music.migu.cn/")
                     .execute()
                     .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("items").getJSONObject(0);
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
 
-            JSONArray albumArray = data.getJSONArray("albums");
-            String albumId = JsonUtil.isEmpty(albumArray) ? "" : albumArray.getJSONObject(0).getString("albumId");
             if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data));
             if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
-            // 咪咕的专辑名称需要额外请求专辑信息接口！
-            if (!musicInfo.hasAlbumName()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
-                    String albumBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, albumId, 1))
-                            .setFollowRedirects(true)
-                            .execute()
-                            .body();
-                    Document doc = Jsoup.parse(albumBody);
-                    musicInfo.setAlbumName(doc.select(".content .title").text());
-                });
-            }
-            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumId);
+            if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album"));
+            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("albumId"));
             if (!musicInfo.hasDuration()) musicInfo.setDuration(TimeUtil.toSeconds(data.getString("length")));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
-                    // 封面图片需要调用另一个歌曲信息的接口
-                    String songInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API_2, songId))
-                            .execute()
-                            .body();
-                    JSONObject songJson = JSONObject.parseObject(songInfoBody).getJSONArray("resource").getJSONObject(0);
-                    JSONArray imgArray = songJson.getJSONArray("albumImgs");
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    JSONArray imgArray = data.getJSONArray("albumImgs");
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(JsonUtil.isEmpty(imgArray) ? "" : imgArray.getJSONObject(0).getString("img"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -284,7 +266,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("albumAssetCode"));
             if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("pic"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -310,7 +292,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasArtistId())
                 musicInfo.setArtistId(RegexUtil.getGroup1("user-(\\d+)\\.htm", a.attr("href")));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     String picUrl = data.getString("pic");
                     if (picUrl.contains("music.126.net"))
                         picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
@@ -327,6 +309,7 @@ public class MusicInfoReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, songId))
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .execute()
                     .body();
             Document doc = Jsoup.parse(songBody);
@@ -344,14 +327,16 @@ public class MusicInfoReq {
             if (!musicInfo.hasArtistId())
                 musicInfo.setArtistId(RegexUtil.getGroup1("user-(\\d+)\\.htm", a.attr("href")));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     String picUrl = data.getString("cover");
                     if (StringUtil.isEmpty(picUrl)) picUrl = data.getString("pic");
-                    if (picUrl.contains("music.126.net"))
-                        picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
-                    else if (picUrl.contains("y.gtimg.cn"))
-                        picUrl = picUrl.replaceFirst("300x300", "500x500");
-                    if (!picUrl.startsWith("http")) picUrl = "http://www.gggmusic.com/" + picUrl;
+                    if (StringUtil.notEmpty(picUrl)) {
+                        if (picUrl.contains("music.126.net"))
+                            picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
+                        else if (picUrl.contains("y.gtimg.cn"))
+                            picUrl = picUrl.replaceFirst("300x300", "500x500");
+                        if (!picUrl.startsWith("http")) picUrl = "http://www.gggmusic.com/" + picUrl;
+                    }
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(picUrl);
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -361,7 +346,7 @@ public class MusicInfoReq {
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.urlEncode(songId.replace("_", "$"))))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.urlEncodeAll(songId.replace("_", "$"))))
                     .execute()
                     .body();
             JSONObject data = JSONArray.parseArray(songBody).getJSONObject(0);
@@ -369,7 +354,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("nickname"));
             if (!musicInfo.hasArtistId()) musicInfo.setArtist(data.getString("userid"));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("avatar"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -391,7 +376,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumInfo.getString("albumId"));
             if (!musicInfo.hasDuration()) musicInfo.setDuration(trackInfo.getDouble("duration"));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage albumImage = SdkUtil.getImageFromUrl("https:" + trackInfo.getString("coverPath"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -413,7 +398,7 @@ public class MusicInfoReq {
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("username"));
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(data.getString("user_id"));
                 if (!musicInfo.hasAlbumImage()) {
-                    GlobalExecutors.imageExecutor.submit(() -> {
+                    GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("front_cover"));
                         ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
@@ -464,7 +449,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("uname"));
             if (!musicInfo.hasArtistId()) musicInfo.setArtistId(data.getString("uid"));
             if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.submit(() -> {
+                GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("cover"));
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                     musicInfo.callback();
@@ -474,14 +459,14 @@ public class MusicInfoReq {
     }
 
     /**
-     * 根据为 NetMusicInfo 填充歌词字符串（包括原文、翻译、罗马音），没有的部分填充 ""
+     * 为 NetMusicInfo 填充歌词字符串（包括原文、翻译、罗马音），没有的部分填充 ""
      */
-    public void fillLrc(NetMusicInfo netMusicInfo) {
-        if (netMusicInfo.isLrcIntegrated()) return;
+    public void fillLrc(NetMusicInfo musicInfo) {
+        if (musicInfo.isLrcIntegrated()) return;
 
-        int source = netMusicInfo.getSource();
-        String id = netMusicInfo.getId();
-//        String hash = netMusicInfo.getHash();
+        int source = musicInfo.getSource();
+        String id = musicInfo.getId();
+//        String hash = musicInfo.getHash();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
@@ -494,9 +479,28 @@ public class MusicInfoReq {
             JSONObject lrc = lrcJson.getJSONObject("lrc");
             JSONObject tLrc = lrcJson.getJSONObject("tlyric");
             JSONObject romaLrc = lrcJson.getJSONObject("romalrc");
-            if (JsonUtil.notEmpty(lrc)) netMusicInfo.setLrc(lrc.getString("lyric"));
-            if (JsonUtil.notEmpty(tLrc)) netMusicInfo.setTrans(tLrc.getString("lyric"));
-            if (JsonUtil.notEmpty(romaLrc)) netMusicInfo.setRoma(romaLrc.getString("lyric"));
+            if (JsonUtil.notEmpty(lrc)) {
+                // 网易云歌词中包含部分 json 数据需要解析
+                String lyric = lrc.getString("lyric");
+                if (StringUtil.isEmpty(lyric)) musicInfo.setLrc("");
+                else {
+                    String[] lsp = lyric.split("\n");
+                    StringBuilder sb = new StringBuilder();
+                    for (String l : lsp) {
+                        if (JSON.isValidObject(l)) {
+                            JSONObject obj = JSONObject.parseObject(l);
+                            sb.append(TimeUtil.formatToLrcTime(obj.getDouble("t")));
+                            JSONArray cArray = obj.getJSONArray("c");
+                            for (int i = 0, s = cArray.size(); i < s; i++)
+                                sb.append(cArray.getJSONObject(i).getString("tx"));
+                        } else sb.append(l);
+                        sb.append("\n");
+                    }
+                    musicInfo.setLrc(sb.toString());
+                }
+            }
+            if (JsonUtil.notEmpty(tLrc)) musicInfo.setTrans(tLrc.getString("lyric"));
+            if (JsonUtil.notEmpty(romaLrc)) musicInfo.setRoma(romaLrc.getString("lyric"));
         }
 
         // 酷狗
@@ -518,8 +522,8 @@ public class MusicInfoReq {
             JSONObject lrcJson = JSONObject.parseObject(lrcBody);
             String lyric = lrcJson.getString("lyric");
             String trans = lrcJson.getString("trans");
-            netMusicInfo.setLrc(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(lyric)));
-            netMusicInfo.setTrans(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(trans)));
+            musicInfo.setLrc(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(lyric)));
+            musicInfo.setTrans(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(trans)));
         }
 
         // 酷我
@@ -529,8 +533,8 @@ public class MusicInfoReq {
                     .body();
             JSONObject data = JSONObject.parseObject(lrcBody).getJSONObject("data");
             if (JsonUtil.isEmpty(data)) {
-                netMusicInfo.setLrc(null);
-                netMusicInfo.setTrans(null);
+                musicInfo.setLrc(null);
+                musicInfo.setTrans(null);
                 return;
             }
             try {
@@ -557,8 +561,8 @@ public class MusicInfoReq {
                             sb.append("\n");
                         } else hasTrans = true;
                     }
-                    netMusicInfo.setLrc(sb.toString());
-                } else netMusicInfo.setLrc(null);
+                    musicInfo.setLrc(sb.toString());
+                } else musicInfo.setLrc(null);
 
                 // 酷我歌词返回的是数组，需要先处理成字符串！
                 // lrclist 可能是数组也可能为 null ！
@@ -583,8 +587,8 @@ public class MusicInfoReq {
                         }
                         lastTime = time;
                     }
-                    netMusicInfo.setTrans(sb.toString());
-                } else netMusicInfo.setTrans(null);
+                    musicInfo.setTrans(sb.toString());
+                } else musicInfo.setTrans(null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -592,16 +596,16 @@ public class MusicInfoReq {
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API_2, id))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
             // 先获取歌词 url，再获取歌词
             String lrcUrl = data.getString("lrcUrl");
             String lrcStr = HttpRequest.get(lrcUrl).execute().body();
-            netMusicInfo.setLrc(lrcStr);
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc(lrcStr);
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         }
 
         // 千千
@@ -611,9 +615,9 @@ public class MusicInfoReq {
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             String lrcUrl = urlJson.getJSONObject("data").getString("lyric");
-            netMusicInfo.setLrc(StringUtil.notEmpty(lrcUrl) ? HttpRequest.get(lrcUrl).execute().body() : "");
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc(StringUtil.notEmpty(lrcUrl) ? HttpRequest.get(lrcUrl).execute().body() : "");
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         }
 
         // 音乐磁场
@@ -631,9 +635,9 @@ public class MusicInfoReq {
                 sb.append(lrc);
                 sb.append('\n');
             }
-            netMusicInfo.setLrc(sb.toString());
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc(sb.toString());
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         }
 
         // 咕咕咕音乐
@@ -650,9 +654,9 @@ public class MusicInfoReq {
                 sb.append(lrc);
                 sb.append('\n');
             }
-            netMusicInfo.setLrc(sb.toString());
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc(sb.toString());
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         }
 
         // 5sing
@@ -662,9 +666,9 @@ public class MusicInfoReq {
                     .execute()
                     .body();
             JSONObject lrcJson = JSONObject.parseObject(lrcBody);
-            netMusicInfo.setLrc(lrcJson.getString("txt"));
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc(lrcJson.getString("txt"));
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         }
 
         // 猫耳(弹幕)
@@ -679,14 +683,14 @@ public class MusicInfoReq {
             List<Element> ds = elements.subList(0, Math.min(elements.size(), dmLimit));
             StringBuilder sb = new StringBuilder();
             for (Element d : ds) {
-                Double time = Double.parseDouble(d.attr("p").split(",", 2)[0]);
+                double time = Double.parseDouble(d.attr("p").split(",", 2)[0]);
                 sb.append(TimeUtil.formatToLrcTime(time));
                 sb.append(d.text());
                 sb.append("\n");
             }
-            netMusicInfo.setLrc(sb.toString());
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc(sb.toString());
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         }
 
         // 哔哩哔哩
@@ -697,13 +701,13 @@ public class MusicInfoReq {
                     .execute()
                     .body();
             JSONObject lrcJson = JSONObject.parseObject(lrcBody);
-            netMusicInfo.setLrc(lrcJson.getString("data"));
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc(lrcJson.getString("data"));
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         } else {
-            netMusicInfo.setLrc("");
-            netMusicInfo.setTrans("");
-            netMusicInfo.setRoma("");
+            musicInfo.setLrc("");
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
         }
     }
 }

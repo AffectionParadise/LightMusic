@@ -51,16 +51,16 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         outerPanel.setLayout(new GridLayout(1, 1));
         outerPanel.add(label);
 
-        NetCommentInfo netCommentInfo = (NetCommentInfo) value;
-        boolean sub = netCommentInfo.isSub();
-        BufferedImage profile = netCommentInfo.getProfile();
+        NetCommentInfo commentInfo = (NetCommentInfo) value;
+        boolean sub = commentInfo.isSub();
+        BufferedImage profile = commentInfo.getProfile();
 
         int lw = list.getVisibleRect().width - 10;
 
         // 使图标靠上
         label.setVerticalTextPosition(TOP);
         label.setHorizontalAlignment(LEFT);
-        label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(netCommentInfo.toString(), lw - (sub ? 235 : 160))));
+        label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
         label.setIconTextGap(15);
         label.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
         label.setFont(customFont);

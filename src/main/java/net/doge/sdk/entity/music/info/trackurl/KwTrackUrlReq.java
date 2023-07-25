@@ -10,7 +10,7 @@ import net.doge.util.common.RegexUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class KWTrackUrlReq {
+public class KwTrackUrlReq {
     private final String SECRET_KEY = "ylzsxkwm";
     private final int DES_MODE_DECRYPT = 1;
     private final int[] arrayE = {

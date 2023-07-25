@@ -46,12 +46,12 @@ public class MvUrlReq {
     /**
      * 根据 MV id 获取 MV 视频链接
      */
-    public String fetchMvUrl(NetMvInfo netMvInfo) {
-        int source = netMvInfo.getSource();
-        String mvId = netMvInfo.getId();
-        String bvId = netMvInfo.getBvid();
-        boolean isVideo = netMvInfo.isVideo();
-        boolean isMlog = netMvInfo.isMlog();
+    public String fetchMvUrl(NetMvInfo mvInfo) {
+        int source = mvInfo.getSource();
+        String mvId = mvInfo.getId();
+        String bvId = mvInfo.getBvid();
+        boolean isVideo = mvInfo.isVideo();
+        boolean isMlog = mvInfo.isMlog();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
@@ -63,8 +63,8 @@ public class MvUrlReq {
                             .execute()
                             .body();
                     mvId = JSONObject.parseObject(body).getString("data");
-                    netMvInfo.setId(mvId);
-                    netMvInfo.setType(MvInfoType.VIDEO);
+                    mvInfo.setId(mvId);
+                    mvInfo.setType(MvInfoType.VIDEO);
                 }
 
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -193,7 +193,7 @@ public class MvUrlReq {
                         .cookie(SdkCommon.BI_COOKIE)
                         .execute()
                         .body();
-                netMvInfo.setId(mvId = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
+                mvInfo.setId(mvId = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
             }
 
             String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, mvId))
@@ -204,7 +204,7 @@ public class MvUrlReq {
             JSONArray urls = data.getJSONArray("durl");
             String url = urls.getJSONObject(0).getString("url");
             // 根据 url 判断视频的格式
-            netMvInfo.setFormat(url.contains(".mp4?") ? Format.MP4 : Format.FLV);
+            mvInfo.setFormat(url.contains(".mp4?") ? Format.MP4 : Format.FLV);
             return url;
         }
 

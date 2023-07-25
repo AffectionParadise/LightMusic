@@ -122,11 +122,10 @@ public class NetRadioInfo {
     }
 
     private void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
     /**
@@ -145,8 +144,8 @@ public class NetRadioInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetRadioInfo) {
-            NetRadioInfo netRadioInfo = (NetRadioInfo) o;
-            return hashCode() == netRadioInfo.hashCode();
+            NetRadioInfo radioInfo = (NetRadioInfo) o;
+            return hashCode() == radioInfo.hashCode();
         }
         return false;
     }

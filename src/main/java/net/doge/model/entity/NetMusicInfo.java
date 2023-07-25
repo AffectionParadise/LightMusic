@@ -65,11 +65,10 @@ public class NetMusicInfo {
     }
 
     public void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
     /**
@@ -169,8 +168,8 @@ public class NetMusicInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetMusicInfo) {
-            NetMusicInfo netMusicInfo = (NetMusicInfo) o;
-            return hashCode() == netMusicInfo.hashCode();
+            NetMusicInfo musicInfo = (NetMusicInfo) o;
+            return hashCode() == musicInfo.hashCode();
         }
         return false;
     }

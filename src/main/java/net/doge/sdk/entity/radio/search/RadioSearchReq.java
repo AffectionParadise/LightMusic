@@ -51,14 +51,14 @@ public class RadioSearchReq {
      */
     public CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetRadioInfo> radioInfos = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncode(keyword);
+        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetRadioInfo>> searchRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
@@ -100,15 +100,15 @@ public class RadioSearchReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 喜马拉雅
         Callable<CommonResult<NetRadioInfo>> searchRadiosXm = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_XM_API, encodedKeyword, page, limit))
@@ -146,14 +146,14 @@ public class RadioSearchReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         Callable<CommonResult<NetRadioInfo>> searchRadiosMe = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_ME_API, encodedKeyword, page, limit))
@@ -186,14 +186,14 @@ public class RadioSearchReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 豆瓣
         Callable<CommonResult<NetRadioInfo>> searchRadiosDb = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             final int lim = Math.min(20, limit);
@@ -229,14 +229,14 @@ public class RadioSearchReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 豆瓣图书
         Callable<CommonResult<NetRadioInfo>> searchBookRadiosDb = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             final int lim = Math.min(20, limit);
@@ -273,14 +273,14 @@ public class RadioSearchReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 豆瓣游戏
         Callable<CommonResult<NetRadioInfo>> searchGameRadiosDb = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             final int lim = Math.min(20, limit);
@@ -317,10 +317,10 @@ public class RadioSearchReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
@@ -350,8 +350,8 @@ public class RadioSearchReq {
                 e.printStackTrace();
             }
         });
-        radioInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(radioInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

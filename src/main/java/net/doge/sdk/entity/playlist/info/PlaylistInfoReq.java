@@ -63,7 +63,7 @@ public class PlaylistInfoReq {
         // 信息完整直接跳过
         if (playlistInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImgThumb(SdkUtil.extractCover(playlistInfo.getCoverImgThumbUrl())));
+        GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImgThumb(SdkUtil.extractCover(playlistInfo.getCoverImgThumbUrl())));
     }
 
     /**
@@ -380,7 +380,7 @@ public class PlaylistInfoReq {
             String description = playlistJson.getString("description");
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasCreator())
                 playlistInfo.setCreator(JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "");
@@ -409,7 +409,7 @@ public class PlaylistInfoReq {
             String description = data.getString("intro");
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             playlistInfo.setTag("");
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(data.getIntValue("songcount"));
@@ -430,7 +430,7 @@ public class PlaylistInfoReq {
             String description = data.getString("desc").replace("<br>", "\n");
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(data));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(data.getIntValue("songnum"));
@@ -448,7 +448,7 @@ public class PlaylistInfoReq {
             String description = data.getString("info");
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(data.getString("tag").replace(",", "、"));
         }
@@ -465,7 +465,7 @@ public class PlaylistInfoReq {
             String description = data.getString("summary");
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(data));
         }
@@ -482,7 +482,7 @@ public class PlaylistInfoReq {
             String description = playlistJson.getString("desc");
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(playlistJson));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(playlistJson.getIntValue("trackCount"));
@@ -504,7 +504,7 @@ public class PlaylistInfoReq {
             String tag = sj.toString();
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(tag);
         }
@@ -523,7 +523,7 @@ public class PlaylistInfoReq {
             String description = StringUtil.removeHTMLLabel(album.getString("intro"));
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(info));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(album.getIntValue("music_count"));
@@ -541,7 +541,7 @@ public class PlaylistInfoReq {
             String description = data.getString("intro");
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
             playlistInfo.setTag("");
         }
@@ -559,7 +559,7 @@ public class PlaylistInfoReq {
      */
     public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetMusicInfo> netMusicInfos = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
 
         int source = playlistInfo.getSource();
         String id = playlistInfo.getId();
@@ -597,17 +597,17 @@ public class PlaylistInfoReq {
                     Double duration = songJson.getDouble("dt") / 1000;
                     String mvId = songJson.getString("mv");
 
-                    NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setId(songId);
-                    netMusicInfo.setName(name);
-                    netMusicInfo.setArtist(artist);
-                    netMusicInfo.setArtistId(artistId);
-                    netMusicInfo.setAlbumName(albumName);
-                    netMusicInfo.setAlbumId(albumId);
-                    netMusicInfo.setDuration(duration);
-                    netMusicInfo.setMvId(mvId);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
 
-                    netMusicInfos.add(netMusicInfo);
+                    res.add(musicInfo);
                 }
             };
             // 歌曲总数
@@ -621,7 +621,7 @@ public class PlaylistInfoReq {
                 total.set(playlistInfoJson.getJSONObject("playlist").getIntValue("trackCount"));
             };
 
-            LinkedList<Future<?>> taskList = new LinkedList<>();
+            List<Future<?>> taskList = new LinkedList<>();
 
             taskList.add(GlobalExecutors.requestExecutor.submit(getMusicInfo));
             taskList.add(GlobalExecutors.requestExecutor.submit(getTotal));
@@ -667,18 +667,18 @@ public class PlaylistInfoReq {
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getString("mvhash");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.KG);
-                netMusicInfo.setHash(hash);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-//                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setHash(hash);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+//                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -706,18 +706,18 @@ public class PlaylistInfoReq {
                     Double duration = songJson.getDouble("interval");
                     String mvId = songJson.getString("vid");
 
-                    NetMusicInfo netMusicInfo = new NetMusicInfo();
-                    netMusicInfo.setSource(NetMusicSource.QQ);
-                    netMusicInfo.setId(songId);
-                    netMusicInfo.setName(name);
-                    netMusicInfo.setArtist(artist);
-                    netMusicInfo.setArtistId(artistId);
-                    netMusicInfo.setAlbumName(albumName);
-                    netMusicInfo.setAlbumId(albumId);
-                    netMusicInfo.setDuration(duration);
-                    netMusicInfo.setMvId(mvId);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.QQ);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
 
-                    netMusicInfos.add(netMusicInfo);
+                    res.add(musicInfo);
                 }
             }
         }
@@ -743,18 +743,18 @@ public class PlaylistInfoReq {
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getIntValue("hasmv") == 0 ? "" : songId;
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.KW);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.KW);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -781,18 +781,18 @@ public class PlaylistInfoReq {
                 // 咪咕音乐没有 mv 时，该字段不存在！
                 String mvId = songJson.getString("mvId");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.MG);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.MG);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -816,17 +816,17 @@ public class PlaylistInfoReq {
                 String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.QI);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.QI);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -849,14 +849,14 @@ public class PlaylistInfoReq {
                 String artist = aa.text();
                 String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", aa.attr("href"));
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.FS);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -876,13 +876,13 @@ public class PlaylistInfoReq {
                 String name = songJson.getString("soundstr");
                 Double duration = songJson.getDouble("duration") / 1000;
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.ME);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setDuration(duration);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setDuration(duration);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -904,18 +904,18 @@ public class PlaylistInfoReq {
                 String artistId = songJson.getString("uid");
                 Double duration = songJson.getDouble("duration");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.BI);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setDuration(duration);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.BI);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setDuration(duration);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
-        return new CommonResult<>(netMusicInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

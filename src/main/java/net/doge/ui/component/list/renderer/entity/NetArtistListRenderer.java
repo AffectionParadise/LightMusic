@@ -43,7 +43,7 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetArtistInfo netArtistInfo = (NetArtistInfo) value;
+        NetArtistInfo artistInfo = (NetArtistInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
@@ -53,7 +53,7 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
         CustomLabel mvNumLabel = new CustomLabel();
 
         iconLabel.setIconTextGap(0);
-        iconLabel.setIcon(netArtistInfo.hasCoverImgThumb() ? new ImageIcon(netArtistInfo.getCoverImgThumb()) : artistIcon);
+        iconLabel.setIcon(artistInfo.hasCoverImgThumb() ? new ImageIcon(artistInfo.getCoverImgThumb()) : artistIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -91,10 +91,10 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
 
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netArtistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String songNum = netArtistInfo.hasSongNum() ? StringUtil.textToHtml(netArtistInfo.fromME() ? netArtistInfo.getSongNum() + " 电台" : netArtistInfo.getSongNum() + " 歌曲") : "";
-        String albumNum = netArtistInfo.hasAlbumNum() ? StringUtil.textToHtml(netArtistInfo.getAlbumNum() + " 专辑") : "";
-        String mvNum = netArtistInfo.hasMvNum() ? StringUtil.textToHtml(netArtistInfo.getMvNum() + " MV") : "";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(artistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String songNum = artistInfo.hasSongNum() ? StringUtil.textToHtml(artistInfo.fromME() ? artistInfo.getSongNum() + " 电台" : artistInfo.getSongNum() + " 歌曲") : "";
+        String albumNum = artistInfo.hasAlbumNum() ? StringUtil.textToHtml(artistInfo.getAlbumNum() + " 专辑") : "";
+        String mvNum = artistInfo.hasMvNum() ? StringUtil.textToHtml(artistInfo.getMvNum() + " MV") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

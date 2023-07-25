@@ -43,7 +43,7 @@ public class NetAlbumListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetAlbumInfo netAlbumInfo = (NetAlbumInfo) value;
+        NetAlbumInfo albumInfo = (NetAlbumInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
@@ -53,7 +53,7 @@ public class NetAlbumListRenderer extends DefaultListCellRenderer {
         CustomLabel publishTimeLabel = new CustomLabel();
 
         iconLabel.setIconTextGap(0);
-        iconLabel.setIcon(netAlbumInfo.hasCoverImgThumb() ? new ImageIcon(netAlbumInfo.getCoverImgThumb()) : albumIcon);
+        iconLabel.setIcon(albumInfo.hasCoverImgThumb() ? new ImageIcon(albumInfo.getCoverImgThumb()) : albumIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -91,11 +91,11 @@ public class NetAlbumListRenderer extends DefaultListCellRenderer {
 
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netAlbumInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String artist = netAlbumInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                StringUtil.shorten(netAlbumInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
-        String songNum = netAlbumInfo.hasSongNum() ? StringUtil.textToHtml(netAlbumInfo.isPhoto() ? netAlbumInfo.getSongNum() + " 图片" : netAlbumInfo.getSongNum() + " 歌曲") : "";
-        String publishTime = netAlbumInfo.hasPublishTime() ? StringUtil.textToHtml(netAlbumInfo.getPublishTime() + " 发行") : "";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(albumInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String artist = albumInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+                StringUtil.shorten(albumInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+        String songNum = albumInfo.hasSongNum() ? StringUtil.textToHtml(albumInfo.isPhoto() ? albumInfo.getSongNum() + " 图片" : albumInfo.getSongNum() + " 歌曲") : "";
+        String publishTime = albumInfo.hasPublishTime() ? StringUtil.textToHtml(albumInfo.getPublishTime() + " 发行") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

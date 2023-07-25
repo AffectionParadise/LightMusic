@@ -75,11 +75,10 @@ public class NetMvInfo {
     }
 
     private void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
     /**
@@ -118,8 +117,8 @@ public class NetMvInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetMvInfo) {
-            NetMvInfo netMvInfo = (NetMvInfo) o;
-            return hashCode() == netMvInfo.hashCode();
+            NetMvInfo mvInfo = (NetMvInfo) o;
+            return hashCode() == mvInfo.hashCode();
         }
         return false;
     }

@@ -34,8 +34,6 @@ public class TerminateUtil {
      *
      * @param command
      * @return
-     * @throws IOException
-     * @throws InterruptedException
      */
     public static int exec(String command) {
         try {
@@ -57,7 +55,7 @@ public class TerminateUtil {
      * @param command
      * @return
      */
-    public static void asyncExec(String command) {
+    public static void execAsync(String command) {
         RuntimeUtil.exec(command);
     }
 
@@ -68,7 +66,7 @@ public class TerminateUtil {
      * @return
      */
     public static void explorer(String path) {
-        asyncExec(String.format("explorer /select, \"%s\"", path));
+        execAsync(String.format("explorer /select, \"%s\"", path));
     }
 
     /**
@@ -78,7 +76,7 @@ public class TerminateUtil {
      * @return
      */
     public static void notepad(String path) {
-        asyncExec(String.format("notepad \"%s\"", path));
+        execAsync(String.format("notepad \"%s\"", path));
     }
 
     private static class OutputHandlerRunnable implements Runnable {
@@ -92,9 +90,9 @@ public class TerminateUtil {
 
         @Override
         public void run() {
-            try (BufferedReader bufr = new BufferedReader(new InputStreamReader(in))) {
-                String line = null;
-                while ((line = bufr.readLine()) != null) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
                     if (error) {
                         System.out.println(line);
                     }

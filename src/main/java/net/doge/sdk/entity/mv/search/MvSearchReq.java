@@ -46,16 +46,16 @@ public class MvSearchReq {
      */
     public CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetMvInfo> mvInfos = new LinkedList<>();
+        List<NetMvInfo> res = new LinkedList<>();
 //        Set<NetMvInfo> set = Collections.synchronizedSet(new HashSet<>());
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncode(keyword);
+        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
 
         // 网易云
         // MV
         Callable<CommonResult<NetMvInfo>> searchMvs = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
@@ -92,14 +92,14 @@ public class MvSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 视频
         Callable<CommonResult<NetMvInfo>> searchVideos = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
@@ -139,15 +139,15 @@ public class MvSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗
         Callable<CommonResult<NetMvInfo>> searchMvsKg = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(SEARCH_MV_KG_API, encodedKeyword, page, limit))
@@ -187,14 +187,14 @@ public class MvSearchReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         Callable<CommonResult<NetMvInfo>> searchMvsQq = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
@@ -232,14 +232,14 @@ public class MvSearchReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         Callable<CommonResult<NetMvInfo>> searchMvsKw = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MV_KW_API, encodedKeyword, page, limit)).execute();
@@ -274,15 +274,15 @@ public class MvSearchReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 好看
         Callable<CommonResult<NetMvInfo>> searchMvsHk = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_HK_API, encodedKeyword, page, limit))
@@ -321,14 +321,14 @@ public class MvSearchReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 哔哩哔哩
         Callable<CommonResult<NetMvInfo>> searchMvsBi = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_BI_API, encodedKeyword, page))
@@ -366,9 +366,9 @@ public class MvSearchReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
@@ -400,8 +400,8 @@ public class MvSearchReq {
                 e.printStackTrace();
             }
         });
-        mvInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(mvInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

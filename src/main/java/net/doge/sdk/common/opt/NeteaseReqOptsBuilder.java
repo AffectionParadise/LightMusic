@@ -26,10 +26,10 @@ public class NeteaseReqOptsBuilder {
     }
 
     // 构造 eapi 请求选项
-    public static Map<NeteaseReqOptEnum, String> eApi(String url) {
+    public static Map<NeteaseReqOptEnum, String> eApi(String path) {
         Map<NeteaseReqOptEnum, String> opts = new HashMap<>();
         opts.put(NeteaseReqOptEnum.CRYPTO, NeteaseReqOptConstants.E_API);
-        opts.put(NeteaseReqOptEnum.URL, url);
+        opts.put(NeteaseReqOptEnum.PATH, path);
         return opts;
     }
 }

@@ -1,5 +1,8 @@
 package net.doge.sdk.util;
 
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.ui.ImageConstants;
@@ -9,9 +12,6 @@ import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.StringJoiner;
 
 public class SdkUtil {
@@ -22,7 +22,7 @@ public class SdkUtil {
      * @return
      */
     private static JSONArray getArtistArray(JSONObject json) {
-        String[] artistKeys = {"artists", "artist", "authors", "singer", "singer_list", "singers", "ar", "singerinfo", "creator", "actors"};
+        String[] artistKeys = {"artists", "artist", "ar", "authors", "singers", "singer_list", "singer", "singerinfo", "creator", "actors"};
         JSONArray artistArray = null;
         for (String key : artistKeys) {
             if (!json.containsKey(key)) continue;
@@ -72,10 +72,10 @@ public class SdkUtil {
 
         // 获取艺术家 id
         JSONObject first = artistArray.getJSONObject(0);
-        String[] idKeys = {"id", "mid", "author_id", "artistId", "artistCode", "singermid", "singer_mid", "singerid", "userId"};
+        String[] idKeys = {"singermid", "singer_mid", "mid", "singerid", "artistCode", "artistId", "author_id", "userId", "id"};
         for (String key : idKeys) {
             if (!first.containsKey(key)) continue;
-            return json.getString(key);
+            return first.getString(key);
         }
 
         return "";
@@ -176,12 +176,11 @@ public class SdkUtil {
      */
     public static String getRedirectUrl(String url) {
         try {
-            // 获取重定向之后的 url
-            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-            conn.setInstanceFollowRedirects(false);
-            conn.setConnectTimeout(SdkCommon.TIME_OUT);
-            return conn.getHeaderField("Location");
-        } catch (IOException e) {
+            HttpResponse resp = HttpRequest.get(url)
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
+                    .execute();
+            return resp.header("Location");
+        } catch (Exception e) {
             return "";
         }
     }

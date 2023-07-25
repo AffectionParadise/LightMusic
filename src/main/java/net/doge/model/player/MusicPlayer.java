@@ -16,7 +16,7 @@ import net.doge.constant.ui.SpectrumConstants;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.ui.MainFrame;
-import net.doge.util.media.MusicUtil;
+import net.doge.util.media.MediaUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 
@@ -34,12 +34,12 @@ import java.util.concurrent.TimeUnit;
 public class MusicPlayer {
     // 播放界面
     private MainFrame f;
-    // 当前载入的文件的信息
-    private MetaMusicInfo musicInfo = new MetaMusicInfo();
+    // 当前载入的音乐的元信息
+    private MetaMusicInfo metaMusicInfo = new MetaMusicInfo();
     // 载入的本地音乐信息
     private AudioFile audioFile;
     // 载入的在线音乐信息，如果是本地音乐则为 null
-    private NetMusicInfo netMusicInfo;
+    private NetMusicInfo musicInfo;
     // 当前播放器状态
     private int status;
     // 播放器
@@ -65,31 +65,31 @@ public class MusicPlayer {
     }
 
     // 载入文件
-    public void load(String source, NetMusicInfo netMusicInfo) {
-        load(new AudioFile(source), netMusicInfo);
+    public void load(String source, NetMusicInfo musicInfo) {
+        load(new AudioFile(source), musicInfo);
     }
 
-    public void load(AudioFile source, NetMusicInfo netMusicInfo) {
+    public void load(AudioFile source, NetMusicInfo musicInfo) {
         // 先清除上一次播放数据
         clearMetadata();
         // 释放上一个 MediaPlayer 对象
         disposeMp();
         // 加载音乐信息
-        initMusicInfo(source, netMusicInfo);
+        initMusicInfo(source, musicInfo);
         status = PlayerStatus.LOADED;
     }
 
     // 清除上一次的播放数据
     private void clearMetadata() {
-        musicInfo.setFormat(null);
-        musicInfo.setName(null);
-        musicInfo.setArtist(null);
-        musicInfo.setAlbumName(null);
-        musicInfo.setDuration(0);
-        musicInfo.setInvokeLater(null);
-        musicInfo.setAlbumImage(null);
+        metaMusicInfo.setFormat(null);
+        metaMusicInfo.setName(null);
+        metaMusicInfo.setArtist(null);
+        metaMusicInfo.setAlbumName(null);
+        metaMusicInfo.setDuration(0);
+        metaMusicInfo.setInvokeLater(null);
+        metaMusicInfo.setAlbumImage(null);
         audioFile = null;
-        netMusicInfo = null;
+        musicInfo = null;
 
         for (int i = 0, len = specsOrigin.length; i < len; i++) {
             specsOrigin[i] = 0;
@@ -111,7 +111,7 @@ public class MusicPlayer {
 
     // 判断播放器是否载入了文件
     public boolean loadedAudioFile() {
-        return netMusicInfo == null && audioFile != null;
+        return musicInfo == null && audioFile != null;
     }
 
     // 判断播放器是否载入了指定文件
@@ -122,13 +122,13 @@ public class MusicPlayer {
 
     // 判断播放器是否载入了在线音乐
     public boolean loadedNetMusic() {
-        return netMusicInfo != null;
+        return musicInfo != null;
     }
 
     // 判断播放器是否载入了指定在线音乐
-    public boolean loadedNetMusic(NetMusicInfo netMusicInfo) {
+    public boolean loadedNetMusic(NetMusicInfo musicInfo) {
         if (!loadedNetMusic()) return false;
-        return netMusicInfo.equals(this.netMusicInfo);
+        return musicInfo.equals(this.musicInfo);
     }
 
     // 判断播放器是否载入了指定对象
@@ -164,70 +164,70 @@ public class MusicPlayer {
     }
 
     // 初始化音频信息(pcm wav)
-    private void initMusicInfo(AudioFile source, NetMusicInfo netMusicInfo) {
+    private void initMusicInfo(AudioFile source, NetMusicInfo musicInfo) {
         this.audioFile = source;
-        this.netMusicInfo = netMusicInfo;
+        this.musicInfo = musicInfo;
 
         // 音频格式(以 source 文件为准)
-        musicInfo.setFormat(source == null ? netMusicInfo.getFormat() : source.getFormat());
+        metaMusicInfo.setFormat(source == null ? musicInfo.getFormat() : source.getFormat());
         // 时长(优先考虑 NetMusicInfo 的 duration 属性，有时 getDuration 方法返回的时长不准确)
-        musicInfo.setDuration(netMusicInfo != null ? netMusicInfo.hasDuration() ? netMusicInfo.getDuration() : 0 : source.getDuration());
+        metaMusicInfo.setDuration(musicInfo != null ? musicInfo.hasDuration() ? musicInfo.getDuration() : 0 : source.getDuration());
 
         // 在线音乐的信息
-        if (netMusicInfo != null) {
-            String name = netMusicInfo.getName();
-            String artist = netMusicInfo.getArtist();
-            String albumName = netMusicInfo.getAlbumName();
+        if (musicInfo != null) {
+            String name = musicInfo.getName();
+            String artist = musicInfo.getArtist();
+            String albumName = musicInfo.getAlbumName();
 
             // 歌曲名称
-            musicInfo.setName(StringUtil.isEmpty(name) ? "未知" : name);
+            metaMusicInfo.setName(StringUtil.isEmpty(name) ? "未知" : name);
             // 艺术家
-            musicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
+            metaMusicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
             // 专辑名称
-            musicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
+            metaMusicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
             // 专辑图片
-            GlobalExecutors.imageExecutor.submit(() -> {
-                if (!netMusicInfo.hasAlbumImage()) {
-                    netMusicInfo.setInvokeLater(() -> {
-                        BufferedImage albumImage = netMusicInfo.getAlbumImage();
+            GlobalExecutors.requestExecutor.execute(() -> {
+                if (!musicInfo.hasAlbumImage()) {
+                    musicInfo.setInvokeLater(() -> {
+                        BufferedImage albumImage = musicInfo.getAlbumImage();
                         // 处理切换歌曲时封面图片混淆的情况
-                        if (!netMusicInfo.equals(this.netMusicInfo)) return;
-                        musicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
+                        if (!musicInfo.equals(this.musicInfo)) return;
+                        metaMusicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
                         f.showAlbumImage();
                     });
                 } else {
-                    musicInfo.setAlbumImage(netMusicInfo.getAlbumImage());
+                    metaMusicInfo.setAlbumImage(musicInfo.getAlbumImage());
                     f.showAlbumImage();
                 }
             });
             return;
         }
         // MP3 文件的其他信息
-        if (musicInfo.isMp3()) {
+        if (metaMusicInfo.isMp3()) {
             String artist = source.getArtist();
             String albumName = source.getAlbum();
             // 歌曲名称
-            musicInfo.setName(source.hasSongName() ? source.getSongName() : source.getNameWithoutSuffix());
+            metaMusicInfo.setName(source.hasSongName() ? source.getSongName() : source.getNameWithoutSuffix());
             // 艺术家
-            musicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
+            metaMusicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
             // 专辑
-            musicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
+            metaMusicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
 
             // 获取 MP3 专辑图片
-            GlobalExecutors.imageExecutor.submit(() -> {
-                BufferedImage albumImage = MusicUtil.getAlbumImage(source);
+            GlobalExecutors.requestExecutor.execute(() -> {
+                BufferedImage albumImage = MediaUtil.getAlbumImage(source);
                 // 处理切换歌曲时封面图片混淆的情况
                 if (!source.equals(audioFile)) return;
-                musicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
+                metaMusicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
                 f.showAlbumImage();
             });
         }
         // 其他类型的文件信息
         else {
-            musicInfo.setName(source.getNameWithoutSuffix());
-            musicInfo.setArtist("未知");
-            musicInfo.setAlbumName("未知");
-            musicInfo.setAlbumImage(f.defaultAlbumImage);
+            metaMusicInfo.setName(source.getNameWithoutSuffix());
+            metaMusicInfo.setArtist("未知");
+            metaMusicInfo.setAlbumName("未知");
+            metaMusicInfo.setAlbumImage(f.defaultAlbumImage);
             f.showAlbumImage();
         }
     }
@@ -247,8 +247,8 @@ public class MusicPlayer {
         mp = null;
     }
 
-    private void initRequestHeaders(NetMusicInfo netMusicInfo, Media media) {
-        if (netMusicInfo == null || netMusicInfo.getSource() != NetMusicSource.BI) return;
+    private void initRequestHeaders(NetMusicInfo musicInfo, Media media) {
+        if (musicInfo == null || musicInfo.getSource() != NetMusicSource.BI) return;
         try {
             // 由于 Media 类不能重写，只能通过反射机制设置请求头
             Field field = Media.class.getDeclaredField("jfxLocator");
@@ -263,9 +263,9 @@ public class MusicPlayer {
     // 初始化 MediaPlayer 对象
     public void initMp() {
         // 加载文件(在线音乐直接播放 url)
-        String src = audioFile != null ? audioFile.toURI().toString() : netMusicInfo.getUrl();
+        String src = audioFile != null ? audioFile.toURI().toString() : musicInfo.getUrl();
         Media media = new Media(src);
-        initRequestHeaders(netMusicInfo, media);
+        initRequestHeaders(musicInfo, media);
         mp = new MediaPlayer(media);
         // 初始化 MediaPlayer 设置
         f.initPlayer();
@@ -362,7 +362,7 @@ public class MusicPlayer {
 
     // 获取总时间秒
     public double getDurationSeconds() {
-        return musicInfo.getDuration();
+        return metaMusicInfo.getDuration();
     }
 
     // 获取总时间字符串
@@ -372,7 +372,7 @@ public class MusicPlayer {
 
     // 获取当前进度比例
     public double getCurrScale() {
-        double s = getCurrTimeSeconds() / musicInfo.getDuration();
+        double s = getCurrTimeSeconds() / metaMusicInfo.getDuration();
         return s <= 1 ? s : Double.isInfinite(s) ? 0 : 1;
     }
 }

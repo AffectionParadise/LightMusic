@@ -177,11 +177,10 @@ public class NetUserInfo {
     }
 
     private void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
     private void callback2() {
@@ -208,8 +207,8 @@ public class NetUserInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetUserInfo) {
-            NetUserInfo netUserInfo = (NetUserInfo) o;
-            return hashCode() == netUserInfo.hashCode();
+            NetUserInfo userInfo = (NetUserInfo) o;
+            return hashCode() == userInfo.hashCode();
         }
         return false;
     }

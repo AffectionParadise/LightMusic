@@ -43,7 +43,7 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetRankingInfo netRankingInfo = (NetRankingInfo) value;
+        NetRankingInfo rankingInfo = (NetRankingInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
@@ -53,7 +53,7 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         CustomLabel updateTimeLabel = new CustomLabel();
 
         iconLabel.setIconTextGap(0);
-        iconLabel.setIcon(netRankingInfo.hasCoverImgThumb() ? new ImageIcon(netRankingInfo.getCoverImgThumb()) : rankingIcon);
+        iconLabel.setIcon(rankingInfo.hasCoverImgThumb() ? new ImageIcon(rankingInfo.getCoverImgThumb()) : rankingIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -91,10 +91,10 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
 
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netRankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String playCount = netRankingInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(netRankingInfo.getPlayCount())) : "";
-        String updateFre = netRankingInfo.hasUpdateFre() ? StringUtil.textToHtml(netRankingInfo.getUpdateFre()) : "";
-        String updateTime = netRankingInfo.hasUpdateTime() ? StringUtil.textToHtml(netRankingInfo.getUpdateTime() + " 更新") : "";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(rankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String playCount = rankingInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(rankingInfo.getPlayCount())) : "";
+        String updateFre = rankingInfo.hasUpdateFre() ? StringUtil.textToHtml(rankingInfo.getUpdateFre()) : "";
+        String updateTime = rankingInfo.hasUpdateTime() ? StringUtil.textToHtml(rankingInfo.getUpdateTime() + " 更新") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

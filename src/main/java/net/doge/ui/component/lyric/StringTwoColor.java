@@ -1,15 +1,13 @@
 package net.doge.ui.component.lyric;
 
 import lombok.Data;
-import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.ui.Fonts;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 @Data
 public class StringTwoColor {
@@ -293,16 +291,10 @@ public class StringTwoColor {
     private void cropImg() {
         if (width <= widthThreshold) return;
         int foreWidth = (int) (width * ratio + 0.5);
-        try {
-            if (foreWidth <= widthThreshold / 2)
-                buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(0, 0, widthThreshold, height)).asBufferedImage();
-            else if (width - foreWidth > widthThreshold / 2)
-                buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(foreWidth - widthThreshold / 2, 0, widthThreshold, height)).asBufferedImage();
-            else
-                buffImg = Thumbnails.of(buffImg).scale(1).sourceRegion(new Rectangle(width - widthThreshold, 0, widthThreshold, height)).asBufferedImage();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (foreWidth <= widthThreshold / 2) buffImg = ImageUtil.region(buffImg, 0, 0, widthThreshold, height);
+        else if (width - foreWidth > widthThreshold / 2)
+            buffImg = ImageUtil.region(buffImg, foreWidth - widthThreshold / 2, 0, widthThreshold, height);
+        else buffImg = ImageUtil.region(buffImg, width - widthThreshold, 0, widthThreshold, height);
     }
 
     private void makeIcon() {

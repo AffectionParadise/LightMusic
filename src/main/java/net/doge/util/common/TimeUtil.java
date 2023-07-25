@@ -16,11 +16,11 @@ import java.util.concurrent.TimeUnit;
  * @Date 2020/12/15
  */
 public class TimeUtil {
-    private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static DateFormat dateShortTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private static DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-    private static DateFormat shortDateFormatter = new SimpleDateFormat("MM-dd");
-    private static DateFormat shortDateShortTimeFormatter = new SimpleDateFormat("MM-dd HH:mm");
+    private static final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat dateShortTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat shortDateFormatter = new SimpleDateFormat("MM-dd");
+    private static final DateFormat shortDateShortTimeFormatter = new SimpleDateFormat("MM-dd HH:mm");
 
     /**
      * 转换毫秒为时间短语
@@ -194,13 +194,12 @@ public class TimeUtil {
     /**
      * 月日转换为星座
      *
-     * @param month
-     * @param day
+     * @param month 月
+     * @param day 日
      * @return
      */
     public static String getConstellation(int month, int day) {
         return DateUtil.getZodiac(month - 1, day);
-//        return day < constellationDayArr[month - 1] ? constellationArr[month - 1] : constellationArr[month];
     }
 
     /**
@@ -218,17 +217,17 @@ public class TimeUtil {
     /**
      * 转换秒为 xx(m):xx(s) 格式
      *
-     * @param timeSeconds
+     * @param seconds
      * @return
      */
-    public static String format(double timeSeconds) {
+    public static String format(double seconds) {
         StringBuilder res = new StringBuilder();
-        int s = (int) timeSeconds;
-        int minutes = s / 60, seconds = s % 60;
-        if (minutes < 10) res.append("0").append(minutes).append(":");
-        else res.append(minutes).append(":");
-        if (seconds < 10) res.append("0").append(seconds);
-        else res.append(seconds);
+        int s = (int) seconds;
+        int minute = s / 60, second = s % 60;
+        if (minute < 10) res.append("0").append(minute).append(":");
+        else res.append(minute).append(":");
+        if (second < 10) res.append("0").append(second);
+        else res.append(second);
         return res.toString();
     }
 
@@ -258,16 +257,15 @@ public class TimeUtil {
         s = s.replaceFirst("时长：", "");
         List<String> groups = RegexUtil.findAllGroup1("(\\d+)", s);
         if (groups.size() == 1) {
-            if (s.contains("秒")) return Integer.parseInt(groups.get(0));
-            else if (s.contains("分")) return Integer.parseInt(groups.get(0)) * 60;
-            else return Integer.parseInt(groups.get(0)) * 3600;
+            int first = Integer.parseInt(groups.get(0));
+            if (s.contains("秒")) return first;
+            else if (s.contains("分")) return first * 60;
+            else return first * 3600;
         } else if (groups.size() == 2) {
-            if (s.contains("时") && s.contains("分"))
-                return Integer.parseInt(groups.get(0)) * 3600 + Integer.parseInt(groups.get(1)) * 60;
-            else if (s.contains("时") && s.contains("秒"))
-                return Integer.parseInt(groups.get(0)) * 3600 + Integer.parseInt(groups.get(1));
-            else
-                return Integer.parseInt(groups.get(0)) * 60 + Integer.parseInt(groups.get(1));
+            int first = Integer.parseInt(groups.get(0)), second = Integer.parseInt(groups.get(1));
+            if (s.contains("时") && s.contains("分")) return first * 3600 + second * 60;
+            else if (s.contains("时") && s.contains("秒")) return first * 3600 + second;
+            else return first * 60 + second;
         } else
             return Integer.parseInt(groups.get(0)) * 3600 + Integer.parseInt(groups.get(1)) * 60 + Integer.parseInt(groups.get(2));
     }
@@ -275,21 +273,22 @@ public class TimeUtil {
     /**
      * 转换秒为 [xx(m):xx(s).xx(ms)] 格式
      *
-     * @param timeSeconds
+     * @param seconds
      * @return
      */
-    public static String formatToLrcTime(Double timeSeconds) {
-        if (timeSeconds == null) return null;
+    public static String formatToLrcTime(Double seconds) {
+        if (seconds == null) return "";
+        if (seconds < 0) seconds = 0.0;
         StringBuilder res = new StringBuilder();
-        int s = timeSeconds.intValue();
-        String s1 = String.valueOf(timeSeconds);
-        int minutes = s / 60, seconds = s % 60;
+        int s = seconds.intValue();
+        String s1 = String.valueOf(seconds);
+        int minute = s / 60, second = s % 60;
         String milliseconds = s1.substring(s1.lastIndexOf('.'));
         res.append("[");
-        if (minutes < 10) res.append("0").append(minutes).append(":");
-        else res.append(minutes).append(":");
-        if (seconds < 10) res.append("0").append(seconds);
-        else res.append(seconds);
+        if (minute < 10) res.append("0").append(minute).append(":");
+        else res.append(minute).append(":");
+        if (second < 10) res.append("0").append(second);
+        else res.append(second);
         res.append(milliseconds.length() == 2 ? milliseconds + "0" : milliseconds);
         res.append("]");
         return res.toString();

@@ -1,9 +1,6 @@
 package net.doge.util.collection;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author Doge
@@ -19,11 +16,9 @@ public class ListUtil {
      * @param obj
      * @return
      */
-    public static int search(List list, Object obj) {
+    public static <T> int search(List<T> list, Object obj) {
         for (int i = 0, len = list.size(); i < len; i++) {
-            if (list.get(i).equals(obj)) {
-                return i;
-            }
+            if (list.get(i).equals(obj)) return i;
         }
         return -1;
     }
@@ -35,12 +30,11 @@ public class ListUtil {
      * @param list2
      * @return
      */
-    public static boolean equals(List list1, List list2) {
+    public static <T> boolean equals(List<T> list1, List<T> list2) {
         if (list1 == list2) return true;
-        if (list1 == null && list2 != null || list1 != null && list2 == null) return false;
+        if (list1 == null || list2 == null) return false;
         if (list1.size() != list2.size()) return false;
-        if (!list1.containsAll(list2)) return false;
-        return true;
+        return new HashSet<>(list1).containsAll(list2);
     }
 
     /**
@@ -54,11 +48,9 @@ public class ListUtil {
         int max = 0;
         for (List<T> l : list) max = Math.max(max, l.size());
         List<T> res = new LinkedList<>();
-        for (int i = 0; i < max; i++) {
-            for (List<T> l : list) {
+        for (int i = 0; i < max; i++)
+            for (List<T> l : list)
                 if (i < l.size()) res.add(l.get(i));
-            }
-        }
         // 去重
         distinct(res);
         return res;

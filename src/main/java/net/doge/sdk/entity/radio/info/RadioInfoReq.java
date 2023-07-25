@@ -63,14 +63,14 @@ public class RadioInfoReq {
         // 信息完整直接跳过
         if (radioInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImgThumb(SdkUtil.extractCover(radioInfo.getCoverImgThumbUrl())));
+        GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImgThumb(SdkUtil.extractCover(radioInfo.getCoverImgThumbUrl())));
     }
 
     /**
      * 根据电台 id 获取电台
      */
     public CommonResult<NetRadioInfo> getRadioInfo(String id, int source) {
-        LinkedList<NetRadioInfo> res = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 1;
 
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
@@ -215,7 +215,7 @@ public class RadioInfoReq {
             String description = radioJson.getString("desc");
 
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             radioInfo.setDescription(description);
             if (!radioInfo.hasDj()) radioInfo.setDj(radioJson.getJSONObject("dj").getString("nickname"));
             if (!radioInfo.hasDjId()) radioInfo.setDjId(radioJson.getJSONObject("dj").getString("userId"));
@@ -229,7 +229,7 @@ public class RadioInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(radioInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(radioInfo.getCoverImgUrl())));
             radioInfo.setTag("");
             radioInfo.setDescription("");
         }
@@ -237,7 +237,7 @@ public class RadioInfoReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             if (!radioInfo.hasTrackCount()) {
-                GlobalExecutors.requestExecutor.submit(() -> {
+                GlobalExecutors.requestExecutor.execute(() -> {
                     String radioInfoBody = HttpRequest.get(String.format(BRIEF_RADIO_DETAIL_XM_API, id))
                             .execute()
                             .body();
@@ -258,7 +258,7 @@ public class RadioInfoReq {
             String description = radioJson.getString("shortIntro");
 
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             if (!radioInfo.hasTag()) radioInfo.setTag(tag);
             if (!radioInfo.hasDescription()) radioInfo.setDescription(description);
         }
@@ -277,7 +277,7 @@ public class RadioInfoReq {
             String description = drama.getString("abstract");
 
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             if (!radioInfo.hasTag()) radioInfo.setTag(SdkUtil.parseTag(drama));
             if (!radioInfo.hasDescription()) radioInfo.setDescription(StringUtil.removeHTMLLabel(description));
             if (!radioInfo.hasDj()) radioInfo.setDj(drama.getString("author"));
@@ -316,7 +316,7 @@ public class RadioInfoReq {
 
                 radioInfo.setDescription(info + desc + "作者简介：\n" + authorIntro + "目录：\n" + catalog + "丛书信息：\n" + trace);
                 if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
-                GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+                GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             } else if (isGame) {
                 String radioInfoBody = HttpRequest.get(String.format(GAME_RADIO_DETAIL_DB_API, id))
                         .execute()
@@ -330,7 +330,7 @@ public class RadioInfoReq {
 
                 radioInfo.setDescription(info + desc);
                 if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
-                GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+                GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             } else {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_DB_API, id))
                         .execute()
@@ -345,7 +345,7 @@ public class RadioInfoReq {
 
                 radioInfo.setDescription(info + desc);
                 if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
-                GlobalExecutors.imageExecutor.submit(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+                GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             }
         }
     }
@@ -355,7 +355,7 @@ public class RadioInfoReq {
      */
     public CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int sortType, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetMusicInfo> musicInfos = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
 
         int source = radioInfo.getSource();
         String radioId = radioInfo.getId();
@@ -394,7 +394,7 @@ public class RadioInfoReq {
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -430,7 +430,7 @@ public class RadioInfoReq {
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
-                    musicInfos.add(musicInfo);
+                    res.add(musicInfo);
                 }
             }
         }
@@ -464,7 +464,7 @@ public class RadioInfoReq {
                 musicInfo.setDuration(duration);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -503,11 +503,11 @@ public class RadioInfoReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
-        return new CommonResult<>(musicInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 
     /**
@@ -518,7 +518,7 @@ public class RadioInfoReq {
         String id = radioInfo.getId();
         boolean isBook = radioInfo.isBook();
         boolean isGame = radioInfo.isGame();
-        LinkedList<String> imgUrls = new LinkedList<>();
+        List<String> res = new LinkedList<>();
         Integer total = 0;
         final int limit = isGame ? 24 : 30;
 
@@ -534,7 +534,7 @@ public class RadioInfoReq {
                 for (int i = 0, len = imgs.size(); i < len; i++) {
                     Element img = imgs.get(i);
                     String url = img.attr("src").replaceFirst("/thumb/", "/photo/");
-                    imgUrls.add(url);
+                    res.add(url);
                 }
             } else if (!isBook) {
                 String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_IMG_DB_API, id, (page - 1) * limit))
@@ -547,12 +547,12 @@ public class RadioInfoReq {
                 for (int i = 0, len = imgs.size(); i < len; i++) {
                     Element img = imgs.get(i);
                     String url = img.attr("src").replaceFirst("/m/", "/l/");
-                    imgUrls.add(url);
+                    res.add(url);
                 }
             }
         }
 
-        return new CommonResult<>(imgUrls, total);
+        return new CommonResult<>(res, total);
     }
 
     /**
@@ -562,7 +562,7 @@ public class RadioInfoReq {
         int source = radioInfo.getSource();
         String id = radioInfo.getId();
         boolean isBook = radioInfo.isBook();
-        LinkedList<String> imgUrls = new LinkedList<>();
+        List<String> imgUrls = new LinkedList<>();
         Integer total = 0;
         final int limit = 30;
 

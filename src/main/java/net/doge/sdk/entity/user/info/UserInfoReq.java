@@ -80,7 +80,7 @@ public class UserInfoReq {
         // 信息完整直接跳过
         if (userInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatarThumb(SdkUtil.extractCover(userInfo.getAvatarThumbUrl())));
+        GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatarThumb(SdkUtil.extractCover(userInfo.getAvatarThumbUrl())));
     }
 
     /**
@@ -113,17 +113,17 @@ public class UserInfoReq {
 
             String avatarUrl = profileJson.getString("avatarUrl");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = profileJson.getString("backgroundUrl");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
 
         // QQ
         else if (source == NetMusicSource.QQ) {
             userInfo.setSign("");
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
         }
 
         // 喜马拉雅
@@ -153,23 +153,23 @@ public class UserInfoReq {
 
             String avatarUrl = "https:" + data.getString("cover");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = "https:" + data.getString("background");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
 
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             userInfo.setSign("");
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
         }
 
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             userInfo.setSign("");
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
         }
 
         // 猫耳
@@ -177,7 +177,7 @@ public class UserInfoReq {
             Runnable getProgramCount = () -> {
                 // 用户节目数
                 if (!userInfo.hasProgramCount()) {
-                    GlobalExecutors.requestExecutor.submit(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, uid, 1, 1))
                                 .execute()
                                 .body();
@@ -204,12 +204,12 @@ public class UserInfoReq {
 
                 String avatarUrl = "https:" + doc.select("div#topusermainicon img").attr("src");
                 if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-                GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+                GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
                 String bgUrl = RegexUtil.getGroup1("background-image: url\\([\"'](.*?)[\"']\\)", userInfoBody);
                 String bgImgUrl = (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl;
                 if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
-                GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
+                GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
             };
 
             List<Future<?>> taskList = new LinkedList<>();
@@ -264,14 +264,14 @@ public class UserInfoReq {
             Integer followed = Integer.parseInt(followedElem.text());
 
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
             userInfo.setSign(sign);
             if (!userInfo.hasFollow()) userInfo.setFollow(follow);
             if (!userInfo.hasFollowed()) userInfo.setFollowed(followed);
 
             String bgImgUrl = RegexUtil.getGroup1("background-image:url\\((.*?)\\)", bgImgElem.attr("style"));
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
 
         // 好看
@@ -288,7 +288,7 @@ public class UserInfoReq {
 
             String avatarUrl = userInfoJson.getString("avatar");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
         }
 
         // 豆瓣
@@ -313,7 +313,7 @@ public class UserInfoReq {
 
             String avatarUrl = doc.select("div.basic-info img").attr("src");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
         }
 
         // 堆糖
@@ -339,11 +339,11 @@ public class UserInfoReq {
 
             String avatarUrl = doc.select("a.people-avatar img").attr("src").replaceFirst("\\.thumb\\.\\d+_\\d+_\\w+", "");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = doc.select("img.header-bg").attr("src");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
 
         // 哔哩哔哩
@@ -366,11 +366,11 @@ public class UserInfoReq {
 
             String avatarUrl = card.getString("face");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
             String bgImgUrl = data.getJSONObject("space").getString("s_img");
             if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
         }
     }
 
@@ -379,7 +379,7 @@ public class UserInfoReq {
      */
     public CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetMusicInfo> musicInfos = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
         boolean isAll = recordType == 1;
 
         int source = userInfo.getSource();
@@ -416,7 +416,7 @@ public class UserInfoReq {
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
-                    musicInfos.add(musicInfo);
+                    res.add(musicInfo);
                 }
             }
         }
@@ -450,7 +450,7 @@ public class UserInfoReq {
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -489,7 +489,7 @@ public class UserInfoReq {
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -522,7 +522,7 @@ public class UserInfoReq {
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -551,7 +551,7 @@ public class UserInfoReq {
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
                 musicInfo.setDuration(duration);
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -559,7 +559,7 @@ public class UserInfoReq {
         else if (source == NetMusicSource.FS) {
             // 原唱
             Callable<CommonResult<NetMusicInfo>> getYc = () -> {
-                LinkedList<NetMusicInfo> res = new LinkedList<>();
+                List<NetMusicInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String userInfoBody = HttpRequest.get(String.format(USER_YC_SONGS_FS_API, userId, page))
@@ -628,14 +628,14 @@ public class UserInfoReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
 
-                return new CommonResult<>(res, t);
+                return new CommonResult<>(r, t);
             };
             // 翻唱
             Callable<CommonResult<NetMusicInfo>> getFc = () -> {
-                LinkedList<NetMusicInfo> res = new LinkedList<>();
+                List<NetMusicInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String userInfoBody = HttpRequest.get(String.format(USER_FC_SONGS_FS_API, userId, page))
@@ -704,14 +704,14 @@ public class UserInfoReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
 
-                return new CommonResult<>(res, t);
+                return new CommonResult<>(r, t);
             };
             // 伴奏
             Callable<CommonResult<NetMusicInfo>> getBz = () -> {
-                LinkedList<NetMusicInfo> res = new LinkedList<>();
+                List<NetMusicInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String userInfoBody = HttpRequest.get(String.format(USER_BZ_SONGS_FS_API, userId, page))
@@ -780,10 +780,10 @@ public class UserInfoReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
 
-                    res.add(musicInfo);
+                    r.add(musicInfo);
                 }
 
-                return new CommonResult<>(res, t);
+                return new CommonResult<>(r, t);
             };
 
             List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
@@ -804,7 +804,7 @@ public class UserInfoReq {
                     e.printStackTrace();
                 }
             });
-            musicInfos.addAll(ListUtil.joinAll(rl));
+            res.addAll(ListUtil.joinAll(rl));
         }
 
         // 哔哩哔哩
@@ -833,12 +833,12 @@ public class UserInfoReq {
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);
                     musicInfo.setDuration(duration);
-                    musicInfos.add(musicInfo);
+                    res.add(musicInfo);
                 }
             }
         }
 
-        return new CommonResult<>(musicInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 
     /**
@@ -847,7 +847,7 @@ public class UserInfoReq {
      * @return
      */
     public CommonResult<NetUserInfo> getUserInfo(String id, int source) {
-        LinkedList<NetUserInfo> res = new LinkedList<>();
+        List<NetUserInfo> res = new LinkedList<>();
         Integer t = 1;
 
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
@@ -1000,7 +1000,7 @@ public class UserInfoReq {
 
                 Runnable getProgramCount = () -> {
                     // 用户节目数
-                    GlobalExecutors.requestExecutor.submit(() -> {
+                    GlobalExecutors.requestExecutor.execute(() -> {
                         String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, id, 1, 1))
                                 .execute()
                                 .body();

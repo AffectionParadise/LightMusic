@@ -14,6 +14,7 @@ import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 
 public class AlbumMenuReq {
     // 相似专辑 API (豆瓣)
@@ -28,7 +29,7 @@ public class AlbumMenuReq {
         int source = albumInfo.getSource();
         String id = albumInfo.getId();
 
-        LinkedList<NetAlbumInfo> res = new LinkedList<>();
+        List<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 豆瓣

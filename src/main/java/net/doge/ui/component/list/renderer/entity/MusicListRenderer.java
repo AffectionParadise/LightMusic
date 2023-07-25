@@ -60,10 +60,10 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         if (!(value instanceof AudioFile) && !(value instanceof NetMusicInfo)) return this;
 
         AudioFile file = null;
-        NetMusicInfo netMusicInfo = null;
+        NetMusicInfo musicInfo = null;
         boolean isFile = value instanceof AudioFile;
         if (isFile) file = (AudioFile) value;
-        else netMusicInfo = (NetMusicInfo) value;
+        else musicInfo = (NetMusicInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
@@ -78,9 +78,9 @@ public class MusicListRenderer extends DefaultListCellRenderer {
             else iconLabel.setIcon(playingIcon);
         } else {
             // 播放中的文件图标不同
-            if (!player.loadedNetMusic(netMusicInfo)) {
-                if (netMusicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
-                else if (netMusicInfo.isProgram()) iconLabel.setIcon(programIcon);
+            if (!player.loadedNetMusic(musicInfo)) {
+                if (musicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
+                else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
                 else iconLabel.setIcon(musicIcon);
             } else iconLabel.setIcon(playingIcon);
         }
@@ -112,18 +112,18 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         outerPanel.add(durationLabel);
 
         final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[netMusicInfo.getSource()]);
+        String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[musicInfo.getSource()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                StringUtil.shorten(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : netMusicInfo.getName(), RendererConstants.STRING_MAX_LENGTH),
+                StringUtil.shorten(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH),
                 maxWidth));
         String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                StringUtil.shorten(isFile ? file.hasArtist() ? file.getArtist() : "" : netMusicInfo.hasArtist() ? netMusicInfo.getArtist() : "", RendererConstants.STRING_MAX_LENGTH),
+                StringUtil.shorten(isFile ? file.hasArtist() ? file.getArtist() : "" : musicInfo.hasArtist() ? musicInfo.getArtist() : "", RendererConstants.STRING_MAX_LENGTH),
                 maxWidth));
         String albumName = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
-                StringUtil.shorten(isFile ? (file.hasAlbum() ? file.getAlbum() : "") : netMusicInfo.hasAlbumName() ? netMusicInfo.getAlbumName() : "", RendererConstants.STRING_MAX_LENGTH),
+                StringUtil.shorten(isFile ? (file.hasAlbum() ? file.getAlbum() : "") : musicInfo.hasAlbumName() ? musicInfo.getAlbumName() : "", RendererConstants.STRING_MAX_LENGTH),
                 maxWidth));
         String duration = StringUtil.textToHtml(isFile ? file.hasDuration() ? TimeUtil.format(file.getDuration()) : "--:--"
-                : netMusicInfo.hasDuration() ? TimeUtil.format(netMusicInfo.getDuration()) : "--:--");
+                : musicInfo.hasDuration() ? TimeUtil.format(musicInfo.getDuration()) : "--:--");
 
         iconLabel.setText(source);
         nameLabel.setText(name);

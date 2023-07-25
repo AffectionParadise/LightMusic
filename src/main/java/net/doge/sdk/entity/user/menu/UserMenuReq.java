@@ -110,11 +110,45 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo netCommentInfo, int limit, int page) {
-        int source = netCommentInfo.getSource();
-        String uid = StringUtil.urlEncode(netCommentInfo.getUserId());
+    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int limit, int page) {
+        int source = commentInfo.getSource();
+        String uid = StringUtil.urlEncodeAll(commentInfo.getUserId());
+        String username = commentInfo.getUsername();
 
-        LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+        NetUserInfo userInfo = new NetUserInfo();
+        userInfo.setSource(source);
+        userInfo.setId(uid);
+        userInfo.setName(username);
+
+        return getUserPlaylists(userInfo, limit, page);
+    }
+
+    /**
+     * 获取用户专辑（通过评论）
+     *
+     * @return
+     */
+    public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int limit, int page) {
+        int source = commentInfo.getSource();
+        String uid = StringUtil.urlEncodeAll(commentInfo.getUserId());
+
+        NetUserInfo userInfo = new NetUserInfo();
+        userInfo.setSource(source);
+        userInfo.setId(uid);
+
+        return getUserAlbums(userInfo, limit, page);
+    }
+
+    /**
+     * 获取用户歌单（通过用户）
+     *
+     * @return
+     */
+    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo userInfo, int limit, int page) {
+        int source = userInfo.getSource();
+        String uid = userInfo.getId();
+
+        List<NetPlaylistInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
 
         // 网易云
@@ -158,7 +192,7 @@ public class UserMenuReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             Callable<CommonResult<NetPlaylistInfo>> getCreatedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
+                List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, uid))
@@ -176,7 +210,7 @@ public class UserMenuReq {
                         String playlistId = playlistJson.getString("tid");
                         if ("0".equals(playlistId)) continue;
                         String playlistName = playlistJson.getString("diss_name");
-                        String creator = netCommentInfo.getUsername();
+                        String creator = userInfo.getName();
                         Long playCount = playlistJson.getLong("listen_num");
                         Integer trackCount = playlistJson.getIntValue("song_cnt");
                         String coverImgThumbUrl = playlistJson.getString("diss_cover");
@@ -202,7 +236,7 @@ public class UserMenuReq {
             };
 
             Callable<CommonResult<NetPlaylistInfo>> getCollectedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
+                List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, (page - 1) * limit, page * limit))
@@ -267,7 +301,7 @@ public class UserMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             Callable<CommonResult<NetPlaylistInfo>> getCreatedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
+                List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, uid, page, limit))
@@ -307,7 +341,7 @@ public class UserMenuReq {
             };
 
             Callable<CommonResult<NetPlaylistInfo>> getCollectedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
+                List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, uid, page, limit))
@@ -370,15 +404,15 @@ public class UserMenuReq {
     }
 
     /**
-     * 获取用户专辑（通过评论）
+     * 获取用户专辑（通过用户）
      *
      * @return
      */
-    public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo netCommentInfo, int limit, int page) {
-        int source = netCommentInfo.getSource();
-        String uid = StringUtil.urlEncode(netCommentInfo.getUserId());
+    public CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo userInfo, int limit, int page) {
+        int source = userInfo.getSource();
+        String uid = userInfo.getId();
 
-        LinkedList<NetAlbumInfo> res = new LinkedList<>();
+        List<NetAlbumInfo> res = new LinkedList<>();
         Integer total = 0;
 
         // QQ
@@ -459,363 +493,6 @@ public class UserMenuReq {
             }
         }
 
-        return new CommonResult<>(res, total);
-    }
-
-    /**
-     * 获取用户歌单（通过用户）
-     *
-     * @return
-     */
-    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo netUserInfo, int limit, int page) {
-        int source = netUserInfo.getSource();
-        String uid = netUserInfo.getId();
-
-        LinkedList<NetPlaylistInfo> res = new LinkedList<>();
-        AtomicInteger total = new AtomicInteger();
-
-        // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
-            String playlistInfoBody = SdkCommon.ncRequest(Method.POST, USER_PLAYLIST_API,
-                            String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", uid, (page - 1) * limit, limit), options)
-                    .execute()
-                    .body();
-            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONArray playlistArray = playlistInfoJson.getJSONArray("playlist");
-            total.set(playlistArray.size());
-            for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
-                JSONObject playlistJson = playlistArray.getJSONObject(i);
-
-                String playlistId = playlistJson.getString("id");
-                String playlistName = playlistJson.getString("name");
-                String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                String creatorId = playlistJson.getJSONObject("creator").getString("userId");
-                Long playCount = playlistJson.getLong("playCount");
-                Integer trackCount = playlistJson.getIntValue("trackCount");
-                String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
-
-                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setId(playlistId);
-                playlistInfo.setName(playlistName);
-                playlistInfo.setCreator(creator);
-                playlistInfo.setCreatorId(creatorId);
-                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                playlistInfo.setPlayCount(playCount);
-                playlistInfo.setTrackCount(trackCount);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                    playlistInfo.setCoverImgThumb(coverImgThumb);
-                });
-
-                res.add(playlistInfo);
-            }
-        }
-
-        // QQ
-        else if (source == NetMusicSource.QQ) {
-            Callable<CommonResult<NetPlaylistInfo>> getCreatedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
-                Integer t = 0;
-
-                String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, uid))
-                        .header(Header.REFERER, "https://y.qq.com/portal/profile.html")
-                        .execute()
-                        .body();
-                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-                JSONObject data = playlistInfoJson.getJSONObject("data");
-                if (JsonUtil.notEmpty(data)) {
-                    JSONArray playlistArray = data.getJSONArray("disslist");
-                    t = playlistArray.size();
-                    for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
-                        JSONObject playlistJson = playlistArray.getJSONObject(i);
-
-                        String playlistId = playlistJson.getString("tid");
-                        if ("0".equals(playlistId)) continue;
-                        String playlistName = playlistJson.getString("diss_name");
-                        String creator = netUserInfo.getName();
-                        Long playCount = playlistJson.getLong("listen_num");
-                        Integer trackCount = playlistJson.getIntValue("song_cnt");
-                        String coverImgThumbUrl = playlistJson.getString("diss_cover");
-
-                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                        playlistInfo.setSource(NetMusicSource.QQ);
-                        playlistInfo.setId(playlistId);
-                        playlistInfo.setName(playlistName);
-                        playlistInfo.setCreator(creator);
-                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                        playlistInfo.setPlayCount(playCount);
-                        playlistInfo.setTrackCount(trackCount);
-                        GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                            playlistInfo.setCoverImgThumb(coverImgThumb);
-                        });
-
-                        r.add(playlistInfo);
-                    }
-                }
-
-                return new CommonResult<>(r, t);
-            };
-
-            Callable<CommonResult<NetPlaylistInfo>> getCollectedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
-                Integer t = 0;
-
-                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, (page - 1) * limit, page * limit))
-                        .execute()
-                        .body();
-                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-                JSONObject data = playlistInfoJson.getJSONObject("data");
-                JSONArray playlistArray = data.getJSONArray("cdlist");
-                if (JsonUtil.notEmpty(playlistArray)) {
-                    t = data.getIntValue("totaldiss");
-                    for (int i = 0, len = playlistArray.size(); i < len; i++) {
-                        JSONObject playlistJson = playlistArray.getJSONObject(i);
-
-                        String playlistId = playlistJson.getString("dissid");
-                        if ("0".equals(playlistId)) continue;
-                        String playlistName = playlistJson.getString("dissname");
-                        String creator = playlistJson.getString("nickname");
-                        Long playCount = playlistJson.getLong("listennum");
-                        Integer trackCount = playlistJson.getIntValue("songnum");
-                        String coverImgThumbUrl = playlistJson.getString("logo");
-
-                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                        playlistInfo.setSource(NetMusicSource.QQ);
-                        playlistInfo.setId(playlistId);
-                        playlistInfo.setName(playlistName);
-                        playlistInfo.setCreator(creator);
-                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                        playlistInfo.setPlayCount(playCount);
-                        playlistInfo.setTrackCount(trackCount);
-                        GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                            playlistInfo.setCoverImgThumb(coverImgThumb);
-                        });
-
-                        r.add(playlistInfo);
-                    }
-                }
-
-                return new CommonResult<>(r, t);
-            };
-
-            List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
-
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCreatedPlaylists));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCollectedPlaylists));
-
-            List<List<NetPlaylistInfo>> rl = new LinkedList<>();
-            taskList.forEach(task -> {
-                try {
-                    CommonResult<NetPlaylistInfo> result = task.get();
-                    rl.add(result.data);
-                    total.set(Math.max(total.get(), result.total));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            });
-            res.addAll(ListUtil.joinAll(rl));
-        }
-
-        // 猫耳
-        else if (source == NetMusicSource.ME) {
-            Callable<CommonResult<NetPlaylistInfo>> getCreatedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
-                Integer t = 0;
-
-                String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, uid, page, limit))
-                        .execute()
-                        .body();
-                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-                JSONObject data = playlistInfoJson.getJSONObject("info");
-                JSONArray playlistArray = data.getJSONArray("Datas");
-                if (JsonUtil.notEmpty(playlistArray)) {
-                    t = data.getJSONObject("pagination").getIntValue("count");
-                    for (int i = 0, len = playlistArray.size(); i < len; i++) {
-                        JSONObject playlistJson = playlistArray.getJSONObject(i);
-
-                        String playlistId = playlistJson.getString("id");
-                        String playlistName = playlistJson.getString("title");
-                        String creator = playlistJson.getString("username");
-                        Integer trackCount = playlistJson.getIntValue("music_count");
-                        String coverImgThumbUrl = playlistJson.getString("front_cover");
-
-                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                        playlistInfo.setSource(NetMusicSource.ME);
-                        playlistInfo.setId(playlistId);
-                        playlistInfo.setName(playlistName);
-                        playlistInfo.setCreator(creator);
-                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                        playlistInfo.setTrackCount(trackCount);
-                        GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                            playlistInfo.setCoverImgThumb(coverImgThumb);
-                        });
-
-                        r.add(playlistInfo);
-                    }
-                }
-
-                return new CommonResult<>(r, t);
-            };
-
-            Callable<CommonResult<NetPlaylistInfo>> getCollectedPlaylists = () -> {
-                LinkedList<NetPlaylistInfo> r = new LinkedList<>();
-                Integer t = 0;
-
-                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, uid, page, limit))
-                        .execute()
-                        .body();
-                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-                JSONObject data = playlistInfoJson.getJSONObject("info");
-                JSONArray playlistArray = data.getJSONArray("Datas");
-                if (JsonUtil.notEmpty(playlistArray)) {
-                    t = data.getJSONObject("pagination").getIntValue("count");
-                    for (int i = 0, len = playlistArray.size(); i < len; i++) {
-                        JSONObject playlistJson = playlistArray.getJSONObject(i);
-
-                        String playlistId = playlistJson.getString("id");
-                        String playlistName = playlistJson.getString("title");
-                        String creator = playlistJson.getString("username");
-                        Integer trackCount = playlistJson.getIntValue("music_count");
-                        String coverImgThumbUrl = playlistJson.getString("front_cover");
-
-                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                        playlistInfo.setSource(NetMusicSource.ME);
-                        playlistInfo.setId(playlistId);
-                        playlistInfo.setName(playlistName);
-                        playlistInfo.setCreator(creator);
-                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                        playlistInfo.setTrackCount(trackCount);
-                        GlobalExecutors.imageExecutor.execute(() -> {
-                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                            playlistInfo.setCoverImgThumb(coverImgThumb);
-                        });
-
-                        r.add(playlistInfo);
-                    }
-                }
-
-                return new CommonResult<>(r, t);
-            };
-
-            List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
-
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCreatedPlaylists));
-            taskList.add(GlobalExecutors.requestExecutor.submit(getCollectedPlaylists));
-
-            List<List<NetPlaylistInfo>> rl = new LinkedList<>();
-            taskList.forEach(task -> {
-                try {
-                    CommonResult<NetPlaylistInfo> result = task.get();
-                    rl.add(result.data);
-                    total.set(Math.max(total.get(), result.total));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            });
-            res.addAll(ListUtil.joinAll(rl));
-        }
-
-        return new CommonResult<>(res, total.get());
-    }
-
-    /**
-     * 获取用户专辑（通过用户）
-     *
-     * @return
-     */
-    public CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo netUserInfo, int limit, int page) {
-        int source = netUserInfo.getSource();
-        String uid = netUserInfo.getId();
-
-        LinkedList<NetAlbumInfo> res = new LinkedList<>();
-        Integer t = 0;
-
-        // QQ
-        if (source == NetMusicSource.QQ) {
-            String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, (page - 1) * limit, page * limit - 1))
-                    .execute()
-                    .body();
-            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
-            JSONObject data = albumInfoJson.getJSONObject("data");
-            t = data.getIntValue("totalalbum");
-            JSONArray albumArray = data.getJSONArray("albumlist");
-            if (JsonUtil.notEmpty(albumArray)) {
-                for (int i = 0, len = albumArray.size(); i < len; i++) {
-                    JSONObject albumJson = albumArray.getJSONObject(i);
-
-                    String albumId = albumJson.getString("albummid");
-                    String albumName = albumJson.getString("albumname");
-                    String artist = SdkUtil.parseArtist(albumJson);
-                    String artistId = SdkUtil.parseArtistId(albumJson);
-                    String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
-                    Integer songNum = albumJson.getIntValue("songnum");
-                    String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
-
-                    NetAlbumInfo albumInfo = new NetAlbumInfo();
-                    albumInfo.setSource(NetMusicSource.QQ);
-                    albumInfo.setId(albumId);
-                    albumInfo.setName(albumName);
-                    albumInfo.setArtist(artist);
-                    albumInfo.setArtistId(artistId);
-                    albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                    albumInfo.setPublishTime(publishTime);
-                    albumInfo.setSongNum(songNum);
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                        albumInfo.setCoverImgThumb(coverImgThumb);
-                    });
-                    res.add(albumInfo);
-                }
-            }
-        }
-
-        // 豆瓣
-        else if (source == NetMusicSource.DB) {
-            final int rn = 15;
-            String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DB_API, uid, (page - 1) * rn))
-                    .execute()
-                    .body();
-            Document doc = Jsoup.parse(albumInfoBody);
-            Elements rs = doc.select("div.item");
-            String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
-            t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
-            t += t / rn * 5;
-            for (int i = 0, len = rs.size(); i < len; i++) {
-                Element radio = rs.get(i);
-                Element a = radio.select("li.title a").first();
-                Element intro = radio.select("li.intro").first();
-                Element img = radio.select("div.pic img").first();
-
-                String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
-                String radioName = a.text();
-                String coverImgThumbUrl = img.attr("src");
-                String[] sp = intro.text().split(" / ");
-                String artist = sp[0];
-                String pubTime = sp[1];
-
-                NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.DB);
-                albumInfo.setId(radioId);
-                albumInfo.setName(radioName);
-                albumInfo.setArtist(artist);
-                albumInfo.setPublishTime(pubTime);
-                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-                    albumInfo.setCoverImgThumb(coverImgThumb);
-                });
-                res.add(albumInfo);
-            }
-        }
-
         // 堆糖
         else if (source == NetMusicSource.DT) {
             String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DT_API, uid, (page - 1) * limit, limit))
@@ -824,8 +501,8 @@ public class UserMenuReq {
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             JSONArray albumArray = data.getJSONArray("object_list");
-            t = page * limit;
-            if (data.getIntValue("more") == 1) t++;
+            total = page * limit;
+            if (data.getIntValue("more") == 1) total++;
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
 
@@ -854,7 +531,7 @@ public class UserMenuReq {
             }
         }
 
-        return new CommonResult<>(res, t);
+        return new CommonResult<>(res, total);
     }
 
     /**
@@ -862,11 +539,11 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetRadioInfo> getUserRadios(NetUserInfo netUserInfo, int limit, int page) {
-        int source = netUserInfo.getSource();
-        String uid = netUserInfo.getId();
+    public CommonResult<NetRadioInfo> getUserRadios(NetUserInfo userInfo, int limit, int page) {
+        int source = userInfo.getSource();
+        String uid = userInfo.getId();
 
-        LinkedList<NetRadioInfo> res = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
 
         // 网易云
@@ -914,7 +591,7 @@ public class UserMenuReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             Callable<CommonResult<NetRadioInfo>> getCreatedRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
+                List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_XM_API, uid, page, limit))
@@ -958,7 +635,7 @@ public class UserMenuReq {
             };
 
             Callable<CommonResult<NetRadioInfo>> getSubRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
+                List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_XM_API, uid, page, limit))
@@ -1025,7 +702,7 @@ public class UserMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             Callable<CommonResult<NetRadioInfo>> getCreatedRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
+                List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, uid, page, limit))
@@ -1041,7 +718,7 @@ public class UserMenuReq {
                     String radioId = radioJson.getString("id");
                     String radioName = radioJson.getString("name");
 //                    String category = radioJson.getString("type_name");
-                    String dj = netUserInfo.getName();
+                    String dj = userInfo.getName();
                     Long playCount = radioJson.getLong("view_count");
                     String coverImgThumbUrl = radioJson.getString("cover");
 
@@ -1065,7 +742,7 @@ public class UserMenuReq {
             };
 
             Callable<CommonResult<NetRadioInfo>> getSubRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
+                List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, uid, page, limit))
@@ -1124,7 +801,7 @@ public class UserMenuReq {
         // 豆瓣
         else if (source == NetMusicSource.DB) {
             Callable<CommonResult<NetRadioInfo>> getRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
+                List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 final int rn = 15;
@@ -1166,7 +843,7 @@ public class UserMenuReq {
 
             // 图书电台
             Callable<CommonResult<NetRadioInfo>> getBookRadios = () -> {
-                LinkedList<NetRadioInfo> r = new LinkedList<>();
+                List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 final int rn = 15;
@@ -1235,11 +912,11 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetMvInfo> getUserVideos(NetUserInfo netUserInfo, int sortType, int page, int limit, String cursor) {
-        int source = netUserInfo.getSource();
-        String uid = netUserInfo.getId();
+    public CommonResult<NetMvInfo> getUserVideos(NetUserInfo userInfo, int sortType, int page, int limit, String cursor) {
+        int source = userInfo.getSource();
+        String uid = userInfo.getId();
 
-        LinkedList<NetMvInfo> res = new LinkedList<>();
+        List<NetMvInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
         AtomicReference<String> cur = new AtomicReference<>();
 
@@ -1249,7 +926,7 @@ public class UserMenuReq {
         if (source == NetMusicSource.HK) {
             // 普通视频
             Callable<CommonResult<NetMvInfo>> getNormalVideos = () -> {
-                LinkedList<NetMvInfo> r = new LinkedList<>();
+                List<NetMvInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, uid, cursor))
@@ -1265,8 +942,8 @@ public class UserMenuReq {
 
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title");
-                    String artistName = netUserInfo.getName();
-                    String creatorId = netUserInfo.getId();
+                    String artistName = userInfo.getName();
+                    String creatorId = userInfo.getId();
                     String coverImgUrl = mvJson.getString("poster");
                     Long playCount = mvJson.getLong("playcnt");
                     Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
@@ -1294,7 +971,7 @@ public class UserMenuReq {
             };
             // 小视频
             Callable<CommonResult<NetMvInfo>> getSmallVideos = () -> {
-                LinkedList<NetMvInfo> r = new LinkedList<>();
+                List<NetMvInfo> r = new LinkedList<>();
                 Integer t = 0;
 
                 String mvInfoBody = HttpRequest.get(String.format(USER_SMALL_VIDEO_HK_API, uid))
@@ -1310,8 +987,8 @@ public class UserMenuReq {
 
                     String mvId = mvJson.getString("vid");
                     String mvName = mvJson.getString("title");
-                    String artistName = netUserInfo.getName();
-                    String creatorId = netUserInfo.getId();
+                    String artistName = userInfo.getName();
+                    String creatorId = userInfo.getId();
                     String coverImgUrl = mvJson.getString("poster");
                     Long playCount = mvJson.getLong("playcnt");
                     Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
@@ -1411,7 +1088,7 @@ public class UserMenuReq {
         int source = netUserInfo.getSource();
         String id = netUserInfo.getId();
 
-        LinkedList<NetUserInfo> res = new LinkedList<>();
+        List<NetUserInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -1422,36 +1099,38 @@ public class UserMenuReq {
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
-            JSONArray userArray = userInfoJson.getJSONArray("follow");
             t = userInfoJson.getBooleanValue("more") ? page * limit + 1 : page * limit;
-            for (int i = 0, len = userArray.size(); i < len; i++) {
-                JSONObject userJson = userArray.getJSONObject(i);
+            JSONArray userArray = userInfoJson.getJSONArray("follow");
+            if (JsonUtil.notEmpty(userArray)) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    JSONObject userJson = userArray.getJSONObject(i);
 
-                String userId = userJson.getString("userId");
-                String userName = userJson.getString("nickname");
-                Integer gen = userJson.getIntValue("gender");
-                String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
+                    String userId = userJson.getString("userId");
+                    String userName = userJson.getString("nickname");
+                    Integer gen = userJson.getIntValue("gender");
+                    String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
 //                String sign = userJson.getString("signature");
-                String avatarThumbUrl = userJson.getString("avatarUrl");
-                Integer follow = userJson.getIntValue("follows");
-                Integer followed = userJson.getIntValue("followeds");
-                Integer playlistCount = userJson.getIntValue("playlistCount");
+                    String avatarThumbUrl = userJson.getString("avatarUrl");
+                    Integer follow = userJson.getIntValue("follows");
+                    Integer followed = userJson.getIntValue("followeds");
+                    Integer playlistCount = userJson.getIntValue("playlistCount");
 
-                NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setId(userId);
-                userInfo.setName(userName);
-                userInfo.setGender(gender);
-                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
-                userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
-                userInfo.setPlaylistCount(playlistCount);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
-                    userInfo.setAvatarThumb(avatarThumb);
-                });
+                    userInfo.setFollow(follow);
+                    userInfo.setFollowed(followed);
+                    userInfo.setPlaylistCount(playlistCount);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
 
-                res.add(userInfo);
+                    res.add(userInfo);
+                }
             }
         }
 
@@ -1718,25 +1397,27 @@ public class UserMenuReq {
             JSONObject data = userInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
             JSONArray userArray = data.getJSONArray("list");
-            for (int i = 0, len = userArray.size(); i < len; i++) {
-                JSONObject userJson = userArray.getJSONObject(i);
+            if (JsonUtil.notEmpty(userArray)) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    JSONObject userJson = userArray.getJSONObject(i);
 
-                String userId = userJson.getString("mid");
-                String userName = userJson.getString("uname");
-                String avatarThumbUrl = userJson.getString("face");
+                    String userId = userJson.getString("mid");
+                    String userName = userJson.getString("uname");
+                    String avatarThumbUrl = userJson.getString("face");
 
-                NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.BI);
-                userInfo.setId(userId);
-                userInfo.setName(userName);
-                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.BI);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
 
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
-                    userInfo.setAvatarThumb(avatarThumb);
-                });
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
 
-                res.add(userInfo);
+                    res.add(userInfo);
+                }
             }
         }
 
@@ -1752,7 +1433,7 @@ public class UserMenuReq {
         int source = netUserInfo.getSource();
         String id = netUserInfo.getId();
 
-        LinkedList<NetUserInfo> res = new LinkedList<>();
+        List<NetUserInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -1764,35 +1445,37 @@ public class UserMenuReq {
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("followeds");
-            t = userInfoJson.getIntValue("size");
-            for (int i = 0, len = userArray.size(); i < len; i++) {
-                JSONObject userJson = userArray.getJSONObject(i);
+            if (JsonUtil.notEmpty(userArray)) {
+                t = userInfoJson.getIntValue("size");
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    JSONObject userJson = userArray.getJSONObject(i);
 
-                String userId = userJson.getString("userId");
-                String userName = userJson.getString("nickname");
-                Integer gen = userJson.getIntValue("gender");
-                String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
+                    String userId = userJson.getString("userId");
+                    String userName = userJson.getString("nickname");
+                    Integer gen = userJson.getIntValue("gender");
+                    String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
 //                String sign = userJson.getString("signature");
-                String avatarThumbUrl = userJson.getString("avatarUrl");
-                Integer follow = userJson.getIntValue("follows");
-                Integer followed = userJson.getIntValue("followeds");
-                Integer playlistCount = userJson.getIntValue("playlistCount");
+                    String avatarThumbUrl = userJson.getString("avatarUrl");
+                    Integer follow = userJson.getIntValue("follows");
+                    Integer followed = userJson.getIntValue("followeds");
+                    Integer playlistCount = userJson.getIntValue("playlistCount");
 
-                NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setId(userId);
-                userInfo.setName(userName);
-                userInfo.setGender(gender);
-                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setGender(gender);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
-                userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
-                userInfo.setPlaylistCount(playlistCount);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
-                    userInfo.setAvatarThumb(avatarThumb);
-                });
+                    userInfo.setFollow(follow);
+                    userInfo.setFollowed(followed);
+                    userInfo.setPlaylistCount(playlistCount);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
 
-                res.add(userInfo);
+                    res.add(userInfo);
+                }
             }
         }
 
@@ -2059,25 +1742,27 @@ public class UserMenuReq {
             JSONObject data = userInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
             JSONArray userArray = data.getJSONArray("list");
-            for (int i = 0, len = userArray.size(); i < len; i++) {
-                JSONObject userJson = userArray.getJSONObject(i);
+            if (JsonUtil.notEmpty(userArray)) {
+                for (int i = 0, len = userArray.size(); i < len; i++) {
+                    JSONObject userJson = userArray.getJSONObject(i);
 
-                String userId = userJson.getString("mid");
-                String userName = userJson.getString("uname");
-                String avatarThumbUrl = userJson.getString("face");
+                    String userId = userJson.getString("mid");
+                    String userName = userJson.getString("uname");
+                    String avatarThumbUrl = userJson.getString("face");
 
-                NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.BI);
-                userInfo.setId(userId);
-                userInfo.setName(userName);
-                userInfo.setAvatarThumbUrl(avatarThumbUrl);
+                    NetUserInfo userInfo = new NetUserInfo();
+                    userInfo.setSource(NetMusicSource.BI);
+                    userInfo.setId(userId);
+                    userInfo.setName(userName);
+                    userInfo.setAvatarThumbUrl(avatarThumbUrl);
 
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
-                    userInfo.setAvatarThumb(avatarThumb);
-                });
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
+                        userInfo.setAvatarThumb(avatarThumb);
+                    });
 
-                res.add(userInfo);
+                    res.add(userInfo);
+                }
             }
         }
 

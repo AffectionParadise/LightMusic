@@ -75,14 +75,14 @@ public class ArtistInfoReq {
 
         // 酷我
         if (source == NetMusicSource.KW) {
-            GlobalExecutors.imageExecutor.submit(() -> {
+            GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage coverImgThumb = SdkUtil.extractCover(artistInfo.getCoverImgThumbUrl());
                 if (coverImgThumb == null)
                     coverImgThumb = SdkUtil.extractCover(artistInfo.getCoverImgUrl().replaceFirst("/300/", "/0/"));
                 artistInfo.setCoverImgThumb(coverImgThumb);
             });
         } else {
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImgThumb(SdkUtil.extractCover(artistInfo.getCoverImgThumbUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImgThumb(SdkUtil.extractCover(artistInfo.getCoverImgThumbUrl())));
         }
     }
 
@@ -90,7 +90,7 @@ public class ArtistInfoReq {
      * 根据歌手 id 获取歌手
      */
     public CommonResult<NetArtistInfo> getArtistInfo(String id, int source) {
-        LinkedList<NetArtistInfo> res = new LinkedList<>();
+        List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 1;
 
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
@@ -335,7 +335,7 @@ public class ArtistInfoReq {
             String description = artistJson.getString("briefDesc");
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(artistJson.getIntValue("musicSize"));
             if (!artistInfo.hasAlbumNum()) artistInfo.setSongNum(artistJson.getIntValue("albumSize"));
@@ -354,7 +354,7 @@ public class ArtistInfoReq {
             String coverImgUrl = data.getString("imgurl").replace("{size}", "240");
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getIntValue("songcount"));
             if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(data.getIntValue("albumcount"));
@@ -381,7 +381,7 @@ public class ArtistInfoReq {
                 artistInfo.setSongNum(sn.size() > 1 ? Integer.parseInt(sn.get(1).text()) : 0);
             if (!artistInfo.hasMvNum()) artistInfo.setSongNum(sn.size() > 2 ? Integer.parseInt(sn.get(2).text()) : 0);
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
         }
 
@@ -397,7 +397,7 @@ public class ArtistInfoReq {
             String coverImgUrl = data.getString("pic300");
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getIntValue("musicNum"));
             if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(data.getIntValue("albumNum"));
@@ -432,7 +432,7 @@ public class ArtistInfoReq {
                 artistInfo.setMvNum(mvNum);
             }
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
         }
 
@@ -448,7 +448,7 @@ public class ArtistInfoReq {
             String coverImgUrl = data.getString("pic");
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);
             if (!artistInfo.hasSongNum()) artistInfo.setSongNum(data.getIntValue("trackTotal"));
             if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(data.getIntValue("albumTotal"));
@@ -471,7 +471,7 @@ public class ArtistInfoReq {
                 if (!artistInfo.hasDescription()) artistInfo.setDescription(intro + "\n\n" + announcement);
 
                 if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-                GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+                GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             } else {
                 String artistInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, id, 1, 1))
                         .execute()
@@ -508,7 +508,7 @@ public class ArtistInfoReq {
 
                 String coverImgUrl = cv.getString("icon");
                 if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-                GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+                GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             }
         }
 
@@ -526,7 +526,7 @@ public class ArtistInfoReq {
 
             artistInfo.setDescription(info + desc);
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
-            GlobalExecutors.imageExecutor.submit(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
         }
     }
 
@@ -535,7 +535,7 @@ public class ArtistInfoReq {
      */
     public CommonResult<NetMusicInfo> getMusicInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
         int total = 0;
-        List<NetMusicInfo> netMusicInfos = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
 
         int source = artistInfo.getSource();
         String id = artistInfo.getId();
@@ -563,17 +563,17 @@ public class ArtistInfoReq {
                 Double duration = songJson.getDouble("dt") / 1000;
                 String mvId = songJson.getString("mv");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -600,18 +600,18 @@ public class ArtistInfoReq {
                 JSONArray mvdata = songJson.getJSONArray("mvdata");
                 String mvId = JsonUtil.isEmpty(mvdata) ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.KG);
-                netMusicInfo.setHash(hash);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setHash(hash);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -638,25 +638,25 @@ public class ArtistInfoReq {
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.QQ);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.QQ);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
         // 酷我
         else if (source == NetMusicSource.KW) {
             String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_SONGS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncode(id))
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -676,18 +676,18 @@ public class ArtistInfoReq {
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getIntValue("hasmv") == 0 ? "" : songId;
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.KW);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.KW);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setArtist(artist);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -718,17 +718,17 @@ public class ArtistInfoReq {
                 String albumId = RegexUtil.getGroup1("/v3/music/album/(\\d+)", ba.attr("href"));
                 String mvId = fa.isEmpty() ? "" : RegexUtil.getGroup1("/v3/video/mv/(.*)", fa.attr("href"));
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.MG);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setMvId(mvId);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.MG);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setMvId(mvId);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -752,17 +752,17 @@ public class ArtistInfoReq {
                 String albumId = songJson.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");
 
-                NetMusicInfo netMusicInfo = new NetMusicInfo();
-                netMusicInfo.setSource(NetMusicSource.QI);
-                netMusicInfo.setId(songId);
-                netMusicInfo.setName(name);
-                netMusicInfo.setArtist(artist);
-                netMusicInfo.setArtistId(artistId);
-                netMusicInfo.setAlbumName(albumName);
-                netMusicInfo.setAlbumId(albumId);
-                netMusicInfo.setDuration(duration);
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.QI);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
 
-                netMusicInfos.add(netMusicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -790,10 +790,10 @@ public class ArtistInfoReq {
                 musicInfo.setName(name);
 //                musicInfo.setArtist(artist);
 //                musicInfo.setArtistId(artistId);
-                netMusicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
-        return new CommonResult<>(netMusicInfos, total);
+        return new CommonResult<>(res, total);
     }
 }

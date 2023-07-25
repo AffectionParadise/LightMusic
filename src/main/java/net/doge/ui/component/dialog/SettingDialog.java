@@ -1,5 +1,6 @@
 package net.doge.ui.component.dialog;
 
+import com.alibaba.fastjson2.JSONObject;
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -14,21 +15,20 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.checkbox.CustomCheckBox;
 import net.doge.ui.component.combobox.CustomComboBox;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
-import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.panel.CustomPanel;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
+import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
-import net.doge.ui.component.combobox.ui.ComboBoxUI;
-import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.util.collection.ListUtil;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.system.FileUtil;
-import net.doge.util.ui.ImageUtil;
-import net.doge.util.common.JsonUtil;
 import net.doge.util.system.KeyUtil;
-import net.doge.util.collection.ListUtil;
-import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -37,6 +37,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -131,12 +132,12 @@ public class SettingDialog extends AbstractTitledDialog {
     private DialogButton backupListButton;
     private DialogButton restoreListButton;
 
-    public LinkedList<Integer> playOrPauseKeys = new LinkedList<>();
-    public LinkedList<Integer> playLastKeys = new LinkedList<>();
-    public LinkedList<Integer> playNextKeys = new LinkedList<>();
-    public LinkedList<Integer> backwardKeys = new LinkedList<>();
-    public LinkedList<Integer> forwardKeys = new LinkedList<>();
-    public LinkedList<Integer> videoFullScreenKeys = new LinkedList<>();
+    public List<Integer> playOrPauseKeys = new LinkedList<>();
+    public List<Integer> playLastKeys = new LinkedList<>();
+    public List<Integer> playNextKeys = new LinkedList<>();
+    public List<Integer> backwardKeys = new LinkedList<>();
+    public List<Integer> forwardKeys = new LinkedList<>();
+    public List<Integer> videoFullScreenKeys = new LinkedList<>();
     public LinkedList<Integer> currKeys = new LinkedList<>();
     private CustomPanel keyPanel = new CustomPanel();
     private CustomLabel keyLabel = new CustomLabel("全局快捷键：");
@@ -164,9 +165,9 @@ public class SettingDialog extends AbstractTitledDialog {
     private DialogButton applyButton;
     private DialogButton cancelButton;
 
-    private Object comp;
-    AWTEventListener keyBindListener;
-    AWTEventListener mouseListener;
+    private Object currKeyComp;
+    private AWTEventListener keyBindListener;
+    private AWTEventListener mouseListener;
 
     public SettingDialog(MainFrame f) {
         super(f, "设置");
@@ -358,7 +359,7 @@ public class SettingDialog extends AbstractTitledDialog {
         keyBindListener = new AWTEventListener() {
             @Override
             public void eventDispatched(AWTEvent event) {
-                if (!(event instanceof KeyEvent) || comp == null) return;
+                if (!(event instanceof KeyEvent) || currKeyComp == null) return;
                 KeyEvent e = (KeyEvent) event;
                 int code = e.getKeyCode();
                 boolean released = e.getID() == KeyEvent.KEY_RELEASED, pressed = e.getID() == KeyEvent.KEY_PRESSED;
@@ -367,7 +368,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 if (released && !currKeys.isEmpty()) currKeys.removeLast();
 
                 if (pressed) {
-                    CustomTextField tf = (CustomTextField) comp;
+                    CustomTextField tf = (CustomTextField) currKeyComp;
                     if (currKeys.contains(code)) return;
                     currKeys.add(code);
                     // 检查重复按键
@@ -393,7 +394,7 @@ public class SettingDialog extends AbstractTitledDialog {
                             videoFullScreenTextField.setText("");
                         }
                     }
-                    tf.setText(KeyUtil.join(currKeys));
+                    // 暂存快捷键
                     if (tf == playOrPauseTextField) {
                         playOrPauseKeys.clear();
                         playOrPauseKeys.addAll(currKeys);
@@ -413,6 +414,7 @@ public class SettingDialog extends AbstractTitledDialog {
                         videoFullScreenKeys.clear();
                         videoFullScreenKeys.addAll(currKeys);
                     }
+                    tf.setText(KeyUtil.join(currKeys));
                 }
             }
 
@@ -430,7 +432,7 @@ public class SettingDialog extends AbstractTitledDialog {
         mouseListener = event -> {
             if (event instanceof MouseEvent) {
                 MouseEvent me = (MouseEvent) event;
-                if (me.getID() == MouseEvent.MOUSE_PRESSED) comp = null;
+                if (me.getID() == MouseEvent.MOUSE_PRESSED) currKeyComp = null;
             }
         };
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -439,7 +441,7 @@ public class SettingDialog extends AbstractTitledDialog {
         FocusAdapter focusAdapter = new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                comp = e.getSource();
+                currKeyComp = e.getSource();
                 currKeys.clear();
             }
         };

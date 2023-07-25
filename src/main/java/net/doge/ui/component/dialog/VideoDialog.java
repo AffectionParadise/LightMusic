@@ -160,13 +160,13 @@ public class VideoDialog extends AbstractTitledDialog {
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
 
-    private NetMvInfo netMvInfo;
+    private NetMvInfo mvInfo;
 
-    public VideoDialog(NetMvInfo netMvInfo, String dest, MainFrame f) {
-        super(f, StringUtil.textToHtml(StringUtil.shorten(netMvInfo.toSimpleString(), 60)));
+    public VideoDialog(NetMvInfo mvInfo, String dest, MainFrame f) {
+        super(f, StringUtil.textToHtml(StringUtil.shorten(mvInfo.toSimpleString(), 60)));
         this.isLocal = dest != null;
-        this.netMvInfo = netMvInfo;
-        this.uri = isLocal ? dest : netMvInfo.getUrl();
+        this.mvInfo = mvInfo;
+        this.uri = isLocal ? dest : mvInfo.getUrl();
 
         mediaWidth = WindowSize.VIDEO_DIMENSIONS[f.windowSize][0];
         mediaHeight = WindowSize.VIDEO_DIMENSIONS[f.windowSize][1];
@@ -217,7 +217,7 @@ public class VideoDialog extends AbstractTitledDialog {
 
     private void initRequestHeaders() {
         // b 站视频需要设置请求头
-        if (isLocal || netMvInfo.getSource() != NetMusicSource.BI) return;
+        if (isLocal || mvInfo.getSource() != NetMusicSource.BI) return;
         try {
             // 由于 Media 类不能重写，只能通过反射机制设置请求头
             Field field = Media.class.getDeclaredField("jfxLocator");
@@ -292,7 +292,7 @@ public class VideoDialog extends AbstractTitledDialog {
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE
                     || type == MediaException.Type.MEDIA_UNAVAILABLE
                     || type == MediaException.Type.UNKNOWN) {
-                if (!isLocal) netMvInfo.setUrl(uri = MusicServerUtil.fetchMvUrl(netMvInfo));
+                if (!isLocal) mvInfo.setUrl(uri = MusicServerUtil.fetchMvUrl(mvInfo));
                 initAgain();
             }
             // 尝试多次无效直接关闭窗口
@@ -419,27 +419,27 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
-        collectButton.setIcon(ImageUtil.dye(f.hasBeenCollected(netMvInfo) ? hasCollectedIcon : collectIcon, iconColor));
+        collectButton.setIcon(ImageUtil.dye(f.hasBeenCollected(mvInfo) ? hasCollectedIcon : collectIcon, iconColor));
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, f));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
         collectButton.addActionListener(e -> {
-            if (!f.hasBeenCollected(netMvInfo)) {
+            if (!f.hasBeenCollected(mvInfo)) {
                 // 加载 MV 基本信息
-                netMvInfo.setInvokeLater(() -> f.updateRenderer(f.collectionList));
-                GlobalExecutors.requestExecutor.submit(() -> MusicServerUtil.fillMvDetail(netMvInfo));
-                f.mvCollectionModel.add(0, netMvInfo);
+                mvInfo.setInvokeLater(() -> f.updateRenderer(f.collectionList));
+                GlobalExecutors.requestExecutor.execute(() -> MusicServerUtil.fillMvDetail(mvInfo));
+                f.mvCollectionModel.add(0, mvInfo);
                 collectButton.setToolTipText(CANCEL_COLLECTION_TIP);
                 collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, iconColor));
                 new TipDialog(f, COLLECT_SUCCESS_MSG).showDialog();
             } else {
-                f.mvCollectionModel.removeElement(netMvInfo);
+                f.mvCollectionModel.removeElement(mvInfo);
                 collectButton.setToolTipText(COLLECT_TIP);
                 collectButton.setIcon(ImageUtil.dye(collectIcon, iconColor));
                 new TipDialog(f, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
         // 下载
-        downloadButton.setEnabled(!isLocal || !netMvInfo.isMp4());
+        downloadButton.setEnabled(!isLocal || !mvInfo.isMp4());
         downloadButton.setToolTipText(DOWNLOAD_TIP);
         downloadButton.setIcon(ImageUtil.dye(downloadIcon, iconColor));
         downloadButton.setDisabledIcon(ImageUtil.dye(downloadIcon, ColorUtil.darker(iconColor)));
@@ -581,7 +581,7 @@ public class VideoDialog extends AbstractTitledDialog {
 
     // 下载 MV
     private void downloadMv() {
-        f.multiDownloadMv(Collections.singletonList(netMvInfo));
+        f.multiDownloadMv(Collections.singletonList(mvInfo));
     }
 
     // 改变所有单选菜单项图标

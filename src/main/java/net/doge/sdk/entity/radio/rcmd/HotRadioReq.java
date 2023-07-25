@@ -75,7 +75,7 @@ public class HotRadioReq {
      */
     public CommonResult<NetRadioInfo> getHotRadios(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetRadioInfo> radioInfos = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
 
         final String defaultTag = "默认";
         String[] s = Tags.radioTag.get(tag);
@@ -95,11 +95,11 @@ public class HotRadioReq {
 //            NetRadioInfo radioInfo = new NetRadioInfo();
 //            radioInfo.setId(radioId);
 //            radioInfo.setName(radioName);
-//            radioInfos.add(radioInfo);
+//            res.add(radioInfo);
 //        }
         // 今日优选电台
         Callable<CommonResult<NetRadioInfo>> getDailyRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -139,13 +139,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 热门电台
         Callable<CommonResult<NetRadioInfo>> getHotRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -182,13 +182,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 热门电台榜
         Callable<CommonResult<NetRadioInfo>> getRadiosRanking = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -225,13 +225,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐电台
         Callable<CommonResult<NetRadioInfo>> getRecRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -268,13 +268,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类热门电台
         Callable<CommonResult<NetRadioInfo>> getCatHotRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -313,14 +313,14 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类推荐电台
         Callable<CommonResult<NetRadioInfo>> getCatRecRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -358,16 +358,16 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 喜马拉雅
         // 分类电台
         Callable<CommonResult<NetRadioInfo>> getCatRadiosXm = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -409,14 +409,14 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 频道电台
         Callable<CommonResult<NetRadioInfo>> getChannelRadiosXm = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
@@ -452,14 +452,14 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 排行榜
         Callable<CommonResult<NetRadioInfo>> getCatRadioRankingXm = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -497,16 +497,16 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         // 周榜
         Callable<CommonResult<NetRadioInfo>> getWeekRadiosMe = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(WEEK_RADIO_ME_API, page, limit))
@@ -537,13 +537,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 月榜
         Callable<CommonResult<NetRadioInfo>> getMonthRadiosMe = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(MONTH_RADIO_ME_API, page, limit))
@@ -574,13 +574,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 总榜
         Callable<CommonResult<NetRadioInfo>> getAllTimeRadiosMe = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(ALL_TIME_RADIO_ME_API, page, limit))
@@ -611,13 +611,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 广播剧分类
         Callable<CommonResult<NetRadioInfo>> getCatRadiosMe = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[5])) {
@@ -648,16 +648,16 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 豆瓣
         // Top 250
         Callable<CommonResult<NetRadioInfo>> getTopRadiosDb = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
             final int rn = 25;
 
@@ -693,13 +693,13 @@ public class HotRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类电台
         Callable<CommonResult<NetRadioInfo>> getCatRadiosDb = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -729,14 +729,14 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类游戏电台
         Callable<CommonResult<NetRadioInfo>> getCatGameRadiosDb = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[7])) {
@@ -769,10 +769,10 @@ public class HotRadioReq {
                         radioInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(radioInfo);
+                    r.add(radioInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
@@ -832,8 +832,8 @@ public class HotRadioReq {
                 e.printStackTrace();
             }
         });
-        radioInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(radioInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

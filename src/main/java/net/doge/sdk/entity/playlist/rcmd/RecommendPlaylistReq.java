@@ -73,7 +73,7 @@ public class RecommendPlaylistReq {
      */
     public CommonResult<NetPlaylistInfo> getRecommendPlaylists(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
+        List<NetPlaylistInfo> res = new LinkedList<>();
 
         final String defaultTag = "默认";
         String[] s = Tags.recPlaylistTag.get(tag);
@@ -81,7 +81,7 @@ public class RecommendPlaylistReq {
         // 网易云(程序分页)
         // 发现歌单
         Callable<CommonResult<NetPlaylistInfo>> getDiscoverPlaylists = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             final int lim = Math.min(35, limit);
@@ -118,13 +118,13 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 个人推荐
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylists = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -154,13 +154,13 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 曲风歌单
         Callable<CommonResult<NetPlaylistInfo>> getStylePlaylists = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -197,16 +197,16 @@ public class RecommendPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗(接口分页)
         // 每页固定 30 条的推荐歌单
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_KG_API, page))
@@ -239,13 +239,13 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(推荐)
         Callable<CommonResult<NetPlaylistInfo>> getRecommendTagPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -276,14 +276,14 @@ public class RecommendPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(最新)
         Callable<CommonResult<NetPlaylistInfo>> getNewTagPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -314,16 +314,16 @@ public class RecommendPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         // 每日推荐(程序分页)
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsQqDaily = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
@@ -354,16 +354,16 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(程序分页)
 //        Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsQq = () -> {
-//            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+//            List<NetPlaylistInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
-//            if (StringUtils.notEmpty(s[0])) {
+//            if (StringUtil.notEmpty(s[0])) {
 //                String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_QQ_API, s[0]))
 //                        .execute()
 //                        .body();
@@ -393,14 +393,14 @@ public class RecommendPlaylistReq {
 //                        playlistInfo.setCoverImgThumb(coverImgThumb);
 //                    });
 //
-//                    res.add(playlistInfo);
+//                    r.add(playlistInfo);
 //                }
 //            }
-//            return new CommonResult<>(res, t);
+//            return new CommonResult<>(r, t);
 //        };
         // 分类推荐歌单(最新)(接口分页)
         Callable<CommonResult<NetPlaylistInfo>> getNewPlaylistsQq = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -408,14 +408,14 @@ public class RecommendPlaylistReq {
                 boolean isAll = "10000000".equals(cat);
                 String url;
                 if (isAll) {
-                    url = NEW_PLAYLIST_QQ_API + StringUtil.urlEncode(String.format(
+                    url = NEW_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_playlist_by_tag\"," +
                                     "\"param\":{\"id\":10000000,\"sin\":%s,\"size\":%s,\"order\":2,\"cur_page\":%s}," +
                                     "\"module\":\"playlist.PlayListPlazaServer\"}}", (page - 1) * limit, limit, page));
                 } else {
-                    url = NEW_PLAYLIST_QQ_API + StringUtil.urlEncode(String.format(
+                    url = NEW_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_category_content\"," +
@@ -457,7 +457,7 @@ public class RecommendPlaylistReq {
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(playlistInfo);
+                        r.add(playlistInfo);
                     }
                 } else {
                     JSONObject data = playlistInfoJson.getJSONObject("playlist").getJSONObject("data").getJSONObject("content");
@@ -484,17 +484,17 @@ public class RecommendPlaylistReq {
                             playlistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(playlistInfo);
+                        r.add(playlistInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         // 推荐歌单(程序分页)
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsKw = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.kwRequest(RECOMMEND_PLAYLIST_KW_API).execute();
@@ -526,14 +526,14 @@ public class RecommendPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(最新)(程序分页)
         Callable<CommonResult<NetPlaylistInfo>> getNewPlaylistsKw = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(String.format(NEW_PLAYLIST_KW_API, page, limit)).execute();
@@ -566,16 +566,16 @@ public class RecommendPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕(接口分页)
         // 推荐歌单(最新)
         Callable<CommonResult<NetPlaylistInfo>> getRecNewPlaylistsMg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(REC_NEW_PLAYLIST_MG_API, page, limit))
@@ -607,13 +607,13 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐歌单(每页固定 10 条)
         Callable<CommonResult<NetPlaylistInfo>> getRecommendPlaylistsMg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_MG_API, (page - 1) * 10))
@@ -648,13 +648,13 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 最新歌单(每页固定 10 条)
         Callable<CommonResult<NetPlaylistInfo>> getNewPlaylistsMg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_MG_API, (page - 1) * 10))
@@ -689,15 +689,15 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         // 推荐歌单
         Callable<CommonResult<NetPlaylistInfo>> getRecPlaylistsQi = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(REC_PLAYLIST_QI_API, System.currentTimeMillis())))
@@ -726,15 +726,15 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         // 推荐歌单
         Callable<CommonResult<NetPlaylistInfo>> getRecPlaylistsMe = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(REC_PLAYLIST_ME_API)
@@ -769,13 +769,13 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类歌单(最新)
         Callable<CommonResult<NetPlaylistInfo>> getNewPlaylistsMe = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -808,16 +808,16 @@ public class RecommendPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 5sing
         // 分类歌单(最新)
         Callable<CommonResult<NetPlaylistInfo>> getNewPlaylistsFs = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
@@ -856,16 +856,16 @@ public class RecommendPlaylistReq {
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 哔哩哔哩
         // 推荐歌单
         Callable<CommonResult<NetPlaylistInfo>> getRecPlaylistsBi = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_BI_API, page, limit))
@@ -901,9 +901,9 @@ public class RecommendPlaylistReq {
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
@@ -960,8 +960,8 @@ public class RecommendPlaylistReq {
                 e.printStackTrace();
             }
         });
-        playlistInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(playlistInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

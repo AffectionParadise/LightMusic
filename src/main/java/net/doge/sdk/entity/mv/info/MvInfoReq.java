@@ -30,7 +30,7 @@ public class MvInfoReq {
         // 信息完整直接跳过
         if (mvInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> mvInfo.setCoverImgThumb(SdkUtil.extractMvCover(mvInfo.getCoverImgUrl())));
+        GlobalExecutors.imageExecutor.execute(() -> mvInfo.setCoverImgThumb(SdkUtil.extractMvCover(mvInfo.getCoverImgUrl())));
     }
 
     /**
@@ -46,9 +46,9 @@ public class MvInfoReq {
     /**
      * 根据 MV id 补全 MV 基本信息
      */
-    public void fillMvDetail(NetMvInfo netMvInfo) {
-        int source = netMvInfo.getSource();
-        String mvId = netMvInfo.getId();
+    public void fillMvDetail(NetMvInfo mvInfo) {
+        int source = mvInfo.getSource();
+        String mvId = mvInfo.getId();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
@@ -66,17 +66,17 @@ public class MvInfoReq {
             String pubTime = data.getString("publishTime");
             String coverImgUrl = data.getString("cover");
 
-            netMvInfo.setName(name);
-            netMvInfo.setArtist(artist);
-            netMvInfo.setCreatorId(creatorId);
-            netMvInfo.setPlayCount(playCount);
-            netMvInfo.setDuration(duration);
-            netMvInfo.setPubTime(pubTime);
-            netMvInfo.setCoverImgUrl(coverImgUrl);
+            mvInfo.setName(name);
+            mvInfo.setArtist(artist);
+            mvInfo.setCreatorId(creatorId);
+            mvInfo.setPlayCount(playCount);
+            mvInfo.setDuration(duration);
+            mvInfo.setPubTime(pubTime);
+            mvInfo.setCoverImgUrl(coverImgUrl);
 
-            GlobalExecutors.imageExecutor.submit(() -> {
+            GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                netMvInfo.setCoverImgThumb(coverImgThumb);
+                mvInfo.setCoverImgThumb(coverImgThumb);
             });
         }
 
@@ -96,17 +96,17 @@ public class MvInfoReq {
             String pubTime = data.getString("update");
             String coverImgUrl = data.getString("imgurl").replace("/{size}", "");
 
-            netMvInfo.setName(name);
-            netMvInfo.setArtist(artist);
-            netMvInfo.setCreatorId(creatorId);
-            netMvInfo.setPlayCount(playCount);
-            netMvInfo.setDuration(duration);
-            netMvInfo.setPubTime(pubTime);
-            netMvInfo.setCoverImgUrl(coverImgUrl);
+            mvInfo.setName(name);
+            mvInfo.setArtist(artist);
+            mvInfo.setCreatorId(creatorId);
+            mvInfo.setPlayCount(playCount);
+            mvInfo.setDuration(duration);
+            mvInfo.setPubTime(pubTime);
+            mvInfo.setCoverImgUrl(coverImgUrl);
 
-            GlobalExecutors.imageExecutor.submit(() -> {
+            GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                netMvInfo.setCoverImgThumb(coverImgThumb);
+                mvInfo.setCoverImgThumb(coverImgThumb);
             });
         }
 
@@ -133,17 +133,17 @@ public class MvInfoReq {
             String pubTime = TimeUtil.msToDate(data.getLong("pubdate") * 1000);
             String coverImgUrl = data.getString("cover_pic");
 
-            netMvInfo.setName(name);
-            netMvInfo.setArtist(artist);
-            netMvInfo.setCreatorId(creatorId);
-            netMvInfo.setPlayCount(playCount);
-            netMvInfo.setDuration(duration);
-            netMvInfo.setPubTime(pubTime);
-            netMvInfo.setCoverImgUrl(coverImgUrl);
+            mvInfo.setName(name);
+            mvInfo.setArtist(artist);
+            mvInfo.setCreatorId(creatorId);
+            mvInfo.setPlayCount(playCount);
+            mvInfo.setDuration(duration);
+            mvInfo.setPubTime(pubTime);
+            mvInfo.setCoverImgUrl(coverImgUrl);
 
-            GlobalExecutors.imageExecutor.submit(() -> {
+            GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                netMvInfo.setCoverImgThumb(coverImgThumb);
+                mvInfo.setCoverImgThumb(coverImgThumb);
             });
         }
 
@@ -163,17 +163,17 @@ public class MvInfoReq {
             String pubTime = data.getString("releaseDate");
             String coverImgUrl = data.getString("pic");
 
-            netMvInfo.setName(name);
-            netMvInfo.setArtist(artist);
-            netMvInfo.setCreatorId(creatorId);
-            netMvInfo.setPlayCount(playCount);
-            netMvInfo.setDuration(duration);
-            netMvInfo.setPubTime(pubTime);
-            netMvInfo.setCoverImgUrl(coverImgUrl);
+            mvInfo.setName(name);
+            mvInfo.setArtist(artist);
+            mvInfo.setCreatorId(creatorId);
+            mvInfo.setPlayCount(playCount);
+            mvInfo.setDuration(duration);
+            mvInfo.setPubTime(pubTime);
+            mvInfo.setCoverImgUrl(coverImgUrl);
 
-            GlobalExecutors.imageExecutor.submit(() -> {
+            GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                netMvInfo.setCoverImgThumb(coverImgThumb);
+                mvInfo.setCoverImgThumb(coverImgThumb);
             });
         }
     }

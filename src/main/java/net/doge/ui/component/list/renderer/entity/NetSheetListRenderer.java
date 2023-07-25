@@ -43,7 +43,7 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetSheetInfo netSheetInfo = (NetSheetInfo) value;
+        NetSheetInfo sheetInfo = (NetSheetInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel iconLabel = new CustomLabel();
@@ -56,7 +56,7 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         CustomLabel pageSizeLabel = new CustomLabel();
 
         iconLabel.setIconTextGap(0);
-        iconLabel.setIcon(netSheetInfo.hasCoverImg() ? new ImageIcon(netSheetInfo.getCoverImg()) : sheetIcon);
+        iconLabel.setIcon(sheetInfo.hasCoverImg() ? new ImageIcon(sheetInfo.getCoverImg()) : sheetIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -109,13 +109,13 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
 
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netSheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String difficulty = netSheetInfo.hasDifficulty() ? StringUtil.textToHtml(netSheetInfo.getDifficulty() + "难度") : "";
-        String musicKey = netSheetInfo.hasMusicKey() ? StringUtil.textToHtml(netSheetInfo.getMusicKey() + "调") : "";
-        String playVersion = netSheetInfo.hasPlayVersion() ? StringUtil.textToHtml(netSheetInfo.getPlayVersion()) : "";
-        String chordName = netSheetInfo.hasChordName() ? StringUtil.textToHtml(netSheetInfo.getChordName()) : "";
-        String bpm = netSheetInfo.hasBpm() ? StringUtil.textToHtml(netSheetInfo.getBpm() + " 拍/分钟") : "";
-        String pageSize = netSheetInfo.hasPageSize() ? StringUtil.textToHtml(netSheetInfo.getPageSize() + " 页") : "";
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(sheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String difficulty = sheetInfo.hasDifficulty() ? StringUtil.textToHtml(sheetInfo.getDifficulty() + "难度") : "";
+        String musicKey = sheetInfo.hasMusicKey() ? StringUtil.textToHtml(sheetInfo.getMusicKey() + "调") : "";
+        String playVersion = sheetInfo.hasPlayVersion() ? StringUtil.textToHtml(sheetInfo.getPlayVersion()) : "";
+        String chordName = sheetInfo.hasChordName() ? StringUtil.textToHtml(sheetInfo.getChordName()) : "";
+        String bpm = sheetInfo.hasBpm() ? StringUtil.textToHtml(sheetInfo.getBpm() + " 拍/分钟") : "";
+        String pageSize = sheetInfo.hasPageSize() ? StringUtil.textToHtml(sheetInfo.getPageSize() + " 页") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

@@ -263,8 +263,8 @@ public class KeyUtil {
      * @param
      * @return
      */
-    public static LinkedList<Integer> strToCodes(String str) {
-        LinkedList<Integer> codes = new LinkedList<>();
+    public static List<Integer> strToCodes(String str) {
+        List<Integer> codes = new LinkedList<>();
         if (StringUtil.notEmpty(str)) {
             String[] sp = str.split(" ");
             for (String s : sp)
@@ -281,9 +281,7 @@ public class KeyUtil {
      */
     public static String codesToStr(List<Integer> codes) {
         StringJoiner sj = new StringJoiner(" ");
-        for (int i = 0, len = codes.size(); i < len; i++) {
-            sj.add(String.valueOf(codes.get(i)));
-        }
+        for (Integer code : codes) sj.add(String.valueOf(code));
         return sj.toString();
     }
 }

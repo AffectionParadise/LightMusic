@@ -93,7 +93,7 @@ public class ArtistMenuReq {
      */
     public CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
         int total = 0;
-        List<NetAlbumInfo> albumInfos = new LinkedList<>();
+        List<NetAlbumInfo> res = new LinkedList<>();
 
         String artistId = artistInfo.getId();
         int source = artistInfo.getSource();
@@ -132,7 +132,7 @@ public class ArtistMenuReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                albumInfos.add(albumInfo);
+                res.add(albumInfo);
             }
         }
 
@@ -171,7 +171,7 @@ public class ArtistMenuReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                albumInfos.add(albumInfo);
+                res.add(albumInfo);
             }
         }
 
@@ -211,14 +211,14 @@ public class ArtistMenuReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                albumInfos.add(albumInfo);
+                res.add(albumInfo);
             }
         }
 
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, artistId, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncode(artistId) + "/album")
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(artistId) + "/album")
                     .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String albumInfoBody = resp.body();
@@ -248,7 +248,7 @@ public class ArtistMenuReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         albumInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    albumInfos.add(albumInfo);
+                    res.add(albumInfo);
                 }
             }
         }
@@ -288,7 +288,7 @@ public class ArtistMenuReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                albumInfos.add(albumInfo);
+                res.add(albumInfo);
             }
         }
 
@@ -325,22 +325,22 @@ public class ArtistMenuReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     albumInfo.setCoverImgThumb(coverImgThumb);
                 });
-                albumInfos.add(albumInfo);
+                res.add(albumInfo);
             }
         }
 
-        return new CommonResult<>(albumInfos, total);
+        return new CommonResult<>(res, total);
     }
 
     /**
      * 根据歌手 id 获取里面 MV 的粗略信息，分页，返回 NetMvInfo
      */
-    public CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo netArtistInfo, int limit, int page) {
+    public CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
         int total = 0;
-        List<NetMvInfo> mvInfos = new LinkedList<>();
+        List<NetMvInfo> res = new LinkedList<>();
 
-        String artistId = netArtistInfo.getId();
-        int source = netArtistInfo.getSource();
+        String artistId = artistInfo.getId();
+        int source = artistInfo.getSource();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
@@ -353,7 +353,7 @@ public class ArtistMenuReq {
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("mvs");
-            total = netArtistInfo.getMvNum();
+            total = artistInfo.getMvNum();
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
@@ -378,7 +378,7 @@ public class ArtistMenuReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                mvInfos.add(mvInfo);
+                res.add(mvInfo);
             }
             // 歌手视频
 //            Callable<CommonResult<NetMvInfo>> getArtistVideo = ()->{
@@ -390,7 +390,7 @@ public class ArtistMenuReq {
 //                        .body();
 //                JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
 //                JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("records");
-//                t = netArtistInfo.getMvNum();
+//                t = artistInfo.getMvNum();
 //                for (int i = 0, len = mvArray.size(); i < len; i++) {
 //                    JSONObject mvJson = mvArray.getJSONObject(i);
 //
@@ -449,7 +449,7 @@ public class ArtistMenuReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                mvInfos.add(mvInfo);
+                res.add(mvInfo);
             }
         }
 
@@ -485,14 +485,14 @@ public class ArtistMenuReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                mvInfos.add(mvInfo);
+                res.add(mvInfo);
             }
         }
 
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, artistId, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncode(artistId) + "/mv")
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(artistId) + "/mv")
                     .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();
@@ -525,12 +525,12 @@ public class ArtistMenuReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    mvInfos.add(mvInfo);
+                    res.add(mvInfo);
                 }
             }
         }
 
-        return new CommonResult<>(mvInfos, total);
+        return new CommonResult<>(res, total);
     }
 
     /**
@@ -539,7 +539,7 @@ public class ArtistMenuReq {
     public CommonResult<String> getArtistImgUrls(NetArtistInfo artistInfo, int page) {
         int source = artistInfo.getSource();
         String id = artistInfo.getId();
-        LinkedList<String> imgUrls = new LinkedList<>();
+        List<String> imgUrls = new LinkedList<>();
         Integer total = 0;
         final int limit = 30;
 
@@ -570,7 +570,7 @@ public class ArtistMenuReq {
         int source = netArtistInfo.getSource();
         String id = netArtistInfo.getId();
 
-        LinkedList<NetArtistInfo> res = new LinkedList<>();
+        List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -678,11 +678,11 @@ public class ArtistMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getArtistFans(NetArtistInfo netArtistInfo, int limit, int page) {
-        int source = netArtistInfo.getSource();
-        String id = netArtistInfo.getId();
+    public CommonResult<NetUserInfo> getArtistFans(NetArtistInfo artistInfo, int limit, int page) {
+        int source = artistInfo.getSource();
+        String id = artistInfo.getId();
 
-        LinkedList<NetUserInfo> res = new LinkedList<>();
+        List<NetUserInfo> res = new LinkedList<>();
         AtomicReference<Integer> t = new AtomicReference<>(0);
 
         // 网易云
@@ -832,7 +832,7 @@ public class ArtistMenuReq {
         int source = netArtistInfo.getSource();
         String id = netArtistInfo.getId();
 
-        LinkedList<NetArtistInfo> res = new LinkedList<>();
+        List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 0;
         final int dbLimit = 10;
 
@@ -907,17 +907,17 @@ public class ArtistMenuReq {
      *
      * @return
      */
-    public CommonResult<NetRadioInfo> getArtistRadios(NetArtistInfo netArtistInfo, int page, int limit) {
-        int source = netArtistInfo.getSource();
-        String id = netArtistInfo.getId();
+    public CommonResult<NetRadioInfo> getArtistRadios(NetArtistInfo artistInfo, int page, int limit) {
+        int source = artistInfo.getSource();
+        String id = artistInfo.getId();
 
-        LinkedList<NetRadioInfo> res = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 0;
         final int dbLimit = 10;
 
         // 猫耳
         if (source == NetMusicSource.ME) {
-            if (netArtistInfo.isOrganization()) {
+            if (artistInfo.isOrganization()) {
                 String radioInfoBody = HttpRequest.get(String.format(ORGANIZATION_RADIOS_ME_API, id, page))
                         .execute()
                         .body();
@@ -930,7 +930,7 @@ public class ArtistMenuReq {
 
                     String radioId = radioJson.getString("id");
                     String radioName = radioJson.getString("name");
-                    String dj = netArtistInfo.getName();
+                    String dj = artistInfo.getName();
                     String coverImgThumbUrl = "https:" + radioJson.getString("cover");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
@@ -960,7 +960,7 @@ public class ArtistMenuReq {
                     String radioId = radioJson.getString("id");
                     String radioName = radioJson.getString("name");
                     String category = radioJson.getString("catalog_name");
-                    String dj = netArtistInfo.getName();
+                    String dj = artistInfo.getName();
                     Long playCount = radioJson.getLong("view_count");
                     String coverImgThumbUrl = radioJson.getString("cover");
 

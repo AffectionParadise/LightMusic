@@ -24,7 +24,7 @@ import java.io.IOException;
  * @Description 音乐工具类
  * @Date 2020/12/11
  */
-public class MusicUtil {
+public class MediaUtil {
     /**
      * 获取音频文件时长
      *
@@ -49,18 +49,18 @@ public class MusicUtil {
      * 为 MP3 写入信息(包含曲名、艺术家、专辑、封面图片)
      *
      * @param sourcePath
-     * @param netMusicInfo
+     * @param musicInfo
      */
-    public static void writeMP3Info(String sourcePath, NetMusicInfo netMusicInfo) {
-        if (!netMusicInfo.hasAlbumImage()) netMusicInfo.setInvokeLater(() -> startWrite(sourcePath, netMusicInfo));
-        else startWrite(sourcePath, netMusicInfo);
+    public static void writeMP3Info(String sourcePath, NetMusicInfo musicInfo) {
+        if (!musicInfo.hasAlbumImage()) musicInfo.setInvokeLater(() -> startWrite(sourcePath, musicInfo));
+        else startWrite(sourcePath, musicInfo);
     }
 
-    private static void startWrite(String sourcePath, NetMusicInfo netMusicInfo) {
-        String name = netMusicInfo.getName();
-        String artist = netMusicInfo.getArtist();
-        String albumName = netMusicInfo.getAlbumName();
-        BufferedImage albumImg = netMusicInfo.getAlbumImage();
+    private static void startWrite(String sourcePath, NetMusicInfo musicInfo) {
+        String name = musicInfo.getName();
+        String artist = musicInfo.getArtist();
+        String albumName = musicInfo.getAlbumName();
+        BufferedImage albumImg = musicInfo.getAlbumImage();
 
         // 创建临时文件
         File destFile = new File(sourcePath);
@@ -240,12 +240,12 @@ public class MusicUtil {
     }
 
     /**
-     * 将音频文件转成指定格式
+     * 将音频/视频文件转成指定格式
      *
      * @param source
      * @return
      */
-    public static void convert(AudioFile source, AudioFile dest) {
+    public static void convert(File source, File dest) {
         TerminateUtil.exec(String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
     }
 }

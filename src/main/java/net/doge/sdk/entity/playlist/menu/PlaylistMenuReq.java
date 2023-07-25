@@ -20,6 +20,7 @@ import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class PlaylistMenuReq {
@@ -37,7 +38,7 @@ public class PlaylistMenuReq {
         int source = netPlaylistInfo.getSource();
         String id = netPlaylistInfo.getId();
 
-        LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+        List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云
@@ -84,11 +85,11 @@ public class PlaylistMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo netPlaylistInfo, int limit, int page) {
-        int source = netPlaylistInfo.getSource();
-        String id = netPlaylistInfo.getId();
+    public CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo playlistInfo, int limit, int page) {
+        int source = playlistInfo.getSource();
+        String id = playlistInfo.getId();
 
-        LinkedList<NetUserInfo> res = new LinkedList<>();
+        List<NetUserInfo> res = new LinkedList<>();
         Integer t = 0;
 
         // 网易云

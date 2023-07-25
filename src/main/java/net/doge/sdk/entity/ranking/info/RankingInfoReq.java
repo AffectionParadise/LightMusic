@@ -36,7 +36,7 @@ public class RankingInfoReq {
         // 信息完整直接跳过
         if (rankingInfo.isIntegrated()) return;
 
-        GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImgThumb(SdkUtil.extractCover(rankingInfo.getCoverImgUrl())));
+        GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImgThumb(SdkUtil.extractCover(rankingInfo.getCoverImgUrl())));
     }
 
     /**
@@ -51,12 +51,12 @@ public class RankingInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
         }
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
         }
 
         // QQ
@@ -69,14 +69,14 @@ public class RankingInfoReq {
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("detail").getJSONObject("data").getJSONObject("data");
 
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
             // QQ 需要额外补全榜单描述
             rankingInfo.setDescription(data.getString("intro").replace("<br>", "\n"));
         }
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
         }
 
         // 咪咕
@@ -90,14 +90,14 @@ public class RankingInfoReq {
             if (!rankingInfo.hasPlayCount())
                 rankingInfo.setPlayCount(data.getJSONObject("opNumItem").getLong("playNum"));
             if (!rankingInfo.hasUpdateTime()) rankingInfo.setUpdateTime(data.getString("columnUpdateTime"));
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
             // 咪咕需要额外补全榜单描述
             rankingInfo.setDescription(data.getString("columnDes"));
         }
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
         }
 
         // 猫耳
@@ -110,7 +110,7 @@ public class RankingInfoReq {
 
             String description = StringUtil.removeHTMLLabel(data.getString("intro"));
 
-            GlobalExecutors.imageExecutor.submit(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
             rankingInfo.setDescription(description);
         }
     }
@@ -120,7 +120,7 @@ public class RankingInfoReq {
      */
     public CommonResult<NetMusicInfo> getMusicInfoInRanking(String rankingId, int source, int limit, int page) {
         int total = 0;
-        List<NetMusicInfo> musicInfos = new LinkedList<>();
+        List<NetMusicInfo> res = new LinkedList<>();
 
         // 网易云(榜单就是歌单，接口分页)
         if (source == NetMusicSource.NET_CLOUD) {
@@ -162,7 +162,7 @@ public class RankingInfoReq {
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -200,7 +200,7 @@ public class RankingInfoReq {
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -238,7 +238,7 @@ public class RankingInfoReq {
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -272,7 +272,7 @@ public class RankingInfoReq {
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -306,7 +306,7 @@ public class RankingInfoReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
@@ -336,10 +336,10 @@ public class RankingInfoReq {
                 musicInfo.setArtistId(artistId);
                 musicInfo.setDuration(duration);
 
-                musicInfos.add(musicInfo);
+                res.add(musicInfo);
             }
         }
 
-        return new CommonResult<>(musicInfos, total);
+        return new CommonResult<>(res, total);
     }
 }

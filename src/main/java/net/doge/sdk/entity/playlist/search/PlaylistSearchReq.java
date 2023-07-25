@@ -41,14 +41,14 @@ public class PlaylistSearchReq {
      */
     public CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetPlaylistInfo> playlistInfos = new LinkedList<>();
+        List<NetPlaylistInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncode(keyword);
+        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylists = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
@@ -85,15 +85,15 @@ public class PlaylistSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsKg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_KG_API, encodedKeyword, page, limit))
@@ -125,14 +125,14 @@ public class PlaylistSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsQq = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
@@ -165,14 +165,14 @@ public class PlaylistSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     playlistInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(playlistInfo);
+                r.add(playlistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsKw = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page, limit)).execute();
@@ -204,15 +204,15 @@ public class PlaylistSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsMg = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_MG_API, encodedKeyword, page, limit))
@@ -247,15 +247,15 @@ public class PlaylistSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 5sing
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsFs = () -> {
-            LinkedList<NetPlaylistInfo> res = new LinkedList<>();
+            List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_FS_API, encodedKeyword, page))
@@ -289,10 +289,10 @@ public class PlaylistSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(playlistInfo);
+                    r.add(playlistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
@@ -322,8 +322,8 @@ public class PlaylistSearchReq {
                 e.printStackTrace();
             }
         });
-        playlistInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(playlistInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

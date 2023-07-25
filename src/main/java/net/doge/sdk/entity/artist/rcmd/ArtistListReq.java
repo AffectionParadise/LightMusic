@@ -63,7 +63,7 @@ public class ArtistListReq {
      */
     public CommonResult<NetArtistInfo> getArtistLists(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetArtistInfo> artistInfos = new LinkedList<>();
+        List<NetArtistInfo> res = new LinkedList<>();
 //        Set<NetArtistInfo> set = Collections.synchronizedSet(new HashSet<>());
 
         final String defaultTag = "默认";
@@ -72,7 +72,7 @@ public class ArtistListReq {
         // 网易云 (接口分页)
         // 歌手榜
         Callable<CommonResult<NetArtistInfo>> getArtistRanking = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -104,14 +104,14 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 热门歌手
         Callable<CommonResult<NetArtistInfo>> getHotArtist = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -142,13 +142,13 @@ public class ArtistListReq {
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类歌手
         Callable<CommonResult<NetArtistInfo>> getCatArtist = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
@@ -182,14 +182,14 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 曲风歌手
         Callable<CommonResult<NetArtistInfo>> getStyleArtist = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -222,16 +222,16 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗(接口分页)
         // 热门歌手
         Callable<CommonResult<NetArtistInfo>> getHotArtistKg = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -266,14 +266,14 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 飙升歌手
         Callable<CommonResult<NetArtistInfo>> getUpArtistKg = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -308,15 +308,15 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ (每页固定 80 条)
         Callable<CommonResult<NetArtistInfo>> getArtistRankingQq = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
@@ -348,16 +348,16 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我 (接口分页)
         // 推荐歌手
         Callable<CommonResult<NetArtistInfo>> getArtistRankingKw = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[5])) {
@@ -391,15 +391,15 @@ public class ArtistListReq {
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(artistInfo);
+                        r.add(artistInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 全部歌手
         Callable<CommonResult<NetArtistInfo>> getAllArtistsKw = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -436,17 +436,17 @@ public class ArtistListReq {
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(artistInfo);
+                        r.add(artistInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕
         // 来电新声榜(程序分页)
         Callable<CommonResult<NetArtistInfo>> getArtistRankingMg = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API)
@@ -473,13 +473,13 @@ public class ArtistListReq {
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 来电唱作榜(程序分页)
         Callable<CommonResult<NetArtistInfo>> getArtistRankingMg2 = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API_2)
@@ -506,15 +506,15 @@ public class ArtistListReq {
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         // 推荐歌手
         Callable<CommonResult<NetArtistInfo>> getRecArtistsQi = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = HttpRequest.get(SdkCommon.buildQianUrl(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis())))
@@ -547,13 +547,13 @@ public class ArtistListReq {
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类歌手
         Callable<CommonResult<NetArtistInfo>> getCatArtistsQi = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[7])) {
@@ -586,16 +586,16 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         // 分类声优
         Callable<CommonResult<NetArtistInfo>> getCatCVsMe = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[8])) {
@@ -624,14 +624,14 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类社团
         Callable<CommonResult<NetArtistInfo>> getCatOrganizationsMe = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[8])) {
@@ -661,10 +661,10 @@ public class ArtistListReq {
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetArtistInfo>>> taskList = new LinkedList<>();
@@ -719,8 +719,8 @@ public class ArtistListReq {
                 e.printStackTrace();
             }
         });
-        artistInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(artistInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

@@ -43,7 +43,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetUserInfo netUserInfo = (NetUserInfo) value;
+        NetUserInfo userInfo = (NetUserInfo) value;
 
         CustomPanel outerPanel = new CustomPanel();
         CustomLabel avatarLabel = new CustomLabel();
@@ -56,7 +56,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         CustomLabel playlistCountLabel = new CustomLabel();
 
         avatarLabel.setIconTextGap(0);
-        avatarLabel.setIcon(netUserInfo.hasAvatarThumb() ? new ImageIcon(netUserInfo.getAvatarThumb()) : userIcon);
+        avatarLabel.setIcon(userInfo.hasAvatarThumb() ? new ImageIcon(userInfo.getAvatarThumb()) : userIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         avatarLabel.setForeground(textColor);
@@ -103,16 +103,16 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
 
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(netUserInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String gender = netUserInfo.hasGender() ? StringUtil.textToHtml(netUserInfo.getGender()) : "";
-        boolean hasRadioCount = netUserInfo.hasRadioCount(), hasProgramCount = netUserInfo.hasProgramCount();
-        String playlistCount = netUserInfo.hasPlaylistCount() ? StringUtil.textToHtml(netUserInfo.getPlaylistCount() + " 歌单")
-                : hasRadioCount && hasProgramCount ? StringUtil.textToHtml(netUserInfo.getRadioCount() + " 电台，" + netUserInfo.getProgramCount() + " 节目")
-                : hasRadioCount ? StringUtil.textToHtml(netUserInfo.getRadioCount() + " 电台")
-                : hasProgramCount ? StringUtil.textToHtml(netUserInfo.getProgramCount() + (netUserInfo.fromDt() ? " 专辑" : netUserInfo.fromBI() ? " 视频" : " 节目"))
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(userInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String gender = userInfo.hasGender() ? StringUtil.textToHtml(userInfo.getGender()) : "";
+        boolean hasRadioCount = userInfo.hasRadioCount(), hasProgramCount = userInfo.hasProgramCount();
+        String playlistCount = userInfo.hasPlaylistCount() ? StringUtil.textToHtml(userInfo.getPlaylistCount() + " 歌单")
+                : hasRadioCount && hasProgramCount ? StringUtil.textToHtml(userInfo.getRadioCount() + " 电台，" + userInfo.getProgramCount() + " 节目")
+                : hasRadioCount ? StringUtil.textToHtml(userInfo.getRadioCount() + " 电台")
+                : hasProgramCount ? StringUtil.textToHtml(userInfo.getProgramCount() + (userInfo.fromDt() ? " 专辑" : userInfo.fromBI() ? " 视频" : " 节目"))
                 : "";
-        String follow = netUserInfo.hasFollow() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollow()) + " 关注") : "";
-        String followed = netUserInfo.hasFollowed() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(netUserInfo.getFollowed()) + " 粉丝") : "";
+        String follow = userInfo.hasFollow() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(userInfo.getFollow()) + " 关注") : "";
+        String followed = userInfo.hasFollowed() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(userInfo.getFollowed()) + " 粉丝") : "";
 
         avatarLabel.setText(source);
         nameLabel.setText(name);

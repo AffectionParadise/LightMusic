@@ -149,11 +149,10 @@ public class NetArtistInfo {
     }
 
     private void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
     /**
@@ -172,8 +171,8 @@ public class NetArtistInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetArtistInfo) {
-            NetArtistInfo netArtistInfo = (NetArtistInfo) o;
-            return hashCode() == netArtistInfo.hashCode();
+            NetArtistInfo artistInfo = (NetArtistInfo) o;
+            return hashCode() == artistInfo.hashCode();
         }
         return false;
     }

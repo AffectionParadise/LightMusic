@@ -47,12 +47,12 @@ public class NewRadioReq {
      */
     public CommonResult<NetRadioInfo> getNewRadios(int src, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetRadioInfo> radioInfos = new LinkedList<>();
+        List<NetRadioInfo> res = new LinkedList<>();
 
         // 网易云(程序分页)
         // 新晋电台榜
         Callable<CommonResult<NetRadioInfo>> getNewRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -90,13 +90,13 @@ public class NewRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐个性电台
         Callable<CommonResult<NetRadioInfo>> getPersonalizedRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -137,13 +137,13 @@ public class NewRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐电台
         Callable<CommonResult<NetRadioInfo>> getRecommendRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -181,13 +181,13 @@ public class NewRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 付费精品电台
         Callable<CommonResult<NetRadioInfo>> getPayRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -223,13 +223,13 @@ public class NewRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 付费精选电台
         Callable<CommonResult<NetRadioInfo>> getPayGiftRadios = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -266,14 +266,14 @@ public class NewRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ(程序分页)
         Callable<CommonResult<NetRadioInfo>> getRecommendRadiosQq = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
@@ -310,17 +310,17 @@ public class NewRadioReq {
                             radioInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(radioInfo);
+                        r.add(radioInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         // 推荐广播剧
         Callable<CommonResult<NetRadioInfo>> getRecRadiosMe = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(REC_RADIO_ME_API)
@@ -350,13 +350,13 @@ public class NewRadioReq {
                     radioInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(radioInfo);
+                r.add(radioInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 夏日推荐
         Callable<CommonResult<NetRadioInfo>> getSummerRadiosMe = () -> {
-            LinkedList<NetRadioInfo> res = new LinkedList<>();
+            List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(SUMMER_RADIO_ME_API)
@@ -386,16 +386,16 @@ public class NewRadioReq {
                             radioInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(radioInfo);
+                        r.add(radioInfo);
                     }
                 }
             }
 
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 频道
 //        Callable<CommonResult<NetRadioInfo>> getChannelsMe = () -> {
-//            LinkedList<NetRadioInfo> res = new LinkedList<>();
+//            List<NetRadioInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
 //            String radioInfoBody = HttpRequest.get(CHANNEL_ME_API)
@@ -410,7 +410,7 @@ public class NewRadioReq {
 //                String radioId = radio.attr("href").replace("/explore/channel/","");
 //                String radioName = radio.select("b").text();
 //                String coverImgThumbUrl = "https:" + radioJson.getString("cover");
-//                String description = StringUtils.removeHTMLLabel(radioJson.getString("abstract"));
+//                String description = StringUtil.removeHTMLLabel(radioJson.getString("abstract"));
 //
 //                NetRadioInfo radioInfo = new NetRadioInfo();
 //                radioInfo.setSource(NetMusicSource.ME);
@@ -423,9 +423,9 @@ public class NewRadioReq {
 //                    radioInfo.setCoverImgThumb(coverImgThumb);
 //                });
 //
-//                res.add(radioInfo);
+//                r.add(radioInfo);
 //            }
-//            return new CommonResult<>(res, t);
+//            return new CommonResult<>(r, t);
 //        };
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
@@ -459,8 +459,8 @@ public class NewRadioReq {
                 e.printStackTrace();
             }
         });
-        radioInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(radioInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

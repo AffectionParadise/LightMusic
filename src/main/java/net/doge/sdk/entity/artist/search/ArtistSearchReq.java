@@ -50,14 +50,14 @@ public class ArtistSearchReq {
      */
     public CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetArtistInfo> artistInfos = new LinkedList<>();
+        List<NetArtistInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncode(keyword);
+        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetArtistInfo>> searchArtists = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
@@ -90,16 +90,16 @@ public class ArtistSearchReq {
                             BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                             artistInfo.setCoverImgThumb(coverImgThumb);
                         });
-                        res.add(artistInfo);
+                        r.add(artistInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         Callable<CommonResult<NetArtistInfo>> searchArtistsQq = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             int lim = Math.min(40, limit);
@@ -134,14 +134,14 @@ public class ArtistSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         Callable<CommonResult<NetArtistInfo>> searchArtistsKw = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_ARTIST_KW_API, encodedKeyword, page, limit)).execute();
@@ -170,15 +170,15 @@ public class ArtistSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 咪咕
         Callable<CommonResult<NetArtistInfo>> searchArtistsMg = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_MG_API, encodedKeyword, page, limit))
@@ -209,15 +209,15 @@ public class ArtistSearchReq {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
-                    res.add(artistInfo);
+                    r.add(artistInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         Callable<CommonResult<NetArtistInfo>> searchArtistsQi = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SEARCH_ARTIST_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword)))
@@ -245,14 +245,14 @@ public class ArtistSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 猫耳
         Callable<CommonResult<NetArtistInfo>> searchCVsMe = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_CV_ME_API, encodedKeyword, page, limit))
@@ -280,14 +280,14 @@ public class ArtistSearchReq {
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 豆瓣
         Callable<CommonResult<NetArtistInfo>> searchArtistsDb = () -> {
-            LinkedList<NetArtistInfo> res = new LinkedList<>();
+            List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_DB_API, encodedKeyword, (page - 1) * 15))
@@ -315,9 +315,9 @@ public class ArtistSearchReq {
                     BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
-                res.add(artistInfo);
+                r.add(artistInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetArtistInfo>>> taskList = new LinkedList<>();
@@ -349,8 +349,8 @@ public class ArtistSearchReq {
                 e.printStackTrace();
             }
         });
-        artistInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(artistInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

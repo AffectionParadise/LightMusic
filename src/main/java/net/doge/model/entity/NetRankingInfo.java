@@ -69,11 +69,10 @@ public class NetRankingInfo {
     }
 
     private void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
     /**
@@ -92,8 +91,8 @@ public class NetRankingInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetRankingInfo) {
-            NetRankingInfo netRankingInfo = (NetRankingInfo) o;
-            return hashCode() == netRankingInfo.hashCode();
+            NetRankingInfo rankingInfo = (NetRankingInfo) o;
+            return hashCode() == rankingInfo.hashCode();
         }
         return false;
     }

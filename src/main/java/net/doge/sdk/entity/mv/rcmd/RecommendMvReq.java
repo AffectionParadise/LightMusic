@@ -72,7 +72,7 @@ public class RecommendMvReq {
      */
     public CommonResult<NetMvInfo> getRecommendMvs(int src, String tag, int limit, int page) {
         AtomicInteger total = new AtomicInteger();
-        List<NetMvInfo> mvInfos = new LinkedList<>();
+        List<NetMvInfo> res = new LinkedList<>();
 
         final String defaultTag = "默认";
         String[] s = Tags.mvTag.get(tag);
@@ -80,7 +80,7 @@ public class RecommendMvReq {
         // 网易云(程序分页)
         // MV 排行
         Callable<CommonResult<NetMvInfo>> getMvRanking = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -118,14 +118,14 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 最新 MV
         Callable<CommonResult<NetMvInfo>> getNewMv = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
@@ -157,14 +157,14 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 全部 MV
         Callable<CommonResult<NetMvInfo>> getAllMv = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0]) || StringUtil.notEmpty(s[1])) {
@@ -200,14 +200,14 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 推荐 MV
         Callable<CommonResult<NetMvInfo>> getRecommendMv = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -240,13 +240,13 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 网易出品 MV
         Callable<CommonResult<NetMvInfo>> getExclusiveMv = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
@@ -280,14 +280,14 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷狗(接口分页)
         Callable<CommonResult<NetMvInfo>> getRecommendMvKg = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
@@ -325,16 +325,16 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // QQ
         // 推荐 MV (接口分页)
         Callable<CommonResult<NetMvInfo>> getRecommendMvQq = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
@@ -375,14 +375,14 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 最新 MV (程序分页)
         Callable<CommonResult<NetMvInfo>> getNewMvQq = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[5])) {
@@ -417,15 +417,15 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 酷我
         Callable<CommonResult<NetMvInfo>> getRecommendMvKw = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
@@ -461,17 +461,17 @@ public class RecommendMvReq {
                             mvInfo.setCoverImgThumb(coverImgThumb);
                         });
 
-                        res.add(mvInfo);
+                        r.add(mvInfo);
                     }
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 千千
         // 推荐 MV
         Callable<CommonResult<NetMvInfo>> getRecommendMvQi = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(RECOMMEND_MV_QI_API, page, limit, System.currentTimeMillis())))
@@ -508,15 +508,15 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 5sing
         // 推荐 MV
         Callable<CommonResult<NetMvInfo>> getRecommendMvFs = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_FS_API, page, limit))
@@ -553,13 +553,13 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 最热 MV
         Callable<CommonResult<NetMvInfo>> getHotMvFs = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(HOT_MV_FS_API, page, limit))
@@ -596,13 +596,13 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 最新 MV
         Callable<CommonResult<NetMvInfo>> getNewMvFs = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(NEW_MV_FS_API, page, limit))
@@ -639,15 +639,15 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 好看
         // 猜你喜欢视频
         Callable<CommonResult<NetMvInfo>> getGuessVideoHk = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(GUESS_VIDEO_HK_API, System.currentTimeMillis()))
@@ -684,13 +684,13 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 榜单视频
         Callable<CommonResult<NetMvInfo>> getTopVideoHk = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(TOP_VIDEO_HK_API, page, limit))
@@ -727,13 +727,13 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分类推荐视频
         Callable<CommonResult<NetMvInfo>> getRecommendVideoHk = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[7])) {
@@ -772,16 +772,16 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         // 哔哩哔哩
         // 热门视频
         Callable<CommonResult<NetMvInfo>> getHotVideoBi = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(HOT_VIDEO_BI_API, page, limit))
@@ -820,13 +820,13 @@ public class RecommendMvReq {
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
 
-                res.add(mvInfo);
+                r.add(mvInfo);
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分区排行榜视频
         Callable<CommonResult<NetMvInfo>> getCatRankVideoBi = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[8])) {
@@ -866,14 +866,14 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
         // 分区最新视频
         Callable<CommonResult<NetMvInfo>> getCatNewVideoBi = () -> {
-            LinkedList<NetMvInfo> res = new LinkedList<>();
+            List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[8])) {
@@ -914,10 +914,10 @@ public class RecommendMvReq {
                         mvInfo.setCoverImgThumb(coverImgThumb);
                     });
 
-                    res.add(mvInfo);
+                    r.add(mvInfo);
                 }
             }
-            return new CommonResult<>(res, t);
+            return new CommonResult<>(r, t);
         };
 
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
@@ -972,8 +972,8 @@ public class RecommendMvReq {
                 e.printStackTrace();
             }
         });
-        mvInfos.addAll(ListUtil.joinAll(rl));
+        res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(mvInfos, total.get());
+        return new CommonResult<>(res, total.get());
     }
 }

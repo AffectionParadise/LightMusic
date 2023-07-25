@@ -93,11 +93,10 @@ public class NetPlaylistInfo {
     }
 
     public void callback() {
-        if (invokeLater != null) {
-            invokeLater.run();
-            // 调用后丢弃
-            invokeLater = null;
-        }
+        if (invokeLater == null) return;
+        invokeLater.run();
+        // 调用后丢弃
+        invokeLater = null;
     }
 
 //    private String buildCoverImgThumbPath() {
@@ -120,8 +119,8 @@ public class NetPlaylistInfo {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetPlaylistInfo) {
-            NetPlaylistInfo netPlaylistInfo = (NetPlaylistInfo) o;
-            return hashCode() == netPlaylistInfo.hashCode();
+            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+            return hashCode() == playlistInfo.hashCode();
         }
         return false;
     }
