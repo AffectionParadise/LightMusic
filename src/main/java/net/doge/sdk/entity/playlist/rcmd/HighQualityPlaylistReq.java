@@ -752,7 +752,7 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[6])) {
-                String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(CAT_PLAYLIST_QI_API, page, limit, s[6].trim(), System.currentTimeMillis())))
+                String playlistInfoBody = SdkCommon.qiRequest(String.format(CAT_PLAYLIST_QI_API, page, limit, s[6].trim(), System.currentTimeMillis()))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

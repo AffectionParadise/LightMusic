@@ -21,7 +21,7 @@ public class ColorUtil {
      * @param color
      * @return
      */
-    public static String colorToRGBString(Color color) {
+    public static String colorToRgbStr(Color color) {
         if (color == null) return "";
         return color.getRed() + "," + color.getGreen() + "," + color.getBlue();
     }
@@ -32,7 +32,7 @@ public class ColorUtil {
      * @param rgbStr
      * @return
      */
-    public static Color RGBStringToColor(String rgbStr) {
+    public static Color rgbStrToColor(String rgbStr) {
         if (StringUtil.isEmpty(rgbStr)) return null;
         String[] split = rgbStr.split(",");
         return new Color(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
@@ -58,13 +58,13 @@ public class ColorUtil {
      * @param color
      * @return
      */
-    public static String toHex(Color color) {
+    public static String colorToHex(Color color) {
         if (color == null) return null;
         return cn.hutool.core.img.ColorUtil.toHex(color);
     }
 
     /**
-     * 合并 RGB 三个值
+     * 合并 RGB 三个值(0-255)
      *
      * @param
      * @return
@@ -74,12 +74,12 @@ public class ColorUtil {
     }
 
     /**
-     * 合并 RGB 三个值
+     * 合并 RGB 三个值(0-1)
      *
      * @param
      * @return
      */
-    public static int merge(float r, float g, float b) {
+    public static int merge(double r, double g, double b) {
         return merge((int) (r * 255), (int) (g * 255), (int) (b * 255));
     }
 
@@ -89,29 +89,23 @@ public class ColorUtil {
      * @param
      * @return
      */
-    public static HSV intColorToHsv(int rgb) {
+    public static HSV rgbValToHsv(int rgb) {
         int R = (rgb >> 16) & 0xFF, G = (rgb >> 8) & 0xFF, B = rgb & 0xFF;
-        float R_1 = R / 255f, G_1 = G / 255f, B_1 = B / 255f;
-        float max = Math.max(R_1, Math.max(G_1, B_1)), min = Math.min(R_1, Math.min(G_1, B_1));
-        float diff = max - min;
-        float hue = 0f;
-        if (diff == 0f) hue = 0f;
+        double R_1 = (double) R / 255, G_1 = (double) G / 255, B_1 = (double) B / 255;
+        double max = Math.max(R_1, Math.max(G_1, B_1)), min = Math.min(R_1, Math.min(G_1, B_1));
+        double diff = max - min;
+        double hue = 0;
+        if (diff == 0) hue = 0;
         else {
-            if (max == R_1) {
-                hue = (((G_1 - B_1) / diff) % 6) * 60f;
-            }
-            if (max == G_1) {
-                hue = (((B_1 - R_1) / diff) + 2f) * 60f;
-            }
-            if (max == B_1) {
-                hue = (((R_1 - G_1) / diff) + 4f) * 60f;
-            }
+            if (max == R_1) hue = (((G_1 - B_1) / diff) % 6) * 60;
+            else if (max == G_1) hue = (((B_1 - R_1) / diff) + 2) * 60;
+            else if (max == B_1) hue = (((R_1 - G_1) / diff) + 4) * 60;
         }
         if (hue < 0) hue += 360;
-        float saturation;
-        if (max == 0f) saturation = 0f;
-        else saturation = diff / max;
-        return new HSV(hue, saturation * 100, max * 100);
+        double s;
+        if (max == 0) s = 0;
+        else s = diff / max;
+        return new HSV(hue, s * 100, max * 100);
     }
 
     /**
@@ -121,45 +115,7 @@ public class ColorUtil {
      * @return
      */
     public static HSV colorToHsv(Color color) {
-        return intColorToHsv(color.getRGB());
-    }
-
-//    public static void main(String[] args) {
-//        System.out.println(colorToHsv(new Color(255, 0, 34)));
-//        System.out.println(hsvToColor(352, 100, 100));
-//    }
-
-    /**
-     * HSV 转 int
-     *
-     * @param
-     * @return
-     */
-    public static int hsvToIntColor(float h, float s, float v) {
-        s /= 100;
-        v /= 100;
-        float f, p, q, t;
-        if (s == 0) return merge(v, v, v);
-        h /= 60;
-        int i = (int) h;
-        f = h - i;
-        p = v * (1 - s);
-        q = v * (1 - s * f);
-        t = v * (1 - s * (1 - f));
-        switch (i) {
-            case 0:
-                return merge(v, t, p);
-            case 1:
-                return merge(q, v, p);
-            case 2:
-                return merge(p, v, t);
-            case 3:
-                return merge(p, q, v);
-            case 4:
-                return merge(t, p, v);
-            default:
-                return merge(v, p, q);
-        }
+        return rgbValToHsv(color.getRGB());
     }
 
 //    /**
@@ -173,13 +129,36 @@ public class ColorUtil {
 //    }
 
     /**
-     * HSV 转 Color
+     * HSV 三个值转 Color
      *
      * @param
      * @return
      */
-    public static Color hsvToColor(float h, float s, float v) {
-        return new Color(hsvToIntColor(h, s, v));
+    public static Color hsvValToColor(double h, double s, double v) {
+        s /= 100;
+        v /= 100;
+        double f, p, q, t;
+        if (s == 0) return new Color(merge(v, v, v));
+        h /= 60;
+        int i = (int) h;
+        f = h - i;
+        p = v * (1 - s);
+        q = v * (1 - s * f);
+        t = v * (1 - s * (1 - f));
+        switch (i) {
+            case 0:
+                return new Color(merge(v, t, p));
+            case 1:
+                return new Color(merge(q, v, p));
+            case 2:
+                return new Color(merge(p, v, t));
+            case 3:
+                return new Color(merge(p, q, v));
+            case 4:
+                return new Color(merge(t, p, v));
+            default:
+                return new Color(merge(v, p, q));
+        }
     }
 
 //    /**
@@ -189,7 +168,7 @@ public class ColorUtil {
 //     * @return
 //     */
 //    public static Color hsvToColor(HSV hsv) {
-//        return new Color(hsvToIntColor(hsv.h, hsv.s, hsv.v));
+//        return hsvValToColor(hsv.h, hsv.s, hsv.v);
 //    }
 
 //    /**
@@ -204,7 +183,7 @@ public class ColorUtil {
 //    }
 
     /**
-     * 更亮的颜色
+     * 更亮的颜色(RGB 算法)
      *
      * @param color
      * @return
@@ -214,7 +193,7 @@ public class ColorUtil {
     }
 
     /**
-     * 更亮的颜色，带因子
+     * 更亮的颜色(RGB 算法)，带因子
      *
      * @param color
      * @return
@@ -227,7 +206,7 @@ public class ColorUtil {
     }
 
     /**
-     * 更亮的颜色，带因子
+     * 更亮的颜色(HSL 算法)，带因子
      *
      * @param color
      * @return
@@ -241,7 +220,7 @@ public class ColorUtil {
     }
 
     /**
-     * 更暗的颜色
+     * 更暗的颜色(RGB 算法)
      *
      * @param color
      * @return
@@ -251,7 +230,7 @@ public class ColorUtil {
     }
 
     /**
-     * 更暗的颜色，带因子
+     * 更暗的颜色(RGB 算法)，带因子
      *
      * @param color
      * @return
@@ -264,7 +243,7 @@ public class ColorUtil {
     }
 
     /**
-     * 更暗的颜色，带因子
+     * 更暗的颜色，带因子(HSL 算法)
      *
      * @param color
      * @return
@@ -298,7 +277,7 @@ public class ColorUtil {
      * @param color
      * @return
      */
-    public static Color rotate(Color color, float deg) {
+    public static Color rotate(Color color, double deg) {
         HSL hsl = colorToHsl(color);
         double d = hsl.h + deg;
         hsl.h = d >= 0 ? d % 360 : 360 + d;
@@ -306,23 +285,23 @@ public class ColorUtil {
     }
 
     /**
-     * Color 转 int[]
+     * Color 转 RGB 数组
      *
      * @param color
      * @return
      */
-    public static int[] colorToIntArray(Color color) {
+    public static int[] colorToRgbArray(Color color) {
         if (color == null) return null;
         return new int[]{color.getRed(), color.getGreen(), color.getBlue()};
     }
 
     /**
-     * int[] 转 Color
+     * RGB 数组转 Color
      *
      * @param a
      * @return
      */
-    public static Color intArrayToColor(int[] a) {
+    public static Color rgbArrayToColor(int[] a) {
         if (a == null) return null;
         return new Color(a[0], a[1], a[2]);
     }
@@ -336,21 +315,20 @@ public class ColorUtil {
     public static double lightness(int rgb) {
         int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
         return Math.pow(Math.pow(r / 255.0f, 2.2f) + Math.pow(g / 170.0f, 2.2f) + Math.pow(b / 425.0f, 2.2f), 1 / 2.2f) * 0.547373141f;
-//        return intColorToHsv(rgb).v / 100;
+//        return colorToHsl(r, g, b).l / 100;
     }
 
     /**
-     * Color 转 HSL
+     * RGB 三个值转 HSL
      *
      * @param red
      * @param green
      * @param blue
      * @return
      */
-    public static HSL colorToHsl(int red, int green, int blue) {
-        double b, delta, g, max, min, r;
-
-        double hue, saturation, luminosity;
+    public static HSL rgbValToHsl(int red, int green, int blue) {
+        double r, g, b, delta, max, min;
+        double h, s, l;
         /*
          * Convert RGB to HSL colorspace.
          */
@@ -360,23 +338,19 @@ public class ColorUtil {
         max = Math.max(r, Math.max(g, b));
         min = Math.min(r, Math.min(g, b));
 
-        hue = 0.0;
-        saturation = 0.0;
-        luminosity = (min + max) / 2.0;
+        h = 0;
+        s = 0;
+        l = (min + max) / 2;
         delta = max - min;
-        if (delta == 0.0) {
-            return new HSL(hue * 360, saturation * 100, luminosity * 100);
-        }
-        saturation = delta / ((luminosity <= 0.5) ? (min + max) : (2.0 - max - min));
-        if (r == max)
-            hue = (g == min ? 5.0 + (max - b) / delta : 1.0 - (max - g) / delta);
-        else if (g == max)
-            hue = (b == min ? 1.0 + (max - r) / delta : 3.0 - (max - b) / delta);
-        else
-            hue = (r == min ? 3.0 + (max - g) / delta : 5.0 - (max - r) / delta);
-        hue /= 6.0;
+        if (delta == 0) return new HSL(h * 360, s * 100, l * 100);
+        s = delta / ((l <= 0.5) ? (min + max) : (2 - max - min));
+        if (r == max) h = g == min ? 5 + (max - b) / delta : 1 - (max - g) / delta;
+        else if (g == max) h = b == min ? 1 + (max - r) / delta : 3 - (max - b) / delta;
+        else h = r == min ? 3 + (max - g) / delta : 5 - (max - r) / delta;
+        h /= 6;
+        if (h == 1) h = 0;
 
-        return new HSL(hue * 360, saturation * 100, luminosity * 100);
+        return new HSL(h * 360, s * 100, l * 100);
     }
 
     /**
@@ -386,49 +360,33 @@ public class ColorUtil {
      * @return
      */
     public static HSL colorToHsl(Color color) {
-        return colorToHsl(color.getRed(), color.getGreen(), color.getBlue());
+        return rgbValToHsl(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     /**
-     * HSL 转 Color
-     *
-     * @param hsl
-     * @return
-     */
-    public static Color hslToColor(HSL hsl) {
-        return hslToColor(hsl.h, hsl.s, hsl.l);
-    }
-
-    /**
-     * HSL 转 Color
+     * HSL 三个值转 Color
      *
      * @param h
      * @param s
      * @param l
      * @return
      */
-    public static Color hslToColor(double h, double s, double l) {
-        double hue = h / 360, saturation = s / 100, luminosity = l / 100;
-        // int red, green, blue;
-        double b, g, r, v, x, y, z;
+    public static Color hslValToColor(double h, double s, double l) {
+        h = h / 360;
+        s = s / 100;
+        l = l / 100;
+        double r, g, b, v, x, y, z;
 
         /*
          * Convert HSL to RGB colorspace.
          */
-        v = (luminosity <= 0.5) ? (luminosity * (1.0 + saturation))
-                : (luminosity + saturation - luminosity * saturation);
-        if (saturation == 0.0) {
-            return new Color((int) (255 * luminosity + 0.5), (int) (255 * luminosity + 0.5), (int) (255 * luminosity + 0.5));
-        }
-        y = 2.0 * luminosity - v;
-        x = y + (v - y) * (6.0 * hue - Math.floor(6.0 * hue));
-        z = v - (v - y) * (6.0 * hue - Math.floor(6.0 * hue));
-        switch ((int) (6.0 * hue)) {
-            case 0:
-                r = v;
-                g = x;
-                b = y;
-                break;
+        v = l <= 0.5 ? l * (1 + s) : l + s - l * s;
+        if (s == 0) return new Color((int) (255 * l + 0.5), (int) (255 * l + 0.5), (int) (255 * l + 0.5));
+        y = 2 * l - v;
+        double v1 = (v - y) * (6 * h - Math.floor(6 * h));
+        x = y + v1;
+        z = v - v1;
+        switch ((int) (6 * h)) {
             case 1:
                 r = z;
                 g = v;
@@ -454,6 +412,7 @@ public class ColorUtil {
                 g = y;
                 b = z;
                 break;
+            case 0:
             default:
                 r = v;
                 g = x;
@@ -461,6 +420,16 @@ public class ColorUtil {
                 break;
         }
         return new Color((int) (255 * r + 0.5), (int) (255 * g + 0.5), (int) (255 * b + 0.5));
+    }
+
+    /**
+     * HSL 转 Color
+     *
+     * @param hsl
+     * @return
+     */
+    public static Color hslToColor(HSL hsl) {
+        return hslValToColor(hsl.h, hsl.s, hsl.l);
     }
 
 //    /**

@@ -254,7 +254,7 @@ public class PlaylistInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis())))
+            String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -381,7 +381,7 @@ public class PlaylistInfoReq {
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
-            playlistInfo.setDescription(description);
+            playlistInfo.setDescription(StringUtil.notEmpty(description) ? description : "");
             if (!playlistInfo.hasCreator())
                 playlistInfo.setCreator(JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "");
             if (!playlistInfo.hasCreatorId())
@@ -472,7 +472,7 @@ public class PlaylistInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis())))
+            String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -798,7 +798,7 @@ public class PlaylistInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(PLAYLIST_DETAIL_QI_API, id, page, limit, System.currentTimeMillis())))
+            String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, page, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

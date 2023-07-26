@@ -48,7 +48,7 @@ public class NetUserInfo {
     // 关注数
     private Integer follow;
     // 粉丝数
-    private Integer followed;
+    private Integer fan;
     // 歌单数
     private Integer playlistCount;
     // 电台数
@@ -141,8 +141,8 @@ public class NetUserInfo {
         return follow != null && follow >= 0;
     }
 
-    public boolean hasFollowed() {
-        return followed != null && followed >= 0;
+    public boolean hasFan() {
+        return fan != null && fan >= 0;
     }
 
     public boolean hasPlaylistCount() {

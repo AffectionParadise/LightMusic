@@ -486,7 +486,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 //        CustomLabel birthdayLabel = new CustomLabel();
 //        CustomLabel areaLabel = new CustomLabel();
             CustomLabel followLabel = new CustomLabel();
-            CustomLabel followedLabel = new CustomLabel();
+            CustomLabel fanLabel = new CustomLabel();
             CustomLabel playlistCountLabel = new CustomLabel();
 
             avatarLabel.setIconTextGap(0);
@@ -499,7 +499,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 //        birthdayLabel.setForeground(textColor);
 //        areaLabel.setForeground(textColor);
             followLabel.setForeground(textColor);
-            followedLabel.setForeground(textColor);
+            fanLabel.setForeground(textColor);
             playlistCountLabel.setForeground(textColor);
 
             avatarLabel.setFont(customFont);
@@ -508,13 +508,13 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
 //        birthdayLabel.setFont(tinyFont);
 //        areaLabel.setFont(tinyFont);
             followLabel.setFont(tinyFont);
-            followedLabel.setFont(tinyFont);
+            fanLabel.setFont(tinyFont);
             playlistCountLabel.setFont(tinyFont);
 
             final float alpha = 0.5f;
             genderLabel.setBluntAlpha(alpha);
             followLabel.setBluntAlpha(alpha);
-            followedLabel.setBluntAlpha(alpha);
+            fanLabel.setBluntAlpha(alpha);
             playlistCountLabel.setBluntAlpha(alpha);
 
             BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
@@ -530,7 +530,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             outerPanel.add(Box.createVerticalStrut(sh));
             outerPanel.add(followLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
-            outerPanel.add(followedLabel);
+            outerPanel.add(fanLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
             outerPanel.add(playlistCountLabel);
             outerPanel.add(Box.createVerticalStrut(sh));
@@ -546,14 +546,14 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
                     : hasProgramCount ? StringUtil.textToHtml(userInfo.getProgramCount() + (userInfo.fromDt() ? " 专辑" : userInfo.fromBI() ? " 视频" : " 节目"))
                     : "";
             String follow = userInfo.hasFollow() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(userInfo.getFollow()) + " 关注") : "";
-            String followed = userInfo.hasFollowed() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(userInfo.getFollowed()) + " 粉丝") : "";
+            String fan = userInfo.hasFan() ? StringUtil.textToHtml(StringUtil.formatNumberWithoutSuffix(userInfo.getFan()) + " 粉丝") : "";
 
             avatarLabel.setText(source);
             nameLabel.setText(name);
             genderLabel.setText(gender);
             playlistCountLabel.setText(playlistCount);
             followLabel.setText(follow);
-            followedLabel.setText(followed);
+            fanLabel.setText(fan);
 
             list.setFixedCellWidth(pw);
 

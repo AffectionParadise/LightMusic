@@ -83,7 +83,7 @@ public class UserSearchReq {
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                     String avatarThumbUrl = userJson.getString("avatarUrl");
                     Integer follow = userJson.getIntValue("follows");
-                    Integer followed = userJson.getIntValue("followeds");
+                    Integer fan = userJson.getIntValue("followeds");
                     Integer playlistCount = userJson.getIntValue("playlistCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
@@ -92,7 +92,7 @@ public class UserSearchReq {
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
                     userInfo.setPlaylistCount(playlistCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -125,7 +125,7 @@ public class UserSearchReq {
                 String userName = userJson.getString("title");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("pic");
-                Integer followed = userJson.getIntValue("fans_num");
+                Integer fan = userJson.getIntValue("fans_num");
 //                Integer playlistCount = userJson.getIntValue("diss_num");
 
                 NetUserInfo userInfo = new NetUserInfo();
@@ -135,7 +135,7 @@ public class UserSearchReq {
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setAvatarUrl(avatarThumbUrl);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
 //                userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -169,7 +169,7 @@ public class UserSearchReq {
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                     String avatarThumbUrl = userJson.getString("logoPic").replaceFirst("http:", "https:");
                     Integer follow = userJson.getIntValue("followingsCount");
-                    Integer followed = userJson.getIntValue("followersCount");
+                    Integer fan = userJson.getIntValue("followersCount");
                     Integer radioCount = userJson.getIntValue("albumCount");
                     Integer programCount = userJson.getIntValue("tracksCount");
 
@@ -180,7 +180,7 @@ public class UserSearchReq {
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
                     userInfo.setRadioCount(radioCount);
                     userInfo.setProgramCount(programCount);
 
@@ -217,7 +217,7 @@ public class UserSearchReq {
                 String avatarThumbUrl = userJson.getString("avatar2");
 //                String bgImgUrl = userJson.getString("coverurl2");
                 Integer follow = userJson.getIntValue("follownum");
-                Integer followed = userJson.getIntValue("fansnum");
+                Integer fan = userJson.getIntValue("fansnum");
 //                Integer radioCount = userJson.getIntValue("albumnum");
                 Integer programCount = userJson.getIntValue("soundnum");
 //                String sign = userJson.getString("userintro");
@@ -229,7 +229,7 @@ public class UserSearchReq {
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
 //                userInfo.setRadioCount(radioCount);
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
@@ -266,7 +266,7 @@ public class UserSearchReq {
                     String gender = sex == 0 ? "♂ 男" : sex == 1 ? "♀ 女" : "保密";
                     String avatarThumbUrl = userJson.getString("pictureUrl");
                     Integer follow = userJson.getIntValue("follow");
-                    Integer followed = userJson.getIntValue("fans");
+                    Integer fan = userJson.getIntValue("fans");
                     Integer programCount = userJson.getIntValue("totalSong");
 
                     NetUserInfo userInfo = new NetUserInfo();
@@ -276,7 +276,7 @@ public class UserSearchReq {
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
                     userInfo.setProgramCount(programCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -308,7 +308,7 @@ public class UserSearchReq {
                 String userName = userJson.getString("name");
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("author_icon");
-                Integer followed = userJson.getIntValue("fansCnt");
+                Integer fan = userJson.getIntValue("fansCnt");
                 Integer programCount = userJson.getIntValue("videoCnt");
 
                 NetUserInfo userInfo = new NetUserInfo();
@@ -317,7 +317,7 @@ public class UserSearchReq {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
                 userInfo.setProgramCount(programCount);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
@@ -356,7 +356,7 @@ public class UserSearchReq {
                     String gender = "保密";
                     String sr = img.attr("src");
                     String avatarThumbUrl = sr.contains("/user") ? sr.replaceFirst("normal", "large") : sr.replaceFirst("/up", "/ul");
-                    Integer followed = Integer.parseInt(RegexUtil.getGroup1("(\\d+)人关注", info.text()));
+                    Integer fan = Integer.parseInt(RegexUtil.getGroup1("(\\d+)人关注", info.text()));
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.DB);
@@ -364,7 +364,7 @@ public class UserSearchReq {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(avatarThumbUrl);
                         userInfo.setAvatarThumb(coverImgThumb);
@@ -397,7 +397,7 @@ public class UserSearchReq {
                     String gender = "保密";
                     String avatarThumbUrl = userJson.getString("avatar");
                     Integer follow = userJson.getIntValue("followCount");
-                    Integer followed = userJson.getIntValue("beFollowCount");
+                    Integer fan = userJson.getIntValue("beFollowCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.DT);
@@ -406,7 +406,7 @@ public class UserSearchReq {
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -442,7 +442,7 @@ public class UserSearchReq {
                     String gender = gen == 1 ? "♂ 男" : gen == 2 ? "♀ 女" : "保密";
                     String avatarThumbUrl = "https:" + userJson.getString("upic");
                     Integer programCount = userJson.getIntValue("videos");
-                    Integer followed = userJson.getIntValue("fans");
+                    Integer fan = userJson.getIntValue("fans");
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.BI);
@@ -451,7 +451,7 @@ public class UserSearchReq {
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setProgramCount(programCount);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);

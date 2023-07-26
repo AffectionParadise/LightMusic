@@ -518,12 +518,16 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(INDEX_NEW_ALBUM_QI_API, System.currentTimeMillis())))
+            String albumInfoBody = SdkCommon.qiRequest(String.format(INDEX_NEW_ALBUM_QI_API, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
-            JSONObject data = albumInfoJson.getJSONArray("data").getJSONObject(3);
+            JSONArray dataArray = albumInfoJson.getJSONArray("data");
+            JSONObject data = dataArray.getJSONObject(4);
             JSONArray albumArray = data.getJSONArray("result");
+            // 首页秀动发行
+            JSONObject xdData = dataArray.getJSONObject(2);
+            albumArray.addAll(xdData.getJSONArray("result"));
             t = albumArray.size();
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
@@ -536,7 +540,8 @@ public class NewAlbumReq {
                 String releaseDate = albumJson.getString("releaseDate");
                 if (StringUtil.isEmpty(releaseDate)) releaseDate = albumJson.getString("pushTime");
                 String publishTime = releaseDate.split("T")[0];
-                Integer songNum = albumJson.getJSONArray("trackList").size();
+                JSONArray trackList = albumJson.getJSONArray("trackList");
+                Integer songNum = JsonUtil.notEmpty(trackList) ? trackList.size() : null;
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.QI);
@@ -560,7 +565,7 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(XD_ALBUM_QI_API, page, limit, System.currentTimeMillis())))
+            String albumInfoBody = SdkCommon.qiRequest(String.format(XD_ALBUM_QI_API, page, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -600,7 +605,7 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(NEW_ALBUM_QI_API, page, limit, System.currentTimeMillis())))
+            String albumInfoBody = SdkCommon.qiRequest(String.format(NEW_ALBUM_QI_API, page, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

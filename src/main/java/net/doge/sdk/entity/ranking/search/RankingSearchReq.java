@@ -374,7 +374,7 @@ public class RankingSearchReq {
             List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String rankingInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(GET_RANKING_QI_API, System.currentTimeMillis())))
+            String rankingInfoBody = SdkCommon.qiRequest(String.format(GET_RANKING_QI_API, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);

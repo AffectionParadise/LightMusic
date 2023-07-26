@@ -700,11 +700,11 @@ public class RecommendPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(REC_PLAYLIST_QI_API, System.currentTimeMillis())))
+            String playlistInfoBody = SdkCommon.qiRequest(String.format(REC_PLAYLIST_QI_API, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            JSONObject data = playlistInfoJson.getJSONArray("data").getJSONObject(4);
+            JSONObject data = playlistInfoJson.getJSONArray("data").getJSONObject(5);
             t = data.getIntValue("module_nums");
             JSONArray playlistArray = data.getJSONArray("result");
             for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {

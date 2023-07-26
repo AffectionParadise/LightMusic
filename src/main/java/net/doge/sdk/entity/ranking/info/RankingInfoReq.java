@@ -278,7 +278,7 @@ public class RankingInfoReq {
 
         // 千千(程序分页)
         else if (source == NetMusicSource.QI) {
-            String rankingInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(RANKING_DETAIL_QI_API, rankingId, page, limit, System.currentTimeMillis())))
+            String rankingInfoBody = SdkCommon.qiRequest(String.format(RANKING_DETAIL_QI_API, rankingId, page, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);

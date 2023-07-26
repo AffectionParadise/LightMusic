@@ -220,7 +220,7 @@ public class ArtistSearchReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String artistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SEARCH_ARTIST_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword)))
+            String artistInfoBody = SdkCommon.qiRequest(String.format(SEARCH_ARTIST_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

@@ -353,7 +353,7 @@ public class CommentReq {
 
                     // 被回复的评论
                     if (JsonUtil.isEmpty(middleCommentContent)) continue;
-                    String uId = cj2.getString("encrypt_replyeduin");
+                    String uid = cj2.getString("encrypt_replyeduin");
                     String uname = cj.getString("rootcommentnick");
                     String rc = cj.getString("rootcommentcontent");
                     String cnt = StringUtil.notEmpty(rc) ? rc.replace("\\n", "\n") : "";
@@ -361,7 +361,7 @@ public class CommentReq {
                     NetCommentInfo ci = new NetCommentInfo();
                     ci.setSource(NetMusicSource.QQ);
                     ci.setSub(true);
-                    ci.setUserId(uId);
+                    ci.setUserId(uid);
                     ci.setUsername(StringUtil.isEmpty(uname) ? "null" : uname.substring(1));
                     ci.setContent(StringUtil.isEmpty(cnt) ? "该评论已被删除" : cnt);
                     res.add(ci);

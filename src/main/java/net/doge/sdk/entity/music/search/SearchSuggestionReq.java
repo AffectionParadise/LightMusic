@@ -164,7 +164,7 @@ public class SearchSuggestionReq {
         Callable<List<String>> getSearchSuggestionQi = () -> {
             List<String> r = new LinkedList<>();
 
-            HttpResponse resp = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SEARCH_SUGGESTION_QI_API, System.currentTimeMillis(), encodedKeyword))).execute();
+            HttpResponse resp = SdkCommon.qiRequest(String.format(SEARCH_SUGGESTION_QI_API, System.currentTimeMillis(), encodedKeyword)).execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");

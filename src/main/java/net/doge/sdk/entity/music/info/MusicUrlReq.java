@@ -250,7 +250,7 @@ public class MusicUrlReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playUrlBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(GET_SONG_URL_QI_API, songId, System.currentTimeMillis())))
+            String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, songId, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody).getJSONObject("data");

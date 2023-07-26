@@ -365,11 +365,11 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(RECOMMEND_NEW_SONG_QI_API, System.currentTimeMillis())))
+            String musicInfoBody = SdkCommon.qiRequest(String.format(RECOMMEND_NEW_SONG_QI_API, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            JSONObject data = musicInfoJson.getJSONArray("data").getJSONObject(2);
+            JSONObject data = musicInfoJson.getJSONArray("data").getJSONObject(3);
             t = data.getIntValue("module_nums");
             JSONArray songArray = data.getJSONArray("result");
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {

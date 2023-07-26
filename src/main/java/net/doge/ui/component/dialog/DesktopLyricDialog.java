@@ -40,16 +40,16 @@ public class DesktopLyricDialog extends JDialog {
     private MainPanel mainPanel = new MainPanel();
     private CustomPanel buttonPanel = new CustomPanel();
 
-    private String LOCK_TIP = "锁定桌面歌词";
-    private String UNLOCK_TIP = "解锁桌面歌词";
-    private String RESTORE_TIP = "还原桌面歌词位置";
-    private String DESCEND_TRANS_TIP = "减少透明度";
-    private String ASCEND_TRANS_TIP = "增加透明度";
-    private String DECREASE_FONT_TIP = "缩小字体";
-    private String INCREASE_FONT_TIP = "放大字体";
-    private String ON_TOP_TIP = "置顶桌面歌词";
-    private String CANCEL_ON_TOP_TIP = "取消置顶桌面歌词";
-    private String CLOSE_TIP = "关闭桌面歌词";
+    private final String LOCK_TIP = "锁定桌面歌词";
+    private final String UNLOCK_TIP = "解锁桌面歌词";
+    private final String RESTORE_TIP = "还原桌面歌词位置";
+    private final String DESCEND_TRANS_TIP = "减少透明度";
+    private final String ASCEND_TRANS_TIP = "增加透明度";
+    private final String DECREASE_FONT_TIP = "缩小字体";
+    private final String INCREASE_FONT_TIP = "放大字体";
+    private final String ON_TOP_TIP = "置顶桌面歌词";
+    private final String CANCEL_ON_TOP_TIP = "取消置顶桌面歌词";
+    private final String CLOSE_TIP = "关闭桌面歌词";
     private ImageIcon lockIcon = new ImageIcon(SimplePath.ICON_PATH + "lock.png");
     private ImageIcon unlockIcon = new ImageIcon(SimplePath.ICON_PATH + "unlock.png");
     private ImageIcon restoreIcon = new ImageIcon(SimplePath.ICON_PATH + "restoreLocation.png");

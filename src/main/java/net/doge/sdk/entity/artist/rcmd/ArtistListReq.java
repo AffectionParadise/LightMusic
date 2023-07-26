@@ -517,7 +517,7 @@ public class ArtistListReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(SdkCommon.buildQianUrl(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis())))
+            HttpResponse resp = SdkCommon.qiRequest(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis()))
                     .execute();
             String artistInfoBody = resp.body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -529,10 +529,9 @@ public class ArtistListReq {
 
                 String artistId = artistJson.getString("artistCode");
                 String artistName = artistJson.getString("name");
-                String coverImgUrl = artistJson.getString("pic");
+                String coverImgThumbUrl = artistJson.getString("pic");
                 Integer songNum = artistJson.getIntValue("trackTotal");
                 Integer albumNum = artistJson.getIntValue("albumTotal");
-                String coverImgThumbUrl = coverImgUrl;
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetMusicSource.QI);
@@ -542,8 +541,7 @@ public class ArtistListReq {
                 artistInfo.setAlbumNum(albumNum);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgUrl);
-                    if (coverImgThumb == null) coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                     artistInfo.setCoverImgThumb(coverImgThumb);
                 });
 
@@ -559,10 +557,9 @@ public class ArtistListReq {
             if (StringUtil.notEmpty(s[7])) {
                 // 分割时保留空串
                 String[] sp = s[7].split(" ", -1);
-                HttpResponse resp = HttpRequest.get(SdkCommon.buildQianUrl(
-                                String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis())))
-                        .execute();
-                String artistInfoBody = resp.body();
+                String artistInfoBody = SdkCommon.qiRequest(String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis()))
+                        .execute()
+                        .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("data");
                 t = data.getIntValue("total");
@@ -572,8 +569,7 @@ public class ArtistListReq {
 
                     String artistId = artistJson.getString("artistCode");
                     String artistName = artistJson.getString("name");
-                    String coverImgUrl = artistJson.getString("pic");
-                    String coverImgThumbUrl = coverImgUrl;
+                    String coverImgThumbUrl = artistJson.getString("pic");
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
                     artistInfo.setSource(NetMusicSource.QI);
@@ -581,8 +577,7 @@ public class ArtistListReq {
                     artistInfo.setName(artistName);
                     artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgUrl);
-                        if (coverImgThumb == null) coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         artistInfo.setCoverImgThumb(coverImgThumb);
                     });
 

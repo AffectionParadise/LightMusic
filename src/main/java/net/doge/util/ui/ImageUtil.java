@@ -221,12 +221,12 @@ public class ImageUtil {
      * 创建透明图片
      */
     public static BufferedImage createTranslucentImage(int w, int h) {
-        BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = bufferedImage.createGraphics();
+        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = img.createGraphics();
         // 获取透明的 BufferedImage
-        BufferedImage translucentImg = g.getDeviceConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
+        BufferedImage outputImg = g.getDeviceConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
         g.dispose();
-        return translucentImg;
+        return outputImg;
     }
 
     /**
@@ -239,26 +239,26 @@ public class ImageUtil {
         if (image instanceof BufferedImage) return (BufferedImage) image;
         image = new ImageIcon(image).getImage();
         boolean hasAlpha = false;
-        BufferedImage bufferedImage = null;
+        BufferedImage img = null;
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
             int transparency = Transparency.OPAQUE;
             if (hasAlpha) transparency = Transparency.BITMASK;
             GraphicsDevice gs = ge.getDefaultScreenDevice();
             GraphicsConfiguration gc = gs.getDefaultConfiguration();
-            bufferedImage = gc.createCompatibleImage(image.getWidth(null), image
+            img = gc.createCompatibleImage(image.getWidth(null), image
                     .getHeight(null), transparency);
         } catch (HeadlessException e) {
         }
-        if (bufferedImage == null) {
+        if (img == null) {
             int type = BufferedImage.TYPE_INT_RGB;
             if (hasAlpha) type = BufferedImage.TYPE_INT_ARGB;
-            bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
+            img = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
         }
-        Graphics g = bufferedImage.createGraphics();
+        Graphics g = img.createGraphics();
         g.drawImage(image, 0, 0, null);
         g.dispose();
-        return bufferedImage;
+        return img;
     }
 
     /**
@@ -270,11 +270,11 @@ public class ImageUtil {
     public static BufferedImage eraseTranslucency(BufferedImage img) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
-        BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = bufferedImage.createGraphics();
+        BufferedImage outputImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = outputImg.createGraphics();
         g.drawImage(img, 0, 0, w, h, null);
         g.dispose();
-        return bufferedImage;
+        return outputImg;
     }
 
     /**
@@ -297,8 +297,8 @@ public class ImageUtil {
      */
     public static BufferedImage dye(Image img, Color color) {
         int w = img.getWidth(null), h = img.getHeight(null);
-        BufferedImage dyed = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = dyed.createGraphics();
+        BufferedImage outputImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = outputImg.createGraphics();
         g.drawImage(img, 0, 0, null);
         g.setComposite(AlphaComposite.SrcAtop);
 //        final float diff = 15;
@@ -309,7 +309,7 @@ public class ImageUtil {
         g.setColor(color);
         g.fillRect(0, 0, w, h);
         g.dispose();
-        return dyed;
+        return outputImg;
     }
 
 //    /**
@@ -342,13 +342,13 @@ public class ImageUtil {
      */
     public static BufferedImage dyeRect(int width, int height, Color color) {
         if (color == null) return null;
-        BufferedImage translucentImage = createTranslucentImage(width, height);
-        Graphics2D g = translucentImage.createGraphics();
+        BufferedImage img = createTranslucentImage(width, height);
+        Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(color);
         g.fillRect(0, 0, width, height);
         g.dispose();
-        return translucentImage;
+        return img;
     }
 
     /**
@@ -360,13 +360,13 @@ public class ImageUtil {
      * @return
      */
     public static ImageIcon dyeRoundRect(int width, int height, Color color) {
-        BufferedImage translucentImage = createTranslucentImage(width, height);
-        Graphics2D g = translucentImage.createGraphics();
+        BufferedImage img = createTranslucentImage(width, height);
+        Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(color);
         g.fillRoundRect(0, 0, width, height, 10, 10);
         g.dispose();
-        return new ImageIcon(translucentImage);
+        return new ImageIcon(img);
     }
 
     /**
@@ -377,13 +377,13 @@ public class ImageUtil {
      * @return
      */
     public static ImageIcon dyeCircle(int width, Color color) {
-        BufferedImage translucentImage = createTranslucentImage(width, width);
-        Graphics2D g = translucentImage.createGraphics();
+        BufferedImage img = createTranslucentImage(width, width);
+        Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(color);
         g.fillOval(0, 0, width, width);
         g.dispose();
-        return new ImageIcon(translucentImage);
+        return new ImageIcon(img);
     }
 
     /**
@@ -406,7 +406,7 @@ public class ImageUtil {
      */
     public static BufferedImage darker(BufferedImage img) {
         if (img == null) return null;
-        double ln = getLightness(img);
+        double ln = lightness(img);
         float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
         if (ln > 0.6f) bn = param;
         else if (ln > 0.3f) bn = param + 0.1f;
@@ -425,12 +425,12 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static double getLightness(BufferedImage img) {
+    public static double lightness(BufferedImage img) {
         if (img == null) return 0;
-        double t = 0;
         int w = img.getWidth(), h = img.getHeight();
         List<Float> dots = new LinkedList<>();
-        for (float i = 0.05f; i < 1; i += 0.05f) dots.add(i);
+        double t = 0;
+        for (float i = 0; i < 1; i += 0.05f) dots.add(i);
         for (float dw : dots) {
             for (float dh : dots) {
                 int rgb = img.getRGB((int) (w * dw), (int) (h * dh));
@@ -464,14 +464,14 @@ public class ImageUtil {
     public static BufferedImage setRadius(BufferedImage img, int radius) {
         if (img == null) return null;
         int width = img.getWidth(), height = img.getHeight();
-        BufferedImage outputImage = createTranslucentImage(width, height);
-        Graphics2D g = outputImage.createGraphics();
+        BufferedImage outputImg = createTranslucentImage(width, height);
+        Graphics2D g = outputImg.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.fillRoundRect(0, 0, width, height, radius, radius);
         g.setComposite(AlphaComposite.SrcIn);
         g.drawImage(img, 0, 0, width, height, null);
         g.dispose();
-        return outputImage;
+        return outputImg;
     }
 
     /**
@@ -605,7 +605,7 @@ public class ImageUtil {
     public static Color getAvgRGB(BufferedImage img, float alpha) {
         int w = img.getWidth(), h = img.getHeight();
         List<Float> dots = new LinkedList<>();
-        for (float i = 0.05f; i < 1; i += 0.05f) dots.add(i);
+        for (float i = 0; i < 1; i += 0.05f) dots.add(i);
         int R = 0, G = 0, B = 0, s = dots.size();
         for (float dw : dots) {
             for (float dh : dots) {
@@ -627,7 +627,7 @@ public class ImageUtil {
      */
     public static BufferedImage toGradient(BufferedImage img, int w, int h) {
         Color mc = ColorUtil.getBestSwatch(img, 2);
-        Color ca = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.2f), -20), cb = ColorUtil.hslDarken(mc, 0.2f);
+        Color ca = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.2f), -20), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.2f), 20);
         return linearGradient(w, h, ca, cb);
     }
 
@@ -642,7 +642,8 @@ public class ImageUtil {
 //        Graphics2D g = img.createGraphics();
 //        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 //        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2);
-//        g.setPaint(gp);
+//        LinearGradientPaint lgp = new LinearGradientPaint(0, 0, w, h, new float[]{0, 0.5f, 1}, new Color[]{c1, c2, c3});
+//        g.setPaint(lgp);
 //        g.fillRect(0, 0, w, h);
 //        g.dispose();
         return gf.filter(img, null);
@@ -667,13 +668,13 @@ public class ImageUtil {
     public static BufferedImage borderShadow(BufferedImage img) {
         if (img == null) return null;
         int ow = img.getWidth(), oh = img.getHeight();
-        BufferedImage newImg = createTranslucentImage(ow + 2 * SHADOW_THICKNESS, oh + 2 * SHADOW_THICKNESS);
-        Graphics2D g = newImg.createGraphics();
+        BufferedImage outputImg = createTranslucentImage(ow + 2 * SHADOW_THICKNESS, oh + 2 * SHADOW_THICKNESS);
+        Graphics2D g = outputImg.createGraphics();
         g.drawImage(img, SHADOW_THICKNESS, SHADOW_THICKNESS, null);
         g.dispose();
-        newImg = borderShadowFilter.filter(newImg, null);
-        newImg = width(newImg, ow);
-        return newImg;
+        outputImg = borderShadowFilter.filter(outputImg, null);
+        outputImg = width(outputImg, ow);
+        return outputImg;
     }
 
     /**

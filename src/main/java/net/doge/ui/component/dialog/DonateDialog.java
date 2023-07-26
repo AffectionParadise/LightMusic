@@ -20,7 +20,7 @@ import java.awt.*;
 public class DonateDialog extends AbstractTitledDialog {
     private DialogButton yes;
 
-    private String thankMsg = "同时感谢以下为本项目提供思路的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
+    private final String THANK_MSG = "同时感谢以下为本项目提供思路的开源项目，世界因你们这些无私的开发者而美丽~~\n\n" +
             "https://github.com/Binaryify/NeteaseCloudMusicApi\n" +
             "https://github.com/jsososo/QQMusicApi\n" +
             "https://github.com/QiuYaohong/kuwoMusicApi\n" +
@@ -39,7 +39,7 @@ public class DonateDialog extends AbstractTitledDialog {
     private CustomPanel rightPanel = new CustomPanel();
     private CustomLabel alipayLabel = new CustomLabel("支付宝");
     private CustomPanel thankPanel = new CustomPanel();
-    private CustomLabel thankLabel = new CustomLabel(StringUtil.textToHtml(thankMsg));
+    private CustomLabel thankLabel = new CustomLabel(StringUtil.textToHtml(THANK_MSG));
     private CustomPanel buttonPanel = new CustomPanel();
 
     public DonateDialog(MainFrame f) {

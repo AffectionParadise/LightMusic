@@ -247,7 +247,7 @@ public class AlbumInfoReq {
 
             // 千千
             else if (source == NetMusicSource.QI) {
-                String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis())))
+                String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
                         .execute()
                         .body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -383,7 +383,7 @@ public class AlbumInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis())))
+            String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -391,7 +391,11 @@ public class AlbumInfoReq {
 
             String coverImgUrl = albumJson.getString("pic");
             String description = albumJson.getString("introduce");
-            if (!albumInfo.hasSongNum()) albumInfo.setSongNum(albumJson.getJSONArray("trackList").size());
+            if (!albumInfo.hasSongNum()) {
+                JSONArray trackList = albumJson.getJSONArray("trackList");
+                Integer songNum = JsonUtil.notEmpty(trackList) ? trackList.size() : null;
+                albumInfo.setSongNum(songNum);
+            }
             if (!albumInfo.hasPublishTime())
                 albumInfo.setPublishTime(albumJson.getString("releaseDate").split("T")[0]);
 
@@ -673,7 +677,7 @@ public class AlbumInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis())))
+            String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

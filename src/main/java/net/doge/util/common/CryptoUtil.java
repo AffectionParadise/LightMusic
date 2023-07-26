@@ -85,10 +85,8 @@ public class CryptoUtil {
         try {
             Cipher cipher = Cipher.getInstance("AES/" + mode + "/PKCS5Padding");
             SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
-            if (iv != null) {
-                IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-                cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-            } else cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+            if (iv != null) cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv));
+            else cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
             return cipher.doFinal(data);
         } catch (Exception e) {
             return null;

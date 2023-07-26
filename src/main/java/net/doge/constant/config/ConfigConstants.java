@@ -303,7 +303,7 @@ public class ConfigConstants {
     // 用户关注数
     public static final String NET_USER_FOLLOW = "follow";
     // 用户粉丝数
-    public static final String NET_USER_FOLLOWED = "followed";
+    public static final String NET_USER_FAN = "fan";
     // 用户歌单数
     public static final String NET_USER_PLAYLIST_COUNT = "playlistCount";
     // 用户电台数

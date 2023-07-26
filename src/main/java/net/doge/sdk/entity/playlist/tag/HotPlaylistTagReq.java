@@ -180,7 +180,7 @@ public class HotPlaylistTagReq {
 
         // 千千
         Runnable initHotPlaylistTagQi = () -> {
-            String playlistTagBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(PLAYLIST_TAG_QI_API, System.currentTimeMillis())))
+            String playlistTagBody = SdkCommon.qiRequest(String.format(PLAYLIST_TAG_QI_API, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);

@@ -90,17 +90,17 @@ public class UserMenuReq {
     private final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
 
     // 用户粉丝 API
-    private final String USER_FOLLOWEDS_API = "https://music.163.com/eapi/user/getfolloweds/%s";
+    private final String USER_FANS_API = "https://music.163.com/eapi/user/getfolloweds/%s";
     // 用户粉丝 API (喜马拉雅)
-    private final String USER_FOLLOWEDS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
+    private final String USER_FANS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
     // 用户粉丝 API (猫耳)
-    private final String USER_FOLLOWEDS_ME_API = "https://www.missevan.com/person/getuserattention?type=1&user_id=%s&p=%s&page_size=%s";
+    private final String USER_FANS_ME_API = "https://www.missevan.com/person/getuserattention?type=1&user_id=%s&p=%s&page_size=%s";
     // 用户粉丝 API (5sing)
-    private final String USER_FOLLOWEDS_FS_API = "http://5sing.kugou.com/%s/fans/%s.html";
+    private final String USER_FANS_FS_API = "http://5sing.kugou.com/%s/fans/%s.html";
     // 用户粉丝 API (堆糖)
-    private final String USER_FOLLOWEDS_DT_API = "https://www.duitang.com/napi/friendship/fans/?user_id=%s&start=%s&limit=%s";
+    private final String USER_FANS_DT_API = "https://www.duitang.com/napi/friendship/fans/?user_id=%s&start=%s&limit=%s";
     // 用户粉丝 API (哔哩哔哩)
-    private final String USER_FOLLOWEDS_BI_API = "https://api.bilibili.com/x/relation/followers?vmid=%s&pn=%s&ps=%s";
+    private final String USER_FANS_BI_API = "https://api.bilibili.com/x/relation/followers?vmid=%s&pn=%s&ps=%s";
 
     // 歌曲封面信息 API (QQ)
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
@@ -112,13 +112,13 @@ public class UserMenuReq {
      */
     public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int limit, int page) {
         int source = commentInfo.getSource();
-        String uid = StringUtil.urlEncodeAll(commentInfo.getUserId());
-        String username = commentInfo.getUsername();
+        String id = StringUtil.urlEncodeAll(commentInfo.getUserId());
+        String name = commentInfo.getUsername();
 
         NetUserInfo userInfo = new NetUserInfo();
         userInfo.setSource(source);
-        userInfo.setId(uid);
-        userInfo.setName(username);
+        userInfo.setId(id);
+        userInfo.setName(name);
 
         return getUserPlaylists(userInfo, limit, page);
     }
@@ -130,11 +130,11 @@ public class UserMenuReq {
      */
     public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int limit, int page) {
         int source = commentInfo.getSource();
-        String uid = StringUtil.urlEncodeAll(commentInfo.getUserId());
+        String id = StringUtil.urlEncodeAll(commentInfo.getUserId());
 
         NetUserInfo userInfo = new NetUserInfo();
         userInfo.setSource(source);
-        userInfo.setId(uid);
+        userInfo.setId(id);
 
         return getUserAlbums(userInfo, limit, page);
     }
@@ -146,7 +146,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo userInfo, int limit, int page) {
         int source = userInfo.getSource();
-        String uid = userInfo.getId();
+        String id = userInfo.getId();
 
         List<NetPlaylistInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
@@ -155,7 +155,7 @@ public class UserMenuReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, USER_PLAYLIST_API,
-                            String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", uid, (page - 1) * limit, limit), options)
+                            String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", id, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -191,11 +191,12 @@ public class UserMenuReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
+            // 创建的歌单
             Callable<CommonResult<NetPlaylistInfo>> getCreatedPlaylists = () -> {
                 List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, uid))
+                String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, id))
                         .header(Header.REFERER, "https://y.qq.com/portal/profile.html")
                         .execute()
                         .body();
@@ -234,12 +235,12 @@ public class UserMenuReq {
 
                 return new CommonResult<>(r, t);
             };
-
+            // 收藏的歌单
             Callable<CommonResult<NetPlaylistInfo>> getCollectedPlaylists = () -> {
                 List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, uid, (page - 1) * limit, page * limit))
+                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, id, (page - 1) * limit, page * limit))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -300,11 +301,12 @@ public class UserMenuReq {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
+            // 创建的音单
             Callable<CommonResult<NetPlaylistInfo>> getCreatedPlaylists = () -> {
                 List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, uid, page, limit))
+                String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, id, page, limit))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -339,12 +341,12 @@ public class UserMenuReq {
 
                 return new CommonResult<>(r, t);
             };
-
+            // 收藏的音单
             Callable<CommonResult<NetPlaylistInfo>> getCollectedPlaylists = () -> {
                 List<NetPlaylistInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, uid, page, limit))
+                String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, id, page, limit))
                         .execute()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -410,14 +412,14 @@ public class UserMenuReq {
      */
     public CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo userInfo, int limit, int page) {
         int source = userInfo.getSource();
-        String uid = userInfo.getId();
+        String id = userInfo.getId();
 
         List<NetAlbumInfo> res = new LinkedList<>();
         Integer total = 0;
 
         // QQ
         if (source == NetMusicSource.QQ) {
-            String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, uid, (page - 1) * limit, page * limit - 1))
+            String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, id, (page - 1) * limit, page * limit - 1))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -457,7 +459,7 @@ public class UserMenuReq {
         // 豆瓣
         else if (source == NetMusicSource.DB) {
             final int rn = 15;
-            String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DB_API, uid, (page - 1) * rn))
+            String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DB_API, id, (page - 1) * rn))
                     .execute()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
@@ -495,7 +497,7 @@ public class UserMenuReq {
 
         // 堆糖
         else if (source == NetMusicSource.DT) {
-            String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DT_API, uid, (page - 1) * limit, limit))
+            String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DT_API, id, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -541,7 +543,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetRadioInfo> getUserRadios(NetUserInfo userInfo, int limit, int page) {
         int source = userInfo.getSource();
-        String uid = userInfo.getId();
+        String id = userInfo.getId();
 
         List<NetRadioInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
@@ -549,7 +551,7 @@ public class UserMenuReq {
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
-            String radioInfoBody = SdkCommon.ncRequest(Method.POST, USER_RADIO_API, String.format("{\"userId\":\"%s\"}", uid), options)
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, USER_RADIO_API, String.format("{\"userId\":\"%s\"}", id), options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -594,7 +596,7 @@ public class UserMenuReq {
                 List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_XM_API, uid, page, limit))
+                String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_XM_API, id, page, limit))
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -638,7 +640,7 @@ public class UserMenuReq {
                 List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_XM_API, uid, page, limit))
+                String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_XM_API, id, page, limit))
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -705,7 +707,7 @@ public class UserMenuReq {
                 List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, uid, page, limit))
+                String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, id, page, limit))
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -745,7 +747,7 @@ public class UserMenuReq {
                 List<NetRadioInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, uid, page, limit))
+                String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, id, page, limit))
                         .execute()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -805,7 +807,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 final int rn = 15;
-                String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_DB_API, uid, (page - 1) * rn))
+                String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_DB_API, id, (page - 1) * rn))
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
@@ -847,7 +849,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 final int rn = 15;
-                String radioInfoBody = HttpRequest.get(String.format(USER_BOOK_RADIO_DB_API, uid, (page - 1) * rn))
+                String radioInfoBody = HttpRequest.get(String.format(USER_BOOK_RADIO_DB_API, id, (page - 1) * rn))
                         .execute()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
@@ -914,7 +916,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetMvInfo> getUserVideos(NetUserInfo userInfo, int sortType, int page, int limit, String cursor) {
         int source = userInfo.getSource();
-        String uid = userInfo.getId();
+        String id = userInfo.getId();
 
         List<NetMvInfo> res = new LinkedList<>();
         AtomicInteger total = new AtomicInteger();
@@ -929,7 +931,7 @@ public class UserMenuReq {
                 List<NetMvInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, uid, cursor))
+                String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, id, cursor))
                         .cookie(SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
@@ -974,7 +976,7 @@ public class UserMenuReq {
                 List<NetMvInfo> r = new LinkedList<>();
                 Integer t = 0;
 
-                String mvInfoBody = HttpRequest.get(String.format(USER_SMALL_VIDEO_HK_API, uid))
+                String mvInfoBody = HttpRequest.get(String.format(USER_SMALL_VIDEO_HK_API, id))
                         .cookie(SdkCommon.HK_COOKIE)
                         .execute()
                         .body();
@@ -1038,41 +1040,43 @@ public class UserMenuReq {
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, orders[sortType], uid, page, limit))
+            String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, orders[sortType], id, page, limit))
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
-            total.set(data.getJSONObject("page").getIntValue("count"));
-            JSONArray mvArray = data.getJSONObject("list").getJSONArray("vlist");
-            for (int i = 0, len = mvArray.size(); i < len; i++) {
-                JSONObject mvJson = mvArray.getJSONObject(i);
+            if (JsonUtil.notEmpty(data)) {
+                total.set(data.getJSONObject("page").getIntValue("count"));
+                JSONArray mvArray = data.getJSONObject("list").getJSONArray("vlist");
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    JSONObject mvJson = mvArray.getJSONObject(i);
 
-                String bvId = mvJson.getString("bvid");
-                String mvName = mvJson.getString("title");
-                String artistName = mvJson.getString("author");
-                String creatorId = mvJson.getString("mid");
-                String coverImgUrl = mvJson.getString("pic");
-                Long playCount = mvJson.getLong("play");
-                Double duration = TimeUtil.toSeconds(mvJson.getString("length"));
-                String pubTime = TimeUtil.msToDate(mvJson.getLong("created") * 1000);
+                    String bvId = mvJson.getString("bvid");
+                    String mvName = mvJson.getString("title");
+                    String artistName = mvJson.getString("author");
+                    String creatorId = mvJson.getString("mid");
+                    String coverImgUrl = mvJson.getString("pic");
+                    Long playCount = mvJson.getLong("play");
+                    Double duration = TimeUtil.toSeconds(mvJson.getString("length"));
+                    String pubTime = TimeUtil.msToDate(mvJson.getLong("created") * 1000);
 
-                NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.BI);
-                mvInfo.setBvid(bvId);
-                mvInfo.setName(mvName);
-                mvInfo.setArtist(artistName);
-                mvInfo.setCreatorId(creatorId);
-                mvInfo.setCoverImgUrl(coverImgUrl);
-                mvInfo.setPlayCount(playCount);
-                mvInfo.setDuration(duration);
-                mvInfo.setPubTime(pubTime);
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                    mvInfo.setCoverImgThumb(coverImgThumb);
-                });
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(NetMusicSource.BI);
+                    mvInfo.setBvid(bvId);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCreatorId(creatorId);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setDuration(duration);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
 
-                res.add(mvInfo);
+                    res.add(mvInfo);
+                }
             }
         }
 
@@ -1112,7 +1116,7 @@ public class UserMenuReq {
 //                String sign = userJson.getString("signature");
                     String avatarThumbUrl = userJson.getString("avatarUrl");
                     Integer follow = userJson.getIntValue("follows");
-                    Integer followed = userJson.getIntValue("followeds");
+                    Integer fan = userJson.getIntValue("followeds");
                     Integer playlistCount = userJson.getIntValue("playlistCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
@@ -1122,7 +1126,7 @@ public class UserMenuReq {
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
                     userInfo.setPlaylistCount(playlistCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -1152,7 +1156,7 @@ public class UserMenuReq {
 //                String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                 String avatarThumbUrl = "https:" + userJson.getString("coverPath");
                 Integer follow = userJson.getIntValue("followingCount");
-                Integer followed = userJson.getIntValue("followerCount");
+                Integer fan = userJson.getIntValue("followerCount");
                 Integer radioCount = userJson.getIntValue("albumCount");
                 Integer programCount = userJson.getIntValue("trackCount");
 
@@ -1163,7 +1167,7 @@ public class UserMenuReq {
 //                userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
                 userInfo.setRadioCount(radioCount);
                 userInfo.setProgramCount(programCount);
 
@@ -1193,7 +1197,7 @@ public class UserMenuReq {
                 String gender = "保密";
 //                String sign = userJson.getString("userintro");
                 String avatarThumbUrl = userJson.getString("boardiconurl2");
-                Integer followed = userJson.getIntValue("fansnum");
+                Integer fan = userJson.getIntValue("fansnum");
                 Integer programCount = userJson.getIntValue("soundnumchecked");
 
                 NetUserInfo userInfo = new NetUserInfo();
@@ -1202,7 +1206,7 @@ public class UserMenuReq {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
 
@@ -1280,7 +1284,7 @@ public class UserMenuReq {
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
                     Integer follow = Integer.parseInt(la.first().text());
-                    Integer followed = Integer.parseInt(la.last().text());
+                    Integer fan = Integer.parseInt(la.last().text());
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.FS);
@@ -1289,7 +1293,7 @@ public class UserMenuReq {
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -1367,7 +1371,7 @@ public class UserMenuReq {
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar");
                 Integer follow = userJson.getIntValue("followCount");
-                Integer followed = userJson.getIntValue("beFollowCount");
+                Integer fan = userJson.getIntValue("beFollowCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.DT);
@@ -1376,7 +1380,7 @@ public class UserMenuReq {
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -1395,9 +1399,9 @@ public class UserMenuReq {
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = data.getIntValue("total");
-            JSONArray userArray = data.getJSONArray("list");
-            if (JsonUtil.notEmpty(userArray)) {
+            if (JsonUtil.notEmpty(data)) {
+                t = data.getIntValue("total");
+                JSONArray userArray = data.getJSONArray("list");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 
@@ -1429,7 +1433,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getUserFolloweds(NetUserInfo netUserInfo, int limit, int page) {
+    public CommonResult<NetUserInfo> getUserFans(NetUserInfo netUserInfo, int limit, int page) {
         int source = netUserInfo.getSource();
         String id = netUserInfo.getId();
 
@@ -1439,7 +1443,7 @@ public class UserMenuReq {
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/user/getfolloweds");
-            String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FOLLOWEDS_API, id),
+            String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FANS_API, id),
                             String.format("{\"userId\":\"%s\",\"time\":0,\"offset\":%s,\"limit\":%s,\"getcounts\":true}", id, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
@@ -1454,10 +1458,9 @@ public class UserMenuReq {
                     String userName = userJson.getString("nickname");
                     Integer gen = userJson.getIntValue("gender");
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
-//                String sign = userJson.getString("signature");
                     String avatarThumbUrl = userJson.getString("avatarUrl");
                     Integer follow = userJson.getIntValue("follows");
-                    Integer followed = userJson.getIntValue("followeds");
+                    Integer fan = userJson.getIntValue("followeds");
                     Integer playlistCount = userJson.getIntValue("playlistCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
@@ -1465,9 +1468,8 @@ public class UserMenuReq {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-//                userInfo.setSign(sign);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
                     userInfo.setPlaylistCount(playlistCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -1481,7 +1483,7 @@ public class UserMenuReq {
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
-            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_XM_API, id, page, limit))
+            String userInfoBody = HttpRequest.get(String.format(USER_FANS_XM_API, id, page, limit))
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -1497,7 +1499,7 @@ public class UserMenuReq {
 //                String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
                 String avatarThumbUrl = "https:" + userJson.getString("coverPath");
                 Integer follow = userJson.getIntValue("followingCount");
-                Integer followed = userJson.getIntValue("followerCount");
+                Integer fan = userJson.getIntValue("followerCount");
                 Integer radioCount = userJson.getIntValue("albumCount");
                 Integer programCount = userJson.getIntValue("trackCount");
 
@@ -1508,7 +1510,7 @@ public class UserMenuReq {
 //                userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
                 userInfo.setRadioCount(radioCount);
                 userInfo.setProgramCount(programCount);
 
@@ -1523,7 +1525,7 @@ public class UserMenuReq {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_ME_API, id, page, limit))
+            String userInfoBody = HttpRequest.get(String.format(USER_FANS_ME_API, id, page, limit))
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -1538,7 +1540,7 @@ public class UserMenuReq {
                 String gender = "保密";
 //                String sign = userJson.getString("userintro");
                 String avatarThumbUrl = userJson.getString("boardiconurl2");
-                Integer followed = userJson.getIntValue("fansnum");
+                Integer fan = userJson.getIntValue("fansnum");
                 Integer programCount = userJson.getIntValue("soundnumchecked");
 
                 NetUserInfo userInfo = new NetUserInfo();
@@ -1547,7 +1549,7 @@ public class UserMenuReq {
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
                 userInfo.setProgramCount(programCount);
 //                userInfo.setSign(sign);
 
@@ -1562,7 +1564,7 @@ public class UserMenuReq {
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_FS_API, id, page))
+            String userInfoBody = HttpRequest.get(String.format(USER_FANS_FS_API, id, page))
                     .setFollowRedirects(true)
                     .execute()
                     .body();
@@ -1625,7 +1627,7 @@ public class UserMenuReq {
                     String gender = "保密";
                     String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
                     Integer follow = Integer.parseInt(la.first().text());
-                    Integer followed = Integer.parseInt(la.last().text());
+                    Integer fan = Integer.parseInt(la.last().text());
 
                     NetUserInfo userInfo = new NetUserInfo();
                     userInfo.setSource(NetMusicSource.FS);
@@ -1634,7 +1636,7 @@ public class UserMenuReq {
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
                     userInfo.setFollow(follow);
-                    userInfo.setFollowed(followed);
+                    userInfo.setFan(fan);
 
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -1697,7 +1699,7 @@ public class UserMenuReq {
 
         // 堆糖
         else if (source == NetMusicSource.DT) {
-            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_DT_API, id, (page - 1) * limit, limit))
+            String userInfoBody = HttpRequest.get(String.format(USER_FANS_DT_API, id, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -1712,7 +1714,7 @@ public class UserMenuReq {
                 String gender = "保密";
                 String avatarThumbUrl = userJson.getString("avatar");
                 Integer follow = userJson.getIntValue("followCount");
-                Integer followed = userJson.getIntValue("beFollowCount");
+                Integer fan = userJson.getIntValue("beFollowCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
                 userInfo.setSource(NetMusicSource.DT);
@@ -1721,7 +1723,7 @@ public class UserMenuReq {
                 userInfo.setGender(gender);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
                 userInfo.setFollow(follow);
-                userInfo.setFollowed(followed);
+                userInfo.setFan(fan);
 
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
@@ -1734,15 +1736,15 @@ public class UserMenuReq {
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWEDS_BI_API, id, page, limit))
+            String userInfoBody = HttpRequest.get(String.format(USER_FANS_BI_API, id, page, limit))
                     .cookie(SdkCommon.BI_COOKIE)
                     .execute()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
-            t = data.getIntValue("total");
-            JSONArray userArray = data.getJSONArray("list");
-            if (JsonUtil.notEmpty(userArray)) {
+            if (JsonUtil.notEmpty(data)) {
+                t = data.getIntValue("total");
+                JSONArray userArray = data.getJSONArray("list");
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     JSONObject userJson = userArray.getJSONObject(i);
 

@@ -254,7 +254,7 @@ public class ArtistInfoReq {
 
             // 千千
             else if (source == NetMusicSource.QI) {
-                String artistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis())))
+                String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis()))
                         .execute()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -438,7 +438,7 @@ public class ArtistInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String artistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis())))
+            String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -734,7 +734,7 @@ public class ArtistInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String artistInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(ARTIST_SONGS_QI_API, id, page, limit, System.currentTimeMillis())))
+            String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_SONGS_QI_API, id, page, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

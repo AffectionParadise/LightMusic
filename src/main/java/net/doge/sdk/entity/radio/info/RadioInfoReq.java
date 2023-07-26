@@ -358,13 +358,13 @@ public class RadioInfoReq {
         List<NetMusicInfo> res = new LinkedList<>();
 
         int source = radioInfo.getSource();
-        String radioId = radioInfo.getId();
+        String id = radioInfo.getId();
 
         // 网易云(接口分页)
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_PROGRAM_DETAIL_API,
-                            String.format("{\"radioId\":\"%s\",\"offset\":%s,\"limit\":%s,\"asc\":false}", radioId, (page - 1) * limit, limit), options)
+                            String.format("{\"radioId\":\"%s\",\"offset\":%s,\"limit\":%s,\"asc\":false}", id, (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -403,7 +403,7 @@ public class RadioInfoReq {
             String radioInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                             "\"param\":{\"id\":%s,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
-                            "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}", radioId))
+                            "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}", id))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -437,7 +437,7 @@ public class RadioInfoReq {
 
         // 喜马拉雅(接口分页)
         else if (source == NetMusicSource.XM) {
-            String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_XM_API, radioId, sortType, page, limit))
+            String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_XM_API, id, sortType, page, limit))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -447,7 +447,7 @@ public class RadioInfoReq {
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
-                String id = songJson.getString("trackId");
+                String songId = songJson.getString("trackId");
                 String name = songJson.getString("title");
                 String artist = songJson.getString("anchorName");
                 String artistId = songJson.getString("anchorId");
@@ -457,7 +457,7 @@ public class RadioInfoReq {
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.XM);
-                musicInfo.setId(id);
+                musicInfo.setId(songId);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
@@ -470,7 +470,7 @@ public class RadioInfoReq {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, radioId))
+            String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
                     .execute()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);

@@ -95,15 +95,14 @@ public class ArtistMenuReq {
         int total = 0;
         List<NetAlbumInfo> res = new LinkedList<>();
 
-        String artistId = artistInfo.getId();
+        String id = artistInfo.getId();
         int source = artistInfo.getSource();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
-            String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ARTIST_ALBUMS_API, artistId),
-                            String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit),
-                            options)
+            String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ARTIST_ALBUMS_API, id),
+                            String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit), options)
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -112,7 +111,7 @@ public class ArtistMenuReq {
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
 
-                String id = albumJson.getString("id");
+                String albumId = albumJson.getString("id");
                 String name = albumJson.getString("name");
                 String artist = SdkUtil.parseArtist(albumJson);
                 String arId = SdkUtil.parseArtistId(albumJson);
@@ -121,7 +120,7 @@ public class ArtistMenuReq {
                 String coverImgThumbUrl = albumJson.getString("picUrl");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setId(id);
+                albumInfo.setId(albumId);
                 albumInfo.setName(name);
                 albumInfo.setArtist(artist);
                 albumInfo.setArtistId(arId);
@@ -138,7 +137,7 @@ public class ArtistMenuReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_KG_API, artistId, page, limit))
+            String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_KG_API, id, page, limit))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -180,7 +179,7 @@ public class ArtistMenuReq {
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerAlbum\":{\"method\":\"get_singer_album\",\"param\":" +
                             "{\"singermid\":\"%s\",\"order\":\"time\",\"begin\":%s,\"num\":%s,\"exstatus\":1}," +
-                            "\"module\":\"music.web_singer_info_svr\"}}", artistId, (page - 1) * limit, limit))
+                            "\"module\":\"music.web_singer_info_svr\"}}", id, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -217,8 +216,8 @@ public class ArtistMenuReq {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, artistId, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(artistId) + "/album")
+            HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, id, page, limit))
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/album")
                     .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String albumInfoBody = resp.body();
@@ -255,7 +254,7 @@ public class ArtistMenuReq {
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-            String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_MG_API, artistId, page))
+            String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_MG_API, id, page))
                     .setFollowRedirects(true)
                     .execute()
                     .body();
@@ -294,7 +293,7 @@ public class ArtistMenuReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String albumInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(ARTIST_ALBUMS_QI_API, artistId, page, limit, System.currentTimeMillis())))
+            String albumInfoBody = SdkCommon.qiRequest(String.format(ARTIST_ALBUMS_QI_API, id, page, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -310,7 +309,8 @@ public class ArtistMenuReq {
                 String arId = SdkUtil.parseArtistId(albumJson);
                 String coverImgThumbUrl = albumJson.getString("pic");
                 String publishTime = albumJson.getString("releaseDate").split("T")[0];
-                Integer songNum = albumJson.getJSONArray("trackList").size();
+                JSONArray trackList = albumJson.getJSONArray("trackList");
+                Integer songNum = JsonUtil.notEmpty(trackList) ? trackList.size() : null;
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.QI);
@@ -339,7 +339,7 @@ public class ArtistMenuReq {
         int total = 0;
         List<NetMvInfo> res = new LinkedList<>();
 
-        String artistId = artistInfo.getId();
+        String id = artistInfo.getId();
         int source = artistInfo.getSource();
 
         // 网易云
@@ -347,7 +347,7 @@ public class ArtistMenuReq {
             // 歌手 MV
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_MVS_API,
-                            String.format("{\"artistId\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", artistId, (page - 1) * limit, limit),
+                            String.format("{\"artistId\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", id, (page - 1) * limit, limit),
                             options)
                     .execute()
                     .body();
@@ -385,7 +385,7 @@ public class ArtistMenuReq {
 //                List<NetMvInfo> res = new LinkedList<>();
 //                int t = 0;
 //
-//                String mvInfoBody = HttpRequest.get(String.format(ARTIST_VIDEOS_API, artistId, (page - 1) * limit, limit))
+//                String mvInfoBody = HttpRequest.get(String.format(ARTIST_VIDEOS_API, id, (page - 1) * limit, limit))
 //                        .execute()
 //                        .body();
 //                JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -422,7 +422,7 @@ public class ArtistMenuReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_KG_API, artistId, page, limit))
+            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_KG_API, id, page, limit))
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -455,7 +455,7 @@ public class ArtistMenuReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_QQ_API, artistId, (page - 1) * limit, limit))
+            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_QQ_API, id, (page - 1) * limit, limit))
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -491,8 +491,8 @@ public class ArtistMenuReq {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, artistId, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(artistId) + "/mv")
+            HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, id, page, limit))
+                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/mv")
                     .execute();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();
@@ -539,7 +539,7 @@ public class ArtistMenuReq {
     public CommonResult<String> getArtistImgUrls(NetArtistInfo artistInfo, int page) {
         int source = artistInfo.getSource();
         String id = artistInfo.getId();
-        List<String> imgUrls = new LinkedList<>();
+        List<String> res = new LinkedList<>();
         Integer total = 0;
         final int limit = 30;
 
@@ -554,11 +554,11 @@ public class ArtistMenuReq {
             for (int i = 0, len = imgs.size(); i < len; i++) {
                 Element img = imgs.get(i);
                 String url = img.attr("src").replaceFirst("/m/", "/l/");
-                imgUrls.add(url);
+                res.add(url);
             }
         }
 
-        return new CommonResult<>(imgUrls, total);
+        return new CommonResult<>(res, total);
     }
 
     /**
@@ -702,10 +702,9 @@ public class ArtistMenuReq {
                     String userName = userJson.getString("nickname");
                     Integer gen = userJson.getIntValue("gender");
                     String gender = gen == 0 ? "保密" : gen == 1 ? "♂ 男" : "♀ 女";
-//                    String sign = userJson.getString("signature");
                     String avatarThumbUrl = userJson.getString("avatarUrl");
 //                    Integer follow = userJson.getIntValue("follows");
-//                    Integer followed = userJson.getIntValue("followeds");
+//                    Integer fan = userJson.getIntValue("followeds");
 //                    Integer playlistCount = userJson.getIntValue("playlistCount");
 
                     NetUserInfo userInfo = new NetUserInfo();
@@ -713,9 +712,8 @@ public class ArtistMenuReq {
                     userInfo.setName(userName);
                     userInfo.setGender(gender);
                     userInfo.setAvatarThumbUrl(avatarThumbUrl);
-//                    userInfo.setSign(sign);
 //                    userInfo.setFollow(follow);
-//                    userInfo.setFollowed(followed);
+//                    userInfo.setFan(fan);
 //                    userInfo.setPlaylistCount(playlistCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);

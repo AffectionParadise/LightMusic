@@ -162,7 +162,7 @@ public class MvUrlReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String mvBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(MV_URL_QI_API, mvId, System.currentTimeMillis())))
+            String mvBody = SdkCommon.qiRequest(String.format(MV_URL_QI_API, mvId, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONArray data = JSONObject.parseObject(mvBody).getJSONArray("data");

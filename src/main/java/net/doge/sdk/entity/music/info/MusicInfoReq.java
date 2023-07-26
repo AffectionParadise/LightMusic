@@ -255,7 +255,7 @@ public class MusicInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String songBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(SINGLE_SONG_DETAIL_QI_API, songId, System.currentTimeMillis())))
+            String songBody = SdkCommon.qiRequest(String.format(SINGLE_SONG_DETAIL_QI_API, songId, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
@@ -610,7 +610,7 @@ public class MusicInfoReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playUrlBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(GET_SONG_URL_QI_API, id, System.currentTimeMillis())))
+            String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, id, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);

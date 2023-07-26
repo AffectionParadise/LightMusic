@@ -432,7 +432,7 @@ public class ColorThiefUtil {
             int numVBoxes = vboxes.size();
             List<Color> palette = new LinkedList<>();
             for (int i = 0; i < numVBoxes; i++) {
-                palette.add(ColorUtil.intArrayToColor(vboxes.get(i).avg(false)));
+                palette.add(ColorUtil.rgbArrayToColor(vboxes.get(i).avg(false)));
             }
             return palette;
         }
@@ -442,15 +442,15 @@ public class ColorThiefUtil {
         }
 
         public Color map(Color color) {
-            int[] c = ColorUtil.colorToIntArray(color);
+            int[] c = ColorUtil.colorToRgbArray(color);
             int numVBoxes = vboxes.size();
             for (int i = 0; i < numVBoxes; i++) {
                 VBox vbox = vboxes.get(i);
                 if (vbox.contains(c)) {
-                    return ColorUtil.intArrayToColor(vbox.avg(false));
+                    return ColorUtil.rgbArrayToColor(vbox.avg(false));
                 }
             }
-            return nearest(ColorUtil.intArrayToColor(c));
+            return nearest(ColorUtil.rgbArrayToColor(c));
         }
 
         public Color nearest(Color color) {
@@ -471,7 +471,7 @@ public class ColorThiefUtil {
                     pColor = vbColor;
                 }
             }
-            return ColorUtil.intArrayToColor(pColor);
+            return ColorUtil.rgbArrayToColor(pColor);
         }
 
     }
@@ -496,9 +496,9 @@ public class ColorThiefUtil {
     }
 
     private static VBox vboxFromPixels(int[][] pixels, int[] histo) {
-        int rmin = Integer.MAX_VALUE, rmax = 0;
-        int gmin = Integer.MAX_VALUE, gmax = 0;
-        int bmin = Integer.MAX_VALUE, bmax = 0;
+        int rmin = 1000000, rmax = 0;
+        int gmin = 1000000, gmax = 0;
+        int bmin = 1000000, bmax = 0;
 
         int rval, gval, bval;
 

@@ -112,7 +112,7 @@ public class PlaylistMenuReq {
 //                String sign = userJson.getString("signature");
                 String avatarThumbUrl = userJson.getString("avatarUrl");
 //                Integer follow = userJson.getIntValue("follows");
-//                Integer followed = userJson.getIntValue("followeds");
+//                Integer fan = userJson.getIntValue("followeds");
 //                Integer playlistCount = userJson.getIntValue("playlistCount");
 
                 NetUserInfo userInfo = new NetUserInfo();
@@ -122,7 +122,7 @@ public class PlaylistMenuReq {
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
 //                userInfo.setSign(sign);
 //                userInfo.setFollow(follow);
-//                userInfo.setFollowed(followed);
+//                userInfo.setFan(fan);
 //                userInfo.setPlaylistCount(playlistCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);

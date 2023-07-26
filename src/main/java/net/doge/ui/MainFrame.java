@@ -190,7 +190,7 @@ public class MainFrame extends JFrame {
             "下面是一些常见问题解答，请仔细阅读。祝你使用愉快~\n\n" +
             "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n" +
             "注：\n1.此操作要求你的歌单权限是公开的，不能是私密，否则看不到\n" +
-            "2.如果你确实不想公开你的歌单，也可以在“歌单广场”选项卡勾上“歌单 ID”，搜索你的歌单 ID\n\n" +
+            "2.如果你确实不想公开你的歌单，也可以在“歌单”选项卡勾上“歌单 ID”，搜索你的歌单 ID\n\n" +
             "Q2：如何进行收藏等其他操作？\nA2：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
             "Q3：如何批量操作？\nA3：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
             "Q4：为什么有些歌曲名字和音频不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
@@ -254,7 +254,7 @@ public class MainFrame extends JFrame {
     private final String USER_RADIO_MENU_ITEM_TEXT = "查看用户电台";
     private final String USER_VIDEO_MENU_ITEM_TEXT = "查看用户视频";
     private final String USER_FOLLOW_MENU_ITEM_TEXT = "查看用户关注";
-    private final String USER_FOLLOWED_MENU_ITEM_TEXT = "查看用户粉丝";
+    private final String USER_FAN_MENU_ITEM_TEXT = "查看用户粉丝";
     private final String RADIO_DJ_MENU_ITEM_TEXT = "查看主播";
     private final String EDIT_INFO_MENU_ITEM_TEXT = "编辑歌曲信息";
     private final String LOCATE_FILE_MENU_ITEM_TEXT = "打开文件所在位置";
@@ -566,7 +566,7 @@ public class MainFrame extends JFrame {
     // 查看用户关注菜单项图标
     private ImageIcon userFollowMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "follow.png");
     // 查看用户粉丝菜单项图标
-    private ImageIcon userFollowedMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "followed.png");
+    private ImageIcon userFanMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "fan.png");
     // 复制名称菜单项图标
     private ImageIcon copyNameMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "copy.png");
     // 查看乐谱菜单项图标
@@ -1774,7 +1774,7 @@ public class MainFrame extends JFrame {
     // 用户右键菜单：查看用户关注
     private CustomMenuItem netUserFollowMenuItem = new CustomMenuItem(USER_FOLLOW_MENU_ITEM_TEXT);
     // 用户右键菜单：查看用户粉丝
-    private CustomMenuItem netUserFollowedMenuItem = new CustomMenuItem(USER_FOLLOWED_MENU_ITEM_TEXT);
+    private CustomMenuItem netUserFanMenuItem = new CustomMenuItem(USER_FAN_MENU_ITEM_TEXT);
     // 用户右键菜单：复制名称
     private CustomMenuItem netUserCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 用户工具栏
@@ -2298,7 +2298,7 @@ public class MainFrame extends JFrame {
     // 当前关注用户原用户
     private NetUserInfo currFollowUserUserInfo;
     // 当前粉丝用户原用户
-    private NetUserInfo currFollowedUserUserInfo;
+    private NetUserInfo currFanUserUserInfo;
     // 当前用户(作者)原歌曲
     private NetMusicInfo currAuthorMusicInfo;
     // 当前用户(作者)原专辑
@@ -2951,17 +2951,17 @@ public class MainFrame extends JFrame {
                         UIStyleConstants.CUSTOM,
                         styleObject.getString("name"),
                         styleObject.getString("imgPath"),
-                        ColorUtil.RGBStringToColor(styleObject.getString("bgColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("foreColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("selectedColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("lrcColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("highlightColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("textColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("timeBarColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("iconColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("scrollBarColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("sliderColor")),
-                        ColorUtil.RGBStringToColor(styleObject.getString("spectrumColor"))
+                        ColorUtil.rgbStrToColor(styleObject.getString("bgColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("foreColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("selectedColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("lrcColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("highlightColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("textColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("timeBarColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("iconColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("scrollBarColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("sliderColor")),
+                        ColorUtil.rgbStrToColor(styleObject.getString("spectrumColor"))
                 );
                 addStyle(style);
             }
@@ -3710,7 +3710,7 @@ public class MainFrame extends JFrame {
                 userInfo.setAvatarUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_URL));
                 userInfo.setAvatarThumbUrl(jsonObject.getString(ConfigConstants.NET_USER_AVATAR_THUMB_URL));
                 userInfo.setFollow(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOW, -1));
-                userInfo.setFollowed(jsonObject.getIntValue(ConfigConstants.NET_USER_FOLLOWED, -1));
+                userInfo.setFan(jsonObject.getIntValue(ConfigConstants.NET_USER_FAN, -1));
                 userInfo.setPlaylistCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PLAYLIST_COUNT, -1));
                 userInfo.setRadioCount(jsonObject.getIntValue(ConfigConstants.NET_USER_RADIO_COUNT, -1));
                 userInfo.setProgramCount(jsonObject.getIntValue(ConfigConstants.NET_USER_PROGRAM_COUNT, -1));
@@ -3730,17 +3730,17 @@ public class MainFrame extends JFrame {
             JSONObject styleObject = new JSONObject();
             styleObject.put("name", style.getStyleName());
             styleObject.put("imgPath", style.getStyleImgPath());
-            styleObject.put("bgColor", ColorUtil.colorToRGBString(style.getBgColor()));
-            styleObject.put("foreColor", ColorUtil.colorToRGBString(style.getForeColor()));
-            styleObject.put("selectedColor", ColorUtil.colorToRGBString(style.getSelectedColor()));
-            styleObject.put("lrcColor", ColorUtil.colorToRGBString(style.getLrcColor()));
-            styleObject.put("highlightColor", ColorUtil.colorToRGBString(style.getHighlightColor()));
-            styleObject.put("textColor", ColorUtil.colorToRGBString(style.getTextColor()));
-            styleObject.put("timeBarColor", ColorUtil.colorToRGBString(style.getTimeBarColor()));
-            styleObject.put("iconColor", ColorUtil.colorToRGBString(style.getIconColor()));
-            styleObject.put("scrollBarColor", ColorUtil.colorToRGBString(style.getScrollBarColor()));
-            styleObject.put("sliderColor", ColorUtil.colorToRGBString(style.getSliderColor()));
-            styleObject.put("spectrumColor", ColorUtil.colorToRGBString(style.getSpectrumColor()));
+            styleObject.put("bgColor", ColorUtil.colorToRgbStr(style.getBgColor()));
+            styleObject.put("foreColor", ColorUtil.colorToRgbStr(style.getForeColor()));
+            styleObject.put("selectedColor", ColorUtil.colorToRgbStr(style.getSelectedColor()));
+            styleObject.put("lrcColor", ColorUtil.colorToRgbStr(style.getLrcColor()));
+            styleObject.put("highlightColor", ColorUtil.colorToRgbStr(style.getHighlightColor()));
+            styleObject.put("textColor", ColorUtil.colorToRgbStr(style.getTextColor()));
+            styleObject.put("timeBarColor", ColorUtil.colorToRgbStr(style.getTimeBarColor()));
+            styleObject.put("iconColor", ColorUtil.colorToRgbStr(style.getIconColor()));
+            styleObject.put("scrollBarColor", ColorUtil.colorToRgbStr(style.getScrollBarColor()));
+            styleObject.put("sliderColor", ColorUtil.colorToRgbStr(style.getSliderColor()));
+            styleObject.put("spectrumColor", ColorUtil.colorToRgbStr(style.getSpectrumColor()));
             styleArray.add(styleObject);
         }
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
@@ -4193,7 +4193,7 @@ public class MainFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_USER_AVATAR_URL, userInfo.getAvatarUrl());
             jsonObject.put(ConfigConstants.NET_USER_AVATAR_THUMB_URL, userInfo.getAvatarThumbUrl());
             jsonObject.put(ConfigConstants.NET_USER_FOLLOW, userInfo.getFollow());
-            jsonObject.put(ConfigConstants.NET_USER_FOLLOWED, userInfo.getFollowed());
+            jsonObject.put(ConfigConstants.NET_USER_FAN, userInfo.getFan());
             jsonObject.put(ConfigConstants.NET_USER_PLAYLIST_COUNT, userInfo.getPlaylistCount());
             jsonObject.put(ConfigConstants.NET_USER_RADIO_COUNT, userInfo.getRadioCount());
             jsonObject.put(ConfigConstants.NET_USER_PROGRAM_COUNT, userInfo.getProgramCount());
@@ -15031,7 +15031,7 @@ public class MainFrame extends JFrame {
                 // 添加回工具栏的搜索/标题
                 netUserToolBar.removeAll();
                 netUserToolBar.add(netUserBackwardButton);
-                if (currFollowUserUserInfo == null && currFollowedUserUserInfo == null
+                if (currFollowUserUserInfo == null && currFanUserUserInfo == null
                         && currUserPlaylistInfo == null && currUserMvInfo == null && currUserRadioInfo == null
                         && currUserCommentInfo == null && currSubscriberPlaylistInfo == null
                         && currSubscriberRadioInfo == null && currUserArtistInfo == null
@@ -15166,18 +15166,18 @@ public class MainFrame extends JFrame {
         });
         // 搜索用户跳页事件
         Runnable searchUserGoPageAction = () -> {
-            boolean followUserRequest = currFollowUserUserInfo != null, followedUserRequest = currFollowedUserUserInfo != null,
+            boolean followUserRequest = currFollowUserUserInfo != null, fanUserRequest = currFanUserUserInfo != null,
                     playlistRequest = currUserPlaylistInfo != null, mvRequest = currUserMvInfo != null, radioRequest = currUserRadioInfo != null,
                     commentRequest = currUserCommentInfo != null, playlistSubRequest = currSubscriberPlaylistInfo != null,
                     radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
                     songRequest = currAuthorMusicInfo != null, albumRequest = currAuthorAlbumInfo != null;
-            if (followUserRequest || followedUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
+            if (followUserRequest || fanUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
                     playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtil.notEmpty(netUserCurrKeyword)) {
                 loadingAndRun(() -> {
                     try {
                         // 搜索用户并显示用户列表
                         CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtil.getUserFollows(currFollowUserUserInfo, limit, netUserCurrPage)
-                                : followedUserRequest ? MusicServerUtil.getUserFolloweds(currFollowedUserUserInfo, limit, netUserCurrPage)
+                                : fanUserRequest ? MusicServerUtil.getUserFans(currFanUserUserInfo, limit, netUserCurrPage)
                                 : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, limit, netUserCurrPage)
                                 : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, limit, netUserCurrPage)
                                 : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, limit, netUserCurrPage)
@@ -16103,7 +16103,7 @@ public class MainFrame extends JFrame {
             });
         });
         // 查看用户粉丝
-        netUserFollowedMenuItem.addActionListener(e -> {
+        netUserFanMenuItem.addActionListener(e -> {
             NetUserInfo userInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.NET_USER) userInfo = netUserList.getSelectedValue();
@@ -16112,7 +16112,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取用户粉丝
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFolloweds(currFollowedUserUserInfo = userInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFans(currFanUserUserInfo = userInfo, limit, netUserCurrPage = 1);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -16188,7 +16188,7 @@ public class MainFrame extends JFrame {
         netUserPopupMenu.add(netUserRadioMenuItem);
         netUserPopupMenu.add(netUserVideoMenuItem);
         netUserPopupMenu.add(netUserFollowMenuItem);
-        netUserPopupMenu.add(netUserFollowedMenuItem);
+        netUserPopupMenu.add(netUserFanMenuItem);
         netUserPopupMenu.add(netUserCopyNameMenuItem);
 
         // 搜索历史面板
@@ -21215,7 +21215,6 @@ public class MainFrame extends JFrame {
             retry = 0;
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             updateTitle("加载失败");
             if (e instanceof MediaException) new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
             else if (e instanceof IllegalArgumentException || e instanceof IllegalMediaException)
@@ -21699,7 +21698,7 @@ public class MainFrame extends JFrame {
         netPlaylistCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
         netPlaylistSimilarPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
         netPlaylistCreatorMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
-        netPlaylistSubscriberMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netPlaylistSubscriberMenuItem.setIcon(ImageUtil.dye(userFanMenuItemIcon, iconColor));
         netPlaylistCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
         netAlbumOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
@@ -21717,7 +21716,7 @@ public class MainFrame extends JFrame {
         netArtistBrowseAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
         netArtistBrowseMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
         netArtistSimilarArtistMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
-        netArtistFansMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netArtistFansMenuItem.setIcon(ImageUtil.dye(userFanMenuItemIcon, iconColor));
         netArtistBuddyMenuItem.setIcon(ImageUtil.dye(buddyMenuItemIcon, iconColor));
         netArtistRadiosMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
         netArtistPhotosMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
@@ -21728,7 +21727,7 @@ public class MainFrame extends JFrame {
         netRadioCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
         netRadioCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
         netRadioDjMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
-        netRadioSubscriberMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netRadioSubscriberMenuItem.setIcon(ImageUtil.dye(userFanMenuItemIcon, iconColor));
         netRadioSimilarMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
         netRadioArtistsMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
         netRadioPhotosMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
@@ -21758,7 +21757,7 @@ public class MainFrame extends JFrame {
         netUserRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
         netUserVideoMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
         netUserFollowMenuItem.setIcon(ImageUtil.dye(userFollowMenuItemIcon, iconColor));
-        netUserFollowedMenuItem.setIcon(ImageUtil.dye(userFollowedMenuItemIcon, iconColor));
+        netUserFanMenuItem.setIcon(ImageUtil.dye(userFanMenuItemIcon, iconColor));
         netUserCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
         netCommentCopyMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
@@ -23440,7 +23439,7 @@ public class MainFrame extends JFrame {
     // 清除用户请求实例
     private void clearRequestForUser() {
         currFollowUserUserInfo = null;
-        currFollowedUserUserInfo = null;
+        currFanUserUserInfo = null;
         currAuthorMusicInfo = null;
         currAuthorAlbumInfo = null;
         currUserPlaylistInfo = null;

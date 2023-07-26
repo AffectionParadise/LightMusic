@@ -782,8 +782,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getUserFolloweds(NetUserInfo userInfo, int limit, int page) {
-        return new UserMenuReq().getUserFolloweds(userInfo, limit, page);
+    public static CommonResult<NetUserInfo> getUserFans(NetUserInfo userInfo, int limit, int page) {
+        return new UserMenuReq().getUserFans(userInfo, limit, page);
     }
 
     /**

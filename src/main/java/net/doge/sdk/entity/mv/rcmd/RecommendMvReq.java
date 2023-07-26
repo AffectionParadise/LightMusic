@@ -474,7 +474,7 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String mvInfoBody = HttpRequest.get(SdkCommon.buildQianUrl(String.format(RECOMMEND_MV_QI_API, page, limit, System.currentTimeMillis())))
+            String mvInfoBody = SdkCommon.qiRequest(String.format(RECOMMEND_MV_QI_API, page, limit, System.currentTimeMillis()))
                     .execute()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

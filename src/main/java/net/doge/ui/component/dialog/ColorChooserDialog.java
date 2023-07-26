@@ -90,9 +90,9 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     public int r;
     public int g;
     public int b;
-    public float h;
-    public float s;
-    public float v;
+    public double h;
+    public double s;
+    public double v;
     public double nh;
     public double ns;
     public double nl;
@@ -255,7 +255,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
 //        vSlider.addChangeListener(e -> {
 //            if (updating) return;
 //            h = vSlider.getValue();
-//            updateColor(makeColor(h, s, v), true);
+//            updateColor(makeColorFromHsv(h, s, v), true);
 //        });
 
         rlb.setForeground(textColor);
@@ -353,20 +353,20 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         return modelComboBox.getSelectedIndex() == 2;
     }
 
-    public Color makeColor(int r, int g, int b) {
+    public Color makeColorFromRgb(int r, int g, int b) {
         return new Color(r, g, b);
     }
 
-    public Color makeColor(float h, float s, float v) {
-        return ColorUtil.hsvToColor(h, s, v);
+    public Color makeColorFromHsv(double h, double s, double v) {
+        return ColorUtil.hsvValToColor(h, s, v);
     }
 
-    public Color makeColor(double h, double s, double l) {
-        return ColorUtil.hslToColor(h, s, l);
+    public Color makeColorFromHsl(double h, double s, double l) {
+        return ColorUtil.hslValToColor(h, s, l);
     }
 
     public Color makeColor() {
-        return isRGB() ? makeColor(r, g, b) : isHSV() ? makeColor(h, s, v) : makeColor(nh, ns, nl);
+        return isRGB() ? makeColorFromRgb(r, g, b) : isHSV() ? makeColorFromHsv(h, s, v) : makeColorFromHsl(nh, ns, nl);
     }
 
     // 改变颜色模型
@@ -432,7 +432,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
             rTextField.setText(String.valueOf(isRGB ? r : isHSV ? (int) h : (int) nh));
             gTextField.setText(String.valueOf(isRGB ? g : isHSV ? (int) s : (int) ns));
             bTextField.setText(String.valueOf(isRGB ? b : isHSV ? (int) v : (int) nl));
-            hexTextField.setText(ColorUtil.toHex(makeColor()));
+            hexTextField.setText(ColorUtil.colorToHex(makeColor()));
         } catch (Exception e) {
 
         }
@@ -505,7 +505,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         else if (d2) gSlider.setValue(isRGB ? (g = i) : isHSV ? (int) (s = i) : (int) (ns = i));
         else if (d3) bSlider.setValue(isRGB ? (b = i) : isHSV ? (int) (v = i) : (int) (nl = i));
 
-        if (!d4) hexTextField.setText(ColorUtil.toHex(makeColor(r, g, b)));
+        if (!d4) hexTextField.setText(ColorUtil.colorToHex(makeColorFromRgb(r, g, b)));
         else updateUI();
     }
 
