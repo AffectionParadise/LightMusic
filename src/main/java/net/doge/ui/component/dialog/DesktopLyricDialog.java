@@ -60,7 +60,7 @@ public class DesktopLyricDialog extends JDialog {
     private ImageIcon onTopIcon = new ImageIcon(SimplePath.ICON_PATH + "onTop.png");
     private ImageIcon cancelOnTopIcon = new ImageIcon(SimplePath.ICON_PATH + "cancelOnTop.png");
     private ImageIcon closeIcon = new ImageIcon(SimplePath.ICON_PATH + "closeMedium.png");
-    private ImageIcon emptyIcon = new ImageIcon(ImageUtil.createTranslucentImage(lockIcon.getIconWidth(), lockIcon.getIconHeight()));
+    private ImageIcon emptyIcon = new ImageIcon(ImageUtil.createTransparentImage(lockIcon.getIconWidth(), lockIcon.getIconHeight()));
 
     private CustomButton lock = new CustomButton();
     private CustomButton restore = new CustomButton();

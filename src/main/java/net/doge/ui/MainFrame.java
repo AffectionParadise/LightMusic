@@ -2443,7 +2443,7 @@ public class MainFrame extends JFrame {
         // 窗口圆角
         setDefaultLookAndFeelDecorated(true);
         // 窗口透明
-        // setWindowOpaque 存在性能问题，别用
+        // 存在性能问题，别用
 //        setBackground(Colors.TRANSLUCENT);
         // 窗口大小适应
         addComponentListener(new ComponentAdapter() {
@@ -2860,11 +2860,11 @@ public class MainFrame extends JFrame {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         toolkit.addAWTEventListener(event -> {
             if (!(event instanceof KeyEvent)) return;
-            KeyEvent kE = (KeyEvent) event;
-            boolean released = kE.getID() == KeyEvent.KEY_RELEASED, pressed = kE.getID() == KeyEvent.KEY_PRESSED;
+            KeyEvent keyEvent = (KeyEvent) event;
+            boolean released = keyEvent.getID() == KeyEvent.KEY_RELEASED, pressed = keyEvent.getID() == KeyEvent.KEY_PRESSED;
             if (!released && !pressed) return;
 
-            int code = kE.getKeyCode();
+            int code = keyEvent.getKeyCode();
 
             // 图片浏览窗口的监听事件
             if (imageViewDialog != null && released && !imageViewDialog.pageTextField.hasFocus()) {
@@ -3745,7 +3745,7 @@ public class MainFrame extends JFrame {
         }
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
         // 当前 UI 风格索引
-        config.put(ConfigConstants.CURR_UI_STYLE, ListUtil.search(styles, currUIStyle));
+        config.put(ConfigConstants.CURR_UI_STYLE, ListUtil.indexOf(styles, currUIStyle));
         // 存入快捷键
         config.put(ConfigConstants.KEY_ENABLED, keyEnabled);
         config.put(ConfigConstants.PLAY_OR_PAUSE_KEYS, KeyUtil.codesToStr(playOrPauseKeys));
@@ -20106,7 +20106,7 @@ public class MainFrame extends JFrame {
         changePaneButton.setText(NO_LRC_MSG);
         changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
-            // 歌词页面切到歌单
+            // 歌词页面切到列表
             if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) {
                 // 清空评论数据
                 if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
@@ -20116,11 +20116,13 @@ public class MainFrame extends JFrame {
                 globalPanel.remove(netCommentBox);
                 globalPanel.remove(netSheetBox);
                 globalPanel.add(tabbedPane, BorderLayout.CENTER);
+                // 防止事件不起作用
+                globalPanel.requestFocus();
                 changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
                 currPane = MusicPane.MUSIC;
                 lastPane = -1;
             }
-            // 歌单切到歌词页面
+            // 列表切到歌词页面
             else if (currPane == MusicPane.MUSIC || lastPane == MusicPane.MUSIC) {
                 if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
                 // 清空评论数据
@@ -20130,6 +20132,8 @@ public class MainFrame extends JFrame {
                 globalPanel.remove(tabbedPane);
                 globalPanel.remove(netCommentBox);
                 globalPanel.remove(netSheetBox);
+                // 防止事件不起作用
+                globalPanel.requestFocus();
                 globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
                 changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
                 currPane = MusicPane.LYRIC;
@@ -23159,7 +23163,7 @@ public class MainFrame extends JFrame {
                 // 高斯模糊
                 styleImage = ImageUtil.gaussianBlur(styleImage);
             }
-            styleImage = ImageUtil.eraseTranslucency(styleImage);
+            styleImage = ImageUtil.eraseTransparency(styleImage);
             // 放大至窗口大小
             styleImage = ImageUtil.width(styleImage, getWidth());
             if (darkerOn) {
@@ -23317,8 +23321,8 @@ public class MainFrame extends JFrame {
                             Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + 50);
                             netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
                             netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
-                            netMusicSearchSuggestionPanel.setVisible(false);
-                            netMusicSearchSuggestionPanel.setVisible(true);
+                            netMusicSearchSuggestionInnerPanel2.setVisible(false);
+                            netMusicSearchSuggestionInnerPanel2.setVisible(true);
                         }
                     });
                 }
@@ -23371,8 +23375,8 @@ public class MainFrame extends JFrame {
                             Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + 50);
                             netMusicHotSearchInnerPanel2.setMinimumSize(d);
                             netMusicHotSearchInnerPanel2.setPreferredSize(d);
-                            netMusicHotSearchPanel.setVisible(false);
-                            netMusicHotSearchPanel.setVisible(true);
+                            netMusicHotSearchInnerPanel2.setVisible(false);
+                            netMusicHotSearchInnerPanel2.setVisible(true);
                         }
                     });
                 }

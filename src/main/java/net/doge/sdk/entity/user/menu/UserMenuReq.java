@@ -1028,7 +1028,7 @@ public class UserMenuReq {
                     rl.add(result.data);
                     total.set(Math.max(total.get(), result.total));
                     // 用普通视频的 cursor
-                    if (ListUtil.search(taskList, task) == 0) cur.set(result.cursor);
+                    if (ListUtil.indexOf(taskList, task) == 0) cur.set(result.cursor);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {

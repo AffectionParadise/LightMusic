@@ -357,7 +357,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
             String cursor = results == null || cursors.size() == 1 ? "" : cursors.get(dp - 1);
             results = requestImgUrls(pn = dp, limit, cursor);
             String next = results.cursor;
-            if (ListUtil.search(cursors, next) < 0) cursors.add(next);
+            if (ListUtil.indexOf(cursors, next) < 0) cursors.add(next);
         }
         String url = results.data.size() > di ? results.data.get(di) : "";
         BufferedImage img = ImageUtil.readByUrl(url);

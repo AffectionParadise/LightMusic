@@ -58,7 +58,7 @@ public abstract class AbstractShadowDialog extends JDialog {
         // 处理成 100 * 100 大小
         if (f.gsOn) bufferedImage = ImageUtil.width(bufferedImage, 100);
         // 消除透明度
-        bufferedImage = ImageUtil.eraseTranslucency(bufferedImage);
+        bufferedImage = ImageUtil.eraseTransparency(bufferedImage);
         // 高斯模糊
         if (f.gsOn) bufferedImage = ImageUtil.gaussianBlur(bufferedImage);
         // 放大至窗口大小

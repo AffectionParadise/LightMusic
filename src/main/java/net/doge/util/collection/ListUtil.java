@@ -10,13 +10,13 @@ import java.util.*;
 public class ListUtil {
 
     /**
-     * 搜索元素位置，找不到返回 -1
+     * 查找元素位置，找不到返回 -1
      *
      * @param list
      * @param obj
      * @return
      */
-    public static <T> int search(List<T> list, Object obj) {
+    public static <T> int indexOf(List<T> list, Object obj) {
         for (int i = 0, len = list.size(); i < len; i++) {
             if (list.get(i).equals(obj)) return i;
         }

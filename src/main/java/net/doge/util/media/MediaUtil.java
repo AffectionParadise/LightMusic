@@ -72,7 +72,7 @@ public class MediaUtil {
             ID3v2 tag = mp3file.getId3v2Tag();
             // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
             if (tag == null) tag = new ID3v24Tag();
-            if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/jpeg");
+            if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/png");
             if (StringUtil.notEmpty(name)) tag.setTitle(name);
             if (StringUtil.notEmpty(artist)) tag.setArtist(artist);
             if (StringUtil.notEmpty(albumName)) tag.setAlbum(albumName);
@@ -110,7 +110,7 @@ public class MediaUtil {
             ID3v2 tag = mp3file.getId3v2Tag();
             // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
             if (tag == null) tag = new ID3v24Tag();
-            if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/jpeg");
+            if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/png");
             tag.setTitle(title);
             tag.setArtist(artist);
             tag.setAlbum(albumName);
@@ -172,8 +172,8 @@ public class MediaUtil {
                 ID3v2 id3v2Tag = f.getId3v2Tag();
                 byte[] imageBytes = id3v2Tag.getAlbumImage();
                 if (imageBytes != null) {
-                    Image image = Toolkit.getDefaultToolkit().createImage(imageBytes, 0, imageBytes.length);
-                    albumImage = ImageUtil.imageToBufferedImage(image);
+                    Image img = Toolkit.getDefaultToolkit().createImage(imageBytes, 0, imageBytes.length);
+                    albumImage = ImageUtil.imageToBufferedImage(img);
                 }
             }
             return albumImage;

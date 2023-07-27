@@ -214,51 +214,36 @@ public class ImageUtil {
      * @return
      */
     public static byte[] toBytes(BufferedImage img) {
-        return ImgUtil.toBytes(img, ImgUtil.IMAGE_TYPE_JPEG);
+        return ImgUtil.toBytes(img, ImgUtil.IMAGE_TYPE_PNG);
     }
 
     /**
      * 创建透明图片
      */
-    public static BufferedImage createTranslucentImage(int w, int h) {
-        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = img.createGraphics();
-        // 获取透明的 BufferedImage
-        BufferedImage outputImg = g.getDeviceConfiguration().createCompatibleImage(w, h, Transparency.TRANSLUCENT);
-        g.dispose();
+    public static BufferedImage createTransparentImage(int w, int h) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        BufferedImage outputImg = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT);
         return outputImg;
     }
 
     /**
-     * Image 转为 BuffedImage
+     * Image 转为 BufferedImage
      *
-     * @param image
+     * @param img
      * @return
      */
-    public static BufferedImage imageToBufferedImage(Image image) {
-        if (image instanceof BufferedImage) return (BufferedImage) image;
-        image = new ImageIcon(image).getImage();
-        boolean hasAlpha = false;
-        BufferedImage img = null;
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        try {
-            int transparency = Transparency.OPAQUE;
-            if (hasAlpha) transparency = Transparency.BITMASK;
-            GraphicsDevice gs = ge.getDefaultScreenDevice();
-            GraphicsConfiguration gc = gs.getDefaultConfiguration();
-            img = gc.createCompatibleImage(image.getWidth(null), image
-                    .getHeight(null), transparency);
-        } catch (HeadlessException e) {
-        }
-        if (img == null) {
-            int type = BufferedImage.TYPE_INT_RGB;
-            if (hasAlpha) type = BufferedImage.TYPE_INT_ARGB;
-            img = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
-        }
-        Graphics g = img.createGraphics();
-        g.drawImage(image, 0, 0, null);
+    public static BufferedImage imageToBufferedImage(Image img) {
+        if (img instanceof BufferedImage) return (BufferedImage) img;
+        // 防止 img 宽高参数不正确
+        img = new ImageIcon(img).getImage();
+        int w = img.getWidth(null), h = img.getHeight(null);
+        BufferedImage outputImg = createTransparentImage(w, h);
+        Graphics g = outputImg.createGraphics();
+        g.drawImage(img, 0, 0, null);
         g.dispose();
-        return img;
+        return outputImg;
     }
 
     /**
@@ -267,12 +252,12 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static BufferedImage eraseTranslucency(BufferedImage img) {
+    public static BufferedImage eraseTransparency(BufferedImage img) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
         BufferedImage outputImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = outputImg.createGraphics();
-        g.drawImage(img, 0, 0, w, h, null);
+        g.drawImage(img, 0, 0, null);
         g.dispose();
         return outputImg;
     }
@@ -335,18 +320,18 @@ public class ImageUtil {
     /**
      * 返回纯色指定宽高的矩形 BuffedImage
      *
-     * @param width
-     * @param height
+     * @param w
+     * @param h
      * @param color
      * @return
      */
-    public static BufferedImage dyeRect(int width, int height, Color color) {
+    public static BufferedImage dyeRect(int w, int h, Color color) {
         if (color == null) return null;
-        BufferedImage img = createTranslucentImage(width, height);
+        BufferedImage img = createTransparentImage(w, h);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(color);
-        g.fillRect(0, 0, width, height);
+        g.fillRect(0, 0, w, h);
         g.dispose();
         return img;
     }
@@ -354,17 +339,17 @@ public class ImageUtil {
     /**
      * 返回纯色指定宽高的圆角矩形 ImageIcon
      *
-     * @param width
-     * @param height
+     * @param w
+     * @param h
      * @param color
      * @return
      */
-    public static ImageIcon dyeRoundRect(int width, int height, Color color) {
-        BufferedImage img = createTranslucentImage(width, height);
+    public static ImageIcon dyeRoundRect(int w, int h, Color color) {
+        BufferedImage img = createTransparentImage(w, h);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(color);
-        g.fillRoundRect(0, 0, width, height, 10, 10);
+        g.fillRoundRect(0, 0, w, h, 10, 10);
         g.dispose();
         return new ImageIcon(img);
     }
@@ -372,16 +357,16 @@ public class ImageUtil {
     /**
      * 返回纯色指定宽度的圆形 ImageIcon
      *
-     * @param width
+     * @param w
      * @param color
      * @return
      */
-    public static ImageIcon dyeCircle(int width, Color color) {
-        BufferedImage img = createTranslucentImage(width, width);
+    public static ImageIcon dyeCircle(int w, Color color) {
+        BufferedImage img = createTransparentImage(w, w);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(color);
-        g.fillOval(0, 0, width, width);
+        g.fillOval(0, 0, w, w);
         g.dispose();
         return new ImageIcon(img);
     }
@@ -463,13 +448,13 @@ public class ImageUtil {
      */
     public static BufferedImage setRadius(BufferedImage img, int radius) {
         if (img == null) return null;
-        int width = img.getWidth(), height = img.getHeight();
-        BufferedImage outputImg = createTranslucentImage(width, height);
+        int w = img.getWidth(), h = img.getHeight();
+        BufferedImage outputImg = createTransparentImage(w, h);
         Graphics2D g = outputImg.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.fillRoundRect(0, 0, width, height, radius, radius);
+        g.fillRoundRect(0, 0, w, h, radius, radius);
         g.setComposite(AlphaComposite.SrcIn);
-        g.drawImage(img, 0, 0, width, height, null);
+        g.drawImage(img, 0, 0, null);
         g.dispose();
         return outputImg;
     }
@@ -637,7 +622,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage linearGradient(int w, int h, Color c1, Color c2) {
-        BufferedImage img = createTranslucentImage(w, h);
+        BufferedImage img = createTransparentImage(w, h);
         GradientFilter gf = new GradientFilter(new Point(0, 0), new Point(w, h), c1.getRGB(), c2.getRGB(), false, GradientFilter.LINEAR, GradientFilter.INT_LINEAR);
 //        Graphics2D g = img.createGraphics();
 //        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -667,14 +652,12 @@ public class ImageUtil {
      */
     public static BufferedImage borderShadow(BufferedImage img) {
         if (img == null) return null;
-        int ow = img.getWidth(), oh = img.getHeight();
-        BufferedImage outputImg = createTranslucentImage(ow + 2 * SHADOW_THICKNESS, oh + 2 * SHADOW_THICKNESS);
+        int w = img.getWidth(), h = img.getHeight();
+        BufferedImage outputImg = createTransparentImage(w + 2 * SHADOW_THICKNESS, h + 2 * SHADOW_THICKNESS);
         Graphics2D g = outputImg.createGraphics();
         g.drawImage(img, SHADOW_THICKNESS, SHADOW_THICKNESS, null);
         g.dispose();
-        outputImg = borderShadowFilter.filter(outputImg, null);
-        outputImg = width(outputImg, ow);
-        return outputImg;
+        return width(borderShadowFilter.filter(outputImg, null), w);
     }
 
     /**
