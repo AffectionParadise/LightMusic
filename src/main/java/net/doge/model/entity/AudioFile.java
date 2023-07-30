@@ -1,12 +1,13 @@
 package net.doge.model.entity;
 
 import net.doge.constant.player.Format;
-import net.doge.util.system.FileUtil;
+import net.doge.model.entity.base.MusicResource;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.FileUtil;
 
 import java.io.File;
 
-public class AudioFile extends File {
+public class AudioFile extends File implements MusicResource {
     // 格式
     private String format;
     // 曲名
@@ -52,7 +53,7 @@ public class AudioFile extends File {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj instanceof AudioFile && getAbsolutePath().equals(((AudioFile) obj).getAbsolutePath());
+        return obj instanceof AudioFile && getAbsolutePath().equals(((AudioFile) obj).getAbsolutePath());
     }
 
     public boolean hasSongName() {

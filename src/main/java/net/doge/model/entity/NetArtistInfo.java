@@ -2,6 +2,7 @@ package net.doge.model.entity;
 
 import net.doge.constant.model.NetMusicSource;
 import lombok.Data;
+import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
  * @Date 2020/12/7
  */
 @Data
-public class NetArtistInfo {
+public class NetArtistInfo implements NetResource {
     // 歌手来源
     private int source = NetMusicSource.NET_CLOUD;
     // 是否是社团(猫耳)

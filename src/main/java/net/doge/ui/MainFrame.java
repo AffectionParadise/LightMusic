@@ -46,6 +46,9 @@ import net.doge.exception.IllegalMediaException;
 import net.doge.exception.NoLyricException;
 import net.doge.exception.NoPrivilegeException;
 import net.doge.model.entity.*;
+import net.doge.model.entity.base.MusicResource;
+import net.doge.model.entity.base.NetResource;
+import net.doge.model.entity.base.Resource;
 import net.doge.model.lyric.LrcData;
 import net.doge.model.lyric.Statement;
 import net.doge.model.player.MetaMusicInfo;
@@ -1049,44 +1052,44 @@ public class MainFrame extends JFrame {
     private CustomLabel emptyHintLabel = new CustomLabel("列表空空如也~");
 
     // 个人音乐播放列表
-    private CustomList musicList = new CustomList<>();
+    private CustomList<MusicResource> musicList = new CustomList<>();
     private CustomScrollPane musicScrollPane = new CustomScrollPane(musicList);
     // 本地音乐 ListModel
-    private DefaultListModel musicListModel = new DefaultListModel<>();
+    private DefaultListModel<MusicResource> musicListModel = new DefaultListModel<>();
     // 播放历史 ListModel
-    public DefaultListModel historyModel = new DefaultListModel<>();
+    public DefaultListModel<MusicResource> historyModel = new DefaultListModel<>();
 
     // 收藏列表
-    public CustomList collectionList = new CustomList<>();
+    public CustomList<NetResource> collectionList = new CustomList<>();
     private CustomScrollPane collectionScrollPane = new CustomScrollPane(collectionList);
     // 歌曲收藏 ListModel
-    private DefaultListModel collectionModel = new DefaultListModel<>();
+    private DefaultListModel<MusicResource> collectionModel = new DefaultListModel<>();
     // 歌单收藏 ListModel
-    private DefaultListModel playlistCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> playlistCollectionModel = new DefaultListModel<>();
     // 作为收藏歌单单独的 ListModel，切换
-    private DefaultListModel netMusicListForPlaylistCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForPlaylistCollectionModel = new DefaultListModel<>();
     // 专辑收藏 ListModel
-    private DefaultListModel albumCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> albumCollectionModel = new DefaultListModel<>();
     // 作为专辑单独的 ListModel，切换
-    private DefaultListModel netMusicListForAlbumCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForAlbumCollectionModel = new DefaultListModel<>();
     // 歌手收藏 ListModel
-    private DefaultListModel artistCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> artistCollectionModel = new DefaultListModel<>();
     // 作为收藏歌手单独的 ListModel，切换
-    private DefaultListModel netMusicListForArtistCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForArtistCollectionModel = new DefaultListModel<>();
     // 电台收藏 ListModel
-    private DefaultListModel radioCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> radioCollectionModel = new DefaultListModel<>();
     // 作为收藏电台单独的 ListModel，切换
-    private DefaultListModel netMusicListForRadioCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForRadioCollectionModel = new DefaultListModel<>();
     // MV 收藏 ListModel
-    public DefaultListModel mvCollectionModel = new DefaultListModel<>();
+    public DefaultListModel<NetResource> mvCollectionModel = new DefaultListModel<>();
     // 榜单收藏 ListModel
-    private DefaultListModel rankingCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> rankingCollectionModel = new DefaultListModel<>();
     // 作为收藏榜单单独的 ListModel，切换
-    private DefaultListModel netMusicListForRankingCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForRankingCollectionModel = new DefaultListModel<>();
     // 用户收藏 ListModel
-    private DefaultListModel userCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> userCollectionModel = new DefaultListModel<>();
     // 作为收藏用户单独的 ListModel，切换
-    private DefaultListModel netMusicListForUserCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForUserCollectionModel = new DefaultListModel<>();
     // 收藏数量面板
     private CustomPanel collectionCountPanel = new CustomPanel();
     // 收藏数量标签
@@ -1218,7 +1221,7 @@ public class MainFrame extends JFrame {
     // 在线播放列表
     private CustomList<NetMusicInfo> netMusicList = new CustomList<>();
     private CustomScrollPane netMusicScrollPane = new CustomScrollPane(netMusicList);
-    private DefaultListModel netMusicListModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListModel = new DefaultListModel<>();
     // 在线音乐右键弹出菜单
     private CustomPopupMenu netMusicPopupMenu = new CustomPopupMenu(THIS);
     // 在线音乐右键菜单：播放
@@ -1831,28 +1834,28 @@ public class MainFrame extends JFrame {
     public CustomPanel netUserHistorySearchInnerPanel2 = new CustomPanel();
 
     // 推荐歌单/专辑/歌手/电台列表
-    private CustomList itemRecommendList = new CustomList<>();
+    private CustomList<NetResource> itemRecommendList = new CustomList<>();
     private CustomScrollPane itemRecommendScrollPane = new CustomScrollPane(itemRecommendList);
     // 推荐歌单 ListModel
-    private DefaultListModel playlistRecommendListModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> playlistRecommendListModel = new DefaultListModel<>();
     // 作为推荐歌单单独的 ListModel，切换
-    private DefaultListModel netMusicListForPlaylistRecommendModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForPlaylistRecommendModel = new DefaultListModel<>();
     // 推荐专辑 ListModel
-    private DefaultListModel albumRecommendListModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> albumRecommendListModel = new DefaultListModel<>();
     // 作为推荐专辑单独的 ListModel，切换
-    private DefaultListModel netMusicListForAlbumRecommendModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForAlbumRecommendModel = new DefaultListModel<>();
     // 推荐歌手 ListModel
-    private DefaultListModel artistRecommendListModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> artistRecommendListModel = new DefaultListModel<>();
     // 作为推荐歌手单独的 ListModel，切换
-    private DefaultListModel netMusicListForArtistRecommendModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForArtistRecommendModel = new DefaultListModel<>();
     // 推荐电台 ListModel
-    private DefaultListModel radioRecommendListModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> radioRecommendListModel = new DefaultListModel<>();
     // 作为推荐电台单独的 ListModel，切换
-    private DefaultListModel netMusicListForRadioRecommendModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForRadioRecommendModel = new DefaultListModel<>();
     // 推荐 MV ListModel
-    private DefaultListModel mvRecommendListModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> mvRecommendListModel = new DefaultListModel<>();
     // 推荐单曲 ListModel
-    private DefaultListModel netMusicRecommendListModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicRecommendListModel = new DefaultListModel<>();
     // 推荐工具栏
     private CustomToolBar recommendToolBar = new CustomToolBar();
     // 推荐歌单按钮
@@ -1945,11 +1948,11 @@ public class MainFrame extends JFrame {
     private CustomLabel taskCountLabel = new CustomLabel("共 0 项任务");
 
     // 播放队列
-    private CustomList playQueue = new CustomList<>();
+    private CustomList<MusicResource> playQueue = new CustomList<>();
     private ListCellRenderer playQueueRenderer;
     private CustomScrollPane playQueueScrollPane = new CustomScrollPane(playQueue);
     // 播放队列 ListModel
-    private DefaultListModel playQueueModel = new DefaultListModel<>();
+    private DefaultListModel<MusicResource> playQueueModel = new DefaultListModel<>();
     // 播放队列右键弹出菜单
     private CustomPopupMenu playQueuePopupMenu = new CustomPopupMenu(THIS);
     // 播放队列右键菜单：播放
@@ -2196,7 +2199,7 @@ public class MainFrame extends JFrame {
     // 评论数量标签
     private CustomLabel netCommentCountLabel = new CustomLabel("");
     // 当前显示评论的对象信息
-    private Object currCommentObjectInfo;
+    private NetResource currCommentResource;
 
     // 乐谱盒子
     private Box netSheetBox = new Box(BoxLayout.Y_AXIS);
@@ -3221,7 +3224,7 @@ public class MainFrame extends JFrame {
                     musicInfo.setId(jo.getString(ConfigConstants.NET_MUSIC_ID));
                     musicInfo.setName(jo.getString(ConfigConstants.NET_MUSIC_NAME));
                     musicInfo.setArtist(jo.getString(ConfigConstants.NET_MUSIC_ARTIST));
-                    task = new Task(downloadList, type, musicInfo, null);
+                    task = new Task(downloadList, type, musicInfo);
 
                     task.setInvokeLater(() -> {
                         String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
@@ -3241,7 +3244,7 @@ public class MainFrame extends JFrame {
                     mvInfo.setBvid(jo.getString(ConfigConstants.NET_MV_BVID));
                     mvInfo.setName(jo.getString(ConfigConstants.NET_MV_NAME));
                     mvInfo.setArtist(jo.getString(ConfigConstants.NET_MV_ARTIST));
-                    task = new Task(downloadList, type, null, mvInfo);
+                    task = new Task(downloadList, type, mvInfo);
                 }
                 // 考虑到下载路径可能更换，沿用任务原来的路径
                 task.setDest(dest);
@@ -3864,12 +3867,12 @@ public class MainFrame extends JFrame {
         // 存入当前历史列表
         JSONArray historyJsonArray = new JSONArray();
         for (int i = 0, len = historyModel.getSize(); i < len; i++) {
-            Object o = historyModel.get(i);
-            if (o instanceof AudioFile) {
-                AudioFile file = (AudioFile) o;
+            MusicResource resource = historyModel.get(i);
+            if (resource instanceof AudioFile) {
+                AudioFile file = (AudioFile) resource;
                 historyJsonArray.add(file.getPath());
-            } else if (o instanceof NetMusicInfo) {
-                NetMusicInfo musicInfo = (NetMusicInfo) o;
+            } else if (resource instanceof NetMusicInfo) {
+                NetMusicInfo musicInfo = (NetMusicInfo) resource;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
@@ -3907,7 +3910,7 @@ public class MainFrame extends JFrame {
             jsonObject.put(ConfigConstants.TASK_TOTAL, task.getTotal());
             // 如果是音乐下载任务，需要额外记录音乐信息
             if (task.isMusic()) {
-                NetMusicInfo musicInfo = task.getMusicInfo();
+                NetMusicInfo musicInfo = (NetMusicInfo) task.getResource();
                 JSONObject jo = new JSONObject();
                 jo.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
                 jo.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
@@ -3918,7 +3921,7 @@ public class MainFrame extends JFrame {
             }
             // 如果是 MV 下载任务，需要额外记录 MV 信息
             else if (task.getType() == TaskType.MV) {
-                NetMvInfo mvInfo = task.getMvInfo();
+                NetMvInfo mvInfo = (NetMvInfo) task.getResource();
                 JSONObject jo = new JSONObject();
                 jo.put(ConfigConstants.NET_MV_SOURCE, mvInfo.getSource());
                 jo.put(ConfigConstants.NET_MV_TYPE, mvInfo.getType());
@@ -3936,12 +3939,12 @@ public class MainFrame extends JFrame {
         // 存入播放队列
         JSONArray playQueueJsonArray = new JSONArray();
         for (int i = 0, len = playQueueModel.getSize(); i < len; i++) {
-            Object o = playQueueModel.get(i);
-            if (o instanceof AudioFile) {
-                AudioFile file = (AudioFile) o;
+            MusicResource resource = playQueueModel.get(i);
+            if (resource instanceof AudioFile) {
+                AudioFile file = (AudioFile) resource;
                 playQueueJsonArray.add(file.getPath());
-            } else if (o instanceof NetMusicInfo) {
-                NetMusicInfo musicInfo = (NetMusicInfo) o;
+            } else if (resource instanceof NetMusicInfo) {
+                NetMusicInfo musicInfo = (NetMusicInfo) resource;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
@@ -4041,12 +4044,12 @@ public class MainFrame extends JFrame {
         // 存入收藏歌曲列表
         JSONArray collectionJsonArray = new JSONArray();
         for (int i = 0, len = collectionModel.getSize(); i < len; i++) {
-            Object o = collectionModel.get(i);
-            if (o instanceof AudioFile) {
-                AudioFile file = (AudioFile) o;
+            MusicResource resource = collectionModel.get(i);
+            if (resource instanceof AudioFile) {
+                AudioFile file = (AudioFile) resource;
                 collectionJsonArray.add(file.getPath());
-            } else if (o instanceof NetMusicInfo) {
-                NetMusicInfo musicInfo = (NetMusicInfo) o;
+            } else if (resource instanceof NetMusicInfo) {
+                NetMusicInfo musicInfo = (NetMusicInfo) resource;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
                 jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
@@ -5151,10 +5154,10 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        Object o = collectionList.getSelectedValue();
+                        NetResource resource = collectionList.getSelectedValue();
                         // 这是歌单里的歌
-                        if (o instanceof NetPlaylistInfo) {
-                            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                        if (resource instanceof NetPlaylistInfo) {
+                            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5173,8 +5176,8 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.repaint();
                         }
                         // 这是专辑里的歌
-                        else if (o instanceof NetAlbumInfo) {
-                            NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                        else if (resource instanceof NetAlbumInfo) {
+                            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5193,8 +5196,8 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.repaint();
                         }
                         // 这是歌手里的歌
-                        else if (o instanceof NetArtistInfo) {
-                            NetArtistInfo artistInfo = (NetArtistInfo) o;
+                        else if (resource instanceof NetArtistInfo) {
+                            NetArtistInfo artistInfo = (NetArtistInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -5213,8 +5216,8 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.repaint();
                         }
                         // 这是电台里的歌
-                        else if (o instanceof NetRadioInfo) {
-                            NetRadioInfo radioInfo = (NetRadioInfo) o;
+                        else if (resource instanceof NetRadioInfo) {
+                            NetRadioInfo radioInfo = (NetRadioInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
@@ -5233,8 +5236,8 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.repaint();
                         }
                         // 这是榜单里的歌
-                        else if (o instanceof NetRankingInfo) {
-                            NetRankingInfo RankingInfo = (NetRankingInfo) o;
+                        else if (resource instanceof NetRankingInfo) {
+                            NetRankingInfo RankingInfo = (NetRankingInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
                                     RankingInfo.getId(), RankingInfo.getSource(), limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
@@ -5254,8 +5257,8 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.repaint();
                         }
                         // 这是用户里的歌
-                        else if (o instanceof NetUserInfo) {
-                            NetUserInfo userInfo = (NetUserInfo) o;
+                        else if (resource instanceof NetUserInfo) {
+                            NetUserInfo userInfo = (NetUserInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
                                     collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
@@ -5313,13 +5316,13 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         collectionPlayAllButton.addActionListener(e -> {
-            Object o = collectionList.getSelectedValue();
-            if (o instanceof NetPlaylistInfo) netPlaylistPlayAllButton.doClick();
-            else if (o instanceof NetAlbumInfo) netAlbumPlayAllButton.doClick();
-            else if (o instanceof NetArtistInfo) netArtistPlayAllButton.doClick();
-            else if (o instanceof NetRadioInfo) netRadioPlayAllButton.doClick();
-            else if (o instanceof NetRankingInfo) netRankingPlayAllButton.doClick();
-            else if (o instanceof NetUserInfo) netUserPlayAllButton.doClick();
+            NetResource resource = collectionList.getSelectedValue();
+            if (resource instanceof NetPlaylistInfo) netPlaylistPlayAllButton.doClick();
+            else if (resource instanceof NetAlbumInfo) netAlbumPlayAllButton.doClick();
+            else if (resource instanceof NetArtistInfo) netArtistPlayAllButton.doClick();
+            else if (resource instanceof NetRadioInfo) netRadioPlayAllButton.doClick();
+            else if (resource instanceof NetRankingInfo) netRankingPlayAllButton.doClick();
+            else if (resource instanceof NetUserInfo) netUserPlayAllButton.doClick();
         });
         // 刷新按钮事件
         collectionRefreshButton.addActionListener(e -> {
@@ -5421,7 +5424,7 @@ public class MainFrame extends JFrame {
         collectionLeftBox.add(collectionCountPanel);
     }
 
-    private Object collectionOpenObj;
+    private NetResource collectionOpenResource;
 
     // 初始化收藏列表
     private void initCollectionList() {
@@ -5463,20 +5466,20 @@ public class MainFrame extends JFrame {
             }
         });
         openCollectionItemAction = () -> {
-            Object o = collectionList.getSelectedValue();
+            NetResource resource = collectionList.getSelectedValue();
             // 打开的是 MV
-            if (o instanceof NetMvInfo) {
+            if (resource instanceof NetMvInfo) {
                 playMv(MvCompSourceType.COLLECTION);
                 return;
             }
-            collectionOpenObj = o;
+            collectionOpenResource = resource;
             // 检查收藏按钮
-            checkDescriptionCollectionStatus(collectionItemDescriptionCollectionButton, o);
+            checkDescriptionCollectionStatus(collectionItemDescriptionCollectionButton, resource);
             loadingAndRun(() -> {
                 List<Future<?>> taskList = new LinkedList<>();
                 // 打开的是歌单
-                if (o instanceof NetPlaylistInfo) {
-                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                if (resource instanceof NetPlaylistInfo) {
+                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -5571,8 +5574,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是专辑
-                else if (o instanceof NetAlbumInfo) {
-                    NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                else if (resource instanceof NetAlbumInfo) {
+                    NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -5664,8 +5667,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是歌手
-                else if (o instanceof NetArtistInfo) {
-                    NetArtistInfo artistInfo = (NetArtistInfo) o;
+                else if (resource instanceof NetArtistInfo) {
+                    NetArtistInfo artistInfo = (NetArtistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -5760,8 +5763,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是电台
-                else if (o instanceof NetRadioInfo) {
-                    NetRadioInfo radioInfo = (NetRadioInfo) o;
+                else if (resource instanceof NetRadioInfo) {
+                    NetRadioInfo radioInfo = (NetRadioInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -5859,8 +5862,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是榜单
-                else if (o instanceof NetRankingInfo) {
-                    NetRankingInfo rankingInfo = (NetRankingInfo) o;
+                else if (resource instanceof NetRankingInfo) {
+                    NetRankingInfo rankingInfo = (NetRankingInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -5952,8 +5955,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是用户
-                else if (o instanceof NetUserInfo) {
-                    NetUserInfo userInfo = (NetUserInfo) o;
+                else if (resource instanceof NetUserInfo) {
+                    NetUserInfo userInfo = (NetUserInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -6455,59 +6458,59 @@ public class MainFrame extends JFrame {
         removeToolButton.addActionListener(e -> {
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
             if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC) {
-                List selectedValues = musicList.getSelectedValuesList();
+                List<MusicResource> selectedValues = musicList.getSelectedValuesList();
                 if (selectedValues.isEmpty()) return;
                 ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
                 confirmDialog.showDialog();
                 int response = confirmDialog.getResponse();
                 if (response != JOptionPane.YES_OPTION) return;
                 // 删除选中的文件
-                DefaultListModel<Object> model = (DefaultListModel<Object>) musicList.getModel();
+                DefaultListModel<MusicResource> model = (DefaultListModel<MusicResource>) musicList.getModel();
                 // 解决删除元素带来的性能问题
                 ListCellRenderer r = musicList.getCellRenderer();
                 musicList.setCellRenderer(null);
-                for (Object o : selectedValues) {
+                for (MusicResource resource : selectedValues) {
                     // 改变取消收藏状态
-                    if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.loadedObject(o) && hasBeenCollected(o))
+                    if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.loadedObject(resource) && hasBeenCollected(resource))
                         collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
-                    model.removeElement(o);
+                    model.removeElement(resource);
                     if (model == filterModel) {
                         if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC)
-                            musicListModel.removeElement(o);
+                            musicListModel.removeElement(resource);
                         else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY)
-                            historyModel.removeElement(o);
+                            historyModel.removeElement(resource);
                         else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION)
-                            collectionModel.removeElement(o);
+                            collectionModel.removeElement(resource);
                     }
                 }
                 musicList.setCellRenderer(r);
                 new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
             } else {
-                List selectedValues = collectionList.getSelectedValuesList();
+                List<NetResource> selectedValues = collectionList.getSelectedValuesList();
                 if (selectedValues.isEmpty()) return;
                 ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
                 confirmDialog.showDialog();
                 int response = confirmDialog.getResponse();
                 if (response != JOptionPane.YES_OPTION) return;
                 // 删除选中的项目
-                for (Object o : selectedValues) {
-                    DefaultListModel<Object> model = (DefaultListModel<Object>) collectionList.getModel();
-                    model.removeElement(o);
+                for (NetResource resource : selectedValues) {
+                    DefaultListModel<NetResource> model = (DefaultListModel<NetResource>) collectionList.getModel();
+                    model.removeElement(resource);
                     if (model == filterModel) {
                         if (selectedIndex == CollectionTabIndex.PLAYLIST)
-                            playlistCollectionModel.removeElement(o);
+                            playlistCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.ALBUM)
-                            albumCollectionModel.removeElement(o);
+                            albumCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.ARTIST)
-                            artistCollectionModel.removeElement(o);
+                            artistCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.RADIO)
-                            radioCollectionModel.removeElement(o);
+                            radioCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.MV)
-                            mvCollectionModel.removeElement(o);
+                            mvCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.RANKING)
-                            rankingCollectionModel.removeElement(o);
+                            rankingCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.USER)
-                            userCollectionModel.removeElement(o);
+                            userCollectionModel.removeElement(resource);
                     }
                 }
                 new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
@@ -6522,7 +6525,7 @@ public class MainFrame extends JFrame {
             // 清空列表
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
             if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC) {
-                DefaultListModel<Object> model = (DefaultListModel<Object>) musicList.getModel();
+                DefaultListModel<MusicResource> model = (DefaultListModel<MusicResource>) musicList.getModel();
                 musicList.setModel(emptyListModel);
                 model.clear();
                 if (model == filterModel) {
@@ -6538,7 +6541,7 @@ public class MainFrame extends JFrame {
                     collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                 }
             } else {
-                DefaultListModel<Object> model = (DefaultListModel<Object>) collectionList.getModel();
+                DefaultListModel<NetResource> model = (DefaultListModel<NetResource>) collectionList.getModel();
                 collectionList.setModel(emptyListModel);
                 model.clear();
                 if (model == filterModel) {
@@ -6560,7 +6563,7 @@ public class MainFrame extends JFrame {
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
             Set<Object> set = new HashSet<>();
-            DefaultListModel<Object> model = null;
+            DefaultListModel model = null;
             if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) model = musicListModel;
             else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) model = historyModel;
             else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
@@ -6575,13 +6578,13 @@ public class MainFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
             }
             for (int i = 0; i < model.getSize(); i++) {
-                Object elem = model.get(i);
+                Resource elem = (Resource) model.get(i);
                 if (!set.contains(elem)) set.add(elem);
                 else model.remove(i--);
             }
             set.clear();
             for (int i = 0; i < filterModel.getSize(); i++) {
-                Object elem = filterModel.get(i);
+                Resource elem = (Resource) filterModel.get(i);
                 if (!set.contains(elem)) set.add(elem);
                 else filterModel.remove(i--);
             }
@@ -6593,7 +6596,7 @@ public class MainFrame extends JFrame {
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
-            DefaultListModel<Object> model = null;
+            DefaultListModel model = null;
             if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) model = musicListModel;
             else if (currPersonalMusicTab == PersonalMusicTabIndex.HISTORY) model = historyModel;
             else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
@@ -6608,7 +6611,7 @@ public class MainFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
             }
             for (int i = 0, s = model.size(), half = s / 2; i < half; i++) {
-                Object t = model.get(i);
+                Resource t = (Resource) model.get(i);
                 model.set(i, model.get(s - 1 - i));
                 model.set(s - 1 - i, t);
             }
@@ -6721,10 +6724,10 @@ public class MainFrame extends JFrame {
             int selectedIndex = list.getSelectedIndex();
             if (selectedIndex != -1 && selectedIndex != 0) {
                 DefaultListModel model = (DefaultListModel) list.getModel();
-                Object o1 = model.get(selectedIndex - 1);
-                Object o2 = model.get(selectedIndex);
-                model.set(selectedIndex - 1, o2);
-                model.set(selectedIndex, o1);
+                Resource r1 = (Resource) model.get(selectedIndex - 1);
+                Resource r2 = (Resource) model.get(selectedIndex);
+                model.set(selectedIndex - 1, r2);
+                model.set(selectedIndex, r1);
                 list.setSelectedIndex(selectedIndex - 1);
             }
         });
@@ -6738,10 +6741,10 @@ public class MainFrame extends JFrame {
             int selectedIndex = list.getSelectedIndex();
             DefaultListModel model = (DefaultListModel) list.getModel();
             if (selectedIndex != -1 && selectedIndex != model.getSize() - 1) {
-                Object o1 = model.get(selectedIndex);
-                Object o2 = model.get(selectedIndex + 1);
-                model.set(selectedIndex, o2);
-                model.set(selectedIndex + 1, o1);
+                Resource r1 = (Resource) model.get(selectedIndex);
+                Resource r2 = (Resource) model.get(selectedIndex + 1);
+                model.set(selectedIndex, r2);
+                model.set(selectedIndex + 1, r1);
                 list.setSelectedIndex(selectedIndex + 1);
             }
         });
@@ -6988,8 +6991,8 @@ public class MainFrame extends JFrame {
                         if (index != -1 && !musicList.isSelectedIndex(index)
                                 || musicList.isSelectedIndex(index) && musicList.getSelectedIndices().length == 1) {
                             musicList.setSelectedIndex(index);
-                            Object o = musicList.getSelectedValue();
-                            boolean ins = o instanceof NetMusicInfo;
+                            MusicResource resource = musicList.getSelectedValue();
+                            boolean ins = resource instanceof NetMusicInfo;
                             downloadMenuItem.setEnabled(ins);
                             commentMenuItem.setEnabled(ins);
                             sheetMenuItem.setEnabled(ins);
@@ -6999,8 +7002,8 @@ public class MainFrame extends JFrame {
                             albumMenuItem.setEnabled(ins);
                             recRadioMenuItem.setEnabled(ins);
                             relatedMvMenuItem.setEnabled(ins);
-                            playMvMenuItem.setEnabled(ins && ((NetMusicInfo) o).hasMv());
-                            if (hasBeenCollected(o)) {
+                            playMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
+                            if (hasBeenCollected(resource)) {
                                 collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
@@ -7010,12 +7013,12 @@ public class MainFrame extends JFrame {
                             locateFileMenuItem.setEnabled(!ins);
                             editInfoMenuItem.setEnabled(!ins);
                         } else {
-                            List list = musicList.getSelectedValuesList();
-                            for (Object o : list) {
-                                downloadMenuItem.setEnabled(o instanceof NetMusicInfo);
+                            List<MusicResource> list = musicList.getSelectedValuesList();
+                            for (MusicResource resource : list) {
+                                downloadMenuItem.setEnabled(resource instanceof NetMusicInfo);
                                 if (downloadMenuItem.isEnabled()) break;
                             }
-                            Object first = list.get(0);
+                            MusicResource first = list.get(0);
                             boolean ins = first instanceof NetMusicInfo;
                             commentMenuItem.setEnabled(ins);
                             sheetMenuItem.setEnabled(ins);
@@ -7048,17 +7051,17 @@ public class MainFrame extends JFrame {
         nextPlayMenuItem.addActionListener(e -> nextPlay(musicList));
         // 右键菜单打开文件所在位置
         locateFileMenuItem.addActionListener(e -> {
-            Object o = musicList.getSelectedValue();
-            if (o instanceof AudioFile) {
-                File file = ((AudioFile) o);
+            MusicResource resource = musicList.getSelectedValue();
+            if (resource instanceof AudioFile) {
+                File file = ((AudioFile) resource);
                 TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
             }
         });
         // 右键菜单编辑歌曲信息
         editInfoMenuItem.addActionListener(e -> {
-            Object o = musicList.getSelectedValue();
-            if (o instanceof AudioFile) {
-                AudioFile file = ((AudioFile) o);
+            MusicResource resource = musicList.getSelectedValue();
+            if (resource instanceof AudioFile) {
+                AudioFile file = ((AudioFile) resource);
                 if (file.exists()) {
                     editInfo(file);
                     updateRenderer(musicList);
@@ -7069,27 +7072,27 @@ public class MainFrame extends JFrame {
         removeMenuItem.addActionListener(e -> removeToolButton.doClick());
         // 右键菜单收藏/取消收藏
         collectMenuItem.addActionListener(e -> {
-            ListModel model = musicList.getModel();
+            ListModel<MusicResource> model = musicList.getModel();
             boolean needRefresh = model == collectionModel;
             if (collectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
-                List values = musicList.getSelectedValuesList();
+                List<MusicResource> values = musicList.getSelectedValuesList();
                 if (needRefresh) musicList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    collectionModel.add(0, o);
-                    if (player.loadedObject(o))
+                    MusicResource resource = values.get(i);
+                    if (hasBeenCollected(resource)) continue;
+                    collectionModel.add(0, resource);
+                    if (player.loadedObject(resource))
                         collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
-                List values = musicList.getSelectedValuesList();
+                List<MusicResource> values = musicList.getSelectedValuesList();
                 if (needRefresh) musicList.setModel(emptyListModel);
-                values.forEach(o -> {
-                    if (hasBeenCollected(o)) {
-                        collectionModel.removeElement(o);
-                        if (player.loadedObject(o))
+                values.forEach(resource -> {
+                    if (hasBeenCollected(resource)) {
+                        collectionModel.removeElement(resource);
+                        if (player.loadedObject(resource))
                             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -7106,27 +7109,27 @@ public class MainFrame extends JFrame {
         });
         // 右键菜单查看评论
         commentMenuItem.addActionListener(e -> {
-            Object o = musicList.getSelectedValue();
-            if (o instanceof NetMusicInfo) {
-                getComments(o, true);
+            MusicResource resource = musicList.getSelectedValue();
+            if (resource instanceof NetMusicInfo) {
+                getComments((NetMusicInfo) resource, true);
             }
         });
         // 右键菜单查看乐谱
         sheetMenuItem.addActionListener(e -> {
-            Object o = musicList.getSelectedValue();
-            if (o instanceof NetMusicInfo) {
-                getSheets((NetMusicInfo) o, true);
+            MusicResource resource = musicList.getSelectedValue();
+            if (resource instanceof NetMusicInfo) {
+                getSheets((NetMusicInfo) resource, true);
             }
         });
         // 右键菜单搜索这首歌曲
         searchSongMenuItem.addActionListener(e -> {
-            Object o = musicList.getSelectedValue();
+            MusicResource resource = musicList.getSelectedValue();
             tabbedPane.setSelectedIndex(TabIndex.NET_MUSIC);
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
-            if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toKeywords());
-            } else searchTextField.setText(((AudioFile) o).toKeywords());
+            if (resource instanceof NetMusicInfo) {
+                searchTextField.setText(((NetMusicInfo) resource).toKeywords());
+            } else searchTextField.setText(((AudioFile) resource).toKeywords());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
         });
@@ -7144,10 +7147,10 @@ public class MainFrame extends JFrame {
         relatedMvMenuItem.addActionListener(e -> netMusicRelatedMvMenuItem.doClick());
         // 右键菜单复制名称
         copyNameMenuItem.addActionListener(e -> {
-            Object o = musicList.getSelectedValue();
+            MusicResource resource = musicList.getSelectedValue();
             String s = null;
-            if (o instanceof AudioFile) s = o.toString();
-            else if (o instanceof NetMusicInfo) s = ((NetMusicInfo) o).toSimpleString();
+            if (resource instanceof AudioFile) s = resource.toString();
+            else if (resource instanceof NetMusicInfo) s = ((NetMusicInfo) resource).toSimpleString();
             copyToClipboard(s);
         });
 
@@ -7582,27 +7585,27 @@ public class MainFrame extends JFrame {
         netMusicNextPlayMenuItem.addActionListener(e -> nextPlay(netMusicList));
         // 收藏在线音乐
         netMusicCollectMenuItem.addActionListener(e -> {
-            ListModel model = musicList.getModel();
+            ListModel<MusicResource> model = musicList.getModel();
             boolean needRefresh = model == collectionModel;
             if (netMusicCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
-                List values = netMusicList.getSelectedValuesList();
+                List<NetMusicInfo> values = netMusicList.getSelectedValuesList();
                 if (needRefresh) musicList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    collectionModel.add(0, o);
-                    if (player.loadedObject(o))
+                    NetMusicInfo musicInfo = values.get(i);
+                    if (hasBeenCollected(musicInfo)) continue;
+                    collectionModel.add(0, musicInfo);
+                    if (player.loadedObject(musicInfo))
                         collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
-                List values = netMusicList.getSelectedValuesList();
+                List<NetMusicInfo> values = netMusicList.getSelectedValuesList();
                 if (needRefresh) musicList.setModel(emptyListModel);
-                values.forEach(o -> {
-                    if (hasBeenCollected(o)) {
-                        collectionModel.removeElement(o);
-                        if (player.loadedObject(o))
+                values.forEach(musicInfo -> {
+                    if (hasBeenCollected(musicInfo)) {
+                        collectionModel.removeElement(musicInfo);
+                        if (player.loadedObject(musicInfo))
                             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -7629,13 +7632,11 @@ public class MainFrame extends JFrame {
         });
         // 搜索这首歌曲
         netMusicSearchSongMenuItem.addActionListener(e -> {
-            Object o = netMusicList.getSelectedValue();
+            NetMusicInfo musicInfo = netMusicList.getSelectedValue();
             tabbedPane.setSelectedIndex(TabIndex.NET_MUSIC);
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
-            if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toKeywords());
-            } else searchTextField.setText(((AudioFile) o).toKeywords());
+            searchTextField.setText(musicInfo.toKeywords());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
         });
@@ -8172,7 +8173,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -8180,8 +8180,8 @@ public class MainFrame extends JFrame {
         });
         // 右键菜单复制名称
         netMusicCopyNameMenuItem.addActionListener(e -> {
-            Object o = netMusicList.getSelectedValue();
-            copyToClipboard(((NetMusicInfo) o).toSimpleString());
+            NetMusicInfo musicInfo = netMusicList.getSelectedValue();
+            copyToClipboard(musicInfo.toSimpleString());
         });
 
         netMusicPopupMenu.add(netMusicPlayMenuItem);
@@ -8685,19 +8685,19 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
-                Object o = itemRecommendList.getSelectedValue();
+                NetResource resource = itemRecommendList.getSelectedValue();
                 String url = null;
-                if (o instanceof NetPlaylistInfo) {
-                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                if (resource instanceof NetPlaylistInfo) {
+                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                     url = playlistInfo.hasCoverImgUrl() ? playlistInfo.getCoverImgUrl() : playlistInfo.getCoverImgThumbUrl();
-                } else if (o instanceof NetAlbumInfo) {
-                    NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                } else if (resource instanceof NetAlbumInfo) {
+                    NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                     url = albumInfo.hasCoverImgUrl() ? albumInfo.getCoverImgUrl() : albumInfo.getCoverImgThumbUrl();
-                } else if (o instanceof NetArtistInfo) {
-                    NetArtistInfo artistInfo = (NetArtistInfo) o;
+                } else if (resource instanceof NetArtistInfo) {
+                    NetArtistInfo artistInfo = (NetArtistInfo) resource;
                     url = artistInfo.hasCoverImgUrl() ? artistInfo.getCoverImgUrl() : artistInfo.getCoverImgThumbUrl();
-                } else if (o instanceof NetRadioInfo) {
-                    NetRadioInfo radioInfo = (NetRadioInfo) o;
+                } else if (resource instanceof NetRadioInfo) {
+                    NetRadioInfo radioInfo = (NetRadioInfo) resource;
                     url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
                 }
                 if (StringUtil.isEmpty(url)) return;
@@ -8744,25 +8744,25 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
-                Object o = collectionList.getSelectedValue();
+                NetResource resource = collectionList.getSelectedValue();
                 String url = null;
-                if (o instanceof NetPlaylistInfo) {
-                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                if (resource instanceof NetPlaylistInfo) {
+                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                     url = playlistInfo.hasCoverImgUrl() ? playlistInfo.getCoverImgUrl() : playlistInfo.getCoverImgThumbUrl();
-                } else if (o instanceof NetAlbumInfo) {
-                    NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                } else if (resource instanceof NetAlbumInfo) {
+                    NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                     url = albumInfo.hasCoverImgUrl() ? albumInfo.getCoverImgUrl() : albumInfo.getCoverImgThumbUrl();
-                } else if (o instanceof NetArtistInfo) {
-                    NetArtistInfo artistInfo = (NetArtistInfo) o;
+                } else if (resource instanceof NetArtistInfo) {
+                    NetArtistInfo artistInfo = (NetArtistInfo) resource;
                     url = artistInfo.hasCoverImgUrl() ? artistInfo.getCoverImgUrl() : artistInfo.getCoverImgThumbUrl();
-                } else if (o instanceof NetRadioInfo) {
-                    NetRadioInfo radioInfo = (NetRadioInfo) o;
+                } else if (resource instanceof NetRadioInfo) {
+                    NetRadioInfo radioInfo = (NetRadioInfo) resource;
                     url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
-                } else if (o instanceof NetRankingInfo) {
-                    NetRankingInfo rankingInfo = (NetRankingInfo) o;
+                } else if (resource instanceof NetRankingInfo) {
+                    NetRankingInfo rankingInfo = (NetRankingInfo) resource;
                     url = rankingInfo.getCoverImgUrl();
-                } else if (o instanceof NetUserInfo) {
-                    NetUserInfo userInfo = (NetUserInfo) o;
+                } else if (resource instanceof NetUserInfo) {
+                    NetUserInfo userInfo = (NetUserInfo) resource;
                     url = userInfo.hasAvatarUrl() ? userInfo.getAvatarUrl() : userInfo.getAvatarThumbUrl();
                 }
                 if (StringUtil.isEmpty(url)) return;
@@ -8809,9 +8809,9 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
-                Object o = collectionList.getSelectedValue();
-                if (!(o instanceof NetUserInfo)) return;
-                String url = ((NetUserInfo) o).getBgImgUrl();
+                NetResource resource = collectionList.getSelectedValue();
+                if (!(resource instanceof NetUserInfo)) return;
+                String url = ((NetUserInfo) resource).getBgImgUrl();
                 if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
@@ -8987,29 +8987,29 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
         collectionItemDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
         saveDescCoverImgMenuItem.addActionListener(e -> {
-            Object o = null;
+            NetResource resource = null;
             int si = tabbedPane.getSelectedIndex();
-            if (si == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else if (si == TabIndex.NET_PLAYLIST) o = netPlaylistList.getSelectedValue();
-            else if (si == TabIndex.NET_ALBUM) o = netAlbumList.getSelectedValue();
-            else if (si == TabIndex.NET_ARTIST) o = netArtistList.getSelectedValue();
-            else if (si == TabIndex.NET_RADIO) o = netRadioList.getSelectedValue();
-            else if (si == TabIndex.NET_RANKING) o = netRankingList.getSelectedValue();
-            else if (si == TabIndex.NET_USER) o = netUserList.getSelectedValue();
-            else if (si == TabIndex.RECOMMEND) o = itemRecommendList.getSelectedValue();
-            if (o instanceof NetPlaylistInfo) saveImg(((NetPlaylistInfo) o).getCoverImg());
-            else if (o instanceof NetAlbumInfo) saveImg(((NetAlbumInfo) o).getCoverImg());
-            else if (o instanceof NetArtistInfo) saveImg(((NetArtistInfo) o).getCoverImg());
-            else if (o instanceof NetRadioInfo) saveImg(((NetRadioInfo) o).getCoverImg());
-            else if (o instanceof NetRankingInfo) saveImg(((NetRankingInfo) o).getCoverImg());
-            else if (o instanceof NetUserInfo) saveImg(((NetUserInfo) o).getAvatar());
+            if (si == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else if (si == TabIndex.NET_PLAYLIST) resource = netPlaylistList.getSelectedValue();
+            else if (si == TabIndex.NET_ALBUM) resource = netAlbumList.getSelectedValue();
+            else if (si == TabIndex.NET_ARTIST) resource = netArtistList.getSelectedValue();
+            else if (si == TabIndex.NET_RADIO) resource = netRadioList.getSelectedValue();
+            else if (si == TabIndex.NET_RANKING) resource = netRankingList.getSelectedValue();
+            else if (si == TabIndex.NET_USER) resource = netUserList.getSelectedValue();
+            else if (si == TabIndex.RECOMMEND) resource = itemRecommendList.getSelectedValue();
+            if (resource instanceof NetPlaylistInfo) saveImg(((NetPlaylistInfo) resource).getCoverImg());
+            else if (resource instanceof NetAlbumInfo) saveImg(((NetAlbumInfo) resource).getCoverImg());
+            else if (resource instanceof NetArtistInfo) saveImg(((NetArtistInfo) resource).getCoverImg());
+            else if (resource instanceof NetRadioInfo) saveImg(((NetRadioInfo) resource).getCoverImg());
+            else if (resource instanceof NetRankingInfo) saveImg(((NetRankingInfo) resource).getCoverImg());
+            else if (resource instanceof NetUserInfo) saveImg(((NetUserInfo) resource).getAvatar());
         });
         saveDescBgImgMenuItem.addActionListener(e -> {
-            Object o = null;
+            NetResource resource = null;
             int si = tabbedPane.getSelectedIndex();
-            if (si == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else if (si == TabIndex.NET_USER) o = netUserList.getSelectedValue();
-            if (o instanceof NetUserInfo) saveImg(((NetUserInfo) o).getBgImg());
+            if (si == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else if (si == TabIndex.NET_USER) resource = netUserList.getSelectedValue();
+            if (resource instanceof NetUserInfo) saveImg(((NetUserInfo) resource).getBgImg());
         });
         copyDescNameMenuItem.addActionListener(e -> {
             CustomLabel l = null;
@@ -9077,25 +9077,25 @@ public class MainFrame extends JFrame {
             switchDescriptionCollectionStatus(userDescriptionCollectionButton);
         });
         recommendItemDescriptionCollectionButton.addActionListener(e -> {
-            Object o = itemRecommendList.getSelectedValue();
+            NetResource resource = itemRecommendList.getSelectedValue();
             CustomMenuItem menuItem = null;
-            if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
-            else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
-            else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
-            else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
+            if (resource instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
+            else if (resource instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
+            else if (resource instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
+            else if (resource instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
             menuItem.doClick();
             switchDescriptionCollectionStatus(recommendItemDescriptionCollectionButton);
         });
         collectionItemDescriptionCollectionButton.addActionListener(e -> {
-            Object o = collectionList.getSelectedValue();
-            if (o == null) o = collectionOpenObj;
+            NetResource resource = collectionList.getSelectedValue();
+            if (resource == null) resource = collectionOpenResource;
             CustomMenuItem menuItem = null;
-            if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
-            else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
-            else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
-            else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
-            else if (o instanceof NetRankingInfo) menuItem = netRankingCollectMenuItem;
-            else if (o instanceof NetUserInfo) menuItem = netUserCollectMenuItem;
+            if (resource instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
+            else if (resource instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
+            else if (resource instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
+            else if (resource instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
+            else if (resource instanceof NetRankingInfo) menuItem = netRankingCollectMenuItem;
+            else if (resource instanceof NetUserInfo) menuItem = netUserCollectMenuItem;
             menuItem.doClick();
             switchDescriptionCollectionStatus(collectionItemDescriptionCollectionButton);
         });
@@ -9189,8 +9189,8 @@ public class MainFrame extends JFrame {
     }
 
     // 检查描述收藏按钮状态
-    private void checkDescriptionCollectionStatus(CustomButton btn, Object o) {
-        if (hasBeenCollected(o)) {
+    private void checkDescriptionCollectionStatus(CustomButton btn, NetResource resource) {
+        if (hasBeenCollected(resource)) {
             btn.setIcon(ImageUtil.dye(collectedItemIcon, currUIStyle.getIconColor()));
             btn.setText(COLLECTED_TIP);
             btn.setToolTipText(COLLECTED_TIP);
@@ -9899,24 +9899,24 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 // 描述面板取消收藏之后，使用之前保存的对象
-                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
-                if (useOpenObj) {
-                    playlistCollectionModel.add(0, collectionOpenObj);
+                boolean userOpenResource = values.isEmpty() && !hasBeenCollected(collectionOpenResource);
+                if (userOpenResource) {
+                    playlistCollectionModel.add(0, collectionOpenResource);
                 } else {
                     for (int i = values.size() - 1; i >= 0; i--) {
-                        Object o = values.get(i);
-                        if (hasBeenCollected(o)) continue;
-                        playlistCollectionModel.add(0, o);
+                        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) values.get(i);
+                        if (hasBeenCollected(playlistInfo)) continue;
+                        playlistCollectionModel.add(0, playlistInfo);
                     }
                 }
                 if (needRefresh) collectionList.setModel(model);
-                if (useOpenObj) collectionList.setSelectedIndex(0);
+                if (userOpenResource) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
-                    if (list == collectionList || hasBeenCollected(o)) {
+                    if (list == collectionList || hasBeenCollected((Resource) o)) {
                         playlistCollectionModel.removeElement(o);
                     }
                 });
@@ -10144,12 +10144,12 @@ public class MainFrame extends JFrame {
         });
         // 复制名称
         netPlaylistCopyNameMenuItem.addActionListener(e -> {
-            Object o;
+            NetResource resource;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_PLAYLIST) o = netPlaylistList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else o = itemRecommendList.getSelectedValue();
-            copyToClipboard(((NetPlaylistInfo) o).toSimpleString());
+            if (selectedIndex == TabIndex.NET_PLAYLIST) resource = netPlaylistList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else resource = itemRecommendList.getSelectedValue();
+            copyToClipboard(((NetPlaylistInfo) resource).toSimpleString());
         });
         // 歌单列表右键菜单项
         netPlaylistPopupMenu.add(netPlaylistOpenMenuItem);
@@ -10898,24 +10898,24 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 // 描述面板取消收藏之后，使用之前保存的对象
-                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
-                if (useOpenObj) {
-                    albumCollectionModel.add(0, collectionOpenObj);
+                boolean userOpenResource = values.isEmpty() && !hasBeenCollected(collectionOpenResource);
+                if (userOpenResource) {
+                    albumCollectionModel.add(0, collectionOpenResource);
                 } else {
                     for (int i = values.size() - 1; i >= 0; i--) {
-                        Object o = values.get(i);
-                        if (hasBeenCollected(o)) continue;
-                        albumCollectionModel.add(0, o);
+                        NetAlbumInfo albumInfo = (NetAlbumInfo) values.get(i);
+                        if (hasBeenCollected(albumInfo)) continue;
+                        albumCollectionModel.add(0, albumInfo);
                     }
                 }
                 if (needRefresh) collectionList.setModel(model);
-                if (useOpenObj) collectionList.setSelectedIndex(0);
+                if (userOpenResource) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
-                    if (list == collectionList || hasBeenCollected(o)) {
+                    if (list == collectionList || hasBeenCollected((Resource) o)) {
                         albumCollectionModel.removeElement(o);
                     }
                 });
@@ -11160,12 +11160,12 @@ public class MainFrame extends JFrame {
         });
         // 复制名称
         netAlbumCopyNameMenuItem.addActionListener(e -> {
-            Object o;
+            NetResource resource;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ALBUM) o = netAlbumList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else o = itemRecommendList.getSelectedValue();
-            copyToClipboard(((NetAlbumInfo) o).toSimpleString());
+            if (selectedIndex == TabIndex.NET_ALBUM) resource = netAlbumList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else resource = itemRecommendList.getSelectedValue();
+            copyToClipboard(((NetAlbumInfo) resource).toSimpleString());
         });
         // 专辑列表右键菜单项
         netAlbumPopupMenu.add(netAlbumOpenMenuItem);
@@ -11933,24 +11933,24 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 // 描述面板取消收藏之后，使用之前保存的对象
-                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
-                if (useOpenObj) {
-                    artistCollectionModel.add(0, collectionOpenObj);
+                boolean useOpenResource = values.isEmpty() && !hasBeenCollected(collectionOpenResource);
+                if (useOpenResource) {
+                    artistCollectionModel.add(0, collectionOpenResource);
                 } else {
                     for (int i = values.size() - 1; i >= 0; i--) {
-                        Object o = values.get(i);
-                        if (hasBeenCollected(o)) continue;
-                        artistCollectionModel.add(0, o);
+                        NetArtistInfo artistInfo = (NetArtistInfo) values.get(i);
+                        if (hasBeenCollected(artistInfo)) continue;
+                        artistCollectionModel.add(0, artistInfo);
                     }
                 }
                 if (needRefresh) collectionList.setModel(model);
-                if (useOpenObj) collectionList.setSelectedIndex(0);
+                if (useOpenResource) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
-                    if (list == collectionList || hasBeenCollected(o)) {
+                    if (list == collectionList || hasBeenCollected((Resource) o)) {
                         artistCollectionModel.removeElement(o);
                     }
                 });
@@ -12412,12 +12412,12 @@ public class MainFrame extends JFrame {
         });
         // 复制名称
         netArtistCopyNameMenuItem.addActionListener(e -> {
-            Object o;
+            NetResource resource;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_ARTIST) o = netArtistList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else o = itemRecommendList.getSelectedValue();
-            copyToClipboard(((NetArtistInfo) o).toSimpleString());
+            if (selectedIndex == TabIndex.NET_ARTIST) resource = netArtistList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else resource = itemRecommendList.getSelectedValue();
+            copyToClipboard(((NetArtistInfo) resource).toSimpleString());
         });
         // 歌手右键菜单项
         netArtistPopupMenu.add(netArtistOpenMenuItem);
@@ -13192,24 +13192,24 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 // 描述面板取消收藏之后，使用之前保存的对象
-                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
-                if (useOpenObj) {
-                    radioCollectionModel.add(0, collectionOpenObj);
+                boolean useOpenResource = values.isEmpty() && !hasBeenCollected(collectionOpenResource);
+                if (useOpenResource) {
+                    radioCollectionModel.add(0, collectionOpenResource);
                 } else {
                     for (int i = values.size() - 1; i >= 0; i--) {
-                        Object o = values.get(i);
-                        if (hasBeenCollected(o)) continue;
-                        radioCollectionModel.add(0, o);
+                        NetRadioInfo radioInfo = (NetRadioInfo) values.get(i);
+                        if (hasBeenCollected(radioInfo)) continue;
+                        radioCollectionModel.add(0, radioInfo);
                     }
                 }
                 if (needRefresh) collectionList.setModel(model);
-                if (useOpenObj) collectionList.setSelectedIndex(0);
+                if (useOpenResource) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
-                    if (list == collectionList || hasBeenCollected(o)) {
+                    if (list == collectionList || hasBeenCollected((Resource) o)) {
                         radioCollectionModel.removeElement(o);
                     }
                 });
@@ -13573,12 +13573,12 @@ public class MainFrame extends JFrame {
         });
         // 复制名称
         netRadioCopyNameMenuItem.addActionListener(e -> {
-            Object o;
+            NetResource resource;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RADIO) o = netRadioList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else o = itemRecommendList.getSelectedValue();
-            copyToClipboard(((NetRadioInfo) o).toSimpleString());
+            if (selectedIndex == TabIndex.NET_RADIO) resource = netRadioList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else resource = itemRecommendList.getSelectedValue();
+            copyToClipboard(((NetRadioInfo) resource).toSimpleString());
         });
         // 电台列表右键菜单项
         netRadioPopupMenu.add(netRadioOpenMenuItem);
@@ -14059,9 +14059,9 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    mvCollectionModel.add(0, o);
+                    NetMvInfo mvInfo = (NetMvInfo) values.get(i);
+                    if (hasBeenCollected(mvInfo)) continue;
+                    mvCollectionModel.add(0, mvInfo);
                 }
                 if (needRefresh) collectionList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
@@ -14069,7 +14069,7 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
-                    if (list == collectionList || hasBeenCollected(o)) {
+                    if (list == collectionList || hasBeenCollected((Resource) o)) {
                         mvCollectionModel.removeElement(o);
                     }
                 });
@@ -14351,12 +14351,12 @@ public class MainFrame extends JFrame {
         });
         // 复制名称
         netMvCopyNameMenuItem.addActionListener(e -> {
-            Object o;
+            NetResource resource;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_MV) o = netMvList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else o = itemRecommendList.getSelectedValue();
-            copyToClipboard(((NetMvInfo) o).toSimpleString());
+            if (selectedIndex == TabIndex.NET_MV) resource = netMvList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else resource = itemRecommendList.getSelectedValue();
+            copyToClipboard(((NetMvInfo) resource).toSimpleString());
         });
         // MV 列表右键菜单项
         netMvPopupMenu.add(netMvPlayMenuItem);
@@ -14934,24 +14934,24 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 // 描述面板取消收藏之后，使用之前保存的对象
-                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
-                if (useOpenObj) {
-                    rankingCollectionModel.add(0, collectionOpenObj);
+                boolean userOpenResource = values.isEmpty() && !hasBeenCollected(collectionOpenResource);
+                if (userOpenResource) {
+                    rankingCollectionModel.add(0, collectionOpenResource);
                 } else {
                     for (int i = values.size() - 1; i >= 0; i--) {
-                        Object o = values.get(i);
-                        if (hasBeenCollected(o)) continue;
-                        rankingCollectionModel.add(0, o);
+                        NetRankingInfo rankingInfo = (NetRankingInfo) values.get(i);
+                        if (hasBeenCollected(rankingInfo)) continue;
+                        rankingCollectionModel.add(0, rankingInfo);
                     }
                 }
                 if (needRefresh) collectionList.setModel(model);
-                if (useOpenObj) collectionList.setSelectedIndex(0);
+                if (userOpenResource) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
-                    if (list == collectionList || hasBeenCollected(o)) {
+                    if (list == collectionList || hasBeenCollected((Resource) o)) {
                         rankingCollectionModel.removeElement(o);
                     }
                 });
@@ -15739,24 +15739,24 @@ public class MainFrame extends JFrame {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 // 描述面板取消收藏之后，使用之前保存的对象
-                boolean useOpenObj = values.isEmpty() && !hasBeenCollected(collectionOpenObj);
-                if (useOpenObj) {
-                    userCollectionModel.add(0, collectionOpenObj);
+                boolean useOpenResource = values.isEmpty() && !hasBeenCollected(collectionOpenResource);
+                if (useOpenResource) {
+                    userCollectionModel.add(0, collectionOpenResource);
                 } else {
                     for (int i = values.size() - 1; i >= 0; i--) {
-                        Object o = values.get(i);
-                        if (hasBeenCollected(o)) continue;
-                        userCollectionModel.add(0, o);
+                        NetUserInfo userInfo = (NetUserInfo) values.get(i);
+                        if (hasBeenCollected(userInfo)) continue;
+                        userCollectionModel.add(0, userInfo);
                     }
                 }
                 if (needRefresh) collectionList.setModel(model);
-                if (useOpenObj) collectionList.setSelectedIndex(0);
+                if (useOpenResource) collectionList.setSelectedIndex(0);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
                 List values = list.getSelectedValuesList();
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
-                    if (list == collectionList || hasBeenCollected(o)) {
+                    if (list == collectionList || hasBeenCollected((Resource) o)) {
                         userCollectionModel.removeElement(o);
                     }
                 });
@@ -16172,12 +16172,12 @@ public class MainFrame extends JFrame {
         });
         // 复制名称
         netUserCopyNameMenuItem.addActionListener(e -> {
-            Object o;
+            NetResource resource;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_USER) o = netUserList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) o = collectionList.getSelectedValue();
-            else o = itemRecommendList.getSelectedValue();
-            copyToClipboard(((NetUserInfo) o).toSimpleString());
+            if (selectedIndex == TabIndex.NET_USER) resource = netUserList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) resource = collectionList.getSelectedValue();
+            else resource = itemRecommendList.getSelectedValue();
+            copyToClipboard(((NetUserInfo) resource).toSimpleString());
         });
         // 用户列表右键菜单项
         netUserPopupMenu.add(netUserOpenMenuItem);
@@ -16240,12 +16240,12 @@ public class MainFrame extends JFrame {
     private String cursor;
 
     // 获取评论
-    private void getComments(Object info, boolean first) {
+    private void getComments(NetResource resource, boolean first) {
         loadingAndRun(() -> {
             try {
                 // 获取评论并显示评论列表
                 CommonResult<NetCommentInfo> result = MusicServerUtil.getComments(
-                        currCommentObjectInfo = info, (String) netCommentTypeComboBox.getSelectedItem(),
+                        currCommentResource = resource, (String) netCommentTypeComboBox.getSelectedItem(),
                         commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage, first ? cursor = "" : cursor);
                 List<NetCommentInfo> commentInfos = result.data;
                 Integer total = result.total;
@@ -16253,12 +16253,12 @@ public class MainFrame extends JFrame {
                 netCommentMaxPage = Math.max(total % commentLimit == 0 ? total / commentLimit : total / commentLimit + 1, 1);
                 // 更新标题和数量显示
                 String s = null;
-                if (info instanceof NetMusicInfo) s = ((NetMusicInfo) info).toSimpleString();
-                else if (info instanceof NetPlaylistInfo) s = ((NetPlaylistInfo) info).toSimpleString();
-                else if (info instanceof NetAlbumInfo) s = ((NetAlbumInfo) info).toSimpleString();
-                else if (info instanceof NetRadioInfo) s = ((NetRadioInfo) info).toSimpleString();
-                else if (info instanceof NetMvInfo) s = ((NetMvInfo) info).toSimpleString();
-                else if (info instanceof NetRankingInfo) s = ((NetRankingInfo) info).toSimpleString();
+                if (resource instanceof NetMusicInfo) s = ((NetMusicInfo) resource).toSimpleString();
+                else if (resource instanceof NetPlaylistInfo) s = ((NetPlaylistInfo) resource).toSimpleString();
+                else if (resource instanceof NetAlbumInfo) s = ((NetAlbumInfo) resource).toSimpleString();
+                else if (resource instanceof NetRadioInfo) s = ((NetRadioInfo) resource).toSimpleString();
+                else if (resource instanceof NetMvInfo) s = ((NetMvInfo) resource).toSimpleString();
+                else if (resource instanceof NetRankingInfo) s = ((NetRankingInfo) resource).toSimpleString();
                 netCommentTitleLabel.setText(StringUtil.textToHtml(s + " 的评论"));
                 netCommentCountLabel.setText(String.format(PAGINATION_MSG, netCommentCurrPage, netCommentMaxPage));
                 netCommentCountPanel.setVisible(true);
@@ -16407,11 +16407,11 @@ public class MainFrame extends JFrame {
                     || netCommentTypeComboBox.getSelectedItem() == null
                     || e.getStateChange() != ItemEvent.SELECTED) return;
             netCommentCurrPage = 1;
-            getComments(currCommentObjectInfo, false);
+            getComments(currCommentResource, false);
         });
         // 刷新按钮事件
         netCommentRefreshButton.addActionListener(e -> {
-            getComments(currCommentObjectInfo, false);
+            getComments(currCommentResource, false);
         });
         // 第一页按钮事件
         netCommentStartPageButton.addActionListener(e -> {
@@ -16420,7 +16420,7 @@ public class MainFrame extends JFrame {
                 return;
             }
             netCommentCurrPage = 1;
-            getComments(currCommentObjectInfo, false);
+            getComments(currCommentResource, false);
         });
         // 上一页按钮事件
         netCommentLastPageButton.addActionListener(e -> {
@@ -16429,7 +16429,7 @@ public class MainFrame extends JFrame {
                 return;
             }
             netCommentCurrPage--;
-            getComments(currCommentObjectInfo, false);
+            getComments(currCommentResource, false);
         });
         // 下一页按钮事件
         netCommentNextPageButton.addActionListener(e -> {
@@ -16438,7 +16438,7 @@ public class MainFrame extends JFrame {
                 return;
             }
             netCommentCurrPage++;
-            getComments(currCommentObjectInfo, false);
+            getComments(currCommentResource, false);
         });
         // 最后一页按钮事件
         netCommentEndPageButton.addActionListener(e -> {
@@ -16447,7 +16447,7 @@ public class MainFrame extends JFrame {
                 return;
             }
             netCommentCurrPage = netCommentMaxPage;
-            getComments(currCommentObjectInfo, false);
+            getComments(currCommentResource, false);
         });
         // 跳页按钮事件
         netCommentGoButton.addActionListener(e -> {
@@ -16460,7 +16460,7 @@ public class MainFrame extends JFrame {
                 return;
             }
             netCommentCurrPage = destPage;
-            getComments(currCommentObjectInfo, false);
+            getComments(currCommentResource, false);
         });
         // 按钮大小限制
         Dimension dimension = new Dimension(30, 30);
@@ -17072,10 +17072,10 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     // 搜索歌曲并显示在在线播放列表
                     try {
-                        Object o = itemRecommendList.getSelectedValue();
+                        NetResource resource = itemRecommendList.getSelectedValue();
                         // 这是歌单里的歌
-                        if (o instanceof NetPlaylistInfo) {
-                            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                        if (resource instanceof NetPlaylistInfo) {
+                            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -17101,8 +17101,8 @@ public class MainFrame extends JFrame {
                             recommendLeftBox.repaint();
                         }
                         // 这是专辑里的歌
-                        else if (o instanceof NetAlbumInfo) {
-                            NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                        else if (resource instanceof NetAlbumInfo) {
+                            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -17128,8 +17128,8 @@ public class MainFrame extends JFrame {
                             recommendLeftBox.repaint();
                         }
                         // 这是歌手里的歌
-                        else if (o instanceof NetArtistInfo) {
-                            NetArtistInfo artistInfo = (NetArtistInfo) o;
+                        else if (resource instanceof NetArtistInfo) {
+                            NetArtistInfo artistInfo = (NetArtistInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
@@ -17155,8 +17155,8 @@ public class MainFrame extends JFrame {
                             recommendLeftBox.repaint();
                         }
                         // 这是电台里的歌
-                        else if (o instanceof NetRadioInfo) {
-                            NetRadioInfo radioInfo = (NetRadioInfo) o;
+                        else if (resource instanceof NetRadioInfo) {
+                            NetRadioInfo radioInfo = (NetRadioInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
                                     radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), limit, netMusicInRecommendCurrPage);
                             List<NetMusicInfo> musicInfos = result.data;
@@ -17672,11 +17672,11 @@ public class MainFrame extends JFrame {
         });
         // 播放全部
         netRecommendPlayAllButton.addActionListener(e -> {
-            Object o = itemRecommendList.getSelectedValue();
-            if (o instanceof NetPlaylistInfo) netPlaylistPlayAllButton.doClick();
-            else if (o instanceof NetAlbumInfo) netAlbumPlayAllButton.doClick();
-            else if (o instanceof NetArtistInfo) netArtistPlayAllButton.doClick();
-            else if (o instanceof NetRadioInfo) netRadioPlayAllButton.doClick();
+            NetResource resource = itemRecommendList.getSelectedValue();
+            if (resource instanceof NetPlaylistInfo) netPlaylistPlayAllButton.doClick();
+            else if (resource instanceof NetAlbumInfo) netAlbumPlayAllButton.doClick();
+            else if (resource instanceof NetArtistInfo) netArtistPlayAllButton.doClick();
+            else if (resource instanceof NetRadioInfo) netRadioPlayAllButton.doClick();
         });
         // 刷新按钮事件
         netRecommendRefreshButton.addActionListener(e -> {
@@ -18615,19 +18615,19 @@ public class MainFrame extends JFrame {
             }
         });
         openRecommendItemAction = () -> {
-            Object o = itemRecommendList.getSelectedValue();
+            NetResource resource = itemRecommendList.getSelectedValue();
             // 打开的是 MV
-            if (o instanceof NetMvInfo) {
+            if (resource instanceof NetMvInfo) {
                 playMv(MvCompSourceType.MV_RECOMMEND_LIST);
                 return;
             }
             // 检查收藏按钮
-            checkDescriptionCollectionStatus(recommendItemDescriptionCollectionButton, o);
+            checkDescriptionCollectionStatus(recommendItemDescriptionCollectionButton, resource);
             loadingAndRun(() -> {
                 List<Future<?>> taskList = new LinkedList<>();
                 // 打开的是歌单
-                if (o instanceof NetPlaylistInfo) {
-                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) o;
+                if (resource instanceof NetPlaylistInfo) {
+                    NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -18722,8 +18722,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是专辑
-                else if (o instanceof NetAlbumInfo) {
-                    NetAlbumInfo albumInfo = (NetAlbumInfo) o;
+                else if (resource instanceof NetAlbumInfo) {
+                    NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -18815,8 +18815,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是歌手
-                else if (o instanceof NetArtistInfo) {
-                    NetArtistInfo artistInfo = (NetArtistInfo) o;
+                else if (resource instanceof NetArtistInfo) {
+                    NetArtistInfo artistInfo = (NetArtistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -18911,8 +18911,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是电台
-                else if (o instanceof NetRadioInfo) {
-                    NetRadioInfo radioInfo = (NetRadioInfo) o;
+                else if (resource instanceof NetRadioInfo) {
+                    NetRadioInfo radioInfo = (NetRadioInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
@@ -19042,14 +19042,14 @@ public class MainFrame extends JFrame {
                     int index = itemRecommendList.locationToIndex(e.getPoint());
                     if (index == -1) return;
                     if (!itemRecommendList.isSelectedIndex(index)) itemRecommendList.setSelectedIndex(index);
-                    Object o = itemRecommendList.getSelectedValue();
+                    NetResource resource = itemRecommendList.getSelectedValue();
                     CustomMenuItem menuItem = null;
-                    if (o instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
-                    else if (o instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
-                    else if (o instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
-                    else if (o instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
-                    else if (o instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
-                    if (hasBeenCollected(o)) {
+                    if (resource instanceof NetPlaylistInfo) menuItem = netPlaylistCollectMenuItem;
+                    else if (resource instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
+                    else if (resource instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
+                    else if (resource instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
+                    else if (resource instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
+                    if (hasBeenCollected(resource)) {
                         menuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                         menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                     } else {
@@ -19249,7 +19249,7 @@ public class MainFrame extends JFrame {
                         restartTaskMenuItem.setEnabled(false);
                         Task t = tasks.get(0);
                         downloadNextPlayMenuItem.setEnabled(t.isMusic());
-                        downloadEditInfoMenuItem.setEnabled(t.isFinished() && t.isMusic() && t.getMusicInfo().isMp3());
+                        downloadEditInfoMenuItem.setEnabled(t.isFinished() && t.isMusic() && ((NetMusicInfo) t.getResource()).isMp3());
                         for (Task task : tasks) {
                             if (task.isProcessing()) cancelTaskMenuItem.setEnabled(true);
                             else restartTaskMenuItem.setEnabled(true);
@@ -19321,7 +19321,7 @@ public class MainFrame extends JFrame {
                 FileUtil.delete(task.getDest());
                 // 顺便删除歌词文件
                 if (!task.isMusic()) continue;
-                FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + task.getMusicInfo().toSimpleLrcFileName());
+                FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + ((NetMusicInfo) task.getResource()).toSimpleLrcFileName());
             }
             downloadList.setModel(downloadListModel);
             new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
@@ -19351,7 +19351,7 @@ public class MainFrame extends JFrame {
 
         // 从播放队列删除
         playQueueRemoveToolButton.addActionListener(e -> {
-            List selectedValues = playQueue.getSelectedValuesList();
+            List<MusicResource> selectedValues = playQueue.getSelectedValuesList();
             if (!selectedValues.isEmpty()) {
                 ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
                         ASK_REMOVE_SONGS_FROM_PLAY_QUEUE_MSG, "是", "否");
@@ -19361,9 +19361,9 @@ public class MainFrame extends JFrame {
                 if (response == JOptionPane.YES_OPTION) {
                     // 解决删除元素带来的性能问题
                     playQueue.setModel(emptyListModel);
-                    for (Object o : selectedValues) {
-                        if (player.loadedObject(o)) unload();
-                        playQueueModel.removeElement(o);
+                    for (MusicResource resource : selectedValues) {
+                        if (player.loadedObject(resource)) unload();
+                        playQueueModel.removeElement(resource);
                     }
                     playQueue.setModel(playQueueModel);
                     updateCurrSong();
@@ -19393,8 +19393,8 @@ public class MainFrame extends JFrame {
                 // 解决删除元素带来的性能问题
                 playQueue.setModel(emptyListModel);
                 for (int i = 0; i < playQueueModel.getSize(); i++) {
-                    Object elem = playQueueModel.get(i);
-                    if (!set.contains(elem)) set.add(elem);
+                    MusicResource resource = playQueueModel.get(i);
+                    if (!set.contains(resource)) set.add(resource);
                     else playQueueModel.remove(i--);
                 }
                 playQueue.setModel(playQueueModel);
@@ -19408,11 +19408,10 @@ public class MainFrame extends JFrame {
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response == JOptionPane.YES_OPTION) {
-                Set<Object> set = new HashSet<>();
                 // 解决修改元素带来的性能问题
                 playQueue.setModel(emptyListModel);
                 for (int i = 0, s = playQueueModel.size(), half = s / 2; i < half; i++) {
-                    Object t = playQueueModel.get(i);
+                    MusicResource t = playQueueModel.get(i);
                     playQueueModel.set(i, playQueueModel.get(s - 1 - i));
                     playQueueModel.set(s - 1 - i, t);
                 }
@@ -19425,25 +19424,25 @@ public class MainFrame extends JFrame {
         playQueueMoveUpToolButton.addActionListener(e -> {
             int selectedIndex = playQueue.getSelectedIndex();
             if (selectedIndex != -1 && selectedIndex != 0) {
-                Object o1 = playQueueModel.get(selectedIndex - 1);
-                Object o2 = playQueueModel.get(selectedIndex);
-                playQueueModel.set(selectedIndex - 1, o2);
-                playQueueModel.set(selectedIndex, o1);
+                MusicResource r1 = playQueueModel.get(selectedIndex - 1);
+                MusicResource r2 = playQueueModel.get(selectedIndex);
+                playQueueModel.set(selectedIndex - 1, r2);
+                playQueueModel.set(selectedIndex, r1);
                 playQueue.setSelectedIndex(selectedIndex - 1);
-                if (player.loadedObject(o1)) currSong = selectedIndex;
-                else if (player.loadedObject(o2)) currSong = selectedIndex - 1;
+                if (player.loadedObject(r1)) currSong = selectedIndex;
+                else if (player.loadedObject(r2)) currSong = selectedIndex - 1;
             }
         });
         playQueueMoveDownToolButton.addActionListener(e -> {
             int selectedIndex = playQueue.getSelectedIndex();
             if (selectedIndex != -1 && selectedIndex != playQueueModel.getSize() - 1) {
-                Object o1 = playQueueModel.get(selectedIndex);
-                Object o2 = playQueueModel.get(selectedIndex + 1);
-                playQueueModel.set(selectedIndex, o2);
-                playQueueModel.set(selectedIndex + 1, o1);
+                MusicResource r1 = playQueueModel.get(selectedIndex);
+                MusicResource r2 = playQueueModel.get(selectedIndex + 1);
+                playQueueModel.set(selectedIndex, r2);
+                playQueueModel.set(selectedIndex + 1, r1);
                 playQueue.setSelectedIndex(selectedIndex + 1);
-                if (player.loadedObject(o1)) currSong = selectedIndex + 1;
-                else if (player.loadedObject(o2)) currSong = selectedIndex;
+                if (player.loadedObject(r1)) currSong = selectedIndex + 1;
+                else if (player.loadedObject(r2)) currSong = selectedIndex;
             }
         });
 
@@ -19548,8 +19547,8 @@ public class MainFrame extends JFrame {
                         if (index != -1 && !playQueue.isSelectedIndex(index)
                                 || playQueue.isSelectedIndex(index) && playQueue.getSelectedIndices().length == 1) {
                             playQueue.setSelectedIndex(index);
-                            Object o = playQueue.getSelectedValue();
-                            boolean ins = o instanceof NetMusicInfo;
+                            MusicResource resource = playQueue.getSelectedValue();
+                            boolean ins = resource instanceof NetMusicInfo;
                             playQueueDownloadMenuItem.setEnabled(ins);
                             playQueueCommentMenuItem.setEnabled(ins);
                             playQueueSheetMenuItem.setEnabled(ins);
@@ -19559,8 +19558,8 @@ public class MainFrame extends JFrame {
                             playQueueAlbumMenuItem.setEnabled(ins);
                             playQueueRecRadioMenuItem.setEnabled(ins);
                             playQueueRelatedMvMenuItem.setEnabled(ins);
-                            playQueuePlayMvMenuItem.setEnabled(ins && ((NetMusicInfo) o).hasMv());
-                            if (hasBeenCollected(o)) {
+                            playQueuePlayMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
+                            if (hasBeenCollected(resource)) {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
                             } else {
@@ -19570,12 +19569,12 @@ public class MainFrame extends JFrame {
                             playQueueLocateFileMenuItem.setEnabled(!ins);
                             playQueueEditInfoMenuItem.setEnabled(!ins);
                         } else {
-                            List list = playQueue.getSelectedValuesList();
-                            for (Object o : list) {
-                                playQueueDownloadMenuItem.setEnabled(o instanceof NetMusicInfo);
+                            List<MusicResource> list = playQueue.getSelectedValuesList();
+                            for (MusicResource resource : list) {
+                                playQueueDownloadMenuItem.setEnabled(resource instanceof NetMusicInfo);
                                 if (playQueueDownloadMenuItem.isEnabled()) break;
                             }
-                            Object first = list.get(0);
+                            MusicResource first = list.get(0);
                             boolean ins = first instanceof NetMusicInfo;
                             playQueueCommentMenuItem.setEnabled(ins);
                             playQueueSheetMenuItem.setEnabled(ins);
@@ -19614,27 +19613,27 @@ public class MainFrame extends JFrame {
         });
         // 收藏/取消收藏菜单项
         playQueueCollectMenuItem.addActionListener(e -> {
-            ListModel model = musicList.getModel();
+            ListModel<MusicResource> model = musicList.getModel();
             boolean needRefresh = model == collectionModel;
             if (playQueueCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
-                List values = playQueue.getSelectedValuesList();
+                List<MusicResource> values = playQueue.getSelectedValuesList();
                 if (needRefresh) musicList.setModel(emptyListModel);
                 for (int i = values.size() - 1; i >= 0; i--) {
-                    Object o = values.get(i);
-                    if (hasBeenCollected(o)) continue;
-                    collectionModel.add(0, o);
-                    if (player.loadedObject(o))
+                    MusicResource resource = values.get(i);
+                    if (hasBeenCollected(resource)) continue;
+                    collectionModel.add(0, resource);
+                    if (player.loadedObject(resource))
                         collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
-                List values = playQueue.getSelectedValuesList();
+                List<MusicResource> values = playQueue.getSelectedValuesList();
                 if (needRefresh) musicList.setModel(emptyListModel);
-                values.forEach(o -> {
-                    if (hasBeenCollected(o)) {
-                        collectionModel.removeElement(o);
-                        if (player.loadedObject(o))
+                values.forEach(resource -> {
+                    if (hasBeenCollected(resource)) {
+                        collectionModel.removeElement(resource);
+                        if (player.loadedObject(resource))
                             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -19649,27 +19648,27 @@ public class MainFrame extends JFrame {
         });
         // 查看评论菜单项
         playQueueCommentMenuItem.addActionListener(e -> {
-            Object o = playQueue.getSelectedValue();
-            if (o instanceof NetMusicInfo) {
-                getComments(o, true);
+            MusicResource resource = playQueue.getSelectedValue();
+            if (resource instanceof NetMusicInfo) {
+                getComments((NetMusicInfo) resource, true);
             }
         });
         // 查看乐谱菜单项
         playQueueSheetMenuItem.addActionListener(e -> {
-            Object o = playQueue.getSelectedValue();
-            if (o instanceof NetMusicInfo) {
-                getSheets((NetMusicInfo) o, true);
+            MusicResource resource = playQueue.getSelectedValue();
+            if (resource instanceof NetMusicInfo) {
+                getSheets((NetMusicInfo) resource, true);
             }
         });
         // 搜索这首歌曲菜单项
         playQueueSearchSongMenuItem.addActionListener(e -> {
-            Object o = playQueue.getSelectedValue();
+            MusicResource resource = playQueue.getSelectedValue();
             tabbedPane.setSelectedIndex(TabIndex.NET_MUSIC);
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
             searchTextField.requestFocus();
-            if (o instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) o).toKeywords());
-            } else searchTextField.setText(((AudioFile) o).toKeywords());
+            if (resource instanceof NetMusicInfo) {
+                searchTextField.setText(((NetMusicInfo) resource).toKeywords());
+            } else searchTextField.setText(((AudioFile) resource).toKeywords());
             netMusicClearInputButton.setVisible(true);
             searchButton.doClick();
         });
@@ -19687,27 +19686,27 @@ public class MainFrame extends JFrame {
         playQueueRelatedMvMenuItem.addActionListener(e -> netMusicRelatedMvMenuItem.doClick());
         // 复制名称菜单项
         playQueueCopyNameMenuItem.addActionListener(e -> {
-            Object o = playQueue.getSelectedValue();
+            MusicResource resource = playQueue.getSelectedValue();
             String s = null;
-            if (o instanceof AudioFile) s = o.toString();
-            else if (o instanceof NetMusicInfo) s = ((NetMusicInfo) o).toSimpleString();
+            if (resource instanceof AudioFile) s = resource.toString();
+            else if (resource instanceof NetMusicInfo) s = ((NetMusicInfo) resource).toSimpleString();
             copyToClipboard(s);
         });
         // 打开文件所在位置菜单项
         playQueueLocateFileMenuItem.addActionListener(e -> {
-            Object o = playQueue.getSelectedValue();
-            if (o instanceof AudioFile) {
-                File file = ((AudioFile) o);
+            MusicResource resource = playQueue.getSelectedValue();
+            if (resource instanceof AudioFile) {
+                File file = ((AudioFile) resource);
                 TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
             }
         });
         // 编辑歌曲信息菜单项
         playQueueEditInfoMenuItem.addActionListener(e -> {
-            Object o = playQueue.getSelectedValue();
-            if (o instanceof AudioFile) {
-                AudioFile file = (AudioFile) o;
+            MusicResource resource = playQueue.getSelectedValue();
+            if (resource instanceof AudioFile) {
+                AudioFile file = (AudioFile) resource;
                 if (file.exists()) {
-                    editInfo((AudioFile) o);
+                    editInfo((AudioFile) resource);
                     updateRenderer(playQueue);
                 } else new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
             }
@@ -20152,15 +20151,15 @@ public class MainFrame extends JFrame {
         collectButton.addMouseListener(new ButtonMouseListener(collectButton, THIS));
         collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
         collectButton.addActionListener(e -> {
-            Object o = player.getMusicInfo();
-            if (o == null) o = player.getAudioFile();
-            if (!hasBeenCollected(o)) {
-                collectionModel.add(0, o);
+            MusicResource resource = player.getMusicInfo();
+            if (resource == null) resource = player.getAudioFile();
+            if (!hasBeenCollected(resource)) {
+                collectionModel.add(0, resource);
                 collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 collectButton.setToolTipText(COLLECTED_TIP);
                 new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
-                collectionModel.removeElement(o);
+                collectionModel.removeElement(resource);
                 collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                 collectButton.setToolTipText(COLLECT_TIP);
                 new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
@@ -20179,7 +20178,7 @@ public class MainFrame extends JFrame {
         commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth() + 10, commentIcon.getIconHeight() + 10));
         commentButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
-            if (currPane != MusicPane.COMMENT || currCommentObjectInfo != musicInfo)
+            if (currPane != MusicPane.COMMENT || currCommentResource != musicInfo)
                 getComments(musicInfo, currPane != MusicPane.COMMENT);
         });
         // 乐谱
@@ -20994,7 +20993,7 @@ public class MainFrame extends JFrame {
 
         // 下载列表先创建实例
         if (model == downloadListModel) {
-            Task task = downloadList.getSelectedValue();
+            Task task = (Task) obj;
             AudioFile audioFile = new AudioFile(task.getDest());
             if (!audioFile.exists()) {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
@@ -21024,7 +21023,7 @@ public class MainFrame extends JFrame {
 
         // 将单首歌曲加到当前播放歌曲之后(若不在播放队列)
         int in = Math.min(currSong + 1, playQueueModel.size());
-        playQueueModel.add(in, obj);
+        playQueueModel.add(in, (MusicResource) obj);
         new TipDialog(THIS, NEXT_PLAY_SUCCESS_MSG).showDialog();
     }
 
@@ -21046,7 +21045,7 @@ public class MainFrame extends JFrame {
 
         // 下载列表先创建实例
         if (model == downloadListModel) {
-            Task task = downloadList.getSelectedValue();
+            Task task = (Task) obj;
             AudioFile audioFile = new AudioFile(task.getDest());
             if (!audioFile.exists()) {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
@@ -21067,7 +21066,7 @@ public class MainFrame extends JFrame {
             }
             if (!exists) {
                 int in = currSong + 1;
-                playQueueModel.add(in, obj);
+                playQueueModel.add(in, (MusicResource) obj);
                 playQueue.setSelectedIndex(in);
             }
         }
@@ -21089,7 +21088,7 @@ public class MainFrame extends JFrame {
                     playQueue.setModel(emptyListModel);
                     playQueueModel.clear();
                     for (int i = 0, size = model.size(); i < size; i++) {
-                        playQueueModel.addElement(model.get(i));
+                        playQueueModel.addElement((MusicResource) model.get(i));
                     }
                     playQueue.setModel(playQueueModel);
                 }
@@ -22810,7 +22809,7 @@ public class MainFrame extends JFrame {
         String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
 
         // 创建下载任务，并加入队列
-        Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
+        Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
         task.setInvokeLater(() -> {
             // 写入歌曲信息
             if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
@@ -22829,15 +22828,15 @@ public class MainFrame extends JFrame {
         // 避免造成性能问题
         downloadList.setModel(emptyListModel);
         for (int i = musicInfos.size() - 1; i >= 0; i--) {
-            Object o = musicInfos.get(i);
-            if (!(o instanceof NetMusicInfo)) continue;
-            NetMusicInfo musicInfo = (NetMusicInfo) o;
+            MusicResource resource = (MusicResource) musicInfos.get(i);
+            if (!(resource instanceof NetMusicInfo)) continue;
+            NetMusicInfo musicInfo = (NetMusicInfo) resource;
 
             String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
             String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
 
             // 创建下载任务，并加入队列
-            Task task = new Task(downloadList, TaskType.MUSIC, musicInfo, null);
+            Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
             task.setInvokeLater(() -> {
                 // 写入歌曲信息
                 if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
@@ -22855,14 +22854,14 @@ public class MainFrame extends JFrame {
     }
 
     // 下载多部 MV
-    public void multiDownloadMv(List<NetMvInfo> mvList) {
+    public void multiDownloadMv(List mvList) {
         List<Task> tasks = new LinkedList<>();
         // 避免造成性能问题
         downloadList.setModel(emptyListModel);
         for (int i = mvList.size() - 1; i >= 0; i--) {
-            NetMvInfo mvInfo = mvList.get(i);
+            NetMvInfo mvInfo = (NetMvInfo) mvList.get(i);
             // 创建下载任务，并加入队列
-            Task task = new Task(downloadList, TaskType.MV, null, mvInfo);
+            Task task = new Task(downloadList, TaskType.MV, mvInfo);
             tasks.add(task);
             downloadListModel.add(0, task);
         }
@@ -22877,7 +22876,7 @@ public class MainFrame extends JFrame {
         // 播放下载列表的 MV
         if (mvType == MvCompSourceType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
-            NetMvInfo mvInfo = task.getMvInfo();
+            NetMvInfo mvInfo = (NetMvInfo) task.getResource();
             String dest = task.getDest();
             if (!new File(dest).exists()) {
                 new TipDialog(THIS, FILE_NOT_FOUND_MSG).showDialog();
@@ -23008,38 +23007,38 @@ public class MainFrame extends JFrame {
     }
 
     // 判断是否已经收藏
-    public boolean hasBeenCollected(Object o) {
-        if (o == null) return false;
+    public boolean hasBeenCollected(Resource resource) {
+        if (resource == null) return false;
         DefaultListModel model = null;
-        if (o instanceof AudioFile || o instanceof NetMusicInfo) model = collectionModel;
-        else if (o instanceof NetPlaylistInfo) model = playlistCollectionModel;
-        else if (o instanceof NetAlbumInfo) model = albumCollectionModel;
-        else if (o instanceof NetArtistInfo) model = artistCollectionModel;
-        else if (o instanceof NetRadioInfo) model = radioCollectionModel;
-        else if (o instanceof NetMvInfo) model = mvCollectionModel;
-        else if (o instanceof NetRankingInfo) model = rankingCollectionModel;
-        else if (o instanceof NetUserInfo) model = userCollectionModel;
+        if (resource instanceof AudioFile || resource instanceof NetMusicInfo) model = collectionModel;
+        else if (resource instanceof NetPlaylistInfo) model = playlistCollectionModel;
+        else if (resource instanceof NetAlbumInfo) model = albumCollectionModel;
+        else if (resource instanceof NetArtistInfo) model = artistCollectionModel;
+        else if (resource instanceof NetRadioInfo) model = radioCollectionModel;
+        else if (resource instanceof NetMvInfo) model = mvCollectionModel;
+        else if (resource instanceof NetRankingInfo) model = rankingCollectionModel;
+        else if (resource instanceof NetUserInfo) model = userCollectionModel;
         for (int i = 0, len = model.size(); i < len; i++) {
-            if (model.get(i).equals(o)) return true;
+            if (model.get(i).equals(resource)) return true;
         }
         return false;
     }
 
     // 更新收藏
-    private void updateCollection(Object o) {
-        if (o == null) return;
+    private void updateCollection(Resource resource) {
+        if (resource == null) return;
         DefaultListModel model = null;
-        if (o instanceof AudioFile || o instanceof NetMusicInfo) model = collectionModel;
-        else if (o instanceof NetPlaylistInfo) model = playlistCollectionModel;
-        else if (o instanceof NetAlbumInfo) model = albumCollectionModel;
-        else if (o instanceof NetArtistInfo) model = artistCollectionModel;
-        else if (o instanceof NetRadioInfo) model = radioCollectionModel;
-        else if (o instanceof NetMvInfo) model = mvCollectionModel;
-        else if (o instanceof NetRankingInfo) model = rankingCollectionModel;
-        else if (o instanceof NetUserInfo) model = userCollectionModel;
+        if (resource instanceof AudioFile || resource instanceof NetMusicInfo) model = collectionModel;
+        else if (resource instanceof NetPlaylistInfo) model = playlistCollectionModel;
+        else if (resource instanceof NetAlbumInfo) model = albumCollectionModel;
+        else if (resource instanceof NetArtistInfo) model = artistCollectionModel;
+        else if (resource instanceof NetRadioInfo) model = radioCollectionModel;
+        else if (resource instanceof NetMvInfo) model = mvCollectionModel;
+        else if (resource instanceof NetRankingInfo) model = rankingCollectionModel;
+        else if (resource instanceof NetUserInfo) model = userCollectionModel;
         for (int i = 0, len = model.size(); i < len; i++) {
-            if (model.get(i).equals(o)) {
-                model.set(i, o);
+            if (model.get(i).equals(resource)) {
+                model.set(i, resource);
                 return;
             }
         }
@@ -23248,8 +23247,8 @@ public class MainFrame extends JFrame {
             musicList.setModel(emptyListModel);
         } else collectionList.setModel(emptyListModel);
         for (int i = 0, size = listModel.size(); i < size; i++) {
-            Object o = listModel.get(i);
-            if (o.toString().toLowerCase().contains(keyword)) filterModel.addElement(o);
+            Resource resource = (Resource) listModel.get(i);
+            if (resource.toString().toLowerCase().contains(keyword)) filterModel.addElement(resource);
         }
         if (useMusicList) {
             musicList.setModel(filterModel);

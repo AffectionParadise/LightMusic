@@ -1,5 +1,6 @@
 package net.doge.sdk.util;
 
+import net.doge.model.entity.base.NetResource;
 import net.doge.model.task.Task;
 import net.doge.model.entity.*;
 import net.doge.sdk.common.CommonResult;
@@ -256,8 +257,8 @@ public class MusicServerUtil {
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
      */
-    public static CommonResult<NetCommentInfo> getComments(Object info, String type, int limit, int page, String cursor) {
-        return new CommentReq().getComments(info, type, limit, page, cursor);
+    public static CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int limit, int page, String cursor) {
+        return new CommentReq().getComments(resource, type, limit, page, cursor);
     }
 
     /**

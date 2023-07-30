@@ -372,24 +372,24 @@ public class SettingDialog extends AbstractTitledDialog {
                     if (currKeys.contains(code)) return;
                     currKeys.add(code);
                     // 检查重复按键
-                    Object o = checkKeyDuplicated();
-                    if (o != null) {
-                        if (o == playOrPauseKeys) {
+                    List<Integer> keyList = checkKeyDuplicated();
+                    if (keyList != null) {
+                        if (keyList == playOrPauseKeys) {
                             playOrPauseKeys.clear();
                             playOrPauseTextField.setText("");
-                        } else if (o == playLastKeys) {
+                        } else if (keyList == playLastKeys) {
                             playLastKeys.clear();
                             playLastTextField.setText("");
-                        } else if (o == playNextKeys) {
+                        } else if (keyList == playNextKeys) {
                             playNextKeys.clear();
                             playNextTextField.setText("");
-                        } else if (o == backwardKeys) {
+                        } else if (keyList == backwardKeys) {
                             backwardKeys.clear();
                             backwardTextField.setText("");
-                        } else if (o == forwardKeys) {
+                        } else if (keyList == forwardKeys) {
                             forwardKeys.clear();
                             forwardTextField.setText("");
-                        } else if (o == videoFullScreenKeys) {
+                        } else if (keyList == videoFullScreenKeys) {
                             videoFullScreenKeys.clear();
                             videoFullScreenTextField.setText("");
                         }
@@ -419,7 +419,7 @@ public class SettingDialog extends AbstractTitledDialog {
             }
 
             // 检查是否有重复按键
-            private Object checkKeyDuplicated() {
+            private List<Integer> checkKeyDuplicated() {
                 if (ListUtil.equals(currKeys, playOrPauseKeys)) return playOrPauseKeys;
                 if (ListUtil.equals(currKeys, playLastKeys)) return playLastKeys;
                 if (ListUtil.equals(currKeys, playNextKeys)) return playNextKeys;

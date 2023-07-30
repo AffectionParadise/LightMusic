@@ -4,6 +4,8 @@ import net.doge.constant.player.Format;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
 import lombok.Data;
+import net.doge.model.entity.base.Downloadable;
+import net.doge.model.entity.base.NetResource;
 import net.doge.util.system.FileUtil;
 import net.doge.util.common.StringUtil;
 
@@ -16,7 +18,7 @@ import java.util.Objects;
  * @Date 2020/12/7
  */
 @Data
-public class NetMvInfo {
+public class NetMvInfo implements NetResource, Downloadable {
     // MV 来源
     private int source = NetMusicSource.NET_CLOUD;
     // 类型 (网易云分成 MV 视频 Mlog)

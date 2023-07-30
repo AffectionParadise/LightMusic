@@ -8,6 +8,7 @@ import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetMvInfo;
+import net.doge.model.entity.base.Downloadable;
 import net.doge.util.system.FileUtil;
 import net.doge.sdk.util.MusicServerUtil;
 
@@ -29,10 +30,8 @@ public class Task {
     private JList downloadList;
     // 下载类型
     private int type;
-    // 音乐信息(类型为 MUSIC 时)
-    private NetMusicInfo musicInfo;
-    // MV 信息(类型为 MV 时)
-    private NetMvInfo mvInfo;
+    // 资源信息
+    private Downloadable resource;
     // url
     private String url;
     // 文件路径
@@ -52,13 +51,13 @@ public class Task {
     // 完成后调用
     private Runnable invokeLater;
 
-    public Task(JList downloadList, int type, NetMusicInfo musicInfo, NetMvInfo mvInfo) {
+    public Task(JList downloadList, int type, Downloadable resource) {
         this.downloadList = downloadList;
         this.type = type;
-        this.musicInfo = musicInfo;
-        this.mvInfo = mvInfo;
-        this.name = type == TaskType.MUSIC ? musicInfo.toSimpleString() : mvInfo.toSimpleString();
-        this.dest = type == TaskType.MUSIC ? SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName() : SimplePath.DOWNLOAD_MV_PATH + mvInfo.toSimpleFileName();
+        this.resource = resource;
+        this.name = type == TaskType.MUSIC ? ((NetMusicInfo) resource).toSimpleString() : ((NetMvInfo) resource).toSimpleString();
+        this.dest = type == TaskType.MUSIC ? SimplePath.DOWNLOAD_MUSIC_PATH + ((NetMusicInfo) resource).toSimpleFileName()
+                : SimplePath.DOWNLOAD_MV_PATH + ((NetMvInfo) resource).toSimpleFileName();
     }
 
     public void setPercent(double percent) {
@@ -83,7 +82,7 @@ public class Task {
 
     private Map<String, Object> getHeaders() {
         Map<String, Object> headers = null;
-        if (isMv() && mvInfo.getSource() == NetMusicSource.BI || isMusic() && musicInfo.getSource() == NetMusicSource.BI) {
+        if (isMv() && ((NetMvInfo) resource).getSource() == NetMusicSource.BI || isMusic() && ((NetMusicInfo) resource).getSource() == NetMusicSource.BI) {
             headers = new HashMap<>();
             headers.put("referer", "https://www.bilibili.com/");
         }
@@ -146,6 +145,7 @@ public class Task {
     // 任务开始之前先请求所需信息
     private void prepareInfo() {
         if (type == TaskType.MUSIC) {
+            NetMusicInfo musicInfo = (NetMusicInfo) resource;
             // 先补全音乐信息、url
             MusicServerUtil.fillMusicInfo(musicInfo);
             MusicServerUtil.fillMusicUrl(musicInfo);
@@ -153,6 +153,7 @@ public class Task {
             url = musicInfo.getUrl();
             dest = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
         } else if (type == TaskType.MV) {
+            NetMvInfo mvInfo = (NetMvInfo) resource;
             MusicServerUtil.fillMvInfo(mvInfo);
             url = mvInfo.getUrl();
             dest = SimplePath.DOWNLOAD_MV_PATH + mvInfo.toSimpleFileName();

@@ -3,6 +3,7 @@ package net.doge.model.entity;
 import lombok.Data;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.model.RadioType;
+import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
 
 import java.awt.image.BufferedImage;
@@ -14,7 +15,7 @@ import java.util.Objects;
  * @Date 2020/12/7
  */
 @Data
-public class NetRadioInfo {
+public class NetRadioInfo implements NetResource {
     // 电台来源
     private int source = NetMusicSource.NET_CLOUD;
     // 类型 (豆瓣)

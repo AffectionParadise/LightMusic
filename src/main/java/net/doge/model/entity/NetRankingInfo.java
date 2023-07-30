@@ -2,6 +2,7 @@ package net.doge.model.entity;
 
 import lombok.Data;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
 
 import java.awt.image.BufferedImage;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @Date 2020/12/7
  */
 @Data
-public class NetRankingInfo {
+public class NetRankingInfo implements NetResource {
     // 榜单来源
     private int source = NetMusicSource.NET_CLOUD;
     // 榜单 id

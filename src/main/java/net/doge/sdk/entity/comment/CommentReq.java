@@ -9,6 +9,7 @@ import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.*;
+import net.doge.model.entity.base.NetResource;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
@@ -86,7 +87,7 @@ public class CommentReq {
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
      */
-    public CommonResult<NetCommentInfo> getComments(Object info, String type, int limit, int page, String cursor) {
+    public CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int limit, int page, String cursor) {
         int total = 0;
         List<NetCommentInfo> res = new LinkedList<>();
 
@@ -97,8 +98,8 @@ public class CommentReq {
 
         boolean isRadio = false, isBook = false, isGame = false;
 
-        if (info instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) info;
+        if (resource instanceof NetMusicInfo) {
+            NetMusicInfo musicInfo = (NetMusicInfo) resource;
             // 网易云需要先判断是普通歌曲还是电台节目，酷狗歌曲获取评论需要 hash
             boolean hasProgramId = musicInfo.hasProgramId();
             boolean hasHash = musicInfo.hasHash();
@@ -116,14 +117,14 @@ public class CommentReq {
                 JSONObject trackInfo = JSONObject.parseObject(songInfoBody).getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info");
                 id = trackInfo.getString("id");
             }
-        } else if (info instanceof NetPlaylistInfo) {
-            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) info;
+        } else if (resource instanceof NetPlaylistInfo) {
+            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
             id = playlistInfo.getId();
             source = playlistInfo.getSource();
             // 网易 QQ 酷我 猫耳
             typeStr = new String[]{"A_PL_0_", "3", "8", "2"};
-        } else if (info instanceof NetAlbumInfo) {
-            NetAlbumInfo albumInfo = (NetAlbumInfo) info;
+        } else if (resource instanceof NetAlbumInfo) {
+            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
             id = albumInfo.getId();
             source = albumInfo.getSource();
             // 网易 QQ 酷我 猫耳
@@ -136,8 +137,8 @@ public class CommentReq {
                         .body();
                 id = JSONObject.parseObject(songInfoBody).getJSONObject("data").getString("album_id");
             }
-        } else if (info instanceof NetRadioInfo) {
-            NetRadioInfo radioInfo = (NetRadioInfo) info;
+        } else if (resource instanceof NetRadioInfo) {
+            NetRadioInfo radioInfo = (NetRadioInfo) resource;
             id = radioInfo.getId();
             source = radioInfo.getSource();
             isRadio = true;
@@ -145,8 +146,8 @@ public class CommentReq {
             isGame = radioInfo.isGame();
             // 网易 QQ 酷我 猫耳
             typeStr = new String[]{"A_DR_14_", "", "", ""};
-        } else if (info instanceof NetMvInfo) {
-            NetMvInfo mvInfo = (NetMvInfo) info;
+        } else if (resource instanceof NetMvInfo) {
+            NetMvInfo mvInfo = (NetMvInfo) resource;
             // 网易云需要判断是视频还是 MV 还是 Mlog
             boolean isVideo = mvInfo.isVideo();
             boolean isMlog = mvInfo.isMlog();
@@ -167,8 +168,8 @@ public class CommentReq {
             }
             // 网易 QQ 酷我 猫耳
             typeStr = new String[]{isVideo || isMlog ? "R_VI_62_" : "R_MV_5_", "5", "7"};
-        } else if (info instanceof NetRankingInfo) {
-            NetRankingInfo rankingInfo = (NetRankingInfo) info;
+        } else if (resource instanceof NetRankingInfo) {
+            NetRankingInfo rankingInfo = (NetRankingInfo) resource;
             id = rankingInfo.getId();
             source = rankingInfo.getSource();
             // 网易 QQ 酷我 猫耳
@@ -259,7 +260,7 @@ public class CommentReq {
         }
 
         // 酷狗
-        else if (source == NetMusicSource.KG && info instanceof NetMusicInfo) {
+        else if (source == NetMusicSource.KG && resource instanceof NetMusicInfo) {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_KG_API, id, page, limit))
                     // 注意此处必须加 header 才能请求到正确的数据！
                     .header(Header.USER_AGENT, "Android712-AndroidPhone-8983-18-0-COMMENT-wifi")
@@ -682,12 +683,12 @@ public class CommentReq {
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            boolean isMv = info instanceof NetMvInfo;
+            boolean isMv = resource instanceof NetMvInfo;
             String url = "";
-            if (info instanceof NetMusicInfo) {
+            if (resource instanceof NetMusicInfo) {
                 String[] sp = id.split("_");
                 url = String.format(GET_COMMENTS_FS_API, sp[0], sp[1], page, limit);
-            } else if (info instanceof NetPlaylistInfo) {
+            } else if (resource instanceof NetPlaylistInfo) {
                 url = String.format(GET_COMMENTS_FS_API, "dynamicSongList", id, page, limit);
             } else if (isMv) {
                 url = String.format(GET_MV_COMMENTS_FS_API, id, page);
@@ -1025,7 +1026,7 @@ public class CommentReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             int lim = Math.min(20, limit);
-            String url = info instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
+            String url = resource instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
                     : String.format(GET_SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, lim);
             String commentInfoBody = HttpRequest.get(url)
                     .cookie(SdkCommon.BI_COOKIE)
