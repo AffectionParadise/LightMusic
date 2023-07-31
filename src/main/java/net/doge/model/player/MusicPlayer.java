@@ -15,6 +15,7 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.ui.SpectrumConstants;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.NetMusicInfo;
+import net.doge.model.entity.base.MusicResource;
 import net.doge.ui.MainFrame;
 import net.doge.util.media.MediaUtil;
 import net.doge.util.common.StringUtil;
@@ -104,11 +105,6 @@ public class MusicPlayer {
         status = PlayerStatus.EMPTY;
     }
 
-    // 判断播放器是否载入了歌曲
-    public boolean loadedMusic() {
-        return loadedAudioFile() || loadedNetMusic();
-    }
-
     // 判断播放器是否载入了文件
     public boolean loadedAudioFile() {
         return musicInfo == null && audioFile != null;
@@ -131,10 +127,15 @@ public class MusicPlayer {
         return musicInfo.equals(this.musicInfo);
     }
 
-    // 判断播放器是否载入了指定对象
-    public boolean loadedObject(Object o) {
-        if (o instanceof AudioFile) return loadedAudioFile((AudioFile) o);
-        else if (o instanceof NetMusicInfo) return loadedNetMusic((NetMusicInfo) o);
+    // 判断播放器是否载入了音乐资源
+    public boolean loadedMusicResource() {
+        return loadedAudioFile() || loadedNetMusic();
+    }
+
+    // 判断播放器是否载入了指定音乐资源
+    public boolean loadedMusicResource(MusicResource resource) {
+        if (resource instanceof AudioFile) return loadedAudioFile((AudioFile) resource);
+        else if (resource instanceof NetMusicInfo) return loadedNetMusic((NetMusicInfo) resource);
         return false;
     }
 

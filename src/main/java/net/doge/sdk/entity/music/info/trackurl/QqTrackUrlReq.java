@@ -18,24 +18,20 @@ public class QqTrackUrlReq {
     public String getTrackUrl(String mid, String quality) {
         String platform = "qq";
         String device = "MI 14 Pro Max";
-        String osVersion = "27";
+        String osVersion = "13";
         long time = System.currentTimeMillis() / 1000;
-        String lowerCase = CryptoUtil.hashMD5("f389249d91bd845c9b817db984054cfb" + time + "6562653262383463363633646364306534333663").toLowerCase();
+        String lowerCase = CryptoUtil.hashMD5("6d849adb2f3e00d413fe48efbb18d9bb" + time + "6562653262383463363633646364306534333668").toLowerCase();
 
         String s6 = "{\\\"method\\\":\\\"GetMusicUrl\\\",\\\"platform\\\":\\\"" + platform + "\\\",\\\"t1\\\":\\\"" + mid + "\\\",\\\"t2\\\":\\\"" + quality + "\\\"}";
-        String s7 = "{\\\"uid\\\":\\\"\\\",\\\"token\\\":\\\"\\\",\\\"deviceid\\\":\\\"84ac82836212e869dbeea73f09ebe52b\\\",\\\"appVersion\\\":\\\"4.1.0.V4\\\"," +
-                "\\\"vercode\\\":\\\"4100\\\",\\\"device\\\":\\\"" + device + "\\\",\\\"osVersion\\\":\\\"" + osVersion + "\\\"}";
-        String s8 = "{\n\t\"text_1\":\t\"" + s6 + "\",\n\t\"text_2\":\t\"" + s7 + "\",\n\t\"sign_1\":\t\"" + lowerCase + "\",\n\t\"time\":\t\""
-                + time + "\",\n\t\"sign_2\":\t\"" + CryptoUtil.hashMD5(s6.replace("\\", "") + s7.replace("\\", "")
-                + lowerCase + time + "NDRjZGIzNzliNzEx").toLowerCase() + "\"\n}";
+        String s7 = "{\\\"uid\\\":\\\"\\\",\\\"token\\\":\\\"\\\",\\\"deviceid\\\":\\\"84ac82836212e869dbeea73f09ebe52b\\\",\\\"appVersion\\\":\\\"4.1.2\\\"," +
+                "\\\"vercode\\\":\\\"4120\\\",\\\"device\\\":\\\"" + device + "\\\",\\\"osVersion\\\":\\\"" + osVersion + "\\\"}";
+        String s8 = "{\n\t\"text_1\":\t\"" + s6 + "\",\n\t\"text_2\":\t\"" + s7 + "\",\n\t\"sign_1\":\t\"" + lowerCase + "\",\n\t\"time\":\t\"" + time + "\",\n\t\"sign_2\":\t\""
+                + CryptoUtil.hashMD5(s6.replace("\\", "") + s7.replace("\\", "") + lowerCase + time + "NDRjZGIzNzliNzEe").toLowerCase() + "\"\n}";
 
-        String key = "6480fedae539deb2";
-        byte[] aesBytes = CryptoUtil.aesEncrypt(s8.getBytes(StandardCharsets.UTF_8), "ECB", key.getBytes(StandardCharsets.UTF_8), null);
-        s8 = CryptoUtil.bytesToHex(aesBytes);
-        byte[] encodedBytes = CryptoUtil.bytesToHex(s8.getBytes(StandardCharsets.UTF_8)).getBytes(StandardCharsets.UTF_8);
-        byte[] compressedBytes = CryptoUtil.compress(encodedBytes);
+        String hex = CryptoUtil.bytesToHex(s8.getBytes(StandardCharsets.UTF_8)).toUpperCase();
+        byte[] compressedBytes = CryptoUtil.compress(hex.getBytes(StandardCharsets.UTF_8));
         String[] urls = {
-                "http://app.kzti.top:1030/client/cgi-bin/api.fcg",
+                "http://gcsp.kzti.top:1030/client/cgi-bin/api.fcg",
                 "http://119.91.134.171:1030/client/cgi-bin/api.fcg",
                 "http://106.52.68.150:1030/client/cgi-bin/api.fcg"
         };
@@ -51,4 +47,8 @@ public class QqTrackUrlReq {
             return "";
         }
     }
+
+//    public static void main(String[] args) {
+//        System.out.println(new QqTrackUrlReq().getTrackUrl("0039MnYb0qxYhV", "hq"));
+//    }
 }

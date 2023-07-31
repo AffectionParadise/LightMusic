@@ -1,9 +1,12 @@
 package net.doge.util.system;
 
-import net.doge.util.common.StringUtil;
+import com.alibaba.fastjson2.JSONArray;
+import net.doge.util.common.JsonUtil;
 
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * @Author Doge
@@ -244,44 +247,40 @@ public class KeyUtil {
     }
 
     /**
-     * 将 KeyList 中元素连接成字符串
+     * 将 code 列表中元素连接成字符串
      *
-     * @param keyList
+     * @param keys
      * @return
      */
-    public static String join(List<Integer> keyList) {
+    public static String join(List<Integer> keys) {
         StringJoiner sj = new StringJoiner(" + ");
-        for (int i = 0, len = keyList.size(); i < len; i++) {
-            sj.add(toStr(keyList.get(i)));
-        }
+        for (Integer key : keys) sj.add(toStr(key));
         return sj.toString();
     }
 
     /**
-     * 字符串转为 code 列表
+     * Json 数组转为 code 列表
      *
      * @param
      * @return
      */
-    public static List<Integer> strToCodes(String str) {
+    public static List<Integer> jsonArrayToKeys(JSONArray array) {
         List<Integer> codes = new LinkedList<>();
-        if (StringUtil.notEmpty(str)) {
-            String[] sp = str.split(" ");
-            for (String s : sp)
-                if (StringUtil.notEmpty(s)) codes.add(Integer.parseInt(s));
+        if (JsonUtil.notEmpty(array)) {
+            for (int i = 0, s = array.size(); i < s; i++) codes.add(array.getIntValue(i));
         }
         return codes;
     }
 
     /**
-     * code 列表转为字符串
+     * code 列表转为 Json 数组
      *
      * @param
      * @return
      */
-    public static String codesToStr(List<Integer> codes) {
-        StringJoiner sj = new StringJoiner(" ");
-        for (Integer code : codes) sj.add(String.valueOf(code));
-        return sj.toString();
+    public static JSONArray keysToJsonArray(List<Integer> keys) {
+        JSONArray array = new JSONArray();
+        array.addAll(keys);
+        return array;
     }
 }

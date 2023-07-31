@@ -90,12 +90,12 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     public int r;
     public int g;
     public int b;
-    public double h;
-    public double s;
-    public double v;
-    public double nh;
-    public double ns;
-    public double nl;
+    public float h;
+    public float s;
+    public float v;
+    public float nh;
+    public float ns;
+    public float nl;
     public int max1;
     public int max2;
     public int max3;
@@ -357,11 +357,11 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         return new Color(r, g, b);
     }
 
-    public Color makeColorFromHsv(double h, double s, double v) {
+    public Color makeColorFromHsv(float h, float s, float v) {
         return ColorUtil.hsvValToColor(h, s, v);
     }
 
-    public Color makeColorFromHsl(double h, double s, double l) {
+    public Color makeColorFromHsl(float h, float s, float l) {
         return ColorUtil.hslValToColor(h, s, l);
     }
 

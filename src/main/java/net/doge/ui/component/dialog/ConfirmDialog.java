@@ -25,7 +25,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
     private DialogButton cancel = new DialogButton("");
     private int response;
 
-    private String message = "";
+    private String message;
     private CustomPanel messagePanel = new CustomPanel();
     private CustomLabel messageLabel = new CustomLabel(message);
     private boolean showCheck;

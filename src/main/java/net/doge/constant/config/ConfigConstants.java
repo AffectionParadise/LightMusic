@@ -43,6 +43,8 @@ public class ConfigConstants {
     public static final String GS_FACTOR_INDEX = "gsFactorIndex";
     // 暗角滤镜因子
     public static final String DARKER_FACTOR_INDEX = "darkerFactorIndex";
+    // 线性渐变色彩风格
+    public static final String GRADIENT_COLOR_STYLE_INDEX = "gradientColorStyleIndex";
     // 播放模式
     public static final String PLAY_MODE = "playMode";
     // 歌曲下载路径

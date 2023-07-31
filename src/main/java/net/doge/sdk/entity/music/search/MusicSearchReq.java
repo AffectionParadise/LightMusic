@@ -653,7 +653,7 @@ public class MusicSearchReq {
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.FS);
-                    musicInfo.setId(String.format("%s_%s", songType, songId));
+                    musicInfo.setId(songType + "_" + songId);
                     musicInfo.setName(songName);
                     musicInfo.setArtist(artist);
                     musicInfo.setArtistId(artistId);

@@ -489,7 +489,8 @@ public class MusicInfoReq {
                     for (String l : lsp) {
                         if (JSON.isValidObject(l)) {
                             JSONObject obj = JSONObject.parseObject(l);
-                            sb.append(TimeUtil.formatToLrcTime(obj.getDouble("t")));
+                            Double t = obj.getDouble("t");
+                            if (t != null) sb.append(TimeUtil.formatToLrcTime(t / 1000));
                             JSONArray cArray = obj.getJSONArray("c");
                             for (int i = 0, s = cArray.size(); i < s; i++)
                                 sb.append(cArray.getJSONObject(i).getString("tx"));

@@ -1,9 +1,10 @@
 package net.doge.util.ui;
 
+import net.doge.constant.ui.BlurConstants;
 import net.doge.constant.ui.Colors;
 import net.doge.model.color.HSL;
 import net.doge.model.color.HSV;
-import net.doge.util.common.StringUtil;
+import net.doge.model.color.Palette;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,29 +16,6 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class ColorUtil {
-    /**
-     * Color 转为 RGB 字符串，格式 xxx,xxx,xxx
-     *
-     * @param color
-     * @return
-     */
-    public static String colorToRgbStr(Color color) {
-        if (color == null) return "";
-        return color.getRed() + "," + color.getGreen() + "," + color.getBlue();
-    }
-
-    /**
-     * RGB 字符串转为 Color，格式 xxx,xxx,xxx
-     *
-     * @param rgbStr
-     * @return
-     */
-    public static Color rgbStrToColor(String rgbStr) {
-        if (StringUtil.isEmpty(rgbStr)) return null;
-        String[] split = rgbStr.split(",");
-        return new Color(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
-    }
-
     /**
      * 十六进制字符串转为 Color
      *
@@ -79,7 +57,7 @@ public class ColorUtil {
      * @param
      * @return
      */
-    public static int merge(double r, double g, double b) {
+    public static int merge(float r, float g, float b) {
         return merge((int) (r * 255), (int) (g * 255), (int) (b * 255));
     }
 
@@ -91,10 +69,10 @@ public class ColorUtil {
      */
     public static HSV rgbValToHsv(int rgb) {
         int R = (rgb >> 16) & 0xFF, G = (rgb >> 8) & 0xFF, B = rgb & 0xFF;
-        double R_1 = (double) R / 255, G_1 = (double) G / 255, B_1 = (double) B / 255;
-        double max = Math.max(R_1, Math.max(G_1, B_1)), min = Math.min(R_1, Math.min(G_1, B_1));
-        double diff = max - min;
-        double hue = 0;
+        float R_1 = (float) R / 255, G_1 = (float) G / 255, B_1 = (float) B / 255;
+        float max = Math.max(R_1, Math.max(G_1, B_1)), min = Math.min(R_1, Math.min(G_1, B_1));
+        float diff = max - min;
+        float hue = 0;
         if (diff == 0) hue = 0;
         else {
             if (max == R_1) hue = (((G_1 - B_1) / diff) % 6) * 60;
@@ -102,7 +80,7 @@ public class ColorUtil {
             else if (max == B_1) hue = (((R_1 - G_1) / diff) + 4) * 60;
         }
         if (hue < 0) hue += 360;
-        double s;
+        float s;
         if (max == 0) s = 0;
         else s = diff / max;
         return new HSV(hue, s * 100, max * 100);
@@ -134,10 +112,10 @@ public class ColorUtil {
      * @param
      * @return
      */
-    public static Color hsvValToColor(double h, double s, double v) {
+    public static Color hsvValToColor(float h, float s, float v) {
         s /= 100;
         v /= 100;
-        double f, p, q, t;
+        float f, p, q, t;
         if (s == 0) return new Color(merge(v, v, v));
         h /= 60;
         int i = (int) h;
@@ -262,7 +240,7 @@ public class ColorUtil {
 //     * @param color
 //     * @return
 //     */
-//    public static Color darkMuted(Color color, double sMin, double sMax, double lMin, double lMax) {
+//    public static Color darkMuted(Color color, float sMin, float sMax, float lMin, float lMax) {
 //        HSL hsl = colorToHsl(color);
 //        if (hsl.s < sMin) hsl.s = sMin;
 //        else if (hsl.s > sMax) hsl.s = sMax;
@@ -277,9 +255,9 @@ public class ColorUtil {
      * @param color
      * @return
      */
-    public static Color rotate(Color color, double deg) {
+    public static Color rotate(Color color, float deg) {
         HSL hsl = colorToHsl(color);
-        double d = hsl.h + deg;
+        float d = hsl.h + deg;
         hsl.h = d >= 0 ? d % 360 : 360 + d;
         return hslToColor(hsl);
     }
@@ -327,14 +305,14 @@ public class ColorUtil {
      * @return
      */
     public static HSL rgbValToHsl(int red, int green, int blue) {
-        double r, g, b, delta, max, min;
-        double h, s, l;
+        float r, g, b, delta, max, min;
+        float h, s, l;
         /*
          * Convert RGB to HSL colorspace.
          */
-        r = (double) red / 255;
-        g = (double) green / 255;
-        b = (double) blue / 255;
+        r = (float) red / 255;
+        g = (float) green / 255;
+        b = (float) blue / 255;
         max = Math.max(r, Math.max(g, b));
         min = Math.min(r, Math.min(g, b));
 
@@ -343,7 +321,7 @@ public class ColorUtil {
         l = (min + max) / 2;
         delta = max - min;
         if (delta == 0) return new HSL(h * 360, s * 100, l * 100);
-        s = delta / ((l <= 0.5) ? (min + max) : (2 - max - min));
+        s = delta / ((l <= 0.5f) ? (min + max) : (2 - max - min));
         if (r == max) h = g == min ? 5 + (max - b) / delta : 1 - (max - g) / delta;
         else if (g == max) h = b == min ? 1 + (max - r) / delta : 3 - (max - b) / delta;
         else h = r == min ? 3 + (max - g) / delta : 5 - (max - r) / delta;
@@ -371,19 +349,19 @@ public class ColorUtil {
      * @param l
      * @return
      */
-    public static Color hslValToColor(double h, double s, double l) {
+    public static Color hslValToColor(float h, float s, float l) {
         h = h / 360;
         s = s / 100;
         l = l / 100;
-        double r, g, b, v, x, y, z;
+        float r, g, b, v, x, y, z;
 
         /*
          * Convert HSL to RGB colorspace.
          */
-        v = l <= 0.5 ? l * (1 + s) : l + s - l * s;
-        if (s == 0) return new Color((int) (255 * l + 0.5), (int) (255 * l + 0.5), (int) (255 * l + 0.5));
+        v = l <= 0.5f ? l * (1 + s) : l + s - l * s;
+        if (s == 0) return new Color((int) (255 * l + 0.5f), (int) (255 * l + 0.5f), (int) (255 * l + 0.5f));
         y = 2 * l - v;
-        double v1 = (v - y) * (6 * h - Math.floor(6 * h));
+        float v1 = (float) ((v - y) * (6 * h - Math.floor(6 * h)));
         x = y + v1;
         z = v - v1;
         switch ((int) (6 * h)) {
@@ -419,7 +397,7 @@ public class ColorUtil {
                 b = y;
                 break;
         }
-        return new Color((int) (255 * r + 0.5), (int) (255 * g + 0.5), (int) (255 * b + 0.5));
+        return new Color((int) (255 * r + 0.5f), (int) (255 * g + 0.5f), (int) (255 * b + 0.5f));
     }
 
     /**
@@ -432,58 +410,58 @@ public class ColorUtil {
         return hslValToColor(hsl.h, hsl.s, hsl.l);
     }
 
-//    /**
-//     * 判断色块是否已经在调色板
-//     *
-//     * @param palette
-//     * @param swatch
-//     * @return
-//     */
-//    private static boolean isSwatchSelected(Palette palette, Color swatch) {
-//        return swatch.equals(palette.vibrant)
-//                || swatch.equals(palette.lightVibrant)
-//                || swatch.equals(palette.darkVibrant)
-//                || swatch.equals(palette.muted)
-//                || swatch.equals(palette.lightMuted)
-//                || swatch.equals(palette.darkMuted);
-//    }
+    /**
+     * 判断色块是否已经在调色板
+     *
+     * @param palette
+     * @param swatch
+     * @return
+     */
+    private static boolean isSwatchSelected(Palette palette, Color swatch) {
+        return swatch.equals(palette.vibrant)
+                || swatch.equals(palette.lightVibrant)
+                || swatch.equals(palette.darkVibrant)
+                || swatch.equals(palette.muted)
+                || swatch.equals(palette.lightMuted)
+                || swatch.equals(palette.darkMuted);
+    }
 
-//    /**
-//     * 根据参数返回色块
-//     *
-//     * @return
-//     */
-//    public static Color swatch(List<Color> colors, ColorThiefUtil.CMap colorMap, Palette palette,
-//                               double lTarget, double lMin, double lMax,
-//                               double sTarget, double sMin, double sMax) {
-//        Color res = null;
-//        double maxWeight = 0, maxPopulation = 0;
-//        int size = colors.size();
-//        int[] pop = new int[size];
-//        // 找到最大的颜色分布
-//        for (int i = 0; i < size; i++) {
-//            pop[i] = colorMap.vboxes.get(i).count(false);
-//            maxPopulation = Math.max(maxPopulation, pop[i]);
-//        }
-//        final double sWeight = 3, lWeight = 6.5, pWeight = 0.5, weightSum = sWeight + lWeight + pWeight;
-//        for (int i = 0; i < size; i++) {
-//            Color color = colors.get(i);
-//            HSL hsl = colorToHsl(color);
-//            if (hsl.s >= sMin && hsl.s <= sMax && hsl.l >= lMin && hsl.l <= lMax && !isSwatchSelected(palette, color)) {
-//                // 根据饱和度、亮度、颜色分布范围对该颜色求一个加权平均值
-//                double weight = invertDiff(hsl.s, sTarget) * sWeight + invertDiff(hsl.l, lTarget) * lWeight + pop[i] / maxPopulation * pWeight;
-//                weight /= weightSum;
-//                if (res == null || weight > maxWeight) {
-//                    res = color;
-//                    maxWeight = weight;
-//                }
-//            }
-//        }
-//        return res;
-//    }
+    /**
+     * 根据参数返回色块
+     *
+     * @return
+     */
+    public static Color swatch(List<Color> colors, ColorThiefUtil.CMap colorMap, Palette palette,
+                               float lTarget, float lMin, float lMax,
+                               float sTarget, float sMin, float sMax) {
+        Color res = null;
+        float maxWeight = 0, maxPopulation = 0;
+        int size = colors.size();
+        int[] pop = new int[size];
+        // 找到最大的颜色分布
+        for (int i = 0; i < size; i++) {
+            pop[i] = colorMap.vboxes.get(i).count(false);
+            maxPopulation = Math.max(maxPopulation, pop[i]);
+        }
+        final float sWeight = 3f, lWeight = 6.5f, pWeight = 0.5f, weightSum = sWeight + lWeight + pWeight;
+        for (int i = 0; i < size; i++) {
+            Color color = colors.get(i);
+            HSL hsl = colorToHsl(color);
+            if (hsl.s >= sMin && hsl.s <= sMax && hsl.l >= lMin && hsl.l <= lMax && !isSwatchSelected(palette, color)) {
+                // 根据饱和度、亮度、颜色分布范围对该颜色求一个加权平均值
+                float weight = invertDiff(hsl.s, sTarget) * sWeight + invertDiff(hsl.l, lTarget) * lWeight + pop[i] / maxPopulation * pWeight;
+                weight /= weightSum;
+                if (res == null || weight > maxWeight) {
+                    res = color;
+                    maxWeight = weight;
+                }
+            }
+        }
+        return res;
+    }
 
-//    private static final double targetDarkLuma = 26, maxDarkLuma = 45, minLightLuma = 55, targetLightLuma = 74, minNormalLuma = 30,
-//            targetNormalLuma = 50, maxNormalLuma = 70, targetMutesSaturation = 30, maxMutesSaturation = 40, targetVibrantSaturation = 100, minVibrantSaturation = 35;
+    private static final float targetDarkLuma = 26, maxDarkLuma = 45, minLightLuma = 55, targetLightLuma = 74, minNormalLuma = 30,
+            targetNormalLuma = 50, maxNormalLuma = 70, targetMutesSaturation = 30, maxMutesSaturation = 40, targetVibrantSaturation = 100, minVibrantSaturation = 35;
 
     /**
      * 根据图片和颜色数量生成 Palette，并找到最佳色块返回
@@ -497,140 +475,106 @@ public class ColorUtil {
         List<Color> colors = colorMap.palette();
         if (colors.isEmpty()) colors.add(Colors.GRAY);
 
-//        Palette palette = new Palette();
-//        palette.vibrant = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetVibrantSaturation, minVibrantSaturation, 100);
-//        palette.lightVibrant = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetVibrantSaturation, minVibrantSaturation, 100);
-//        palette.darkVibrant = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetVibrantSaturation, minVibrantSaturation, 100);
-//        palette.muted = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetMutesSaturation, 0, maxMutesSaturation);
-//        palette.lightMuted = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetMutesSaturation, 0, maxMutesSaturation);
-//        palette.darkMuted = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetMutesSaturation, 0, maxMutesSaturation);
+        Palette palette = new Palette();
+        palette.vibrant = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetVibrantSaturation, minVibrantSaturation, 100);
+        palette.lightVibrant = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetVibrantSaturation, minVibrantSaturation, 100);
+        palette.darkVibrant = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetVibrantSaturation, minVibrantSaturation, 100);
+        palette.muted = swatch(colors, colorMap, palette, targetNormalLuma, minNormalLuma, maxNormalLuma, targetMutesSaturation, 0, maxMutesSaturation);
+        palette.lightMuted = swatch(colors, colorMap, palette, targetLightLuma, minLightLuma, 100, targetMutesSaturation, 0, maxMutesSaturation);
+        palette.darkMuted = swatch(colors, colorMap, palette, targetDarkLuma, 0, maxDarkLuma, targetMutesSaturation, 0, maxMutesSaturation);
 
-//        optimizePalette(palette);
+        optimizePalette(palette);
 
-//        return findBestSwatch(palette, colors.get(0));
-        return findBestSwatch(colors.get(0));
-    }
-
-    /**
-     * 找到最佳色块
-     *
-     * @param swatch
-     * @return
-     */
-    private static Color findBestSwatch(Color swatch) {
-        HSL hsl = ColorUtil.colorToHsl(swatch);
-        if (hsl.s > 40) hsl.s = 40;
-        if (hsl.l < 40) hsl.l = 40;
-        else if (hsl.l > 60) hsl.l = 60;
-        swatch = ColorUtil.hslToColor(hsl);
-        return swatch;
+        switch (BlurConstants.gradientColorStyleIndex) {
+            case BlurConstants.VIBRANT:
+            default:
+                return palette.vibrant;
+            case BlurConstants.LIGHT_VIBRANT:
+                return palette.lightVibrant;
+            case BlurConstants.DARK_VIBRANT:
+                return palette.darkVibrant;
+            case BlurConstants.MUTED:
+                return palette.muted;
+            case BlurConstants.LIGHT_MUTED:
+                return palette.lightMuted;
+            case BlurConstants.DARK_MUTED:
+                return palette.darkMuted;
+        }
+//        return findBestSwatch(colors.get(0));
     }
 
 //    /**
 //     * 找到最佳色块
 //     *
-//     * @param palette
-//     * @param avg
+//     * @param swatch
 //     * @return
 //     */
-//    private static Color findBestSwatch(Palette palette, Color avg) {
-//        List<Color> swatches = Arrays.asList(palette.lightVibrant, palette.vibrant, palette.darkVibrant, palette.lightMuted, palette.muted, palette.darkMuted);
-//        swatches.sort(Comparator.comparingDouble(c -> distance(c, avg)));
-//
-//        Color swatch = swatches.get(0);
+//    private static Color findBestSwatch(Color swatch) {
 //        HSL hsl = ColorUtil.colorToHsl(swatch);
 //        if (hsl.s > 40) hsl.s = 40;
 //        if (hsl.l < 40) hsl.l = 40;
 //        else if (hsl.l > 60) hsl.l = 60;
 //        swatch = ColorUtil.hslToColor(hsl);
-//
 //        return swatch;
 //    }
 
-//    /**
-//     * 两种颜色的距离
-//     *
-//     * @param c1
-//     * @param c2
-//     * @return
-//     */
-//    private static double distance(Color c1, Color c2) {
-//        return Math.sqrt(Math.pow(c1.getRed() - c2.getRed(), 2) + Math.pow(c1.getGreen() - c2.getGreen(), 2) + Math.pow(c1.getBlue() - c2.getBlue(), 2));
-//    }
-//
-//    /**
-//     * 优化 Palette
-//     *
-//     * @param palette
-//     * @return
-//     */
-//    private static void optimizePalette(Palette palette) {
-//        HSL hsl;
-//        if (palette.vibrant == null && palette.darkVibrant == null && palette.lightVibrant == null) {
-//            if (palette.darkVibrant == null && palette.darkMuted != null) {
-//                hsl = colorToHsl(palette.darkMuted);
-//                hsl.l = targetDarkLuma;
-//                palette.darkVibrant = hslToColor(hsl);
-//            }
-//            if (palette.lightVibrant == null && palette.lightMuted != null) {
-//                hsl = colorToHsl(palette.lightMuted);
-//                hsl.l = targetDarkLuma;
-//                palette.darkVibrant = hslToColor(hsl);
-//            }
-//        }
-//        if (palette.vibrant == null && palette.darkVibrant != null) {
-//            hsl = colorToHsl(palette.darkVibrant);
-//            hsl.l = targetNormalLuma;
-//            palette.vibrant = hslToColor(hsl);
-//        } else if (palette.vibrant == null && palette.lightVibrant != null) {
-//            hsl = colorToHsl(palette.lightVibrant);
-//            hsl.l = targetNormalLuma;
-//            palette.vibrant = hslToColor(hsl);
-//        }
-//        if (palette.darkVibrant == null && palette.vibrant != null) {
-//            hsl = colorToHsl(palette.vibrant);
-//            hsl.l = targetDarkLuma;
-//            palette.darkVibrant = hslToColor(hsl);
-//        }
-//        if (palette.lightVibrant == null && palette.vibrant != null) {
-//            hsl = colorToHsl(palette.vibrant);
-//            hsl.l = targetLightLuma;
-//            palette.lightVibrant = hslToColor(hsl);
-//        }
-//        if (palette.muted == null && palette.vibrant != null) {
-//            hsl = colorToHsl(palette.vibrant);
-//            hsl.l = targetMutesSaturation;
-//            palette.muted = hslToColor(hsl);
-//        }
-//        if (palette.darkMuted == null && palette.darkVibrant != null) {
-//            hsl = colorToHsl(palette.darkVibrant);
-//            hsl.l = targetMutesSaturation;
-//            palette.darkMuted = hslToColor(hsl);
-//        }
-//        if (palette.lightMuted == null && palette.lightVibrant != null) {
-//            hsl = colorToHsl(palette.lightVibrant);
-//            hsl.l = targetMutesSaturation;
-//            palette.lightMuted = hslToColor(hsl);
-//        }
-//    }
+    /**
+     * 优化 Palette
+     *
+     * @param palette
+     * @return
+     */
+    private static void optimizePalette(Palette palette) {
+        HSL hsl;
+        if (palette.vibrant == null && palette.darkVibrant == null && palette.lightVibrant == null) {
+            if (palette.darkVibrant == null && palette.darkMuted != null) {
+                hsl = colorToHsl(palette.darkMuted);
+                hsl.l = targetDarkLuma;
+                palette.darkVibrant = hslToColor(hsl);
+            }
+            if (palette.lightVibrant == null && palette.lightMuted != null) {
+                hsl = colorToHsl(palette.lightMuted);
+                hsl.l = targetDarkLuma;
+                palette.darkVibrant = hslToColor(hsl);
+            }
+        }
+        if (palette.vibrant == null && palette.darkVibrant != null) {
+            hsl = colorToHsl(palette.darkVibrant);
+            hsl.l = targetNormalLuma;
+            palette.vibrant = hslToColor(hsl);
+        } else if (palette.vibrant == null && palette.lightVibrant != null) {
+            hsl = colorToHsl(palette.lightVibrant);
+            hsl.l = targetNormalLuma;
+            palette.vibrant = hslToColor(hsl);
+        }
+        if (palette.darkVibrant == null && palette.vibrant != null) {
+            hsl = colorToHsl(palette.vibrant);
+            hsl.l = targetDarkLuma;
+            palette.darkVibrant = hslToColor(hsl);
+        }
+        if (palette.lightVibrant == null && palette.vibrant != null) {
+            hsl = colorToHsl(palette.vibrant);
+            hsl.l = targetLightLuma;
+            palette.lightVibrant = hslToColor(hsl);
+        }
+        if (palette.muted == null && palette.vibrant != null) {
+            hsl = colorToHsl(palette.vibrant);
+            hsl.l = targetMutesSaturation;
+            palette.muted = hslToColor(hsl);
+        }
+        if (palette.darkMuted == null && palette.darkVibrant != null) {
+            hsl = colorToHsl(palette.darkVibrant);
+            hsl.l = targetMutesSaturation;
+            palette.darkMuted = hslToColor(hsl);
+        }
+        if (palette.lightMuted == null && palette.lightVibrant != null) {
+            hsl = colorToHsl(palette.lightVibrant);
+            hsl.l = targetMutesSaturation;
+            palette.lightMuted = hslToColor(hsl);
+        }
+    }
 
-//    /**
-//     * 混合多种颜色
-//     *
-//     * @param colors
-//     * @return
-//     */
-//    public static Color mix(Color... colors) {
-//        int rn = 0, gn = 0, bn = 0, s = colors.length;
-//        for (Color color : colors) {
-//            rn += color.getRed();
-//            gn += color.getGreen();
-//            bn += color.getBlue();
-//        }
-//        return new Color(rn / s, gn / s, bn / s);
-//    }
-
-//    private static double invertDiff(double v1, double v2) {
-//        return 1 - Math.abs((v1 - v2) / 100);
-//    }
+    private static float invertDiff(float v1, float v2) {
+        return 1 - Math.abs((v1 - v2) / 100);
+    }
 }

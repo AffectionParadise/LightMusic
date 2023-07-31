@@ -318,7 +318,7 @@ public class ImageUtil {
 //    }
 
     /**
-     * 返回纯色指定宽高的矩形 BuffedImage
+     * 返回纯色指定宽高的矩形 BufferedImage
      *
      * @param w
      * @param h
@@ -369,62 +369,6 @@ public class ImageUtil {
         g.fillOval(0, 0, w, w);
         g.dispose();
         return new ImageIcon(img);
-    }
-
-    /**
-     * 对 BufferedImage 进行毛玻璃化(高斯模糊)处理，用于专辑背景
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage gaussianBlur(BufferedImage img) {
-        if (img == null) return null;
-        gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
-        return gaussianFilter.filter(img, null);
-    }
-
-    /**
-     * 对 BufferedImage 进行暗化处理
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage darker(BufferedImage img) {
-        if (img == null) return null;
-        double ln = lightness(img);
-        float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
-        if (ln > 0.6f) bn = param;
-        else if (ln > 0.3f) bn = param + 0.1f;
-        else if (ln > 0.25f) bn = param + 0.18f;
-        else if (ln > 0.2f) bn = param + 0.26f;
-        else if (ln > 0.1f) bn = param + 0.35f;
-        else bn = param + 0.95f;
-        // 自适应亮度
-        contrastFilter.setBrightness(bn);
-        return contrastFilter.filter(img, null);
-    }
-
-    /**
-     * 获取 BufferedImage 亮度
-     *
-     * @param img
-     * @return
-     */
-    public static double lightness(BufferedImage img) {
-        if (img == null) return 0;
-        int w = img.getWidth(), h = img.getHeight();
-        List<Float> dots = new LinkedList<>();
-        double t = 0;
-        for (float i = 0; i < 1; i += 0.05f) dots.add(i);
-        for (float dw : dots) {
-            for (float dh : dots) {
-                int rgb = img.getRGB((int) (w * dw), (int) (h * dh));
-                t += ColorUtil.lightness(rgb);
-            }
-        }
-        int s = dots.size();
-        t /= s * s;
-        return t;
     }
 
     /**
@@ -572,6 +516,118 @@ public class ImageUtil {
     }
 
     /**
+     * 改变图片比例
+     *
+     * @param img
+     * @param scale
+     * @return
+     */
+    public static BufferedImage scale(BufferedImage img, float scale) {
+        try {
+            return Thumbnails.of(img).scale(scale).asBufferedImage();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 旋转图像
+     *
+     * @param img
+     * @param angle
+     * @return
+     */
+    public static BufferedImage rotate(BufferedImage img, double angle) {
+        try {
+            return Thumbnails.of(img).scale(1f).rotate(angle).asBufferedImage();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 图片添加阴影
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage shadow(BufferedImage img) {
+        return shadowFilter.filter(img, null);
+    }
+
+    /**
+     * 图片添加边框阴影
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage borderShadow(BufferedImage img) {
+        if (img == null) return null;
+        int w = img.getWidth(), h = img.getHeight();
+        BufferedImage outputImg = createTransparentImage(w + 2 * SHADOW_THICKNESS, h + 2 * SHADOW_THICKNESS);
+        Graphics2D g = outputImg.createGraphics();
+        g.drawImage(img, SHADOW_THICKNESS, SHADOW_THICKNESS, null);
+        g.dispose();
+        return width(borderShadowFilter.filter(outputImg, null), w);
+    }
+
+    /**
+     * 获取 BufferedImage 亮度
+     *
+     * @param img
+     * @return
+     */
+    public static double lightness(BufferedImage img) {
+        if (img == null) return 0;
+        int w = img.getWidth(), h = img.getHeight();
+        List<Float> dots = new LinkedList<>();
+        double t = 0;
+        for (float i = 0; i < 1; i += 0.05f) dots.add(i);
+        for (float dw : dots) {
+            for (float dh : dots) {
+                int rgb = img.getRGB((int) (w * dw), (int) (h * dh));
+                t += ColorUtil.lightness(rgb);
+            }
+        }
+        int s = dots.size();
+        t /= s * s;
+        return t;
+    }
+
+    /**
+     * 对 BufferedImage 进行毛玻璃化(高斯模糊)处理，用于专辑背景
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage gaussianBlur(BufferedImage img) {
+        if (img == null) return null;
+        gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
+        return gaussianFilter.filter(img, null);
+    }
+
+    /**
+     * 对 BufferedImage 进行暗化处理
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage darker(BufferedImage img) {
+        if (img == null) return null;
+        double ln = lightness(img);
+        float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
+        if (ln > 0.6f) bn = param;
+        else if (ln > 0.3f) bn = param + 0.1f;
+        else if (ln > 0.25f) bn = param + 0.18f;
+        else if (ln > 0.2f) bn = param + 0.26f;
+        else if (ln > 0.1f) bn = param + 0.35f;
+        else bn = param + 0.95f;
+        // 自适应亮度
+        contrastFilter.setBrightness(bn);
+        return contrastFilter.filter(img, null);
+    }
+
+    /**
      * 获取图片均值颜色
      *
      * @param img
@@ -606,12 +662,12 @@ public class ImageUtil {
     }
 
     /**
-     * 图像提取主色调，并生成指定宽高的线性渐变
+     * 图像提取主色调，并生成指定宽高的线性渐变图像
      *
      * @return
      */
-    public static BufferedImage toGradient(BufferedImage img, int w, int h) {
-        Color mc = ColorUtil.getBestSwatch(img, 2);
+    public static BufferedImage toGradientImage(BufferedImage img, int w, int h) {
+        Color mc = ColorUtil.getBestSwatch(img, 5);
         Color ca = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.2f), -20), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.2f), 20);
         return linearGradient(w, h, ca, cb);
     }
@@ -632,61 +688,5 @@ public class ImageUtil {
 //        g.fillRect(0, 0, w, h);
 //        g.dispose();
         return gf.filter(img, null);
-    }
-
-    /**
-     * 图片添加阴影
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage shadow(BufferedImage img) {
-        return shadowFilter.filter(img, null);
-    }
-
-    /**
-     * 图片添加边框阴影
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage borderShadow(BufferedImage img) {
-        if (img == null) return null;
-        int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = createTransparentImage(w + 2 * SHADOW_THICKNESS, h + 2 * SHADOW_THICKNESS);
-        Graphics2D g = outputImg.createGraphics();
-        g.drawImage(img, SHADOW_THICKNESS, SHADOW_THICKNESS, null);
-        g.dispose();
-        return width(borderShadowFilter.filter(outputImg, null), w);
-    }
-
-    /**
-     * 改变图片比例
-     *
-     * @param img
-     * @param scale
-     * @return
-     */
-    public static BufferedImage scale(BufferedImage img, float scale) {
-        try {
-            return Thumbnails.of(img).scale(scale).asBufferedImage();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 旋转图像
-     *
-     * @param img
-     * @param angle
-     * @return
-     */
-    public static BufferedImage rotate(BufferedImage img, double angle) {
-        try {
-            return Thumbnails.of(img).scale(1f).rotate(angle).asBufferedImage();
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

@@ -1400,7 +1400,6 @@ public class MainFrame extends JFrame {
     private CustomList<NetAlbumInfo> netAlbumList = new CustomList<>();
     private CustomScrollPane netAlbumScrollPane = new CustomScrollPane(netAlbumList);
     private DefaultListModel<NetAlbumInfo> netAlbumListModel = new DefaultListModel<>();
-    private DefaultListModel<NetAlbumInfo> netAlbumListForArtistModel = new DefaultListModel<>();
     // 作为专辑单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
     private DefaultListModel netMusicListForAlbumModel = new DefaultListModel<>();
     // 专辑右键弹出菜单
@@ -2390,7 +2389,7 @@ public class MainFrame extends JFrame {
         globalExecutor.execute(() -> {
             try {
                 motto = MusicServerUtil.getMotto();
-                if (player.loadedMusic()) return;
+                if (player.loadedMusicResource()) return;
                 titleLabel.setVisible(false);
                 titleLabel.setText(StringUtil.textToHtml(TITLE + "\n" + motto));
                 titleLabel.setVisible(true);
@@ -2479,10 +2478,10 @@ public class MainFrame extends JFrame {
                     albumLabel.setPreferredSize(ld);
                     songNameLabel.setVisible(false);
                     songNameLabel.setVisible(true);
-                    if (player.loadedMusic()) {
+                    if (player.loadedMusicResource()) {
                         showAlbumImage();
                     }
-                    if (blurType == BlurConstants.OFF) doBlur();
+                    if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) doBlur();
                 });
             }
         });
@@ -2954,51 +2953,51 @@ public class MainFrame extends JFrame {
                         UIStyleConstants.CUSTOM,
                         styleObject.getString("name"),
                         styleObject.getString("imgPath"),
-                        ColorUtil.rgbStrToColor(styleObject.getString("bgColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("foreColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("selectedColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("lrcColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("highlightColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("textColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("timeBarColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("iconColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("scrollBarColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("sliderColor")),
-                        ColorUtil.rgbStrToColor(styleObject.getString("spectrumColor"))
+                        ColorUtil.hexToColor(styleObject.getString("bgColor")),
+                        ColorUtil.hexToColor(styleObject.getString("foreColor")),
+                        ColorUtil.hexToColor(styleObject.getString("selectedColor")),
+                        ColorUtil.hexToColor(styleObject.getString("lrcColor")),
+                        ColorUtil.hexToColor(styleObject.getString("highlightColor")),
+                        ColorUtil.hexToColor(styleObject.getString("textColor")),
+                        ColorUtil.hexToColor(styleObject.getString("timeBarColor")),
+                        ColorUtil.hexToColor(styleObject.getString("iconColor")),
+                        ColorUtil.hexToColor(styleObject.getString("scrollBarColor")),
+                        ColorUtil.hexToColor(styleObject.getString("sliderColor")),
+                        ColorUtil.hexToColor(styleObject.getString("spectrumColor"))
                 );
                 addStyle(style);
             }
         }
         // 载入是否启用快捷键
         keyEnabled = config.getBooleanValue(ConfigConstants.KEY_ENABLED, true);
-        playOrPauseKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.PLAY_OR_PAUSE_KEYS));
+        playOrPauseKeys = KeyUtil.jsonArrayToKeys(config.getJSONArray(ConfigConstants.PLAY_OR_PAUSE_KEYS));
         if (playOrPauseKeys.isEmpty()) {
             playOrPauseKeys.add(KeyEvent.VK_CONTROL);
             playOrPauseKeys.add(KeyEvent.VK_F5);
         }
-        playLastKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.PLAY_LAST_KEYS));
+        playLastKeys = KeyUtil.jsonArrayToKeys(config.getJSONArray(ConfigConstants.PLAY_LAST_KEYS));
         if (playLastKeys.isEmpty()) {
             playLastKeys.add(KeyEvent.VK_CONTROL);
             playLastKeys.add(KeyEvent.VK_LEFT);
         }
-        playNextKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.PLAY_NEXT_KEYS));
+        playNextKeys = KeyUtil.jsonArrayToKeys(config.getJSONArray(ConfigConstants.PLAY_NEXT_KEYS));
         if (playNextKeys.isEmpty()) {
             playNextKeys.add(KeyEvent.VK_CONTROL);
             playNextKeys.add(KeyEvent.VK_RIGHT);
         }
-        backwardKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.BACKWARD_KEYS));
+        backwardKeys = KeyUtil.jsonArrayToKeys(config.getJSONArray(ConfigConstants.BACKWARD_KEYS));
         if (backwardKeys.isEmpty()) {
             backwardKeys.add(KeyEvent.VK_CONTROL);
             backwardKeys.add(KeyEvent.VK_ALT);
             backwardKeys.add(KeyEvent.VK_LEFT);
         }
-        forwardKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.FORWARD_KEYS));
+        forwardKeys = KeyUtil.jsonArrayToKeys(config.getJSONArray(ConfigConstants.FORWARD_KEYS));
         if (forwardKeys.isEmpty()) {
             forwardKeys.add(KeyEvent.VK_CONTROL);
             forwardKeys.add(KeyEvent.VK_ALT);
             forwardKeys.add(KeyEvent.VK_RIGHT);
         }
-        videoFullScreenKeys = KeyUtil.strToCodes(config.getString(ConfigConstants.VIDEO_FULL_SCREEN_KEYS));
+        videoFullScreenKeys = KeyUtil.jsonArrayToKeys(config.getJSONArray(ConfigConstants.VIDEO_FULL_SCREEN_KEYS));
         if (videoFullScreenKeys.isEmpty()) {
             videoFullScreenKeys.add(KeyEvent.VK_F11);
         }
@@ -3022,6 +3021,8 @@ public class MainFrame extends JFrame {
         BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 载入暗角滤镜因子
         BlurConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
+        // 载入线性渐变色彩风格
+        BlurConstants.gradientColorStyleIndex = config.getIntValue(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
         // 载入歌曲下载路径
         String musicDownPath = config.getString(ConfigConstants.MUSIC_DOWN_PATH);
         if (StringUtil.notEmpty(musicDownPath)) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
@@ -3733,17 +3734,17 @@ public class MainFrame extends JFrame {
             JSONObject styleObject = new JSONObject();
             styleObject.put("name", style.getStyleName());
             styleObject.put("imgPath", style.getStyleImgPath());
-            styleObject.put("bgColor", ColorUtil.colorToRgbStr(style.getBgColor()));
-            styleObject.put("foreColor", ColorUtil.colorToRgbStr(style.getForeColor()));
-            styleObject.put("selectedColor", ColorUtil.colorToRgbStr(style.getSelectedColor()));
-            styleObject.put("lrcColor", ColorUtil.colorToRgbStr(style.getLrcColor()));
-            styleObject.put("highlightColor", ColorUtil.colorToRgbStr(style.getHighlightColor()));
-            styleObject.put("textColor", ColorUtil.colorToRgbStr(style.getTextColor()));
-            styleObject.put("timeBarColor", ColorUtil.colorToRgbStr(style.getTimeBarColor()));
-            styleObject.put("iconColor", ColorUtil.colorToRgbStr(style.getIconColor()));
-            styleObject.put("scrollBarColor", ColorUtil.colorToRgbStr(style.getScrollBarColor()));
-            styleObject.put("sliderColor", ColorUtil.colorToRgbStr(style.getSliderColor()));
-            styleObject.put("spectrumColor", ColorUtil.colorToRgbStr(style.getSpectrumColor()));
+            styleObject.put("bgColor", ColorUtil.colorToHex(style.getBgColor()));
+            styleObject.put("foreColor", ColorUtil.colorToHex(style.getForeColor()));
+            styleObject.put("selectedColor", ColorUtil.colorToHex(style.getSelectedColor()));
+            styleObject.put("lrcColor", ColorUtil.colorToHex(style.getLrcColor()));
+            styleObject.put("highlightColor", ColorUtil.colorToHex(style.getHighlightColor()));
+            styleObject.put("textColor", ColorUtil.colorToHex(style.getTextColor()));
+            styleObject.put("timeBarColor", ColorUtil.colorToHex(style.getTimeBarColor()));
+            styleObject.put("iconColor", ColorUtil.colorToHex(style.getIconColor()));
+            styleObject.put("scrollBarColor", ColorUtil.colorToHex(style.getScrollBarColor()));
+            styleObject.put("sliderColor", ColorUtil.colorToHex(style.getSliderColor()));
+            styleObject.put("spectrumColor", ColorUtil.colorToHex(style.getSpectrumColor()));
             styleArray.add(styleObject);
         }
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
@@ -3751,12 +3752,12 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.CURR_UI_STYLE, ListUtil.indexOf(styles, currUIStyle));
         // 存入快捷键
         config.put(ConfigConstants.KEY_ENABLED, keyEnabled);
-        config.put(ConfigConstants.PLAY_OR_PAUSE_KEYS, KeyUtil.codesToStr(playOrPauseKeys));
-        config.put(ConfigConstants.PLAY_LAST_KEYS, KeyUtil.codesToStr(playLastKeys));
-        config.put(ConfigConstants.PLAY_NEXT_KEYS, KeyUtil.codesToStr(playNextKeys));
-        config.put(ConfigConstants.BACKWARD_KEYS, KeyUtil.codesToStr(backwardKeys));
-        config.put(ConfigConstants.FORWARD_KEYS, KeyUtil.codesToStr(forwardKeys));
-        config.put(ConfigConstants.VIDEO_FULL_SCREEN_KEYS, KeyUtil.codesToStr(videoFullScreenKeys));
+        config.put(ConfigConstants.PLAY_OR_PAUSE_KEYS, KeyUtil.keysToJsonArray(playOrPauseKeys));
+        config.put(ConfigConstants.PLAY_LAST_KEYS, KeyUtil.keysToJsonArray(playLastKeys));
+        config.put(ConfigConstants.PLAY_NEXT_KEYS, KeyUtil.keysToJsonArray(playNextKeys));
+        config.put(ConfigConstants.BACKWARD_KEYS, KeyUtil.keysToJsonArray(backwardKeys));
+        config.put(ConfigConstants.FORWARD_KEYS, KeyUtil.keysToJsonArray(forwardKeys));
+        config.put(ConfigConstants.VIDEO_FULL_SCREEN_KEYS, KeyUtil.keysToJsonArray(videoFullScreenKeys));
         // 存入选项卡
         config.put(ConfigConstants.TAB_INDEX, tabbedPane.getSelectedIndex());
         // 存入个人音乐选项卡
@@ -3779,6 +3780,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 存入暗角滤镜因子
         config.put(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
+        // 存入线性渐变色彩风格
+        config.put(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
         // 存入歌曲下载路径
         config.put(ConfigConstants.MUSIC_DOWN_PATH, SimplePath.DOWNLOAD_MUSIC_PATH);
         // 存入 MV 下载路径
@@ -6471,7 +6474,7 @@ public class MainFrame extends JFrame {
                 musicList.setCellRenderer(null);
                 for (MusicResource resource : selectedValues) {
                     // 改变取消收藏状态
-                    if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.loadedObject(resource) && hasBeenCollected(resource))
+                    if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.loadedMusicResource(resource) && hasBeenCollected(resource))
                         collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     model.removeElement(resource);
                     if (model == filterModel) {
@@ -7081,7 +7084,7 @@ public class MainFrame extends JFrame {
                     MusicResource resource = values.get(i);
                     if (hasBeenCollected(resource)) continue;
                     collectionModel.add(0, resource);
-                    if (player.loadedObject(resource))
+                    if (player.loadedMusicResource(resource))
                         collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
@@ -7092,7 +7095,7 @@ public class MainFrame extends JFrame {
                 values.forEach(resource -> {
                     if (hasBeenCollected(resource)) {
                         collectionModel.removeElement(resource);
-                        if (player.loadedObject(resource))
+                        if (player.loadedMusicResource(resource))
                             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -7594,7 +7597,7 @@ public class MainFrame extends JFrame {
                     NetMusicInfo musicInfo = values.get(i);
                     if (hasBeenCollected(musicInfo)) continue;
                     collectionModel.add(0, musicInfo);
-                    if (player.loadedObject(musicInfo))
+                    if (player.loadedMusicResource(musicInfo))
                         collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
@@ -7605,7 +7608,7 @@ public class MainFrame extends JFrame {
                 values.forEach(musicInfo -> {
                     if (hasBeenCollected(musicInfo)) {
                         collectionModel.removeElement(musicInfo);
-                        if (player.loadedObject(musicInfo))
+                        if (player.loadedMusicResource(musicInfo))
                             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -19362,7 +19365,7 @@ public class MainFrame extends JFrame {
                     // 解决删除元素带来的性能问题
                     playQueue.setModel(emptyListModel);
                     for (MusicResource resource : selectedValues) {
-                        if (player.loadedObject(resource)) unload();
+                        if (player.loadedMusicResource(resource)) unload();
                         playQueueModel.removeElement(resource);
                     }
                     playQueue.setModel(playQueueModel);
@@ -19429,8 +19432,8 @@ public class MainFrame extends JFrame {
                 playQueueModel.set(selectedIndex - 1, r2);
                 playQueueModel.set(selectedIndex, r1);
                 playQueue.setSelectedIndex(selectedIndex - 1);
-                if (player.loadedObject(r1)) currSong = selectedIndex;
-                else if (player.loadedObject(r2)) currSong = selectedIndex - 1;
+                if (player.loadedMusicResource(r1)) currSong = selectedIndex;
+                else if (player.loadedMusicResource(r2)) currSong = selectedIndex - 1;
             }
         });
         playQueueMoveDownToolButton.addActionListener(e -> {
@@ -19441,8 +19444,8 @@ public class MainFrame extends JFrame {
                 playQueueModel.set(selectedIndex, r2);
                 playQueueModel.set(selectedIndex + 1, r1);
                 playQueue.setSelectedIndex(selectedIndex + 1);
-                if (player.loadedObject(r1)) currSong = selectedIndex + 1;
-                else if (player.loadedObject(r2)) currSong = selectedIndex;
+                if (player.loadedMusicResource(r1)) currSong = selectedIndex + 1;
+                else if (player.loadedMusicResource(r2)) currSong = selectedIndex;
             }
         });
 
@@ -19622,7 +19625,7 @@ public class MainFrame extends JFrame {
                     MusicResource resource = values.get(i);
                     if (hasBeenCollected(resource)) continue;
                     collectionModel.add(0, resource);
-                    if (player.loadedObject(resource))
+                    if (player.loadedMusicResource(resource))
                         collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 }
                 if (needRefresh) musicList.setModel(model);
@@ -19633,7 +19636,7 @@ public class MainFrame extends JFrame {
                 values.forEach(resource -> {
                     if (hasBeenCollected(resource)) {
                         collectionModel.removeElement(resource);
-                        if (player.loadedObject(resource))
+                        if (player.loadedMusicResource(resource))
                             collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                     }
                 });
@@ -19741,6 +19744,8 @@ public class MainFrame extends JFrame {
         playQueueLeftBox.add(playQueueScrollPane);
     }
 
+    private boolean lrcListDragged;
+
     // 初始化歌词列表
     private void initLrcList() {
         // 复制歌词
@@ -19847,7 +19852,26 @@ public class MainFrame extends JFrame {
 //                renderer.setHoverIndex(-1);
 //                lrcList.repaint();
 //            }
-//        });
+//        }
+
+        // 滚动条调整事件（鼠标滚轮滑动、滚动条拖动）
+        JScrollBar vs = lrcScrollPane.getVerticalScrollBar();
+        swActionTimer = new Timer(2500, e -> {
+            swActionTimer.stop();
+            if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
+            ((ScrollBarUI) vs.getUI()).setActive(false);
+            lrcScrollWaiting = false;
+        });
+        Runnable swAction = () -> {
+            if (swActionTimer.isRunning()) swActionTimer.stop();
+            currScrollVal = vs.getValue();
+            ((ScrollBarUI) vs.getUI()).setActive(true);
+            lrcScrollWaiting = true;
+            swActionTimer.start();
+        };
+        // 歌词面板拖动时上下滚动
+        Point dragFrom = new Point();
+
         // 右键弹出菜单
         lrcList.addMouseListener(new MouseAdapter() {
             @Override
@@ -19872,34 +19896,18 @@ public class MainFrame extends JFrame {
                     lrcPopupMenu.show(lrcList, e.getX(), e.getY());
                 }
                 // 双击定位歌词时间
-                else if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
                     String lyric = lrcList.getSelectedValue().getLyric();
                     if (lyric.trim().isEmpty()) return;
                     if (nextLrc >= 0) locateLrcMenuItem.doClick();
                 }
+                // 拖拽释放启动歌词滚动延时动画
+                if (lrcListDragged) {
+                    swAction.run();
+                    lrcListDragged = false;
+                }
             }
-        });
-        // 绑定数据 Model
-        lrcList.setModel(lrcListModel);
 
-        // 滚动条调整事件（鼠标滚轮滑动、滚动条拖动）
-        JScrollBar vs = lrcScrollPane.getVerticalScrollBar();
-        swActionTimer = new Timer(2500, e -> {
-            swActionTimer.stop();
-            if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
-            ((ScrollBarUI) vs.getUI()).setActive(false);
-            lrcScrollWaiting = false;
-        });
-        Runnable swAction = () -> {
-            if (swActionTimer.isRunning()) swActionTimer.stop();
-            currScrollVal = vs.getValue();
-            ((ScrollBarUI) vs.getUI()).setActive(true);
-            lrcScrollWaiting = true;
-            swActionTimer.start();
-        };
-        // 歌词面板拖动时上下滚动
-        Point dragFrom = new Point();
-        lrcList.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1) return;
@@ -19907,6 +19915,9 @@ public class MainFrame extends JFrame {
                 dragFrom.y = e.getY();
             }
         });
+        // 绑定数据 Model
+        lrcList.setModel(lrcListModel);
+
         // 歌词面板大小变化后对齐高亮歌词
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
@@ -19916,20 +19927,23 @@ public class MainFrame extends JFrame {
                 lrcScrollAnimation = true;
             }
         });
-        // 歌词列表左键上下拖拽上下滚动，触发延时动画
+        // 歌词列表左键上下拖拽上下滚动时停止延时动画
         lrcList.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
+                lrcListDragged = true;
                 // 停止当前动画
+                swActionTimer.stop();
                 lrcScrollAnimation = false;
+                lrcScrollWaiting = true;
                 Point p = e.getPoint();
                 int yOffset = (dragFrom.y - p.y) * 2;
                 boolean ok = lrcScrollPane.setVValue(lrcScrollPane.getVValue() + yOffset);
                 dragFrom.x = p.x;
                 // 拖动时超出滚动条范围后不再叠加参数
                 dragFrom.y = ok ? p.y + yOffset : p.y;
-                swAction.run();
+                ((ScrollBarUI) vs.getUI()).setActive(true);
             }
         });
         // 歌词面板滚轮滚动触发延时动画
@@ -19939,6 +19953,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseDragged(MouseEvent e) {
                 swActionTimer.stop();
+                lrcScrollAnimation = false;
                 lrcScrollWaiting = true;
             }
         });
@@ -20641,7 +20656,7 @@ public class MainFrame extends JFrame {
             miniDialog.infoLabel.setText(changePaneButton.getText());
         }
         // 恢复背景
-        if (blurType != BlurConstants.OFF) doBlur();
+        doBlur();
         // 禁止 MV、收藏、下载、评论、乐谱
         mvButton.setEnabled(false);
         collectButton.setEnabled(false);
@@ -21004,7 +21019,7 @@ public class MainFrame extends JFrame {
         }
 
         // 判断歌曲是否正在播放
-        if (player.loadedObject(obj)) {
+        if (player.loadedMusicResource((MusicResource) obj)) {
             new TipDialog(THIS, ALREADY_PLAYING_MSG).showDialog();
             return;
         }
@@ -21293,10 +21308,9 @@ public class MainFrame extends JFrame {
     private void updateCurrSong() {
         currSong = -1;
         for (int i = 0, size = playQueueModel.size(); i < size; i++) {
-            if (player.loadedObject(playQueueModel.get(i))) {
-                currSong = i;
-                return;
-            }
+            if (!player.loadedMusicResource(playQueueModel.get(i))) continue;
+            currSong = i;
+            return;
         }
     }
 
@@ -21476,7 +21490,7 @@ public class MainFrame extends JFrame {
 
     // 开启频谱
     public void openSpectrum() {
-        if (!player.loadedMusic()) return;
+        if (!player.loadedMusicResource()) return;
         if (!spectrumPanel.isDrawSpectrum()) spectrumPanel.setDrawSpectrum(true);
         // 开始动画之前先判断在不在运行，防止重复运行动画造成卡顿！
         if (!spectrumTimer.isRunning()) spectrumTimer.start();
@@ -22616,9 +22630,7 @@ public class MainFrame extends JFrame {
         artistLabel.setForeground(textColor);
         albumLabel.setForeground(textColor);
         // 切换风格，包含背景图，模糊状态并载入了音乐就不换
-        if (blurType == BlurConstants.OFF || !player.loadedMusic()) {
-            doStyleBlur(style);
-        }
+        if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) doBlur();
         // 标题图标
         Image titleImg = ImageUtil.dye(titleIcon, iconColor).getImage();
         setIconImage(titleImg);
@@ -23101,16 +23113,15 @@ public class MainFrame extends JFrame {
 
     // 模糊碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化
     public void doBlur() {
-        // 未加载歌曲，转为主题模糊
-        if (blurType == BlurConstants.OFF || !player.loadedMusic()) {
-            doStyleBlur(currUIStyle);
-            return;
-        }
         blurExecutor.execute(() -> {
-            BufferedImage albumImage = player.getMetaMusicInfo().getAlbumImage();
-            if (albumImage == null) albumImage = defaultAlbumImage;
-            if (blurType == BlurConstants.MC)
-                albumImage = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(albumImage));
+            BufferedImage img;
+            boolean loadedMusicResource = player.loadedMusicResource();
+            if (blurType != BlurConstants.OFF && loadedMusicResource) {
+                img = player.getMetaMusicInfo().getAlbumImage();
+                if (img == null) img = defaultAlbumImage;
+                if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
+            } else img = currUIStyle.getImg();
+
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
                 gw = windowWidth;
@@ -23118,61 +23129,40 @@ public class MainFrame extends JFrame {
             }
             // 改变迷你窗口背景
             if (miniDialog != null) {
-                BufferedImage finalAlbumImage = albumImage;
-                miniDialog.globalExecutor.execute(() -> miniDialog.doBlur(finalAlbumImage));
+                BufferedImage finalImg = img;
+                miniDialog.globalExecutor.execute(() -> miniDialog.doBlur(finalImg));
             }
-            BufferedImage bufferedImage = albumImage;
-            // 截取中间的一部分(有的图片是长方形)
-            bufferedImage = ImageUtil.cropCenter(bufferedImage);
+
+            // 截取正方形(有的图片是长方形)
+            if (loadedMusicResource && (blurType == BlurConstants.CV || blurType == BlurConstants.LG))
+                img = ImageUtil.cropCenter(img);
+            // 消除透明度
+            img = ImageUtil.eraseTransparency(img);
+            // 线性渐变
+            if (loadedMusicResource && blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, gw, gh);
             if (gsOn) {
                 // 处理成 100 * 100 大小
-                bufferedImage = ImageUtil.width(bufferedImage, 100);
+                img = ImageUtil.width(img, 100);
                 // 高斯模糊
-                bufferedImage = ImageUtil.gaussianBlur(bufferedImage);
+                img = ImageUtil.gaussianBlur(img);
             }
-            // 放大至窗口大小
-            bufferedImage = ImageUtil.width(bufferedImage, gw);
-            if (gh > bufferedImage.getHeight())
-                bufferedImage = ImageUtil.height(bufferedImage, gh);
+            // 缩放至窗口大小
+            img = ImageUtil.width(img, gw);
+            if (gh > img.getHeight())
+                img = ImageUtil.height(img, gh);
             // 裁剪中间的一部分
-            if (blurType == BlurConstants.CV) {
-                int ih = bufferedImage.getHeight();
-                bufferedImage = ImageUtil.region(bufferedImage, 0, (ih - gh) / 2, gw, gh);
-                bufferedImage = ImageUtil.quality(bufferedImage, 0.1);
+            if (!loadedMusicResource || blurType == BlurConstants.CV || blurType == BlurConstants.OFF) {
+                int iw = img.getWidth(), ih = img.getHeight();
+                img = ImageUtil.region(img, iw > gw ? (iw - gw) / 2 : 0, iw > gw ? 0 : (ih - gh) / 2, gw, gh);
+                img = ImageUtil.quality(img, 0.1);
+            } else {
+                img = ImageUtil.forceSize(img, gw, gh);
             }
-            // 线性渐变
-            if (blurType == BlurConstants.LG) bufferedImage = ImageUtil.toGradient(bufferedImage, gw, gh);
             // 暗角滤镜
-            if (darkerOn) bufferedImage = ImageUtil.darker(bufferedImage);
+            if (darkerOn) img = ImageUtil.darker(img);
             // 设置圆角
-//                bufferedImage = ImageUtils.setRadius(bufferedImage, WIN_ARC);
-            globalPanel.setBackgroundImage(bufferedImage);
-            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
-            updateUpperComp();
-        });
-    }
-
-    // 风格背景模糊
-    private void doStyleBlur(UIStyle style) {
-        blurExecutor.execute(() -> {
-            BufferedImage styleImage = style.getImg();
-            if (gsOn) {
-                // 缩小
-                styleImage = ImageUtil.width(styleImage, 100);
-                // 高斯模糊
-                styleImage = ImageUtil.gaussianBlur(styleImage);
-            }
-            styleImage = ImageUtil.eraseTransparency(styleImage);
-            // 放大至窗口大小
-            styleImage = ImageUtil.width(styleImage, getWidth());
-            if (darkerOn) {
-                // 亮度
-                styleImage = ImageUtil.darker(styleImage);
-            }
-            // 质量
-            styleImage = ImageUtil.quality(styleImage, 0.1f);
-            // 一定要让 Thumbnails 降低图像质量，不然因为图像太大频繁更新造成严重卡顿！
-            globalPanel.setBackgroundImage(styleImage);
+//                img = ImageUtils.setRadius(img, WIN_ARC);
+            globalPanel.setBackgroundImage(img);
             updateUpperComp();
             if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
         });

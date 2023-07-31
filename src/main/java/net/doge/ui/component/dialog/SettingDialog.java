@@ -81,6 +81,9 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel darkerFactorPanel = new CustomPanel();
     private CustomLabel darkerFactorLabel = new CustomLabel("暗角滤镜因子（因子越小越暗）：");
     private CustomComboBox<String> darkerFactorComboBox = new CustomComboBox();
+    private CustomPanel gradientColorStylePanel = new CustomPanel();
+    private CustomLabel gradientColorStyleLabel = new CustomLabel("线性渐变色彩风格：");
+    private CustomComboBox<String> gradientColorStyleComboBox = new CustomComboBox();
     private CustomPanel musicDownPanel = new CustomPanel();
     private CustomLabel musicDownLabel = new CustomLabel("歌曲下载路径：");
     private CustomTextField musicDownPathTextField = new CustomTextField(20);
@@ -238,6 +241,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextPanel.setLayout(fl);
         gsFactorPanel.setLayout(fl);
         darkerFactorPanel.setLayout(fl);
+        gradientColorStylePanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
         mvDownPanel.setLayout(fl);
         cachePanel.setLayout(fl);
@@ -277,6 +281,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextPanel.setBorder(b);
         gsFactorPanel.setBorder(b);
         darkerFactorPanel.setBorder(b);
+        gradientColorStylePanel.setBorder(b);
         musicDownPanel.setBorder(b);
         mvDownPanel.setBorder(b);
         cachePanel.setBorder(b);
@@ -312,6 +317,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextCheckBox.setForeground(textColor);
         gsFactorLabel.setForeground(textColor);
         darkerFactorLabel.setForeground(textColor);
+        gradientColorStyleLabel.setForeground(textColor);
         musicDownLabel.setForeground(textColor);
         mvDownLabel.setForeground(textColor);
         cacheLabel.setForeground(textColor);
@@ -473,6 +479,7 @@ public class SettingDialog extends AbstractTitledDialog {
         // 下拉框 UI
         gsFactorComboBox.setUI(new ComboBoxUI(gsFactorComboBox, f));
         darkerFactorComboBox.setUI(new ComboBoxUI(darkerFactorComboBox, f));
+        gradientColorStyleComboBox.setUI(new ComboBoxUI(gradientColorStyleComboBox, f));
         closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f));
         windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f));
         fobComboBox.setUI(new ComboBoxUI(fobComboBox, f));
@@ -627,13 +634,17 @@ public class SettingDialog extends AbstractTitledDialog {
 
         showTabTextPanel.add(showTabTextCheckBox);
 
+        for (String name : BlurConstants.gaussianFactorName) gsFactorComboBox.addItem(name);
+        gsFactorPanel.add(gsFactorLabel);
+        gsFactorPanel.add(gsFactorComboBox);
+
         for (String name : BlurConstants.darkerFactorName) darkerFactorComboBox.addItem(name);
         darkerFactorPanel.add(darkerFactorLabel);
         darkerFactorPanel.add(darkerFactorComboBox);
 
-        for (String name : BlurConstants.gaussianFactorName) gsFactorComboBox.addItem(name);
-        gsFactorPanel.add(gsFactorLabel);
-        gsFactorPanel.add(gsFactorComboBox);
+        for (String name : BlurConstants.gradientColorStyleName) gradientColorStyleComboBox.addItem(name);
+        gradientColorStylePanel.add(gradientColorStyleLabel);
+        gradientColorStylePanel.add(gradientColorStyleComboBox);
 
         musicDownPanel.add(musicDownLabel);
         musicDownPanel.add(musicDownPathTextField);
@@ -718,6 +729,7 @@ public class SettingDialog extends AbstractTitledDialog {
         centerPanel.add(showTabTextPanel);
         centerPanel.add(gsFactorPanel);
         centerPanel.add(darkerFactorPanel);
+        centerPanel.add(gradientColorStylePanel);
 
         centerPanel.add(downloadAndCachePanel);
         centerPanel.add(musicDownPanel);
@@ -756,6 +768,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextCheckBox.setSelected(f.showTabText);
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
+        gradientColorStyleComboBox.setSelectedIndex(BlurConstants.gradientColorStyleIndex);
         musicDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath());
         mvDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
         cachePathTextField.setText(new File(SimplePath.CACHE_PATH).getAbsolutePath());
@@ -815,7 +828,11 @@ public class SettingDialog extends AbstractTitledDialog {
         int darkerFactorIndex = BlurConstants.darkerFactorIndex;
         BlurConstants.darkerFactorIndex = darkerFactorComboBox.getSelectedIndex();
 
-        if (gsFactorIndex != BlurConstants.gsFactorIndex || darkerFactorIndex != BlurConstants.darkerFactorIndex)
+        int gradientColorStyleIndex = BlurConstants.gradientColorStyleIndex;
+        BlurConstants.gradientColorStyleIndex = gradientColorStyleComboBox.getSelectedIndex();
+
+        if (gsFactorIndex != BlurConstants.gsFactorIndex || darkerFactorIndex != BlurConstants.darkerFactorIndex
+                || gradientColorStyleIndex != BlurConstants.gradientColorStyleIndex)
             f.doBlur();
 
         SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
