@@ -112,10 +112,10 @@ public class MusicMenuReq {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("mid");
-                String songName = songJson.getString("name");
+                String songName = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("name");
+                String albumName = songJson.getJSONObject("album").getString("title");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");

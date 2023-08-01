@@ -3021,8 +3021,8 @@ public class MainFrame extends JFrame {
         BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 载入暗角滤镜因子
         BlurConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
-        // 载入线性渐变色彩风格
-        BlurConstants.gradientColorStyleIndex = config.getIntValue(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
+//        // 载入线性渐变色彩风格
+//        BlurConstants.gradientColorStyleIndex = config.getIntValue(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
         // 载入歌曲下载路径
         String musicDownPath = config.getString(ConfigConstants.MUSIC_DOWN_PATH);
         if (StringUtil.notEmpty(musicDownPath)) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
@@ -3780,8 +3780,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 存入暗角滤镜因子
         config.put(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
-        // 存入线性渐变色彩风格
-        config.put(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
+//        // 存入线性渐变色彩风格
+//        config.put(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
         // 存入歌曲下载路径
         config.put(ConfigConstants.MUSIC_DOWN_PATH, SimplePath.DOWNLOAD_MUSIC_PATH);
         // 存入 MV 下载路径
@@ -23108,7 +23108,11 @@ public class MainFrame extends JFrame {
         // 更新弹出菜单
         if (currPopup != null) currPopup.repaint();
         // 更新对话框
-        for (AbstractShadowDialog d : currDialogs) d.updateBlur();
+        try {
+            for (AbstractShadowDialog d : currDialogs) d.updateBlur();
+        } catch (ConcurrentModificationException e) {
+
+        }
     }
 
     // 模糊碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化

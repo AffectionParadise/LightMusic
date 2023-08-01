@@ -414,10 +414,10 @@ public class RadioInfoReq {
                     JSONObject songJson = songArray.getJSONObject(i);
 
                     String songId = songJson.getString("mid");
-                    String name = songJson.getString("name");
+                    String name = songJson.getString("title");
                     String artist = SdkUtil.parseArtist(songJson);
                     String artistId = SdkUtil.parseArtistId(songJson);
-                    String albumName = songJson.getJSONObject("album").getString("name");
+                    String albumName = songJson.getJSONObject("album").getString("title");
                     String albumId = songJson.getJSONObject("album").getString("mid");
                     Double duration = songJson.getDouble("interval");
 

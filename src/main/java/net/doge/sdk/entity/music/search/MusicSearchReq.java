@@ -36,7 +36,7 @@ public class MusicSearchReq {
     // 关键词搜索歌曲 API (搜歌词) (酷狗)
     private final String SEARCH_MUSIC_BY_LYRIC_KG_API = "http://mobileservice.kugou.com/api/v3/lyric/search?keyword=%s&page=%s&pagesize=%s";
     // 关键词搜索歌曲 API (酷我)
-    private final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&reqId=a52ed540-2fb5-11ee-bba2-0d6f963952a7&plat=web_www&from=&httpsStatus=1";
     // 关键词搜索歌曲 API (咪咕)
     private final String SEARCH_MUSIC_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=2&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索歌曲 API (搜歌词) (咪咕)
@@ -319,10 +319,10 @@ public class MusicSearchReq {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("mid");
-                String songName = songJson.getString("name");
+                String songName = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("name");
+                String albumName = songJson.getJSONObject("album").getString("title");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
@@ -359,10 +359,10 @@ public class MusicSearchReq {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("mid");
-                String songName = songJson.getString("name");
+                String songName = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("name");
+                String albumName = songJson.getJSONObject("album").getString("title");
                 String albumId = songJson.getJSONObject("album").getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("id");

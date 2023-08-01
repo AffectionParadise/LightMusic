@@ -133,8 +133,8 @@ public class LrcData {
             // 处理歌词复用的情况
             for (int i = 0; i < timeNum; ++i) {
                 Statement sm = new Statement();
-                // 设置歌词，包含 ""
-                sm.setLyric(timeNum < str.length ? str[str.length - 1].trim() : "");
+                // 设置歌词，去除首尾空格，将多个中间连续空格缩成一个，包含 ""
+                sm.setLyric(timeNum < str.length ? str[str.length - 1].trim().replaceAll(" +", " ") : "");
                 // 设置时间
                 sm.setTime(str[i]);
                 statements.add(sm);

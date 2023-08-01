@@ -88,7 +88,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 其他行的样式
         else {
             label.setFont(index == row - 2 ? shrinkFont : defaultFont);
-            label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth)));
+            label.setText(StringUtil.textToHtml(StringUtil.wrapLineByWidth(lyric, maxWidth)));
 //            labelUI.setDrawBg(index == hoverIndex && StringUtil.notEmpty(text.trim()));
             label.setIcon(null);
         }
