@@ -463,13 +463,14 @@ public class AlbumInfoReq {
             total = songArray.size();
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject albumJson = songJson.getJSONObject("al");
 
                 String songId = songJson.getString("id");
                 String name = songJson.getString("name").trim();
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("al").getString("name");
-                String albumId = songJson.getJSONObject("al").getString("id");
+                String albumName = albumJson.getString("name");
+                String albumId = albumJson.getString("id");
                 Double duration = songJson.getDouble("dt") / 1000;
                 String mvId = songJson.getString("mv");
 
@@ -537,13 +538,14 @@ public class AlbumInfoReq {
             JSONArray songArray = data.getJSONArray("songList");
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i).getJSONObject("songInfo");
+                JSONObject albumJson = songJson.getJSONObject("album");
 
                 String songId = songJson.getString("mid");
                 String name = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("title");
-                String albumId = songJson.getJSONObject("album").getString("mid");
+                String albumName = albumJson.getString("title");
+                String albumId = albumJson.getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
 

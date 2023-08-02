@@ -348,12 +348,13 @@ public class MvMenuReq {
             t = mvArray.size();
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
+                JSONObject owner = mvJson.getJSONObject("owner");
 
                 String mvId = mvJson.getString("cid");
                 String bvId = mvJson.getString("bvid");
                 String mvName = mvJson.getString("title");
-                String artistName = mvJson.getJSONObject("owner").getString("name");
-                String creatorId = mvJson.getJSONObject("owner").getString("mid");
+                String artistName = owner.getString("name");
+                String creatorId = owner.getString("mid");
                 String coverImgUrl = mvJson.getString("pic");
                 Long playCount = mvJson.getJSONObject("stat").getLong("view");
                 Double duration = mvJson.getDouble("duration");

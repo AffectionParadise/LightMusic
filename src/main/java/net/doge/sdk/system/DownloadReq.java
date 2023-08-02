@@ -1,4 +1,4 @@
-package net.doge.sdk.core;
+package net.doge.sdk.system;
 
 import net.doge.model.task.Task;
 import net.doge.sdk.common.SdkCommon;

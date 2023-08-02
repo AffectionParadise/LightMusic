@@ -116,16 +116,14 @@ public class MusicInfoReq {
                         .execute()
                         .body();
                 JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("program");
+                JSONObject dj = songJson.getJSONObject("dj");
 
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(songJson.getDouble("duration") / 1000);
-                if (!musicInfo.hasArtist())
-                    musicInfo.setArtist(songJson.getJSONObject("dj").getString("nickname"));
-                if (!musicInfo.hasArtistId())
-                    musicInfo.setArtistId(songJson.getJSONObject("dj").getString("userId"));
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(dj.getString("nickname"));
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(dj.getString("userId"));
                 if (!musicInfo.hasAlbumName())
                     musicInfo.setAlbumName(songJson.getJSONObject("radio").getString("name"));
-                if (!musicInfo.hasAlbumId())
-                    musicInfo.setAlbumId(songJson.getJSONObject("radio").getString("id"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(songJson.getJSONObject("radio").getString("id"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage albumImage = SdkUtil.getImageFromUrl(songJson.getString("coverUrl"));
@@ -141,14 +139,16 @@ public class MusicInfoReq {
                 JSONArray array = JSONObject.parseObject(songBody).getJSONArray("songs");
                 if (JsonUtil.isEmpty(array)) return;
                 JSONObject songJson = array.getJSONObject(0);
+                JSONObject albumJson = songJson.getJSONObject("al");
+
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(songJson.getDouble("dt") / 1000);
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(songJson));
                 if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(songJson));
-                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(songJson.getJSONObject("al").getString("name"));
-                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(songJson.getJSONObject("al").getString("id"));
+                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(albumJson.getString("name"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumJson.getString("id"));
                 if (!musicInfo.hasAlbumImage()) {
                     GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage albumImage = SdkUtil.getImageFromUrl(songJson.getJSONObject("al").getString("picUrl"));
+                        BufferedImage albumImage = SdkUtil.getImageFromUrl(albumJson.getString("picUrl"));
                         ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                         musicInfo.callback();
                     });

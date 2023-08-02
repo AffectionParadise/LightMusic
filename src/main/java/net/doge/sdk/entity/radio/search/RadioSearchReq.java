@@ -73,11 +73,12 @@ public class RadioSearchReq {
                 JSONArray radioArray = result.getJSONArray("djRadios");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
+                    JSONObject djJson = radioJson.getJSONObject("dj");
 
                     String radioId = radioJson.getString("id");
                     String radioName = radioJson.getString("name");
-                    String dj = radioJson.getJSONObject("dj").getString("nickname");
-                    String djId = radioJson.getJSONObject("dj").getString("userId");
+                    String dj = djJson.getString("nickname");
+                    String djId = djJson.getString("userId");
                     Long playCount = radioJson.getLong("playCount");
                     Integer trackCount = radioJson.getIntValue("programCount");
                     String category = radioJson.getString("category");

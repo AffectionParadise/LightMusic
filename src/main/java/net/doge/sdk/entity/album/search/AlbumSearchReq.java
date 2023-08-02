@@ -395,11 +395,12 @@ public class AlbumSearchReq {
             JSONArray albumArray = data.getJSONArray("object_list");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
+                JSONObject user = albumJson.getJSONObject("user");
 
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
-                String artist = albumJson.getJSONObject("user").getString("username");
-                String artistId = albumJson.getJSONObject("user").getString("id");
+                String artist = user.getString("username");
+                String artistId = user.getString("id");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("updated_at_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getIntValue("count");
@@ -434,11 +435,12 @@ public class AlbumSearchReq {
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject mainJson = albumArray.getJSONObject(i);
                 JSONObject albumJson = mainJson.getJSONObject("album");
+                JSONObject sender = mainJson.getJSONObject("sender");
 
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
-                String artist = mainJson.getJSONObject("sender").getString("username");
-                String artistId = mainJson.getJSONObject("sender").getString("id");
+                String artist = sender.getString("username");
+                String artistId = sender.getString("id");
                 String publishTime = TimeUtil.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getIntValue("count");

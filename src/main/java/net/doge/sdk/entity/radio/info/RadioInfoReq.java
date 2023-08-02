@@ -82,11 +82,12 @@ public class RadioInfoReq {
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject radioJson = radioInfoJson.getJSONObject("data");
+                JSONObject djJson = radioJson.getJSONObject("dj");
 
                 String radioId = radioJson.getString("id");
                 String radioName = radioJson.getString("name");
-                String dj = radioJson.getJSONObject("dj").getString("nickname");
-                String djId = radioJson.getJSONObject("dj").getString("userId");
+                String dj = djJson.getString("nickname");
+                String djId = djJson.getString("userId");
 //                Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
@@ -210,6 +211,7 @@ public class RadioInfoReq {
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject radioJson = radioInfoJson.getJSONObject("data");
+            JSONObject dj = radioJson.getJSONObject("dj");
 
             String coverImgUrl = radioJson.getString("picUrl");
             String description = radioJson.getString("desc");
@@ -217,8 +219,8 @@ public class RadioInfoReq {
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             radioInfo.setDescription(description);
-            if (!radioInfo.hasDj()) radioInfo.setDj(radioJson.getJSONObject("dj").getString("nickname"));
-            if (!radioInfo.hasDjId()) radioInfo.setDjId(radioJson.getJSONObject("dj").getString("userId"));
+            if (!radioInfo.hasDj()) radioInfo.setDj(dj.getString("nickname"));
+            if (!radioInfo.hasDjId()) radioInfo.setDjId(dj.getString("userId"));
             String category = radioJson.getString("category");
             if (StringUtil.notEmpty(category)) category += "、" + radioJson.getString("secondCategory");
             if (!radioInfo.hasCategory()) radioInfo.setCategory(category);
@@ -412,13 +414,14 @@ public class RadioInfoReq {
                 total.set(songArray.size());
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
+                    JSONObject albumJson = songJson.getJSONObject("album");
 
                     String songId = songJson.getString("mid");
                     String name = songJson.getString("title");
                     String artist = SdkUtil.parseArtist(songJson);
                     String artistId = SdkUtil.parseArtistId(songJson);
-                    String albumName = songJson.getJSONObject("album").getString("title");
-                    String albumId = songJson.getJSONObject("album").getString("mid");
+                    String albumName = albumJson.getString("title");
+                    String albumId = albumJson.getString("mid");
                     Double duration = songJson.getDouble("interval");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();

@@ -2,10 +2,7 @@ package net.doge.util.ui;
 
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.http.HttpRequest;
-import com.jhlabs.image.ContrastFilter;
-import com.jhlabs.image.GaussianFilter;
-import com.jhlabs.image.GradientFilter;
-import com.jhlabs.image.ShadowFilter;
+import com.jhlabs.image.*;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.player.Format;
@@ -215,6 +212,24 @@ public class ImageUtil {
      */
     public static byte[] toBytes(BufferedImage img) {
         return ImgUtil.toBytes(img, ImgUtil.IMAGE_TYPE_PNG);
+    }
+
+    /**
+     * 将图片转为一维像素数组
+     *
+     * @param img
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @return
+     */
+    public static int[] toPixels(BufferedImage img, int x, int y, int w, int h) {
+        int[] pixels = new int[w * h];
+        for (int index = 0, i = x; i < w; i++)
+            for (int j = y; j < h; j++)
+                pixels[index++] = img.getRGB(i, j);
+        return pixels;
     }
 
     /**
@@ -666,7 +681,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage toGradientImage(BufferedImage img, int w, int h) {
-        Color mc = ColorUtil.getBestSwatch(img, 3);
+        Color mc = ColorUtil.getBestSwatch(img);
         Color ca = ColorUtil.rotate(mc, -10), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.3f), 10);
         return linearGradient(w, h, ca, cb);
     }

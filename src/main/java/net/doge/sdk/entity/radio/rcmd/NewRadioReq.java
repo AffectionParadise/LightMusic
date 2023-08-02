@@ -64,11 +64,12 @@ public class NewRadioReq {
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
+                JSONObject djJson = radioJson.getJSONObject("dj");
 
                 String radioId = radioJson.getString("id");
                 String radioName = radioJson.getString("name");
-                String dj = radioJson.getJSONObject("dj").getString("nickname");
-                String djId = radioJson.getJSONObject("dj").getString("userId");
+                String dj = djJson.getString("nickname");
+                String djId = djJson.getString("userId");
                 Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");
@@ -155,11 +156,12 @@ public class NewRadioReq {
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
+                JSONObject djJson = radioJson.getJSONObject("dj");
 
                 String radioId = radioJson.getString("id");
                 String radioName = radioJson.getString("name");
-                String dj = radioJson.getJSONObject("dj").getString("nickname");
-                String djId = radioJson.getJSONObject("dj").getString("userId");
+                String dj = djJson.getString("nickname");
+                String djId = djJson.getString("userId");
                 Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");

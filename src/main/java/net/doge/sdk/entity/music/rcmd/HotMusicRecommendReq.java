@@ -98,13 +98,14 @@ public class HotMusicRecommendReq {
                 t = data.getJSONObject("page").getIntValue("total");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
+                    JSONObject albumJson = songJson.getJSONObject("al");
 
                     String songId = songJson.getString("id");
                     String songName = songJson.getString("name").trim();
                     String artist = SdkUtil.parseArtist(songJson);
                     String artistId = SdkUtil.parseArtistId(songJson);
-                    String albumName = songJson.getJSONObject("al").getString("name");
-                    String albumId = songJson.getJSONObject("al").getString("id");
+                    String albumName = albumJson.getString("name");
+                    String albumId = albumJson.getString("id");
                     Double duration = songJson.getDouble("dt") / 1000;
                     String mvId = songJson.getString("mv");
 
@@ -227,13 +228,14 @@ public class HotMusicRecommendReq {
             JSONArray songArray = data.getJSONArray("songInfoList");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject albumJson = songJson.getJSONObject("album");
 
                 String id = songJson.getString("mid");
                 String name = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("title");
-                String albumId = songJson.getJSONObject("album").getString("mid");
+                String albumName = albumJson.getString("title");
+                String albumId = albumJson.getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
 
@@ -268,13 +270,14 @@ public class HotMusicRecommendReq {
             JSONArray songArray = data.getJSONArray("songInfoList");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject albumJson = songJson.getJSONObject("album");
 
                 String id = songJson.getString("mid");
                 String name = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("title");
-                String albumId = songJson.getJSONObject("album").getString("mid");
+                String albumName = albumJson.getString("title");
+                String albumId = albumJson.getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
 

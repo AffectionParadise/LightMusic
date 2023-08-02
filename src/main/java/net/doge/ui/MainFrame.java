@@ -188,6 +188,7 @@ public class MainFrame extends JFrame {
     private final String UPDATE_CHECKING_MSG = "检查更新中......";
     private final String UPDATE_CHECK_FAIL_MSG = "检查更新失败，请稍后再试";
     private final String UPDATE_MSG = "已有新版本 %s，当前版本 %s，是否前往发布页更新？";
+    private final String IGNORE_UPDATE_MSG = "当有新版本时不再提示";
     private final String LATEST_MSG = "当前已是最新版本";
     private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n" +
             "下面是一些常见问题解答，请仔细阅读。祝你使用愉快~\n\n" +
@@ -4221,15 +4222,13 @@ public class MainFrame extends JFrame {
                 String latest = doc.select("h1.d-inline.mr-3").first().text().split(" ")[1];
                 String now = SoftInfo.EDITION;
                 if (latest.compareTo(now) > 0) {
-                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(UPDATE_MSG, latest, now), "是", "否");
+                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(UPDATE_MSG, latest, now), "是", "否", mute, IGNORE_UPDATE_MSG);
                     d.showDialog();
                     int response = d.getResponse();
-                    if (response == JOptionPane.YES_OPTION) {
-                        releaseMenuItem.doClick();
-                    }
-                } else {
-                    if (!mute) new TipDialog(THIS, LATEST_MSG).showDialog();
-                }
+                    boolean checked = d.isChecked();
+                    if (response == JOptionPane.YES_OPTION) releaseMenuItem.doClick();
+                    if (mute && checked) autoUpdate = false;
+                } else if (!mute) new TipDialog(THIS, LATEST_MSG).showDialog();
             } catch (Exception ex) {
                 if (!mute) new TipDialog(THIS, UPDATE_CHECK_FAIL_MSG).showDialog();
             } finally {

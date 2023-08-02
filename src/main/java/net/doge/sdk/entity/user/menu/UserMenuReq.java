@@ -163,11 +163,12 @@ public class UserMenuReq {
             total.set(playlistInfoJson.getBooleanValue("more") ? page * limit + 1 : page * limit);
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
+                JSONObject creatorJson = playlistJson.getJSONObject("creator");
 
                 String playlistId = playlistJson.getString("id");
                 String playlistName = playlistJson.getString("name");
-                String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                String creatorId = playlistJson.getJSONObject("creator").getString("userId");
+                String creator = creatorJson.getString("nickname");
+                String creatorId = creatorJson.getString("userId");
                 Long playCount = playlistJson.getLong("playCount");
                 Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
@@ -507,11 +508,12 @@ public class UserMenuReq {
             if (data.getIntValue("more") == 1) total++;
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
+                JSONObject user = albumJson.getJSONObject("user");
 
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
-                String artist = albumJson.getJSONObject("user").getString("username");
-                String artistId = albumJson.getJSONObject("user").getString("id");
+                String artist = user.getString("username");
+                String artistId = user.getString("id");
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("updated_at_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getIntValue("count");
@@ -559,11 +561,12 @@ public class UserMenuReq {
             total.set(radioInfoJson.getIntValue("count"));
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
+                JSONObject djJson = radioJson.getJSONObject("dj");
 
                 String radioId = radioJson.getString("id");
                 String radioName = radioJson.getString("name");
-                String dj = radioJson.getJSONObject("dj").getString("nickname");
-                String djId = radioJson.getJSONObject("dj").getString("userId");
+                String dj = djJson.getString("nickname");
+                String djId = djJson.getString("userId");
                 Long playCount = radioJson.getLong("playCount");
                 Integer trackCount = radioJson.getIntValue("programCount");
                 String category = radioJson.getString("category");

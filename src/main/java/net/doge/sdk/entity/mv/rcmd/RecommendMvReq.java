@@ -94,14 +94,15 @@ public class RecommendMvReq {
                 t = mvArray.size();
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
+                    JSONObject mv = mvJson.getJSONObject("mv");
 
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
                     String artistName = SdkUtil.parseArtist(mvJson);
                     String creatorId = SdkUtil.parseArtistId(mvJson);
                     Long playCount = mvJson.getLong("playCount");
-                    Double duration = mvJson.getJSONObject("mv").getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
-                    String pubTime = mvJson.getJSONObject("mv").getString("publishTime");
+                    Double duration = mv.getJSONArray("videos").getJSONObject(0).getDouble("duration") / 1000;
+                    String pubTime = mv.getString("publishTime");
                     String coverImgUrl = mvJson.getString("cover");
 
                     NetMvInfo mvInfo = new NetMvInfo();
@@ -528,11 +529,12 @@ public class RecommendMvReq {
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
+                JSONObject user = mvJson.getJSONObject("user");
 
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("title");
-                String artistName = mvJson.getJSONObject("user").getString("NN");
-                String creatorId = mvJson.getJSONObject("user").getString("ID");
+                String artistName = user.getString("NN");
+                String creatorId = user.getString("ID");
                 Long playCount = mvJson.getLong("play");
                 String coverImgUrl = mvJson.getString("cover_url");
                 Double duration = mvJson.getDouble("duration");
@@ -571,11 +573,12 @@ public class RecommendMvReq {
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
+                JSONObject user = mvJson.getJSONObject("user");
 
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("title");
-                String artistName = mvJson.getJSONObject("user").getString("NN");
-                String creatorId = mvJson.getJSONObject("user").getString("ID");
+                String artistName = user.getString("NN");
+                String creatorId = user.getString("ID");
                 Long playCount = mvJson.getLong("play");
                 String coverImgUrl = mvJson.getString("cover_url");
                 Double duration = mvJson.getDouble("duration");
@@ -614,11 +617,12 @@ public class RecommendMvReq {
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
+                JSONObject user = mvJson.getJSONObject("user");
 
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("title");
-                String artistName = mvJson.getJSONObject("user").getString("NN");
-                String creatorId = mvJson.getJSONObject("user").getString("ID");
+                String artistName = user.getString("NN");
+                String creatorId = user.getString("ID");
                 Long playCount = mvJson.getLong("play");
                 String coverImgUrl = mvJson.getString("cover_url");
                 Double duration = mvJson.getDouble("duration");
@@ -793,12 +797,13 @@ public class RecommendMvReq {
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
+                JSONObject owner = mvJson.getJSONObject("owner");
 
                 String id = mvJson.getString("cid");
                 String bvId = mvJson.getString("bvid");
                 String mvName = mvJson.getString("title");
-                String artistName = mvJson.getJSONObject("owner").getString("name");
-                String creatorId = mvJson.getJSONObject("owner").getString("mid");
+                String artistName = owner.getString("name");
+                String creatorId = owner.getString("mid");
                 String coverImgUrl = mvJson.getString("pic");
                 Long playCount = mvJson.getJSONObject("stat").getLong("view");
                 Double duration = mvJson.getDouble("duration");
@@ -887,12 +892,13 @@ public class RecommendMvReq {
                 JSONArray mvArray = data.getJSONArray("archives");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
+                    JSONObject owner = mvJson.getJSONObject("owner");
 
                     String id = mvJson.getString("cid");
                     String bvId = mvJson.getString("bvid");
                     String mvName = mvJson.getString("title");
-                    String artistName = mvJson.getJSONObject("owner").getString("name");
-                    String creatorId = mvJson.getJSONObject("owner").getString("mid");
+                    String artistName = owner.getString("name");
+                    String creatorId = owner.getString("mid");
                     String coverImgUrl = mvJson.getString("pic");
                     Long playCount = mvJson.getJSONObject("stat").getLong("view");
                     Double duration = mvJson.getDouble("duration");

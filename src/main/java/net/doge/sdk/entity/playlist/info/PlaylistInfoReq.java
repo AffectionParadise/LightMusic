@@ -587,13 +587,14 @@ public class PlaylistInfoReq {
                 JSONArray songArray = playlistInfoJson.getJSONArray("songs");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
+                    JSONObject albumJson = songJson.getJSONObject("al");
 
                     String songId = songJson.getString("id");
                     String name = songJson.getString("name").trim();
                     String artist = SdkUtil.parseArtist(songJson);
                     String artistId = SdkUtil.parseArtistId(songJson);
-                    String albumName = songJson.getJSONObject("al").getString("name");
-                    String albumId = songJson.getJSONObject("al").getString("id");
+                    String albumName = albumJson.getString("name");
+                    String albumId = albumJson.getString("id");
                     Double duration = songJson.getDouble("dt") / 1000;
                     String mvId = songJson.getString("mv");
 

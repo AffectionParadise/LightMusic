@@ -656,11 +656,12 @@ public class NewAlbumReq {
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject mainJson = albumArray.getJSONObject(i);
                 JSONObject albumJson = mainJson.getJSONObject("album");
+                JSONObject sender = mainJson.getJSONObject("sender");
 
                 String albumId = albumJson.getString("id");
                 String albumName = albumJson.getString("name");
-                String artist = mainJson.getJSONObject("sender").getString("username");
-                String artistId = mainJson.getJSONObject("sender").getString("id");
+                String artist = sender.getString("username");
+                String artistId = sender.getString("id");
 //                String publishTime = TimeUtils.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                 String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                 Integer songNum = albumJson.getIntValue("count");
@@ -698,11 +699,12 @@ public class NewAlbumReq {
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     JSONObject mainJson = albumArray.getJSONObject(i);
                     JSONObject albumJson = mainJson.getJSONObject("album");
+                    JSONObject sender = mainJson.getJSONObject("sender");
 
                     String albumId = albumJson.getString("id");
                     String albumName = albumJson.getString("name");
-                    String artist = mainJson.getJSONObject("sender").getString("username");
-                    String artistId = mainJson.getJSONObject("sender").getString("id");
+                    String artist = sender.getString("username");
+                    String artistId = sender.getString("id");
                     String publishTime = TimeUtil.msToDate(mainJson.getLong("add_datetime_ts") * 1000);
                     String coverImgThumbUrl = albumJson.getJSONArray("covers").getString(0);
                     Integer songNum = albumJson.getIntValue("count");

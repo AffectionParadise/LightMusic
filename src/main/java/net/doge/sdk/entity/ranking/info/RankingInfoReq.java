@@ -179,13 +179,14 @@ public class RankingInfoReq {
             JSONArray songArray = data.getJSONArray("songInfoList");
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject albumJson = songJson.getJSONObject("album");
 
                 String songId = songJson.getString("mid");
                 String name = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("title");
-                String albumId = songJson.getJSONObject("album").getString("mid");
+                String albumName = albumJson.getString("title");
+                String albumId = albumJson.getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
 

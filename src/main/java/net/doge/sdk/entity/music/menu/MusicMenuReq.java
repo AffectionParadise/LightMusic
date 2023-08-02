@@ -65,13 +65,14 @@ public class MusicMenuReq {
             t = songArray.size();
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject albumJson = songJson.getJSONObject("album");
 
                 String songId = songJson.getString("id");
                 String songName = songJson.getString("name").trim();
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("name");
-                String albumId = songJson.getJSONObject("album").getString("id");
+                String albumName = albumJson.getString("name");
+                String albumId = albumJson.getString("id");
                 Double duration = songJson.getDouble("duration") / 1000;
                 String mvId = songJson.getString("mvid");
 
@@ -110,13 +111,14 @@ public class MusicMenuReq {
             t = songArray.size();
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject albumJson = songJson.getJSONObject("album");
 
                 String songId = songJson.getString("mid");
                 String songName = songJson.getString("title");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-                String albumName = songJson.getJSONObject("album").getString("title");
-                String albumId = songJson.getJSONObject("album").getString("mid");
+                String albumName = albumJson.getString("title");
+                String albumId = albumJson.getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
 
@@ -233,11 +235,12 @@ public class MusicMenuReq {
             t = playlistArray.size();
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
+                JSONObject creatorJson = playlistJson.getJSONObject("creator");
 
                 String playlistId = playlistJson.getString("id");
                 String playlistName = playlistJson.getString("name");
-                String creator = playlistJson.getJSONObject("creator").getString("nickname");
-                String creatorId = playlistJson.getJSONObject("creator").getString("userId");
+                String creator = creatorJson.getString("nickname");
+                String creatorId = creatorJson.getString("userId");
                 Long playCount = playlistJson.getLong("playCount");
                 Integer trackCount = playlistJson.getIntValue("trackCount");
                 String coverImgThumbUrl = playlistJson.getString("coverImgUrl");
