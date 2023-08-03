@@ -178,7 +178,7 @@ public class SdkUtil {
         try {
             HttpResponse resp = HttpRequest.get(url)
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-                    .execute();
+                    .executeAsync();
             return resp.header("Location");
         } catch (Exception e) {
             return "";

@@ -97,7 +97,7 @@ public class UserInfoReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_API, id), "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject profileJson = userInfoJson.getJSONObject("profile");
@@ -129,7 +129,7 @@ public class UserInfoReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_XM_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -179,7 +179,7 @@ public class UserInfoReq {
                 if (!userInfo.hasProgramCount()) {
                     GlobalExecutors.requestExecutor.execute(() -> {
                         String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, id, 1, 1))
-                                .execute()
+                                .executeAsync()
                                 .body();
                         Integer programCount = JSONObject.parseObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getIntValue("count");
                         userInfo.setProgramCount(programCount);
@@ -188,7 +188,7 @@ public class UserInfoReq {
             };
             Runnable fillUserInfo = () -> {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -232,7 +232,7 @@ public class UserInfoReq {
         else if (source == NetMusicSource.FS) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_FS_API, id))
                     .setFollowRedirects(true)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
 
@@ -278,7 +278,7 @@ public class UserInfoReq {
         else if (source == NetMusicSource.HK) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HK_API, id))
                     .cookie(SdkCommon.HK_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(RegexUtil.getGroup1("\"author_info\":(\\{.*?\\})", userInfoBody));
 
@@ -294,7 +294,7 @@ public class UserInfoReq {
         // 豆瓣
         else if (source == NetMusicSource.DB) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_DB_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
 
@@ -320,7 +320,7 @@ public class UserInfoReq {
         else if (source == NetMusicSource.DT) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_DT_API, id))
                     .setFollowRedirects(true)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
             Elements a = doc.select("div.people-funs a");
@@ -350,7 +350,7 @@ public class UserInfoReq {
         else if (source == NetMusicSource.BI) {
             String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_BI_API, id))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -390,7 +390,7 @@ public class UserInfoReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, USER_SONGS_API,
                             String.format("{\"uid\":\"%s\",\"type\":%s}", id, recordType ^ 1), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray songArray = userInfoJson.getJSONArray(isAll ? "allData" : "weekData");
@@ -424,7 +424,7 @@ public class UserInfoReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_XM_API, id, recordType + 1, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -458,7 +458,7 @@ public class UserInfoReq {
         else if (source == NetMusicSource.HF) {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_HF_API, id, page))
                     .cookie(SdkCommon.HF_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
             Elements songs = doc.select(".media.thread.tap");
@@ -496,7 +496,7 @@ public class UserInfoReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_GG_API, id, page))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
             Elements songs = doc.select(".media.thread.tap");
@@ -529,7 +529,7 @@ public class UserInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, recordType, id, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("info");
@@ -564,7 +564,7 @@ public class UserInfoReq {
 
                 String userInfoBody = HttpRequest.get(String.format(USER_YC_SONGS_FS_API, id, page))
                         .setFollowRedirects(true)
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -640,7 +640,7 @@ public class UserInfoReq {
 
                 String userInfoBody = HttpRequest.get(String.format(USER_FC_SONGS_FS_API, id, page))
                         .setFollowRedirects(true)
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -716,7 +716,7 @@ public class UserInfoReq {
 
                 String userInfoBody = HttpRequest.get(String.format(USER_BZ_SONGS_FS_API, id, page))
                         .setFollowRedirects(true)
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -810,7 +810,7 @@ public class UserInfoReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String userInfoBody = HttpRequest.get(String.format(USER_AUDIO_BI_API, recordType + 1, id, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -855,7 +855,7 @@ public class UserInfoReq {
             if (source == NetMusicSource.NET_CLOUD) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_API, id), "{}", options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject userJson = JSONObject.parseObject(userInfoBody).getJSONObject("profile");
 
@@ -889,7 +889,7 @@ public class UserInfoReq {
             // 喜马拉雅
             else if (source == NetMusicSource.XM) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_XM_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
                 JSONObject data = userInfoJson.getJSONObject("data");
@@ -927,7 +927,7 @@ public class UserInfoReq {
             else if (source == NetMusicSource.HF) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HF_API, id))
                         .cookie(SdkCommon.HF_COOKIE)
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -962,7 +962,7 @@ public class UserInfoReq {
             // 咕咕咕音乐
             else if (source == NetMusicSource.GG) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_GG_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -1002,7 +1002,7 @@ public class UserInfoReq {
                     // 用户节目数
                     GlobalExecutors.requestExecutor.execute(() -> {
                         String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, id, 1, 1))
-                                .execute()
+                                .executeAsync()
                                 .body();
                         Integer programCount = JSONObject.parseObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getIntValue("count");
                         userInfo.setProgramCount(programCount);
@@ -1010,7 +1010,7 @@ public class UserInfoReq {
                 };
                 Runnable fillUserInfo = () -> {
                     String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_ME_API, id))
-                            .execute()
+                            .executeAsync()
                             .body();
                     Document doc = Jsoup.parse(userInfoBody);
 
@@ -1055,7 +1055,7 @@ public class UserInfoReq {
             else if (source == NetMusicSource.FS) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_FS_API, id))
                         .setFollowRedirects(true)
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -1104,7 +1104,7 @@ public class UserInfoReq {
             else if (source == NetMusicSource.HK) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HK_API, id))
                         .cookie(SdkCommon.HK_COOKIE)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject data = JSONObject.parseObject(RegexUtil.getGroup1("\"author_info\":(\\{.*?\\})", userInfoBody));
 
@@ -1135,7 +1135,7 @@ public class UserInfoReq {
             // 豆瓣
             else if (source == NetMusicSource.DB) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_DB_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
@@ -1168,7 +1168,7 @@ public class UserInfoReq {
             else if (source == NetMusicSource.BI) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_BI_API, id))
                         .cookie(SdkCommon.BI_COOKIE)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
                 JSONObject data = userInfoJson.getJSONObject("data");

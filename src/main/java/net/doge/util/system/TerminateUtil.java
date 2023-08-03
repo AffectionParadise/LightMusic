@@ -2,8 +2,12 @@ package net.doge.util.system;
 
 import cn.hutool.core.util.RuntimeUtil;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.meta.SoftInfo;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @Author Doge
@@ -11,24 +15,6 @@ import java.io.*;
  * @Date 2020/12/15
  */
 public class TerminateUtil {
-//    private static String[] dirs = {"MiguMusicApi", "NeteaseCloudMusicApi", "QQMusicApi", "kuwoMusicApi"};
-//    private static String[] cmds = {"npm start", "npm start", "npm start", "npm run dev"};
-//
-//    public static void startSvc() throws IOException, InterruptedException {
-//        Runtime rt = Runtime.getRuntime();
-//        Process p = null;
-//        for (int i = 0, l = dirs.length; i < l; i++) {
-//            System.setProperty("user.dir", dirs[i]);
-//            p = rt.exec(new String[]{"cmd", "/c", cmds[i]}, null, null);
-//            System.setProperty("user.dir", "..");
-//        }
-//        p.waitFor();
-//    }
-//
-//    public static void main(String[] args) throws IOException, InterruptedException {
-//        startSvc();
-//    }
-
     /**
      * 执行命令(同步)
      *
@@ -57,6 +43,16 @@ public class TerminateUtil {
      */
     public static void execAsync(String command) {
         RuntimeUtil.exec(command);
+    }
+
+    /**
+     * 调用更新程序
+     *
+     * @param
+     * @return
+     */
+    public static void updater() {
+        execAsync(SoftInfo.UPDATER_FILE_NAME + " 54ee8fdb2c9f213c4e4eea81268fc38b");
     }
 
     /**

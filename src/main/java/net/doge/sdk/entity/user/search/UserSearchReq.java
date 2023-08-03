@@ -67,7 +67,7 @@ public class UserSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
             String userInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1002,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject result = userInfoJson.getJSONObject("result");
@@ -112,7 +112,7 @@ public class UserSearchReq {
 
             String userInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 8))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
@@ -153,7 +153,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_XM_API, encodedKeyword, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject result = userInfoJson.getJSONObject("data").getJSONObject("user");
@@ -202,7 +202,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_ME_API, encodedKeyword, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject info = userInfoJson.getJSONObject("info");
@@ -251,7 +251,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_FS_API, encodedKeyword, page))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(userInfoBody);
             t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
@@ -295,7 +295,7 @@ public class UserSearchReq {
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_HK_API, page, encodedKeyword, limit))
                     .cookie(SdkCommon.HK_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -337,7 +337,7 @@ public class UserSearchReq {
 
             final int lim = Math.min(20, limit);
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DB_API, encodedKeyword, (page - 1) * lim))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("items");
@@ -382,7 +382,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis()))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -426,7 +426,7 @@ public class UserSearchReq {
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_BI_API, encodedKeyword, page))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");

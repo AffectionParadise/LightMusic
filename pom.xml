@@ -4,13 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>MusicPlayer</artifactId>
+    <groupId>net.doge</groupId>
+    <artifactId>LightMusic</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -142,33 +143,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>libs</directory>
-                <targetPath>BOOT-INF/libs/</targetPath>
-                <includes>
-                    <include>**/*.jar</include>
-                </includes>
-            </resource>
-        </resources>
-
-        <!-- 项目打成 jar 用 -->
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <showWarnings>true</showWarnings>
-                    <compilerArgs>
-                        <arg>-extdirs</arg>
-                        <arg>${project.basedir}/libs</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

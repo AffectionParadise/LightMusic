@@ -59,7 +59,7 @@ public class MvMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_MLOG_API,
                             String.format("{\"id\":\"0\",\"type\":2,\"rcmdType\":20,\"limit\":500,\"extInfo\":\"{'songId':'%s'}\"}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("feeds");
@@ -103,7 +103,7 @@ public class MvMenuReq {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
@@ -112,7 +112,7 @@ public class MvMenuReq {
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"video\":{\"module\":\"MvService.MvInfoProServer\"," +
                             "\"method\":\"GetSongRelatedMv\",\"param\":{\"songid\":%s,\"songtype\":1,\"lastmvid\":0,\"num\":10}}}", id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONObject("video").getJSONObject("data").getJSONArray("list");
@@ -171,7 +171,7 @@ public class MvMenuReq {
                 if (isMlog) {
                     Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                     String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
-                            .execute()
+                            .executeAsync()
                             .body();
                     id = JSONObject.parseObject(body).getString("data");
                     netMvInfo.setId(id);
@@ -181,7 +181,7 @@ public class MvMenuReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_VIDEO_API,
                                 String.format("{\"id\":\"%s\",\"type\":%s}", id, RegexUtil.test("^\\d+$", id) ? 0 : 1), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
@@ -218,7 +218,7 @@ public class MvMenuReq {
             else {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_MV_API, String.format("{\"mvid\":\"%s\"}", id), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("mvs");
@@ -262,7 +262,7 @@ public class MvMenuReq {
                             "\"param\":{\"vid\":\"%s\",\"required\":[\"vid\",\"type\",\"sid\",\"cover_pic\",\"duration\",\"singers\"," +
                             "\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\",\"isfav\",\"gmid\",\"uploader_headurl\"," +
                             "\"uploader_nick\",\"uploader_encuin\",\"uploader_uin\",\"uploader_hasfollow\",\"uploader_follower_num\"],\"support\":1}}}", id, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("other").getJSONObject("data");
             JSONArray mvArray = data.getJSONArray("list");
@@ -302,7 +302,7 @@ public class MvMenuReq {
         else if (source == NetMusicSource.HK) {
             String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_HK_API, name, id))
                     .header(Header.REFERER, String.format("https://haokan.baidu.com/v?vid=%s", id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data").getJSONObject("response");
             JSONArray mvArray = data.getJSONArray("videos");
@@ -342,7 +342,7 @@ public class MvMenuReq {
         else if (source == NetMusicSource.BI) {
             String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_BI_API, bvid))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
             t = mvArray.size();
@@ -399,7 +399,7 @@ public class MvMenuReq {
         if (source == NetMusicSource.BI) {
             String mvInfoBody = HttpRequest.get(String.format(VIDEO_EPISODES_BI_API, bvid))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
             if (JsonUtil.notEmpty(mvArray)) {

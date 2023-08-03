@@ -15,6 +15,11 @@ public class SimplePath {
         return String.join(SEPARATOR, parts);
     }
 
+    // 插件路径
+    public static String PLUGIN_PATH = buildPath("plugin");
+    // 临时路径
+    public static String TEMP_PATH = System.getProperty("java.io.tmpdir");
+
     // 图标路径
     public static String ICON_PATH = buildPath("icon");
     // 菜单相关图标路径
@@ -42,7 +47,9 @@ public class SimplePath {
             // 所有路径后面添加分隔符
             Field[] fields = SimplePath.class.getFields();
             for (Field field : fields) {
-                field.set(null, field.get(null) + SEPARATOR);
+                String path = (String) field.get(null);
+                if (path.endsWith(SEPARATOR)) continue;
+                field.set(null, path + SEPARATOR);
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);

@@ -67,7 +67,7 @@ public class NewSongTagReq {
         Runnable initNewSongTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
@@ -109,7 +109,7 @@ public class NewSongTagReq {
         // 5sing
         Runnable initNewSongTagFs = () -> {
             String tagBody = HttpRequest.get(SONG_TAG_API_FS)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(tagBody);
             Elements dds = doc.select("dl.song_sort dd");

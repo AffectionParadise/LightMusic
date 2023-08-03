@@ -91,7 +91,7 @@ public class HighQualityPlaylistReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_API,
                                 String.format("{\"cat\":\"%s\",\"lasttime\":0,\"limit\":%s,\"total\":true}", s[0], limit), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
@@ -135,7 +135,7 @@ public class HighQualityPlaylistReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_API,
                                 String.format("{\"cat\":\"%s\",\"order\":\"hot\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = playlistInfoJson.getIntValue("total");
@@ -179,7 +179,7 @@ public class HighQualityPlaylistReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_API,
                                 String.format("{\"cat\":\"%s\",\"order\":\"new\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = playlistInfoJson.getIntValue("total");
@@ -223,7 +223,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[2])) {
                 String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_KG_API, s[2].trim(), page))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = limit * 100;
@@ -261,7 +261,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[2])) {
                 String playlistInfoBody = HttpRequest.get(String.format(HOT_COLLECTED_CAT_PLAYLIST_KG_API, s[2].trim(), page))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = limit * 100;
@@ -299,7 +299,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[2])) {
                 String playlistInfoBody = HttpRequest.get(String.format(UP_CAT_PLAYLIST_KG_API, s[2].trim(), page))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = limit * 100;
@@ -336,7 +336,7 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(HOT_PLAYLIST_KG_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -402,7 +402,7 @@ public class HighQualityPlaylistReq {
                                     "\"module\":\"playlist.PlayListCategoryServer\"}}", cat, cat, limit, page - 1));
                 }
                 String playlistInfoBody = HttpRequest.get(url)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 if (isAll) {
@@ -472,7 +472,7 @@ public class HighQualityPlaylistReq {
 
             HttpResponse resp = HttpRequest.get(String.format(HOT_PLAYLIST_KW_API, page, limit))
                     .setFollowRedirects(true)
-                    .execute();
+                    .executeAsync();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -512,7 +512,7 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(DEFAULT_PLAYLIST_KW_API, page, limit)).execute();
+            HttpResponse resp = HttpRequest.get(String.format(DEFAULT_PLAYLIST_KW_API, page, limit)).executeAsync();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -556,7 +556,7 @@ public class HighQualityPlaylistReq {
                 String[] sp = s[4].split(" ");
                 // 根据 digest 信息请求不同的分类歌单接口
                 if ("43".equals(sp[1])) {
-                    HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API_2, sp[0])).execute();
+                    HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API_2, sp[0])).executeAsync();
                     if (resp.getStatus() == HttpStatus.HTTP_OK) {
                         String playlistInfoBody = resp.body();
                         JSONArray playlistArray = JSONArray.parseArray(playlistInfoBody);
@@ -586,7 +586,7 @@ public class HighQualityPlaylistReq {
                         }
                     }
                 } else {
-                    HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API, sp[0], page, limit)).execute();
+                    HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API, sp[0], page, limit)).executeAsync();
                     if (resp.getStatus() == HttpStatus.HTTP_OK) {
                         String playlistInfoBody = resp.body();
                         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -631,7 +631,7 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(REC_HOT_PLAYLIST_MG_API, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data").getJSONArray("contentItemList").getJSONObject(0);
@@ -671,7 +671,7 @@ public class HighQualityPlaylistReq {
 //            String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_MG_API, (page - 1) * 10))
 //                    .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
 //                    .header(Header.REFERER, "https://m.music.migu.cn/")
-//                    .execute()
+//                    .executeAsync()
 //                    .body();
 //            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
 //            JSONObject data = playlistInfoJson.getJSONObject("retMsg");
@@ -711,7 +711,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[5])) {
                 String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, s[5], page))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data").getJSONObject("contentItemList");
@@ -753,7 +753,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[6])) {
                 String playlistInfoBody = SdkCommon.qiRequest(String.format(CAT_PLAYLIST_QI_API, page, limit, s[6].trim(), System.currentTimeMillis()))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -792,7 +792,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[7])) {
                 String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_ME_API, s[7].trim(), page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = playlistInfoJson.getJSONObject("pagination").getIntValue("count");
@@ -832,7 +832,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[8])) {
                 String playlistInfoBody = HttpRequest.get(String.format(EXP_PLAYLIST_ME_API, s[8].trim(), page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONArray playlistArray = JSONArray.parseArray(playlistInfoBody);
                 t = playlistArray.size();
@@ -875,7 +875,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[9])) {
                 String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, s[9].trim(), page))
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(playlistInfoBody);
                 Elements as = doc.select("span.pagecon a");

@@ -1,8 +1,7 @@
 package net.doge.sdk.util;
 
-import net.doge.model.entity.base.NetResource;
-import net.doge.model.task.Task;
 import net.doge.model.entity.*;
+import net.doge.model.entity.base.NetResource;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.entity.album.info.AlbumInfoReq;
 import net.doge.sdk.entity.album.menu.AlbumMenuReq;
@@ -15,8 +14,6 @@ import net.doge.sdk.entity.artist.rcmd.ArtistListReq;
 import net.doge.sdk.entity.artist.search.ArtistSearchReq;
 import net.doge.sdk.entity.artist.tag.ArtistTagReq;
 import net.doge.sdk.entity.comment.CommentReq;
-import net.doge.sdk.system.DownloadReq;
-import net.doge.sdk.system.MottoReq;
 import net.doge.sdk.entity.music.info.MusicInfoReq;
 import net.doge.sdk.entity.music.info.MusicUrlReq;
 import net.doge.sdk.entity.music.menu.MusicMenuReq;
@@ -55,9 +52,10 @@ import net.doge.sdk.entity.sheet.SheetReq;
 import net.doge.sdk.entity.user.info.UserInfoReq;
 import net.doge.sdk.entity.user.menu.UserMenuReq;
 import net.doge.sdk.entity.user.search.UserSearchReq;
-import net.doge.ui.component.panel.LoadingPanel;
+import net.doge.sdk.system.DownloadReq;
+import net.doge.sdk.system.MottoReq;
+import net.doge.sdk.system.listener.DownloadListener;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -818,48 +816,49 @@ public class MusicServerUtil {
         new MusicInfoReq().fillLrc(musicInfo);
     }
 
+//    /**
+//     * 下载文件
+//     *
+//     * @param url
+//     * @param dest
+//     * @throws Exception
+//     */
+//    public static void download(String url, String dest) throws Exception {
+//        download(url, dest, null, null);
+//    }
+
     /**
      * 下载文件
      *
-     * @param urlPath
+     * @param url
      * @param dest
      * @throws Exception
      */
-    public static void download(String urlPath, String dest) throws Exception {
-        new DownloadReq().download(urlPath, dest);
+    public static void download(String url, String dest, Map<String, String> headers) throws Exception {
+        download(url, dest, headers, null);
     }
 
     /**
-     * 下载文件，同时设置等待面板百分比
+     * 下载文件
      *
-     * @param loading
-     * @param urlPath
+     * @param url
      * @param dest
      * @throws Exception
      */
-    public static void download(LoadingPanel loading, String urlPath, String dest) throws Exception {
-        download(loading, urlPath, dest, null);
+    public static void download(String url, String dest, DownloadListener listener) throws Exception {
+        download(url, dest, null, listener);
     }
 
     /**
-     * 下载文件，同时设置等待面板百分比
+     * 下载文件，监听下载进度
      *
-     * @param comp
-     * @param urlPath
+     * @param url
      * @param dest
+     * @param headers
+     * @param listener
      * @throws Exception
      */
-    public static void download(Component comp, String urlPath, String dest, Map<String, Object> headers) throws Exception {
-        new DownloadReq().download(comp, urlPath, dest, headers);
-    }
-
-    /**
-     * 通过 Task 下载文件，设置 percent
-     *
-     * @param task
-     * @throws Exception
-     */
-    public static void download(Task task, Map<String, Object> headers) throws Exception {
-        new DownloadReq().download(task, headers);
+    public static void download(String url, String dest, Map<String, String> headers, DownloadListener listener) throws Exception {
+        new DownloadReq().download(url, dest, headers, listener);
     }
 }

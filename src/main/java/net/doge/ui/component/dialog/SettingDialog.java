@@ -836,7 +836,7 @@ public class SettingDialog extends AbstractTitledDialog {
         SimplePath.CACHE_PATH = cacheDir.getAbsolutePath() + File.separator;
         SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + File.separator + "img" + File.separator;
         // 更改缓存图像路径并创建
-        FileUtil.makeSureDir(SimplePath.IMG_CACHE_PATH);
+        FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
 
         String text = maxCacheSizeTextField.getText();
         if (StringUtil.isEmpty(text)) {

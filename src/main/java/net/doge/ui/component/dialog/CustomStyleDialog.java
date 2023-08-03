@@ -3,21 +3,21 @@ package net.doge.ui.component.dialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
-import net.doge.constant.ui.Colors;
 import net.doge.constant.player.Format;
 import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.Colors;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
-import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.component.textfield.CustomTextField;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.component.textfield.CustomTextField;
+import net.doge.util.common.StringUtil;
 import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
-import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -140,7 +140,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                     try {
                         // 文件夹不存在就创建
                         File dir = new File(SimplePath.CUSTOM_STYLE_IMG_PATH);
-                        FileUtil.makeSureDir(dir);
+                        FileUtil.mkDir(dir);
                         String newPath = SimplePath.CUSTOM_STYLE_IMG_PATH + imgFile.getName();
                         Files.copy(
                                 Paths.get(imgFile.getPath()),

@@ -78,7 +78,7 @@ public class ArtistTagReq {
         Runnable initStyleArtistTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
@@ -123,7 +123,7 @@ public class ArtistTagReq {
             String artistTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                             "\"param\":{\"area\":-100,\"sex\":-100,\"genre\":-100,\"index\":-100,\"sin\":0,\"cur_page\":1}}}")
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistTagJson = JSONObject.parseObject(artistTagBody);
             JSONObject data = artistTagJson.getJSONObject("singerList").getJSONObject("data").getJSONObject("tags");

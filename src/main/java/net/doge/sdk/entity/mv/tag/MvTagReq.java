@@ -1,11 +1,11 @@
 package net.doge.sdk.entity.mv.tag;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.SdkCommon;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.async.GlobalExecutors;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.Tags;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -232,7 +232,7 @@ public class MvTagReq {
         // MV 标签
         Runnable initMvTagKg = () -> {
             String radioTagBody = HttpRequest.get(MV_TAG_KG_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONObject("data").getJSONArray("list");
@@ -251,7 +251,7 @@ public class MvTagReq {
         Runnable initMvTagQq = () -> {
             String radioTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONObject("mv_tag").getJSONObject("data").getJSONArray("version");

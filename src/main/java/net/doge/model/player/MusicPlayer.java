@@ -9,17 +9,17 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.player.Format;
 import net.doge.constant.player.PlayerStatus;
-import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.ui.SpectrumConstants;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.base.MusicResource;
 import net.doge.ui.MainFrame;
-import net.doge.util.media.MediaUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import net.doge.util.media.MediaUtil;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
@@ -208,7 +208,7 @@ public class MusicPlayer {
             String artist = source.getArtist();
             String albumName = source.getAlbum();
             // 歌曲名称
-            metaMusicInfo.setName(source.hasSongName() ? source.getSongName() : source.getNameWithoutSuffix());
+            metaMusicInfo.setName(source.hasSongName() ? source.getSongName() : source.getPrefix());
             // 艺术家
             metaMusicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
             // 专辑
@@ -225,7 +225,7 @@ public class MusicPlayer {
         }
         // 其他类型的文件信息
         else {
-            metaMusicInfo.setName(source.getNameWithoutSuffix());
+            metaMusicInfo.setName(source.getPrefix());
             metaMusicInfo.setArtist("未知");
             metaMusicInfo.setAlbumName("未知");
             metaMusicInfo.setAlbumImage(f.defaultAlbumImage);

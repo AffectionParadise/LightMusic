@@ -8,10 +8,8 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Vector;
-import java.util.regex.Pattern;
 
 /**
  * @Author Doge
@@ -19,8 +17,6 @@ import java.util.regex.Pattern;
  * @Date 2020/12/21
  */
 public class FileUtil {
-    private static final Pattern FILE_PATTERN = Pattern.compile("[\\\\/:*?\"<>|]");
-
     /**
      * 获得不带后缀的文件路径
      */
@@ -32,47 +28,36 @@ public class FileUtil {
     /**
      * 获得不带后缀的文件名
      */
-    public static String getNameWithoutSuffix(File file) {
-        String name = file.getName();
-        return name.substring(0, name.lastIndexOf('.'));
+    public static String getPrefix(File file) {
+        return cn.hutool.core.io.FileUtil.getPrefix(file);
     }
 
     /**
      * 获得文件后缀名
      */
     public static String getSuffix(File file) {
-        String name = file.getName();
-        return name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+        return cn.hutool.core.io.FileUtil.getSuffix(file).toLowerCase();
     }
 
     /**
      * 确保文件夹存在，若不存在则创建
      */
-    public static void makeSureDir(String dirPath) {
-        makeSureDir(new File(dirPath));
+    public static void mkDir(String dirPath) {
+        cn.hutool.core.io.FileUtil.mkdir(dirPath);
     }
 
     /**
      * 确保文件夹存在，若不存在则创建
      */
-    public static void makeSureDir(File dir) {
-        if (!dir.exists()) dir.mkdirs();
+    public static void mkDir(File dir) {
+        cn.hutool.core.io.FileUtil.mkdir(dir);
     }
 
     /**
      * 去掉文件名中的非法字符
      */
     public static String filterFileName(String fileName) {
-        return FILE_PATTERN.matcher(fileName).replaceAll("");
-    }
-
-    /**
-     * 替换文件扩展名
-     */
-    public static String replaceSuffix(String fileName, String suffix) {
-        int i = fileName.lastIndexOf('.');
-        if (i == -1) return fileName;
-        return fileName.substring(0, i + 1) + suffix;
+        return cn.hutool.core.io.FileUtil.cleanInvalid(fileName);
     }
 
     /**
@@ -91,7 +76,7 @@ public class FileUtil {
      * @param path 文件路径
      */
     public static void delete(String path) {
-        delete(new File(path));
+        cn.hutool.core.io.FileUtil.del(path);
     }
 
     /**
@@ -100,26 +85,8 @@ public class FileUtil {
      * @param f 文件
      */
     public static void delete(File f) {
-        f.delete();
+        cn.hutool.core.io.FileUtil.del(f);
     }
-
-//    /**
-//     * 删除文件夹
-//     *
-//     * @param dirPath 文件夹路径
-//     */
-//    public static void deleteDir(String dirPath) {
-//        File file = new File(dirPath);
-//        if (file.isDirectory()) {
-//            File[] files = file.listFiles();
-//            if (files != null) {
-//                for (int i = 0, len = files.length; i < len; i++) {
-//                    deleteDir(files[i].getAbsolutePath());
-//                }
-//            }
-//        }
-//        file.delete();
-//    }
 
     /**
      * 判断文件开头是不是 {
@@ -175,19 +142,12 @@ public class FileUtil {
      *
      * @param file
      */
-    public static long getDirOrFileSize(File file) {
-        if (file == null || !file.exists()) return 0;
-        if (file.isFile()) return file.length();
-        File[] files = file.listFiles();
-        long total = 0;
-        if (files != null) {
-            for (File f : files) total += getDirOrFileSize(f);
-        }
-        return total;
+    public static long size(File file) {
+        return cn.hutool.core.io.FileUtil.size(file);
     }
 
     /**
-     * 转换大小单位，返回字符串，例如 1 B，1 KB，1 MB，1 GB，1 TB，1 PB
+     * 转换大小单位，返回字符串，例如 1 B，1 K，1 M，1 G，1 T，1 P
      *
      * @param size
      * @return
@@ -196,32 +156,24 @@ public class FileUtil {
         if (size < 1024)
             return String.format("%s B", size);
         else if (size < 1024 * 1024)
-            return String.format("%.2f K", (double) size / 1024);
+            return String.format("%.1f K", (double) size / 1024);
         else if (size < 1024 * 1024 * 1024)
-            return String.format("%.2f M", (double) size / 1024 / 1024);
+            return String.format("%.1f M", (double) size / 1024 / 1024);
         else if (size < 1024L * 1024 * 1024 * 1024)
-            return String.format("%.2f G", (double) size / 1024 / 1024 / 1024);
+            return String.format("%.1f G", (double) size / 1024 / 1024 / 1024);
         else if (size < 1024L * 1024 * 1024 * 1024 * 1024)
-            return String.format("%.2f T", (double) size / 1024 / 1024 / 1024 / 1024);
+            return String.format("%.1f T", (double) size / 1024 / 1024 / 1024 / 1024);
         else
-            return String.format("%.2f P", (double) size / 1024 / 1024 / 1024 / 1024 / 1024);
+            return String.format("%.1f P", (double) size / 1024 / 1024 / 1024 / 1024 / 1024);
     }
 
     /**
-     * 深度删除文件夹内的所有文件，但不删除文件夹
+     * 清空文件夹
      *
      * @param dirPath 文件夹路径
      */
-    public static void deepDeleteFiles(String dirPath) {
-        File file = new File(dirPath);
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (int i = 0, len = files.length; i < len; i++) {
-                    deepDeleteFiles(files[i].getAbsolutePath());
-                }
-            }
-        } else file.delete();
+    public static void clean(String dirPath) {
+        cn.hutool.core.io.FileUtil.clean(dirPath);
     }
 
     /**
@@ -229,49 +181,19 @@ public class FileUtil {
      *
      * @param source
      * @param dest
-     * @throws IOException
      */
     public static void copy(String source, String dest) {
-        try {
-            Files.copy(Paths.get(source), new BufferedOutputStream(new FileOutputStream(dest)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cn.hutool.core.io.FileUtil.copy(source, dest, true);
     }
 
     /**
-     * 从文件读取字符串
+     * 将字符串写入到文件
      *
-     * @param f
-     * @throws IOException
+     * @param content
+     * @param path
      */
-    public static String readAsStr(File f) {
-        if (f == null) return null;
-        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
-            StringBuilder sb = new StringBuilder();
-            String s;
-            while ((s = reader.readLine()) != null) sb.append(s);
-            return sb.toString();
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 将字符串写入到文件，是否追加
-     *
-     * @param str
-     * @param dest
-     * @throws IOException
-     */
-    public static void writeStr(String str, String dest, boolean append) {
-        if (str == null) return;
-        File file = new File(dest);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, append))) {
-            writer.write(str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void writeStr(String content, String path) {
+        cn.hutool.core.io.FileUtil.writeUtf8String(content, path);
     }
 
     /**
@@ -297,22 +219,22 @@ public class FileUtil {
     /**
      * 从文件或歌词字符串读取歌词（不支持滚动时）
      *
-     * @param fileNameOrStr
+     * @param fileNameOrLrcStr
      * @param isFile
      * @return
      * @throws IOException
      */
-    public static Vector<Statement> getBadFormatStatements(String fileNameOrStr, boolean isFile) {
+    public static Vector<Statement> getBadFormatStatements(String fileNameOrLrcStr, boolean isFile) {
         Vector<Statement> statements = new Vector<>();
         try {
             BufferedReader bufferReader;
             if (isFile) {
-                File f = new File(fileNameOrStr);
+                File f = new File(fileNameOrLrcStr);
                 FileInputStream fis = new FileInputStream(f);
                 // 获取文件编码并读取歌词
                 bufferReader = new BufferedReader(new InputStreamReader(fis, getCharsetName(f)));
             } else {
-                bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
+                bufferReader = new BufferedReader(new StringReader(fileNameOrLrcStr));
             }
             String strLine;
             while (null != (strLine = bufferReader.readLine())) {

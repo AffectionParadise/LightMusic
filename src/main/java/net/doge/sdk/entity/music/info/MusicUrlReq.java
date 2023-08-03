@@ -172,7 +172,7 @@ public class MusicUrlReq {
             // standard, exhigh, lossless, hires, jyeffect(高清环绕声), sky(沉浸环绕声), jymaster(超清母带)
             String songBody = SdkCommon.ncRequest(Method.POST, GET_SONG_URL_API,
                             String.format("{\"ids\":\"['%s']\",\"level\":\"jymaster\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", songId), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
             if (JsonUtil.notEmpty(data)) {
@@ -190,7 +190,7 @@ public class MusicUrlReq {
             // 酷狗接口请求需要带上 cookie ！
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
                     .cookie(SdkCommon.COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             if (data.getIntValue("is_free_part") == 0) return data.getString("play_url");
@@ -203,7 +203,7 @@ public class MusicUrlReq {
 //                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
 //                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
 //                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", songId, songId, songId)))
-//                    .execute()
+//                    .executeAsync()
 //                    .body();
 //            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
 //            JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
@@ -216,10 +216,10 @@ public class MusicUrlReq {
         // 酷我(解锁付费音乐)
         else if (source == NetMusicSource.KW) {
 //            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
-//                    .execute()
+//                    .executeAsync()
 //                    .body();
 //            return urlBody;
-//            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, songId)).execute();
+//            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, songId)).executeAsync();
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {
 //                String urlBody = resp.body();
 //                JSONObject urlJson = JSONObject.parseObject(urlBody);
@@ -234,7 +234,7 @@ public class MusicUrlReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, songId))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
             JSONArray rateFormats = data.getJSONArray("rateFormats");
@@ -251,7 +251,7 @@ public class MusicUrlReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, songId, System.currentTimeMillis()))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody).getJSONObject("data");
             // 排除试听部分，直接换源
@@ -266,7 +266,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.HF) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, songId))
                     .cookie(SdkCommon.HF_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(songBody);
             String dataStr = RegexUtil.getGroup1("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html());
@@ -282,7 +282,7 @@ public class MusicUrlReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, songId))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(songBody);
             String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());
@@ -309,7 +309,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.FS) {
             String[] sp = songId.split("_");
             String songBody = HttpRequest.get(String.format(GET_SONG_URL_FS_API, sp[0], sp[1]))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             String url = data.getString("squrl");
@@ -321,7 +321,7 @@ public class MusicUrlReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_XM_API, songId))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             return urlJson.getJSONObject("data").getString("src");
@@ -330,7 +330,7 @@ public class MusicUrlReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, songId))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
             return data.getString("soundurl");
@@ -340,7 +340,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.BI) {
             String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_BI_API, songId))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             return urlJson.getJSONObject("data").getJSONArray("cdns").getString(0);

@@ -64,7 +64,7 @@ public class RadioSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1009,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject result = radioInfoJson.getJSONObject("result");
@@ -114,7 +114,7 @@ public class RadioSearchReq {
 
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_XM_API, encodedKeyword, page, limit))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data").getJSONObject("album");
@@ -158,7 +158,7 @@ public class RadioSearchReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_ME_API, encodedKeyword, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
@@ -199,7 +199,7 @@ public class RadioSearchReq {
 
             final int lim = Math.min(20, limit);
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
@@ -242,7 +242,7 @@ public class RadioSearchReq {
 
             final int lim = Math.min(20, limit);
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_BOOK_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
@@ -286,7 +286,7 @@ public class RadioSearchReq {
 
             final int lim = Math.min(20, limit);
             String radioInfoBody = HttpRequest.get(String.format(SEARCH_GAME_RADIO_DB_API, encodedKeyword, (page - 1) * lim))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("items");

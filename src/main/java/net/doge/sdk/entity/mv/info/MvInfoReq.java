@@ -54,7 +54,7 @@ public class MvInfoReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String mvBody = SdkCommon.ncRequest(Method.POST, MV_DETAIL_API, String.format("{\"id\":\"%s\"}", mvId), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
@@ -83,7 +83,7 @@ public class MvInfoReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String mvBody = HttpRequest.get(String.format(MV_DETAIL_KG_API, mvId))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
@@ -120,7 +120,7 @@ public class MvInfoReq {
                             "\"param\":{\"vid\":\"%s\",\"required\":[\"vid\",\"type\",\"sid\",\"cover_pic\",\"duration\",\"singers\"," +
                             "\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\",\"isfav\",\"gmid\",\"uploader_headurl\"," +
                             "\"uploader_nick\",\"uploader_encuin\",\"uploader_uin\",\"uploader_hasfollow\",\"uploader_follower_num\"],\"support\":1}}}", mvId, mvId))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("mvinfo").getJSONObject("data").getJSONObject(mvId);
@@ -150,7 +150,7 @@ public class MvInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String mvBody = SdkCommon.kwRequest(String.format(MV_DETAIL_KW_API, mvId))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");

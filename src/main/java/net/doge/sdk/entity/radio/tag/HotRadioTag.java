@@ -80,7 +80,7 @@ public class HotRadioTag {
         Runnable initHotRadioTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioTagBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_TAG_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONArray("data");
@@ -98,7 +98,7 @@ public class HotRadioTag {
         Runnable initRecRadioTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioTagBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_TAG_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONArray("categories");
@@ -117,7 +117,7 @@ public class HotRadioTag {
         // 电台分类标签
         Runnable initRadioTagXm = () -> {
             String radioTagBody = HttpRequest.get(RADIO_TAG_XM_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray fTags = radioTagJson.getJSONArray("data");
@@ -150,7 +150,7 @@ public class HotRadioTag {
         // 排行榜标签
         Runnable initRankingTagXm = () -> {
             String radioTagBody = HttpRequest.get(RADIO_RANKING_TAG_XM_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray fTags = radioTagJson.getJSONObject("data").getJSONArray("clusterType");
@@ -176,7 +176,7 @@ public class HotRadioTag {
         // 广播剧标签
         Runnable initRadioTagMe = () -> {
             String radioTagBody = HttpRequest.get(RADIO_TAG_ME_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONObject tags = radioTagJson.getJSONObject("info");
@@ -202,7 +202,7 @@ public class HotRadioTag {
         // 分类电台标签
         Runnable initRadioTagDb = () -> {
             String radioTagBody = HttpRequest.get(RADIO_TAG_DB_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(radioTagBody);
             Elements tags = doc.select("div.types span a");
@@ -219,7 +219,7 @@ public class HotRadioTag {
         // 分类游戏电台标签
         Runnable initGameRadioTagDb = () -> {
             String radioTagBody = HttpRequest.get(GAME_RADIO_TAG_DB_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(radioTagBody);
             Elements fieldset = doc.select("form.filters fieldset");

@@ -82,7 +82,7 @@ public class HotRadioReq {
         // 网易云(程序分页)
 //        // 个性电台推荐
 //        String radioInfoBody = HttpRequest.get(PERSONAL_RADIO_API)
-//                .execute()
+//                .executeAsync()
 //                .body();
 //        JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
 //        JSONArray radioArray = radioInfoJson.getJSONArray("data");
@@ -104,7 +104,7 @@ public class HotRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, DAILY_RADIO_API, "{\"page\":0}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("data");
@@ -150,7 +150,7 @@ public class HotRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_API, "{\"offset\":0,\"limit\":1000}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
@@ -194,7 +194,7 @@ public class HotRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_TOPLIST_API, "{\"type\":1,\"offset\":0,\"limit\":200}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("toplist");
@@ -238,7 +238,7 @@ public class HotRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
@@ -284,7 +284,7 @@ public class HotRadioReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_HOT_RADIO_API,
                                 String.format("{\"cateId\":\"%s\",\"offset\":%s,\"limit\":%s}", s[0], (page - 1) * limit, limit), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 t = radioInfoJson.getIntValue("count");
@@ -330,7 +330,7 @@ public class HotRadioReq {
             if (StringUtil.notEmpty(s[1])) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_REC_RADIO_API, String.format("{\"cateId\":\"%s\"}", s[1]), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
@@ -378,7 +378,7 @@ public class HotRadioReq {
             if (StringUtil.notEmpty(s[3])) {
                 String[] sp = s[3].split(" ", -1);
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, sp[0], sp[1], page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
@@ -426,7 +426,7 @@ public class HotRadioReq {
 
             if (StringUtil.notEmpty(s[4])) {
                 String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, s[4], page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
@@ -470,7 +470,7 @@ public class HotRadioReq {
             if (StringUtil.notEmpty(s[2])) {
                 String[] sp = s[2].split(" ");
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANKING_XM_API, sp[0], sp[1]))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("rankList").getJSONObject(0).getJSONArray("albums");
@@ -515,7 +515,7 @@ public class HotRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(WEEK_RADIO_ME_API, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
@@ -552,7 +552,7 @@ public class HotRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(MONTH_RADIO_ME_API, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
@@ -589,7 +589,7 @@ public class HotRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(String.format(ALL_TIME_RADIO_ME_API, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
@@ -628,7 +628,7 @@ public class HotRadioReq {
             if (StringUtil.notEmpty(s[5])) {
                 String[] sp = s[5].split(" ");
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_ME_API, sp[2], sp[0], sp[1], page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
@@ -667,7 +667,7 @@ public class HotRadioReq {
             final int rn = 25;
 
             String radioInfoBody = HttpRequest.get(String.format(TOP_RADIO_DB_API, (page - 1) * rn))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(radioInfoBody);
             Elements rs = doc.select("div.item");
@@ -709,10 +709,10 @@ public class HotRadioReq {
 
             if (StringUtil.notEmpty(s[6])) {
                 String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, s[6], (page - 1) * limit, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONArray radioArray = JSONArray.parseArray(radioInfoBody);
-                t = JSONObject.parseObject(HttpRequest.get(String.format(CAT_RADIO_TOTAL_DB_API, s[6])).execute().body()).getIntValue("total");
+                t = JSONObject.parseObject(HttpRequest.get(String.format(CAT_RADIO_TOTAL_DB_API, s[6])).executeAsync().body()).getIntValue("total");
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -747,7 +747,7 @@ public class HotRadioReq {
             if (StringUtil.notEmpty(s[7])) {
                 String[] sp = s[7].split(" ", -1);
                 String radioInfoBody = HttpRequest.get(String.format(CAT_GAME_RADIO_DB_API, sp[0], sp[1], page))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject data = JSONObject.parseObject(radioInfoBody);
                 JSONArray radioArray = data.getJSONArray("games");

@@ -33,7 +33,7 @@ public class ProgramTagReq {
         // 猫耳探索
         Runnable initExpProgramTagMe = () -> {
             String playlistTagBody = HttpRequest.get(EXP_PROGRAM_TAG_ME_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(playlistTagBody);
 
@@ -51,7 +51,7 @@ public class ProgramTagReq {
         // 首页标签
         Runnable initProgramIndexTagMe = () -> {
             String radioTagBody = HttpRequest.get(PROGRAM_SUB_TAG_ME_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(radioTagBody);
 

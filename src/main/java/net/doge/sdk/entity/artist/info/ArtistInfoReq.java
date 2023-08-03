@@ -98,7 +98,7 @@ public class ArtistInfoReq {
             if (source == NetMusicSource.NET_CLOUD) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject artistJson = artistInfoJson.getJSONObject("data").getJSONObject("artist");
@@ -128,7 +128,7 @@ public class ArtistInfoReq {
             // 酷狗
             else if (source == NetMusicSource.KG) {
                 String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_KG_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject artistJson = artistInfoJson.getJSONObject("data");
@@ -159,7 +159,7 @@ public class ArtistInfoReq {
             // QQ
             else if (source == NetMusicSource.QQ) {
                 String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_QQ_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(artistInfoBody);
 
@@ -190,7 +190,7 @@ public class ArtistInfoReq {
             // 酷我
             else if (source == NetMusicSource.KW) {
                 String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_DETAIL_KW_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject artistJson = artistInfoJson.getJSONObject("data");
@@ -222,7 +222,7 @@ public class ArtistInfoReq {
             else if (source == NetMusicSource.MG) {
                 String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_MG_API, id))
                         .setFollowRedirects(true)
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(artistInfoBody);
 
@@ -255,7 +255,7 @@ public class ArtistInfoReq {
             // 千千
             else if (source == NetMusicSource.QI) {
                 String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis()))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject artistJson = artistInfoJson.getJSONObject("data");
@@ -286,7 +286,7 @@ public class ArtistInfoReq {
             // 豆瓣
 //            else if (source == NetMusicSource.DB) {
 //                String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_DB_API, id))
-//                        .execute()
+//                        .executeAsync()
 //                        .body();
 //                Document doc = Jsoup.parse(artistInfoBody);
 //                Element h1 = doc.select("#content > h1").first();
@@ -326,7 +326,7 @@ public class ArtistInfoReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject artistJson = artistInfoJson.getJSONObject("data").getJSONObject("artist");
@@ -345,7 +345,7 @@ public class ArtistInfoReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_KG_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -364,7 +364,7 @@ public class ArtistInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_QQ_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
 
@@ -388,7 +388,7 @@ public class ArtistInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_DETAIL_KW_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -408,7 +408,7 @@ public class ArtistInfoReq {
         else if (source == NetMusicSource.MG) {
             String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_MG_API, id))
                     .setFollowRedirects(true)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
 
@@ -439,7 +439,7 @@ public class ArtistInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis()))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -459,7 +459,7 @@ public class ArtistInfoReq {
         else if (source == NetMusicSource.ME) {
             if (artistInfo.isOrganization()) {
                 String artistInfoBody = HttpRequest.get(String.format(ORGANIZATION_DETAIL_ME_API, id))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("info").getJSONObject("organization");
@@ -474,7 +474,7 @@ public class ArtistInfoReq {
                 GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             } else {
                 String artistInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, id, 1, 1))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("info");
@@ -515,7 +515,7 @@ public class ArtistInfoReq {
         // 豆瓣
         else if (source == NetMusicSource.DB) {
             String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_DB_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             String info = StringUtil.getPrettyText(doc.select("#headline div.info").first()) + "\n";
@@ -546,7 +546,7 @@ public class ArtistInfoReq {
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_SONGS_API,
                             String.format("{\"id\":\"%s\",\"private_cloud\":true,\"work_type\":1,\"order\":\"hot\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit),
                             options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             total = artistInfoJson.getIntValue("total");
@@ -581,7 +581,7 @@ public class ArtistInfoReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String artistInfoBody = HttpRequest.get(String.format(ARTIST_SONGS_KG_API, id, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -621,7 +621,7 @@ public class ArtistInfoReq {
             String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singer\":{\"method\":\"get_singer_detail_info\",\"param\":" +
                             "{\"sort\":5,\"singermid\":\"%s\",\"sin\":%s,\"num\":%s},\"module\":\"music.web_singer_info_svr\"}}", id, (page - 1) * limit, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("singer").getJSONObject("data");
@@ -659,7 +659,7 @@ public class ArtistInfoReq {
         else if (source == NetMusicSource.KW) {
             String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_SONGS_KW_API, id, page, limit))
                     .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -697,7 +697,7 @@ public class ArtistInfoReq {
         else if (source == NetMusicSource.MG) {
             String artistInfoBody = HttpRequest.get(String.format(ARTIST_SONGS_MG_API, id, page))
                     .setFollowRedirects(true)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements pageElem = doc.select(".views-pagination .pagination-item");
@@ -737,7 +737,7 @@ public class ArtistInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_SONGS_QI_API, id, page, limit, System.currentTimeMillis()))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -771,7 +771,7 @@ public class ArtistInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String artistInfoBody = HttpRequest.get(String.format(CV_PROGRAMS_ME_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements programs = doc.select(".pld-sound-title.cv-title a");

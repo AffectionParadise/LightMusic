@@ -57,7 +57,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, NEW_RADIO_API, "{\"type\":0,\"offset\":0,\"limit\":200}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("toplist");
@@ -102,7 +102,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_RADIO_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("result");
@@ -149,7 +149,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
@@ -194,7 +194,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_RADIO_API, "{\"limit\":100}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");
@@ -237,7 +237,7 @@ public class NewRadioReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_GIFT_RADIO_API,
                             String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");
@@ -282,7 +282,7 @@ public class NewRadioReq {
                     .body("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                             "\"param\":{\"id\":99,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
                             "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}")
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("radiolist").getJSONObject("data");
@@ -326,7 +326,7 @@ public class NewRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(REC_RADIO_ME_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("info");
@@ -362,7 +362,7 @@ public class NewRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(SUMMER_RADIO_ME_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("info");
@@ -401,7 +401,7 @@ public class NewRadioReq {
 //            Integer t = 0;
 //
 //            String radioInfoBody = HttpRequest.get(CHANNEL_ME_API)
-//                    .execute()
+//                    .executeAsync()
 //                    .body();
 //            Document doc = Jsoup.parse(radioInfoBody);
 //            Elements radios = doc.select(".item.blk > a");

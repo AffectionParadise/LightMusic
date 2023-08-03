@@ -9,8 +9,9 @@ import net.doge.constant.task.TaskType;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.model.entity.base.Downloadable;
-import net.doge.util.system.FileUtil;
+import net.doge.sdk.system.listener.DownloadListener;
 import net.doge.sdk.util.MusicServerUtil;
+import net.doge.util.system.FileUtil;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -80,8 +81,8 @@ public class Task {
         downloadList.repaint();
     }
 
-    private Map<String, Object> getHeaders() {
-        Map<String, Object> headers = null;
+    private Map<String, String> getHeaders() {
+        Map<String, String> headers = null;
         if (isMv() && ((NetMvInfo) resource).getSource() == NetMusicSource.BI || isMusic() && ((NetMusicInfo) resource).getSource() == NetMusicSource.BI) {
             headers = new HashMap<>();
             headers.put("referer", "https://www.bilibili.com/");
@@ -97,7 +98,24 @@ public class Task {
                 dirCheck();
                 prepareInfo();
                 setStatus(TaskStatus.RUNNING);
-                MusicServerUtil.download(this, getHeaders());
+                MusicServerUtil.download(url, dest, getHeaders(), new DownloadListener() {
+                    @Override
+                    public void totalSizeInitialized(long totalSize) {
+                        setTotal(totalSize);
+                    }
+
+                    @Override
+                    public void progress(long finishedSize, long totalSize) {
+                        setPercent((double) finishedSize / totalSize * 100);
+                        setFinished(finishedSize);
+                    }
+
+                    @Override
+                    public boolean shouldContinue() {
+                        // 中断任务后跳出
+                        return !isInterrupted();
+                    }
+                });
                 if (isInterrupted()) return;
                 if (invokeLater != null) invokeLater.run();
                 setStatus(TaskStatus.FINISHED);
@@ -161,8 +179,8 @@ public class Task {
     }
 
     private void dirCheck() {
-        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MV_PATH);
+        FileUtil.mkDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+        FileUtil.mkDir(SimplePath.DOWNLOAD_MV_PATH);
     }
 
     @Override

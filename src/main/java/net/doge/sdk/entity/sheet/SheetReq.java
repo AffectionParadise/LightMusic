@@ -37,7 +37,7 @@ public class SheetReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String sheetInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_API, String.format("{\"id\":\"%s\",\"abTest\":\"b\"}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject sheetInfoJson = JSONObject.parseObject(sheetInfoBody);
             JSONObject data = sheetInfoJson.getJSONObject("data");
@@ -92,7 +92,7 @@ public class SheetReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api//music/sheet/preview/info");
             String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_API, id), String.format("{\"id\":\"%s\"}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject imgInfoJson = JSONObject.parseObject(imgInfoBody);
             JSONArray imgArray = imgInfoJson.getJSONArray("data");

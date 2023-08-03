@@ -61,7 +61,7 @@ public class RadioMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_SUBSCRIBERS_API,
                             String.format("{\"id\":\"%s\",\"time\":-1,\"limit\":1000,\"total\":true}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("subscribers");
@@ -118,7 +118,7 @@ public class RadioMenuReq {
         if (source == NetMusicSource.DB) {
             String artistInfoBody = HttpRequest.get(String.format(isBook ? SIMILAR_BOOK_RADIO_DB_API
                             : isGame ? SIMILAR_GAME_RADIO_DB_API : SIMILAR_RADIO_DB_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements rs = doc.select(isBook ? "div#db-rec-section dl:not(.clear)"
@@ -150,7 +150,7 @@ public class RadioMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String radioInfoBody = HttpRequest.get(String.format(SIMILAR_RADIO_ME_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
@@ -198,7 +198,7 @@ public class RadioMenuReq {
         // 猫耳
         if (source == NetMusicSource.ME) {
             String artistInfoBody = HttpRequest.get(String.format(RADIO_CVS_ME_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("info");
@@ -229,7 +229,7 @@ public class RadioMenuReq {
         // 豆瓣
         else if (source == NetMusicSource.DB && !isBook) {
             String artistInfoBody = HttpRequest.get(String.format(RADIO_ARTISTS_DB_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements cs = doc.select("li.celebrity");

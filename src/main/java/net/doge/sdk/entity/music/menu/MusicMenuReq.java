@@ -58,7 +58,7 @@ public class MusicMenuReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_SONG_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songArray = musicInfoJson.getJSONArray("songs");
@@ -95,7 +95,7 @@ public class MusicMenuReq {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
@@ -104,7 +104,7 @@ public class MusicMenuReq {
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"simsongs\":{\"module\":\"rcmusic.similarSongRadioServer\"," +
                             "\"method\":\"get_simsongs\",\"param\":{\"songid\":%s}}}", id))
-                    .execute()
+                    .executeAsync()
                     .body();
             musicInfoJson = JSONObject.parseObject(musicInfoBody).getJSONObject("simsongs").getJSONObject("data");
             JSONArray songArray = musicInfoJson.getJSONArray("songInfoList");
@@ -141,7 +141,7 @@ public class MusicMenuReq {
         else if (source == NetMusicSource.HF) {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
                     .cookie(SdkCommon.HF_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".relate_post a");
@@ -165,7 +165,7 @@ public class MusicMenuReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select("ul.text-middle.break-all li a");
@@ -189,7 +189,7 @@ public class MusicMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_ME_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songArray = musicInfoJson.getJSONObject("info").getJSONArray("sounds");
@@ -228,7 +228,7 @@ public class MusicMenuReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_PLAYLIST_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
@@ -267,7 +267,7 @@ public class MusicMenuReq {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
@@ -276,7 +276,7 @@ public class MusicMenuReq {
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"gedan\":{\"module\":\"music.mb_gedan_recommend_svr\"," +
                             "\"method\":\"get_related_gedan\",\"param\":{\"sin\":0,\"last_id\":0,\"song_type\":1,\"song_id\":%s}}}", id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONObject("gedan").getJSONObject("data").getJSONArray("vec_gedan");
@@ -326,7 +326,7 @@ public class MusicMenuReq {
         // 猫耳
         if (source == NetMusicSource.ME) {
             String radioInfoBody = HttpRequest.get(String.format(SONG_REC_RADIO_ME_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");

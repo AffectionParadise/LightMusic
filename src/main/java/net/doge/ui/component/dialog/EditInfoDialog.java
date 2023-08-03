@@ -11,13 +11,13 @@ import net.doge.model.entity.MediaInfo;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.combobox.CustomComboBox;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
-import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.component.textfield.CustomTextField;
-import net.doge.ui.component.combobox.ui.ComboBoxUI;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import net.doge.util.media.MediaUtil;
@@ -161,7 +161,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
         // 获得传入的歌曲信息
         String fileName = StringUtil.wrapLineByWidth(file.getName(), 300);
-        String fileSize = FileUtil.getUnitString(FileUtil.getDirOrFileSize(file));
+        String fileSize = FileUtil.getUnitString(FileUtil.size(file));
         String creationTime = TimeUtil.msToDatetime(FileUtil.getCreationTime(file));
         String lastModifiedTime = TimeUtil.msToDatetime(file.lastModified());
         String lastAccessTime = TimeUtil.msToDatetime(FileUtil.getAccessTime(file));

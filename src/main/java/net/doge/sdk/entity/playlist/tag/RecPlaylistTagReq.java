@@ -50,7 +50,7 @@ public class RecPlaylistTagReq {
         Runnable initRecPlaylistTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
@@ -92,7 +92,7 @@ public class RecPlaylistTagReq {
         // 酷狗
         Runnable initRecPlaylistTagKg = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KG_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tagIds = playlistTagJson.getJSONObject("data").getJSONObject("tagids");
@@ -114,7 +114,7 @@ public class RecPlaylistTagReq {
         // QQ
         Runnable initRecPlaylistTagQq = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_QQ_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONObject("tags").getJSONObject("data").getJSONArray("v_group");
@@ -135,7 +135,7 @@ public class RecPlaylistTagReq {
         // 猫耳
         Runnable initRecPlaylistTagMe = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_ME_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tags = playlistTagJson.getJSONObject("info");
@@ -157,7 +157,7 @@ public class RecPlaylistTagReq {
         // 5sing
         Runnable initRecPlaylistTagFs = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_FS_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(playlistTagBody);
             Elements tags = doc.select("ul.flx li a");

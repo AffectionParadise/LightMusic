@@ -63,7 +63,7 @@ public class ArtistSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/cloudsearch/pc");
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":100,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject result = artistInfoJson.getJSONObject("result");
@@ -105,7 +105,7 @@ public class ArtistSearchReq {
             int lim = Math.min(40, limit);
             String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, lim, keyword, 1))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
@@ -144,7 +144,7 @@ public class ArtistSearchReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_ARTIST_KW_API, encodedKeyword, page, limit)).execute();
+            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_ARTIST_KW_API, encodedKeyword, page, limit)).executeAsync();
             // 酷我有时候会崩，先验证是否请求成功
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String artistInfoBody = resp.body();
@@ -183,7 +183,7 @@ public class ArtistSearchReq {
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_MG_API, encodedKeyword, page, limit))
                     .header(Header.REFERER,"https://m.music.migu.cn/")
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             t = artistInfoJson.getIntValue("pgt");
@@ -221,7 +221,7 @@ public class ArtistSearchReq {
             Integer t = 0;
 
             String artistInfoBody = SdkCommon.qiRequest(String.format(SEARCH_ARTIST_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -256,7 +256,7 @@ public class ArtistSearchReq {
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_CV_ME_API, encodedKeyword, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject info = artistInfoJson.getJSONObject("info");
@@ -291,7 +291,7 @@ public class ArtistSearchReq {
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_DB_API, encodedKeyword, (page - 1) * 15))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
             t = Integer.parseInt(doc.select("div.rr").first().text().split("共")[1]);

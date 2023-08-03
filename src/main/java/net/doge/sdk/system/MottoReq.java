@@ -15,7 +15,7 @@ public class MottoReq {
      */
     public String getMotto() {
         String mottoBody = HttpRequest.get(MOTTO_API)
-                .execute()
+                .executeAsync()
                 .body();
         JSONObject mottoJson = JSONObject.parseObject(mottoBody);
         String content = mottoJson.getString("hitokoto");

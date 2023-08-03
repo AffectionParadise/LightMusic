@@ -29,7 +29,7 @@ public class MusicSearchTagReq {
         // 猫耳
         Runnable initProgramSearchTagMe = () -> {
             String playlistTagBody = HttpRequest.get(PROGRAM_SEARCH_TAG_ME_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONArray tags = JSONArray.parseArray(playlistTagBody);
             for (int i = 0, len = tags.size(); i < len; i++) {

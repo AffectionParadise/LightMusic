@@ -79,7 +79,7 @@ public class ArtistListReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_RANKING_LIST_API,
                                 String.format("{\"type\":\"%s\",\"offset\":0,\"limit\":100,\"total\":true}", s[0]), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONArray artistArray = artistInfoJson.getJSONObject("list").getJSONArray("artists");
@@ -117,7 +117,7 @@ public class ArtistListReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, HOT_ARTIST_LIST_API,
                             String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONArray artistArray = artistInfoJson.getJSONArray("artists");
@@ -157,7 +157,7 @@ public class ArtistListReq {
                 String artistInfoBody = SdkCommon.ncRequest(Method.POST, CAT_ARTIST_API,
                                 String.format("{\"type\":\"%s\",\"area\":\"%s\",\"initial\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                                         sp[0], sp[1], sp[2], (page - 1) * limit, limit), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONArray artistArray = artistInfoJson.getJSONArray("artists");
@@ -196,7 +196,7 @@ public class ArtistListReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String artistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ARTIST_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("data");
@@ -237,7 +237,7 @@ public class ArtistListReq {
             if (StringUtil.notEmpty(s[3])) {
                 String[] split = s[3].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(HOT_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("data");
@@ -279,7 +279,7 @@ public class ArtistListReq {
             if (StringUtil.notEmpty(s[3])) {
                 String[] split = s[3].split(" ");
                 String artistInfoBody = HttpRequest.get(String.format(UP_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("data");
@@ -325,7 +325,7 @@ public class ArtistListReq {
                 String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                                 "\"param\":{\"sex\":%s,\"genre\":%s,\"index\":%s,\"area\":%s,\"sin\":%s,\"cur_page\":%s}}}", sp[0], sp[1], sp[2], sp[3], (p - 1) * lim, p))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("singerList").getJSONObject("data");
@@ -361,7 +361,7 @@ public class ArtistListReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[5])) {
-                HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, s[5], page, limit)).execute();
+                HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, s[5], page, limit)).executeAsync();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
                     JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -406,7 +406,7 @@ public class ArtistListReq {
                 String[] sp = s[6].split(" ", -1);
                 HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
                         .header(Header.REFERER, StringUtil.notEmpty(sp[1]) ? "http://www.kuwo.cn/singers" : "")
-                        .execute();
+                        .executeAsync();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
                     JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -450,7 +450,7 @@ public class ArtistListReq {
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("columnInfo");
@@ -483,7 +483,7 @@ public class ArtistListReq {
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API_2)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("columnInfo");
@@ -518,7 +518,7 @@ public class ArtistListReq {
             Integer t = 0;
 
             HttpResponse resp = SdkCommon.qiRequest(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis()))
-                    .execute();
+                    .executeAsync();
             String artistInfoBody = resp.body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONArray("data").getJSONObject(6);
@@ -558,7 +558,7 @@ public class ArtistListReq {
                 // 分割时保留空串
                 String[] sp = s[7].split(" ", -1);
                 String artistInfoBody = SdkCommon.qiRequest(String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis()))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject data = artistInfoJson.getJSONObject("data");
@@ -595,7 +595,7 @@ public class ArtistListReq {
 
             if (StringUtil.notEmpty(s[8])) {
                 String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[8].trim(), page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject info = artistInfoJson.getJSONObject("info");
@@ -631,7 +631,7 @@ public class ArtistListReq {
 
             if (StringUtil.notEmpty(s[8])) {
                 String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[8].trim(), page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONObject info = artistInfoJson.getJSONObject("info");

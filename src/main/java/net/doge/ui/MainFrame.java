@@ -111,6 +111,7 @@ import net.doge.util.ui.SpectrumUtil;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import javax.swing.Timer;
 import javax.swing.*;
@@ -187,9 +188,10 @@ public class MainFrame extends JFrame {
     private final String ASK_REVERSE_MSG = "是否要倒置列表顺序？";
     private final String UPDATE_CHECKING_MSG = "检查更新中......";
     private final String UPDATE_CHECK_FAIL_MSG = "检查更新失败，请稍后再试";
-    private final String UPDATE_MSG = "已有新版本 %s，当前版本 %s，是否前往发布页更新？";
+    private final String UPDATE_MSG = "\uD83D\uDE80 新版本已发布，是否更新？\n\n最新版本：%s\n当前版本：%s\n\n";
     private final String IGNORE_UPDATE_MSG = "当有新版本时不再提示";
-    private final String LATEST_MSG = "当前已是最新版本";
+    private final String UPDATE_READY_MSG = "更新包已就绪，是否现在重启应用以完成更新？";
+    private final String LATEST_MSG = "\uD83C\uDF89 当前已是最新版本\n\n最新版本：%s\n当前版本：%s\n\n";
     private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n" +
             "下面是一些常见问题解答，请仔细阅读。祝你使用愉快~\n\n" +
             "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n" +
@@ -2945,6 +2947,9 @@ public class MainFrame extends JFrame {
     // 加载配置
     private boolean loadConfig() {
         JSONObject config = JsonUtil.readJson(ConfigConstants.FILE_NAME);
+        // 载入是否自动更新
+        autoUpdate = config.getBooleanValue(ConfigConstants.AUTO_UPDATE, true);
+        if (autoUpdate) checkUpdate(true);
         // 载入已保存的自定义风格(逆序加载，这样才能保持顺序一致)
         JSONArray styleArray = config.getJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
         if (JsonUtil.notEmpty(styleArray)) {
@@ -3002,9 +3007,6 @@ public class MainFrame extends JFrame {
         if (videoFullScreenKeys.isEmpty()) {
             videoFullScreenKeys.add(KeyEvent.VK_F11);
         }
-        // 载入是否自动更新
-        autoUpdate = config.getBooleanValue(ConfigConstants.AUTO_UPDATE, true);
-        if (autoUpdate) checkUpdate(true);
         // 载入关闭窗口操作
         currCloseWindowOption = config.getIntValue(ConfigConstants.CLOSE_WINDOW_OPTION, CloseWindowOptions.ASK);
         // 载入窗口大小
@@ -3027,19 +3029,19 @@ public class MainFrame extends JFrame {
         // 载入歌曲下载路径
         String musicDownPath = config.getString(ConfigConstants.MUSIC_DOWN_PATH);
         if (StringUtil.notEmpty(musicDownPath)) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
-        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+        FileUtil.mkDir(SimplePath.DOWNLOAD_MUSIC_PATH);
         // 载入 MV 下载路径
         String mvDownPath = config.getString(ConfigConstants.MV_DOWN_PATH);
         if (StringUtil.notEmpty(mvDownPath)) SimplePath.DOWNLOAD_MV_PATH = mvDownPath;
-        FileUtil.makeSureDir(SimplePath.DOWNLOAD_MV_PATH);
+        FileUtil.mkDir(SimplePath.DOWNLOAD_MV_PATH);
         // 载入缓存路径
         String cachePath = config.getString(ConfigConstants.CACHE_PATH);
         if (StringUtil.notEmpty(cachePath)) {
             SimplePath.CACHE_PATH = cachePath;
             SimplePath.IMG_CACHE_PATH = cachePath + (cachePath.endsWith(File.separator) ? "" : File.separator) + "img" + File.separator;
         }
-        FileUtil.makeSureDir(SimplePath.CACHE_PATH);
-        FileUtil.makeSureDir(SimplePath.IMG_CACHE_PATH);
+        FileUtil.mkDir(SimplePath.CACHE_PATH);
+        FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
         // 载入最大缓存大小
         maxCacheSize = config.getLongValue(ConfigConstants.MAX_CACHE_SIZE, 1024);
         // 载入最大播放历史数量
@@ -3234,7 +3236,7 @@ public class MainFrame extends JFrame {
                         if (musicInfo.isMp3()) MediaUtil.writeMP3Info(dest, musicInfo);
                         // 自动下载歌词
                         if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                            FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
+                            FileUtil.writeStr(musicInfo.getLrc(), destLrcPath);
                     });
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
@@ -4209,6 +4211,12 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.USER_COLLECTION, userCollectionJsonArray);
     }
 
+    // 开始更新
+    private void startUpdate() {
+        TerminateUtil.updater();
+        exit();
+    }
+
     // 检查更新
     private void checkUpdate(boolean mute) {
         globalExecutor.execute(() -> {
@@ -4216,19 +4224,53 @@ public class MainFrame extends JFrame {
             if (!mute) td = new TipDialog(THIS, UPDATE_CHECKING_MSG, 0);
             try {
                 if (!mute) td.showDialog();
-                String body = HttpRequest.get(SoftInfo.UPDATE).execute().body();
+                String body = HttpRequest.get(SoftInfo.RELEASE).executeAsync().body();
                 if (!mute) td.close();
                 Document doc = Jsoup.parse(body);
-                String latest = doc.select("h1.d-inline.mr-3").first().text().split(" ")[1];
-                String now = SoftInfo.EDITION;
+                String latest = doc.select("h1.d-inline.mr-3").first().text().split(" ")[1], now = SoftInfo.VERSION;
+                Elements li = doc.select(".markdown-body.my-3 ul").first().select("li");
+                StringJoiner sj = new StringJoiner("\n");
+                li.forEach(l -> sj.add("- " + l.text()));
+                String detail = sj.toString();
+                String updateInfo = StringUtil.notEmpty(detail) ? "更新说明：\n" + detail : "";
+                // 有新版本
                 if (latest.compareTo(now) > 0) {
-                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(UPDATE_MSG, latest, now), "是", "否", mute, IGNORE_UPDATE_MSG);
+                    File packageFile = new File(SimplePath.TEMP_PATH + SoftInfo.PACKAGE_FILE_NAME);
+                    boolean exists = packageFile.exists();
+                    // 启动时，若更新包存在，直接更新
+                    if (mute && exists) {
+                        TerminateUtil.updater();
+                        System.exit(0);
+                    }
+                    // 弹出更新提示框
+                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(UPDATE_MSG, latest, now) + updateInfo,
+                            "是", "否", "前往发布页", mute, IGNORE_UPDATE_MSG);
                     d.showDialog();
                     int response = d.getResponse();
                     boolean checked = d.isChecked();
-                    if (response == JOptionPane.YES_OPTION) releaseMenuItem.doClick();
+                    // 在线更新
+                    if (response == JOptionPane.YES_OPTION) {
+                        UpdateDialog ud = null;
+                        // 若更新包不存在，先开启下载框进行下载
+                        if (!exists) {
+                            ud = new UpdateDialog(THIS);
+                            ud.showDialog();
+                        }
+                        // 更新包已存在，或者下载成功，询问是否重启
+                        if (ud == null || !ud.isCanceled()) {
+                            ConfirmDialog cd = new ConfirmDialog(THIS, UPDATE_READY_MSG, "立即重启", "以后再说");
+                            cd.showDialog();
+                            int resp = cd.getResponse();
+                            if (resp == JOptionPane.YES_OPTION) startUpdate();
+                        }
+                    } else if (response == JOptionPane.CANCEL_OPTION) releaseMenuItem.doClick();
                     if (mute && checked) autoUpdate = false;
-                } else if (!mute) new TipDialog(THIS, LATEST_MSG).showDialog();
+                }
+                // 已是最新版
+                else if (!mute) {
+                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(LATEST_MSG, latest, now) + updateInfo, "确定");
+                    d.showDialog();
+                }
             } catch (Exception ex) {
                 if (!mute) new TipDialog(THIS, UPDATE_CHECK_FAIL_MSG).showDialog();
             } finally {
@@ -4301,7 +4343,7 @@ public class MainFrame extends JFrame {
         closeSong.addActionListener(e -> unload());
         clearCache.addActionListener(e -> {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                    String.format(ASK_CLEAR_CACHE_MSG, FileUtil.getUnitString(FileUtil.getDirOrFileSize(new File(SimplePath.CACHE_PATH)))), "是", "否");
+                    String.format(ASK_CLEAR_CACHE_MSG, FileUtil.getUnitString(FileUtil.size(new File(SimplePath.CACHE_PATH)))), "是", "否");
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
@@ -19768,7 +19810,7 @@ public class MainFrame extends JFrame {
             if (player.loadedNetMusic()) {
                 NetMusicInfo musicInfo = player.getMusicInfo();
                 lrcPath = new File(SimplePath.CACHE_PATH + musicInfo.toLrcFileName()).getAbsolutePath();
-                FileUtil.writeStr(lrcStr, lrcPath, false);
+                FileUtil.writeStr(lrcStr, lrcPath);
             }
             // 本地音乐直接打开 lrc 文件
             else {
@@ -19785,7 +19827,7 @@ public class MainFrame extends JFrame {
             if (player.loadedNetMusic()) {
                 NetMusicInfo musicInfo = player.getMusicInfo();
                 lrcPath = new File(SimplePath.CACHE_PATH + musicInfo.toLrcTransFileName()).getAbsolutePath();
-                FileUtil.writeStr(transStr, lrcPath, false);
+                FileUtil.writeStr(transStr, lrcPath);
             }
             TerminateUtil.notepad(lrcPath);
         });
@@ -21198,7 +21240,9 @@ public class MainFrame extends JFrame {
                         if (!file.exists() || FileUtil.startsWithLeftBrace(file)) {
                             loading.start();
                             loading.setText(LOADING_MSG);
-                            MusicServerUtil.download(loading, musicInfo.getUrl(), file.getPath());
+                            MusicServerUtil.download(musicInfo.getUrl(), file.getPath(), (finishedSize, totalSize) -> {
+                                loading.setText("加载歌曲文件，" + String.format("%.1f", (double) finishedSize / totalSize * 100) + "%");
+                            });
                         }
                         // Flac 文件需要转换格式，并删除原来的文件
                         if (musicInfo.isFlac()) {
@@ -22790,8 +22834,8 @@ public class MainFrame extends JFrame {
     private void downloadLrc(NetMusicInfo musicInfo) {
         globalExecutor.execute(() -> {
             try {
-                FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-                FileUtil.writeStr(lrcStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName(), false);
+                FileUtil.mkDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+                FileUtil.writeStr(lrcStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName());
                 new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
             } catch (Exception e) {
                 if (e instanceof IORuntimeException) {
@@ -22808,8 +22852,8 @@ public class MainFrame extends JFrame {
     // 下载歌词翻译
     private void downloadLrcTrans(NetMusicInfo musicInfo) {
         globalExecutor.execute(() -> {
-            FileUtil.makeSureDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-            FileUtil.writeStr(transStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcTransFileName(), false);
+            FileUtil.mkDir(SimplePath.DOWNLOAD_MUSIC_PATH);
+            FileUtil.writeStr(transStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcTransFileName());
             new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
         });
     }
@@ -22826,7 +22870,7 @@ public class MainFrame extends JFrame {
             if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
             // 自动下载歌词
             if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
+                FileUtil.writeStr(musicInfo.getLrc(), destLrcPath);
         });
         task.start();
         downloadListModel.add(0, task);
@@ -22853,7 +22897,7 @@ public class MainFrame extends JFrame {
                 if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
                 // 自动下载歌词
                 if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                    FileUtil.writeStr(musicInfo.getLrc(), destLrcPath, false);
+                    FileUtil.writeStr(musicInfo.getLrc(), destLrcPath);
             });
             tasks.add(task);
             downloadListModel.add(0, task);
@@ -22979,12 +23023,12 @@ public class MainFrame extends JFrame {
                             dialog.setMessage("加载视频文件......");
                             dialog.updateSize();
                             dialog.setLocationRelativeTo(null);
-                            Map<String, Object> headers = null;
+                            Map<String, String> headers = null;
                             if (mvInfo.getSource() == NetMusicSource.BI) {
                                 headers = new HashMap<>();
                                 headers.put("referer", "https://www.bilibili.com/");
                             }
-                            MusicServerUtil.download(null, mvInfo.getUrl(), file.getPath(), headers);
+                            MusicServerUtil.download(mvInfo.getUrl(), file.getPath(), headers);
                         }
                         dialog.setMessage("转换视频文件格式......");
                         dialog.updateSize();
@@ -23462,14 +23506,13 @@ public class MainFrame extends JFrame {
         dispose();
     }
 
-    // 退出播放器
-    private void exit() {
+    // 退出应用
+    public void exit() {
         try {
             // 先暂停播放
             player.pause();
             // 缓存超出最大值时清理
-            if (FileUtil.getDirOrFileSize(new File(SimplePath.CACHE_PATH)) > maxCacheSize * 1024 * 1024)
-                clearCache();
+            if (FileUtil.size(new File(SimplePath.CACHE_PATH)) > maxCacheSize * 1024 * 1024) clearCache();
             SystemTray.getSystemTray().remove(trayIconImg);
             saveConfig();
             System.exit(0);
@@ -23480,7 +23523,7 @@ public class MainFrame extends JFrame {
 
     // 清除缓存
     private void clearCache() {
-        FileUtil.deepDeleteFiles(SimplePath.CACHE_PATH);
+        FileUtil.clean(SimplePath.CACHE_PATH);
     }
 
     // 弹出加载面板并执行

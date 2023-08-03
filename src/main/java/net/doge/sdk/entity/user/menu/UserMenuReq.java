@@ -156,7 +156,7 @@ public class UserMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, USER_PLAYLIST_API,
                             String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", id, (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlist");
@@ -199,7 +199,7 @@ public class UserMenuReq {
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, id))
                         .header(Header.REFERER, "https://y.qq.com/portal/profile.html")
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -242,7 +242,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, id, (page - 1) * limit, page * limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -308,7 +308,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, id, page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
@@ -348,7 +348,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, id, page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("info");
@@ -421,7 +421,7 @@ public class UserMenuReq {
         // QQ
         if (source == NetMusicSource.QQ) {
             String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, id, (page - 1) * limit, page * limit - 1))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
@@ -461,7 +461,7 @@ public class UserMenuReq {
         else if (source == NetMusicSource.DB) {
             final int rn = 15;
             String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DB_API, id, (page - 1) * rn))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements rs = doc.select("div.item");
@@ -499,7 +499,7 @@ public class UserMenuReq {
         // 堆糖
         else if (source == NetMusicSource.DT) {
             String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DT_API, id, (page - 1) * limit, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
@@ -554,7 +554,7 @@ public class UserMenuReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, USER_RADIO_API, String.format("{\"userId\":\"%s\"}", id), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
@@ -600,7 +600,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_XM_API, id, page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
@@ -644,7 +644,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_XM_API, id, page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
@@ -711,7 +711,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, id, page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
@@ -751,7 +751,7 @@ public class UserMenuReq {
                 Integer t = 0;
 
                 String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, id, page, limit))
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("info");
@@ -811,7 +811,7 @@ public class UserMenuReq {
 
                 final int rn = 15;
                 String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_DB_API, id, (page - 1) * rn))
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
                 Elements rs = doc.select("div.item");
@@ -853,7 +853,7 @@ public class UserMenuReq {
 
                 final int rn = 15;
                 String radioInfoBody = HttpRequest.get(String.format(USER_BOOK_RADIO_DB_API, id, (page - 1) * rn))
-                        .execute()
+                        .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
                 Elements rs = doc.select("li.subject-item");
@@ -936,7 +936,7 @@ public class UserMenuReq {
 
                 String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, id, cursor))
                         .cookie(SdkCommon.HK_COOKIE)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
                 String cs = data.getString("ctime");
@@ -981,7 +981,7 @@ public class UserMenuReq {
 
                 String mvInfoBody = HttpRequest.get(String.format(USER_SMALL_VIDEO_HK_API, id))
                         .cookie(SdkCommon.HK_COOKIE)
-                        .execute()
+                        .executeAsync()
                         .body();
                 JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
                 String cs = data.getString("ctime");
@@ -1045,7 +1045,7 @@ public class UserMenuReq {
         else if (source == NetMusicSource.BI) {
             String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, orders[sortType], id, page, limit))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
             if (JsonUtil.notEmpty(data)) {
@@ -1103,7 +1103,7 @@ public class UserMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FOLLOWS_API, id),
                             String.format("{\"offset\":%s,\"limit\":%s,\"order\":true}", (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             t = userInfoJson.getBooleanValue("more") ? page * limit + 1 : page * limit;
@@ -1144,7 +1144,7 @@ public class UserMenuReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_XM_API, id, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -1186,7 +1186,7 @@ public class UserMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_ME_API, id, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("info");
@@ -1226,7 +1226,7 @@ public class UserMenuReq {
         else if (source == NetMusicSource.FS) {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_FS_API, id, page))
                     .setFollowRedirects(true)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
 
@@ -1360,7 +1360,7 @@ public class UserMenuReq {
         // 堆糖
         else if (source == NetMusicSource.DT) {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_DT_API, id, (page - 1) * limit, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -1398,7 +1398,7 @@ public class UserMenuReq {
         else if (source == NetMusicSource.BI) {
             String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_BI_API, id, page, limit))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -1448,7 +1448,7 @@ public class UserMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/user/getfolloweds");
             String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FANS_API, id),
                             String.format("{\"userId\":\"%s\",\"time\":0,\"offset\":%s,\"limit\":%s,\"getcounts\":true}", id, (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("followeds");
@@ -1487,7 +1487,7 @@ public class UserMenuReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String userInfoBody = HttpRequest.get(String.format(USER_FANS_XM_API, id, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -1529,7 +1529,7 @@ public class UserMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String userInfoBody = HttpRequest.get(String.format(USER_FANS_ME_API, id, page, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("info");
@@ -1569,7 +1569,7 @@ public class UserMenuReq {
         else if (source == NetMusicSource.FS) {
             String userInfoBody = HttpRequest.get(String.format(USER_FANS_FS_API, id, page))
                     .setFollowRedirects(true)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
 
@@ -1703,7 +1703,7 @@ public class UserMenuReq {
         // 堆糖
         else if (source == NetMusicSource.DT) {
             String userInfoBody = HttpRequest.get(String.format(USER_FANS_DT_API, id, (page - 1) * limit, limit))
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
@@ -1741,7 +1741,7 @@ public class UserMenuReq {
         else if (source == NetMusicSource.BI) {
             String userInfoBody = HttpRequest.get(String.format(USER_FANS_BI_API, id, page, limit))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");

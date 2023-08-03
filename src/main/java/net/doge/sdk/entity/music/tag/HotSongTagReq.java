@@ -57,7 +57,7 @@ public class HotSongTagReq {
         Runnable initHotSongTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");

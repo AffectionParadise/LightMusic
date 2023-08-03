@@ -45,14 +45,14 @@ public class LrcData {
      * 实例化一个歌词数据. 歌词数据信息由指定的文件提供.
      * fileName: 指定的歌词文件.
      */
-    public LrcData(String fileNameOrStr, boolean isFile) throws IOException {
+    public LrcData(String fileNameOrLrcStr, boolean isFile) throws IOException {
         if (isFile) {
-            File f = new File(fileNameOrStr);
+            File f = new File(fileNameOrLrcStr);
             FileInputStream fis = new FileInputStream(f);
             // 获取文件编码并读取歌词
             bufferReader = new BufferedReader(new InputStreamReader(fis, FileUtil.getCharsetName(f)));
         } else {
-            bufferReader = new BufferedReader(new StringReader(fileNameOrStr));
+            bufferReader = new BufferedReader(new StringReader(fileNameOrLrcStr));
         }
         // 将文件数据读入内存
         readData();

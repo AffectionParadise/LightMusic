@@ -38,7 +38,7 @@ public class QqTrackUrlReq {
         String url = urls[0];
 
         try {
-            HttpResponse resp = HttpRequest.post(url).body(compressedBytes).execute();
+            HttpResponse resp = HttpRequest.post(url).body(compressedBytes).executeAsync();
             byte[] decompressed = CryptoUtil.decompress(resp.bodyBytes());
             String body = new String(decompressed, StandardCharsets.UTF_8);
             String trackUrl = JSONObject.parseObject(body).getString("data");

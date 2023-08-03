@@ -45,7 +45,7 @@ public class PlaylistMenuReq {
         if (source == NetMusicSource.NET_CLOUD) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApiPC();
             String playlistInfoBody = SdkCommon.ncRequest(Method.GET, String.format(SIMILAR_PLAYLIST_API, id), "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(playlistInfoBody);
             Elements playlistArray = doc.select(".m-rctlist.f-cb li");
@@ -97,7 +97,7 @@ public class PlaylistMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_SUBSCRIBERS_API,
                             String.format("{\"id\":\"%s\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit), options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("subscribers");

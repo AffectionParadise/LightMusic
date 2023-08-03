@@ -187,9 +187,7 @@ public class StringUtil {
      * @return
      */
     public static String formatNumber(long n) {
-        if (n < 10000) return n + " 播放";
-        if (n < 100000000) return String.format("%s 万 播放", (double) (n / 1000) / 10).replace(".0", "");
-        return String.format("%s 亿 播放", (double) (n / 10000000) / 10).replace(".0", "");
+        return formatNumberWithoutSuffix(n) + " 播放";
     }
 
     /**
@@ -200,8 +198,8 @@ public class StringUtil {
      */
     public static String formatNumberWithoutSuffix(long n) {
         if (n < 10000) return String.valueOf(n);
-        if (n < 100000000) return String.format("%s 万", (double) (n / 1000) / 10).replace(".0", "");
-        return String.format("%s 亿", (double) (n / 10000000) / 10).replace(".0", "");
+        if (n < 100000000) return String.format("%.1f 万", (double) n / 10000).replace(".0", "");
+        return String.format("%.1f 亿", (double) n / 100000000).replace(".0", "");
     }
 
     /**

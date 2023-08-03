@@ -383,7 +383,7 @@ public class NewAlbumTagReq {
         Runnable initAlbumTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .execute()
+                    .executeAsync()
                     .body();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
@@ -426,7 +426,7 @@ public class NewAlbumTagReq {
         // 分类专辑标签
         Runnable initAlbumTagDb = () -> {
             String albumTagBody = HttpRequest.get(ALBUM_TAG_DB_API)
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumTagBody);
             Elements tags = doc.select("tbody tr td a");

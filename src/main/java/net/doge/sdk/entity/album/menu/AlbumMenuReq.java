@@ -35,7 +35,7 @@ public class AlbumMenuReq {
         // 豆瓣
         if (source == NetMusicSource.DB) {
             String albumInfoBody = HttpRequest.get(String.format(SIMILAR_ALBUM_DB_API, id))
-                    .execute()
+                    .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements rs = doc.select("dl.subject-rec-list");

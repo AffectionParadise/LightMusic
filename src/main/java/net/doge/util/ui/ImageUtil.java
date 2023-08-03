@@ -2,7 +2,10 @@ package net.doge.util.ui;
 
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.http.HttpRequest;
-import com.jhlabs.image.*;
+import com.jhlabs.image.ContrastFilter;
+import com.jhlabs.image.GaussianFilter;
+import com.jhlabs.image.GradientFilter;
+import com.jhlabs.image.ShadowFilter;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.player.Format;
@@ -137,7 +140,7 @@ public class ImageUtil {
             return HttpRequest.get(imgUrl)
                     .setFollowRedirects(true)
                     .setReadTimeout(20000)
-                    .execute()
+                    .executeAsync()
                     .bodyStream();
         } catch (Exception e) {
             return null;

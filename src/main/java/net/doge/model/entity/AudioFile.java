@@ -42,13 +42,13 @@ public class AudioFile extends File implements MusicResource {
         return hasDuration();
     }
 
-    public String getNameWithoutSuffix() {
-        return FileUtil.getNameWithoutSuffix(this);
+    public String getPrefix() {
+        return FileUtil.getPrefix(this);
     }
 
     @Override
     public String toString() {
-        return hasSongName() ? songName + (hasArtist() ? " - " + artist : "") : getNameWithoutSuffix();
+        return hasSongName() ? songName + (hasArtist() ? " - " + artist : "") : getPrefix();
     }
 
     @Override
