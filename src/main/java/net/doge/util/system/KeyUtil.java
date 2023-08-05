@@ -21,10 +21,8 @@ public class KeyUtil {
      * @return
      */
     public static String toStr(int code) {
-        if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9 ||
-                code >= KeyEvent.VK_A && code <= KeyEvent.VK_Z) {
+        if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9 || code >= KeyEvent.VK_A && code <= KeyEvent.VK_Z)
             return String.valueOf((char) code);
-        }
 
         switch (code) {
             case KeyEvent.VK_ENTER:
@@ -239,9 +237,7 @@ public class KeyUtil {
             return numpad + c;
         }
 
-        if ((code & 0x01000000) != 0) {
-            return String.valueOf((char) (code ^ 0x01000000));
-        }
+        if ((code & 0x01000000) != 0) return String.valueOf((char) (code ^ 0x01000000));
         String unknown = "Unknown";
         return unknown + " code: 0x" + Integer.toString(code, 16);
     }

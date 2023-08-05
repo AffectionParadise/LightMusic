@@ -81,7 +81,7 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel darkerFactorPanel = new CustomPanel();
     private CustomLabel darkerFactorLabel = new CustomLabel("暗角滤镜因子（因子越小越暗）：");
     private CustomComboBox<String> darkerFactorComboBox = new CustomComboBox();
-//    private CustomPanel gradientColorStylePanel = new CustomPanel();
+    //    private CustomPanel gradientColorStylePanel = new CustomPanel();
 //    private CustomLabel gradientColorStyleLabel = new CustomLabel("线性渐变色彩风格：");
 //    private CustomComboBox<String> gradientColorStyleComboBox = new CustomComboBox();
     private CustomPanel musicDownPanel = new CustomPanel();
@@ -578,14 +578,9 @@ public class SettingDialog extends AbstractTitledDialog {
                 File output = fileChooser.showSaveDialog(null);
                 if (output == null) return;
                 JSONObject config = new JSONObject();
-                f.saveLocalMusicList(config);
-                f.saveCollectedItemList(config);
-                try {
-                    JsonUtil.saveJson(config, output);
-                    new TipDialog(f, "备份成功").showDialog();
-                } catch (IOException ex) {
-                    new TipDialog(f, "备份失败").showDialog();
-                }
+                f.putLocalMusicList(config);
+                f.putCollectedItemList(config);
+                new TipDialog(f, JsonUtil.toFile(config, output) ? "备份成功" : "备份失败").showDialog();
             });
         });
         restoreListButton = new DialogButton("恢复", textColor);
@@ -594,7 +589,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 fileChooser.setTitle("选择文件");
                 File input = fileChooser.showOpenDialog(null);
                 if (input == null) return;
-                JSONObject config = JsonUtil.readJson(input);
+                JSONObject config = JsonUtil.read(input);
                 f.loadLocalMusicList(config);
                 f.loadCollectedMusicList(config);
                 new TipDialog(f, "恢复成功").showDialog();

@@ -31,19 +31,18 @@ public class DownloadReq {
             // 以流的形式下载文件
             byte[] buffer = new byte[1024];
             // 文件大小
-            long fileSize = resp.contentLength(), hasRead = 0;
+            long totalSize = resp.contentLength(), finishedSize = 0;
             boolean hasListener = listener != null;
-            if (hasListener) listener.totalSizeInitialized(fileSize);
+            if (hasListener) listener.totalSizeInitialized(totalSize);
             int read;
             // 如果没有数据了会返回 -1，如果还有会返回数据的长度
             while ((read = in.read(buffer)) != -1) {
-                hasRead += read;
-                if (hasListener) {
-                    if (!listener.shouldContinue()) break;
-                    listener.progress(hasRead, fileSize);
-                }
-                //读取多少输出多少
                 out.write(buffer, 0, read);
+                finishedSize += read;
+                if (hasListener) {
+                    if (listener.canInterrupt()) break;
+                    listener.progress(finishedSize, totalSize);
+                }
             }
             out.flush();
         }

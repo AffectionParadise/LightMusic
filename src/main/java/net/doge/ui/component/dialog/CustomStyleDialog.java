@@ -117,7 +117,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         globalPanel.add(centerScrollPane, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
             // 风格名称不为空
-            if (results[0].equals("")) {
+            if ("".equals(results[0])) {
                 new TipDialog(f, STYLE_NAME_NOT_NULL_MSG).showDialog();
                 return;
             }
@@ -139,9 +139,9 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 if (imgFile.exists() && imgFile.isFile()) {
                     try {
                         // 文件夹不存在就创建
-                        File dir = new File(SimplePath.CUSTOM_STYLE_IMG_PATH);
+                        File dir = new File(SimplePath.CUSTOM_STYLE_PATH);
                         FileUtil.mkDir(dir);
-                        String newPath = SimplePath.CUSTOM_STYLE_IMG_PATH + imgFile.getName();
+                        String newPath = SimplePath.CUSTOM_STYLE_PATH + imgFile.getName();
                         Files.copy(
                                 Paths.get(imgFile.getPath()),
                                 Paths.get(newPath),

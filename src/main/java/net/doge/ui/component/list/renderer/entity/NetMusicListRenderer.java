@@ -3,18 +3,18 @@ package net.doge.ui.component.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.RendererConstants;
-import net.doge.model.player.MusicPlayer;
 import net.doge.model.entity.NetMusicInfo;
+import net.doge.model.player.MusicPlayer;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import net.doge.util.system.LMIconManager;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,10 +37,10 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
     private int hoverIndex = -1;
 
     private MusicPlayer player;
-    private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicItem.png"), ImageConstants.SMALL_WIDTH));
-    private static ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "musicMvItem.png"), ImageConstants.SMALL_WIDTH));
-    private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "programItem.png"), ImageConstants.SMALL_WIDTH));
-    private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "playingItem.png"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicItem"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicMvItem"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.programItem"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playingItem"), ImageConstants.SMALL_WIDTH));
 
     public NetMusicListRenderer(MusicPlayer player) {
         this.player = player;

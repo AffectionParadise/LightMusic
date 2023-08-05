@@ -7,7 +7,7 @@ package net.doge.constant.config;
  */
 public class ConfigConstants {
     // 配置文件名称
-    public static final String FILE_NAME = "config.json";
+    public static final String CONFIG_FILE_NAME = "config.lm";
 
     // 所有自定义风格
     public static final String CUSTOM_UI_STYLES = "customUIStyles";

@@ -11,7 +11,6 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.window.WindowSize;
@@ -19,17 +18,18 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.menu.CustomPopupMenu;
 import net.doge.ui.component.menu.CustomRadioButtonMenuItem;
+import net.doge.ui.component.menu.ui.RadioButtonMenuItemUI;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
-import net.doge.ui.component.menu.ui.RadioButtonMenuItemUI;
 import net.doge.ui.component.slider.ui.SliderUI;
-import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -79,31 +79,31 @@ public class VideoDialog extends AbstractTitledDialog {
     private final String ERROR_MSG = "播放视频时发生异常";
 
     // 选定点图标
-    private ImageIcon dotIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "dot.png");
+    private ImageIcon dotIcon = LMIconManager.getIcon("menu.dot");
     // 播放图标
-    private ImageIcon playIcon = new ImageIcon(SimplePath.ICON_PATH + "play.png");
+    private ImageIcon playIcon = LMIconManager.getIcon("control.play");
     // 暂停图标
-    private ImageIcon pauseIcon = new ImageIcon(SimplePath.ICON_PATH + "pause.png");
+    private ImageIcon pauseIcon = LMIconManager.getIcon("control.pause");
     // 声音图标
-    private ImageIcon soundIcon = new ImageIcon(SimplePath.ICON_PATH + "sound.png");
+    private ImageIcon soundIcon = LMIconManager.getIcon("control.sound");
     // 静音图标
-    private ImageIcon muteIcon = new ImageIcon(SimplePath.ICON_PATH + "mute.png");
+    private ImageIcon muteIcon = LMIconManager.getIcon("control.mute");
     // 未收藏图标
-    private ImageIcon collectIcon = new ImageIcon(SimplePath.ICON_PATH + "collect.png");
+    private ImageIcon collectIcon = LMIconManager.getIcon("control.collect");
     // 已收藏图标
-    private ImageIcon hasCollectedIcon = new ImageIcon(SimplePath.ICON_PATH + "hasCollected.png");
+    private ImageIcon hasCollectedIcon = LMIconManager.getIcon("control.collected");
     // 下载图标
-    private ImageIcon downloadIcon = new ImageIcon(SimplePath.ICON_PATH + "download.png");
+    private ImageIcon downloadIcon = LMIconManager.getIcon("control.download");
     // 倍速图标
-    private ImageIcon rateIcon = new ImageIcon(SimplePath.ICON_PATH + "videoRate.png");
+    private ImageIcon rateIcon = LMIconManager.getIcon("control.rate");
     // 全屏图标
-    private ImageIcon fullScreenIcon = new ImageIcon(SimplePath.ICON_PATH + "fullScreen.png");
+    private ImageIcon fullScreenIcon = LMIconManager.getIcon("control.fullScreen");
     // 快退图标
-    private ImageIcon backwIcon = new ImageIcon(SimplePath.ICON_PATH + "backw.png");
+    private ImageIcon backwIcon = LMIconManager.getIcon("control.backw");
     // 快进图标
-    private ImageIcon forwIcon = new ImageIcon(SimplePath.ICON_PATH + "forw.png");
+    private ImageIcon forwIcon = LMIconManager.getIcon("control.forw");
     // 快进快退时间图标
-    private ImageIcon fobTimeIcon = new ImageIcon(SimplePath.ICON_PATH + "fobTime.png");
+    private ImageIcon fobTimeIcon = LMIconManager.getIcon("control.fobTime");
 
     private boolean isMute;
 

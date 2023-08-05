@@ -29,7 +29,7 @@ public class CustomToolTip extends JToolTip {
     public void addNotify() {
 //        super.addNotify();
         Component parent = getParent();
-        if (parent != null && parent instanceof JComponent) {
+        if (parent instanceof JComponent) {
             JComponent jParent = (JComponent) parent;
             jParent.setOpaque(false);
         }

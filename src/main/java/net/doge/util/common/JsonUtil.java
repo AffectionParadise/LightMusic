@@ -3,8 +3,10 @@ package net.doge.util.common;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
+import net.doge.util.system.FileUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @Author Doge
@@ -59,12 +61,21 @@ public class JsonUtil {
      * @return
      * @throws IOException
      */
-    public static JSONObject readJson(String source) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(source))) {
-            StringBuilder sb = new StringBuilder();
-            String s;
-            while ((s = reader.readLine()) != null) sb.append(s);
-            JSONObject obj = JSONObject.parseObject(sb.toString());
+    public static JSONObject read(String source) {
+        return read(new File(source));
+    }
+
+    /**
+     * 读取 Json 文件，返回 JSONObject
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static JSONObject read(File file) {
+        try {
+            String jsonStr = FileUtil.readStr(file);
+            JSONObject obj = JSONObject.parseObject(jsonStr);
             return obj == null ? new JSONObject() : obj;
         } catch (Exception e) {
             return new JSONObject();
@@ -72,38 +83,29 @@ public class JsonUtil {
     }
 
     /**
-     * 读取 Json 文件，返回 JSONObject
+     * 保存 Json 文件
      *
-     * @param input
+     * @param obj, dest
      * @return
-     * @throws IOException
      */
-    public static JSONObject readJson(File input) {
-        return readJson(input.getAbsolutePath());
+    public static boolean toFile(JSONObject obj, String dest) {
+        return toFile(obj, new File(dest));
     }
 
     /**
      * 保存 Json 文件
      *
-     * @param object, dest
+     * @param obj, file
      * @return
-     * @throws IOException
      */
-    public static void saveJson(JSONObject object, String dest) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(dest));
-        String jsonString = JSONObject.toJSONString(object, JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue);
-        writer.write(jsonString, 0, jsonString.length());
-        writer.close();
-    }
-
-    /**
-     * 保存 Json 文件
-     *
-     * @param object, output
-     * @return
-     * @throws IOException
-     */
-    public static void saveJson(JSONObject object, File output) throws IOException {
-        saveJson(object, output.getAbsolutePath());
+    public static boolean toFile(JSONObject obj, File file) {
+        try {
+            String jsonStr = obj.toString(JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue);
+            FileUtil.writeStr(jsonStr, file);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

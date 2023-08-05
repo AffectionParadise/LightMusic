@@ -6,7 +6,7 @@ public interface DownloadListener {
 
     void progress(long finishedSize, long totalSize);
 
-    default boolean shouldContinue() {
-        return true;
+    default boolean canInterrupt() {
+        return false;
     }
 }

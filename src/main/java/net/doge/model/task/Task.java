@@ -111,9 +111,9 @@ public class Task {
                     }
 
                     @Override
-                    public boolean shouldContinue() {
+                    public boolean canInterrupt() {
                         // 中断任务后跳出
-                        return !isInterrupted();
+                        return isInterrupted();
                     }
                 });
                 if (isInterrupted()) return;
@@ -185,7 +185,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return TaskStatus.NAMES[status] + SEPARATOR + (isProcessing() ? String.format("%.2f %%", percent) + SEPARATOR : "")
+        return TaskStatus.NAMES[status] + SEPARATOR + (isProcessing() ? String.format("%.1f%%", percent).replace(".0", "") + SEPARATOR : "")
                 + TaskType.NAMES[type] + SEPARATOR + name;
     }
 }

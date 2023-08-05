@@ -29,7 +29,7 @@ public class CodeCounter {
         String str;
         do {
             str = bufferedReader.readLine();
-            if (str != null && !str.equals("")) {
+            if (str != null && !str.isEmpty()) {
                 countLine++;
             }
         } while (str != null);

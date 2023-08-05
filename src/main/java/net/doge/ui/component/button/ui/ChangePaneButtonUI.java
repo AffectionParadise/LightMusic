@@ -1,8 +1,8 @@
 package net.doge.ui.component.button.ui;
 
 import net.doge.constant.ui.Colors;
-import net.doge.constant.system.SimplePath;
 import net.doge.ui.MainFrame;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -20,7 +20,7 @@ public class ChangePaneButtonUI extends BasicButtonUI {
     protected Timer drawMaskTimer;
     protected float alpha;
     protected final float destAlpha = 0.3f;
-    public static BufferedImage frameImg = ImageUtil.read(SimplePath.ICON_PATH + "frame.png");
+    public static BufferedImage frameImg = LMIconManager.getImage("control.frame");
     private MainFrame f;
 
     public ChangePaneButtonUI(MainFrame f) {

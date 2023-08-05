@@ -3,7 +3,6 @@ package net.doge.ui.component.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
@@ -11,6 +10,7 @@ import net.doge.model.entity.NetArtistInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private static ImageIcon artistIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "artistItem.png"), ImageConstants.MEDIUM_WIDTH));
+    private static ImageIcon artistIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.artistItem"), ImageConstants.MEDIUM_WIDTH));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;

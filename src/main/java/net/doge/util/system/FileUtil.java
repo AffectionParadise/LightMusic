@@ -153,18 +153,20 @@ public class FileUtil {
      * @return
      */
     public static String getUnitString(long size) {
+        String us;
         if (size < 1024)
-            return String.format("%s B", size);
+            us = String.format("%d B", size);
         else if (size < 1024 * 1024)
-            return String.format("%.1f K", (double) size / 1024);
+            us = String.format("%.1f K", (double) size / 1024);
         else if (size < 1024 * 1024 * 1024)
-            return String.format("%.1f M", (double) size / 1024 / 1024);
+            us = String.format("%.1f M", (double) size / 1024 / 1024);
         else if (size < 1024L * 1024 * 1024 * 1024)
-            return String.format("%.1f G", (double) size / 1024 / 1024 / 1024);
+            us = String.format("%.1f G", (double) size / 1024 / 1024 / 1024);
         else if (size < 1024L * 1024 * 1024 * 1024 * 1024)
-            return String.format("%.1f T", (double) size / 1024 / 1024 / 1024 / 1024);
+            us = String.format("%.1f T", (double) size / 1024 / 1024 / 1024 / 1024);
         else
-            return String.format("%.1f P", (double) size / 1024 / 1024 / 1024 / 1024 / 1024);
+            us = String.format("%.1f P", (double) size / 1024 / 1024 / 1024 / 1024 / 1024);
+        return us.replace(".0", "");
     }
 
     /**
@@ -187,6 +189,16 @@ public class FileUtil {
     }
 
     /**
+     * 从文件读取字符串
+     *
+     * @param file
+     * @return
+     */
+    public static String readStr(File file) {
+        return cn.hutool.core.io.FileUtil.readUtf8String(file);
+    }
+
+    /**
      * 将字符串写入到文件
      *
      * @param content
@@ -194,6 +206,36 @@ public class FileUtil {
      */
     public static void writeStr(String content, String path) {
         cn.hutool.core.io.FileUtil.writeUtf8String(content, path);
+    }
+
+    /**
+     * 将字符串写入到文件
+     *
+     * @param content
+     * @param file
+     */
+    public static void writeStr(String content, File file) {
+        cn.hutool.core.io.FileUtil.writeUtf8String(content, file);
+    }
+
+    /**
+     * 从文件读取 bytes
+     *
+     * @param file
+     * @return
+     */
+    public static byte[] readBytes(File file) {
+        return cn.hutool.core.io.FileUtil.readBytes(file);
+    }
+
+    /**
+     * 将 bytes 写入到文件
+     *
+     * @param data
+     * @param file
+     */
+    public static void writeBytes(byte[] data, File file) {
+        cn.hutool.core.io.FileUtil.writeBytes(data, file);
     }
 
     /**

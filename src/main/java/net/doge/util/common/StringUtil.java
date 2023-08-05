@@ -246,9 +246,7 @@ public class StringUtil {
                 Element childElement = (Element) child;
                 sb.append(getPrettyText(childElement));
                 String s = childElement.tag().getName().toLowerCase();
-                if (s.equals("br") || s.equals("li") || s.equals("p") || s.equals("dd")) {
-                    sb.append("\n");
-                }
+                if ("br".equals(s) || "li".equals(s) || "p".equals(s) || "dd".equals(s)) sb.append("\n");
             }
         }
         return sb.toString();
@@ -281,7 +279,7 @@ public class StringUtil {
      * @return
      */
     public static String textToHtml(String text, boolean withSpace) {
-        if (text == null || text.startsWith("<html>") || text.trim().equals("")) return text;
+        if (text == null || text.startsWith("<html>") || text.trim().isEmpty()) return text;
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("<html><div style=\"font-family:%s\">", Fonts.NORMAL.getFontName(Locale.ENGLISH)));
         for (int i = 0, len = text.length(); i < len; i++) {

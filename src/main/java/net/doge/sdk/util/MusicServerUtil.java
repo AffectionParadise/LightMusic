@@ -816,17 +816,6 @@ public class MusicServerUtil {
         new MusicInfoReq().fillLrc(musicInfo);
     }
 
-//    /**
-//     * 下载文件
-//     *
-//     * @param url
-//     * @param dest
-//     * @throws Exception
-//     */
-//    public static void download(String url, String dest) throws Exception {
-//        download(url, dest, null, null);
-//    }
-
     /**
      * 下载文件
      *

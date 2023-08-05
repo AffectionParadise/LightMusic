@@ -2,14 +2,14 @@ package net.doge.ui.component.dialog;
 
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
-import net.doge.constant.system.SimplePath;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
-import net.doge.ui.component.label.CustomLabel;
-import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.component.lyric.StringTwoColor;
 import net.doge.ui.component.button.listener.ButtonMouseListener;
+import net.doge.ui.component.label.CustomLabel;
+import net.doge.ui.component.lyric.StringTwoColor;
+import net.doge.ui.component.panel.CustomPanel;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -50,16 +50,16 @@ public class DesktopLyricDialog extends JDialog {
     private final String ON_TOP_TIP = "置顶桌面歌词";
     private final String CANCEL_ON_TOP_TIP = "取消置顶桌面歌词";
     private final String CLOSE_TIP = "关闭桌面歌词";
-    private ImageIcon lockIcon = new ImageIcon(SimplePath.ICON_PATH + "lock.png");
-    private ImageIcon unlockIcon = new ImageIcon(SimplePath.ICON_PATH + "unlock.png");
-    private ImageIcon restoreIcon = new ImageIcon(SimplePath.ICON_PATH + "restoreLocation.png");
-    private ImageIcon descendTransIcon = new ImageIcon(SimplePath.ICON_PATH + "descendTrans.png");
-    private ImageIcon ascendTransIcon = new ImageIcon(SimplePath.ICON_PATH + "ascendTrans.png");
-    private ImageIcon decreaseFontIcon = new ImageIcon(SimplePath.ICON_PATH + "decreaseFont.png");
-    private ImageIcon increaseFontIcon = new ImageIcon(SimplePath.ICON_PATH + "increaseFont.png");
-    private ImageIcon onTopIcon = new ImageIcon(SimplePath.ICON_PATH + "onTop.png");
-    private ImageIcon cancelOnTopIcon = new ImageIcon(SimplePath.ICON_PATH + "cancelOnTop.png");
-    private ImageIcon closeIcon = new ImageIcon(SimplePath.ICON_PATH + "closeMedium.png");
+    private ImageIcon lockIcon = LMIconManager.getIcon("dialog.lock");
+    private ImageIcon unlockIcon = LMIconManager.getIcon("dialog.unlock");
+    private ImageIcon restoreIcon = LMIconManager.getIcon("dialog.restoreLocation");
+    private ImageIcon descendTransIcon = LMIconManager.getIcon("dialog.descendTrans");
+    private ImageIcon ascendTransIcon = LMIconManager.getIcon("dialog.ascendTrans");
+    private ImageIcon decreaseFontIcon = LMIconManager.getIcon("dialog.decreaseFont");
+    private ImageIcon increaseFontIcon = LMIconManager.getIcon("dialog.increaseFont");
+    private ImageIcon onTopIcon = LMIconManager.getIcon("dialog.onTop");
+    private ImageIcon cancelOnTopIcon = LMIconManager.getIcon("dialog.cancelOnTop");
+    private ImageIcon closeIcon = LMIconManager.getIcon("dialog.close");
     private ImageIcon emptyIcon = new ImageIcon(ImageUtil.createTransparentImage(lockIcon.getIconWidth(), lockIcon.getIconHeight()));
 
     private CustomButton lock = new CustomButton();
@@ -189,8 +189,8 @@ public class DesktopLyricDialog extends JDialog {
     // 更新锁定
     public void updateLock() {
         boolean locked = f.desktopLyricLocked;
-        lock.setIcon(locked ? lockIcon : unlockIcon);
-        lock.setToolTipText(locked ? LOCK_TIP : UNLOCK_TIP);
+        lock.setIcon(locked ? unlockIcon : lockIcon);
+        lock.setToolTipText(locked ? UNLOCK_TIP : LOCK_TIP);
     }
 
     // 更新置顶

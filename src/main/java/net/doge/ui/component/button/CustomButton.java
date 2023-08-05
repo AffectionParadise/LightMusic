@@ -1,7 +1,7 @@
 package net.doge.ui.component.button;
 
 import net.doge.constant.ui.Fonts;
-import net.doge.constant.system.SimplePath;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class CustomButton extends JButton {
     protected float alpha;
     protected final float destAlpha = 0.2f;
 
-    private static BufferedImage maskImg = ImageUtil.read(SimplePath.ICON_PATH + "mask.png");
+    private static BufferedImage maskImg = LMIconManager.getImage("mask");
 
     public CustomButton() {
         init();

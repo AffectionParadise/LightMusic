@@ -5,19 +5,19 @@ import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.player.Format;
-import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Colors;
 import net.doge.sdk.common.CommonResult;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
-import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -61,27 +61,27 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private final String GO_TIP = "跳页";
 
     // 适应图标
-    private ImageIcon adaptIcon = new ImageIcon(SimplePath.ICON_PATH + "adapt.png");
+    private ImageIcon adaptIcon = LMIconManager.getIcon("dialog.adapt");
     // 放大图标
-    private ImageIcon zoomInIcon = new ImageIcon(SimplePath.ICON_PATH + "zoomIn.png");
+    private ImageIcon zoomInIcon = LMIconManager.getIcon("dialog.zoomIn");
     // 缩小图标
-    private ImageIcon zoomOutIcon = new ImageIcon(SimplePath.ICON_PATH + "zoomOut.png");
+    private ImageIcon zoomOutIcon = LMIconManager.getIcon("dialog.zoomOut");
     // 逆时针旋转图标
-    private ImageIcon leftRotateIcon = new ImageIcon(SimplePath.ICON_PATH + "leftRotate.png");
+    private ImageIcon leftRotateIcon = LMIconManager.getIcon("dialog.leftRotate");
     // 顺时针旋转图标
-    private ImageIcon rightRotateIcon = new ImageIcon(SimplePath.ICON_PATH + "rightRotate.png");
+    private ImageIcon rightRotateIcon = LMIconManager.getIcon("dialog.rightRotate");
     // 上一张图标
-    private ImageIcon lastImgIcon = new ImageIcon(SimplePath.ICON_PATH + "lastPage.png");
+    private ImageIcon lastImgIcon = LMIconManager.getIcon("toolbar.lastPage");
     // 下一张图标
-    private ImageIcon nextImgIcon = new ImageIcon(SimplePath.ICON_PATH + "nextPage.png");
+    private ImageIcon nextImgIcon = LMIconManager.getIcon("toolbar.nextPage");
     // 第一张图标
-    private ImageIcon firstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "startPage.png");
+    private ImageIcon firstImgIcon = LMIconManager.getIcon("toolbar.startPage");
     // 最后一张图标
-    private ImageIcon lstImgIcon = new ImageIcon(SimplePath.ICON_PATH + "endPage.png");
+    private ImageIcon lstImgIcon = LMIconManager.getIcon("toolbar.endPage");
     // 保存图片图标
-    private ImageIcon saveImgIcon = new ImageIcon(SimplePath.ICON_PATH + "saveImg.png");
+    private ImageIcon saveImgIcon = LMIconManager.getIcon("dialog.saveImg");
     // 跳页图标
-    private ImageIcon goIcon = new ImageIcon(SimplePath.ICON_PATH + "go.png");
+    private ImageIcon goIcon = LMIconManager.getIcon("toolbar.go");
 
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel bottomPanel = new CustomPanel();

@@ -1,13 +1,13 @@
 package net.doge.ui.component.dialog;
 
 import net.doge.constant.ui.Colors;
-import net.doge.constant.system.SimplePath;
 import net.doge.ui.MainFrame;
-import net.doge.ui.component.label.CustomLabel;
-import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.component.label.CustomLabel;
+import net.doge.ui.component.panel.CustomPanel;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.LMIconManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,8 +27,8 @@ public class DonateDialog extends AbstractTitledDialog {
             "https://github.com/jsososo/MiguMusicApi";
 
     // 收款码
-    private ImageIcon weixinIcon = new ImageIcon(SimplePath.ICON_PATH + "weixin.png");
-    private ImageIcon alipayIcon = new ImageIcon(SimplePath.ICON_PATH + "alipay.png");
+    private ImageIcon weixinIcon = LMIconManager.getIcon("dialog.weixin");
+    private ImageIcon alipayIcon = LMIconManager.getIcon("dialog.alipay");
 
     private CustomPanel messagePanel = new CustomPanel();
     private CustomLabel messageLabel = new CustomLabel("如果您觉得这款软件还不错，可以请作者喝杯咖啡~~");

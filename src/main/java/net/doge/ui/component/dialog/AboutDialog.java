@@ -1,13 +1,13 @@
 package net.doge.ui.component.dialog;
 
-import net.doge.constant.ui.Colors;
-import net.doge.constant.system.SimplePath;
 import net.doge.constant.meta.SoftInfo;
+import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
-import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -22,13 +22,13 @@ import java.awt.*;
 public class AboutDialog extends AbstractTitledDialog {
     private DialogButton yes;
 
-    private ImageIcon appIcon = new ImageIcon(SimplePath.ICON_PATH + "title.png");
+    private ImageIcon appIcon = LMIconManager.getIcon("title.title");
 
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel appPanel = new CustomPanel();
     private CustomLabel appLabel = new CustomLabel();
     private CustomPanel editionPanel = new CustomPanel();
-    private CustomLabel editionLabel = new CustomLabel("版本：" + SoftInfo.EDITION);
+    private CustomLabel editionLabel = new CustomLabel("版本：" + SoftInfo.VERSION);
     private CustomPanel technoPanel = new CustomPanel();
     private CustomLabel technoLabel = new CustomLabel("基于 Swing 与 JavaFX (Java 8) 构建");
     private CustomPanel websitePanel = new CustomPanel();

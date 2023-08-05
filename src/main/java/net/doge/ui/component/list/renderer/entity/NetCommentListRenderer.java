@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.NetCommentInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.LMIconManager;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private static ImageIcon defaultProfile = new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "profile.png"), ImageConstants.PROFILE_WIDTH), 0.1));
+    private static ImageIcon defaultProfile = new ImageIcon(ImageUtil.setRadius(ImageUtil.width(LMIconManager.getImage("list.profile"), ImageConstants.PROFILE_WIDTH), 0.1));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;

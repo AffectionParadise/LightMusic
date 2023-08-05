@@ -102,9 +102,7 @@ import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import net.doge.util.media.MediaUtil;
-import net.doge.util.system.FileUtil;
-import net.doge.util.system.KeyUtil;
-import net.doge.util.system.TerminateUtil;
+import net.doge.util.system.*;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.SpectrumUtil;
@@ -201,8 +199,8 @@ public class MainFrame extends JFrame {
             "Q3：如何批量操作？\nA3：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
             "Q4：为什么有些歌曲名字和音频不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
             "Q5：资源是如何获取的？\nA5：调用各大平台的 API 获取，免费使用，不可商用！\n\n" +
-            "Q6：软件更新后原来的数据如何继承？\nA6：建议覆盖更新，数据 JSON 文件保存在程序所在目录，保证与程序在同一目录即可\n\n" +
-            "如果还有其他的问题，欢迎在我的 Github 主页发布 issue ~", TITLE);
+            "Q6：软件更新后原来的数据如何继承？\nA6：建议覆盖更新，数据文件 %s 保存在程序所在目录，保证与程序在同一目录即可\n\n" +
+            "如果还有其他的问题，欢迎在我的 Github 主页发布 issue ~", TITLE, ConfigConstants.CONFIG_FILE_NAME);
     private final String FIRST_PAGE_MSG = "已经是第一页了";
     private final String LAST_PAGE_MSG = "已经是最后一页了";
     private final String ILLEGAL_PAGE_MSG = "请输入合法页码";
@@ -296,311 +294,309 @@ public class MainFrame extends JFrame {
     private final String SAVE_ALBUM_IMAGE_TEXT = "导出专辑图片";
 
     // 托盘图标
-    private ImageIcon trayIcon = new ImageIcon(SimplePath.ICON_PATH + "tray.png");
+    private ImageIcon trayIcon = LMIconManager.getIcon("tray");
     // 打开主界面图标
-    private ImageIcon openMainFrameIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "openMainFrame.png");
+    private ImageIcon openMainFrameIcon = LMIconManager.getIcon("menu.openMainFrame");
     // 退出图标
-    private ImageIcon exitIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "exit.png");
+    private ImageIcon exitIcon = LMIconManager.getIcon("menu.exit");
     // 主界面标题图标
-    private ImageIcon titleIcon = new ImageIcon(SimplePath.ICON_PATH + "title.png");
+    private ImageIcon titleIcon = LMIconManager.getIcon("title.title");
     // 隐藏歌曲详情图标
-    private ImageIcon hideDetailIcon = new ImageIcon(SimplePath.ICON_PATH + "hideDetail.png");
+    private ImageIcon hideDetailIcon = LMIconManager.getIcon("title.hideDetail");
     // 分割线图标
-    private ImageIcon splitIcon = new ImageIcon(SimplePath.ICON_PATH + "split.png");
+    private ImageIcon splitIcon = LMIconManager.getIcon("title.split");
     // 迷你模式图标
-    private ImageIcon miniIcon = new ImageIcon(SimplePath.ICON_PATH + "miniWindow.png");
+    private ImageIcon miniIcon = LMIconManager.getIcon("title.miniWindow");
     // 最小化图标
-    private ImageIcon minimizeIcon = new ImageIcon(SimplePath.ICON_PATH + "minWindow.png");
+    private ImageIcon minimizeIcon = LMIconManager.getIcon("title.minWindow");
     // 最大化图标
-    private ImageIcon maximizeIcon = new ImageIcon(SimplePath.ICON_PATH + "maxWindow.png");
+    private ImageIcon maximizeIcon = LMIconManager.getIcon("title.maxWindow");
     // 恢复图标
-    private ImageIcon restoreIcon = new ImageIcon(SimplePath.ICON_PATH + "restoreWindow.png");
+    private ImageIcon restoreIcon = LMIconManager.getIcon("title.restoreWindow");
     // 关闭窗口图标
-    public ImageIcon closeWindowIcon = new ImageIcon(SimplePath.ICON_PATH + "closeWindow.png");
+    public ImageIcon closeWindowIcon = LMIconManager.getIcon("title.closeWindow");
     // 菜单图标
-    private ImageIcon menuIcon = new ImageIcon(SimplePath.ICON_PATH + "menu.png");
+    private ImageIcon menuIcon = LMIconManager.getIcon("title.menu");
     // 更换主题图标
-    private ImageIcon changeStyleIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "changeStyle.png");
+    private ImageIcon changeStyleIcon = LMIconManager.getIcon("menu.changeStyle");
     // 添加自定义主题图标
-    private ImageIcon addCustomStyleIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "addCustomStyle.png");
+    private ImageIcon addCustomStyleIcon = LMIconManager.getIcon("menu.addCustomStyle");
     // 关闭歌曲图标
-    private ImageIcon closeSongIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "closeSong.png");
+    private ImageIcon closeSongIcon = LMIconManager.getIcon("menu.closeSong");
     // 清空缓存图标
-    private ImageIcon clearCacheIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "clearCache.png");
+    private ImageIcon clearCacheIcon = LMIconManager.getIcon("menu.clearCache");
     // 设置图标
-    private ImageIcon settingsIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "settings.png");
+    private ImageIcon settingsIcon = LMIconManager.getIcon("menu.settings");
     // 捐赠图标
-    private ImageIcon donateIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "donate.png");
+    private ImageIcon donateIcon = LMIconManager.getIcon("menu.donate");
     // 发布页图标
-    private ImageIcon releaseIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "release.png");
+    private ImageIcon releaseIcon = LMIconManager.getIcon("menu.release");
     // 检查更新图标
-    private ImageIcon updateIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "update.png");
+    private ImageIcon updateIcon = LMIconManager.getIcon("menu.update");
     // 指南图标
-    private ImageIcon helpIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "help.png");
+    private ImageIcon helpIcon = LMIconManager.getIcon("menu.help");
     // 关于图标
-    private ImageIcon aboutIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "about.png");
+    private ImageIcon aboutIcon = LMIconManager.getIcon("menu.about");
     // 列表为空提示图标
-    private ImageIcon emptyHintIcon = new ImageIcon(SimplePath.ICON_PATH + "emptyHint.png");
+    private ImageIcon emptyHintIcon = LMIconManager.getIcon("emptyHint");
     // 选定点图标(单选时)
-    private ImageIcon dotIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "dot.png");
+    private ImageIcon dotIcon = LMIconManager.getIcon("menu.dot");
     // 选定勾图标
-    private ImageIcon tickIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "tick.png");
+    private ImageIcon tickIcon = LMIconManager.getIcon("menu.tick");
     // 复选框图标
-    public ImageIcon uncheckedIcon = new ImageIcon(SimplePath.ICON_PATH + "unchecked.png");
-    public ImageIcon checkedIcon = new ImageIcon(SimplePath.ICON_PATH + "checked.png");
+    public ImageIcon uncheckedIcon = LMIconManager.getIcon("dialog.unchecked");
+    public ImageIcon checkedIcon = LMIconManager.getIcon("dialog.checked");
     // 添加歌曲文件图标
-    private ImageIcon fileIcon = new ImageIcon(SimplePath.ICON_PATH + "file.png");
+    private ImageIcon fileIcon = LMIconManager.getIcon("menu.file");
     // 添加文件夹图标
-    private ImageIcon folderIcon = new ImageIcon(SimplePath.ICON_PATH + "folder.png");
+    private ImageIcon folderIcon = LMIconManager.getIcon("menu.folder");
     // 未收藏图标
-    private ImageIcon collectIcon = new ImageIcon(SimplePath.ICON_PATH + "collect.png");
+    private ImageIcon collectIcon = LMIconManager.getIcon("control.collect");
     // 已收藏图标
-    private ImageIcon hasCollectedIcon = new ImageIcon(SimplePath.ICON_PATH + "hasCollected.png");
+    private ImageIcon hasCollectedIcon = LMIconManager.getIcon("control.collected");
     // 未收藏图标
-    private ImageIcon collectItemIcon = new ImageIcon(SimplePath.ICON_PATH + "collectItem.png");
+    private ImageIcon collectItemIcon = LMIconManager.getIcon("collectItem");
     // 已收藏图标
-    private ImageIcon collectedItemIcon = new ImageIcon(SimplePath.ICON_PATH + "collectedItem.png");
+    private ImageIcon collectedItemIcon = LMIconManager.getIcon("collectedItem");
     // MV 图标
-    private ImageIcon mvIcon = new ImageIcon(SimplePath.ICON_PATH + "mv.png");
+    private ImageIcon mvIcon = LMIconManager.getIcon("control.mv");
     // 下载图标
-    private ImageIcon downloadIcon = new ImageIcon(SimplePath.ICON_PATH + "download.png");
+    private ImageIcon downloadIcon = LMIconManager.getIcon("control.download");
     // 评论图标
-    private ImageIcon commentIcon = new ImageIcon(SimplePath.ICON_PATH + "comment.png");
-    // 播放图标
-    private ImageIcon playIcon = new ImageIcon(SimplePath.ICON_PATH + "play.png");
-    // 暂停图标
-    private ImageIcon pauseIcon = new ImageIcon(SimplePath.ICON_PATH + "pause.png");
-    // 上一曲图标
-    private ImageIcon lastIcon = new ImageIcon(SimplePath.ICON_PATH + "last.png");
-    // 下一曲图标
-    private ImageIcon nextIcon = new ImageIcon(SimplePath.ICON_PATH + "next.png");
-    // 快退图标
-    private ImageIcon backwIcon = new ImageIcon(SimplePath.ICON_PATH + "backw.png");
-    // 快进图标
-    private ImageIcon forwIcon = new ImageIcon(SimplePath.ICON_PATH + "forw.png");
-    // 播完暂停图标
-    private ImageIcon playModeDisabledIcon = new ImageIcon(SimplePath.ICON_PATH + "playModeDisabled.png");
-    // 单曲循环图标
-    private ImageIcon singleIcon = new ImageIcon(SimplePath.ICON_PATH + "single.png");
-    // 顺序播放图标
-    private ImageIcon sequenceIcon = new ImageIcon(SimplePath.ICON_PATH + "sequence.png");
-    // 列表循环图标
-    private ImageIcon listCycleIcon = new ImageIcon(SimplePath.ICON_PATH + "listCycle.png");
-    // 随机播放图标
-    private ImageIcon shuffleIcon = new ImageIcon(SimplePath.ICON_PATH + "shuffle.png");
-    // 声音图标
-    private ImageIcon soundIcon = new ImageIcon(SimplePath.ICON_PATH + "sound.png");
-    // 静音图标
-    private ImageIcon muteIcon = new ImageIcon(SimplePath.ICON_PATH + "mute.png");
-    // 倍速图标
-    private ImageIcon rateIcon = new ImageIcon(SimplePath.ICON_PATH + "rate.png");
-    // 频谱开启图标
-    private ImageIcon spectrumOnIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumOn.png");
-    // 频谱关闭图标
-    private ImageIcon spectrumOffIcon = new ImageIcon(SimplePath.ICON_PATH + "spectrumOff.png");
-    // 歌曲封面图标
-    private ImageIcon cvBlurIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "cvBlur.png");
-    // 纯主色调图标
-    private ImageIcon mcBlurIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "pureColorBlur.png");
-    // 线性渐变图标
-    private ImageIcon lgBlurIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "linearGradient.png");
-    // 模糊关闭图标
-    private ImageIcon blurOffIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "blurOff.png");
-    // 音效图标
-    private ImageIcon soundEffectIcon = new ImageIcon(SimplePath.ICON_PATH + "soundEffect.png");
+    private ImageIcon commentIcon = LMIconManager.getIcon("control.comment");
     // 乐谱图标
-    private ImageIcon sheetIcon = new ImageIcon(SimplePath.ICON_PATH + "sheet.png");
+    private ImageIcon sheetIcon = LMIconManager.getIcon("control.sheet");
+    // 播放图标
+    private ImageIcon playIcon = LMIconManager.getIcon("control.play");
+    // 暂停图标
+    private ImageIcon pauseIcon = LMIconManager.getIcon("control.pause");
+    // 上一曲图标
+    private ImageIcon lastIcon = LMIconManager.getIcon("control.last");
+    // 下一曲图标
+    private ImageIcon nextIcon = LMIconManager.getIcon("control.next");
+    // 快退图标
+    private ImageIcon backwIcon = LMIconManager.getIcon("control.backw");
+    // 快进图标
+    private ImageIcon forwIcon = LMIconManager.getIcon("control.forw");
+    // 播完暂停图标
+    private ImageIcon playModeDisabledIcon = LMIconManager.getIcon("menu.playModeDisabled");
+    // 单曲循环图标
+    private ImageIcon singleIcon = LMIconManager.getIcon("menu.single");
+    // 顺序播放图标
+    private ImageIcon sequenceIcon = LMIconManager.getIcon("menu.sequence");
+    // 列表循环图标
+    private ImageIcon listCycleIcon = LMIconManager.getIcon("menu.listCycle");
+    // 随机播放图标
+    private ImageIcon shuffleIcon = LMIconManager.getIcon("menu.shuffle");
+    // 声音图标
+    private ImageIcon soundIcon = LMIconManager.getIcon("control.sound");
+    // 静音图标
+    private ImageIcon muteIcon = LMIconManager.getIcon("control.mute");
+    // 倍速图标
+    private ImageIcon rateIcon = LMIconManager.getIcon("control.rate");
+    // 频谱开启图标
+    private ImageIcon spectrumOnIcon = LMIconManager.getIcon("control.spectrumOn");
+    // 频谱关闭图标
+    private ImageIcon spectrumOffIcon = LMIconManager.getIcon("control.spectrumOff");
+    // 歌曲封面图标
+    private ImageIcon cvBlurIcon = LMIconManager.getIcon("menu.cvBlur");
+    // 纯主色调图标
+    private ImageIcon mcBlurIcon = LMIconManager.getIcon("menu.pureColorBlur");
+    // 线性渐变图标
+    private ImageIcon lgBlurIcon = LMIconManager.getIcon("menu.linearGradient");
+    // 模糊关闭图标
+    private ImageIcon blurOffIcon = LMIconManager.getIcon("menu.blurOff");
+    // 音效图标
+    private ImageIcon soundEffectIcon = LMIconManager.getIcon("control.soundEffect");
     // 转到播放队列图标
-    private ImageIcon goToPlayQueueIcon = new ImageIcon(SimplePath.ICON_PATH + "goToPlayQueue.png");
+    private ImageIcon goToPlayQueueIcon = LMIconManager.getIcon("control.goToPlayQueue");
     // 开启桌面歌词图标
-    private ImageIcon desktopLyricOnIcon = new ImageIcon(SimplePath.ICON_PATH + "lrcOn.png");
+    private ImageIcon desktopLyricOnIcon = LMIconManager.getIcon("control.lrcOn");
     // 关闭桌面歌词图标
-    private ImageIcon desktopLyricOffIcon = new ImageIcon(SimplePath.ICON_PATH + "lrcOff.png");
+    private ImageIcon desktopLyricOffIcon = LMIconManager.getIcon("control.lrcOff");
     // 简体中文图标
-    private ImageIcon simpChineseIcon = new ImageIcon(SimplePath.ICON_PATH + "simplifiedChinese.png");
+    private ImageIcon simpChineseIcon = LMIconManager.getIcon("control.simplifiedChinese");
     // 繁体中文图标
-    private ImageIcon tradChineseIcon = new ImageIcon(SimplePath.ICON_PATH + "traditionalChinese.png");
+    private ImageIcon tradChineseIcon = LMIconManager.getIcon("control.traditionalChinese");
     // 日文图标
-    private ImageIcon kanaIcon = new ImageIcon(SimplePath.ICON_PATH + "kana.png");
+    private ImageIcon kanaIcon = LMIconManager.getIcon("control.kana");
     // 罗马音图标
-    private ImageIcon romajiIcon = new ImageIcon(SimplePath.ICON_PATH + "romaji.png");
+    private ImageIcon romajiIcon = LMIconManager.getIcon("control.romaji");
     // 原歌词图标
-    private ImageIcon originalIcon = new ImageIcon(SimplePath.ICON_PATH + "original.png");
+    private ImageIcon originalIcon = LMIconManager.getIcon("control.original");
     // 歌词翻译图标
-    private ImageIcon translationIcon = new ImageIcon(SimplePath.ICON_PATH + "translation.png");
+    private ImageIcon translationIcon = LMIconManager.getIcon("control.translation");
     // 添加歌曲图标
-    private ImageIcon addIcon = new ImageIcon(SimplePath.ICON_PATH + "add.png");
+    private ImageIcon addIcon = LMIconManager.getIcon("toolbar.add");
     // 重新导入图标
-    private ImageIcon reimportIcon = new ImageIcon(SimplePath.ICON_PATH + "reimport.png");
+    private ImageIcon reimportIcon = LMIconManager.getIcon("toolbar.reimport");
     // 管理歌曲目录图标
-    private ImageIcon manageCatalogIcon = new ImageIcon(SimplePath.ICON_PATH + "manageCatalog.png");
+    private ImageIcon manageCatalogIcon = LMIconManager.getIcon("toolbar.manageCatalog");
     // 删除歌曲图标
-    private ImageIcon removeIcon = new ImageIcon(SimplePath.ICON_PATH + "remove.png");
+    private ImageIcon removeIcon = LMIconManager.getIcon("toolbar.remove");
     // 去重图标
-    private ImageIcon duplicateIcon = new ImageIcon(SimplePath.ICON_PATH + "duplicate.png");
+    private ImageIcon duplicateIcon = LMIconManager.getIcon("toolbar.duplicate");
     // 倒序图标
-    private ImageIcon reverseIcon = new ImageIcon(SimplePath.ICON_PATH + "reverse.png");
+    private ImageIcon reverseIcon = LMIconManager.getIcon("toolbar.reverse");
     // 排序图标
-    private ImageIcon sortIcon = new ImageIcon(SimplePath.ICON_PATH + "sort.png");
+    private ImageIcon sortIcon = LMIconManager.getIcon("toolbar.sort");
     // 上移图标
-    private ImageIcon moveUpIcon = new ImageIcon(SimplePath.ICON_PATH + "moveUp.png");
+    private ImageIcon moveUpIcon = LMIconManager.getIcon("toolbar.moveUp");
     // 下移图标
-    private ImageIcon moveDownIcon = new ImageIcon(SimplePath.ICON_PATH + "moveDown.png");
+    private ImageIcon moveDownIcon = LMIconManager.getIcon("toolbar.moveDown");
     // 清除输入图标
-    private ImageIcon clearInputIcon = new ImageIcon(SimplePath.ICON_PATH + "clearInput.png");
+    private ImageIcon clearInputIcon = LMIconManager.getIcon("toolbar.clearInput");
     // 换肤图标
-    private ImageIcon styleIcon = new ImageIcon(SimplePath.ICON_PATH + "style.png");
+    private ImageIcon styleIcon = LMIconManager.getIcon("title.style");
     // 搜索图标
-    private ImageIcon searchIcon = new ImageIcon(SimplePath.ICON_PATH + "search.png");
+    private ImageIcon searchIcon = LMIconManager.getIcon("toolbar.search");
     // 清空搜索历史图标
-    private ImageIcon clearHistorySearchIcon = new ImageIcon(SimplePath.ICON_PATH + "clearHistorySearch.png");
+    private ImageIcon clearHistorySearchIcon = LMIconManager.getIcon("clearHistorySearch");
     // 返回图标
-    private ImageIcon backwardIcon = new ImageIcon(SimplePath.ICON_PATH + "backward.png");
+    private ImageIcon backwardIcon = LMIconManager.getIcon("toolbar.backward");
     // 刷新图标
-    private ImageIcon refreshIcon = new ImageIcon(SimplePath.ICON_PATH + "refresh.png");
+    private ImageIcon refreshIcon = LMIconManager.getIcon("toolbar.refresh");
     // 跳页图标
-    private ImageIcon goIcon = new ImageIcon(SimplePath.ICON_PATH + "go.png");
+    private ImageIcon goIcon = LMIconManager.getIcon("toolbar.go");
     // 播放全部图标
-    private ImageIcon playAllIcon = new ImageIcon(SimplePath.ICON_PATH + "playAll.png");
+    private ImageIcon playAllIcon = LMIconManager.getIcon("toolbar.playAll");
     // 第一页图标
-    private ImageIcon startPageIcon = new ImageIcon(SimplePath.ICON_PATH + "startPage.png");
+    private ImageIcon startPageIcon = LMIconManager.getIcon("toolbar.startPage");
     // 上一页图标
-    private ImageIcon lastPageIcon = new ImageIcon(SimplePath.ICON_PATH + "lastPage.png");
+    private ImageIcon lastPageIcon = LMIconManager.getIcon("toolbar.lastPage");
     // 下一页图标
-    private ImageIcon nextPageIcon = new ImageIcon(SimplePath.ICON_PATH + "nextPage.png");
+    private ImageIcon nextPageIcon = LMIconManager.getIcon("toolbar.nextPage");
     // 最后一页图标
-    private ImageIcon endPageIcon = new ImageIcon(SimplePath.ICON_PATH + "endPage.png");
+    private ImageIcon endPageIcon = LMIconManager.getIcon("toolbar.endPage");
     // 个人音乐图标
-    private ImageIcon personalMusicIcon = new ImageIcon(SimplePath.ICON_PATH + "favorite.png");
+    private ImageIcon personalMusicIcon = LMIconManager.getIcon("tab.personalMusic");
     // 本地音乐图标
-    private ImageIcon localMusicIcon = new ImageIcon(SimplePath.ICON_PATH + "local.png");
+    private ImageIcon localMusicIcon = LMIconManager.getIcon("tab.local");
     // 播放历史图标
-    private ImageIcon historyIcon = new ImageIcon(SimplePath.ICON_PATH + "history.png");
+    private ImageIcon historyIcon = LMIconManager.getIcon("tab.history");
     // 收藏图标
-    private ImageIcon collectionIcon = new ImageIcon(SimplePath.ICON_PATH + "collection.png");
+    private ImageIcon collectionIcon = LMIconManager.getIcon("tab.collection");
     // 音乐馆图标
-    private ImageIcon netMusicIcon = new ImageIcon(SimplePath.ICON_PATH + "netMusic.png");
-    // 歌单广场图标
-    private ImageIcon playlistIcon = new ImageIcon(SimplePath.ICON_PATH + "netPlaylist.png");
-    // 专辑库图标
-    private ImageIcon netAlbumIcon = new ImageIcon(SimplePath.ICON_PATH + "netAlbum.png");
+    private ImageIcon netMusicIcon = LMIconManager.getIcon("tab.netMusic");
+    // 歌单图标
+    private ImageIcon playlistIcon = LMIconManager.getIcon("tab.netPlaylist");
+    // 专辑图标
+    private ImageIcon netAlbumIcon = LMIconManager.getIcon("tab.netAlbum");
     // 歌手图标
-    private ImageIcon netArtistIcon = new ImageIcon(SimplePath.ICON_PATH + "netArtist.png");
+    private ImageIcon netArtistIcon = LMIconManager.getIcon("tab.netArtist");
     // 电台图标
-    private ImageIcon netRadioIcon = new ImageIcon(SimplePath.ICON_PATH + "netRadio.png");
+    private ImageIcon netRadioIcon = LMIconManager.getIcon("tab.netRadio");
     // 榜单图标
-    private ImageIcon netRankingIcon = new ImageIcon(SimplePath.ICON_PATH + "netRanking.png");
+    private ImageIcon netRankingIcon = LMIconManager.getIcon("tab.netRanking");
     // 用户图标
-    private ImageIcon netUserIcon = new ImageIcon(SimplePath.ICON_PATH + "netUser.png");
+    private ImageIcon netUserIcon = LMIconManager.getIcon("tab.netUser");
     // MV 标签页图标
-    private ImageIcon netMvIcon = new ImageIcon(SimplePath.ICON_PATH + "netMv.png");
+    private ImageIcon netMvIcon = LMIconManager.getIcon("tab.netMv");
     // 推荐图标
-    private ImageIcon recommendIcon = new ImageIcon(SimplePath.ICON_PATH + "recommend.png");
+    private ImageIcon recommendIcon = LMIconManager.getIcon("tab.recommend");
     // 下载管理图标
-    private ImageIcon downloadManagementIcon = new ImageIcon(SimplePath.ICON_PATH + "downloadManagement.png");
+    private ImageIcon downloadManagementIcon = LMIconManager.getIcon("tab.downloadManagement");
     // 播放队列图标
-    private ImageIcon playQueueIcon = new ImageIcon(SimplePath.ICON_PATH + "playQueue.png");
+    private ImageIcon playQueueIcon = LMIconManager.getIcon("tab.playQueue");
     // 清空图标
-    private ImageIcon clearIcon = new ImageIcon(SimplePath.ICON_PATH + "clear.png");
+    private ImageIcon clearIcon = LMIconManager.getIcon("toolbar.clear");
     // 推荐歌单图标
-    private ImageIcon playlistRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "playlistRecommend.png");
+    private ImageIcon playlistRecommendIcon = LMIconManager.getIcon("tab.playlistRecommend");
     // 精品歌单图标
-    private ImageIcon highQualityPlaylistIcon = new ImageIcon(SimplePath.ICON_PATH + "highQualityPlaylistRecommend.png");
+    private ImageIcon highQualityPlaylistIcon = LMIconManager.getIcon("tab.highQualityPlaylistRecommend");
     // 飙升歌曲图标
-    private ImageIcon hotMusicIcon = new ImageIcon(SimplePath.ICON_PATH + "hotMusicRecommend.png");
+    private ImageIcon hotMusicIcon = LMIconManager.getIcon("tab.hotMusicRecommend");
     // 推荐单曲图标
-    private ImageIcon musicRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "musicRecommend.png");
+    private ImageIcon musicRecommendIcon = LMIconManager.getIcon("tab.musicRecommend");
     // 新碟上架图标
-    private ImageIcon newAlbumRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "newAlbumRecommend.png");
+    private ImageIcon newAlbumRecommendIcon = LMIconManager.getIcon("tab.newAlbumRecommend");
     // 歌手排行图标
-    private ImageIcon artistListRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "artistListRecommend.png");
+    private ImageIcon artistListRecommendIcon = LMIconManager.getIcon("tab.artistListRecommend");
     // 新晋电台图标
-    private ImageIcon newRadioRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "newRadioRecommend.png");
+    private ImageIcon newRadioRecommendIcon = LMIconManager.getIcon("tab.newRadioRecommend");
     // 热门电台图标
-    private ImageIcon hotRadioRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "hotRadioRecommend.png");
+    private ImageIcon hotRadioRecommendIcon = LMIconManager.getIcon("tab.hotRadioRecommend");
     // 推荐节目图标
-    private ImageIcon programRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "programRecommend.png");
+    private ImageIcon programRecommendIcon = LMIconManager.getIcon("tab.programRecommend");
     // 推荐 MV 图标
-    private ImageIcon mvRecommendIcon = new ImageIcon(SimplePath.ICON_PATH + "mvRecommend.png");
+    private ImageIcon mvRecommendIcon = LMIconManager.getIcon("tab.mvRecommend");
     // 重新开始全部任务图标
-    private ImageIcon restartAllTasksIcon = new ImageIcon(SimplePath.ICON_PATH + "restartAllTasks.png");
+    private ImageIcon restartAllTasksIcon = LMIconManager.getIcon("toolbar.restartAllTasks");
     // 取消全部任务图标
-    private ImageIcon cancelAllTasksIcon = new ImageIcon(SimplePath.ICON_PATH + "cancelAllTasks.png");
+    private ImageIcon cancelAllTasksIcon = LMIconManager.getIcon("toolbar.cancelAllTasks");
     // 删除全部任务图标
-    private ImageIcon removeAllTasksIcon = new ImageIcon(SimplePath.ICON_PATH + "removeAllTasks.png");
+    private ImageIcon removeAllTasksIcon = LMIconManager.getIcon("toolbar.removeAllTasks");
 
     // 下一条格言图标
-    private ImageIcon nextMottoIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "nextMotto.png");
+    private ImageIcon nextMottoIcon = LMIconManager.getIcon("menu.nextMotto");
     // 播放菜单项图标
-    private ImageIcon playMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "play.png");
+    private ImageIcon playMenuItemIcon = LMIconManager.getIcon("menu.play");
     // 下一首播放菜单项图标
-    private ImageIcon nextPlayMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "nextPlay.png");
+    private ImageIcon nextPlayMenuItemIcon = LMIconManager.getIcon("menu.nextPlay");
     // 打开菜单项图标
-    private ImageIcon openMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "open.png");
+    private ImageIcon openMenuItemIcon = LMIconManager.getIcon("menu.open");
     // 查看专辑菜单项图标
-    private ImageIcon browseAlbumMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "browseAlbum.png");
+    private ImageIcon browseAlbumMenuItemIcon = LMIconManager.getIcon("menu.browseAlbum");
     // 播放 MV 菜单项图标
-    private ImageIcon playMvMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "playMv.png");
+    private ImageIcon playMvMenuItemIcon = LMIconManager.getIcon("menu.playMv");
     // 收藏菜单项图标
-    private ImageIcon collectMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "collect.png");
+    private ImageIcon collectMenuItemIcon = LMIconManager.getIcon("menu.collect");
     // 取消收藏菜单项图标
-    private ImageIcon cancelCollectionMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "cancelCollection.png");
+    private ImageIcon cancelCollectionMenuItemIcon = LMIconManager.getIcon("menu.cancelCollection");
     // 下载菜单项图标
-    private ImageIcon downloadMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "download.png");
+    private ImageIcon downloadMenuItemIcon = LMIconManager.getIcon("menu.download");
     // 查看评论菜单项图标
-    private ImageIcon commentMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "comment.png");
+    private ImageIcon commentMenuItemIcon = LMIconManager.getIcon("menu.comment");
     // 查看乐谱菜单项图标
-    private ImageIcon sheetMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "sheet.png");
+    private ImageIcon sheetMenuItemIcon = LMIconManager.getIcon("menu.sheet");
     // 搜索这首歌曲菜单项图标
-    private ImageIcon searchSongItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "searchSong.png");
+    private ImageIcon searchSongItemIcon = LMIconManager.getIcon("menu.searchSong");
     // 查看相似歌曲菜单项图标
-    private ImageIcon similarMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "similar.png");
+    private ImageIcon similarMenuItemIcon = LMIconManager.getIcon("menu.similar");
     // 查看相关歌单菜单项图标
-    private ImageIcon relatedPlaylistMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "similarPlaylist.png");
+    private ImageIcon relatedPlaylistMenuItemIcon = LMIconManager.getIcon("menu.similarPlaylist");
     // 查看电台菜单项图标
-    private ImageIcon radioMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "radio.png");
+    private ImageIcon radioMenuItemIcon = LMIconManager.getIcon("menu.radio");
     // 查看用户图标
-    private ImageIcon userMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "user.png");
+    private ImageIcon userMenuItemIcon = LMIconManager.getIcon("menu.user");
     // 查看相似 MV 菜单项图标
-    private ImageIcon similarMvMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "similarMv.png");
+    private ImageIcon similarMvMenuItemIcon = LMIconManager.getIcon("menu.similarMv");
     // 查看视频视频分集菜单项图标
-    private ImageIcon videoEpisodeMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "episode.png");
+    private ImageIcon videoEpisodeMenuItemIcon = LMIconManager.getIcon("menu.episode");
     // 查看相似歌手菜单项图标
-    private ImageIcon similarArtistMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "similarArtist.png");
+    private ImageIcon similarArtistMenuItemIcon = LMIconManager.getIcon("menu.similarArtist");
     // 查看歌手合作人菜单项图标
-    private ImageIcon buddyMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "buddy.png");
+    private ImageIcon buddyMenuItemIcon = LMIconManager.getIcon("menu.buddy");
     // 查看用户关注菜单项图标
-    private ImageIcon userFollowMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "follow.png");
+    private ImageIcon userFollowMenuItemIcon = LMIconManager.getIcon("menu.follow");
     // 查看用户粉丝菜单项图标
-    private ImageIcon userFanMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "fan.png");
+    private ImageIcon userFanMenuItemIcon = LMIconManager.getIcon("menu.fan");
     // 复制名称菜单项图标
-    private ImageIcon copyNameMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "copy.png");
+    private ImageIcon copyNameMenuItemIcon = LMIconManager.getIcon("menu.copy");
     // 查看乐谱菜单项图标
-    private ImageIcon browseSheetMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "browseSheet.png");
+    private ImageIcon browseSheetMenuItemIcon = LMIconManager.getIcon("menu.browseSheet");
     // 删除菜单项图标
-    private ImageIcon removeMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "remove.png");
-    // 复制歌词菜单项图标
-    private ImageIcon copyLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "copyLrc.png");
+    private ImageIcon removeMenuItemIcon = LMIconManager.getIcon("menu.remove");
     // 定位歌词时间菜单项图标
-    private ImageIcon locateLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "locateLrc.png");
+    private ImageIcon locateLrcMenuItemIcon = LMIconManager.getIcon("menu.locateLrc");
     // 查看歌词文件菜单项图标
-    private ImageIcon browseLrcMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "browseLrc.png");
+    private ImageIcon browseLrcMenuItemIcon = LMIconManager.getIcon("menu.browseLrc");
     // 频谱透明度菜单项图标
-    private ImageIcon spectrumOpacityMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "spectrumOpacity.png");
+    private ImageIcon spectrumOpacityMenuItemIcon = LMIconManager.getIcon("menu.spectrumOpacity");
     // 歌词偏移菜单项图标
-    private ImageIcon lrcOffsetMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "lrcOffset.png");
+    private ImageIcon lrcOffsetMenuItemIcon = LMIconManager.getIcon("menu.lrcOffset");
     // 导出专辑图片菜单项图标
-    private ImageIcon saveAlbumImgMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "saveAlbumImg.png");
+    private ImageIcon saveAlbumImgMenuItemIcon = LMIconManager.getIcon("menu.saveAlbumImg");
     // 查看海报菜单项图标
-    private ImageIcon posterMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "poster.png");
+    private ImageIcon posterMenuItemIcon = LMIconManager.getIcon("menu.poster");
     // 取消任务菜单项图标
-    private ImageIcon cancelTaskMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "cancelTask.png");
+    private ImageIcon cancelTaskMenuItemIcon = LMIconManager.getIcon("menu.cancelTask");
     // 重新开始任务菜单项图标
-    private ImageIcon restartTaskMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "restartTask.png");
+    private ImageIcon restartTaskMenuItemIcon = LMIconManager.getIcon("menu.restartTask");
     // 打开文件所在位置图标
-    private ImageIcon locateFileMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "locateFile.png");
+    private ImageIcon locateFileMenuItemIcon = LMIconManager.getIcon("menu.locateFile");
     // 编辑歌曲信息图标
-    private ImageIcon editInfoMenuItemIcon = new ImageIcon(SimplePath.MENU_ICON_PATH + "editInfo.png");
+    private ImageIcon editInfoMenuItemIcon = LMIconManager.getIcon("menu.editInfo");
 
     // 托盘图标
     private TrayIcon trayIconImg = new TrayIcon(trayIcon.getImage(), TITLE);
@@ -664,19 +660,6 @@ public class MainFrame extends JFrame {
     private final String GO_TIP = "跳页";
     private final String NEXT_PAGE_TIP = "下一页";
     private final String END_PAGE_TIP = "最后一页";
-    private final String LOCAL_MUSIC_TIP = "本地音乐";
-    private final String HISTORY_TIP = "播放历史";
-    private final String COLLECTION_TIP = "收藏";
-    private final String RECOMMEND_PLAYLIST_TIP = "推荐歌单";
-    private final String HIGH_QUALITY_PLAYLIST_TIP = "精品歌单";
-    private final String HOT_MUSIC_TIP = "飙升歌曲";
-    private final String RECOMMEND_NET_MUSIC_TIP = "新歌速递";
-    private final String RECOMMEND_NEW_ALBUM_TIP = "新碟上架";
-    private final String RECOMMEND_ARTIST_LIST_TIP = "歌手排行";
-    private final String RECOMMEND_NEW_RADIO_TIP = "新晋电台";
-    private final String RECOMMEND_HOT_RADIO_TIP = "热门电台";
-    private final String RECOMMEND_PROGRAM_TIP = "推荐节目";
-    private final String RECOMMEND_MV_TIP = "推荐 MV";
     private final String RESTART_SELECTED_TASKS_TIP = "重新开始选中任务";
     private final String CANCEL_SELECTED_TASKS_TIP = "取消选中任务";
     private final String REMOVE_SELECTED_TASKS_TIP = "删除选中任务";
@@ -834,7 +817,7 @@ public class MainFrame extends JFrame {
     // 默认专辑图片
     public BufferedImage defaultAlbumImage = ImageConstants.DEFAULT_IMG;
     // 加载中图片
-    private BufferedImage loadingImage = ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "loadingImage.png"), coverImageWidth);
+    private BufferedImage loadingImage = ImageUtil.width(LMIconManager.getImage("loadingImage"), coverImageWidth);
 
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
@@ -1166,11 +1149,11 @@ public class MainFrame extends JFrame {
     // 个人音乐工具栏
     private CustomToolBar personalMusicToolBar = new CustomToolBar();
     // 本地音乐按钮
-    private TabButton localMusicButton = new TabButton(localMusicIcon);
+    private TabButton localMusicButton = new TabButton("本地音乐", localMusicIcon);
     // 播放历史按钮
-    private TabButton historyButton = new TabButton(historyIcon);
+    private TabButton historyButton = new TabButton("播放历史", historyIcon);
     // 收藏按钮
-    private TabButton collectionButton = new TabButton(collectionIcon);
+    private TabButton collectionButton = new TabButton("收藏", collectionIcon);
 
     // 播放列表工具栏
     private CustomToolBar musicToolBar = new CustomToolBar();
@@ -1861,25 +1844,25 @@ public class MainFrame extends JFrame {
     // 推荐工具栏
     private CustomToolBar recommendToolBar = new CustomToolBar();
     // 推荐歌单按钮
-    private TabButton playlistRecommendButton = new TabButton(playlistRecommendIcon);
+    private TabButton playlistRecommendButton = new TabButton("推荐歌单", playlistRecommendIcon);
     // 精品歌单按钮
-    private TabButton highQualityPlaylistButton = new TabButton(highQualityPlaylistIcon);
+    private TabButton highQualityPlaylistButton = new TabButton("精品歌单", highQualityPlaylistIcon);
     // 飙升歌曲按钮
-    private TabButton hotMusicButton = new TabButton(hotMusicIcon);
+    private TabButton hotMusicButton = new TabButton("飙升歌曲", hotMusicIcon);
     // 推荐单曲按钮
-    private TabButton newMusicButton = new TabButton(musicRecommendIcon);
+    private TabButton newMusicButton = new TabButton("新歌速递", musicRecommendIcon);
     // 新碟上架按钮
-    private TabButton newAlbumRecommendButton = new TabButton(newAlbumRecommendIcon);
+    private TabButton newAlbumRecommendButton = new TabButton("新碟上架", newAlbumRecommendIcon);
     // 歌手排行按钮
-    private TabButton artistListRecommendButton = new TabButton(artistListRecommendIcon);
+    private TabButton artistListRecommendButton = new TabButton("歌手排行", artistListRecommendIcon);
     // 新晋电台按钮
-    private TabButton newRadioRecommendButton = new TabButton(newRadioRecommendIcon);
+    private TabButton newRadioRecommendButton = new TabButton("新晋电台", newRadioRecommendIcon);
     // 热门电台按钮
-    private TabButton hotRadioRecommendButton = new TabButton(hotRadioRecommendIcon);
+    private TabButton hotRadioRecommendButton = new TabButton("热门电台", hotRadioRecommendIcon);
     // 推荐节目按钮
-    private TabButton programRecommendButton = new TabButton(programRecommendIcon);
+    private TabButton programRecommendButton = new TabButton("推荐节目", programRecommendIcon);
     // 推荐 MV 按钮
-    private TabButton mvRecommendButton = new TabButton(mvRecommendIcon);
+    private TabButton mvRecommendButton = new TabButton("推荐 MV", mvRecommendIcon);
     // 推荐数量面板
     private CustomPanel recommendCountPanel = new CustomPanel();
     // 推荐源
@@ -2946,7 +2929,7 @@ public class MainFrame extends JFrame {
 
     // 加载配置
     private boolean loadConfig() {
-        JSONObject config = JsonUtil.readJson(ConfigConstants.FILE_NAME);
+        JSONObject config = LMDataUtil.read(ConfigConstants.CONFIG_FILE_NAME);
         // 载入是否自动更新
         autoUpdate = config.getBooleanValue(ConfigConstants.AUTO_UPDATE, true);
         if (autoUpdate) checkUpdate(true);
@@ -3066,7 +3049,7 @@ public class MainFrame extends JFrame {
         isAutoDownloadLrc = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入歌词偏移
         lrcOffset = config.getDoubleValue(ConfigConstants.LYRIC_OFFSET);
-        currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset));
+        currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset).replace(".0", ""));
         // 载入频谱透明度
         specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.3f;
         spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
@@ -3728,7 +3711,7 @@ public class MainFrame extends JFrame {
     }
 
     // 保存配置
-    private void saveConfig() throws IOException {
+    private void saveConfig() {
         JSONObject config = new JSONObject();
         // 存入自定义风格
         JSONArray styleArray = new JSONArray();
@@ -3867,7 +3850,7 @@ public class MainFrame extends JFrame {
         }
         config.put(ConfigConstants.CATALOGS, catalogJsonArray);
         // 存入当前播放列表(文件路径)
-        saveLocalMusicList(config);
+        putLocalMusicList(config);
         // 存入当前播放的歌曲索引
         config.put(ConfigConstants.CURR_SONG, currSong);
         // 存入当前历史列表
@@ -3898,7 +3881,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.HISTORY, historyJsonArray);
 
         // 存入全部收藏列表
-        saveCollectedItemList(config);
+        putCollectedItemList(config);
 
         // 存入下载任务列表
         JSONArray tasksJsonArray = new JSONArray();
@@ -4032,11 +4015,11 @@ public class MainFrame extends JFrame {
         }
         config.put(ConfigConstants.NET_USER_HISTORY_SEARCH, netUserHistorySearchJsonArray);
 
-        JsonUtil.saveJson(config, ConfigConstants.FILE_NAME);
+        LMDataUtil.toFile(config, ConfigConstants.CONFIG_FILE_NAME);
     }
 
     // 存入本地音乐列表
-    public void saveLocalMusicList(JSONObject config) {
+    public void putLocalMusicList(JSONObject config) {
         JSONArray musicJsonArray = new JSONArray();
         for (int i = 0, len = musicListModel.getSize(); i < len; i++) {
             File file = (File) musicListModel.get(i);
@@ -4046,7 +4029,7 @@ public class MainFrame extends JFrame {
     }
 
     // 存入全部收藏列表
-    public void saveCollectedItemList(JSONObject config) {
+    public void putCollectedItemList(JSONObject config) {
         // 存入收藏歌曲列表
         JSONArray collectionJsonArray = new JSONArray();
         for (int i = 0, len = collectionModel.getSize(); i < len; i++) {
@@ -4212,9 +4195,10 @@ public class MainFrame extends JFrame {
     }
 
     // 开始更新
-    private void startUpdate() {
-        TerminateUtil.updater();
-        exit();
+    private void startUpdate(boolean mute, String keyMD5) {
+        TerminateUtil.updater(keyMD5);
+        if (mute) System.exit(0);
+        else exit();
     }
 
     // 检查更新
@@ -4228,6 +4212,7 @@ public class MainFrame extends JFrame {
                 if (!mute) td.close();
                 Document doc = Jsoup.parse(body);
                 String latest = doc.select("h1.d-inline.mr-3").first().text().split(" ")[1], now = SoftInfo.VERSION;
+                String keyMD5 = doc.select("tbody tr td").last().text();
                 Elements li = doc.select(".markdown-body.my-3 ul").first().select("li");
                 StringJoiner sj = new StringJoiner("\n");
                 li.forEach(l -> sj.add("- " + l.text()));
@@ -4236,24 +4221,22 @@ public class MainFrame extends JFrame {
                 // 有新版本
                 if (latest.compareTo(now) > 0) {
                     File packageFile = new File(SimplePath.TEMP_PATH + SoftInfo.PACKAGE_FILE_NAME);
-                    boolean exists = packageFile.exists();
-                    // 启动时，若更新包存在，直接更新
-                    if (mute && exists) {
-                        TerminateUtil.updater();
-                        System.exit(0);
-                    }
+                    boolean packageFileValid = packageFile.exists() && keyMD5.equalsIgnoreCase(CryptoUtil.hashMD5(packageFile));
+                    // 启动时，若更新包存在且 MD5 值相同，直接更新
+                    if (mute && packageFileValid) startUpdate(true, keyMD5);
                     // 弹出更新提示框
                     ConfirmDialog d = new ConfirmDialog(THIS, String.format(UPDATE_MSG, latest, now) + updateInfo,
                             "是", "否", "前往发布页", mute, IGNORE_UPDATE_MSG);
                     d.showDialog();
                     int response = d.getResponse();
                     boolean checked = d.isChecked();
+                    if (mute && checked) autoUpdate = false;
                     // 在线更新
                     if (response == JOptionPane.YES_OPTION) {
                         UpdateDialog ud = null;
-                        // 若更新包不存在，先开启下载框进行下载
-                        if (!exists) {
-                            ud = new UpdateDialog(THIS);
+                        // 若更新包不存在或 MD5 值有差异，先开启下载框进行下载
+                        if (!packageFileValid) {
+                            ud = new UpdateDialog(THIS, keyMD5);
                             ud.showDialog();
                         }
                         // 更新包已存在，或者下载成功，询问是否重启
@@ -4261,10 +4244,9 @@ public class MainFrame extends JFrame {
                             ConfirmDialog cd = new ConfirmDialog(THIS, UPDATE_READY_MSG, "立即重启", "以后再说");
                             cd.showDialog();
                             int resp = cd.getResponse();
-                            if (resp == JOptionPane.YES_OPTION) startUpdate();
+                            if (resp == JOptionPane.YES_OPTION) startUpdate(false, keyMD5);
                         }
                     } else if (response == JOptionPane.CANCEL_OPTION) releaseMenuItem.doClick();
-                    if (mute && checked) autoUpdate = false;
                 }
                 // 已是最新版
                 else if (!mute) {
@@ -5449,6 +5431,8 @@ public class MainFrame extends JFrame {
         collectionNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         collectionEndPageButton.setToolTipText(END_PAGE_TIP);
 
+        collectionPlayAllButton.setIconTextGap(5);
+
         // 收藏歌单/专辑/歌手/电台/榜单中歌曲的工具栏，暂时不放入
         musicCollectionToolBar.add(collectionBackwardButton);
         musicCollectionToolBar.add(Box.createHorizontalGlue());
@@ -6281,8 +6265,8 @@ public class MainFrame extends JFrame {
         infoAndLrcBox.add(leftInfoBox);
 
         // 列表为空提示
-        emptyHintPanel.setLayout(new GridLayout(1, 1));
-        emptyHintPanel.add(emptyHintLabel);
+        emptyHintPanel.setLayout(new BorderLayout());
+        emptyHintPanel.add(emptyHintLabel, BorderLayout.CENTER);
         emptyHintPanel.setPreferredSize(new Dimension(260, 1000));
     }
 
@@ -6400,10 +6384,7 @@ public class MainFrame extends JFrame {
         localMusicButton.addMouseListener(new ButtonMouseListener(localMusicButton, THIS));
         historyButton.addMouseListener(new ButtonMouseListener(historyButton, THIS));
         collectionButton.addMouseListener(new ButtonMouseListener(collectionButton, THIS));
-        // 按钮文字
-        localMusicButton.setText(LOCAL_MUSIC_TIP);
-        historyButton.setText(HISTORY_TIP);
-        collectionButton.setText(COLLECTION_TIP);
+
         // 按钮文字与图标的位置
         int gap = 15;
         localMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -7280,7 +7261,7 @@ public class MainFrame extends JFrame {
         // 搜索按钮事件
         searchButton.addActionListener(e -> {
             netMusicCurrKeyword = searchTextField.getText().trim();
-            if (!netMusicCurrKeyword.equals("")) {
+            if (!netMusicCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netMusicCurrKeyword);
                 b.addActionListener(event -> {
@@ -9334,7 +9315,7 @@ public class MainFrame extends JFrame {
         // 搜索歌单按钮事件
         netPlaylistSearchButton.addActionListener(e -> {
             netPlaylistCurrKeyword = netPlaylistSearchTextField.getText().trim();
-            if (!netPlaylistCurrKeyword.equals("")) {
+            if (!netPlaylistCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netPlaylistCurrKeyword);
                 b.addActionListener(event -> {
@@ -9686,6 +9667,8 @@ public class MainFrame extends JFrame {
         netPlaylistGoButton.setToolTipText(GO_TIP);
         netPlaylistNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netPlaylistEndPageButton.setToolTipText(END_PAGE_TIP);
+
+        netPlaylistPlayAllButton.setIconTextGap(5);
 
         netPlaylistToolBar.add(netPlaylistBackwardButton);
         netPlaylistToolBar.add(netPlaylistIdCheckBox);
@@ -10336,7 +10319,7 @@ public class MainFrame extends JFrame {
         // 搜索专辑按钮事件
         netAlbumSearchButton.addActionListener(e -> {
             netAlbumCurrKeyword = netAlbumSearchTextField.getText().trim();
-            if (!netAlbumCurrKeyword.equals("")) {
+            if (!netAlbumCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netAlbumCurrKeyword);
                 b.addActionListener(event -> {
@@ -10688,6 +10671,8 @@ public class MainFrame extends JFrame {
         netAlbumGoButton.setToolTipText(GO_TIP);
         netAlbumNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netAlbumEndPageButton.setToolTipText(END_PAGE_TIP);
+
+        netAlbumPlayAllButton.setIconTextGap(5);
 
         netAlbumToolBar.add(netAlbumBackwardButton);
         netAlbumToolBar.add(netAlbumSearchTextField);
@@ -11359,7 +11344,7 @@ public class MainFrame extends JFrame {
         // 搜索歌手按钮事件
         netArtistSearchButton.addActionListener(e -> {
             netArtistCurrKeyword = netArtistSearchTextField.getText().trim();
-            if (!netArtistCurrKeyword.equals("")) {
+            if (!netArtistCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netArtistCurrKeyword);
                 b.addActionListener(event -> {
@@ -11715,6 +11700,8 @@ public class MainFrame extends JFrame {
         netArtistGoButton.setToolTipText(GO_TIP);
         netArtistNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netArtistEndPageButton.setToolTipText(END_PAGE_TIP);
+
+        netArtistPlayAllButton.setIconTextGap(5);
 
         netArtistToolBar.add(netArtistBackwardButton);
         netArtistToolBar.add(netArtistSearchTextField);
@@ -12613,7 +12600,7 @@ public class MainFrame extends JFrame {
         // 搜索电台按钮事件
         netRadioSearchButton.addActionListener(e -> {
             netRadioCurrKeyword = netRadioSearchTextField.getText().trim();
-            if (!netRadioCurrKeyword.equals("")) {
+            if (!netRadioCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netRadioCurrKeyword);
                 b.addActionListener(event -> {
@@ -12964,6 +12951,8 @@ public class MainFrame extends JFrame {
         netRadioGoButton.setToolTipText(GO_TIP);
         netRadioNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netRadioEndPageButton.setToolTipText(END_PAGE_TIP);
+
+        netRadioPlayAllButton.setIconTextGap(5);
 
         netRadioToolBar.add(netRadioBackwardButton);
         netRadioToolBar.add(netRadioSearchTextField);
@@ -13732,7 +13721,7 @@ public class MainFrame extends JFrame {
         // 搜索 MV 按钮事件
         netMvSearchButton.addActionListener(e -> {
             netMvCurrKeyword = netMvSearchTextField.getText().trim();
-            if (!netMvCurrKeyword.equals("")) {
+            if (!netMvCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netMvCurrKeyword);
                 b.addActionListener(event -> {
@@ -14730,6 +14719,8 @@ public class MainFrame extends JFrame {
         netRankingNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netRankingEndPageButton.setToolTipText(END_PAGE_TIP);
 
+        netRankingPlayAllButton.setIconTextGap(5);
+
         netRankingToolBar.add(netRankingBackwardButton);
         netRankingToolBar.add(Box.createHorizontalGlue());
         netRankingLeftBox.add(netRankingToolBar);
@@ -15124,7 +15115,7 @@ public class MainFrame extends JFrame {
         // 搜索用户按钮事件
         netUserSearchButton.addActionListener(e -> {
             netUserCurrKeyword = netUserSearchTextField.getText().trim();
-            if (!netUserCurrKeyword.equals("")) {
+            if (!netUserCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
                 DialogButton b = new DialogButton(netUserCurrKeyword);
                 b.addActionListener(event -> {
@@ -15502,6 +15493,8 @@ public class MainFrame extends JFrame {
         netUserGoButton.setToolTipText(GO_TIP);
         netUserNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netUserEndPageButton.setToolTipText(END_PAGE_TIP);
+
+        netUserPlayAllButton.setIconTextGap(5);
 
         netUserToolBar.add(netUserBackwardButton);
         netUserToolBar.add(netUserSearchTextField);
@@ -18489,17 +18482,9 @@ public class MainFrame extends JFrame {
         netRecommendGoButton.setToolTipText(GO_TIP);
         netRecommendNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netRecommendEndPageButton.setToolTipText(END_PAGE_TIP);
-        // 按钮文字
-        playlistRecommendButton.setText(RECOMMEND_PLAYLIST_TIP);
-        highQualityPlaylistButton.setText(HIGH_QUALITY_PLAYLIST_TIP);
-        hotMusicButton.setText(HOT_MUSIC_TIP);
-        newMusicButton.setText(RECOMMEND_NET_MUSIC_TIP);
-        newAlbumRecommendButton.setText(RECOMMEND_NEW_ALBUM_TIP);
-        artistListRecommendButton.setText(RECOMMEND_ARTIST_LIST_TIP);
-        newRadioRecommendButton.setText(RECOMMEND_NEW_RADIO_TIP);
-        hotRadioRecommendButton.setText(RECOMMEND_HOT_RADIO_TIP);
-        programRecommendButton.setText(RECOMMEND_PROGRAM_TIP);
-        mvRecommendButton.setText(RECOMMEND_MV_TIP);
+
+        netRecommendPlayAllButton.setIconTextGap(5);
+
         // 按钮文字与图标的位置
         int gap = 15;
         playlistRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -19857,7 +19842,7 @@ public class MainFrame extends JFrame {
                 else lrcOffset += Double.parseDouble(text.replaceFirst(" s", ""));
                 if (lrcOffset > lrcOffsetRadius) lrcOffset = lrcOffsetRadius;
                 else if (lrcOffset < -lrcOffsetRadius) lrcOffset = -lrcOffsetRadius;
-                currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset));
+                currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset).replace(".0", ""));
                 if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
             });
             lrcPopupMenu.add(mi);
@@ -21241,7 +21226,7 @@ public class MainFrame extends JFrame {
                             loading.start();
                             loading.setText(LOADING_MSG);
                             MusicServerUtil.download(musicInfo.getUrl(), file.getPath(), (finishedSize, totalSize) -> {
-                                loading.setText("加载歌曲文件，" + String.format("%.1f", (double) finishedSize / totalSize * 100) + "%");
+                                loading.setText("加载歌曲文件，" + String.format("%.1f%%", (double) finishedSize / totalSize * 100).replace(".0", ""));
                             });
                         }
                         // Flac 文件需要转换格式，并删除原来的文件
@@ -21635,6 +21620,7 @@ public class MainFrame extends JFrame {
 
         // 列表为空提示面板
         emptyHintLabel.setIcon(ImageUtil.dye(emptyHintIcon, iconColor));
+        emptyHintLabel.setIconTextGap(10);
         emptyHintLabel.setForeground(textColor);
 
         // 按钮被禁用时颜色
@@ -21832,7 +21818,7 @@ public class MainFrame extends JFrame {
 
         locateLrcMenuItem.setIcon(ImageUtil.dye(locateLrcMenuItemIcon, iconColor));
         locateLrcMenuItem.setDisabledIcon(ImageUtil.dye(locateLrcMenuItemIcon, disabledColor));
-        copyMenuItem.setIcon(ImageUtil.dye(copyLrcMenuItemIcon, iconColor));
+        copyMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
         browseLrcMenuItem.setIcon(ImageUtil.dye(browseLrcMenuItemIcon, iconColor));
         browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, disabledColor));
         browseLrcTransMenuItem.setIcon(ImageUtil.dye(browseLrcMenuItemIcon, iconColor));
@@ -23508,17 +23494,13 @@ public class MainFrame extends JFrame {
 
     // 退出应用
     public void exit() {
-        try {
-            // 先暂停播放
-            player.pause();
-            // 缓存超出最大值时清理
-            if (FileUtil.size(new File(SimplePath.CACHE_PATH)) > maxCacheSize * 1024 * 1024) clearCache();
-            SystemTray.getSystemTray().remove(trayIconImg);
-            saveConfig();
-            System.exit(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // 先暂停播放
+        player.pause();
+        // 缓存超出最大值时清理
+        if (FileUtil.size(new File(SimplePath.CACHE_PATH)) > maxCacheSize * 1024 * 1024) clearCache();
+        SystemTray.getSystemTray().remove(trayIconImg);
+        saveConfig();
+        System.exit(0);
     }
 
     // 清除缓存
@@ -23548,20 +23530,20 @@ public class MainFrame extends JFrame {
         System.setProperty("swing.aatext", "true");
     }
 
-    // 验证文件哈希值
-    private static boolean validateHash() {
-        File f1 = new File(SimplePath.ICON_PATH + "weixin.png");
-        File f2 = new File(SimplePath.ICON_PATH + "alipay.png");
-        if (!f1.exists() || !"4c918e1fa36289d13dc3981290496f1d".equals(CryptoUtil.hashMD5(f1)))
+    // 验证数据
+    private static boolean validateData() {
+        String s1 = LMIconManager.getIconBase64("dialog.weixin");
+        String s2 = LMIconManager.getIconBase64("dialog.alipay");
+        if (!"61cdefa6801e063244013cb73b1d5971".equals(CryptoUtil.hashMD5(s1)))
             return false;
-        if (!f2.exists() || !"94f008fced55194eba97e86b8ead0bc1".equals(CryptoUtil.hashMD5(f2)))
+        if (!"609c58d224aae375a18cb6a9357153ef".equals(CryptoUtil.hashMD5(s2)))
             return false;
         return true;
     }
 
     public static void main(String[] args) {
         GlobalExecutors.requestExecutor.execute(() -> {
-            if (validateHash()) return;
+            if (validateData()) return;
             System.exit(-1);
         });
         enableAntiAliasing();

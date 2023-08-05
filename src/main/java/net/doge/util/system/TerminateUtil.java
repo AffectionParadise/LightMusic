@@ -51,8 +51,8 @@ public class TerminateUtil {
      * @param
      * @return
      */
-    public static void updater() {
-        execAsync(SoftInfo.UPDATER_FILE_NAME + " 54ee8fdb2c9f213c4e4eea81268fc38b");
+    public static void updater(String keyMD5) {
+        execAsync(SoftInfo.UPDATER_FILE_NAME + " " + keyMD5);
     }
 
     /**

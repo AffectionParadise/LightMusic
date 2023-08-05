@@ -173,7 +173,7 @@ public class MediaUtil {
                 byte[] imageBytes = id3v2Tag.getAlbumImage();
                 if (imageBytes != null) {
                     Image img = Toolkit.getDefaultToolkit().createImage(imageBytes, 0, imageBytes.length);
-                    albumImage = ImageUtil.imageToBufferedImage(img);
+                    albumImage = ImageUtil.toBufferedImage(img);
                 }
             }
             return albumImage;
@@ -246,6 +246,6 @@ public class MediaUtil {
      * @return
      */
     public static void convert(File source, File dest) {
-        TerminateUtil.exec(String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
+        TerminateUtil.exec(SimplePath.PLUGIN_PATH + String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
     }
 }

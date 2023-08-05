@@ -1,13 +1,13 @@
 package net.doge.ui.component.dialog;
 
 import net.doge.constant.ui.Colors;
-import net.doge.constant.system.SimplePath;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
+import net.doge.ui.component.dialog.factory.AbstractMiniDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.component.dialog.factory.AbstractMiniDialog;
-import net.doge.ui.component.button.listener.ButtonMouseListener;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -31,7 +31,7 @@ public class MiniDialog extends AbstractMiniDialog {
     private final String CLOSE_TIP = "关闭";
 
     // 关闭窗口图标
-    private ImageIcon closeMiniIcon = new ImageIcon(SimplePath.ICON_PATH + "closeMini.png");
+    private ImageIcon closeMiniIcon = LMIconManager.getIcon("dialog.close");
 
     private CustomPanel controlPanel = new CustomPanel();
 

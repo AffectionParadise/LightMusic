@@ -22,14 +22,12 @@ public class SimplePath {
 
     // 图标路径
     public static String ICON_PATH = buildPath("icon");
-    // 菜单相关图标路径
-    public static String MENU_ICON_PATH = buildPath(ICON_PATH, "menu");
     // 字体路径
     public static String FONT_PATH = buildPath("font");
-    // 系统风格图片路径
-    public static String STYLE_IMG_PATH = buildPath(ICON_PATH, "style");
+    // 风格图片路径
+    public static String STYLE_PATH = buildPath("style");
     // 自定义风格图片
-    public static String CUSTOM_STYLE_IMG_PATH = buildPath(ICON_PATH, "customStyle");
+    public static String CUSTOM_STYLE_PATH = buildPath(STYLE_PATH, "customStyle");
 
     // 缓存路径
     public static String CACHE_PATH = buildPath("cache");

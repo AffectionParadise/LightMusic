@@ -218,6 +218,26 @@ public class ImageUtil {
     }
 
     /**
+     * 将图片转为 Base64
+     *
+     * @param img
+     * @return
+     */
+    public static String toBase64(BufferedImage img) {
+        return ImgUtil.toBase64(img, ImgUtil.IMAGE_TYPE_PNG);
+    }
+
+    /**
+     * 将 Base64 转为图片
+     *
+     * @param base64
+     * @return
+     */
+    public static BufferedImage toImage(String base64) {
+        return ImgUtil.toImage(base64);
+    }
+
+    /**
      * 将图片转为一维像素数组
      *
      * @param img
@@ -252,16 +272,8 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static BufferedImage imageToBufferedImage(Image img) {
-        if (img instanceof BufferedImage) return (BufferedImage) img;
-        // 防止 img 宽高参数不正确
-        img = new ImageIcon(img).getImage();
-        int w = img.getWidth(null), h = img.getHeight(null);
-        BufferedImage outputImg = createTransparentImage(w, h);
-        Graphics g = outputImg.createGraphics();
-        g.drawImage(img, 0, 0, null);
-        g.dispose();
-        return outputImg;
+    public static BufferedImage toBufferedImage(Image img) {
+        return ImgUtil.toBufferedImage(img, ImgUtil.IMAGE_TYPE_PNG);
     }
 
     /**

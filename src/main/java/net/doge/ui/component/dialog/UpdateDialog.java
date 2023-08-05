@@ -7,6 +7,7 @@ import net.doge.constant.meta.SoftInfo;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
+import net.doge.exception.InValidPackageFileException;
 import net.doge.sdk.system.listener.DownloadListener;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.MainFrame;
@@ -16,6 +17,7 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
 import net.doge.ui.component.slider.ui.MuteSliderUI;
+import net.doge.util.common.CryptoUtil;
 import net.doge.util.system.FileUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,6 +35,8 @@ import java.io.File;
 public class UpdateDialog extends AbstractShadowDialog {
     private final String DOWNLOAD_MSG = "正在下载更新包......";
     private final String DOWNLOAD_FAILED_MSG = "更新包下载失败，请稍后再试";
+    private final String VALIDATING_MSG = "正在校验更新包完整性......";
+    private final String VALIDATION_FAILED_MSG = "更新包已损坏，请重新下载";
 
     private CustomPanel centerPanel = new CustomPanel();
 
@@ -46,9 +50,11 @@ public class UpdateDialog extends AbstractShadowDialog {
 
     @Getter
     private boolean canceled;
+    private String keyMD5;
 
-    public UpdateDialog(MainFrame f) {
+    public UpdateDialog(MainFrame f, String keyMD5) {
         super(f);
+        this.keyMD5 = keyMD5;
 
         Color textColor = f.currUIStyle.getTextColor();
         cancelButton = new DialogButton("取消", textColor);
@@ -96,7 +102,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         progressSlider.setUI(new MuteSliderUI(progressSlider, sliderColor));
         progressSlider.setPreferredSize(new Dimension(300, 30));
         progressSlider.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        progressSlider.setMaximum(100);
+        progressSlider.setMaximum(1000);
         progressSlider.setValue(0);
 
         // 进度面板
@@ -117,38 +123,40 @@ public class UpdateDialog extends AbstractShadowDialog {
         String dest = SimplePath.TEMP_PATH + SoftInfo.PACKAGE_FILE_NAME;
         File packageFile = new File(dest);
         try {
-            if (!packageFile.exists()) {
-                String releaseBody = HttpRequest.get(SoftInfo.RELEASE_ASSET).executeAsync().body();
-                Document doc = Jsoup.parse(releaseBody);
-                Element a = doc.select("li a").first();
-                // 代理链接，避免下载链接无法响应
-                String url = "https://ghdl.feizhuqwq.cf/https://github.com" + a.attr("href");
-                MusicServerUtil.download(url, dest, new DownloadListener() {
-                    @Override
-                    public void progress(long finishedSize, long totalSize) {
-                        msgLabel.setText(String.format(DOWNLOAD_MSG + "(%s / %s)", FileUtil.getUnitString(finishedSize), FileUtil.getUnitString(totalSize)));
-                        int percent = (int) ((double) finishedSize / totalSize * progressSlider.getMaximum());
-                        progressSlider.setValue(percent);
-                        percentLabel.setText(percent + "%");
-                    }
-
-                    @Override
-                    public boolean shouldContinue() {
-                        return !canceled;
-                    }
-                });
-                if (canceled) {
-                    // 取消下载后删除软件包
-                    FileUtil.delete(packageFile);
-                    return;
+            String releaseBody = HttpRequest.get(SoftInfo.RELEASE_ASSET).executeAsync().body();
+            Document doc = Jsoup.parse(releaseBody);
+            Element a = doc.select("li a").first();
+            // 代理链接，避免下载链接无法响应
+            String url = "https://ghdl.feizhuqwq.cf/https://github.com" + a.attr("href");
+            MusicServerUtil.download(url, dest, new DownloadListener() {
+                @Override
+                public void progress(long finishedSize, long totalSize) {
+                    msgLabel.setText(String.format(DOWNLOAD_MSG + "(%s / %s)", FileUtil.getUnitString(finishedSize), FileUtil.getUnitString(totalSize)));
+                    double percent = (double) finishedSize / totalSize;
+                    progressSlider.setValue((int) (percent * progressSlider.getMaximum()));
+                    percentLabel.setText(String.format("%d%%", (int) (percent * 100)));
                 }
+
+                @Override
+                public boolean canInterrupt() {
+                    return canceled;
+                }
+            });
+            if (canceled) {
+                // 取消下载后删除软件包
+                FileUtil.delete(packageFile);
+                return;
             }
+            // 校验更新包 MD5
+            msgLabel.setText(VALIDATING_MSG);
+            if (!keyMD5.equalsIgnoreCase(CryptoUtil.hashMD5(packageFile)))
+                throw new InValidPackageFileException(VALIDATION_FAILED_MSG);
             close(false);
         } catch (Exception e) {
             // 下载中断后删除软件包
             FileUtil.delete(packageFile);
             close(true);
-            new TipDialog(f, DOWNLOAD_FAILED_MSG).showDialog();
+            new TipDialog(f, e instanceof InValidPackageFileException ? VALIDATION_FAILED_MSG : DOWNLOAD_FAILED_MSG).showDialog();
         }
     }
 

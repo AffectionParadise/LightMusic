@@ -1,6 +1,8 @@
 package net.doge.ui.component.list.renderer.system;
 
-import net.doge.constant.system.SimplePath;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;
 import net.doge.constant.ui.Fonts;
@@ -11,12 +13,10 @@ import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
 import net.doge.ui.component.slider.ui.MuteSliderUI;
-import net.doge.util.system.FileUtil;
-import net.doge.util.ui.ImageUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.FileUtil;
+import net.doge.util.system.LMIconManager;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +38,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
-    private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(ImageUtil.read(SimplePath.ICON_PATH + "taskItem.png"), ImageConstants.SMALL_WIDTH));
+    private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.taskItem"), ImageConstants.SMALL_WIDTH));
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
@@ -93,7 +93,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         String type = StringUtil.textToHtml(TaskType.NAMES[task.getType()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(task.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
-        String percentStr = StringUtil.textToHtml(String.format("%.2f %%", percent));
+        String percentStr = StringUtil.textToHtml(String.format("%.1f%%", percent).replace(".0", ""));
         String size = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
                 String.format("%s / %s", FileUtil.getUnitString(task.getFinished()), FileUtil.getUnitString(task.getTotal())), maxWidth));
         String status = StringUtil.textToHtml(TaskStatus.NAMES[task.getStatus()]);

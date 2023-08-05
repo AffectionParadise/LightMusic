@@ -1,12 +1,12 @@
 package net.doge.ui.component.combobox.ui;
 
-import net.doge.constant.system.SimplePath;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
+import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.ui.component.combobox.CustomComboBox;
 import net.doge.ui.component.combobox.CustomComboPopup;
-import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.ui.component.list.renderer.system.ComboBoxRenderer;
+import net.doge.util.system.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
     private Color textColor;
     private Color iconColor;
 
-    private ImageIcon arrowIcon = new ImageIcon(SimplePath.ICON_PATH + "arrow.png");
+    private ImageIcon arrowIcon = LMIconManager.getIcon("toolbar.arrow");
 
     public ComboBoxUI(CustomComboBox comboBox, MainFrame f) {
         this.comboBox = comboBox;
