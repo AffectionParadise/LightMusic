@@ -20,14 +20,10 @@ public class SimplePath {
     // 临时路径
     public static String TEMP_PATH = System.getProperty("java.io.tmpdir");
 
-    // 图标路径
-    public static String ICON_PATH = buildPath("icon");
-    // 字体路径
-    public static String FONT_PATH = buildPath("font");
-    // 风格图片路径
-    public static String STYLE_PATH = buildPath("style");
-    // 自定义风格图片
-    public static String CUSTOM_STYLE_PATH = buildPath(STYLE_PATH, "customStyle");
+    // 资源路径
+    public static String RESOURCE_PATH = buildPath("resource");
+    // 自定义主题图片
+    public static String CUSTOM_STYLE_PATH = buildPath(RESOURCE_PATH, "customStyle");
 
     // 缓存路径
     public static String CACHE_PATH = buildPath("cache");

@@ -1,4 +1,4 @@
-package net.doge.constant.player;
+package net.doge.constant.system;
 
 /**
  * @Author Doge

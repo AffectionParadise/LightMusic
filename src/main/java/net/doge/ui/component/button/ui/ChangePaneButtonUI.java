@@ -2,7 +2,7 @@ package net.doge.ui.component.button.ui;
 
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
-import net.doge.util.system.LMIconManager;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

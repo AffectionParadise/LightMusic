@@ -29,7 +29,6 @@ import net.doge.constant.meta.SoftInfo;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.model.UIStyleConstants;
 import net.doge.constant.player.EqualizerData;
-import net.doge.constant.player.Format;
 import net.doge.constant.player.PlayMode;
 import net.doge.constant.player.PlayerStatus;
 import net.doge.constant.system.*;
@@ -101,8 +100,12 @@ import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import net.doge.util.lmdata.LMDataUtil;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.media.MediaUtil;
-import net.doge.util.system.*;
+import net.doge.util.system.FileUtil;
+import net.doge.util.system.KeyUtil;
+import net.doge.util.system.TerminateUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.SpectrumUtil;
@@ -673,12 +676,12 @@ public class MainFrame extends JFrame {
 
     // 当前包含的所有歌曲目录
     public List<File> catalogs = new LinkedList<>();
-    // 各种界面风格
+    // 所有界面主题
     public List<UIStyle> styles = new LinkedList<>();
 
-    // 添加界面风格
+    // 添加界面主题
     {
-        for (UIStyle style : PreDefinedUIStyle.STYLES) styles.add(style);
+        styles.addAll(Arrays.asList(PreDefinedUIStyle.STYLES));
     }
 
     public boolean autoUpdate;
@@ -814,15 +817,13 @@ public class MainFrame extends JFrame {
     // 上一个面板(评论跳转要用到)
     private int lastPane;
 
-    // 默认专辑图片
-    public BufferedImage defaultAlbumImage = ImageConstants.DEFAULT_IMG;
     // 加载中图片
     private BufferedImage loadingImage = ImageUtil.width(LMIconManager.getImage("loadingImage"), coverImageWidth);
 
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
 
-    // 当前主界面风格
+    // 当前主界面主题
     public UIStyle currUIStyle = styles.get(0);
 
     public MusicPlayer player = new MusicPlayer(THIS);
@@ -886,7 +887,7 @@ public class MainFrame extends JFrame {
     private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
     private final String SPEC_OPACITY_MSG = "当前频谱透明度：%d%%";
     public float specOpacity;
-    private CustomMenuItem spectrumOpacityMenuItem = new CustomMenuItem("");
+    private CustomMenuItem spectrumOpacityMenuItem = new CustomMenuItem();
     private CustomMenuItem[] calcSpectrumOpacityMenuItems = {
             new CustomMenuItem("+10%"),
             new CustomMenuItem("+20%"),
@@ -905,7 +906,7 @@ public class MainFrame extends JFrame {
     private double lrcOffset;
     private final double lrcOffsetRadius = 5;
     private final String LRC_OFFSET_MSG = "当前歌词偏移：%.1f s";
-    private CustomMenuItem currLrcOffsetMenuItem = new CustomMenuItem("");
+    private CustomMenuItem currLrcOffsetMenuItem = new CustomMenuItem();
     private CustomMenuItem[] calcLrcOffsetMenuItems = {
             new CustomMenuItem("+0.5 s"),
             new CustomMenuItem("+0.1 s"),
@@ -1079,7 +1080,7 @@ public class MainFrame extends JFrame {
     // 收藏数量面板
     private CustomPanel collectionCountPanel = new CustomPanel();
     // 收藏数量标签
-    private CustomLabel collectionCountLabel = new CustomLabel("");
+    private CustomLabel collectionCountLabel = new CustomLabel();
     // 收藏音乐工具栏
     private CustomToolBar musicCollectionToolBar = new CustomToolBar();
     // 收藏返回按钮
@@ -1202,7 +1203,7 @@ public class MainFrame extends JFrame {
     // 清除输入按钮
     private CustomButton clearInputToolButton = new CustomButton(clearInputIcon);
     // 歌曲数量标签
-    private CustomLabel countLabel = new CustomLabel("");
+    private CustomLabel countLabel = new CustomLabel();
 
     // 在线播放列表
     private CustomList<NetMusicInfo> netMusicList = new CustomList<>();
@@ -1253,7 +1254,7 @@ public class MainFrame extends JFrame {
     // 歌曲数量面板
     private CustomPanel netMusicCountPanel = new CustomPanel();
     // 歌曲数量标签
-    private CustomLabel netMusicCountLabel = new CustomLabel("");
+    private CustomLabel netMusicCountLabel = new CustomLabel();
     // 在线音乐关键词面板
     public CustomPanel netMusicKeywordsPanel = new CustomPanel();
     private CustomScrollPane netMusicKeywordsPanelScrollPane = new CustomScrollPane(netMusicKeywordsPanel);
@@ -1367,7 +1368,7 @@ public class MainFrame extends JFrame {
     // 歌单源
     private CustomComboBox<String> netPlaylistSourceComboBox = new CustomComboBox();
     // 歌单数量标签
-    private CustomLabel netPlaylistCountLabel = new CustomLabel("");
+    private CustomLabel netPlaylistCountLabel = new CustomLabel();
     // 歌单关键词面板
     public CustomPanel netPlaylistKeywordsPanel = new CustomPanel();
     private CustomScrollPane netPlaylistKeywordsPanelScrollPane = new CustomScrollPane(netPlaylistKeywordsPanel);
@@ -1439,7 +1440,7 @@ public class MainFrame extends JFrame {
     // 专辑源
     private CustomComboBox<String> netAlbumSourceComboBox = new CustomComboBox();
     // 专辑数量标签
-    private CustomLabel netAlbumCountLabel = new CustomLabel("");
+    private CustomLabel netAlbumCountLabel = new CustomLabel();
     // 专辑关键词面板
     public CustomPanel netAlbumKeywordsPanel = new CustomPanel();
     private CustomScrollPane netAlbumKeywordsPanelScrollPane = new CustomScrollPane(netAlbumKeywordsPanel);
@@ -1525,7 +1526,7 @@ public class MainFrame extends JFrame {
     // 歌手源
     private CustomComboBox<String> netArtistSourceComboBox = new CustomComboBox();
     // 歌手数量标签
-    private CustomLabel netArtistCountLabel = new CustomLabel("");
+    private CustomLabel netArtistCountLabel = new CustomLabel();
     // 歌手关键词面板
     public CustomPanel netArtistKeywordsPanel = new CustomPanel();
     private CustomScrollPane netArtistKeywordsPanelScrollPane = new CustomScrollPane(netArtistKeywordsPanel);
@@ -1605,7 +1606,7 @@ public class MainFrame extends JFrame {
     // 电台源
     private CustomComboBox<String> netRadioSourceComboBox = new CustomComboBox();
     // 电台数量标签
-    private CustomLabel netRadioCountLabel = new CustomLabel("");
+    private CustomLabel netRadioCountLabel = new CustomLabel();
     // 电台关键词面板
     public CustomPanel netRadioKeywordsPanel = new CustomPanel();
     private CustomScrollPane netRadioKeywordsPanelScrollPane = new CustomScrollPane(netRadioKeywordsPanel);
@@ -1673,7 +1674,7 @@ public class MainFrame extends JFrame {
     // MV 源
     private CustomComboBox<String> netMvSourceComboBox = new CustomComboBox();
     //  MV 数量标签
-    private CustomLabel netMvCountLabel = new CustomLabel("");
+    private CustomLabel netMvCountLabel = new CustomLabel();
     // MV 关键词面板
     public CustomPanel netMvKeywordsPanel = new CustomPanel();
     private CustomScrollPane netMvKeywordsPanelScrollPane = new CustomScrollPane(netMvKeywordsPanel);
@@ -1735,7 +1736,7 @@ public class MainFrame extends JFrame {
     // 榜单源
     private CustomComboBox<String> netRankingSourceComboBox = new CustomComboBox();
     // 榜单数量标签
-    private CustomLabel netRankingCountLabel = new CustomLabel("");
+    private CustomLabel netRankingCountLabel = new CustomLabel();
 
     // 用户列表
     private CustomList<NetUserInfo> netUserList = new CustomList<>();
@@ -1803,7 +1804,7 @@ public class MainFrame extends JFrame {
     // 用户源
     private CustomComboBox<String> netUserSourceComboBox = new CustomComboBox();
     // 用户数量标签
-    private CustomLabel netUserCountLabel = new CustomLabel("");
+    private CustomLabel netUserCountLabel = new CustomLabel();
     // 用户关键词面板
     public CustomPanel netUserKeywordsPanel = new CustomPanel();
     private CustomScrollPane netUserKeywordsPanelScrollPane = new CustomScrollPane(netUserKeywordsPanel);
@@ -1870,7 +1871,7 @@ public class MainFrame extends JFrame {
     // 推荐排序
     private CustomComboBox<String> netRecommendSortTypeComboBox = new CustomComboBox();
     // 推荐数量标签
-    private CustomLabel recommendCountLabel = new CustomLabel("");
+    private CustomLabel recommendCountLabel = new CustomLabel();
     // 推荐歌单/专辑/歌手/电台音乐工具栏
     private CustomToolBar musicRecommendToolBar = new CustomToolBar();
     // 返回推荐歌单/专辑/歌手/电台按钮
@@ -2009,30 +2010,30 @@ public class MainFrame extends JFrame {
     private CustomPanel recommendItemDescriptionPanel = new CustomPanel();
     private CustomPanel collectionItemDescriptionPanel = new CustomPanel();
     // 歌单/专辑/歌手/电台封面图和名称标签
-    private CustomLabel playlistCoverAndNameLabel = new CustomLabel("");
-    private CustomLabel albumCoverAndNameLabel = new CustomLabel("");
-    private CustomLabel artistCoverAndNameLabel = new CustomLabel("");
-    private CustomLabel radioCoverAndNameLabel = new CustomLabel("");
-    private CustomLabel rankingCoverAndNameLabel = new CustomLabel("");
-    private CustomLabel userCoverAndNameLabel = new CustomLabel("");
-    private CustomLabel recommendItemCoverAndNameLabel = new CustomLabel("");
-    private CustomLabel collectionItemCoverAndNameLabel = new CustomLabel("");
+    private CustomLabel playlistCoverAndNameLabel = new CustomLabel();
+    private CustomLabel albumCoverAndNameLabel = new CustomLabel();
+    private CustomLabel artistCoverAndNameLabel = new CustomLabel();
+    private CustomLabel radioCoverAndNameLabel = new CustomLabel();
+    private CustomLabel rankingCoverAndNameLabel = new CustomLabel();
+    private CustomLabel userCoverAndNameLabel = new CustomLabel();
+    private CustomLabel recommendItemCoverAndNameLabel = new CustomLabel();
+    private CustomLabel collectionItemCoverAndNameLabel = new CustomLabel();
     // 歌单标签
-    private CustomLabel playlistTagLabel = new CustomLabel("");
-    private CustomLabel artistTagLabel = new CustomLabel("");
-    private CustomLabel radioTagLabel = new CustomLabel("");
-    private CustomLabel userTagLabel = new CustomLabel("");
-    private CustomLabel recommendItemTagLabel = new CustomLabel("");
-    private CustomLabel collectionItemTagLabel = new CustomLabel("");
+    private CustomLabel playlistTagLabel = new CustomLabel();
+    private CustomLabel artistTagLabel = new CustomLabel();
+    private CustomLabel radioTagLabel = new CustomLabel();
+    private CustomLabel userTagLabel = new CustomLabel();
+    private CustomLabel recommendItemTagLabel = new CustomLabel();
+    private CustomLabel collectionItemTagLabel = new CustomLabel();
     // 歌单/专辑/歌手/电台描述标签
-    private CustomLabel playlistDescriptionLabel = new CustomLabel("");
-    private CustomLabel albumDescriptionLabel = new CustomLabel("");
-    private CustomLabel artistDescriptionLabel = new CustomLabel("");
-    private CustomLabel radioDescriptionLabel = new CustomLabel("");
-    private CustomLabel rankingDescriptionLabel = new CustomLabel("");
-    private CustomLabel userDescriptionLabel = new CustomLabel("");
-    private CustomLabel recommendItemDescriptionLabel = new CustomLabel("");
-    private CustomLabel collectionItemDescriptionLabel = new CustomLabel("");
+    private CustomLabel playlistDescriptionLabel = new CustomLabel();
+    private CustomLabel albumDescriptionLabel = new CustomLabel();
+    private CustomLabel artistDescriptionLabel = new CustomLabel();
+    private CustomLabel radioDescriptionLabel = new CustomLabel();
+    private CustomLabel rankingDescriptionLabel = new CustomLabel();
+    private CustomLabel userDescriptionLabel = new CustomLabel();
+    private CustomLabel recommendItemDescriptionLabel = new CustomLabel();
+    private CustomLabel collectionItemDescriptionLabel = new CustomLabel();
     // 描述部分滚动面板
     private CustomScrollPane playlistDescriptionScrollPane = new CustomScrollPane(playlistDescriptionPanel);
     private CustomScrollPane albumDescriptionScrollPane = new CustomScrollPane(albumDescriptionPanel);
@@ -2162,7 +2163,7 @@ public class MainFrame extends JFrame {
     // 评论返回按钮
     private CustomButton netCommentBackwardButton = new CustomButton(backwardIcon);
     // 评论标题标签
-    private CustomLabel netCommentTitleLabel = new CustomLabel("");
+    private CustomLabel netCommentTitleLabel = new CustomLabel();
     // 评论类型下拉框
     private CustomComboBox<String> netCommentTypeComboBox = new CustomComboBox();
     // 评论刷新按钮
@@ -2182,7 +2183,7 @@ public class MainFrame extends JFrame {
     // 评论数量面板
     private CustomPanel netCommentCountPanel = new CustomPanel();
     // 评论数量标签
-    private CustomLabel netCommentCountLabel = new CustomLabel("");
+    private CustomLabel netCommentCountLabel = new CustomLabel();
     // 当前显示评论的对象信息
     private NetResource currCommentResource;
 
@@ -2203,7 +2204,7 @@ public class MainFrame extends JFrame {
     // 乐谱返回按钮
     private CustomButton netSheetBackwardButton = new CustomButton(backwardIcon);
     // 乐谱标题标签
-    private CustomLabel netSheetTitleLabel = new CustomLabel("");
+    private CustomLabel netSheetTitleLabel = new CustomLabel();
     //    // 乐谱类型下拉框
 //    private CustomComboBox<String> netSheetTypeComboBox = new CustomComboBox();
     // 乐谱刷新按钮
@@ -2223,7 +2224,7 @@ public class MainFrame extends JFrame {
     // 乐谱数量面板
     private CustomPanel netSheetCountPanel = new CustomPanel();
     // 乐谱数量标签
-    private CustomLabel netSheetCountLabel = new CustomLabel("");
+    private CustomLabel netSheetCountLabel = new CustomLabel();
     // 当前显示乐谱的歌曲信息
     private NetMusicInfo currSheetMusicInfo;
 
@@ -2933,7 +2934,7 @@ public class MainFrame extends JFrame {
         // 载入是否自动更新
         autoUpdate = config.getBooleanValue(ConfigConstants.AUTO_UPDATE, true);
         if (autoUpdate) checkUpdate(true);
-        // 载入已保存的自定义风格(逆序加载，这样才能保持顺序一致)
+        // 载入已保存的自定义主题(逆序加载，这样才能保持顺序一致)
         JSONArray styleArray = config.getJSONArray(ConfigConstants.CUSTOM_UI_STYLES);
         if (JsonUtil.notEmpty(styleArray)) {
             for (int i = 0, len = styleArray.size(); i < len; i++) {
@@ -2941,7 +2942,7 @@ public class MainFrame extends JFrame {
                 UIStyle style = new UIStyle(
                         UIStyleConstants.CUSTOM,
                         styleObject.getString("name"),
-                        styleObject.getString("imgPath"),
+                        styleObject.getString("imgKey"),
                         ColorUtil.hexToColor(styleObject.getString("bgColor")),
                         ColorUtil.hexToColor(styleObject.getString("foreColor")),
                         ColorUtil.hexToColor(styleObject.getString("selectedColor")),
@@ -2954,7 +2955,7 @@ public class MainFrame extends JFrame {
                         ColorUtil.hexToColor(styleObject.getString("sliderColor")),
                         ColorUtil.hexToColor(styleObject.getString("spectrumColor"))
                 );
-                addStyle(style);
+                styles.add(style);
             }
         }
         // 载入是否启用快捷键
@@ -3280,6 +3281,8 @@ public class MainFrame extends JFrame {
         currSong = config.getIntValue(ConfigConstants.CURR_SONG, -1);
         if (currSong >= playQueueModel.size()) currSong = -1;
 
+        // 载入收藏选项卡
+        collectionTabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
         // 载入个人音乐选项卡
         int personalMusicTab = config.getIntValue(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
         if (personalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) localMusicButton.doClick();
@@ -3289,8 +3292,6 @@ public class MainFrame extends JFrame {
         preRecommendTab = config.getIntValue(ConfigConstants.RECOMMEND_TAB_INDEX, RecommendTabIndex.PLAYLIST_RECOMMEND);
         // 载入选项卡
         tabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
-        // 载入收藏选项卡
-        collectionTabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
 
         // 载入在线音乐搜索历史关键词
         JSONArray historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
@@ -3501,7 +3502,7 @@ public class MainFrame extends JFrame {
             }
         }
 
-        // 载入上次选的风格
+        // 载入上次选的主题
         int styleIndex = config.getIntValue(ConfigConstants.CURR_UI_STYLE, 0);
         changeUIStyle(styles.get(styleIndex));
 
@@ -3713,13 +3714,13 @@ public class MainFrame extends JFrame {
     // 保存配置
     private void saveConfig() {
         JSONObject config = new JSONObject();
-        // 存入自定义风格
+        // 存入自定义主题
         JSONArray styleArray = new JSONArray();
         for (UIStyle style : styles) {
             if (!style.isCustom()) continue;
             JSONObject styleObject = new JSONObject();
-            styleObject.put("name", style.getStyleName());
-            styleObject.put("imgPath", style.getStyleImgPath());
+            styleObject.put("name", style.getName());
+            styleObject.put("imgKey", style.getImgKey());
             styleObject.put("bgColor", ColorUtil.colorToHex(style.getBgColor()));
             styleObject.put("foreColor", ColorUtil.colorToHex(style.getForeColor()));
             styleObject.put("selectedColor", ColorUtil.colorToHex(style.getSelectedColor()));
@@ -3734,7 +3735,7 @@ public class MainFrame extends JFrame {
             styleArray.add(styleObject);
         }
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
-        // 当前 UI 风格索引
+        // 当前 UI 主题索引
         config.put(ConfigConstants.CURR_UI_STYLE, ListUtil.indexOf(styles, currUIStyle));
         // 存入快捷键
         config.put(ConfigConstants.KEY_ENABLED, keyEnabled);
@@ -4457,7 +4458,7 @@ public class MainFrame extends JFrame {
 
     // 初始化个性化菜单
     private void initIndividuationMenu() {
-        // 自定义风格
+        // 自定义主题
         styleCustomMenuItem.addActionListener(e -> customStyle());
         manageStyleMenuItem.addActionListener(e -> {
             ManageCustomStyleDialog dialog = new ManageCustomStyleDialog(THIS);
@@ -20144,7 +20145,7 @@ public class MainFrame extends JFrame {
         changePaneButton.setIconTextGap(10);
         changePaneButton.setPreferredSize(new Dimension(280, 66));
         changePaneButton.setText(NO_LRC_MSG);
-        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
             // 歌词页面切到列表
             if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) {
@@ -20675,7 +20676,7 @@ public class MainFrame extends JFrame {
 
         // 卸载专辑图片
         albumImageLabel.setIcon(null);
-        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.setText(NO_LRC_MSG);
         if (miniDialog != null) {
             miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
@@ -20703,8 +20704,8 @@ public class MainFrame extends JFrame {
     public void showAlbumImage() {
         MetaMusicInfo metaMusicInfo = player.getMetaMusicInfo();
         BufferedImage albumImage = metaMusicInfo.getAlbumImage();
-        if (albumImage == null) albumImage = defaultAlbumImage;
-        boolean isDefault = albumImage == defaultAlbumImage;
+        if (albumImage == null) albumImage = ImageConstants.DEFAULT_IMG;
+        boolean isDefault = albumImage == ImageConstants.DEFAULT_IMG;
         saveAlbumImageMenuItem.setEnabled(!isDefault);
         // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
         BufferedImage img = ImageUtil.width(ImageUtil.cropCenter(albumImage), albumImageWidth);
@@ -21585,7 +21586,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // 改变 UI 风格
+    // 改变 UI 主题
     public void changeUIStyle(UIStyle style) {
         if (!style.hasImg()) {
             changeUIStyle(styles.get(0));
@@ -22645,20 +22646,20 @@ public class MainFrame extends JFrame {
         volumeSlider.setUI(new SliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
 //        // 按钮图标颜色
-//        if (!player.loadedMusic() || player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMetaMusicInfo().getAlbumImage() == null)) {
+//        if (!player.loadedMusic() || player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == ImageConstants.DEFAULT_IMG || player.getMetaMusicInfo().getAlbumImage() == null)) {
 //            changePaneButton.setIcon(ImageUtil.dye(new ImageIcon(
-//                    ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, changePaneImageWidth), TINY_ARC)), iconColor));
+//                    ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)), iconColor));
 //        }
 //        // 默认专辑图颜色
-//        if (player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == defaultAlbumImage || player.getMetaMusicInfo().getAlbumImage() == null)) {
-//            BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(defaultAlbumImage, albumImageWidth), LARGE_ARC), iconColor));
+//        if (player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == ImageConstants.DEFAULT_IMG || player.getMetaMusicInfo().getAlbumImage() == null)) {
+//            BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, albumImageWidth), LARGE_ARC), iconColor));
 //            albumImageLabel.setIcon(new ImageIcon(albumImage));
 //        }
         // 其他标签颜色
         songNameLabel.setForeground(textColor);
         artistLabel.setForeground(textColor);
         albumLabel.setForeground(textColor);
-        // 切换风格，包含背景图，模糊状态并载入了音乐就不换
+        // 切换主题，包含背景图，模糊状态并载入了音乐就不换
         if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) doBlur();
         // 标题图标
         Image titleImg = ImageUtil.dye(titleIcon, iconColor).getImage();
@@ -22683,11 +22684,11 @@ public class MainFrame extends JFrame {
         editInfoDialog.showDialog();
     }
 
-    // 打开自定义风格弹窗
+    // 打开自定义主题弹窗
     private void customStyle() {
         CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, "添加并应用", currUIStyle);
         customStyleDialog.showDialog();
-        if (!customStyleDialog.getConfirmed()) return;
+        if (!customStyleDialog.isConfirmed()) return;
         // 创建自定义样式并更换
         Object[] results = customStyleDialog.getResults();
         UIStyle customStyle = new UIStyle(
@@ -22698,9 +22699,9 @@ public class MainFrame extends JFrame {
                 (Color) results[10], (Color) results[11]
         );
         if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
-        else customStyle.setStyleImgPath((String) results[1]);
-        // 添加风格菜单项、按钮组，并切换风格
-        addStyle(customStyle);
+        else customStyle.setImgKey((String) results[1]);
+        // 添加主题菜单项、按钮组，并切换主题
+        styles.add(customStyle);
         customStyle.setInvokeLater(() -> changeUIStyle(customStyle));
     }
 
@@ -22708,7 +22709,7 @@ public class MainFrame extends JFrame {
         updateTabUI(tabbedPane, style, null);
     }
 
-    // 更新 Tab 的风格
+    // 更新 Tab 的主题
     private void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style, Point p) {
         Color textColor = style.getTextColor();
         Color iconColor = style.getIconColor();
@@ -22732,11 +22733,6 @@ public class MainFrame extends JFrame {
                 panel.setDrawBg(p != null && rect.contains(SwingUtilities.convertPoint(tabbedPane, p, panel)));
             }
         }
-    }
-
-    // 添加新风格，加到 List 最前面，apply 表示添加后是否应用
-    public void addStyle(UIStyle style) {
-        styles.add(style);
     }
 
     // 播放/暂停按钮执行
@@ -23151,7 +23147,7 @@ public class MainFrame extends JFrame {
             boolean loadedMusicResource = player.loadedMusicResource();
             if (blurType != BlurConstants.OFF && loadedMusicResource) {
                 img = player.getMetaMusicInfo().getAlbumImage();
-                if (img == null) img = defaultAlbumImage;
+                if (img == null) img = ImageConstants.DEFAULT_IMG;
                 if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
             } else img = currUIStyle.getImg();
 
@@ -23532,11 +23528,11 @@ public class MainFrame extends JFrame {
 
     // 验证数据
     private static boolean validateData() {
-        String s1 = LMIconManager.getIconBase64("dialog.weixin");
-        String s2 = LMIconManager.getIconBase64("dialog.alipay");
-        if (!"61cdefa6801e063244013cb73b1d5971".equals(CryptoUtil.hashMD5(s1)))
+        String s1 = LMIconManager.getBase64("dialog.weixin");
+        String s2 = LMIconManager.getBase64("dialog.alipay");
+        if (!"e3721514976bb205b1ef917f817c6243".equals(CryptoUtil.hashMD5(s1)))
             return false;
-        if (!"609c58d224aae375a18cb6a9357153ef".equals(CryptoUtil.hashMD5(s2)))
+        if (!"5d62142f49aaa03205dc8cc7bed351d4".equals(CryptoUtil.hashMD5(s2)))
             return false;
         return true;
     }

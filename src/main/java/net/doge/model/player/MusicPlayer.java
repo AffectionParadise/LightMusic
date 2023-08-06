@@ -10,8 +10,9 @@ import javafx.util.Duration;
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.player.Format;
 import net.doge.constant.player.PlayerStatus;
+import net.doge.constant.system.Format;
+import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.SpectrumConstants;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.NetMusicInfo;
@@ -193,7 +194,7 @@ public class MusicPlayer {
                         BufferedImage albumImage = musicInfo.getAlbumImage();
                         // 处理切换歌曲时封面图片混淆的情况
                         if (!musicInfo.equals(this.musicInfo)) return;
-                        metaMusicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
+                        metaMusicInfo.setAlbumImage(albumImage != null ? albumImage : ImageConstants.DEFAULT_IMG);
                         f.showAlbumImage();
                     });
                 } else {
@@ -219,7 +220,7 @@ public class MusicPlayer {
                 BufferedImage albumImage = MediaUtil.getAlbumImage(source);
                 // 处理切换歌曲时封面图片混淆的情况
                 if (!source.equals(audioFile)) return;
-                metaMusicInfo.setAlbumImage(albumImage != null ? albumImage : f.defaultAlbumImage);
+                metaMusicInfo.setAlbumImage(albumImage != null ? albumImage : ImageConstants.DEFAULT_IMG);
                 f.showAlbumImage();
             });
         }
@@ -228,7 +229,7 @@ public class MusicPlayer {
             metaMusicInfo.setName(source.getPrefix());
             metaMusicInfo.setArtist("未知");
             metaMusicInfo.setAlbumName("未知");
-            metaMusicInfo.setAlbumImage(f.defaultAlbumImage);
+            metaMusicInfo.setAlbumImage(ImageConstants.DEFAULT_IMG);
             f.showAlbumImage();
         }
     }

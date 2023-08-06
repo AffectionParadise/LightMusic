@@ -77,6 +77,10 @@ public class CustomScrollPane extends JScrollPane {
         horizontalScrollBar.setUI(ui);
     }
 
+    public ScrollBarUI getHUI() {
+        return horizontalScrollBar.getUI();
+    }
+
     public void setVUI(ScrollBarUI ui) {
         verticalScrollBar.setUI(ui);
     }

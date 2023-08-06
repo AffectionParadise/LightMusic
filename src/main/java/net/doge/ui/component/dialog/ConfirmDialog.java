@@ -2,13 +2,13 @@ package net.doge.ui.component.dialog;
 
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.checkbox.CustomCheckBox;
+import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.component.button.DialogButton;
-import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,9 +20,9 @@ import java.awt.*;
  * @Date 2021/1/5
  */
 public class ConfirmDialog extends AbstractShadowDialog {
-    private DialogButton yes = new DialogButton("");
-    private DialogButton no = new DialogButton("");
-    private DialogButton cancel = new DialogButton("");
+    private DialogButton yes = new DialogButton();
+    private DialogButton no = new DialogButton();
+    private DialogButton cancel = new DialogButton();
     private int response;
 
     private String message;

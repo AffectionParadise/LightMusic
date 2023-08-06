@@ -33,11 +33,9 @@ public class ScrollBarUI extends BasicScrollBarUI {
 
     // 创建空按钮去掉滚动条上的按钮
     private JButton createZeroButton() {
-        JButton button = new JButton("");
-        Dimension zeroDim = new Dimension(0, 0);
-        button.setPreferredSize(zeroDim);
-        button.setMinimumSize(zeroDim);
-        button.setMaximumSize(zeroDim);
+        JButton button = new JButton();
+        button.setPreferredSize(new Dimension(0, 0));
+        button.setVisible(false);
         return button;
     }
 

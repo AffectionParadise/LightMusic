@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.player.Format;
+import net.doge.constant.system.Format;
 import net.doge.constant.ui.Colors;
 import net.doge.sdk.common.CommonResult;
 import net.doge.ui.MainFrame;
@@ -17,7 +17,7 @@ import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.system.LMIconManager;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

@@ -9,9 +9,9 @@ public class ConfigConstants {
     // 配置文件名称
     public static final String CONFIG_FILE_NAME = "config.lm";
 
-    // 所有自定义风格
+    // 所有自定义主题
     public static final String CUSTOM_UI_STYLES = "customUIStyles";
-    // 当前 UI 风格索引
+    // 当前 UI 主题索引
     public static final String CURR_UI_STYLE = "currUIStyle";
     // 是否启用快捷键
     public static final String KEY_ENABLED = "keyEnabled";

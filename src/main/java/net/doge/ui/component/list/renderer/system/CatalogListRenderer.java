@@ -14,7 +14,7 @@ import java.io.File;
 
 /**
  * @Author Doge
- * @Description 默认的风格列表显示渲染器
+ * @Description 默认的主题列表显示渲染器
  * @Date 2020/12/7
  */
 @Data

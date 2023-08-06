@@ -1,8 +1,9 @@
 package net.doge.util.ui;
 
+import net.doge.util.common.CryptoUtil;
+
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 
 /**
  * @Author Doge
@@ -11,24 +12,23 @@ import java.io.FileInputStream;
  */
 public class FontUtil {
     /**
-     * 加载外部字体
+     * base64 转为字体
      *
-     * @param source
+     * @param base64
      * @param fontSize
      * @return
      */
-    public static Font loadFont(String source, float fontSize) {
+    public static Font toFont(String base64, float fontSize) {
         try {
-            File file = new File(source);
-            FileInputStream fis = new FileInputStream(file);
-            Font dynamicFont = Font.createFont(Font.TRUETYPE_FONT, fis);
+            byte[] bytes = CryptoUtil.base64DecodeToBytes(base64);
+            ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+            Font dynamicFont = Font.createFont(Font.TRUETYPE_FONT, in);
             Font dynamicFontPt = dynamicFont.deriveFont(fontSize);
-            fis.close();
-            // 注册改字体以便 HTML 调用
+            in.close();
+            // 注册该字体以便 HTML 调用
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(dynamicFontPt);
             return dynamicFontPt;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * @Author Doge
- * @Description 默认的风格列表显示渲染器
+ * @Description 默认的主题列表显示渲染器
  * @Date 2020/12/7
  */
 @Data
@@ -79,7 +79,7 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(style.getStyleName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(style.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String type = StringUtil.textToHtml(style.isCustom() ? "自定义" : "预设");
         String inUse = StringUtil.textToHtml(f.currUIStyle == style ? "使用中" : "");
 

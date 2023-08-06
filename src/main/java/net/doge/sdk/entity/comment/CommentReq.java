@@ -358,6 +358,7 @@ public class CommentReq {
                     String uname = cj.getString("rootcommentnick");
                     String rc = cj.getString("rootcommentcontent");
                     String cnt = StringUtil.notEmpty(rc) ? rc.replace("\\n", "\n") : "";
+                    String pu = "";
 
                     NetCommentInfo ci = new NetCommentInfo();
                     ci.setSource(NetMusicSource.QQ);
@@ -365,6 +366,11 @@ public class CommentReq {
                     ci.setUserId(uid);
                     ci.setUsername(StringUtil.isEmpty(uname) ? "null" : uname.substring(1));
                     ci.setContent(StringUtil.isEmpty(cnt) ? "该评论已被删除" : cnt);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = SdkUtil.extractProfile(pu);
+                        ci.setProfile(profile);
+                    });
+
                     res.add(ci);
                 }
             }
@@ -958,6 +964,7 @@ public class CommentReq {
                     Integer likedCount = Integer.parseInt(d.text());
                     String r = RegexUtil.getGroup1("allstar(\\d+)", rating.size() > 2 ? rating.get(2).className() : "");
                     Integer score = StringUtil.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
+                    String profileUrl = "";
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
                     commentInfo.setSource(NetMusicSource.DB);
@@ -967,6 +974,10 @@ public class CommentReq {
                     commentInfo.setTime(time);
                     commentInfo.setLikedCount(likedCount);
                     commentInfo.setScore(score);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = SdkUtil.extractProfile(profileUrl);
+                        commentInfo.setProfile(profile);
+                    });
 
                     res.add(commentInfo);
                 }

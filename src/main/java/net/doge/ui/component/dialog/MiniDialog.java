@@ -7,7 +7,7 @@ import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.ui.component.dialog.factory.AbstractMiniDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.system.LMIconManager;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

@@ -29,7 +29,7 @@ import net.doge.ui.component.slider.CustomSlider;
 import net.doge.ui.component.slider.ui.SliderUI;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
-import net.doge.util.system.LMIconManager;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 

@@ -3,7 +3,8 @@ package net.doge.ui.component.dialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
-import net.doge.constant.player.Format;
+import lombok.Getter;
+import net.doge.constant.system.Format;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Colors;
 import net.doge.model.ui.UIStyle;
@@ -16,6 +17,7 @@ import net.doge.ui.component.scrollpane.CustomScrollPane;
 import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.util.common.StringUtil;
+import net.doge.util.lmdata.LMStyleManager;
 import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -29,10 +31,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -91,7 +89,9 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     // 面板展示的样式
     private UIStyle showedStyle;
 
+    @Getter
     private boolean confirmed = false;
+    @Getter
     private Object[] results = new Object[components.length];
 
     // 父窗口，传入 OK 按钮文字，要展示的样式(添加则用当前样式，编辑则用选中样式)
@@ -116,58 +116,56 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
 
         globalPanel.add(centerScrollPane, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
-            // 风格名称不为空
+            // 主题名称不为空
             if ("".equals(results[0])) {
                 new TipDialog(f, STYLE_NAME_NOT_NULL_MSG).showDialog();
                 return;
             }
-            // 风格名称不重复
+            // 主题名称不重复
             List<UIStyle> styles = f.styles;
+            boolean isAdd = okButton.getPlainText().contains("添加");
             for (UIStyle style : styles) {
                 // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
-                if (style.getStyleName().equals(results[0])
-                        && (style != showedStyle || okButton.getPlainText().contains("添加"))) {
+                if (style.getName().equals(results[0])
+                        && (style != showedStyle || isAdd)) {
                     new TipDialog(f, STYLE_NAME_DUPLICATE_MSG).showDialog();
                     return;
                 }
             }
             // 图片路径
             if (results[1] instanceof String) {
-                // 复制图片(如果有)
-                File imgFile = new File(((String) results[1]));
-                // 图片存在且是文件
-                if (imgFile.exists() && imgFile.isFile()) {
-                    try {
+                String str = (String) results[1];
+                // 图片 key
+                if (LMStyleManager.contains(str)) {
+                    BufferedImage img = LMStyleManager.getImage(str);
+                    String dest = SimplePath.CUSTOM_STYLE_PATH + System.currentTimeMillis() + "." + Format.JPG;
+                    ImageUtil.toFile(img, dest);
+                    // 设置路径
+                    results[1] = dest;
+                }
+                // 图片路径
+                else {
+                    File imgFile = new File(str);
+                    if (imgFile.exists()) {
                         // 文件夹不存在就创建
                         File dir = new File(SimplePath.CUSTOM_STYLE_PATH);
                         FileUtil.mkDir(dir);
-                        String newPath = SimplePath.CUSTOM_STYLE_PATH + imgFile.getName();
-                        Files.copy(
-                                Paths.get(imgFile.getPath()),
-                                Paths.get(newPath),
-                                StandardCopyOption.REPLACE_EXISTING
-                        );
+                        String newPath = SimplePath.CUSTOM_STYLE_PATH + System.currentTimeMillis() + "." + FileUtil.getSuffix(imgFile);
+                        FileUtil.copy(imgFile.getPath(), newPath);
                         // 设置新的路径
                         results[1] = newPath;
                         // 更新时删除原来的图片
-                        String imgPath = f.currUIStyle.getStyleImgPath();
-                        if (StringUtil.notEmpty(imgPath)) {
-                            File sf = new File(imgPath);
-                            File df = new File(newPath);
-                            if (f.currUIStyle == showedStyle && !sf.equals(df) && sf.getParentFile().equals(dir))
-                                sf.delete();
-                        }
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
+                        String ik = showedStyle.getImgKey();
+                        FileUtil.delete(ik);
+                    } else {
+                        new TipDialog(f, IMG_FILE_NOT_EXIST_MSG).showDialog();
+                        return;
                     }
-                } else {
-                    new TipDialog(f, IMG_FILE_NOT_EXIST_MSG).showDialog();
-                    return;
                 }
             }
             confirmed = true;
-            dispose();
             f.currDialogs.remove(this);
+            dispose();
         });
         cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
@@ -190,9 +188,9 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         centerPanel.setLayout(new GridLayout(6, 2));
 
         // 获得传入的界面样式
-        results[0] = showedStyle.getStyleName();
-        String styleImgPath = showedStyle.getStyleImgPath();
-        results[1] = StringUtil.isEmpty(styleImgPath) ? showedStyle.getBgColor() : styleImgPath;
+        results[0] = showedStyle.getName();
+        String imgKey = showedStyle.getImgKey();
+        results[1] = StringUtil.isEmpty(imgKey) ? showedStyle.getBgColor() : imgKey;
         results[2] = showedStyle.getForeColor();
         results[3] = showedStyle.getSelectedColor();
         results[4] = showedStyle.getLrcColor();
@@ -219,7 +217,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 CustomTextField component = (CustomTextField) components[i];
                 component.setForeground(textColor);
                 component.setCaretColor(textColor);
-                // 加载风格名称
+                // 加载主题名称
                 component.setText((String) results[i]);
                 Document document = component.getDocument();
                 // 添加文本改变监听器
@@ -231,11 +229,12 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 // 加载当前样式背景图(显示一个缩略图)
                 if (results[i] != null) {
                     if (results[i] instanceof String) {
-                        BufferedImage image = ImageUtil.read((String) results[i]);
-                        if (image != null) {
-                            if (image.getWidth() >= image.getHeight())
-                                labels[i].setIcon(new ImageIcon(ImageUtil.width(image, imgWidth)));
-                            else labels[i].setIcon(new ImageIcon(ImageUtil.height(image, imgHeight)));
+                        String ik = (String) results[i];
+                        BufferedImage img = showedStyle.isPreDefined() ? LMStyleManager.getImage(ik) : ImageUtil.read(ik);
+                        if (img != null) {
+                            if (img.getWidth() >= img.getHeight())
+                                labels[i].setIcon(new ImageIcon(ImageUtil.width(img, imgWidth)));
+                            else labels[i].setIcon(new ImageIcon(ImageUtil.height(img, imgHeight)));
                         }
                     } else {
                         labels[i].setIcon(new ImageIcon(ImageUtil.width(ImageUtil.dyeRect(2, 1, (Color) results[i]), imgWidth)));
@@ -256,25 +255,25 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                     filters.add(0, new FileChooser.ExtensionFilter("图片文件", allSuffix));
                     Platform.runLater(() -> {
                         File file = fileChooser.showOpenDialog(null);
-                        if (file != null) {
-                            results[finalI] = file.getPath();
-                            BufferedImage img = ImageUtil.read((String) results[finalI]);
-                            if (img == null) {
-                                new TipDialog(f, IMG_NOT_VALID_MSG).showDialog();
-                                return;
-                            }
-                            if (img.getWidth() >= img.getHeight())
-                                labels[finalI].setIcon(new ImageIcon(ImageUtil.width(img, imgWidth)));
-                            else labels[finalI].setIcon(new ImageIcon(ImageUtil.height(img, imgHeight)));
-                            setLocationRelativeTo(null);
+                        if (file == null) return;
+                        String path = file.getPath();
+                        results[finalI] = path;
+                        BufferedImage img = ImageUtil.read(path);
+                        if (img == null) {
+                            new TipDialog(f, IMG_NOT_VALID_MSG).showDialog();
+                            return;
                         }
+                        if (img.getWidth() >= img.getHeight())
+                            labels[finalI].setIcon(new ImageIcon(ImageUtil.width(img, imgWidth)));
+                        else labels[finalI].setIcon(new ImageIcon(ImageUtil.height(img, imgHeight)));
+                        setLocationRelativeTo(null);
                     });
                 });
             } else if (components[i] instanceof CustomLabel) {
                 CustomLabel component = (CustomLabel) components[i];
                 // 鼠标光标
                 component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                // 获取风格颜色并显示成小方格
+                // 获取主题颜色并显示成小方格
                 component.setIcon(ImageUtil.dyeRoundRect(rectWidth, rectHeight, ((Color) results[i])));
                 int finalI = i;
                 // 颜色选择
@@ -336,13 +335,5 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     @Override
     public void changedUpdate(DocumentEvent e) {
         results[0] = ((CustomTextField) components[0]).getText();
-    }
-
-    public boolean getConfirmed() {
-        return confirmed;
-    }
-
-    public Object[] getResults() {
-        return results;
     }
 }

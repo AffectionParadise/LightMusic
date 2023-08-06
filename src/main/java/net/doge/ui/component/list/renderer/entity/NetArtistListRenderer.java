@@ -10,7 +10,7 @@ import net.doge.model.entity.NetArtistInfo;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.util.common.StringUtil;
-import net.doge.util.system.LMIconManager;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

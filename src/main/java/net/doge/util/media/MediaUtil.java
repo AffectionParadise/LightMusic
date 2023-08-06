@@ -4,7 +4,7 @@ import com.mpatric.mp3agic.*;
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.EncoderException;
 import it.sauronsoftware.jave.MultimediaInfo;
-import net.doge.constant.player.Format;
+import net.doge.constant.system.Format;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;

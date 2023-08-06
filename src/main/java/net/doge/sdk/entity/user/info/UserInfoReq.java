@@ -124,6 +124,7 @@ public class UserInfoReq {
         else if (source == NetMusicSource.QQ) {
             userInfo.setSign("");
             GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl("")));
         }
 
         // 喜马拉雅
@@ -164,12 +165,14 @@ public class UserInfoReq {
         else if (source == NetMusicSource.HF) {
             userInfo.setSign("");
             GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl("")));
         }
 
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             userInfo.setSign("");
             GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(userInfo.getAvatarUrl())));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl("")));
         }
 
         // 猫耳
@@ -289,6 +292,7 @@ public class UserInfoReq {
             String avatarUrl = userInfoJson.getString("avatar");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
             GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl("")));
         }
 
         // 豆瓣
@@ -314,6 +318,7 @@ public class UserInfoReq {
             String avatarUrl = doc.select("div.basic-info img").attr("src");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
             GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
+            GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl("")));
         }
 
         // 堆糖

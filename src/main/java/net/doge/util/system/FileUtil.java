@@ -43,7 +43,7 @@ public class FileUtil {
      * 确保文件夹存在，若不存在则创建
      */
     public static void mkDir(String dirPath) {
-        cn.hutool.core.io.FileUtil.mkdir(dirPath);
+        mkDir(new File(dirPath));
     }
 
     /**
@@ -76,7 +76,7 @@ public class FileUtil {
      * @param path 文件路径
      */
     public static void delete(String path) {
-        cn.hutool.core.io.FileUtil.del(path);
+        delete(new File(path));
     }
 
     /**
@@ -175,17 +175,27 @@ public class FileUtil {
      * @param dirPath 文件夹路径
      */
     public static void clean(String dirPath) {
-        cn.hutool.core.io.FileUtil.clean(dirPath);
+        cn.hutool.core.io.FileUtil.clean(new File(dirPath));
     }
 
     /**
      * 复制文件
      *
-     * @param source
+     * @param src
      * @param dest
      */
-    public static void copy(String source, String dest) {
-        cn.hutool.core.io.FileUtil.copy(source, dest, true);
+    public static void copy(String src, String dest) {
+        copy(new File(src), new File(dest));
+    }
+
+    /**
+     * 复制文件
+     *
+     * @param src
+     * @param dest
+     */
+    public static void copy(File src, File dest) {
+        cn.hutool.core.io.FileUtil.copy(src, dest, true);
     }
 
     /**
@@ -205,7 +215,7 @@ public class FileUtil {
      * @param path
      */
     public static void writeStr(String content, String path) {
-        cn.hutool.core.io.FileUtil.writeUtf8String(content, path);
+        writeStr(content, new File(path));
     }
 
     /**

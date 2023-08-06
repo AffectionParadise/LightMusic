@@ -9,7 +9,7 @@ import net.doge.ui.component.button.listener.ButtonMouseListener;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.lyric.StringTwoColor;
 import net.doge.ui.component.panel.CustomPanel;
-import net.doge.util.system.LMIconManager;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -35,8 +35,8 @@ public class DesktopLyricDialog extends JDialog {
     private UIStyle style;
     private Color foreColor;
     private CustomPanel lyricPanel = new CustomPanel();
-    public LyricLabel lyricLabel = new LyricLabel("");
-    private CustomLabel tempLabel = new CustomLabel("");
+    public LyricLabel lyricLabel = new LyricLabel();
+    private CustomLabel tempLabel = new CustomLabel();
     private MainPanel mainPanel = new MainPanel();
     private CustomPanel buttonPanel = new CustomPanel();
 
@@ -383,10 +383,6 @@ public class DesktopLyricDialog extends JDialog {
         private final float min = 0.2f;
         private final float max = 1f;
         private final float step = 0.1f;
-
-        public LyricLabel(String text) {
-            super(text);
-        }
 
         public void decreaseAlpha() {
             setAlpha(alpha - step);

@@ -8,7 +8,7 @@ import com.jhlabs.image.GradientFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constant.player.Format;
+import net.doge.constant.system.Format;
 import net.doge.constant.ui.BlurConstants;
 
 import javax.imageio.ImageIO;
@@ -218,23 +218,17 @@ public class ImageUtil {
     }
 
     /**
-     * 将图片转为 Base64
-     *
-     * @param img
-     * @return
-     */
-    public static String toBase64(BufferedImage img) {
-        return ImgUtil.toBase64(img, ImgUtil.IMAGE_TYPE_PNG);
-    }
-
-    /**
      * 将 Base64 转为图片
      *
      * @param base64
      * @return
      */
     public static BufferedImage toImage(String base64) {
-        return ImgUtil.toImage(base64);
+        try {
+            return ImgUtil.toImage(base64);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**

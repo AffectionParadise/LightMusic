@@ -4,7 +4,8 @@ import net.doge.constant.ui.Fonts;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @Author Doge
@@ -17,8 +18,16 @@ public class CustomMenuItem extends JMenuItem {
     private float alpha;
     private final float destAlpha = 0.1f;
 
+    public CustomMenuItem() {
+        init();
+    }
+
     public CustomMenuItem(String text) {
         super(text);
+        init();
+    }
+
+    private void init() {
         setFont(Fonts.NORMAL);
         createBorder();
         initResponse();

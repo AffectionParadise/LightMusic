@@ -2,27 +2,28 @@ package net.doge.model.ui;
 
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.model.UIStyleConstants;
-import net.doge.util.ui.ImageUtil;
+import net.doge.constant.ui.ImageConstants;
 import net.doge.util.common.StringUtil;
+import net.doge.util.lmdata.LMStyleManager;
+import net.doge.util.ui.ImageUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
  * @Author Doge
- * @Description
+ * @Description 主题
  * @Date 2020/12/12
  */
 @Data
 public class UIStyle {
-    // 风格类型
-    private int styleType;
-    // 风格名称
-    private String styleName;
-    // 对应的图片路径
-    private String styleImgPath;
+    // 类型
+    private int type;
+    // 名称
+    private String name;
+    // 对应的图片 key
+    private String imgKey;
     // 图片
     private BufferedImage img;
     // 小图
@@ -54,11 +55,11 @@ public class UIStyle {
     private Runnable invokeLater;
 
     public boolean isPreDefined() {
-        return styleType == UIStyleConstants.PRE;
+        return type == UIStyleConstants.PRE;
     }
 
     public boolean isCustom() {
-        return styleType == UIStyleConstants.CUSTOM;
+        return type == UIStyleConstants.CUSTOM;
     }
 
     public boolean hasImg() {
@@ -69,14 +70,17 @@ public class UIStyle {
         if (invokeLater == null) return;
         invokeLater.run();
         // 调用后丢弃
-//            invokeLater = null;
+        invokeLater = null;
     }
 
-    public void setStyleImgPath(String styleImgPath) {
-        this.styleImgPath = styleImgPath;
-        if (StringUtil.isEmpty(styleImgPath)) return;
+    public void setImgKey(String imgKey) {
+        this.imgKey = imgKey;
+        if (StringUtil.isEmpty(imgKey)) {
+            img = imgThumb = null;
+            return;
+        }
         GlobalExecutors.requestExecutor.execute(() -> {
-            img = ImageUtil.read(styleImgPath);
+            img = isPreDefined() ? LMStyleManager.getImage(imgKey) : ImageUtil.read(imgKey);
             if (img == null) return;
             imgThumb = ImageUtil.setRadius(ImageUtil.width(img, ImageConstants.MV_COVER_WIDTH), 10);
             // 控制高度不超过阈值
@@ -96,12 +100,12 @@ public class UIStyle {
         });
     }
 
-    public UIStyle(Integer styleType, String styleName, String styleImgPath,
+    public UIStyle(Integer type, String name, String imgKey,
                    Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor,
                    Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor) {
-        this.styleType = styleType;
-        this.styleName = styleName;
-        setStyleImgPath(styleImgPath);
+        this.type = type;
+        this.name = name;
+        setImgKey(imgKey);
         this.foreColor = foreColor;
         this.selectedColor = selectedColor;
         this.lrcColor = lrcColor;
@@ -114,12 +118,12 @@ public class UIStyle {
         this.spectrumColor = spectrumColor;
     }
 
-    public UIStyle(Integer styleType, String styleName, String styleImgPath, Color bgColor,
+    public UIStyle(Integer type, String name, String imgKey, Color bgColor,
                    Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor,
                    Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor) {
-        this.styleType = styleType;
-        this.styleName = styleName;
-        setStyleImgPath(styleImgPath);
+        this.type = type;
+        this.name = name;
+        setImgKey(imgKey);
         setBgColor(bgColor);
         this.foreColor = foreColor;
         this.selectedColor = selectedColor;

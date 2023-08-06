@@ -12,6 +12,8 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <hutool.version>5.8.21</hutool.version>
     </properties>
 
     <dependencies>
@@ -63,14 +65,14 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-http</artifactId>
-            <version>5.8.20</version>
+            <version>${hutool.version}</version>
         </dependency>
 
         <!-- HuTool 加密解密 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-crypto</artifactId>
-            <version>5.8.20</version>
+            <version>${hutool.version}</version>
         </dependency>
 
         <!-- Json 解析 -->

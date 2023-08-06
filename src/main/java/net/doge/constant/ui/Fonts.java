@@ -1,7 +1,6 @@
 package net.doge.constant.ui;
 
-import net.doge.constant.system.SimplePath;
-import net.doge.util.ui.FontUtil;
+import net.doge.util.lmdata.LMFontManager;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -20,15 +19,14 @@ public class Fonts {
     private static final int BIG_SIZE = FONT_SIZE + 10;
     public static final int HUGE_SIZE = BIG_SIZE + 20;
 
-    private static final String NORMAL_NAME = "normal.ttf";
-    public static final String NORMAL_BOLD_NAME = "normal.ttf";
+    private static final String NORMAL_NAME = "normal";
 
     // 中英文
-    public static final Font NORMAL_TINY = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, TINY_SIZE);
-    public static final Font NORMAL = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, FONT_SIZE);
-    public static final Font NORMAL_MEDIUM = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, MEDIUM_SIZE);
-    public static final Font NORMAL_BIG = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_NAME, BIG_SIZE);
-    public static final Font NORMAL_HUGE = FontUtil.loadFont(SimplePath.FONT_PATH + NORMAL_BOLD_NAME, HUGE_SIZE);
+    public static final Font NORMAL_TINY = LMFontManager.getFont(NORMAL_NAME, TINY_SIZE);
+    public static final Font NORMAL = LMFontManager.getFont(NORMAL_NAME, FONT_SIZE);
+    public static final Font NORMAL_MEDIUM = LMFontManager.getFont(NORMAL_NAME, MEDIUM_SIZE);
+    public static final Font NORMAL_BIG = LMFontManager.getFont(NORMAL_NAME, BIG_SIZE);
+    public static final Font NORMAL_HUGE = LMFontManager.getFont(NORMAL_NAME, HUGE_SIZE);
 
 //    public static final Font NORMAL = new Font("微软雅黑", Font.PLAIN, FONT_SIZE);
 //    public static final Font NORMAL_MEDIUM = new Font("微软雅黑", Font.PLAIN, MEDIUM_SIZE);

@@ -1,6 +1,6 @@
 package net.doge.model.entity;
 
-import net.doge.constant.player.Format;
+import net.doge.constant.system.Format;
 import net.doge.model.entity.base.MusicResource;
 import net.doge.util.common.StringUtil;
 import net.doge.util.system.FileUtil;

@@ -1,7 +1,7 @@
 package net.doge.ui.component.dialog;
 
-import net.doge.constant.ui.Colors;
 import net.doge.constant.model.UIStyleConstants;
+import net.doge.constant.ui.Colors;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
@@ -9,17 +9,17 @@ import net.doge.ui.component.checkbox.CustomCheckBox;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.list.CustomList;
-import net.doge.ui.component.scrollpane.CustomScrollPane;
-import net.doge.ui.component.panel.CustomPanel;
-import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
 import net.doge.ui.component.list.renderer.system.StyleListRenderer;
+import net.doge.ui.component.panel.CustomPanel;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
+import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
+import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.List;
 
 /**
@@ -147,7 +147,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             UIStyle value = styleList.getSelectedValue();
             CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, "添加", value != null ? value : f.currUIStyle);
             customStyleDialog.showDialog();
-            if (customStyleDialog.getConfirmed()) {
+            if (customStyleDialog.isConfirmed()) {
                 // 创建自定义样式并更换
                 Object[] results = customStyleDialog.getResults();
                 UIStyle customStyle = new UIStyle(
@@ -160,9 +160,9 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 );
                 customStyle.setInvokeLater(() -> updateRenderer(styleList));
                 if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
-                else customStyle.setStyleImgPath((String) results[1]);
-                // 添加风格菜单项、按钮组，但不切换风格
-                f.addStyle(customStyle);
+                else customStyle.setImgKey((String) results[1]);
+                // 添加主题菜单项、按钮组，但不切换主题
+                f.styles.add(customStyle);
                 // 最后别忘了到列表中添加
                 styleListModel.addElement(customStyle);
             }
@@ -189,16 +189,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                     }
                     styles.remove(style);
                     // 删除图片文件
-                    File file = new File(style.getStyleImgPath());
-                    // 确保要删除的文件不被其他主题使用
-                    boolean canDelete = true;
-                    for (UIStyle st : styles) {
-                        if (file.equals(new File(st.getStyleImgPath()))) {
-                            canDelete = false;
-                            break;
-                        }
-                    }
-                    if (canDelete) file.delete();
+                    FileUtil.delete(style.getImgKey());
                     // 最后别忘了从列表中删除
                     styleListModel.removeElement(style);
                 });
@@ -221,16 +212,17 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 return;
             }
             dialog.showDialog();
-            if (dialog.getConfirmed()) {
+            if (dialog.isConfirmed()) {
                 Object[] results = dialog.getResults();
                 UIStyle selectedStyle = styleList.getSelectedValue();
-                selectedStyle.setStyleName((String) results[0]);
+                selectedStyle.setName((String) results[0]);
                 selectedStyle.setInvokeLater(() -> updateRenderer(styleList));
+                // 先设置图片为空，避免更新主题时背景不切换
+                selectedStyle.setImgKey("");
                 if (results[1] instanceof Color) {
-                    selectedStyle.setStyleImgPath("");
                     selectedStyle.setBgColor((Color) results[1]);
                 } else {
-                    selectedStyle.setStyleImgPath((String) results[1]);
+                    selectedStyle.setImgKey((String) results[1]);
                     selectedStyle.setBgColor(null);
                 }
                 selectedStyle.setForeColor((Color) results[2]);
@@ -245,8 +237,18 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 selectedStyle.setSpectrumColor((Color) results[11]);
                 // 若编辑的样式正在使用，则更换
                 if (f.currUIStyle == selectedStyle) {
-                    f.changeUIStyle(selectedStyle);
-                    updateStyle();
+                    if (selectedStyle.hasImg()) {
+                        SwingUtilities.invokeLater(() -> {
+                            f.changeUIStyle(selectedStyle);
+                            updateStyle();
+                        });
+                    } else {
+                        // 提交给 swing 线程处理，避免发生渲染异常！
+                        selectedStyle.setInvokeLater(() -> SwingUtilities.invokeLater(() -> {
+                            f.changeUIStyle(selectedStyle);
+                            updateStyle();
+                        }));
+                    }
                 }
             }
         });
@@ -305,7 +307,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         styleList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                // 鼠标左键双击应用风格
+                // 鼠标左键双击应用主题
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     applyButton.doClick();
                 }
@@ -368,6 +370,6 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         styleListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
         styleListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
 
-        repaint();
+        globalPanel.repaint();
     }
 }

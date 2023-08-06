@@ -4,7 +4,7 @@ import com.mpatric.mp3agic.ID3v1Genres;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
-import net.doge.constant.player.Format;
+import net.doge.constant.system.Format;
 import net.doge.constant.ui.Colors;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
@@ -86,7 +86,6 @@ public class EditInfoDialog extends AbstractTitledDialog {
     // 面板展示的文件
     private AudioFile file;
 
-    private boolean confirmed = false;
     private Object[] results = new Object[components.length];
 
     // 父窗口，传入要展示的文件
@@ -135,7 +134,6 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 // 歌曲信息更改后重新填充
                 MediaUtil.fillAudioFileInfo(file);
             }
-            confirmed = true;
             dispose();
             f.currDialogs.remove(this);
         });
@@ -270,9 +268,5 @@ public class EditInfoDialog extends AbstractTitledDialog {
         centerScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
         centerScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-    }
-
-    public boolean getConfirmed() {
-        return confirmed;
     }
 }

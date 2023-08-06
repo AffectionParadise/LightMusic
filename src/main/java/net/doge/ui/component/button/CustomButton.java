@@ -1,7 +1,7 @@
 package net.doge.ui.component.button;
 
 import net.doge.constant.ui.Fonts;
-import net.doge.util.system.LMIconManager;
+import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

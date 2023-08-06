@@ -1,6 +1,7 @@
 package net.doge.ui.component.dialog.factory;
 
 import net.doge.constant.ui.BlurConstants;
+import net.doge.constant.ui.ImageConstants;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.panel.GlobalPanel;
@@ -40,7 +41,7 @@ public abstract class AbstractMiniDialog extends JDialog {
         BufferedImage img;
         if (f.blurType != BlurConstants.OFF && f.player.loadedMusicResource()) {
             img = f.player.getMetaMusicInfo().getAlbumImage();
-            if (img == null) img = f.defaultAlbumImage;
+            if (img == null) img = ImageConstants.DEFAULT_IMG;
             if (f.blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
         } else {
             UIStyle style = f.currUIStyle;

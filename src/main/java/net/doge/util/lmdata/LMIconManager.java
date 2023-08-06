@@ -1,8 +1,8 @@
-package net.doge.util.system;
+package net.doge.util.lmdata;
 
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.system.LMDataConstants;
 import net.doge.constant.system.SimplePath;
-import net.doge.constant.ui.ImageConstants;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -10,11 +10,11 @@ import java.awt.image.BufferedImage;
 
 /**
  * @Author Doge
- * @Description 图标、主题工具类
+ * @Description 图标管理器
  * @Date 2020/12/15
  */
 public class LMIconManager {
-    private static final JSONObject ICON_DATA = LMDataUtil.read(SimplePath.ICON_PATH + ImageConstants.ICON_DATA_FILE_NAME);
+    private static final JSONObject ICON_DATA = LMDataUtil.read(SimplePath.RESOURCE_PATH + LMDataConstants.ICON_DATA_FILE_NAME);
 
     /**
      * 根据 key 获取 ImageIcon
@@ -37,11 +37,7 @@ public class LMIconManager {
      * @return
      */
     public static BufferedImage getImage(String key) {
-        try {
-            return ImageUtil.toImage(getIconBase64(key));
-        } catch (Exception e) {
-            return null;
-        }
+        return ImageUtil.toImage(getBase64(key));
     }
 
     /**
@@ -50,7 +46,7 @@ public class LMIconManager {
      * @param key
      * @return
      */
-    public static String getIconBase64(String key) {
+    public static String getBase64(String key) {
         return ICON_DATA.getString(key);
     }
 }
