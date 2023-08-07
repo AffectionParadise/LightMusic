@@ -1,235 +1,107 @@
 package net.doge.model.lyric;
 
 import lombok.Data;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.TimeUtil;
 import net.doge.util.system.FileUtil;
 
-import java.io.*;
-import java.util.Collections;
+import java.io.File;
 import java.util.Comparator;
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @Author Doge
- * @Description
+ * @Description 歌词数据
  * @Date 2020/12/7
  */
 @Data
 public class LrcData {
-    // 读取文件实例
-    private BufferedReader bufferReader;
-    //    // 歌曲题目
-//    private String title = "";
-//    // 演唱者
-//    private String artist = "";
-//    // 专辑
-//    private String album = "";
-//    // 歌词制作者
-//    private String lrcMaker = "";
     // 歌词
-    private Vector<Statement> statements = new Vector<>();
-    // 翻译
-    private Vector<Statement> transStatements = new Vector<>();
+    private List<Statement> statements = new LinkedList<>();
     // lrc 文件内容
-    private String lrcStr = "";
+    private String lrcStr;
 
-    public boolean hasTrans() {
-        return !transStatements.isEmpty();
-    }
+    // 偏移
+    private double offset;
 
     public boolean isEmpty() {
         return statements.isEmpty();
     }
 
-    /*
-     * 实例化一个歌词数据. 歌词数据信息由指定的文件提供.
-     * fileName: 指定的歌词文件.
-     */
-    public LrcData(String fileNameOrLrcStr, boolean isFile) throws IOException {
-        if (isFile) {
-            File f = new File(fileNameOrLrcStr);
-            FileInputStream fis = new FileInputStream(f);
-            // 获取文件编码并读取歌词
-            bufferReader = new BufferedReader(new InputStreamReader(fis, FileUtil.getCharsetName(f)));
-        } else {
-            bufferReader = new BufferedReader(new StringReader(fileNameOrLrcStr));
+    public LrcData(File lrcFile) {
+        this(lrcFile, false);
+    }
+
+    public LrcData(File lrcFile, boolean badFormat) {
+        this(FileUtil.readStr(lrcFile, FileUtil.getCharsetName(lrcFile)), badFormat);
+    }
+
+    public LrcData(String lrcStr) {
+        this(lrcStr, false);
+    }
+
+    public LrcData(String lrcStr, boolean badFormat) {
+        initData(lrcStr, badFormat);
+    }
+
+    // 处理一行数据中的字符
+    private String handleLine(String line) {
+        // 把 tab 先移除，去掉两边空格(包含特殊空格)
+        return StringUtil.trimStringWith(line.replace("\t", ""), ' ', ' ', '　');
+    }
+
+    // 初始化歌词数据
+    private void initData(String lrcStr, boolean badFormat) {
+        this.lrcStr = lrcStr;
+        String[] lrcArray = lrcStr.split("\n");
+        // 不支持滚动的歌词，直接读取整行作为歌词
+        if (badFormat) {
+            for (String line : lrcArray) statements.add(new Statement(handleLine(line)));
         }
-        // 将文件数据读入内存
-        readData();
-        bufferReader.close();
-    }
+        // 解析完整的歌词
+        else {
+            for (String line : lrcArray) {
+                line = handleLine(line);
 
-    /**
-     * 判断是否为有效行
-     *
-     * @param line
-     * @return
-     */
-    public boolean isValidLine(String line) {
-        return !"[]".equals(line);
-    }
+                // 解析 offset
+                String offsetStr = RegexUtil.getGroup1("\\[offset:(-?\\d+)\\]", line);
+                if (StringUtil.notEmpty(offsetStr)) offset = Double.parseDouble(offsetStr) / 1000;
 
-    /*
-     * 读取文件中数据至内存.
-     */
-    public void readData() throws IOException {
-        statements.clear();
-        String strLine;
-        StringBuilder sb = new StringBuilder();
-        // 循环读入所有行
-        while (null != (strLine = bufferReader.readLine())) {
-            sb.append(strLine).append("\n");
-            // 把 tab 先移除，去掉两边空格(包含特殊空格)
-            strLine = StringUtil.trimStringWith(strLine.replace("\t", "").trim(), ' ', '　');
-            // 判断该行是否为有效行
-            if (!isValidLine(strLine)) continue;
-//            // 判断该行数据是否表示歌名
-//            if (null == title || title.trim().isEmpty()) {
-//                Pattern pattern = Pattern.compile("\\[ti:(.+?)\\]");
-//                Matcher matcher = pattern.matcher(strLine);
-//                if (matcher.find()) {
-//                    title = matcher.group(1);
-//                    continue;
-//                }
-//            }
-//            // 判断该行数据是否表示演唱者
-//            if (null == artist || artist.trim().isEmpty()) {
-//                Pattern pattern = Pattern.compile("\\[ar:(.+?)\\]");
-//                Matcher matcher = pattern.matcher(strLine);
-//                if (matcher.find()) {
-//                    artist = matcher.group(1);
-//                    continue;
-//                }
-//            }
-//            // 判断该行数据是否表示专辑
-//            if (null == album || album.trim().isEmpty()) {
-//                Pattern pattern = Pattern.compile("\\[al:(.+?)\\]");
-//                Matcher matcher = pattern.matcher(strLine);
-//                if (matcher.find()) {
-//                    album = matcher.group(1);
-//                    continue;
-//                }
-//            }
-//            // 判断该行数据是否表示歌词制作者
-//            if (null == lrcMaker || lrcMaker.trim().isEmpty()) {
-//                Pattern pattern = Pattern.compile("\\[by:(.+?)\\]");
-//                Matcher matcher = pattern.matcher(strLine);
-//                if (matcher.find()) {
-//                    lrcMaker = matcher.group(1);
-//                    continue;
-//                }
-//            }
-            // 读取并分析歌词
-            int timeNum = 0;                                        // 本行含时间个数
-            String str[] = strLine.split("\\]");              // 以 ] 分隔
-            for (int i = 0; i < str.length; ++i) {
-                String str2[] = str[i].split("\\[");          // 以 [ 分隔
-                if (str2.length == 0) continue;
-                str[i] = str2[str2.length - 1];
-                if (isTime(str[i])) {
-                    ++timeNum;
-                }
+                List<String> timeStrList = RegexUtil.findAllGroup1("\\[(\\d+:\\d+(?:[.:]\\d+)?)\\]", line);
+                int lineLrcStart = line.lastIndexOf(']') + 1;
+                String lineLrc = lineLrcStart < line.length() ? StringUtil.shortenBlank(line.substring(lineLrcStart).trim()) : "";
+                // 循环是为了处理歌词复用情况
+                timeStrList.forEach(timeStr -> {
+                    double time = TimeUtil.lrcTimeToSeconds(timeStr) - offset;
+                    statements.add(new Statement(time, lineLrc));
+                });
             }
-            // 处理歌词复用的情况
-            for (int i = 0; i < timeNum; ++i) {
-                Statement sm = new Statement();
-                // 设置歌词，去除首尾空格，将多个中间连续空格缩成一个，包含 ""
-                sm.setLyric(timeNum < str.length ? str[str.length - 1].trim().replaceAll(" +", " ") : "");
-                // 设置时间
-                sm.setTime(str[i]);
-                statements.add(sm);
-            }
+            // 将读取的歌词按时间排序
+            sortLyric();
+            // 清洗歌词，删除空行并设置结束时间
+            clean();
+            // 添加歌词排头的等待点
+            if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "···"));
         }
-        lrcStr = sb.toString();
-
-        // 将读取的歌词按时间排序
-        sortLyric();
-
-        // 清洗歌词，删除空行并设置结束时间
-        clean();
-
-        // 添加歌词排头的等待点
-        if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "···"));
-
-        // 分离出歌词翻译
-//        parseTrans();
     }
 
-    /*
-     * 判断给定的字符串是否表示时间
-     * 00:00.000000 或 00:00
-     */
-    public boolean isTime(String string) {
-        // 可能有 [] 的情况，先判空
-        if (StringUtil.isEmpty(string)) return false;
-        String str[] = string.split(":|\\.");
-        if (3 != str.length && 2 != str.length) {
-            return false;
-        }
-        try {
-            for (int i = 0; i < str.length; ++i) {
-                Integer.parseInt(str[i]);
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
+    // 按时间排序歌词
+    private void sortLyric() {
+        statements.sort(Comparator.comparingDouble(Statement::getTime));
     }
 
-    /*
-     * 将读取的歌词按时间排序.
-     */
-    public void sortLyric() {
-        Collections.sort(statements, Comparator.comparingDouble(Statement::getTime));
-    }
-
-    /**
-     * 清洗歌词，移除空行并设置结束时间
-     */
-    public void clean() {
+    // 清洗歌词，移除空行并设置结束时间
+    private void clean() {
         for (int i = 0; i < statements.size(); i++) {
             Statement stmt = statements.get(i);
-            if (StringUtil.notEmpty(stmt.getLyric())) continue;
+            if (!stmt.isEmpty()) continue;
             if (i > 0) {
                 Statement ls = statements.get(i - 1);
                 if (!ls.hasEndTime()) ls.setEndTime(stmt.getTime());
             }
             statements.remove(i--);
         }
-    }
-
-    // 提取翻译
-//    void parseTrans() {
-//        try {
-//            boolean hasTrans = false;
-//            Double lastTime = 0D;
-//            for (int i = 0; i < statements.size(); i++) {
-//                Statement stmt = statements.get(i);
-//                Statement nextStmt = null;
-//                if (i + 1 < statements.size()) nextStmt = statements.get(i + 1);
-//                Double time = stmt.getTime();
-//                Double nextTime = null;
-//                if (nextStmt != null)
-//                    nextTime = nextStmt.getTime();
-//                // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
-//                if (hasTrans && nextTime == null || TimeUtils.formatToLrcTime(time).equals(TimeUtils.formatToLrcTime(nextTime))) {
-//                    stmt.setTime(lastTime);
-//                    transStatements.add(stmt);
-//                    // 从原歌词的集合中剔除翻译
-//                    statements.remove(i--);
-//                    hasTrans = true;
-//                }
-//                lastTime = time;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    /**
-     * 得到 lrc 文件内容
-     */
-    public String getLrcStr() {
-        return lrcStr;
     }
 }

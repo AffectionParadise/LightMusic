@@ -6,7 +6,7 @@ import java.util.*;
 public class MMCQ {
     private static final int MAX_ITERATIONS = 100;
     private static final double RGB_DISTANCE = 0.5;
-    private static final int IMG_WIDTH = 256;
+    private static final int MAX_IMG_WIDTH = 256;
 
     private static final int COLOR_ALPHA = 0;
     private static final int COLOR_RED = 1;
@@ -46,7 +46,7 @@ public class MMCQ {
         this.sigBits = sigBits;
         rShift = 8 - this.sigBits;
 
-        img = ImageUtil.width(img, IMG_WIDTH);
+        if (img.getWidth() > MAX_IMG_WIDTH) img = ImageUtil.width(img, MAX_IMG_WIDTH);
         width = img.getWidth();
         height = img.getHeight();
         pixels = ImageUtil.toPixels(img, 0, 0, width, height);

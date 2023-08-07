@@ -22,7 +22,18 @@ public class RegexUtil {
     }
 
     /**
-     * 匹配全部，返回字符串列表
+     * 匹配全部，返回 0 组字符串列表
+     *
+     * @param regex
+     * @param content
+     * @return
+     */
+    public static List<String> findAllGroup0(String regex, CharSequence content) {
+        return ReUtil.findAllGroup0(regex, content);
+    }
+
+    /**
+     * 匹配全部，返回 1 组字符串列表
      *
      * @param regex
      * @param content

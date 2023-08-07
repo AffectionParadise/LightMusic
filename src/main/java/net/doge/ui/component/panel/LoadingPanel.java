@@ -23,11 +23,11 @@ public class LoadingPanel extends JComponent implements MouseListener {
     protected Thread animation = null;
     protected boolean started = false;
     protected int alphaLevel = 254;
-    protected int rampDelay = 200;
-    protected float shield = 0.4f;
-    protected String text = "";
-    protected int barsCount = 14;
-    protected float fps = 15.0f;
+    protected int rampDelay;
+    protected float shield;
+    protected String text;
+    protected int barsCount;
+    protected float fps;
     protected Font font = Fonts.NORMAL_BIG;
 
     private MainFrame f;
@@ -48,7 +48,7 @@ public class LoadingPanel extends JComponent implements MouseListener {
     }
 
     public LoadingPanel(String text, int barsCount, float shield) {
-        this(text, barsCount, shield, 15.0f);
+        this(text, barsCount, shield, 15);
     }
 
     public LoadingPanel(String text, int barsCount, float shield, float fps) {
@@ -57,9 +57,9 @@ public class LoadingPanel extends JComponent implements MouseListener {
 
     public LoadingPanel(String text, int barsCount, float shield, float fps, int rampDelay) {
         this.text = text;
-        this.rampDelay = rampDelay >= 0 ? rampDelay : 0;
-        this.shield = shield >= 0.0f ? shield : 0.0f;
-        this.fps = fps > 0.0f ? fps : 15.0f;
+        this.rampDelay = Math.max(rampDelay, 0);
+        this.shield = Math.max(shield, 0);
+        this.fps = fps > 0 ? fps : 15;
         this.barsCount = barsCount > 0 ? barsCount : 14;
 
         this.hints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -108,7 +108,7 @@ public class LoadingPanel extends JComponent implements MouseListener {
         int width = getWidth();
         int height = getHeight();
 
-        double maxY = 0.0;
+        double maxY = 0;
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHints(hints);
@@ -142,13 +142,13 @@ public class LoadingPanel extends JComponent implements MouseListener {
     private Area[] buildTicker() {
         Area[] ticker = new Area[barsCount];
         Point2D.Double center = new Point2D.Double((double) getWidth() / 2, (double) getHeight() / 2);
-        double fixedAngle = 2.0 * Math.PI / (barsCount);
+        double fixedAngle = 2 * Math.PI / (barsCount);
 
-        for (double i = 0.0; i < barsCount; i++) {
+        for (double i = 0; i < barsCount; i++) {
             Area primitive = buildPrimitive();
 
             AffineTransform toCenter = AffineTransform.getTranslateInstance(center.getX(), center.getY());
-            AffineTransform toBorder = AffineTransform.getTranslateInstance(45.0, -6.0);
+            AffineTransform toBorder = AffineTransform.getTranslateInstance(45, -6);
             AffineTransform toCircle = AffineTransform.getRotateInstance(-i * fixedAngle, center.getX(), center.getY());
 
             AffineTransform toWheel = new AffineTransform();

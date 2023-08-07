@@ -129,6 +129,17 @@ public class StringUtil {
     }
 
     /**
+     * 缩短字符串中所有连续空格
+     *
+     * @param s
+     * @return
+     */
+    public static String shortenBlank(String s) {
+        if (s == null) return s;
+        return s.replaceAll(" +", " ");
+    }
+
+    /**
      * 比较两个字符串大小
      *
      * @param s1
@@ -177,7 +188,7 @@ public class StringUtil {
             } else sb.append(s1);
         }
         // 将连续空格缩成一个
-        return sb.toString().replaceAll(" +", " ");
+        return shortenBlank(sb.toString());
     }
 
     /**
@@ -413,8 +424,8 @@ public class StringUtil {
         char[] chars = str.toCharArray();
         int len = chars.length;
         int st = 0;
-        while (st < len && ArrayUtil.inArray(cs, chars[st])) st++;
-        while (st < len && ArrayUtil.inArray(cs, chars[len - 1])) len--;
+        while (st < len && ArrayUtil.in(cs, chars[st])) st++;
+        while (st < len && ArrayUtil.in(cs, chars[len - 1])) len--;
         return st > 0 || len < chars.length ? str.substring(st, len) : str;
     }
 

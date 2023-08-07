@@ -1,15 +1,14 @@
 package net.doge.util.system;
 
 import info.monitorenter.cpdetector.io.*;
-import net.doge.model.lyric.Statement;
-import net.doge.util.common.StringUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Vector;
 
 /**
  * @Author Doge
@@ -209,6 +208,16 @@ public class FileUtil {
     }
 
     /**
+     * 从文件读取字符串，指定编码
+     *
+     * @param file
+     * @return
+     */
+    public static String readStr(File file, String charsetName) {
+        return cn.hutool.core.io.FileUtil.readString(file, Charset.forName(charsetName));
+    }
+
+    /**
      * 将字符串写入到文件
      *
      * @param content
@@ -254,54 +263,21 @@ public class FileUtil {
      * @param file
      * @return
      */
-    public static String getCharsetName(File file) throws IOException {
+    public static String getCharsetName(File file) {
         String charsetName = "UTF-8";
-        CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
-        detector.add(new ParsingDetector(false));
-        detector.add(JChardetFacade.getInstance());
-        detector.add(ASCIIDetector.getInstance());
-        detector.add(UnicodeDetector.getInstance());
-        Charset charset = detector.detectCodepage(file.toURI().toURL());
-        if (charset != null) charsetName = charset.name();
-        if ("windows-1252".equals(charsetName)) charsetName = "UTF-16";
-        else if ("Big5".equals(charsetName)) charsetName = "GBK";
-        return charsetName;
-    }
-
-    /**
-     * 从文件或歌词字符串读取歌词（不支持滚动时）
-     *
-     * @param fileNameOrLrcStr
-     * @param isFile
-     * @return
-     * @throws IOException
-     */
-    public static Vector<Statement> getBadFormatStatements(String fileNameOrLrcStr, boolean isFile) {
-        Vector<Statement> statements = new Vector<>();
         try {
-            BufferedReader bufferReader;
-            if (isFile) {
-                File f = new File(fileNameOrLrcStr);
-                FileInputStream fis = new FileInputStream(f);
-                // 获取文件编码并读取歌词
-                bufferReader = new BufferedReader(new InputStreamReader(fis, getCharsetName(f)));
-            } else {
-                bufferReader = new BufferedReader(new StringReader(fileNameOrLrcStr));
-            }
-            String strLine;
-            while (null != (strLine = bufferReader.readLine())) {
-                if (StringUtil.isEmpty(strLine.trim())) continue;
-
-                Statement stmt = new Statement();
-                stmt.setLyric(strLine);
-
-                statements.add(stmt);
-            }
-            bufferReader.close();
-        } catch (IOException e) {
-
-        } finally {
-            return statements;
+            CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
+            detector.add(new ParsingDetector(false));
+            detector.add(JChardetFacade.getInstance());
+            detector.add(ASCIIDetector.getInstance());
+            detector.add(UnicodeDetector.getInstance());
+            Charset charset = detector.detectCodepage(file.toURI().toURL());
+            if (charset != null) charsetName = charset.name();
+            if ("windows-1252".equals(charsetName)) charsetName = "UTF-16";
+            else if ("Big5".equals(charsetName)) charsetName = "GBK";
+            return charsetName;
+        } catch (Exception e) {
+            return charsetName;
         }
     }
 }

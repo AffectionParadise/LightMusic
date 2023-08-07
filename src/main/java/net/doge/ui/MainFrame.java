@@ -915,7 +915,7 @@ public class MainFrame extends JFrame {
             new CustomMenuItem("-0.5 s")
     };
     // 歌词
-    private Vector<Statement> statements;
+    private List<Statement> statements;
     private String lrcStr;
     private String transStr;
     private int nextLrc = NextLrc.NOT_EXISTS;
@@ -19785,7 +19785,7 @@ public class MainFrame extends JFrame {
         locateLrcMenuItem.addActionListener(e -> {
             Statement stmt = lrcList.getSelectedValue();
             if (stmt == null) return;
-            double t = stmt.getTime() + lrcOffset;
+            double t = stmt.getTime() - lrcOffset;
             player.seek(t);
             seekLrc(t);
         });
@@ -20744,38 +20744,40 @@ public class MainFrame extends JFrame {
         lrcList.setModel(lrcListModel);
     }
 
-    // 加载歌词(如果有)
+    // 加载歌词
     private void loadLrc(AudioFile file, NetMusicInfo musicInfo, boolean reload, boolean loadTrans) {
         if (player.isEmpty()) return;
         clearLrc();
 
         LrcData lrcData, transData = null, romaData = null;
-        String lrcPath = null, lrc = null;
+        File lrcFile = null;
+        String lrc = null;
         boolean isFile = musicInfo == null;
         try {
+            // 从文件读取
             if (isFile) {
-                lrcPath = FileUtil.getPathWithoutSuffix(file) + ".lrc";
-                lrcData = new LrcData(lrcPath, true);
-                // 获取 lrc 文件内容
-                lrcStr = null;
-                transStr = null;
-            } else {
+                lrcFile = new File(FileUtil.getPathWithoutSuffix(file) + ".lrc");
+                lrcData = new LrcData(lrcFile);
+                lrcStr = transStr = null;
+            }
+            // 从在线音乐读取
+            else {
                 lrc = musicInfo.getLrc();
                 if (lrc.trim().isEmpty()) throw new NoLyricException("歌词是一个空串");
-                lrcData = new LrcData(lrc, false);
+                lrcData = new LrcData(lrc);
                 // 获取 lrc 文件内容
                 lrcStr = lrcData.getLrcStr();
-                // 将翻译内容也读出来
+                // 将翻译也读出来
                 if (musicInfo.hasTrans()) {
-                    transData = new LrcData(musicInfo.getTrans(), false);
+                    transData = new LrcData(musicInfo.getTrans());
                     transStr = transData.getLrcStr();
                 } else transStr = null;
                 // 将罗马音也读出来
-                if (musicInfo.hasRoma()) romaData = new LrcData(musicInfo.getRoma(), false);
+                if (musicInfo.hasRoma()) romaData = new LrcData(musicInfo.getRoma());
             }
-            if (!isFile)
+            if (isFile) statements = lrcData.getStatements();
+            else
                 statements = loadTrans && transData != null && !transData.isEmpty() ? transData.getStatements() : lrcData.getStatements();
-            else statements = loadTrans && lrcData.hasTrans() ? lrcData.getTransStatements() : lrcData.getStatements();
             if (statements.isEmpty())
                 throw new NoLyricException("歌词是一个空串");
             // 繁简切换，简体时不动
@@ -20802,19 +20804,14 @@ public class MainFrame extends JFrame {
             row = LRC_INDEX - 1;
         }
         // 无歌词或歌词文件损坏/不支持滚动
-        catch (IOException | NullPointerException | NoLyricException e) {
+        catch (Exception e) {
             boolean fileExists = false;
-            File f;
-            if (lrcPath != null) {
-                f = new File(lrcPath);
-                fileExists = f.exists();
-            }
+            if (lrcFile != null) fileExists = lrcFile.exists();
             boolean isBadFormat = fileExists || StringUtil.notEmpty(lrc);
             // 本地歌曲歌词不支持滚动时不需要写入 lrcStr
             lrcStr = isBadFormat && !fileExists ? lrc : null;
-//            lrcStr = isBadFormat ? (fileExists ? FileUtils.readAsStr(f) : lrc) : null;
-
-            statements = isBadFormat ? FileUtil.getBadFormatStatements(fileExists ? lrcPath : lrc, fileExists) : new Vector<>();
+            statements = isBadFormat ? fileExists ? new LrcData(lrcFile, true).getStatements()
+                    : new LrcData(lrc, true).getStatements() : new LinkedList<>();
             if (!reload) {
                 // 添加空白充数
                 Statement empty = new Statement(0, " ");
@@ -20955,7 +20952,7 @@ public class MainFrame extends JFrame {
                 double currTimeSeconds = newValue.toSeconds();
                 // 判断是否该高亮下一行歌词，每次时间更新可能跳过多行歌词
                 boolean wrapped = false;
-                while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() + lrcOffset) {
+                while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() - lrcOffset) {
                     row = LRC_INDEX + 1 + nextLrc * 2;
                     if (!lrcScrollAnimation && !lrcScrollWaiting) {
                         currScrollVal = lrcScrollPane.getVValue();
@@ -20969,13 +20966,13 @@ public class MainFrame extends JFrame {
                 }
                 if (wrapped) return;
                 // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
-                if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() + lrcOffset)
+                if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() - lrcOffset)
                     originalRatio = 1;
                 else {
-                    double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() - lrcOffset) /
-                            ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
-                                    : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
-                                    : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
+                    double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() + lrcOffset) /
+                            ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
+                                    : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
+                                    : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
                     originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
@@ -23095,7 +23092,7 @@ public class MainFrame extends JFrame {
     private void seekLrc(double t) {
         if (nextLrc < 0) return;
         for (int i = 0, size = statements.size(); i < size; i++) {
-            if (t < statements.get(i).getTime() + lrcOffset) nextLrc = i;
+            if (t < statements.get(i).getTime() - lrcOffset) nextLrc = i;
             else if (i == size - 1) nextLrc = size;
             else continue;
             row = LRC_INDEX + 1 + (nextLrc - 1) * 2;
@@ -23105,10 +23102,10 @@ public class MainFrame extends JFrame {
             }
             LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
             renderer.setRow(row);
-            double tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime() - lrcOffset) /
-                    ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() + lrcOffset
-                            : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() + lrcOffset
-                            : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() - lrcOffset) : 0;
+            double tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime() + lrcOffset) /
+                    ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
+                            : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
+                            : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
             originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
             break;
         }
@@ -23118,7 +23115,7 @@ public class MainFrame extends JFrame {
     public String getTimeLrc(double t) {
         if (nextLrc < 0) return "";
         for (int i = 0, size = statements.size(); i < size; i++) {
-            if (t < statements.get(i).getTime() + lrcOffset) {
+            if (t < statements.get(i).getTime() - lrcOffset) {
                 if (i == 0) return statements.get(i).getLyric();
                 else return statements.get(i - 1).getLyric();
             } else if (i == size - 1) {

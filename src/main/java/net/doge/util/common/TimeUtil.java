@@ -195,7 +195,7 @@ public class TimeUtil {
      * 月日转换为星座
      *
      * @param month 月
-     * @param day 日
+     * @param day   日
      * @return
      */
     public static String getConstellation(int month, int day) {
@@ -238,7 +238,7 @@ public class TimeUtil {
      * @return
      */
     public static double toSeconds(String s) {
-        List<String> groups = RegexUtil.findAllGroup1("(\\d+)", s);
+        List<String> groups = RegexUtil.findAllGroup0("\\d+", s);
         double res = 0, u = 1;
         for (int i = groups.size() - 1; i >= 0; i--) {
             res += Integer.parseInt(groups.get(i)) * u;
@@ -255,7 +255,7 @@ public class TimeUtil {
      */
     public static double chineseToSeconds(String s) {
         s = s.replaceFirst("时长：", "");
-        List<String> groups = RegexUtil.findAllGroup1("(\\d+)", s);
+        List<String> groups = RegexUtil.findAllGroup0("\\d+", s);
         if (groups.size() == 1) {
             int first = Integer.parseInt(groups.get(0));
             if (s.contains("秒")) return first;
@@ -271,26 +271,40 @@ public class TimeUtil {
     }
 
     /**
-     * 转换秒为 [xx(m):xx(s).xx(ms)] 格式
+     * 转换秒为 [xx(m):xx(s).xx(ms)] 歌词时间格式
      *
      * @param seconds
      * @return
      */
     public static String formatToLrcTime(Double seconds) {
         if (seconds == null) return "";
-        if (seconds < 0) seconds = 0.0;
-        StringBuilder res = new StringBuilder();
+        if (seconds < 0) seconds = 0D;
+        StringBuilder sb = new StringBuilder();
         int s = seconds.intValue();
         String s1 = String.valueOf(seconds);
         int minute = s / 60, second = s % 60;
         String milliseconds = s1.substring(s1.lastIndexOf('.'));
-        res.append("[");
-        if (minute < 10) res.append("0").append(minute).append(":");
-        else res.append(minute).append(":");
-        if (second < 10) res.append("0").append(second);
-        else res.append(second);
-        res.append(milliseconds.length() == 2 ? milliseconds + "0" : milliseconds);
-        res.append("]");
-        return res.toString();
+        sb.append("[");
+        if (minute < 10) sb.append("0").append(minute).append(":");
+        else sb.append(minute).append(":");
+        if (second < 10) sb.append("0").append(second);
+        else sb.append(second);
+        sb.append(milliseconds.length() == 2 ? milliseconds + "0" : milliseconds);
+        sb.append("]");
+        return sb.toString();
+    }
+
+    /**
+     * 转换歌词时间 xx:xx.xxx 为秒
+     *
+     * @param s
+     * @return
+     */
+    public static double lrcTimeToSeconds(String s) {
+        String[] sp = s.split("[.:]");
+        // xx:xx
+        if (sp.length == 2) return Integer.parseInt(sp[0]) * 60 + Integer.parseInt(sp[1]);
+        // xx:xx.xxx
+        return Integer.parseInt(sp[0]) * 60 + Integer.parseInt(sp[1]) + Double.parseDouble("0." + sp[2]);
     }
 }

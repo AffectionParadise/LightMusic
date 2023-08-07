@@ -15,7 +15,7 @@ public class ArrayUtil {
      * @param ch
      * @return
      */
-    public static boolean inArray(char[] chars, char ch) {
+    public static boolean in(char[] chars, char ch) {
         return cn.hutool.core.util.ArrayUtil.indexOf(chars, ch) > -1;
     }
 

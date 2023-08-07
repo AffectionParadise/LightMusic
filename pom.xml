@@ -13,6 +13,17 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <mp3agic.version>0.9.1</mp3agic.version>
+        <thumbnailator.version>0.4.20</thumbnailator.version>
+        <filters.version>2.0.235-1</filters.version>
+        <webp-imageio.version>0.1.6</webp-imageio.version>
+        <imageio-jpeg.version>3.9.4</imageio-jpeg.version>
+        <fastjson2.version>2.0.38</fastjson2.version>
+        <jsoup.version>1.16.1</jsoup.version>
+        <lombok.version>1.18.28</lombok.version>
+        <pinyin4j.version>2.5.1</pinyin4j.version>
+        <opencc4j.version>1.8.1</opencc4j.version>
+        <moji4j.version>1.2.0</moji4j.version>
         <hutool.version>5.8.21</hutool.version>
     </properties>
 
@@ -21,7 +32,7 @@
         <dependency>
             <groupId>com.mpatric</groupId>
             <artifactId>mp3agic</artifactId>
-            <version>0.9.1</version>
+            <version>${mp3agic.version}</version>
         </dependency>
 
         <!-- jave 读取媒体文件时长 -->
@@ -37,28 +48,28 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.20</version>
+            <version>${thumbnailator.version}</version>
         </dependency>
 
         <!-- jhlabs 图像处理 -->
         <dependency>
             <groupId>com.jhlabs</groupId>
             <artifactId>filters</artifactId>
-            <version>2.0.235-1</version>
+            <version>${filters.version}</version>
         </dependency>
 
         <!-- 读取 Webp 图像 -->
         <dependency>
             <groupId>org.sejda.imageio</groupId>
             <artifactId>webp-imageio</artifactId>
-            <version>0.1.6</version>
+            <version>${webp-imageio.version}</version>
         </dependency>
 
         <!-- 读取 jpeg 图像 -->
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-jpeg</artifactId>
-            <version>3.9.4</version>
+            <version>${imageio-jpeg.version}</version>
         </dependency>
 
         <!-- HuTool HTTP 请求 -->
@@ -79,14 +90,14 @@
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
-            <version>2.0.38</version>
+            <version>${fastjson2.version}</version>
         </dependency>
 
         <!-- Jsoup -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.16.1</version>
+            <version>${jsoup.version}</version>
         </dependency>
 
         <!-- cpdetector 检测文件编码格式 -->
@@ -120,28 +131,28 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>${lombok.version}</version>
         </dependency>
 
         <!-- 中文转拼音 -->
         <dependency>
             <groupId>com.belerweb</groupId>
             <artifactId>pinyin4j</artifactId>
-            <version>2.5.1</version>
+            <version>${pinyin4j.version}</version>
         </dependency>
 
         <!-- 繁简切换 -->
         <dependency>
             <groupId>com.github.houbb</groupId>
             <artifactId>opencc4j</artifactId>
-            <version>1.8.1</version>
+            <version>${opencc4j.version}</version>
         </dependency>
 
         <!-- 日语转罗马音 -->
         <dependency>
             <groupId>com.andree-surya</groupId>
             <artifactId>moji4j</artifactId>
-            <version>1.2.0</version>
+            <version>${moji4j.version}</version>
         </dependency>
     </dependencies>
 

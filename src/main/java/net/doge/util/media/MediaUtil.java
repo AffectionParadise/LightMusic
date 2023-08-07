@@ -28,16 +28,16 @@ public class MediaUtil {
     /**
      * 获取音频文件时长
      *
-     * @param source
+     * @param file
      */
-    public static double getDuration(File source) {
+    public static double getDuration(AudioFile file) {
         try {
-            if (source.getName().endsWith(Format.MP3)) {
-                Mp3File f = new Mp3File(source);
+            if (file.getName().endsWith(Format.MP3)) {
+                Mp3File f = new Mp3File(file);
                 return (double) f.getLengthInMilliseconds() / 1000;
             } else {
                 Encoder encoder = new Encoder();
-                MultimediaInfo info = encoder.getInfo(source);
+                MultimediaInfo info = encoder.getInfo(file);
                 return (double) info.getDuration() / 1000;
             }
         } catch (IOException | EncoderException | UnsupportedTagException | InvalidDataException e) {
@@ -127,20 +127,20 @@ public class MediaUtil {
     /**
      * 补全 AudioFile 信息(曲名、艺术家、专辑、时长)
      *
-     * @param source
+     * @param file
      * @return
      */
-    public static void fillAudioFileInfo(AudioFile source) {
+    public static void fillAudioFileInfo(AudioFile file) {
         // 歌曲信息完整时跳出
-//        if (source.isIntegrated()) return;
+//        if (file.isIntegrated()) return;
         try {
-            source.setFormat(FileUtil.getSuffix(source));
-            if (!source.isMp3()) {
-                source.setDuration(getDuration(source));
+            file.setFormat(FileUtil.getSuffix(file));
+            if (!file.isMp3()) {
+                file.setDuration(getDuration(file));
                 return;
             }
-            Mp3File f = new Mp3File(source);
-            source.setDuration((double) f.getLengthInMilliseconds() / 1000);
+            Mp3File f = new Mp3File(file);
+            file.setDuration((double) f.getLengthInMilliseconds() / 1000);
             ID3v1 tag = null;
             // 先从 ID3v2 找信息
             if (f.hasId3v2Tag()) tag = f.getId3v2Tag();
@@ -150,9 +150,9 @@ public class MediaUtil {
             String title = tag.getTitle();
             String artist = tag.getArtist();
             String album = tag.getAlbum();
-            source.setSongName(title);
-            source.setArtist(artist);
-            source.setAlbum(album);
+            file.setSongName(title);
+            file.setArtist(artist);
+            file.setAlbum(album);
         } catch (IOException | UnsupportedTagException | InvalidDataException | IllegalArgumentException e) {
 
         }

@@ -60,7 +60,7 @@ public class MusicPlayer {
     // 判断是否支持该格式
     public boolean support(String format) {
         for (String fmt : Format.AUDIO_TYPE_SUPPORTED) {
-            if (!fmt.equals(format.toLowerCase())) continue;
+            if (!fmt.equalsIgnoreCase(format)) continue;
             return true;
         }
         return false;

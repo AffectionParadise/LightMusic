@@ -3,9 +3,9 @@ package net.doge.ui.component.list.renderer.system;
 import lombok.Data;
 import net.doge.constant.ui.Fonts;
 import net.doge.model.lyric.Statement;
-import net.doge.ui.component.lyric.StringTwoColor;
 import net.doge.ui.component.label.ui.LabelUI;
 import net.doge.ui.component.list.ui.ListUI;
+import net.doge.ui.component.lyric.StringTwoColor;
 import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
@@ -67,7 +67,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         list.setFixedCellWidth(maxWidth);
 
         Statement statement = (Statement) value;
-        String lyric = statement.toString();
+        String lyric = statement.getLyric();
 
         // 标签
         label.setOpaque(false);
@@ -99,7 +99,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
         // 有性能问题，停用
 //        Statement statement = (Statement) value;
-//        String lyric = statement.toString();
+//        String lyric = statement.getLyric();
 //
 //        CustomPanel outerPanel = new CustomPanel();
 //        CustomLabel lyricLabel = new CustomLabel();
