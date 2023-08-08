@@ -7,15 +7,15 @@ public class TabButton extends CustomButton {
     private boolean active;
 
     public TabButton() {
-        super();
+        this(null, null);
     }
 
     public TabButton(String text) {
-        super(text);
+        this(text, null);
     }
 
     public TabButton(Icon icon) {
-        super(icon);
+        this(null, icon);
     }
 
     public TabButton(String text, Icon icon) {

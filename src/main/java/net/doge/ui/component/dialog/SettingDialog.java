@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.system.Quality;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.BlurConstants;
 import net.doge.constant.ui.Colors;
@@ -28,6 +29,7 @@ import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.system.FileUtil;
 import net.doge.util.system.KeyUtil;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -73,6 +75,13 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomCheckBox autoDownloadLrcCheckBox = new CustomCheckBox("下载歌曲时自动下载歌词");
     private CustomPanel videoOnlyPanel = new CustomPanel();
     private CustomCheckBox videoOnlyCheckBox = new CustomCheckBox("播放视频时隐藏主界面");
+    private CustomPanel closeOptionPanel = new CustomPanel();
+    private CustomLabel closeOptionLabel = new CustomLabel("关闭主界面时：");
+    private CustomComboBox<String> closeOptionComboBox = new CustomComboBox();
+    private CustomPanel windowSizePanel = new CustomPanel();
+    private CustomLabel windowSizeLabel = new CustomLabel("窗口大小：");
+    private CustomComboBox<String> windowSizeComboBox = new CustomComboBox();
+
     private CustomPanel showTabTextPanel = new CustomPanel();
     private CustomCheckBox showTabTextCheckBox = new CustomCheckBox("显示侧边栏文字");
     private CustomPanel gsFactorPanel = new CustomPanel();
@@ -84,6 +93,7 @@ public class SettingDialog extends AbstractTitledDialog {
     //    private CustomPanel gradientColorStylePanel = new CustomPanel();
 //    private CustomLabel gradientColorStyleLabel = new CustomLabel("线性渐变色彩风格：");
 //    private CustomComboBox<String> gradientColorStyleComboBox = new CustomComboBox();
+
     private CustomPanel musicDownPanel = new CustomPanel();
     private CustomLabel musicDownLabel = new CustomLabel("歌曲下载路径：");
     private CustomTextField musicDownPathTextField = new CustomTextField(20);
@@ -103,6 +113,16 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel maxCacheSizePanel = new CustomPanel();
     private CustomLabel maxCacheSizeLabel = new CustomLabel(String.format("最大缓存大小(≤%sMB)：", maxCacheSizeLimit));
     private CustomTextField maxCacheSizeTextField = new CustomTextField(10);
+
+    private CustomPanel qualityPanel = new CustomPanel();
+    private CustomLabel qualityLabel = new CustomLabel("优先音质（如果可用）：");
+    private CustomComboBox<String> qualityComboBox = new CustomComboBox();
+    private CustomPanel fobPanel = new CustomPanel();
+    private CustomLabel fobLabel = new CustomLabel("快进/快退时间：");
+    private CustomComboBox<String> fobComboBox = new CustomComboBox();
+    private CustomPanel balancePanel = new CustomPanel();
+    private CustomLabel balanceLabel = new CustomLabel("声道平衡：");
+    private CustomComboBox<String> balanceComboBox = new CustomComboBox();
     private final int maxHistoryCountLimit = 500;
     private CustomPanel maxHistoryCountPanel = new CustomPanel();
     private CustomLabel maxHistoryCountLabel = new CustomLabel(String.format("最大播放历史数量(≤%s)：", maxHistoryCountLimit));
@@ -115,18 +135,6 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel maxConcurrentTaskCountPanel = new CustomPanel();
     private CustomLabel maxConcurrentTaskCountLabel = new CustomLabel(String.format("同时下载的最大任务数(≤%s)：", maxConcurrentTaskCountLimit));
     private CustomTextField maxConcurrentTaskCountTextField = new CustomTextField(10);
-    private CustomPanel closeOptionPanel = new CustomPanel();
-    private CustomLabel closeOptionLabel = new CustomLabel("关闭主界面时：");
-    private CustomComboBox<String> closeOptionComboBox = new CustomComboBox();
-    private CustomPanel windowSizePanel = new CustomPanel();
-    private CustomLabel windowSizeLabel = new CustomLabel("窗口大小：");
-    private CustomComboBox<String> windowSizeComboBox = new CustomComboBox();
-    private CustomPanel fobPanel = new CustomPanel();
-    private CustomLabel fobLabel = new CustomLabel("快进/快退时间：");
-    private CustomComboBox<String> fobComboBox = new CustomComboBox();
-    private CustomPanel balancePanel = new CustomPanel();
-    private CustomLabel balanceLabel = new CustomLabel("声道平衡：");
-    private CustomComboBox<String> balanceComboBox = new CustomComboBox();
     private CustomPanel backupPanel = new CustomPanel();
     private CustomLabel backupLabel = new CustomLabel("播放列表备份/恢复（仅包括本地音乐列表、所有收藏列表）");
     private DialogButton backupListButton;
@@ -200,7 +208,7 @@ public class SettingDialog extends AbstractTitledDialog {
         });
         applyButton.addActionListener(e -> {
             applySettings();
-            new TipDialog(f, "应用成功").showDialog();
+            new TipDialog(f, "应用成功", true).showDialog();
         });
         cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
@@ -248,8 +256,8 @@ public class SettingDialog extends AbstractTitledDialog {
         maxConcurrentTaskCountPanel.setLayout(fl);
         closeOptionPanel.setLayout(fl);
         windowSizePanel.setLayout(fl);
+        qualityPanel.setLayout(fl);
         fobPanel.setLayout(fl);
-//        specStylePanel.setLayout(fl);
         balancePanel.setLayout(fl);
         backupPanel.setLayout(fl);
         keyPanel.setLayout(fl);
@@ -288,8 +296,8 @@ public class SettingDialog extends AbstractTitledDialog {
         maxConcurrentTaskCountPanel.setBorder(b);
         closeOptionPanel.setBorder(b);
         windowSizePanel.setBorder(b);
+        qualityPanel.setBorder(b);
         fobPanel.setBorder(b);
-//        specStylePanel.setBorder(b);
         balancePanel.setBorder(b);
         backupPanel.setBorder(b);
         keyPanel.setBorder(b);
@@ -324,6 +332,7 @@ public class SettingDialog extends AbstractTitledDialog {
         maxConcurrentTaskCountLabel.setForeground(textColor);
         closeOptionLabel.setForeground(textColor);
         windowSizeLabel.setForeground(textColor);
+        qualityLabel.setForeground(textColor);
         fobLabel.setForeground(textColor);
         balanceLabel.setForeground(textColor);
         backupLabel.setForeground(textColor);
@@ -337,26 +346,34 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenLabel.setForeground(textColor);
 
         // 文本框
+        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
         musicDownPathTextField.setForeground(textColor);
         musicDownPathTextField.setCaretColor(textColor);
+        musicDownPathTextField.setSelectionColor(darkerTextAlphaColor);
         mvDownPathTextField.setForeground(textColor);
         mvDownPathTextField.setCaretColor(textColor);
+        mvDownPathTextField.setSelectionColor(darkerTextAlphaColor);
         cachePathTextField.setForeground(textColor);
         cachePathTextField.setCaretColor(textColor);
+        cachePathTextField.setSelectionColor(darkerTextAlphaColor);
         maxCacheSizeTextField.setForeground(textColor);
         maxCacheSizeTextField.setCaretColor(textColor);
+        maxCacheSizeTextField.setSelectionColor(darkerTextAlphaColor);
         SafeDocument doc = new SafeDocument(0, maxCacheSizeLimit);
         maxCacheSizeTextField.setDocument(doc);
         maxHistoryCountTextField.setForeground(textColor);
         maxHistoryCountTextField.setCaretColor(textColor);
+        maxHistoryCountTextField.setSelectionColor(darkerTextAlphaColor);
         doc = new SafeDocument(0, maxHistoryCountLimit);
         maxHistoryCountTextField.setDocument(doc);
         maxSearchHistoryCountTextField.setForeground(textColor);
         maxSearchHistoryCountTextField.setCaretColor(textColor);
+        maxSearchHistoryCountTextField.setSelectionColor(darkerTextAlphaColor);
         doc = new SafeDocument(0, maxSearchHistoryLimit);
         maxSearchHistoryCountTextField.setDocument(doc);
         maxConcurrentTaskCountTextField.setForeground(textColor);
         maxConcurrentTaskCountTextField.setCaretColor(textColor);
+        maxConcurrentTaskCountTextField.setSelectionColor(darkerTextAlphaColor);
         doc = new SafeDocument(1, maxConcurrentTaskCountLimit);
         maxConcurrentTaskCountTextField.setDocument(doc);
         keyBindListener = new AWTEventListener() {
@@ -450,26 +467,32 @@ public class SettingDialog extends AbstractTitledDialog {
         };
         playOrPauseTextField.setForeground(textColor);
         playOrPauseTextField.setCaretColor(textColor);
+        playOrPauseTextField.setSelectionColor(darkerTextAlphaColor);
         playOrPauseTextField.setEditable(false);
         playOrPauseTextField.addFocusListener(focusAdapter);
         playLastTextField.setForeground(textColor);
         playLastTextField.setCaretColor(textColor);
+        playLastTextField.setSelectionColor(darkerTextAlphaColor);
         playLastTextField.setEditable(false);
         playLastTextField.addFocusListener(focusAdapter);
         playNextTextField.setForeground(textColor);
         playNextTextField.setCaretColor(textColor);
+        playNextTextField.setSelectionColor(darkerTextAlphaColor);
         playNextTextField.setEditable(false);
         playNextTextField.addFocusListener(focusAdapter);
         backwardTextField.setForeground(textColor);
         backwardTextField.setCaretColor(textColor);
+        backwardTextField.setSelectionColor(darkerTextAlphaColor);
         backwardTextField.setEditable(false);
         backwardTextField.addFocusListener(focusAdapter);
         forwardTextField.setForeground(textColor);
         forwardTextField.setCaretColor(textColor);
+        forwardTextField.setSelectionColor(darkerTextAlphaColor);
         forwardTextField.setEditable(false);
         forwardTextField.addFocusListener(focusAdapter);
         videoFullScreenTextField.setForeground(textColor);
         videoFullScreenTextField.setCaretColor(textColor);
+        videoFullScreenTextField.setSelectionColor(darkerTextAlphaColor);
         videoFullScreenTextField.setEditable(false);
         videoFullScreenTextField.addFocusListener(focusAdapter);
 
@@ -479,8 +502,8 @@ public class SettingDialog extends AbstractTitledDialog {
 //        gradientColorStyleComboBox.setUI(new ComboBoxUI(gradientColorStyleComboBox, f));
         closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f));
         windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f));
+        qualityComboBox.setUI(new ComboBoxUI(qualityComboBox, f));
         fobComboBox.setUI(new ComboBoxUI(fobComboBox, f));
-//        specStyleComboBox.setUI(new ComboBoxUI(specStyleComboBox, f));
         balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f));
 
         DirectoryChooser dirChooser = new DirectoryChooser();
@@ -505,7 +528,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 File dir = new File(musicDownPathTextField.getText());
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -532,7 +555,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 File dir = new File(mvDownPathTextField.getText());
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -559,7 +582,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 File dir = new File(cachePathTextField.getText());
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -580,7 +603,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 JSONObject config = new JSONObject();
                 f.putLocalMusicList(config);
                 f.putCollectedItemList(config);
-                new TipDialog(f, JsonUtil.toFile(config, output) ? "备份成功" : "备份失败").showDialog();
+                new TipDialog(f, JsonUtil.toFile(config, output) ? "备份成功" : "备份失败", true).showDialog();
             });
         });
         restoreListButton = new DialogButton("恢复", textColor);
@@ -592,7 +615,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 JSONObject config = JsonUtil.read(input);
                 f.loadLocalMusicList(config);
                 f.loadCollectedMusicList(config);
-                new TipDialog(f, "恢复成功").showDialog();
+                new TipDialog(f, "恢复成功", true).showDialog();
             });
         });
 
@@ -673,6 +696,10 @@ public class SettingDialog extends AbstractTitledDialog {
         windowSizePanel.add(windowSizeLabel);
         windowSizePanel.add(windowSizeComboBox);
 
+        for (String name : Quality.NAMES) qualityComboBox.addItem(name);
+        qualityPanel.add(qualityLabel);
+        qualityPanel.add(qualityComboBox);
+
         for (int i = 5; i <= 60; i += 5) {
             String item = i + " 秒";
             fobComboBox.addItem(item);
@@ -731,6 +758,7 @@ public class SettingDialog extends AbstractTitledDialog {
         centerPanel.add(maxConcurrentTaskCountPanel);
 
         centerPanel.add(playbackPanel);
+        centerPanel.add(qualityPanel);
         centerPanel.add(fobPanel);
         centerPanel.add(balancePanel);
         centerPanel.add(maxHistoryCountPanel);
@@ -770,7 +798,7 @@ public class SettingDialog extends AbstractTitledDialog {
         maxConcurrentTaskCountTextField.setText(String.valueOf(((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize()));
         closeOptionComboBox.setSelectedIndex(f.currCloseWindowOption);
         windowSizeComboBox.setSelectedIndex(f.windowSize);
-//        specStyleComboBox.setSelectedIndex(f.currSpecStyle);
+        qualityComboBox.setSelectedIndex(Quality.quality);
         balanceComboBox.setSelectedIndex(Double.valueOf(f.currBalance).intValue() + 1);
 
         enableKeyCheckBox.setSelected(f.keyEnabled);
@@ -793,17 +821,17 @@ public class SettingDialog extends AbstractTitledDialog {
         // 验证
         File musicDir = new File(musicDownPathTextField.getText());
         if (!musicDir.exists()) {
-            new TipDialog(f, "歌曲下载路径无效").showDialog();
+            new TipDialog(f, "歌曲下载路径无效", true).showDialog();
             return false;
         }
         File mvDir = new File(mvDownPathTextField.getText());
         if (!mvDir.exists()) {
-            new TipDialog(f, "MV 下载路径无效").showDialog();
+            new TipDialog(f, "MV 下载路径无效", true).showDialog();
             return false;
         }
         File cacheDir = new File(cachePathTextField.getText());
         if (!cacheDir.exists()) {
-            new TipDialog(f, "缓存路径无效").showDialog();
+            new TipDialog(f, "缓存路径无效", true).showDialog();
             return false;
         }
 
@@ -835,28 +863,28 @@ public class SettingDialog extends AbstractTitledDialog {
 
         String text = maxCacheSizeTextField.getText();
         if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, "最大缓存大小无效").showDialog();
+            new TipDialog(f, "最大缓存大小无效", true).showDialog();
             return false;
         }
         f.maxCacheSize = Long.parseLong(text);
 
         text = maxHistoryCountTextField.getText();
         if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, "最大播放历史数量无效").showDialog();
+            new TipDialog(f, "最大播放历史数量无效", true).showDialog();
             return false;
         }
         f.maxHistoryCount = Integer.parseInt(text);
 
         text = maxSearchHistoryCountTextField.getText();
         if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, "最大搜索历史数量无效").showDialog();
+            new TipDialog(f, "最大搜索历史数量无效", true).showDialog();
             return false;
         }
         f.maxSearchHistoryCount = Integer.parseInt(text);
 
         text = maxConcurrentTaskCountTextField.getText();
         if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, "同时下载的最大任务数无效").showDialog();
+            new TipDialog(f, "同时下载的最大任务数无效", true).showDialog();
             return false;
         }
         GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(Integer.parseInt(text));
@@ -887,8 +915,8 @@ public class SettingDialog extends AbstractTitledDialog {
         f.x = f.y = 0x3f3f3f3f;
         if (f.windowState != WindowState.MAXIMIZED) f.setSize(f.windowWidth, f.windowHeight);
 
+        Quality.quality = qualityComboBox.getSelectedIndex();
         f.forwardOrBackwardTime = Integer.parseInt(((String) fobComboBox.getSelectedItem()).replace(" 秒", ""));
-//        f.currSpecStyle = specStyleComboBox.getSelectedIndex();
         f.currBalance = balanceComboBox.getSelectedIndex() - 1;
         f.player.setBalance(f.currBalance);
 

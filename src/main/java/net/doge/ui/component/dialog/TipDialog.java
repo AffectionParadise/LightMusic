@@ -3,8 +3,8 @@ package net.doge.ui.component.dialog;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;
-import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.component.label.CustomLabel;
 import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
@@ -28,6 +28,30 @@ public class TipDialog extends AbstractShadowDialog {
     private Timer showtimer;
     private Timer closeTimer;
 
+    public TipDialog(MainFrame f, int ms) {
+        this(f, null, ms);
+    }
+
+    public TipDialog(MainFrame f, String message) {
+        this(f, message, false);
+    }
+
+    public TipDialog(MainFrame f, String message, boolean onTop) {
+        this(f, message, 1000, onTop);
+    }
+
+    public TipDialog(MainFrame f, String message, int ms) {
+        this(f, message, ms, false);
+    }
+
+    public TipDialog(MainFrame f, String message, int ms, boolean onTop) {
+        super(f, false);
+        setMessage(message);
+        this.ms = ms;
+        initView();
+        setAlwaysOnTop(onTop);
+    }
+
     public boolean notEmpty() {
         return StringUtil.notEmpty(StringUtil.removeHTMLLabel(message));
     }
@@ -40,32 +64,6 @@ public class TipDialog extends AbstractShadowDialog {
 
     public void setMs(int ms) {
         this.ms = ms;
-    }
-
-    public TipDialog(MainFrame f, String message, int ms) {
-        this(f);
-        setMessage(message);
-        this.ms = ms;
-        initView();
-    }
-
-    public TipDialog(MainFrame f, int ms) {
-        this(f);
-        this.ms = ms;
-        initView();
-    }
-
-    public TipDialog(MainFrame f, String message) {
-        this(f);
-        setMessage(message);
-        this.ms = 1000;
-        initView();
-        // 视频播放界面的对话框需要置顶
-        setAlwaysOnTop(true);
-    }
-
-    public TipDialog(MainFrame f) {
-        super(f, false);
     }
 
     public void updateSize() {

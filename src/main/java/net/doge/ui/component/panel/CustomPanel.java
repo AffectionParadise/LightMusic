@@ -12,7 +12,7 @@ public class CustomPanel extends JPanel {
     private final float destAlpha = 0.1f;
 
     public CustomPanel() {
-        init();
+        this(new FlowLayout());
     }
 
     public CustomPanel(LayoutManager layoutManager) {

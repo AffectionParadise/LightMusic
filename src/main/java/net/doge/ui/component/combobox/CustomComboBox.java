@@ -17,7 +17,6 @@ public class CustomComboBox<T> extends JComboBox<T> {
     protected float alpha = startAlpha;
 
     public CustomComboBox() {
-        super();
         setOpaque(false);
         setFocusable(false);
         setLightWeightPopupEnabled(false);

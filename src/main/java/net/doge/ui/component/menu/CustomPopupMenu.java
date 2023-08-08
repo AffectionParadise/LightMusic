@@ -22,7 +22,6 @@ public class CustomPopupMenu extends JPopupMenu {
     private final int pixels = 10;
 
     public CustomPopupMenu(MainFrame f) {
-        super();
         this.f = f;
 
         // 阴影边框

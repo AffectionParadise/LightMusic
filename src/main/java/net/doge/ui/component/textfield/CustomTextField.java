@@ -1,7 +1,6 @@
 package net.doge.ui.component.textfield;
 
 import lombok.Data;
-import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.component.textfield.listener.TextFieldHintListener;
 
@@ -18,24 +17,21 @@ import java.awt.event.*;
 public class CustomTextField extends JTextField {
     private boolean occupied;
 
-    private boolean drawBg;
-
     public CustomTextField(int length) {
         super(length);
-        setOpaque(false);
-        setHorizontalAlignment(CENTER);
-        setMaximumSize(new Dimension(3000, 30));
-        setSelectionColor(Colors.THEME);
-        setFont(Fonts.NORMAL);
-        Insets insets = getMargin();
-        insets.left = insets.right = 5;
-        drawBg = true;
         init();
     }
 
     // 解决设置文本后不刷新的问题
     private void init() {
+        setOpaque(false);
         setFocusable(false);
+        setHorizontalAlignment(CENTER);
+        setMaximumSize(new Dimension(3000, 30));
+        setFont(Fonts.NORMAL);
+        Insets insets = getMargin();
+        insets.left = insets.right = 5;
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -89,27 +85,25 @@ public class CustomTextField extends JTextField {
 
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
         Graphics2D g2d = (Graphics2D) g;
         int w = getWidth(), h = getHeight();
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // 画背景
-        Color foregroundColor = getForeground();
-        if (drawBg) {
-            g2d.setColor(foregroundColor);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
-            g2d.fillRoundRect(0, 0, w, h, 25, 25);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-        }
+        Color foreColor = getForeground();
+        g2d.setColor(foreColor);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+        g2d.fillRoundRect(0, 0, w, h, 25, 25);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+        super.paintComponent(g);
 
         // 画文字
         String text = getText();
         FontMetrics fontMetrics = getFontMetrics(getFont());
         int stringHeight = fontMetrics.getHeight();
-        g2d.setColor(foregroundColor);
+        g2d.setColor(foreColor);
 
         FontMetrics[] metrics = new FontMetrics[Fonts.TYPES.size()];
         for (int i = 0, len = metrics.length; i < len; i++) {

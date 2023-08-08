@@ -22,6 +22,7 @@ import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import net.doge.util.media.MediaUtil;
 import net.doge.util.system.FileUtil;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -113,7 +114,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         globalPanel.add(centerScrollPane, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
             if (f.player.loadedAudioFile(file)) {
-                new TipDialog(f, FILE_BEING_USED_MSG).showDialog();
+                new TipDialog(f, FILE_BEING_USED_MSG, true).showDialog();
                 return;
             } else {
                 for (int i = 0, size = labels.length; i < size; i++) {
@@ -189,6 +190,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 
         Color textColor = f.currUIStyle.getTextColor();
+        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
             CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
@@ -205,6 +207,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 CustomTextField component = (CustomTextField) components[i];
                 component.setForeground(textColor);
                 component.setCaretColor(textColor);
+                component.setSelectionColor(darkerTextAlphaColor);
                 component.setText((String) results[i]);
             } else if (components[i] instanceof CustomComboBox) {
                 CustomComboBox component = (CustomComboBox) components[i];

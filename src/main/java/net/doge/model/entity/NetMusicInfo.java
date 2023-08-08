@@ -3,6 +3,7 @@ package net.doge.model.entity;
 import lombok.Data;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.Format;
+import net.doge.constant.system.Quality;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.base.Downloadable;
 import net.doge.model.entity.base.MusicResource;
@@ -38,6 +39,8 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     private String format = Format.MP3;
     // 时长(秒)
     private double duration;
+    // 音质
+    private int quality;
     // 歌曲名称
     private String name;
     // 艺术家
@@ -74,34 +77,27 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         invokeLater = null;
     }
 
-    /**
-     * 判断歌曲信息是否完整
-     *
-     * @return
-     */
+    // 判断歌曲信息是否完整
     public boolean isIntegrated() {
         return hasUrl() && hasLrc() && hasAlbumImage();
+    }
+
+    // 判断当前音质是否为设置的音质
+    public boolean isQualityMatch() {
+        return quality == Quality.quality;
     }
 
     public boolean hasProgramId() {
         return StringUtil.notEmpty(programId);
     }
 
-    /**
-     * 判断是不是电台节目(网易云、猫耳和喜马拉雅)
-     *
-     * @return
-     */
+    // 判断是不是电台节目
     public boolean isProgram() {
         return source == NetMusicSource.XM || source == NetMusicSource.HF || source == NetMusicSource.GG
                 || source == NetMusicSource.FS || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
     }
 
-    /**
-     * 判断有没有 hash(酷狗)
-     *
-     * @return
-     */
+    // 判断有没有 hash(酷狗)
     public boolean hasHash() {
         return StringUtil.notEmpty(hash);
     }

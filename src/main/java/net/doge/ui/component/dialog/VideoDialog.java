@@ -1,6 +1,7 @@
 package net.doge.ui.component.dialog;
 
 import com.sun.media.jfxmedia.locator.Locator;
+import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -42,8 +43,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collections;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author Doge
@@ -298,7 +297,7 @@ public class VideoDialog extends AbstractTitledDialog {
             // 尝试多次无效直接关闭窗口
             if (++tryTime >= 3) {
                 closeButton.doClick();
-                new TipDialog(f, ERROR_MSG).showDialog();
+                new TipDialog(f, ERROR_MSG, true).showDialog();
             }
         });
 
@@ -322,14 +321,17 @@ public class VideoDialog extends AbstractTitledDialog {
         closeButton.addActionListener(e -> {
             // 恢复桌面歌词置顶
             f.desktopLyricDialog.setAlwaysOnTop(f.desktopLyricOnTop);
-            Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
-            try {
-                future.get(100, TimeUnit.MILLISECONDS);
-            } catch (Exception ex) {
-
-            } finally {
-                if (!future.isDone()) future.cancel(true);
-            }
+//            Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
+//            try {
+//                future.get(100, TimeUnit.MILLISECONDS);
+//            } catch (Exception ex) {
+//
+//            } finally {
+//                if (!future.isDone()) future.cancel(true);
+//            }
+            // 先暂停播放，避免 runLater 延迟调用
+            mp.pause();
+            Platform.runLater(() -> mp.dispose());
         });
     }
 
@@ -430,12 +432,12 @@ public class VideoDialog extends AbstractTitledDialog {
                 f.mvCollectionModel.add(0, mvInfo);
                 collectButton.setToolTipText(CANCEL_COLLECTION_TIP);
                 collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, iconColor));
-                new TipDialog(f, COLLECT_SUCCESS_MSG).showDialog();
+                new TipDialog(f, COLLECT_SUCCESS_MSG, true).showDialog();
             } else {
                 f.mvCollectionModel.removeElement(mvInfo);
                 collectButton.setToolTipText(COLLECT_TIP);
                 collectButton.setIcon(ImageUtil.dye(collectIcon, iconColor));
-                new TipDialog(f, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
+                new TipDialog(f, CANCEL_COLLECTION_SUCCESS_MSG, true).showDialog();
             }
         });
         // 下载

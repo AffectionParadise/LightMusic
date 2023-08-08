@@ -18,6 +18,7 @@ import net.doge.ui.component.textfield.SafeDocument;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -155,6 +156,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
 
         Color textColor = f.currUIStyle.getTextColor();
+        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
         Color iconColor = f.currUIStyle.getIconColor();
 
         // 标签
@@ -197,7 +199,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         lastImgButton.setPreferredSize(new Dimension(lastImgIcon.getIconWidth() + 10, lastImgIcon.getIconHeight() + 10));
         lastImgButton.addActionListener(e -> {
             if (p == 1) {
-                new TipDialog(f, FIRST_PAGE_MSG).showDialog();
+                new TipDialog(f, FIRST_PAGE_MSG, true).showDialog();
                 return;
             }
             showImg(--p);
@@ -209,7 +211,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         nextImgButton.addActionListener(e -> {
             if (results == null) return;
             if (p >= results.total) {
-                new TipDialog(f, LAST_PAGE_MSG).showDialog();
+                new TipDialog(f, LAST_PAGE_MSG, true).showDialog();
                 return;
             }
             showImg(++p);
@@ -221,7 +223,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         firstImgButton.setPreferredSize(new Dimension(firstImgIcon.getIconWidth() + 10, firstImgIcon.getIconHeight() + 10));
         firstImgButton.addActionListener(e -> {
             if (p == 1) {
-                new TipDialog(f, FIRST_PAGE_MSG).showDialog();
+                new TipDialog(f, FIRST_PAGE_MSG, true).showDialog();
                 return;
             }
             showImg(p = 1);
@@ -233,7 +235,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         lstImgButton.addActionListener(e -> {
             if (results == null) return;
             if (p >= results.total) {
-                new TipDialog(f, LAST_PAGE_MSG).showDialog();
+                new TipDialog(f, LAST_PAGE_MSG, true).showDialog();
                 return;
             }
             showImg(p = results.total);
@@ -249,6 +251,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         });
         pageTextField.setForeground(textColor);
         pageTextField.setCaretColor(textColor);
+        pageTextField.setSelectionColor(darkerTextAlphaColor);
         // 跳页按钮
         goButton.setToolTipText(GO_TIP);
         goButton.setIcon(ImageUtil.dye((ImageIcon) goButton.getIcon(), iconColor));
@@ -261,7 +264,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
             if (StringUtil.isEmpty(text)) return;
             int destPage = Integer.parseInt(text);
             if (destPage < 1 || destPage > results.total) {
-                new TipDialog(f, ILLEGAL_PAGE_MSG).showDialog();
+                new TipDialog(f, ILLEGAL_PAGE_MSG, true).showDialog();
                 return;
             }
             showImg(p = destPage);

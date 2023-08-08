@@ -13,17 +13,15 @@ public class CustomLabel extends JLabel {
     private Timer alphaTimer;
 
     public CustomLabel() {
-        init();
+        this(null, null);
     }
 
     public CustomLabel(String text) {
-        super(text);
-        init();
+        this(text, null);
     }
 
     public CustomLabel(Icon icon) {
-        super(icon);
-        init();
+        this(null, icon);
     }
 
     public CustomLabel(String text, Icon icon) {

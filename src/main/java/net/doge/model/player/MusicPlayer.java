@@ -1,6 +1,7 @@
 package net.doge.model.player;
 
 import com.sun.media.jfxmedia.locator.Locator;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.media.AudioEqualizer;
 import javafx.scene.media.EqualizerBand;
@@ -24,8 +25,6 @@ import net.doge.util.media.MediaUtil;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author Doge
@@ -202,10 +201,9 @@ public class MusicPlayer {
                     f.showAlbumImage();
                 }
             });
-            return;
         }
         // MP3 文件的其他信息
-        if (metaMusicInfo.isMp3()) {
+        else if (metaMusicInfo.isMp3()) {
             String artist = source.getArtist();
             String albumName = source.getAlbum();
             // 歌曲名称
@@ -238,15 +236,19 @@ public class MusicPlayer {
     public void disposeMp() {
         if (mp == null) return;
         // 可能会造成死锁，交给线程池处理
-        Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
-        try {
-            future.get(100, TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-
-        } finally {
-            if (!future.isDone()) future.cancel(true);
-        }
+//        Future<?> future = GlobalExecutors.requestExecutor.submit(() -> mp.dispose());
+//        try {
+//            future.get(100, TimeUnit.MILLISECONDS);
+//        } catch (Exception e) {
+//
+//        } finally {
+//            if (!future.isDone()) future.cancel(true);
+//        }
+        MediaPlayer tmp = mp;
         mp = null;
+        // 先暂停播放，避免 runLater 延迟调用
+        tmp.pause();
+        Platform.runLater(() -> tmp.dispose());
     }
 
     private void initRequestHeaders(NetMusicInfo musicInfo, Media media) {

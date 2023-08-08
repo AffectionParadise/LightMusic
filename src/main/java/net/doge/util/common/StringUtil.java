@@ -323,6 +323,7 @@ public class StringUtil {
      * @return
      */
     public static String removeHTMLLabel(String s) {
+        if (s == null) return s;
         s = s.replaceAll("<br ?/?>", "\n");
         Pattern pattern = Pattern.compile("<[^>]+>");
         Matcher matcher = pattern.matcher(s);

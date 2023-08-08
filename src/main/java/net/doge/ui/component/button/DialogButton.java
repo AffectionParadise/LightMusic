@@ -2,8 +2,8 @@ package net.doge.ui.component.button;
 
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
-import net.doge.util.ui.ColorUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +24,22 @@ public class DialogButton extends JButton implements MouseListener {
     private final float destAlpha = 0.4f;
     private float alpha = startAlpha;
 
+    public DialogButton() {
+        this(null, Colors.WHITE);
+    }
+
+    // 关键词按钮，需显示多种字符
+    public DialogButton(String text) {
+        this(StringUtil.textToHtml(text), Colors.WHITE);
+    }
+
+    // 常规按钮
+    public DialogButton(String text, Color foreColor) {
+        super(text);
+        setForeColor(foreColor);
+        init();
+    }
+
     private void init() {
         addMouseListener(this);
         setOpaque(false);
@@ -39,25 +55,6 @@ public class DialogButton extends JButton implements MouseListener {
             if (alpha <= startAlpha || alpha >= destAlpha) drawBgTimer.stop();
             repaint();
         });
-    }
-
-    public DialogButton() {
-        setForeColor(Colors.WHITE);
-        init();
-    }
-
-    // 关键词按钮，需显示多种字符
-    public DialogButton(String text) {
-        super(StringUtil.textToHtml(text));
-        setForeColor(Colors.WHITE);
-        init();
-    }
-
-    // 常规按钮
-    public DialogButton(String text, Color foreColor) {
-        super(text);
-        setForeColor(foreColor);
-        init();
     }
 
     public void setForeColor(Color foreColor) {

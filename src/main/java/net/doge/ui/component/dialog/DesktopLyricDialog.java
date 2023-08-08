@@ -1,5 +1,6 @@
 package net.doge.ui.component.dialog;
 
+import lombok.Getter;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.model.ui.UIStyle;
@@ -27,7 +28,9 @@ public class DesktopLyricDialog extends JDialog {
     private final int MIN_FONT_SIZE = Fonts.HUGE_SIZE - 20;
     private final int MAX_FONT_SIZE = Fonts.HUGE_SIZE + 20;
     private Color bgColor;
+    @Getter
     private String lyric;
+    @Getter
     private double ratio;
     private StringTwoColor stc;
 
@@ -94,14 +97,6 @@ public class DesktopLyricDialog extends JDialog {
     public void setForeColor(Color foreColor) {
         this.foreColor = foreColor;
         setLyric(lyric, ratio);
-    }
-
-    public double getRatio() {
-        return ratio;
-    }
-
-    public String getLyric() {
-        return lyric;
     }
 
     public void setLyric(String lyric, double ratio) {
@@ -402,10 +397,6 @@ public class DesktopLyricDialog extends JDialog {
 
     private class MainPanel extends CustomPanel {
         private boolean drawBg;
-
-        public MainPanel() {
-            super();
-        }
 
         public void setDrawBg(boolean drawBg) {
             this.drawBg = drawBg;

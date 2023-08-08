@@ -27,8 +27,9 @@ public class HotSearchReq {
     private final String HOT_SEARCH_QQ_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     // 热搜 API (酷我)
     private final String HOT_SEARCH_KW_API
-            = "http://hotword.kuwo.cn/hotword.s?prod=kwplayer_ar_9.3.0.1&corp=kuwo&newver=2&vipver=9.3.0.1" +
-            "&source=kwplayer_ar_9.3.0.1_40.apk&p2p=1&notrace=0&uid=0&plat=kwplayer_ar&rformat=json&encoding=utf8&tabid=1";
+            = "http://hotword.kuwo.cn/hotword.s?prod=kwplayer_ar_9.3.0.1&corp=kuwo&newver=2&vipver=9.3.0.1&source=kwplayer_ar_9.3.0.1_40.apk" +
+            "&p2p=1&notrace=0&uid=0&plat=kwplayer_ar&rformat=json&encoding=utf8&tabid=1";
+    private final String HOT_SEARCH_KW_WEB_API = "https://kuwo.cn/api/www/search/searchKey?key=&httpsStatus=1";
     // 热搜 API (咪咕)
     private final String HOT_SEARCH_MG_API = "http://jadeite.migu.cn:7090/music_search/v3/search/hotword";
     // 热搜 API (5sing)
@@ -98,6 +99,7 @@ public class HotSearchReq {
         };
 
         // 酷我
+        // 桌面端
         Callable<List<String>> getHotSearchKw = () -> {
             List<String> r = new LinkedList<>();
 
@@ -106,6 +108,19 @@ public class HotSearchReq {
                 JSONArray hotkeys = JSONObject.parseObject(resp.body()).getJSONArray("tagvalue");
                 for (int i = 0, len = hotkeys.size(); i < len; i++) {
                     r.add(hotkeys.getJSONObject(i).getString("key"));
+                }
+            }
+            return r;
+        };
+        // Web
+        Callable<List<String>> getHotSearchKwWeb = () -> {
+            List<String> r = new LinkedList<>();
+
+            HttpResponse resp = SdkCommon.kwRequest(HOT_SEARCH_KW_WEB_API).executeAsync();
+            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                JSONArray hotkeys = JSONObject.parseObject(resp.body()).getJSONArray("data");
+                for (int i = 0, len = hotkeys.size(); i < len; i++) {
+                    r.add(hotkeys.getString(i));
                 }
             }
             return r;
@@ -150,6 +165,7 @@ public class HotSearchReq {
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchKg));
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchKw));
+        taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchKwWeb));
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchMg));
         taskList.add(GlobalExecutors.requestExecutor.submit(getHotSearchFs));
 

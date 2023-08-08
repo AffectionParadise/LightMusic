@@ -154,7 +154,7 @@ public class SearchSuggestionReq {
                 JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");
                 for (int i = 0, len = data.size(); i < len; i++) {
-                    r.add(RegexUtil.getGroup1("RELWORD=(.*?)\\r\\n", data.getString(i)));
+                    r.add(RegexUtil.getGroup1("RELWORD=(.*?)\r\n", data.getString(i)));
                 }
             }
             return r;

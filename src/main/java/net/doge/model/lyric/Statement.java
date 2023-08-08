@@ -30,9 +30,9 @@ public class Statement {
         return endTime != 0;
     }
 
-    // 歌词是否为空
-    public boolean isEmpty() {
-        return StringUtil.isEmpty(lyric);
+    // 歌词是否不为空
+    public boolean notEmpty() {
+        return StringUtil.notEmpty(lyric);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.Format;
+import net.doge.constant.system.Quality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
@@ -57,15 +58,14 @@ public class MusicUrlReq {
      * 补充 NetMusicInfo 的 url
      */
     public void fillMusicUrl(NetMusicInfo musicInfo) {
-        // 歌曲信息是完整的
-        if (musicInfo.isIntegrated()) return;
+        // 歌曲信息是完整的且音质与设置的音质相同
+        if (musicInfo.isIntegrated() && musicInfo.isQualityMatch()) return;
 
-        String songId = musicInfo.getId();
         int source = musicInfo.getSource();
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
-            String url = fetchMusicUrl(songId, NetMusicSource.NET_CLOUD);
+            String url = fetchMusicUrl(musicInfo);
             // 排除试听部分，直接换源
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
@@ -76,7 +76,7 @@ public class MusicUrlReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             // 排除试听部分，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.KG);
+            String url = fetchMusicUrl(musicInfo);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
@@ -84,23 +84,25 @@ public class MusicUrlReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             // 排除试听部分，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.QQ);
+            String url = fetchMusicUrl(musicInfo);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
+            if (url.contains(".flac")) musicInfo.setFormat(Format.FLAC);
         }
 
         // 酷我
         else if (source == NetMusicSource.KW) {
             // 无链接，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.KW);
+            String url = fetchMusicUrl(musicInfo);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
+            if (url.contains(".flac")) musicInfo.setFormat(Format.FLAC);
         }
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
             // 无链接，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.MG);
+            String url = fetchMusicUrl(musicInfo);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
@@ -108,7 +110,7 @@ public class MusicUrlReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             // 无链接或试听，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.QI);
+            String url = fetchMusicUrl(musicInfo);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
@@ -116,7 +118,7 @@ public class MusicUrlReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             // 无链接或试听，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.HF);
+            String url = fetchMusicUrl(musicInfo);
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
@@ -125,7 +127,7 @@ public class MusicUrlReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             // 无链接或试听，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.GG);
+            String url = fetchMusicUrl(musicInfo);
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
@@ -134,44 +136,66 @@ public class MusicUrlReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             // 无链接或试听，直接换源
-            String url = fetchMusicUrl(songId, NetMusicSource.FS);
+            String url = fetchMusicUrl(musicInfo);
             if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
             else fillAvailableMusicUrl(musicInfo);
         }
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
-            String url = fetchMusicUrl(songId, NetMusicSource.XM);
+            String url = fetchMusicUrl(musicInfo);
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
             musicInfo.setUrl(url);
         }
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String url = fetchMusicUrl(songId, NetMusicSource.ME);
+            String url = fetchMusicUrl(musicInfo);
             musicInfo.setUrl(url);
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
         }
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String url = fetchMusicUrl(songId, NetMusicSource.BI);
+            String url = fetchMusicUrl(musicInfo);
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
             musicInfo.setUrl(url);
         }
+
+        // 更新音质
+        musicInfo.setQuality(Quality.quality);
     }
 
     /**
      * 根据歌曲 id 获取歌曲地址
      */
-    public String fetchMusicUrl(String songId, int source) {
+    public String fetchMusicUrl(NetMusicInfo musicInfo) {
+        String id = musicInfo.getId();
+        int source = musicInfo.getSource();
+
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
             // 首选高音质接口
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/song/enhance/player/url/v1");
             // standard, exhigh, lossless, hires, jyeffect(高清环绕声), sky(沉浸环绕声), jymaster(超清母带)
+            String quality;
+            switch (Quality.quality) {
+                case Quality.HI_RES:
+                    quality = "hires";
+                    break;
+                case Quality.LOSSLESS:
+                    quality = "lossless";
+                    break;
+                case Quality.SUPER:
+                case Quality.HIGH:
+                    quality = "exhigh";
+                    break;
+                default:
+                    quality = "standard";
+                    break;
+            }
             String songBody = SdkCommon.ncRequest(Method.POST, GET_SONG_URL_API,
-                            String.format("{\"ids\":\"['%s']\",\"level\":\"jymaster\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", songId), options)
+                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
                     .executeAsync()
                     .body();
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
@@ -188,7 +212,7 @@ public class MusicUrlReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             // 酷狗接口请求需要带上 cookie ！
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, id))
                     .cookie(SdkCommon.COOKIE)
                     .executeAsync()
                     .body();
@@ -202,7 +226,7 @@ public class MusicUrlReq {
 //                            StringUtil.urlEncode(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
 //                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
 //                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
-//                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", songId, songId, songId)))
+//                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", id, id, id)))
 //                    .executeAsync()
 //                    .body();
 //            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
@@ -210,16 +234,32 @@ public class MusicUrlReq {
 //            String sip = data.getJSONArray("sip").getString(0);
 //            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
 //            return StringUtil.isEmpty(url) ? "" : sip + url;
-            return new QqTrackUrlReq().getTrackUrl(songId, "hq");
+            String quality;
+            switch (Quality.quality) {
+                case Quality.HI_RES:
+                    quality = "hr";
+                    break;
+                case Quality.LOSSLESS:
+                    quality = "sq";
+                    break;
+                case Quality.SUPER:
+                case Quality.HIGH:
+                    quality = "hq";
+                    break;
+                default:
+                    quality = "mp3";
+                    break;
+            }
+            return new QqTrackUrlReq().getTrackUrl(id, quality);
         }
 
         // 酷我(解锁付费音乐)
         else if (source == NetMusicSource.KW) {
-//            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, songId))
+//            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, id))
 //                    .executeAsync()
 //                    .body();
 //            return urlBody;
-//            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, songId)).executeAsync();
+//            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, id)).executeAsync();
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {
 //                String urlBody = resp.body();
 //                JSONObject urlJson = JSONObject.parseObject(urlBody);
@@ -228,12 +268,25 @@ public class MusicUrlReq {
 //                    if (JsonUtil.notEmpty(data)) return data.getString("url");
 //                }
 //            }
-            return new KwTrackUrlReq().getTrackUrl(songId, "320k");
+            String quality;
+            switch (Quality.quality) {
+                case Quality.LOSSLESS:
+                    quality = "flac";
+                    break;
+                case Quality.SUPER:
+                case Quality.HIGH:
+                    quality = "320k";
+                    break;
+                default:
+                    quality = "128k";
+                    break;
+            }
+            return new KwTrackUrlReq().getTrackUrl(id, quality);
         }
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, songId))
+            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, id))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
@@ -250,7 +303,7 @@ public class MusicUrlReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, songId, System.currentTimeMillis()))
+            String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, id, System.currentTimeMillis()))
                     .executeAsync()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody).getJSONObject("data");
@@ -264,7 +317,7 @@ public class MusicUrlReq {
 
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, songId))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsync()
                     .body();
@@ -281,7 +334,7 @@ public class MusicUrlReq {
 
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, songId))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(songBody);
@@ -307,20 +360,22 @@ public class MusicUrlReq {
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            String[] sp = songId.split("_");
+            String[] sp = id.split("_");
             String songBody = HttpRequest.get(String.format(GET_SONG_URL_FS_API, sp[0], sp[1]))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-            String url = data.getString("squrl");
-            if (StringUtil.isEmpty(url)) url = data.getString("hqurl");
+            String url = Quality.quality == Quality.HI_RES
+                    || Quality.quality == Quality.LOSSLESS
+                    || Quality.quality == Quality.SUPER ? data.getString("squrl") : "";
+            if (StringUtil.isEmpty(url)) url = Quality.quality == Quality.HIGH ? data.getString("hqurl") : "";
             if (StringUtil.isEmpty(url)) url = data.getString("lqurl");
             return url;
         }
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
-            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_XM_API, songId))
+            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_XM_API, id))
                     .executeAsync()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
@@ -329,16 +384,16 @@ public class MusicUrlReq {
 
         // 猫耳
         else if (source == NetMusicSource.ME) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, songId))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, id))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
-            return data.getString("soundurl");
+            return data.getString(Quality.quality == Quality.NORMAL ? "soundurl_128" : "soundurl");
         }
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_BI_API, songId))
+            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_BI_API, id))
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsync()
                     .body();
@@ -379,7 +434,7 @@ public class MusicUrlReq {
         candidates.sort((c1, c2) -> Double.compare(c2.weight, c1.weight));
         for (MusicCandidate candidate : candidates) {
             NetMusicInfo info = candidate.musicInfo;
-            String url = fetchMusicUrl(info.getId(), info.getSource());
+            String url = fetchMusicUrl(info);
             if (StringUtil.isEmpty(url)) continue;
             if (url.contains(".m4a")) musicInfo.setFormat(Format.M4A);
             musicInfo.setUrl(url);

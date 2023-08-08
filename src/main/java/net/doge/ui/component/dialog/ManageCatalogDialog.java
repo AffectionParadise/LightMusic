@@ -113,7 +113,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
                 File dir = catalogList.getSelectedValue();
                 if (dir == null) return;
                 if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG).showDialog();
+                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
                     return;
                 }
                 Desktop.getDesktop().open(dir);
@@ -130,7 +130,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
                 if (!dir.exists()) return;
                 for (int i = 0, size = catalogListModel.size(); i < size; i++) {
                     if (catalogListModel.get(i).getAbsolutePath().equals(dir.getAbsolutePath())) {
-                        new TipDialog(f, CATALOG_EXISTS_MSG).showDialog();
+                        new TipDialog(f, CATALOG_EXISTS_MSG, true).showDialog();
                         return;
                     }
                 }

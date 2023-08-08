@@ -4,19 +4,19 @@ import net.doge.constant.ui.Colors;
 import net.doge.model.color.HSL;
 import net.doge.model.color.HSV;
 import net.doge.ui.MainFrame;
-import net.doge.ui.component.label.CustomLabel;
-import net.doge.ui.component.slider.CustomSlider;
 import net.doge.ui.component.button.DialogButton;
 import net.doge.ui.component.combobox.CustomComboBox;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
 import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
+import net.doge.ui.component.slider.CustomSlider;
+import net.doge.ui.component.slider.ui.ColorSliderUI;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.ui.component.textfield.SafeDocument;
-import net.doge.ui.component.combobox.ui.ComboBoxUI;
-import net.doge.ui.component.slider.ui.ColorSliderUI;
+import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
-import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -213,6 +213,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         Color textColor = f.currUIStyle.getTextColor();
+        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
 
         // 预设
         preLabel.setForeground(textColor);
@@ -300,18 +301,22 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         rLabel.setForeground(textColor);
         rTextField.setForeground(textColor);
         rTextField.setCaretColor(textColor);
+        rTextField.setSelectionColor(darkerTextAlphaColor);
 
         gLabel.setForeground(textColor);
         gTextField.setForeground(textColor);
         gTextField.setCaretColor(textColor);
+        gTextField.setSelectionColor(darkerTextAlphaColor);
 
         bLabel.setForeground(textColor);
         bTextField.setForeground(textColor);
         bTextField.setCaretColor(textColor);
+        bTextField.setSelectionColor(darkerTextAlphaColor);
 
         hexLabel.setForeground(textColor);
         hexTextField.setForeground(textColor);
         hexTextField.setCaretColor(textColor);
+        hexTextField.setSelectionColor(darkerTextAlphaColor);
         SafeDocument doc = new SafeDocument(7);
         doc.addDocumentListener(this);
         hexTextField.setDocument(doc);

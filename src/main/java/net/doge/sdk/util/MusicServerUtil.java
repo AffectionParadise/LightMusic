@@ -788,8 +788,8 @@ public class MusicServerUtil {
     /**
      * 根据歌曲 id 获取歌曲地址
      */
-    public static String fetchMusicUrl(String songId, int source) {
-        return new MusicUrlReq().fetchMusicUrl(songId, source);
+    public static String fetchMusicUrl(NetMusicInfo musicInfo) {
+        return new MusicUrlReq().fetchMusicUrl(musicInfo);
     }
 
     /**

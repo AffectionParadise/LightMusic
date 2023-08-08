@@ -19,8 +19,7 @@ public class CustomRadioButtonMenuItem extends JRadioButtonMenuItem {
     private final float destAlpha = 0.1f;
 
     public CustomRadioButtonMenuItem(String text) {
-        super(text);
-        init();
+        this(text, false);
     }
 
     public CustomRadioButtonMenuItem(String text, boolean selected) {

@@ -180,7 +180,7 @@ public class MainFrame extends JFrame {
     private final String REMEMBER_CHOICE_MSG = "记住我的选择";
     private final String[] EXIT_OPTIONS = {"隐藏到托盘", "退出程序", "取消"};
     private final String ASK_REIMPORT_MSG = "将重新从所有歌曲目录导入歌曲，是否继续？";
-    private final String ASK_RETAIN_MUSIC_LIST_MSG = "播放列表已存在歌曲，您希望保留播放列表的歌曲吗？(选择“否”将清空原有的歌曲列表)";
+    private final String ASK_RETAIN_MUSIC_LIST_MSG = "歌曲列表已存在歌曲，您希望保留歌曲列表的歌曲吗？(选择“否”将清空原有的歌曲列表)";
     private final String ASK_CLEAR_CACHE_MSG = "当前缓存大小为 %s，确定要清空缓存吗？";
     private final String ASK_REMOVE_FIFE_NOT_FOUND_MSG = "该歌曲文件不存在，是否从列表中删除？";
     private final String ASK_REMOVE_ITEMS_MSG = "是否删除选中的项目？";
@@ -198,11 +198,13 @@ public class MainFrame extends JFrame {
             "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n" +
             "注：\n1.此操作要求你的歌单权限是公开的，不能是私密，否则看不到\n" +
             "2.如果你确实不想公开你的歌单，也可以在“歌单”选项卡勾上“歌单 ID”，搜索你的歌单 ID\n\n" +
-            "Q2：如何进行收藏等其他操作？\nA2：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
-            "Q3：如何批量操作？\nA3：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
-            "Q4：为什么有些歌曲名字和音频不一致？\nA4：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
-            "Q5：资源是如何获取的？\nA5：调用各大平台的 API 获取，免费使用，不可商用！\n\n" +
-            "Q6：软件更新后原来的数据如何继承？\nA6：建议覆盖更新，数据文件 %s 保存在程序所在目录，保证与程序在同一目录即可\n\n" +
+            "Q2：如何下载无损 FLAC 音质？\nA2：“设置”->“播放与历史”->“优先音质”可以设置播放和下载时的音质\n" +
+            "注：选择无损音质时，不支持 FLAC 直接播放，需调用 FFmpeg 转为 MP3 进行播放，但不影响下载 FLAC 文件\n\n" +
+            "Q3：如何进行收藏、下载等其他操作？\nA3：通过右键菜单操作，除此之外还有很多功能都在右键菜单里，等你探索~\n\n" +
+            "Q4：如何批量操作？\nA4：列表支持 Ctrl Shift 多选，Ctrl + A 全选\n\n" +
+            "Q5：为什么有些歌曲名字和音频不一致？\nA5：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
+            "Q6：资源是如何获取的？\nA6：调用各大平台的 API 获取，免费使用，不可商用！\n\n" +
+            "Q7：软件更新后原来的数据如何继承？\nA7：建议覆盖更新，数据文件 %s 保存在程序所在目录，保证与程序在同一目录即可\n\n" +
             "如果还有其他的问题，欢迎在我的 Github 主页发布 issue ~", TITLE, ConfigConstants.CONFIG_FILE_NAME);
     private final String FIRST_PAGE_MSG = "已经是第一页了";
     private final String LAST_PAGE_MSG = "已经是最后一页了";
@@ -1038,7 +1040,7 @@ public class MainFrame extends JFrame {
     // 列表为空提示标签
     private CustomLabel emptyHintLabel = new CustomLabel("列表空空如也~");
 
-    // 个人音乐播放列表
+    // 个人音乐歌曲列表
     private CustomList<MusicResource> musicList = new CustomList<>();
     private CustomScrollPane musicScrollPane = new CustomScrollPane(musicList);
     // 本地音乐 ListModel
@@ -1156,7 +1158,7 @@ public class MainFrame extends JFrame {
     // 收藏按钮
     private TabButton collectionButton = new TabButton("收藏", collectionIcon);
 
-    // 播放列表工具栏
+    // 歌曲列表工具栏
     private CustomToolBar musicToolBar = new CustomToolBar();
     // 添加按钮
     private CustomButton addToolButton = new CustomButton(addIcon);
@@ -1205,7 +1207,7 @@ public class MainFrame extends JFrame {
     // 歌曲数量标签
     private CustomLabel countLabel = new CustomLabel();
 
-    // 在线播放列表
+    // 在线歌曲列表
     private CustomList<NetMusicInfo> netMusicList = new CustomList<>();
     private CustomScrollPane netMusicScrollPane = new CustomScrollPane(netMusicList);
     private DefaultListModel<NetMusicInfo> netMusicListModel = new DefaultListModel<>();
@@ -2084,7 +2086,7 @@ public class MainFrame extends JFrame {
 
     // 顶部盒子
     private Box topBox = new Box(BoxLayout.X_AXIS);
-    // 左部工具条和播放列表盒子
+    // 左部工具条和歌曲列表盒子
     private Box leftBox = new Box(BoxLayout.Y_AXIS);
     private Box netLeftBox = new Box(BoxLayout.Y_AXIS);
     private Box netPlaylistLeftBox = new Box(BoxLayout.Y_AXIS);
@@ -3093,6 +3095,8 @@ public class MainFrame extends JFrame {
                 changeToShuffle(false);
                 break;
         }
+        // 载入音质
+        Quality.quality = config.getIntValue(ConfigConstants.QUALITY, Quality.quality);
         // 载入快进/快退时间
         forwardOrBackwardTime = config.getIntValue(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入视频快进/快退时间
@@ -3812,6 +3816,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.DESKTOP_LYRIC_ALPHA, desktopLyricAlpha);
         // 存入桌面歌词字体大小
         config.put(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, desktopLyricFontSize);
+        // 存入音质
+        config.put(ConfigConstants.QUALITY, Quality.quality);
         // 存入快进/快退时间
         config.put(ConfigConstants.FOB_TIME, forwardOrBackwardTime);
         // 存入视频快进/快退时间
@@ -3850,7 +3856,7 @@ public class MainFrame extends JFrame {
             catalogJsonArray.add(dir.getAbsolutePath());
         }
         config.put(ConfigConstants.CATALOGS, catalogJsonArray);
-        // 存入当前播放列表(文件路径)
+        // 存入当前歌曲列表(文件路径)
         putLocalMusicList(config);
         // 存入当前播放的歌曲索引
         config.put(ConfigConstants.CURR_SONG, currSong);
@@ -4414,7 +4420,7 @@ public class MainFrame extends JFrame {
                 if (dir == null) return;
                 // 文件夹不存在直接跳出
                 if (!dir.exists()) return;
-                // 播放列表不为空时，询问是否保留原播放列表
+                // 歌曲列表不为空时，询问是否保留原歌曲列表
                 ListModel model = musicList.getModel();
                 if (musicListModel.getSize() != 0) {
                     ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
@@ -4579,7 +4585,7 @@ public class MainFrame extends JFrame {
                 updateTabUI(tabbedPane, currUIStyle);
             }
         });
-        // 改变播放列表状态
+        // 改变歌曲列表状态
         tabbedPane.addChangeListener(e -> {
             int selectedIndex = tabbedPane.getSelectedIndex();
             // 根据选项卡选择的情况设置选项卡文字 + 图标颜色
@@ -5179,7 +5185,7 @@ public class MainFrame extends JFrame {
             // 搜索收藏歌单/专辑/歌手/电台里的歌
             if (collectionBackwardButton.isEnabled()) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         NetResource resource = collectionList.getSelectedValue();
                         // 这是歌单里的歌
@@ -7304,7 +7310,7 @@ public class MainFrame extends JFrame {
                                 netMusicSearchSubTypeComboBox.addItem(tag);
                         }
 
-                        // 搜索歌曲并显示在在线播放列表
+                        // 搜索歌曲并显示在在线歌曲列表
                         CommonResult<NetMusicInfo> result = MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(),
                                 netMusicSearchTypeComboBox.getSelectedIndex(), (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, limit, netMusicCurrPage = 1);
                         List<NetMusicInfo> musicInfos = result.data;
@@ -7363,7 +7369,7 @@ public class MainFrame extends JFrame {
                                 netMusicSearchSubTypeComboBox.addItem(tag);
                         }
 
-                        // 搜索歌曲并显示在在线播放列表
+                        // 搜索歌曲并显示在在线歌曲列表
                         CommonResult<NetMusicInfo> result = songRequest ? MusicServerUtil.getSimilarSongs(currMusicMusicInfo)
                                 : MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(), netMusicSearchTypeComboBox.getSelectedIndex(),
                                 (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, limit, netMusicCurrPage);
@@ -9459,7 +9465,7 @@ public class MainFrame extends JFrame {
                 }
             });
         };
-        // 搜索歌单内歌曲并显示在在线播放列表
+        // 搜索歌单内歌曲并显示在在线歌曲列表
         Runnable searchMusicInPlaylist = () -> {
             if (!netMusicListForPlaylistModel.isEmpty()) {
                 loadingAndRun(() -> {
@@ -10463,7 +10469,7 @@ public class MainFrame extends JFrame {
                 });
             }
         };
-        // 搜索专辑内歌曲并显示在在线播放列表
+        // 搜索专辑内歌曲并显示在在线歌曲列表
         Runnable searchMusicInAlbum = () -> {
             if (!netMusicListForAlbumModel.isEmpty()) {
                 loadingAndRun(() -> {
@@ -11492,7 +11498,7 @@ public class MainFrame extends JFrame {
                 });
             }
         };
-        // 搜索歌手内歌曲并显示在在线播放列表
+        // 搜索歌手内歌曲并显示在在线歌曲列表
         Runnable searchMusicInArtist = () -> {
             if (!netMusicListForArtistModel.isEmpty()) {
                 loadingAndRun(() -> {
@@ -12742,7 +12748,7 @@ public class MainFrame extends JFrame {
                 });
             }
         };
-        // 搜索电台内歌曲并显示在在线播放列表
+        // 搜索电台内歌曲并显示在在线歌曲列表
         Runnable searchMusicInRadio = () -> {
             if (!netMusicListForRadioModel.isEmpty()) {
                 loadingAndRun(() -> {
@@ -14515,7 +14521,7 @@ public class MainFrame extends JFrame {
                 }
             });
         };
-        // 搜索榜单内歌曲并显示在在线播放列表
+        // 搜索榜单内歌曲并显示在在线歌曲列表
         Runnable searchMusicInRanking = () -> {
             if (!netMusicListForRankingModel.isEmpty()) {
                 loadingAndRun(() -> {
@@ -15267,7 +15273,7 @@ public class MainFrame extends JFrame {
                 });
             }
         };
-        // 搜索用户内歌曲并显示在在线播放列表
+        // 搜索用户内歌曲并显示在在线歌曲列表
         Runnable searchMusicInUser = () -> {
 //            if (!netMusicListForUserModel.isEmpty()) {
             loadingAndRun(() -> {
@@ -17108,7 +17114,7 @@ public class MainFrame extends JFrame {
             // 搜索推荐歌单/专辑/歌手/电台里的歌
             if (recommendBackwardButton.isEnabled()) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         NetResource resource = itemRecommendList.getSelectedValue();
                         // 这是歌单里的歌
@@ -17236,7 +17242,7 @@ public class MainFrame extends JFrame {
             // 搜索推荐歌单
             else if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17285,7 +17291,7 @@ public class MainFrame extends JFrame {
             // 搜索精品歌单
             else if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17334,7 +17340,7 @@ public class MainFrame extends JFrame {
             // 搜索飙升歌曲
             else if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17373,7 +17379,7 @@ public class MainFrame extends JFrame {
             // 搜索新歌速递
             else if (currRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17412,7 +17418,7 @@ public class MainFrame extends JFrame {
             // 搜索新碟上架
             else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17462,7 +17468,7 @@ public class MainFrame extends JFrame {
             // 搜索歌手排行
             else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17512,7 +17518,7 @@ public class MainFrame extends JFrame {
             // 搜索新晋电台
             else if (currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(
                                 netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage);
@@ -17562,7 +17568,7 @@ public class MainFrame extends JFrame {
             // 搜索热门电台
             else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17612,7 +17618,7 @@ public class MainFrame extends JFrame {
             // 搜索推荐节目
             else if (currRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -17651,7 +17657,7 @@ public class MainFrame extends JFrame {
             // 搜索推荐 MV
             else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
                 loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线播放列表
+                    // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
                                 netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
@@ -20073,7 +20079,8 @@ public class MainFrame extends JFrame {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio;
                     if (currRatio < or) ratio = (or - currRatio) / lrcPiece + currRatio;
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
-                    desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
+                    Statement stmt = statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc);
+                    if (stmt != null) desktopLyricDialog.setLyric(stmt.getLyric(), ratio);
                 } else {
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
                     desktopLyricDialog.setLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_MSG : nextLrc == NextLrc.LOADING ? LRC_LOADING_MSG : BAD_FORMAT_LRC_MSG, 0);
@@ -20900,7 +20907,7 @@ public class MainFrame extends JFrame {
                 // 重置标题
                 updateTitle("刷新 URL 中");
                 playExecutor.execute(() -> {
-                    String url = MusicServerUtil.fetchMusicUrl(musicInfo.getId(), musicInfo.getSource());
+                    String url = MusicServerUtil.fetchMusicUrl(musicInfo);
                     if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
                     else MusicServerUtil.fillAvailableMusicUrl(musicInfo);
                     resetMp();
@@ -21247,7 +21254,7 @@ public class MainFrame extends JFrame {
             player.initMp();
 
             if (instantPlay) playLoaded(false);
-            // 添加到历史播放列表
+            // 添加到历史歌曲列表
             if (model != historyModel) {
                 // 先删掉重复的音乐，再添加
                 historyModel.removeElement(musicInfo == null ? file : musicInfo);
@@ -21593,7 +21600,10 @@ public class MainFrame extends JFrame {
         currUIStyle = style;
 
         Color iconColor = style.getIconColor();
+        Color darkerIconColor = ColorUtil.darker(iconColor, 0.3f);
         Color textColor = style.getTextColor();
+        Color darkerTextColor = ColorUtil.darker(textColor);
+        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(darkerTextColor, 0.5f);
         Color selectedColor = style.getSelectedColor();
         Color foreColor = style.getForeColor();
         Color scrollBarColor = style.getScrollBarColor();
@@ -21622,26 +21632,23 @@ public class MainFrame extends JFrame {
         emptyHintLabel.setForeground(textColor);
 
         // 按钮被禁用时颜色
-        Color disabledColor = ColorUtil.darker(iconColor, 0.3f);
-        netMusicBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMusicBackwardButton.getIcon(), disabledColor));
-        netPlaylistBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), disabledColor));
-        netAlbumBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netAlbumBackwardButton.getIcon(), disabledColor));
-        netArtistBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netArtistBackwardButton.getIcon(), disabledColor));
-        netRadioBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), disabledColor));
-        netMvBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMvBackwardButton.getIcon(), disabledColor));
-        netRankingBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRankingBackwardButton.getIcon(), disabledColor));
-        netUserBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netUserBackwardButton.getIcon(), disabledColor));
-        mvButton.setDisabledIcon(ImageUtil.dye((ImageIcon) mvButton.getIcon(), disabledColor));
-        collectButton.setDisabledIcon(ImageUtil.dye((ImageIcon) collectButton.getIcon(), disabledColor));
-        downloadButton.setDisabledIcon(ImageUtil.dye((ImageIcon) downloadButton.getIcon(), disabledColor));
-        commentButton.setDisabledIcon(ImageUtil.dye((ImageIcon) commentButton.getIcon(), disabledColor));
-        sheetButton.setDisabledIcon(ImageUtil.dye((ImageIcon) sheetButton.getIcon(), disabledColor));
+        netMusicBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMusicBackwardButton.getIcon(), darkerIconColor));
+        netPlaylistBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), darkerIconColor));
+        netAlbumBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netAlbumBackwardButton.getIcon(), darkerIconColor));
+        netArtistBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netArtistBackwardButton.getIcon(), darkerIconColor));
+        netRadioBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), darkerIconColor));
+        netMvBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMvBackwardButton.getIcon(), darkerIconColor));
+        netRankingBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRankingBackwardButton.getIcon(), darkerIconColor));
+        netUserBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netUserBackwardButton.getIcon(), darkerIconColor));
+        mvButton.setDisabledIcon(ImageUtil.dye((ImageIcon) mvButton.getIcon(), darkerIconColor));
+        collectButton.setDisabledIcon(ImageUtil.dye((ImageIcon) collectButton.getIcon(), darkerIconColor));
+        downloadButton.setDisabledIcon(ImageUtil.dye((ImageIcon) downloadButton.getIcon(), darkerIconColor));
+        commentButton.setDisabledIcon(ImageUtil.dye((ImageIcon) commentButton.getIcon(), darkerIconColor));
+        sheetButton.setDisabledIcon(ImageUtil.dye((ImageIcon) sheetButton.getIcon(), darkerIconColor));
 
         // 右键菜单项禁用时颜色
         // 全局设置菜单项禁用颜色
-        UIManager.put("MenuItem.disabledForeground", ColorUtil.darker(textColor));
-
-        disabledColor = ColorUtil.darker(iconColor, 0.3f);
+        UIManager.put("MenuItem.disabledForeground", darkerTextColor);
 
         // 右键菜单项图标
         copyMottoMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
@@ -21654,7 +21661,7 @@ public class MainFrame extends JFrame {
         styleCustomMenuItem.setIcon(ImageUtil.dye(addCustomStyleIcon, iconColor));
 
         closeSong.setIcon(ImageUtil.dye(closeSongIcon, iconColor));
-        closeSong.setDisabledIcon(ImageUtil.dye(closeSongIcon, disabledColor));
+        closeSong.setDisabledIcon(ImageUtil.dye(closeSongIcon, darkerIconColor));
         clearCache.setIcon(ImageUtil.dye(clearCacheIcon, iconColor));
         settingMenuItem.setIcon(ImageUtil.dye(settingsIcon, iconColor));
         donateMenuItem.setIcon(ImageUtil.dye(donateIcon, iconColor));
@@ -21688,38 +21695,38 @@ public class MainFrame extends JFrame {
         playMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
         nextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
         playMvMenuItem.setIcon(ImageUtil.dye(playMvMenuItemIcon, iconColor));
-        playMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, disabledColor));
+        playMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, darkerIconColor));
         collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
         downloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
-        downloadMenuItem.setDisabledIcon(ImageUtil.dye(downloadMenuItemIcon, disabledColor));
+        downloadMenuItem.setDisabledIcon(ImageUtil.dye(downloadMenuItemIcon, darkerIconColor));
         commentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
-        commentMenuItem.setDisabledIcon(ImageUtil.dye(commentMenuItemIcon, disabledColor));
+        commentMenuItem.setDisabledIcon(ImageUtil.dye(commentMenuItemIcon, darkerIconColor));
         sheetMenuItem.setIcon(ImageUtil.dye(sheetMenuItemIcon, iconColor));
-        sheetMenuItem.setDisabledIcon(ImageUtil.dye(sheetMenuItemIcon, disabledColor));
+        sheetMenuItem.setDisabledIcon(ImageUtil.dye(sheetMenuItemIcon, darkerIconColor));
         searchSongMenuItem.setIcon(ImageUtil.dye(searchSongItemIcon, iconColor));
         similarSongMenuItem.setIcon(ImageUtil.dye(similarMenuItemIcon, iconColor));
-        similarSongMenuItem.setDisabledIcon(ImageUtil.dye(similarMenuItemIcon, disabledColor));
+        similarSongMenuItem.setDisabledIcon(ImageUtil.dye(similarMenuItemIcon, darkerIconColor));
         relatedPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
-        relatedPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, disabledColor));
+        relatedPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, darkerIconColor));
         authorMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
-        authorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, disabledColor));
+        authorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, darkerIconColor));
         albumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
-        albumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, disabledColor));
+        albumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, darkerIconColor));
         recRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
-        recRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, disabledColor));
+        recRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, darkerIconColor));
         relatedMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
-        relatedMvMenuItem.setDisabledIcon(ImageUtil.dye(similarMvMenuItemIcon, disabledColor));
+        relatedMvMenuItem.setDisabledIcon(ImageUtil.dye(similarMvMenuItemIcon, darkerIconColor));
         copyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
         locateFileMenuItem.setIcon(ImageUtil.dye(locateFileMenuItemIcon, iconColor));
-        locateFileMenuItem.setDisabledIcon(ImageUtil.dye(locateFileMenuItemIcon, disabledColor));
+        locateFileMenuItem.setDisabledIcon(ImageUtil.dye(locateFileMenuItemIcon, darkerIconColor));
         editInfoMenuItem.setIcon(ImageUtil.dye(editInfoMenuItemIcon, iconColor));
-        editInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, disabledColor));
+        editInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, darkerIconColor));
         removeMenuItem.setIcon(ImageUtil.dye(removeMenuItemIcon, iconColor));
 
         netMusicPlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
         netMusicNextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
         netMusicPlayMvMenuItem.setIcon(ImageUtil.dye(playMvMenuItemIcon, iconColor));
-        netMusicPlayMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, disabledColor));
+        netMusicPlayMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, darkerIconColor));
         netMusicCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
         netMusicDownloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
         netMusicCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
@@ -21728,11 +21735,11 @@ public class MainFrame extends JFrame {
         netMusicSimilarSongMenuItem.setIcon(ImageUtil.dye(similarMenuItemIcon, iconColor));
         netMusicRelatedPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
         netMusicAuthorMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
-        netMusicAuthorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, disabledColor));
+        netMusicAuthorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, darkerIconColor));
         netMusicAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
-        netMusicAlbumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, disabledColor));
+        netMusicAlbumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, darkerIconColor));
         netMusicRecRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
-        netMusicRecRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, disabledColor));
+        netMusicRecRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, darkerIconColor));
         netMusicRelatedMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
         netMusicCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
@@ -21806,7 +21813,7 @@ public class MainFrame extends JFrame {
 
         netCommentCopyMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
         netCommentSaveProfileMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
-        netCommentSaveProfileMenuItem.setDisabledIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, disabledColor));
+        netCommentSaveProfileMenuItem.setDisabledIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, darkerIconColor));
         netCommentUserMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
         netCommentPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
         netCommentAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
@@ -21815,72 +21822,72 @@ public class MainFrame extends JFrame {
         netSheetCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
         locateLrcMenuItem.setIcon(ImageUtil.dye(locateLrcMenuItemIcon, iconColor));
-        locateLrcMenuItem.setDisabledIcon(ImageUtil.dye(locateLrcMenuItemIcon, disabledColor));
+        locateLrcMenuItem.setDisabledIcon(ImageUtil.dye(locateLrcMenuItemIcon, darkerIconColor));
         copyMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
         browseLrcMenuItem.setIcon(ImageUtil.dye(browseLrcMenuItemIcon, iconColor));
-        browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, disabledColor));
+        browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, darkerIconColor));
         browseLrcTransMenuItem.setIcon(ImageUtil.dye(browseLrcMenuItemIcon, iconColor));
-        browseLrcTransMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, disabledColor));
+        browseLrcTransMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, darkerIconColor));
         downloadLrcMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
-        downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, disabledColor));
+        downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
         downloadLrcTransMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
-        downloadLrcTransMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, disabledColor));
-        spectrumOpacityMenuItem.setDisabledIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, disabledColor));
+        downloadLrcTransMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
+        spectrumOpacityMenuItem.setDisabledIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
             mi.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, iconColor));
         }
-        currLrcOffsetMenuItem.setDisabledIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, disabledColor));
+        currLrcOffsetMenuItem.setDisabledIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
             mi.setIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, iconColor));
         }
 
         saveAlbumImageMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
-        saveAlbumImageMenuItem.setDisabledIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, disabledColor));
+        saveAlbumImageMenuItem.setDisabledIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, darkerIconColor));
         copySongNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
         copyArtistMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
         copyAlbumMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
         downloadPlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
         downloadNextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
-        downloadNextPlayMenuItem.setDisabledIcon(ImageUtil.dye(nextPlayMenuItemIcon, disabledColor));
+        downloadNextPlayMenuItem.setDisabledIcon(ImageUtil.dye(nextPlayMenuItemIcon, darkerIconColor));
         downloadLocateFileMenuItem.setIcon(ImageUtil.dye(locateFileMenuItemIcon, iconColor));
         downloadEditInfoMenuItem.setIcon(ImageUtil.dye(editInfoMenuItemIcon, iconColor));
-        downloadEditInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, disabledColor));
+        downloadEditInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, darkerIconColor));
         cancelTaskMenuItem.setIcon(ImageUtil.dye(cancelTaskMenuItemIcon, iconColor));
-        cancelTaskMenuItem.setDisabledIcon(ImageUtil.dye(cancelTaskMenuItemIcon, disabledColor));
+        cancelTaskMenuItem.setDisabledIcon(ImageUtil.dye(cancelTaskMenuItemIcon, darkerIconColor));
         restartTaskMenuItem.setIcon(ImageUtil.dye(restartTaskMenuItemIcon, iconColor));
-        restartTaskMenuItem.setDisabledIcon(ImageUtil.dye(restartTaskMenuItemIcon, disabledColor));
+        restartTaskMenuItem.setDisabledIcon(ImageUtil.dye(restartTaskMenuItemIcon, darkerIconColor));
         removeTaskMenuItem.setIcon(ImageUtil.dye(removeMenuItemIcon, iconColor));
 
         playQueuePlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
         playQueueNextPlayMenuItem.setIcon(ImageUtil.dye(nextPlayMenuItemIcon, iconColor));
         playQueuePlayMvMenuItem.setIcon(ImageUtil.dye(playMvMenuItemIcon, iconColor));
-        playQueuePlayMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, disabledColor));
+        playQueuePlayMvMenuItem.setDisabledIcon(ImageUtil.dye(playMvMenuItemIcon, darkerIconColor));
         playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
         playQueueDownloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
-        playQueueDownloadMenuItem.setDisabledIcon(ImageUtil.dye(downloadMenuItemIcon, disabledColor));
+        playQueueDownloadMenuItem.setDisabledIcon(ImageUtil.dye(downloadMenuItemIcon, darkerIconColor));
         playQueueCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
-        playQueueCommentMenuItem.setDisabledIcon(ImageUtil.dye(commentMenuItemIcon, disabledColor));
+        playQueueCommentMenuItem.setDisabledIcon(ImageUtil.dye(commentMenuItemIcon, darkerIconColor));
         playQueueSheetMenuItem.setIcon(ImageUtil.dye(sheetMenuItemIcon, iconColor));
-        playQueueSheetMenuItem.setDisabledIcon(ImageUtil.dye(sheetMenuItemIcon, disabledColor));
+        playQueueSheetMenuItem.setDisabledIcon(ImageUtil.dye(sheetMenuItemIcon, darkerIconColor));
         playQueueSearchSongMenuItem.setIcon(ImageUtil.dye(searchSongItemIcon, iconColor));
         playQueueSimilarSongMenuItem.setIcon(ImageUtil.dye(similarMenuItemIcon, iconColor));
-        playQueueSimilarSongMenuItem.setDisabledIcon(ImageUtil.dye(similarMenuItemIcon, disabledColor));
+        playQueueSimilarSongMenuItem.setDisabledIcon(ImageUtil.dye(similarMenuItemIcon, darkerIconColor));
         playQueueRelatedPlaylistMenuItem.setIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, iconColor));
-        playQueueRelatedPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, disabledColor));
+        playQueueRelatedPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(relatedPlaylistMenuItemIcon, darkerIconColor));
         playQueueAuthorMenuItem.setIcon(ImageUtil.dye(similarArtistMenuItemIcon, iconColor));
-        playQueueAuthorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, disabledColor));
+        playQueueAuthorMenuItem.setDisabledIcon(ImageUtil.dye(similarArtistMenuItemIcon, darkerIconColor));
         playQueueAlbumMenuItem.setIcon(ImageUtil.dye(browseAlbumMenuItemIcon, iconColor));
-        playQueueAlbumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, disabledColor));
+        playQueueAlbumMenuItem.setDisabledIcon(ImageUtil.dye(browseAlbumMenuItemIcon, darkerIconColor));
         playQueueRecRadioMenuItem.setIcon(ImageUtil.dye(radioMenuItemIcon, iconColor));
-        playQueueRecRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, disabledColor));
+        playQueueRecRadioMenuItem.setDisabledIcon(ImageUtil.dye(radioMenuItemIcon, darkerIconColor));
         playQueueRelatedMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
-        playQueueRelatedMvMenuItem.setDisabledIcon(ImageUtil.dye(similarMvMenuItemIcon, disabledColor));
+        playQueueRelatedMvMenuItem.setDisabledIcon(ImageUtil.dye(similarMvMenuItemIcon, darkerIconColor));
         playQueueCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
         playQueueLocateFileMenuItem.setIcon(ImageUtil.dye(locateFileMenuItemIcon, iconColor));
-        playQueueLocateFileMenuItem.setDisabledIcon(ImageUtil.dye(locateFileMenuItemIcon, disabledColor));
+        playQueueLocateFileMenuItem.setDisabledIcon(ImageUtil.dye(locateFileMenuItemIcon, darkerIconColor));
         playQueueEditInfoMenuItem.setIcon(ImageUtil.dye(editInfoMenuItemIcon, iconColor));
-        playQueueEditInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, disabledColor));
+        playQueueEditInfoMenuItem.setDisabledIcon(ImageUtil.dye(editInfoMenuItemIcon, darkerIconColor));
         playQueueRemoveMenuItem.setIcon(ImageUtil.dye(removeMenuItemIcon, iconColor));
 
         // 菜单项文字颜色
@@ -22010,26 +22017,29 @@ public class MainFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        filterTextField.setForeground(filterTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        filterTextField.setForeground(filterTextField.isOccupied() ? textColor : darkerTextColor);
         filterTextField.setCaretColor(textColor);
+        filterTextField.setSelectionColor(darkerTextAlphaColor);
         // 在线音乐搜索栏透明
         focusListeners = searchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        searchTextField.setForeground(searchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        searchTextField.setForeground(searchTextField.isOccupied() ? textColor : darkerTextColor);
         searchTextField.setCaretColor(textColor);
+        searchTextField.setSelectionColor(darkerTextAlphaColor);
         netMusicSourceComboBox.setUI(new ComboBoxUI(netMusicSourceComboBox, THIS));
         netMusicSearchTypeComboBox.setUI(new ComboBoxUI(netMusicSearchTypeComboBox, THIS));
         netMusicSearchSubTypeComboBox.setUI(new ComboBoxUI(netMusicSearchSubTypeComboBox, THIS));
         netMusicPageTextField.setForeground(textColor);
         netMusicPageTextField.setCaretColor(textColor);
+        netMusicPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 歌单搜索栏透明
         netPlaylistIdCheckBox.setForeground(textColor);
         netPlaylistIdCheckBox.setIcon(ImageUtil.dye(uncheckedIcon, iconColor));
@@ -22038,88 +22048,101 @@ public class MainFrame extends JFrame {
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netPlaylistSearchTextField.setCaretColor(textColor);
+        netPlaylistSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netPlaylistSourceComboBox.setUI(new ComboBoxUI(netPlaylistSourceComboBox, THIS));
         netPlaylistPageTextField.setForeground(textColor);
         netPlaylistPageTextField.setCaretColor(textColor);
+        netPlaylistPageTextField.setSelectionColor(darkerTextAlphaColor);
         netPlaylistPlayAllButton.setForeground(textColor);
         // 专辑搜索栏透明
         focusListeners = netAlbumSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netAlbumSearchTextField.setCaretColor(textColor);
+        netAlbumSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netAlbumSourceComboBox.setUI(new ComboBoxUI(netAlbumSourceComboBox, THIS));
         netAlbumPageTextField.setForeground(textColor);
         netAlbumPageTextField.setCaretColor(textColor);
+        netAlbumPageTextField.setSelectionColor(darkerTextAlphaColor);
         netAlbumPlayAllButton.setForeground(textColor);
         // 歌手搜索栏透明
         focusListeners = netArtistSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netArtistSearchTextField.setCaretColor(textColor);
+        netArtistSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netArtistSourceComboBox.setUI(new ComboBoxUI(netArtistSourceComboBox, THIS));
         netArtistPageTextField.setForeground(textColor);
         netArtistPageTextField.setCaretColor(textColor);
+        netArtistPageTextField.setSelectionColor(darkerTextAlphaColor);
         netArtistPlayAllButton.setForeground(textColor);
         // 电台搜索栏透明
         focusListeners = netRadioSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netRadioSearchTextField.setCaretColor(textColor);
+        netRadioSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netRadioSourceComboBox.setUI(new ComboBoxUI(netRadioSourceComboBox, THIS));
         netRadioPageTextField.setForeground(textColor);
         netRadioPageTextField.setCaretColor(textColor);
+        netRadioPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRadioPlayAllButton.setForeground(textColor);
         // MV 搜索栏透明
         focusListeners = netMvSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netMvSearchTextField.setCaretColor(textColor);
+        netMvSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netMvSourceComboBox.setUI(new ComboBoxUI(netMvSourceComboBox, THIS));
         netMvPageTextField.setForeground(textColor);
         netMvPageTextField.setCaretColor(textColor);
+        netMvPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 榜单搜索栏透明
         netRankingPageTextField.setForeground(textColor);
         netRankingPageTextField.setCaretColor(textColor);
+        netRankingPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRankingPlayAllButton.setForeground(textColor);
         // 用户搜索栏透明
         focusListeners = netUserSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
                 ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(ColorUtil.darker(textColor));
+                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
             }
         }
-        netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? textColor : ColorUtil.darker(textColor));
+        netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netUserSearchTextField.setCaretColor(textColor);
+        netUserSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netUserSourceComboBox.setUI(new ComboBoxUI(netUserSourceComboBox, THIS));
         netUserRecordTypeComboBox.setUI(new ComboBoxUI(netUserRecordTypeComboBox, THIS));
         netUserPageTextField.setForeground(textColor);
         netUserPageTextField.setCaretColor(textColor);
+        netUserPageTextField.setSelectionColor(darkerTextAlphaColor);
         netUserPlayAllButton.setForeground(textColor);
         // 榜单栏
         netRankingSourceComboBox.setUI(new ComboBoxUI(netRankingSourceComboBox, THIS));
@@ -22127,20 +22150,24 @@ public class MainFrame extends JFrame {
         netCommentTypeComboBox.setUI(new ComboBoxUI(netCommentTypeComboBox, THIS));
         netCommentPageTextField.setForeground(textColor);
         netCommentPageTextField.setCaretColor(textColor);
+        netCommentPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 乐谱栏透明
         netSheetPageTextField.setForeground(textColor);
         netSheetPageTextField.setCaretColor(textColor);
+        netSheetPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 推荐页码文本框
         netRecommendSourceComboBox.setUI(new ComboBoxUI(netRecommendSourceComboBox, THIS));
         netRecommendSortTypeComboBox.setUI(new ComboBoxUI(netRecommendSortTypeComboBox, THIS));
         netRecommendPageTextField.setForeground(textColor);
         netRecommendPageTextField.setCaretColor(textColor);
+        netRecommendPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, 240));
         netRecommendPlayAllButton.setForeground(textColor);
         // 收藏页码文本框
         collectionRecordTypeComboBox.setUI(new ComboBoxUI(collectionRecordTypeComboBox, THIS));
         collectionPageTextField.setForeground(textColor);
         collectionPageTextField.setCaretColor(textColor);
+        collectionPageTextField.setSelectionColor(darkerTextAlphaColor);
         collectionPlayAllButton.setForeground(textColor);
         // 推荐工具栏按钮透明
         playlistRecommendButton.setForeground(textColor);
@@ -22343,7 +22370,7 @@ public class MainFrame extends JFrame {
         taskCountLabel.setForeground(textColor);
         playQueueCountLabel.setForeground(textColor);
 
-        // 播放列表透明
+        // 音乐列表透明
         MusicListRenderer musicListRenderer = new MusicListRenderer(player);
         musicListRenderer.setForeColor(foreColor);
         musicListRenderer.setSelectedColor(selectedColor);

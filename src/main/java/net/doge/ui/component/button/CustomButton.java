@@ -17,17 +17,15 @@ public class CustomButton extends JButton {
     private static BufferedImage maskImg = LMIconManager.getImage("mask");
 
     public CustomButton() {
-        init();
+        this(null, null);
     }
 
     public CustomButton(String text) {
-        super(text);
-        init();
+        this(text, null);
     }
 
     public CustomButton(Icon icon) {
-        super(icon);
-        init();
+        this(null, icon);
     }
 
     public CustomButton(String text, Icon icon) {

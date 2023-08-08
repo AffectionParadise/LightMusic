@@ -49,6 +49,6 @@ public class QqTrackUrlReq {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(new QqTrackUrlReq().getTrackUrl("0039MnYb0qxYhV", "hq"));
+//        System.out.println(new QqTrackUrlReq().getTrackUrl("0039MnYb0qxYhV", "sq"));
 //    }
 }

@@ -19,7 +19,7 @@ public class CustomMenuItem extends JMenuItem {
     private final float destAlpha = 0.1f;
 
     public CustomMenuItem() {
-        init();
+        this(null);
     }
 
     public CustomMenuItem(String text) {

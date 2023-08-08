@@ -19,8 +19,7 @@ public class CustomCheckMenuItem extends JCheckBoxMenuItem {
     private final float destAlpha = 0.1f;
 
     public CustomCheckMenuItem(String text) {
-        super(text);
-        init();
+        this(text, false);
     }
 
     public CustomCheckMenuItem(String text, boolean selected) {

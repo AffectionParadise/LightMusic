@@ -9,7 +9,6 @@ import java.awt.*;
  * @Date 2020/12/13
  */
 public class CustomMenu extends JMenu {
-
     public CustomMenu(String text) {
         super(text);
         createBorder();

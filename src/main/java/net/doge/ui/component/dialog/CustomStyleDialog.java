@@ -19,6 +19,7 @@ import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMStyleManager;
 import net.doge.util.system.FileUtil;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -118,7 +119,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         okButton.addActionListener(e -> {
             // 主题名称不为空
             if ("".equals(results[0])) {
-                new TipDialog(f, STYLE_NAME_NOT_NULL_MSG).showDialog();
+                new TipDialog(f, STYLE_NAME_NOT_NULL_MSG, true).showDialog();
                 return;
             }
             // 主题名称不重复
@@ -128,7 +129,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
                 if (style.getName().equals(results[0])
                         && (style != showedStyle || isAdd)) {
-                    new TipDialog(f, STYLE_NAME_DUPLICATE_MSG).showDialog();
+                    new TipDialog(f, STYLE_NAME_DUPLICATE_MSG, true).showDialog();
                     return;
                 }
             }
@@ -158,7 +159,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                         String ik = showedStyle.getImgKey();
                         FileUtil.delete(ik);
                     } else {
-                        new TipDialog(f, IMG_FILE_NOT_EXIST_MSG).showDialog();
+                        new TipDialog(f, IMG_FILE_NOT_EXIST_MSG, true).showDialog();
                         return;
                     }
                 }
@@ -205,6 +206,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         Border eb = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 
         Color textColor = f.currUIStyle.getTextColor();
+        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
             CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
@@ -217,6 +219,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 CustomTextField component = (CustomTextField) components[i];
                 component.setForeground(textColor);
                 component.setCaretColor(textColor);
+                component.setSelectionColor(darkerTextAlphaColor);
                 // 加载主题名称
                 component.setText((String) results[i]);
                 Document document = component.getDocument();
@@ -260,7 +263,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                         results[finalI] = path;
                         BufferedImage img = ImageUtil.read(path);
                         if (img == null) {
-                            new TipDialog(f, IMG_NOT_VALID_MSG).showDialog();
+                            new TipDialog(f, IMG_NOT_VALID_MSG, true).showDialog();
                             return;
                         }
                         if (img.getWidth() >= img.getHeight())

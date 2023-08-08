@@ -10,8 +10,7 @@ public class CustomScrollPane extends JScrollPane {
     private int scrollingTo;
 
     public CustomScrollPane() {
-        super();
-        init();
+        this(null);
     }
 
     public CustomScrollPane(Component comp) {

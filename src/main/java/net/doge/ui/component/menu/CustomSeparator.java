@@ -14,7 +14,6 @@ public class CustomSeparator extends JSeparator {
     private MainFrame f;
 
     public CustomSeparator(MainFrame f) {
-        super();
         this.f = f;
     }
 

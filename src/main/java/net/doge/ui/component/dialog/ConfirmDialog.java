@@ -20,9 +20,9 @@ import java.awt.*;
  * @Date 2021/1/5
  */
 public class ConfirmDialog extends AbstractShadowDialog {
-    private DialogButton yes = new DialogButton();
-    private DialogButton no = new DialogButton();
-    private DialogButton cancel = new DialogButton();
+    private DialogButton yes;
+    private DialogButton no;
+    private DialogButton cancel;
     private int response;
 
     private String message;
@@ -34,36 +34,32 @@ public class ConfirmDialog extends AbstractShadowDialog {
     private CustomPanel buttonPanel = new CustomPanel();
 
     public ConfirmDialog(MainFrame f, String message) {
-        super(f);
-        this.message = message;
+        this(f, message, null);
     }
 
     public ConfirmDialog(MainFrame f, String message, String yesText) {
-        this(f, message);
-        Color textColor = f.currUIStyle.getTextColor();
-        yes = new DialogButton(yesText, textColor);
+        this(f, message, yesText, null);
     }
 
     public ConfirmDialog(MainFrame f, String message, String yesText, String noText) {
-        this(f, message, yesText);
-        Color textColor = f.currUIStyle.getTextColor();
-        no = new DialogButton(noText, textColor);
+        this(f, message, yesText, noText, null);
     }
 
     public ConfirmDialog(MainFrame f, String message, String yesText, String noText, String cancelText) {
-        this(f, message, yesText, noText);
-        Color textColor = f.currUIStyle.getTextColor();
-        cancel = new DialogButton(cancelText, textColor);
-    }
-
-    public ConfirmDialog(MainFrame f, String message, String yesText, String noText, String cancelText, boolean showCheck, String checkText) {
-        this(f, message, yesText, noText, cancelText);
-        this.showCheck = showCheck;
-        checkBox.setText(checkText);
+        this(f, message, yesText, noText, cancelText, false, null);
     }
 
     public ConfirmDialog(MainFrame f, String message, String yesText, String noText, boolean showCheck, String checkText) {
-        this(f, message, yesText, noText);
+        this(f, message, yesText, noText, null, showCheck, checkText);
+    }
+
+    public ConfirmDialog(MainFrame f, String message, String yesText, String noText, String cancelText, boolean showCheck, String checkText) {
+        super(f);
+        this.message = message;
+        Color textColor = f.currUIStyle.getTextColor();
+        yes = new DialogButton(yesText, textColor);
+        no = new DialogButton(noText, textColor);
+        cancel = new DialogButton(cancelText, textColor);
         this.showCheck = showCheck;
         checkBox.setText(checkText);
     }

@@ -7,8 +7,7 @@ import java.awt.*;
 
 public class CustomCheckBox extends JCheckBox {
     public CustomCheckBox() {
-        super();
-        init();
+        this(null);
     }
 
     public CustomCheckBox(String text) {

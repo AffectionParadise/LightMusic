@@ -136,7 +136,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             UIStyle style = styleList.getSelectedValue();
             if (style == null) return;
             if (!style.hasImg()) {
-                new TipDialog(f, IMG_LOST_MSG).showDialog();
+                new TipDialog(f, IMG_LOST_MSG, true).showDialog();
                 return;
             }
             f.changeUIStyle(style);
@@ -172,7 +172,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             UIStyle value = styleList.getSelectedValue();
             if (value == null) return;
             if (value.isPreDefined()) {
-                new TipDialog(f, REMOVE_DENIED_MSG).showDialog();
+                new TipDialog(f, REMOVE_DENIED_MSG, true).showDialog();
                 return;
             }
             ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, "是", "否");
@@ -200,7 +200,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             UIStyle value = styleList.getSelectedValue();
             if (value == null) return;
             if (value.isPreDefined()) {
-                new TipDialog(f, EDIT_DENIED_MSG).showDialog();
+                new TipDialog(f, EDIT_DENIED_MSG, true).showDialog();
                 return;
             }
             CustomStyleDialog dialog = new CustomStyleDialog(f, "更新", value);
@@ -208,7 +208,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             if (length == 0) return;
             // 只能单选
             if (length > 1) {
-                new TipDialog(f, SINGLE_SELECT_MSG).showDialog();
+                new TipDialog(f, SINGLE_SELECT_MSG, true).showDialog();
                 return;
             }
             dialog.showDialog();

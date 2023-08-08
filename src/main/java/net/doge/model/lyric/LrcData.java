@@ -96,7 +96,7 @@ public class LrcData {
     private void clean() {
         for (int i = 0; i < statements.size(); i++) {
             Statement stmt = statements.get(i);
-            if (!stmt.isEmpty()) continue;
+            if (stmt.notEmpty()) continue;
             if (i > 0) {
                 Statement ls = statements.get(i - 1);
                 if (!ls.hasEndTime()) ls.setEndTime(stmt.getTime());
