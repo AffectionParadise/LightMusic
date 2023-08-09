@@ -24,14 +24,4 @@ public class BlurConstants {
     public static int darkerFactorIndex = 2;
     public static final String[] darkerFactorName = {"较小 (60%)", "小 (65%)", "中 (70%)", "大 (75%)", "较大 (80%)", "极大 (85%)"};
     public static final float[] darkerFactor = {0.6f, 0.65f, 0.7f, 0.75f, 0.8f, 0.85f};
-
-//    // 线性渐变色彩风格
-//    public static final int VIBRANT = 0;
-//    public static final int LIGHT_VIBRANT = 1;
-//    public static final int DARK_VIBRANT = 2;
-//    public static final int MUTED = 3;
-//    public static final int LIGHT_MUTED = 4;
-//    public static final int DARK_MUTED = 5;
-//    public static int gradientColorStyleIndex = VIBRANT;
-//    public static final String[] gradientColorStyleName = {"鲜艳", "明亮鲜艳", "暗淡鲜艳", "柔和", "明亮柔和", "暗淡柔和"};
 }

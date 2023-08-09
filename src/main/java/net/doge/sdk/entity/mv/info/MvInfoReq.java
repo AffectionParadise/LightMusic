@@ -5,6 +5,8 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.Format;
+import net.doge.constant.system.VideoQuality;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
@@ -38,9 +40,16 @@ public class MvInfoReq {
      */
     public void fillMvInfo(NetMvInfo mvInfo) {
         // 信息完整直接跳过
-        if (mvInfo.isIntegrated()) return;
+        if (mvInfo.isIntegrated() && mvInfo.isQualityMatch()) return;
 
-        mvInfo.setUrl(new MvUrlReq().fetchMvUrl(mvInfo));
+        String url = new MvUrlReq().fetchMvUrl(mvInfo);
+        mvInfo.setUrl(url);
+
+        // 根据 url 判断视频的格式
+        if (url.contains(".flv")) mvInfo.setFormat(Format.FLV);
+
+        // 更新画质
+        mvInfo.setQuality(VideoQuality.quality);
     }
 
     /**

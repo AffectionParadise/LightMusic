@@ -63,7 +63,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     // 显示
     private CustomLabel view = new CustomLabel();
 
-    private CustomComboBox<String> modelComboBox = new CustomComboBox();
+    private CustomComboBox<String> modelComboBox = new CustomComboBox<>();
     // 文本框
     private CustomLabel rLabel = new CustomLabel("R：");
     private CustomTextField rTextField = new CustomTextField(3);

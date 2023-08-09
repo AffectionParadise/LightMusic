@@ -82,7 +82,7 @@ public class NetRankingInfo implements NetResource {
      * @return
      */
     public boolean isIntegrated() {
-        return coverImg != null;
+        return hasCoverImg();
     }
 
     public boolean hasCoverImgThumb() {

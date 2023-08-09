@@ -291,7 +291,11 @@ public class VideoDialog extends AbstractTitledDialog {
             else if (type == MediaException.Type.MEDIA_INACCESSIBLE
                     || type == MediaException.Type.MEDIA_UNAVAILABLE
                     || type == MediaException.Type.UNKNOWN) {
-                if (!isLocal) mvInfo.setUrl(uri = MusicServerUtil.fetchMvUrl(mvInfo));
+                if (!isLocal) {
+                    mvInfo.setUrl("");
+                    MusicServerUtil.fillMvInfo(mvInfo);
+                    uri = mvInfo.getUrl();
+                }
                 initAgain();
             }
             // 尝试多次无效直接关闭窗口

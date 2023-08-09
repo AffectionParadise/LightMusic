@@ -1088,7 +1088,7 @@ public class MainFrame extends JFrame {
     // 收藏返回按钮
     private CustomButton collectionBackwardButton = new CustomButton(backwardIcon);
     // 收藏用户听歌记录类型下拉框
-    private CustomComboBox<String> collectionRecordTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> collectionRecordTypeComboBox = new CustomComboBox<>();
     private DefaultComboBoxModel<String> collectionRecordTypeComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> collectionOrderComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> collectionSortTypeComboBoxModel = new DefaultComboBoxModel<>();
@@ -1293,9 +1293,9 @@ public class MainFrame extends JFrame {
     // 返回关键词面板按钮
     private CustomButton netMusicBackwardButton = new CustomButton(backwardIcon);
     // 在线音乐搜索类型下拉框
-    private CustomComboBox<String> netMusicSourceComboBox = new CustomComboBox();
-    private CustomComboBox<String> netMusicSearchTypeComboBox = new CustomComboBox();
-    private CustomComboBox<String> netMusicSearchSubTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> netMusicSourceComboBox = new CustomComboBox<>();
+    private CustomComboBox<String> netMusicSearchTypeComboBox = new CustomComboBox<>();
+    private CustomComboBox<String> netMusicSearchSubTypeComboBox = new CustomComboBox<>();
     // 在线音乐刷新按钮
     private CustomButton netMusicRefreshButton = new CustomButton(refreshIcon);
     // 在线音乐页数框
@@ -1368,7 +1368,7 @@ public class MainFrame extends JFrame {
     // 歌单数量面板
     private CustomPanel netPlaylistCountPanel = new CustomPanel();
     // 歌单源
-    private CustomComboBox<String> netPlaylistSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netPlaylistSourceComboBox = new CustomComboBox<>();
     // 歌单数量标签
     private CustomLabel netPlaylistCountLabel = new CustomLabel();
     // 歌单关键词面板
@@ -1440,7 +1440,7 @@ public class MainFrame extends JFrame {
     // 专辑数量面板
     private CustomPanel netAlbumCountPanel = new CustomPanel();
     // 专辑源
-    private CustomComboBox<String> netAlbumSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netAlbumSourceComboBox = new CustomComboBox<>();
     // 专辑数量标签
     private CustomLabel netAlbumCountLabel = new CustomLabel();
     // 专辑关键词面板
@@ -1526,7 +1526,7 @@ public class MainFrame extends JFrame {
     // 歌手数量面板
     private CustomPanel netArtistCountPanel = new CustomPanel();
     // 歌手源
-    private CustomComboBox<String> netArtistSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netArtistSourceComboBox = new CustomComboBox<>();
     // 歌手数量标签
     private CustomLabel netArtistCountLabel = new CustomLabel();
     // 歌手关键词面板
@@ -1586,7 +1586,7 @@ public class MainFrame extends JFrame {
     // 电台搜索按钮
     private CustomButton netRadioSearchButton = new CustomButton(searchIcon);
     // 电台排序类型下拉框
-    private CustomComboBox<String> netRadioSortTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> netRadioSortTypeComboBox = new CustomComboBox<>();
     // 电台播放全部按钮
     private CustomButton netRadioPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 电台刷新按钮
@@ -1606,7 +1606,7 @@ public class MainFrame extends JFrame {
     // 电台数量面板
     private CustomPanel netRadioCountPanel = new CustomPanel();
     // 电台源
-    private CustomComboBox<String> netRadioSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netRadioSourceComboBox = new CustomComboBox<>();
     // 电台数量标签
     private CustomLabel netRadioCountLabel = new CustomLabel();
     // 电台关键词面板
@@ -1656,7 +1656,7 @@ public class MainFrame extends JFrame {
     // MV 搜索按钮
     private CustomButton netMvSearchButton = new CustomButton(searchIcon);
     // MV 排序类型下拉框
-    private CustomComboBox<String> netMvSortTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> netMvSortTypeComboBox = new CustomComboBox<>();
     // MV 刷新按钮
     private CustomButton netMvRefreshButton = new CustomButton(refreshIcon);
     // MV 页数框
@@ -1674,7 +1674,7 @@ public class MainFrame extends JFrame {
     // MV 数量面板
     private CustomPanel netMvCountPanel = new CustomPanel();
     // MV 源
-    private CustomComboBox<String> netMvSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netMvSourceComboBox = new CustomComboBox<>();
     //  MV 数量标签
     private CustomLabel netMvCountLabel = new CustomLabel();
     // MV 关键词面板
@@ -1736,7 +1736,7 @@ public class MainFrame extends JFrame {
     // 榜单数量面板
     private CustomPanel netRankingCountPanel = new CustomPanel();
     // 榜单源
-    private CustomComboBox<String> netRankingSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netRankingSourceComboBox = new CustomComboBox<>();
     // 榜单数量标签
     private CustomLabel netRankingCountLabel = new CustomLabel();
 
@@ -1773,7 +1773,7 @@ public class MainFrame extends JFrame {
     // 用户标题标签
     private CustomLabel netUserTitleLabel = new CustomLabel();
     // 用户听歌记录类型下拉框
-    private CustomComboBox<String> netUserRecordTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> netUserRecordTypeComboBox = new CustomComboBox<>();
     private DefaultComboBoxModel<String> recordTypeComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> orderComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> sortTypeComboBoxModel = new DefaultComboBoxModel<>();
@@ -1804,7 +1804,7 @@ public class MainFrame extends JFrame {
     // 用户数量面板
     private CustomPanel netUserCountPanel = new CustomPanel();
     // 用户源
-    private CustomComboBox<String> netUserSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netUserSourceComboBox = new CustomComboBox<>();
     // 用户数量标签
     private CustomLabel netUserCountLabel = new CustomLabel();
     // 用户关键词面板
@@ -1869,9 +1869,9 @@ public class MainFrame extends JFrame {
     // 推荐数量面板
     private CustomPanel recommendCountPanel = new CustomPanel();
     // 推荐源
-    private CustomComboBox<String> netRecommendSourceComboBox = new CustomComboBox();
+    private CustomComboBox<String> netRecommendSourceComboBox = new CustomComboBox<>();
     // 推荐排序
-    private CustomComboBox<String> netRecommendSortTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> netRecommendSortTypeComboBox = new CustomComboBox<>();
     // 推荐数量标签
     private CustomLabel recommendCountLabel = new CustomLabel();
     // 推荐歌单/专辑/歌手/电台音乐工具栏
@@ -1879,7 +1879,7 @@ public class MainFrame extends JFrame {
     // 返回推荐歌单/专辑/歌手/电台按钮
     private CustomButton recommendBackwardButton = new CustomButton(backwardIcon);
     // 推荐歌单标签下拉框
-    private CustomComboBox<String> netRecommendTagComboBox = new CustomComboBox();
+    private CustomComboBox<String> netRecommendTagComboBox = new CustomComboBox<>();
     // 推荐播放全部按钮
     private CustomButton netRecommendPlayAllButton = new CustomButton("播放全部", playAllIcon);
     // 推荐刷新按钮
@@ -2167,7 +2167,7 @@ public class MainFrame extends JFrame {
     // 评论标题标签
     private CustomLabel netCommentTitleLabel = new CustomLabel();
     // 评论类型下拉框
-    private CustomComboBox<String> netCommentTypeComboBox = new CustomComboBox();
+    private CustomComboBox<String> netCommentTypeComboBox = new CustomComboBox<>();
     // 评论刷新按钮
     private CustomButton netCommentRefreshButton = new CustomButton(refreshIcon);
     // 评论页数框
@@ -2208,7 +2208,7 @@ public class MainFrame extends JFrame {
     // 乐谱标题标签
     private CustomLabel netSheetTitleLabel = new CustomLabel();
     //    // 乐谱类型下拉框
-//    private CustomComboBox<String> netSheetTypeComboBox = new CustomComboBox();
+//    private CustomComboBox<String> netSheetTypeComboBox = new CustomComboBox<>();
     // 乐谱刷新按钮
     private CustomButton netSheetRefreshButton = new CustomButton(refreshIcon);
     // 乐谱页数框
@@ -3096,7 +3096,9 @@ public class MainFrame extends JFrame {
                 break;
         }
         // 载入音质
-        Quality.quality = config.getIntValue(ConfigConstants.QUALITY, Quality.quality);
+        AudioQuality.quality = config.getIntValue(ConfigConstants.AUDIO_QUALITY, AudioQuality.quality);
+        // 载入画质
+        VideoQuality.quality = config.getIntValue(ConfigConstants.VIDEO_QUALITY, VideoQuality.quality);
         // 载入快进/快退时间
         forwardOrBackwardTime = config.getIntValue(ConfigConstants.FOB_TIME, DEFAULT_FORWARD_OR_BACKWARD_TIME);
         // 载入视频快进/快退时间
@@ -3817,7 +3819,9 @@ public class MainFrame extends JFrame {
         // 存入桌面歌词字体大小
         config.put(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, desktopLyricFontSize);
         // 存入音质
-        config.put(ConfigConstants.QUALITY, Quality.quality);
+        config.put(ConfigConstants.AUDIO_QUALITY, AudioQuality.quality);
+        // 存入画质
+        config.put(ConfigConstants.VIDEO_QUALITY, VideoQuality.quality);
         // 存入快进/快退时间
         config.put(ConfigConstants.FOB_TIME, forwardOrBackwardTime);
         // 存入视频快进/快退时间
@@ -5502,6 +5506,7 @@ public class MainFrame extends JFrame {
         });
         openCollectionItemAction = () -> {
             NetResource resource = collectionList.getSelectedValue();
+            if (resource == null) return;
             // 打开的是 MV
             if (resource instanceof NetMvInfo) {
                 playMv(MvCompSourceType.COLLECTION);
@@ -9740,9 +9745,10 @@ public class MainFrame extends JFrame {
         });
         // 打开歌单事件
         Runnable openPlaylistAction = () -> {
-            List<Future<?>> taskList = new LinkedList<>();
+            NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
+            if (playlistInfo == null) return;
             loadingAndRun(() -> {
-                NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
+                List<Future<?>> taskList = new LinkedList<>();
 
                 // 检查收藏按钮
                 checkDescriptionCollectionStatus(playlistDescriptionCollectionButton, playlistInfo);
@@ -10743,9 +10749,10 @@ public class MainFrame extends JFrame {
         });
         // 打开专辑
         Runnable openAlbumAction = () -> {
-            List<Future<?>> taskList = new LinkedList<>();
+            NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
+            if (albumInfo == null) return;
             loadingAndRun(() -> {
-                NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
+                List<Future<?>> taskList = new LinkedList<>();
 
                 // 检查收藏按钮
                 checkDescriptionCollectionStatus(albumDescriptionCollectionButton, albumInfo);
@@ -11772,9 +11779,10 @@ public class MainFrame extends JFrame {
         });
         // 打开歌手
         Runnable openArtistAction = () -> {
-            List<Future<?>> taskList = new LinkedList<>();
+            NetArtistInfo artistInfo = netArtistList.getSelectedValue();
+            if (artistInfo == null) return;
             loadingAndRun(() -> {
-                NetArtistInfo artistInfo = netArtistList.getSelectedValue();
+                List<Future<?>> taskList = new LinkedList<>();
 
                 // 检查收藏按钮
                 checkDescriptionCollectionStatus(artistDescriptionCollectionButton, artistInfo);
@@ -13034,9 +13042,10 @@ public class MainFrame extends JFrame {
         });
         // 打开电台
         Runnable openRadioAction = () -> {
-            List<Future<?>> taskList = new LinkedList<>();
+            NetRadioInfo radioInfo = netRadioList.getSelectedValue();
+            if (radioInfo == null) return;
             loadingAndRun(() -> {
-                NetRadioInfo radioInfo = netRadioList.getSelectedValue();
+                List<Future<?>> taskList = new LinkedList<>();
 
                 // 检查收藏按钮
                 checkDescriptionCollectionStatus(radioDescriptionCollectionButton, radioInfo);
@@ -14789,9 +14798,10 @@ public class MainFrame extends JFrame {
         });
         // 打开榜单
         Runnable openRankingAction = () -> {
-            List<Future<?>> taskList = new LinkedList<>();
+            NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
+            if (rankingInfo == null) return;
             loadingAndRun(() -> {
-                NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
+                List<Future<?>> taskList = new LinkedList<>();
 
                 // 检查收藏按钮
                 checkDescriptionCollectionStatus(rankingDescriptionCollectionButton, rankingInfo);
@@ -15566,9 +15576,10 @@ public class MainFrame extends JFrame {
         });
         // 打开用户
         Runnable openUserAction = () -> {
-            List<Future<?>> taskList = new LinkedList<>();
+            NetUserInfo userInfo = netUserList.getSelectedValue();
+            if (userInfo == null) return;
             loadingAndRun(() -> {
-                NetUserInfo userInfo = netUserList.getSelectedValue();
+                List<Future<?>> taskList = new LinkedList<>();
 
                 // 检查收藏按钮
                 checkDescriptionCollectionStatus(userDescriptionCollectionButton, userInfo);
@@ -17030,6 +17041,7 @@ public class MainFrame extends JFrame {
         netSheetBrowseMenuItem.addActionListener(e -> {
             try {
                 NetSheetInfo sheetInfo = netSheetList.getSelectedValue();
+                if (sheetInfo == null) return;
 //                CommonResult<String> results = MusicServerUtils.getSheetImgUrls(sheetInfo);
 //                List<String> imgUrls = results.data;
 //                Integer total = results.total;
@@ -18652,6 +18664,7 @@ public class MainFrame extends JFrame {
         });
         openRecommendItemAction = () -> {
             NetResource resource = itemRecommendList.getSelectedValue();
+            if (resource == null) return;
             // 打开的是 MV
             if (resource instanceof NetMvInfo) {
                 playMv(MvCompSourceType.MV_RECOMMEND_LIST);
@@ -19299,6 +19312,7 @@ public class MainFrame extends JFrame {
         // 播放菜单项
         downloadPlayMenuItem.addActionListener(e -> {
             Task task = downloadList.getSelectedValue();
+            if (task == null) return;
             if (task.isFinished()) {
                 if (task.isMusic()) playExecutor.execute(() -> playSelected(downloadList, false));
                 else playMv(MvCompSourceType.DOWNLOAD_LIST);
@@ -20907,9 +20921,8 @@ public class MainFrame extends JFrame {
                 // 重置标题
                 updateTitle("刷新 URL 中");
                 playExecutor.execute(() -> {
-                    String url = MusicServerUtil.fetchMusicUrl(musicInfo);
-                    if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
-                    else MusicServerUtil.fillAvailableMusicUrl(musicInfo);
+                    musicInfo.setUrl("");
+                    MusicServerUtil.fillMusicUrl(musicInfo);
                     resetMp();
                 });
             }
@@ -21079,6 +21092,9 @@ public class MainFrame extends JFrame {
 
     // 播放选中歌曲，返回是否播放成功
     private boolean playSelected(CustomList list, boolean allowRetry, boolean instantPlay) {
+        Object obj = list.getSelectedValue();
+        if (obj == null) return false;
+
         AudioFile file = null;
         NetMusicInfo musicInfo = null;
 
@@ -21087,7 +21103,6 @@ public class MainFrame extends JFrame {
 
         // 先判断歌曲在不在播放队列，若在直接选中播放队列对应歌曲
         boolean exists = false, pre = false;
-        Object obj = list.getSelectedValue();
 
         // 下载列表先创建实例
         if (model == downloadListModel) {
@@ -22729,12 +22744,12 @@ public class MainFrame extends JFrame {
         customStyle.setInvokeLater(() -> changeUIStyle(customStyle));
     }
 
-    private void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style) {
+    public void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style) {
         updateTabUI(tabbedPane, style, null);
     }
 
     // 更新 Tab 的主题
-    private void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style, Point p) {
+    public void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style, Point p) {
         Color textColor = style.getTextColor();
         Color iconColor = style.getIconColor();
         Color foreColor = style.getForeColor();
@@ -22937,6 +22952,7 @@ public class MainFrame extends JFrame {
         // 播放下载列表的 MV
         if (mvType == MvCompSourceType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
+            if (task == null) return;
             NetMvInfo mvInfo = (NetMvInfo) task.getResource();
             String dest = task.getDest();
             if (!new File(dest).exists()) {
@@ -22952,9 +22968,6 @@ public class MainFrame extends JFrame {
             return;
         }
 
-        TipDialog dialog = new TipDialog(THIS, LOADING_MV_MSG, 0);
-        dialog.showDialog();
-
         // 右键歌曲播放其 MV
         if (mvType != MvCompSourceType.MV_LIST && mvType != MvCompSourceType.MV_RECOMMEND_LIST && mvType != MvCompSourceType.COLLECTION) {
             NetMusicInfo musicInfo = null;
@@ -22967,6 +22980,10 @@ public class MainFrame extends JFrame {
             } else if (mvType == MvCompSourceType.PLAYING) {
                 musicInfo = player.getMusicInfo();
             }
+            if (musicInfo == null) return;
+
+            TipDialog dialog = new TipDialog(THIS, LOADING_MV_MSG, 0);
+            dialog.showDialog();
 
             NetMvInfo mvInfo = new NetMvInfo();
             mvInfo.setSource(musicInfo.getSource());
@@ -23009,6 +23026,11 @@ public class MainFrame extends JFrame {
             else if (mvType == MvCompSourceType.MV_RECOMMEND_LIST)
                 mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
             else if (mvType == MvCompSourceType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            if (mvInfo == null) return;
+
+            TipDialog dialog = new TipDialog(THIS, LOADING_MV_MSG, 0);
+            dialog.showDialog();
+
             try {
                 MusicServerUtil.fillMvInfo(mvInfo);
                 String url = mvInfo.getUrl();

@@ -89,7 +89,9 @@ public class ConfigConstants {
     // 桌面歌词字体大小
     public static final String DESKTOP_LYRIC_FONT_SIZE = "desktopLyricFontSize";
     // 音质
-    public static final String QUALITY = "quality";
+    public static final String AUDIO_QUALITY = "audioQuality";
+    // 画质
+    public static final String VIDEO_QUALITY = "videoQuality";
     // 快进/快退时间
     public static final String FOB_TIME = "fobTime";
     // 视频快进/快退时间

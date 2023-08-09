@@ -5,7 +5,7 @@ package net.doge.constant.system;
  * @Description 音质
  * @Date 2020/12/15
  */
-public class Quality {
+public class AudioQuality {
     // Hi-Res
     public static final int HI_RES = 0;
     // 无损
@@ -19,5 +19,5 @@ public class Quality {
 
     // 当前音质
     public static int quality = SUPER;
-    public static final String[] NAMES = {"Hi-Res (FLAC)", "无损 (FLAC)", "超高 (MP3)", "高 (MP3)", "普通 (MP3)"};
+    public static final String[] NAMES = {"Hi-Res (FLAC)", "无损 (FLAC)", "超高 (MP3)", "较高 (MP3)", "普通 (MP3)"};
 }

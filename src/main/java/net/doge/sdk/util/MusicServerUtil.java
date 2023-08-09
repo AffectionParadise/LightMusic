@@ -28,7 +28,6 @@ import net.doge.sdk.entity.music.tag.MusicSearchTagReq;
 import net.doge.sdk.entity.music.tag.NewSongTagReq;
 import net.doge.sdk.entity.music.tag.ProgramTagReq;
 import net.doge.sdk.entity.mv.info.MvInfoReq;
-import net.doge.sdk.entity.mv.info.MvUrlReq;
 import net.doge.sdk.entity.mv.menu.MvMenuReq;
 import net.doge.sdk.entity.mv.rcmd.RecommendMvReq;
 import net.doge.sdk.entity.mv.search.MvSearchReq;
@@ -783,30 +782,6 @@ public class MusicServerUtil {
      */
     public static CommonResult<NetUserInfo> getUserFans(NetUserInfo userInfo, int limit, int page) {
         return new UserMenuReq().getUserFans(userInfo, limit, page);
-    }
-
-    /**
-     * 根据歌曲 id 获取歌曲地址
-     */
-    public static String fetchMusicUrl(NetMusicInfo musicInfo) {
-        return new MusicUrlReq().fetchMusicUrl(musicInfo);
-    }
-
-    /**
-     * 歌曲换源
-     *
-     * @param musicInfo
-     * @return
-     */
-    public static void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
-        new MusicUrlReq().fillAvailableMusicUrl(musicInfo);
-    }
-
-    /**
-     * 根据 MV id 获取 MV 视频链接
-     */
-    public static String fetchMvUrl(NetMvInfo mvInfo) {
-        return new MvUrlReq().fetchMvUrl(mvInfo);
     }
 
     /**

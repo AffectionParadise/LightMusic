@@ -2,8 +2,8 @@ package net.doge.model.entity;
 
 import lombok.Data;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.AudioQuality;
 import net.doge.constant.system.Format;
-import net.doge.constant.system.Quality;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.base.Downloadable;
 import net.doge.model.entity.base.MusicResource;
@@ -84,7 +84,7 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
 
     // 判断当前音质是否为设置的音质
     public boolean isQualityMatch() {
-        return quality == Quality.quality;
+        return quality == AudioQuality.quality;
     }
 
     public boolean hasProgramId() {

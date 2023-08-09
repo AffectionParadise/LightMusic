@@ -20,6 +20,18 @@ public class ArrayUtil {
     }
 
     /**
+     * 返回元素在数组中的位置
+     *
+     * @param array
+     * @param val
+     * @param <T>
+     * @return
+     */
+    public static <T> int indexOf(T[] array, T val) {
+        return cn.hutool.core.util.ArrayUtil.indexOf(array, val);
+    }
+
+    /**
      * 原地反转数组，返回原数组
      *
      * @param longs

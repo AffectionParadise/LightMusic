@@ -4,6 +4,7 @@ import lombok.Data;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.Format;
+import net.doge.constant.system.VideoQuality;
 import net.doge.model.entity.base.Downloadable;
 import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
@@ -23,8 +24,10 @@ public class NetMvInfo implements NetResource, Downloadable {
     private int source = NetMusicSource.NET_CLOUD;
     // 类型 (网易云分成 MV 视频 Mlog)
     private int type;
-    // 视频格式
+    // 格式
     private String format = Format.MP4;
+    // 画质
+    private int quality;
     // MV id
     private String id;
     // MV bvid (哔哩哔哩)
@@ -83,13 +86,14 @@ public class NetMvInfo implements NetResource, Downloadable {
         invokeLater = null;
     }
 
-    /**
-     * 判断 MV 信息是否完整
-     *
-     * @return
-     */
+    // 判断 MV 信息是否完整
     public boolean isIntegrated() {
-        return url != null;
+        return hasUrl();
+    }
+
+    // 判断当前画质是否与设置的画质匹配
+    public boolean isQualityMatch() {
+        return quality == VideoQuality.quality;
     }
 
     public void setFormat(String format) {
@@ -114,6 +118,10 @@ public class NetMvInfo implements NetResource, Downloadable {
 
     public boolean hasCoverImgThumb() {
         return coverImgThumb != null;
+    }
+
+    public boolean hasUrl() {
+        return StringUtil.notEmpty(url);
     }
 
     @Override

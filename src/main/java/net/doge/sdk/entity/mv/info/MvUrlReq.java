@@ -6,12 +6,12 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.Format;
+import net.doge.constant.system.VideoQuality;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
-import net.doge.sdk.util.SdkUtil;
+import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 
@@ -35,13 +35,13 @@ public class MvUrlReq {
     // MV 视频链接获取 API (千千)
     private final String MV_URL_QI_API = "https://music.91q.com/v1/video/info?appid=16073360&assetCode=%s&timestamp=%s";
     // MV 视频链接获取 API (5sing)
-    private final String MV_URL_FS_API = "http://service.5sing.kugou.com/mv/play?mvId=%s&type=1";
+    private final String MV_URL_FS_API = "http://service.5sing.kugou.com/mv/play?mvId=%s";
     // MV 视频链接获取 API (好看)
     private final String MV_URL_HK_API = "https://haokan.baidu.com/v?vid=%s&_format=json";
     // 视频 bvid 获取 cid (哔哩哔哩)
     private final String VIDEO_CID_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
     // MV 视频链接获取 API (哔哩哔哩)
-    private final String VIDEO_URL_BI_API = "https://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=64";
+    private final String VIDEO_URL_BI_API = "https://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=%s";
 
     /**
      * 根据 MV id 获取 MV 视频链接
@@ -55,6 +55,22 @@ public class MvUrlReq {
 
         // 网易云
         if (source == NetMusicSource.NET_CLOUD) {
+            String quality;
+            switch (VideoQuality.quality) {
+                case VideoQuality.UHD:
+                case VideoQuality.FHD:
+                    quality = "1080";
+                    break;
+                case VideoQuality.HD:
+                    quality = "720";
+                    break;
+                case VideoQuality.SD:
+                    quality = "480";
+                    break;
+                default:
+                    quality = "240";
+                    break;
+            }
             if (isVideo || isMlog) {
                 // Mlog 需要先获取视频 id，并转为视频类型
                 if (isMlog) {
@@ -68,7 +84,7 @@ public class MvUrlReq {
                 }
 
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
-                String mvBody = SdkCommon.ncRequest(Method.POST, VIDEO_URL_API, String.format("{\"ids\":\"['%s']\",\"resolution\":\"1080\"}", mvId), options)
+                String mvBody = SdkCommon.ncRequest(Method.POST, VIDEO_URL_API, String.format("{\"ids\":\"['%s']\",\"resolution\":\"%s\"}", mvId, quality), options)
                         .executeAsync()
                         .body();
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
@@ -100,7 +116,7 @@ public class MvUrlReq {
 //            }
             else {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
-                String mvBody = SdkCommon.ncRequest(Method.POST, MV_URL_API, String.format("{\"id\":\"%s\",\"r\":\"1080\"}", mvId), options)
+                String mvBody = SdkCommon.ncRequest(Method.POST, MV_URL_API, String.format("{\"id\":\"%s\",\"r\":\"%s\"}", mvId, quality), options)
                         .executeAsync()
                         .body();
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
@@ -124,8 +140,13 @@ public class MvUrlReq {
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("mvdata");
             // 高画质优先
-            JSONObject mvJson = data.getJSONObject("rq");
-            if (JsonUtil.isEmpty(mvJson)) mvJson = data.getJSONObject("sq");
+            JSONObject mvJson = VideoQuality.quality <= VideoQuality.FHD ? data.getJSONObject("rq") : null;
+            if (JsonUtil.isEmpty(mvJson))
+                mvJson = VideoQuality.quality <= VideoQuality.HD ? data.getJSONObject("sq") : null;
+            if (JsonUtil.isEmpty(mvJson))
+                mvJson = VideoQuality.quality <= VideoQuality.SD ? data.getJSONObject("hd") : null;
+            if (JsonUtil.isEmpty(mvJson))
+                mvJson = VideoQuality.quality <= VideoQuality.SD ? data.getJSONObject("sd") : null;
             if (JsonUtil.isEmpty(mvJson)) mvJson = data.getJSONObject("le");
             return mvJson.getString("downurl");
         }
@@ -139,8 +160,29 @@ public class MvUrlReq {
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("getMvUrl").getJSONObject("data").getJSONObject(mvId);
             JSONArray mp4Array = data.getJSONArray("mp4");
+            String quality;
+            String[] qs = {"50", "40", "30", "20", "10"};
+            switch (VideoQuality.quality) {
+                case VideoQuality.UHD:
+                    quality = "50";
+                    break;
+                case VideoQuality.FHD:
+                    quality = "40";
+                    break;
+                case VideoQuality.HD:
+                    quality = "30";
+                    break;
+                case VideoQuality.SD:
+                    quality = "20";
+                    break;
+                default:
+                    quality = "10";
+                    break;
+            }
             for (int i = mp4Array.size() - 1; i >= 0; i--) {
-                JSONArray freeFlowUrl = mp4Array.getJSONObject(i).getJSONArray("freeflow_url");
+                JSONObject urlJson = mp4Array.getJSONObject(i);
+                if (ArrayUtil.indexOf(qs, quality) > ArrayUtil.indexOf(qs, urlJson.getString("filetype"))) continue;
+                JSONArray freeFlowUrl = urlJson.getJSONArray("freeflow_url");
                 if (JsonUtil.isEmpty(freeFlowUrl)) continue;
                 return freeFlowUrl.getString(freeFlowUrl.size() - 1);
             }
@@ -166,13 +208,59 @@ public class MvUrlReq {
                     .executeAsync()
                     .body();
             JSONArray data = JSONObject.parseObject(mvBody).getJSONArray("data");
-            JSONArray urls = data.getJSONObject(0).getJSONArray("allRate");
-            return urls.getJSONObject(0).getString("path");
+            JSONArray urlArray = data.getJSONObject(0).getJSONArray("allRate");
+            String quality;
+            String[] qs = {"r2k", "r1080", "r720", "r480", "r360"};
+            switch (VideoQuality.quality) {
+                case VideoQuality.UHD:
+                    quality = "r2k";
+                    break;
+                case VideoQuality.FHD:
+                    quality = "r1080";
+                    break;
+                case VideoQuality.HD:
+                    quality = "r720";
+                    break;
+                case VideoQuality.SD:
+                    quality = "r480";
+                    break;
+                default:
+                    quality = "r360";
+                    break;
+            }
+            for (int i = 0, s = urlArray.size(); i < s; i++) {
+                JSONObject urlJson = urlArray.getJSONObject(i);
+                if (ArrayUtil.indexOf(qs, quality) > ArrayUtil.indexOf(qs, urlJson.getString("resolution"))) continue;
+                return urlJson.getString("path");
+            }
         }
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            return SdkUtil.getRedirectUrl(String.format(MV_URL_FS_API, mvId));
+            String mvBody = HttpRequest.get(String.format(MV_URL_FS_API, mvId))
+                    .executeAsync()
+                    .body();
+            JSONArray urlArray = JSONObject.parseObject(mvBody).getJSONArray("data");
+            String quality;
+            String[] qs = {"超清", "高清", "标清"};
+            switch (VideoQuality.quality) {
+                case VideoQuality.UHD:
+                case VideoQuality.FHD:
+                case VideoQuality.HD:
+                    quality = "超清";
+                    break;
+                case VideoQuality.SD:
+                    quality = "高清";
+                    break;
+                default:
+                    quality = "标清";
+                    break;
+            }
+            for (int i = 0, s = urlArray.size(); i < s; i++) {
+                JSONObject urlJson = urlArray.getJSONObject(i);
+                if (ArrayUtil.indexOf(qs, quality) > ArrayUtil.indexOf(qs, urlJson.getString("title"))) continue;
+                return urlJson.getString("url");
+            }
         }
 
         // 好看
@@ -181,8 +269,29 @@ public class MvUrlReq {
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
-            JSONArray urls = data.getJSONObject("apiData").getJSONObject("curVideoMeta").getJSONArray("clarityUrl");
-            return urls.getJSONObject(urls.size() - 1).getString("url");
+            JSONArray urlArray = data.getJSONObject("apiData").getJSONObject("curVideoMeta").getJSONArray("clarityUrl");
+            String quality;
+            String[] qs = {"1080p", "sc", "hd", "sd"};
+            switch (VideoQuality.quality) {
+                case VideoQuality.UHD:
+                case VideoQuality.FHD:
+                    quality = "1080p";
+                    break;
+                case VideoQuality.HD:
+                    quality = "sc";
+                    break;
+                case VideoQuality.SD:
+                    quality = "hd";
+                    break;
+                default:
+                    quality = "sd";
+                    break;
+            }
+            for (int i = urlArray.size() - 1; i >= 0; i--) {
+                JSONObject urlJson = urlArray.getJSONObject(i);
+                if (ArrayUtil.indexOf(qs, quality) > ArrayUtil.indexOf(qs, urlJson.getString("key"))) continue;
+                return urlJson.getString("url");
+            }
         }
 
         // 哔哩哔哩
@@ -196,16 +305,29 @@ public class MvUrlReq {
                 mvInfo.setId(mvId = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
             }
 
-            String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, mvId))
+            String quality;
+            switch (VideoQuality.quality) {
+                case VideoQuality.UHD:
+                case VideoQuality.FHD:
+                    quality = "116";
+                    break;
+                case VideoQuality.HD:
+                    quality = "74";
+                    break;
+                case VideoQuality.SD:
+                    quality = "32";
+                    break;
+                default:
+                    quality = "16";
+                    break;
+            }
+            String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, mvId, quality))
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
-            JSONArray urls = data.getJSONArray("durl");
-            String url = urls.getJSONObject(0).getString("url");
-            // 根据 url 判断视频的格式
-            mvInfo.setFormat(url.contains(".mp4?") ? Format.MP4 : Format.FLV);
-            return url;
+            JSONArray urlArray = data.getJSONArray("durl");
+            return urlArray.getJSONObject(0).getString("url");
         }
 
         return "";

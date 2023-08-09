@@ -1,7 +1,7 @@
 package net.doge.model.entity;
 
-import net.doge.constant.model.NetMusicSource;
 import lombok.Data;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
 
@@ -98,7 +98,7 @@ public class NetAlbumInfo implements NetResource {
      * @return
      */
     public boolean isIntegrated() {
-        return coverImg != null;
+        return hasCoverImg();
     }
 
     public boolean hasCoverImgThumb() {

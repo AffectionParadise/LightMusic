@@ -198,7 +198,7 @@ public class NetUserInfo implements NetResource {
      * @return
      */
     public boolean isIntegrated() {
-        return avatar != null;
+        return hasAvatar();
     }
 
     public boolean hasAvatarThumb() {
