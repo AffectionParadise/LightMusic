@@ -3176,7 +3176,6 @@ public class MainFrame extends JFrame {
                     JSONObject jsonObject = JSONObject.parseObject(s);
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    musicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
                     musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
                     musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
                     musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
@@ -3214,7 +3213,6 @@ public class MainFrame extends JFrame {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MUSIC_INFO);
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(jo.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    musicInfo.setFormat(jo.getString(ConfigConstants.NET_MUSIC_FORMAT));
                     musicInfo.setId(jo.getString(ConfigConstants.NET_MUSIC_ID));
                     musicInfo.setName(jo.getString(ConfigConstants.NET_MUSIC_NAME));
                     musicInfo.setArtist(jo.getString(ConfigConstants.NET_MUSIC_ARTIST));
@@ -3233,7 +3231,6 @@ public class MainFrame extends JFrame {
                     NetMvInfo mvInfo = new NetMvInfo();
                     mvInfo.setSource(jo.getIntValue(ConfigConstants.NET_MV_SOURCE));
                     mvInfo.setType(jo.getIntValue(ConfigConstants.NET_MV_TYPE));
-                    mvInfo.setFormat(jo.getString(ConfigConstants.NET_MV_FORMAT));
                     mvInfo.setId(jo.getString(ConfigConstants.NET_MV_ID));
                     mvInfo.setBvid(jo.getString(ConfigConstants.NET_MV_BVID));
                     mvInfo.setName(jo.getString(ConfigConstants.NET_MV_NAME));
@@ -3267,7 +3264,6 @@ public class MainFrame extends JFrame {
                     JSONObject jsonObject = JSONObject.parseObject(s);
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    musicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
                     musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
                     musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
                     musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
@@ -3550,7 +3546,6 @@ public class MainFrame extends JFrame {
                     JSONObject jsonObject = JSONObject.parseObject(s);
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    musicInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MUSIC_FORMAT));
                     musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
                     musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
                     musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
@@ -3658,7 +3653,6 @@ public class MainFrame extends JFrame {
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MV_SOURCE));
                 mvInfo.setType(jsonObject.getIntValue(ConfigConstants.NET_MV_TYPE));
-                mvInfo.setFormat(jsonObject.getString(ConfigConstants.NET_MV_FORMAT));
                 mvInfo.setId(jsonObject.getString(ConfigConstants.NET_MV_ID));
                 mvInfo.setBvid(jsonObject.getString(ConfigConstants.NET_MV_BVID));
                 mvInfo.setName(jsonObject.getString(ConfigConstants.NET_MV_NAME));
@@ -3875,7 +3869,6 @@ public class MainFrame extends JFrame {
                 NetMusicInfo musicInfo = (NetMusicInfo) resource;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
-                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
                 jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
@@ -3913,7 +3906,6 @@ public class MainFrame extends JFrame {
                 NetMusicInfo musicInfo = (NetMusicInfo) task.getResource();
                 JSONObject jo = new JSONObject();
                 jo.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
-                jo.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
                 jo.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
                 jo.put(ConfigConstants.NET_MUSIC_NAME, musicInfo.getName());
                 jo.put(ConfigConstants.NET_MUSIC_ARTIST, musicInfo.getArtist());
@@ -3925,7 +3917,6 @@ public class MainFrame extends JFrame {
                 JSONObject jo = new JSONObject();
                 jo.put(ConfigConstants.NET_MV_SOURCE, mvInfo.getSource());
                 jo.put(ConfigConstants.NET_MV_TYPE, mvInfo.getType());
-                jo.put(ConfigConstants.NET_MV_FORMAT, mvInfo.getFormat());
                 jo.put(ConfigConstants.NET_MV_ID, mvInfo.getId());
                 jo.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvid());
                 jo.put(ConfigConstants.NET_MV_NAME, mvInfo.getName());
@@ -3947,7 +3938,6 @@ public class MainFrame extends JFrame {
                 NetMusicInfo musicInfo = (NetMusicInfo) resource;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
-                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
                 jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
@@ -4052,7 +4042,6 @@ public class MainFrame extends JFrame {
                 NetMusicInfo musicInfo = (NetMusicInfo) resource;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
-                jsonObject.put(ConfigConstants.NET_MUSIC_FORMAT, musicInfo.getFormat());
                 jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
                 jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
@@ -4151,7 +4140,6 @@ public class MainFrame extends JFrame {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(ConfigConstants.NET_MV_SOURCE, mvInfo.getSource());
             jsonObject.put(ConfigConstants.NET_MV_TYPE, mvInfo.getType());
-            jsonObject.put(ConfigConstants.NET_MV_FORMAT, mvInfo.getFormat());
             jsonObject.put(ConfigConstants.NET_MV_ID, mvInfo.getId());
             jsonObject.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvid());
             jsonObject.put(ConfigConstants.NET_MV_NAME, mvInfo.getName());

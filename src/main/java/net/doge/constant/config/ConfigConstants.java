@@ -155,8 +155,6 @@ public class ConfigConstants {
 
     // 在线音乐来源
     public static final String NET_MUSIC_SOURCE = "source";
-    // 在线音乐格式
-    public static final String NET_MUSIC_FORMAT = "format";
     // 在线音乐 hash
     public static final String NET_MUSIC_HASH = "hash";
     // 在线音乐 id
@@ -256,8 +254,6 @@ public class ConfigConstants {
     public static final String NET_MV_SOURCE = "source";
     // MV 类型
     public static final String NET_MV_TYPE = "type";
-    // MV 格式
-    public static final String NET_MV_FORMAT = "format";
     // MV id
     public static final String NET_MV_ID = "id";
     // MV bvid

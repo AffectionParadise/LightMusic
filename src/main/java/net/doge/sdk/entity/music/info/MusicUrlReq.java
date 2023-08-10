@@ -68,7 +68,8 @@ public class MusicUrlReq {
         else fillAvailableMusicUrl(musicInfo);
 
         String realUrl = musicInfo.getUrl();
-        if (realUrl.contains(".flac")) musicInfo.setFormat(Format.FLAC);
+        if (realUrl.contains(".mp3") || realUrl.contains(".wav")) musicInfo.setFormat(Format.MP3);
+        else if (realUrl.contains(".flac")) musicInfo.setFormat(Format.FLAC);
         else if (realUrl.contains(".m4a")) musicInfo.setFormat(Format.M4A);
 
         // 更新音质
@@ -148,8 +149,6 @@ public class MusicUrlReq {
             String quality;
             switch (AudioQuality.quality) {
                 case AudioQuality.HI_RES:
-                    quality = "hr";
-                    break;
                 case AudioQuality.LOSSLESS:
                     quality = "sq";
                     break;

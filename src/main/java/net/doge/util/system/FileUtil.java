@@ -174,7 +174,11 @@ public class FileUtil {
      * @param dirPath 文件夹路径
      */
     public static void clean(String dirPath) {
-        cn.hutool.core.io.FileUtil.clean(new File(dirPath));
+        try {
+            cn.hutool.core.io.FileUtil.clean(new File(dirPath));
+        } catch (Exception e) {
+
+        }
     }
 
     /**

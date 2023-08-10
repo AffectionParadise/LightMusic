@@ -45,8 +45,8 @@ public class MvInfoReq {
         String url = new MvUrlReq().fetchMvUrl(mvInfo);
         mvInfo.setUrl(url);
 
-        // 根据 url 判断视频的格式
-        if (url.contains(".flv")) mvInfo.setFormat(Format.FLV);
+        if (url.contains(".mp4")) mvInfo.setFormat(Format.MP4);
+        else if (url.contains(".flv")) mvInfo.setFormat(Format.FLV);
 
         // 更新画质
         mvInfo.setQuality(VideoQuality.quality);

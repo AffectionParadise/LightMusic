@@ -157,11 +157,11 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     public boolean isMp3() {
-        return format.equals(Format.MP3);
+        return Format.MP3.equals(format);
     }
 
     public boolean isFlac() {
-        return format.equals(Format.FLAC);
+        return Format.FLAC.equals(format);
     }
 
     @Override

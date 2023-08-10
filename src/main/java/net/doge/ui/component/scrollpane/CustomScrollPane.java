@@ -1,10 +1,15 @@
 package net.doge.ui.component.scrollpane;
 
+import lombok.Getter;
+
 import javax.swing.*;
 import javax.swing.plaf.ScrollBarUI;
 import java.awt.*;
 
 public class CustomScrollPane extends JScrollPane {
+    @Getter
+    private final int thickness = 10;
+
     private Timer wheelScrollingTimer;
     private int scrollingFrom;
     private int scrollingTo;
@@ -41,7 +46,6 @@ public class CustomScrollPane extends JScrollPane {
             wheelScrollingTimer.start();
         });
 
-        final int thickness = 10;
         horizontalScrollBar.setOpaque(false);
         horizontalScrollBar.setPreferredSize(new Dimension(0, thickness));
         setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);

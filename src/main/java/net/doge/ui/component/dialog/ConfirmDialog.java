@@ -1,5 +1,6 @@
 package net.doge.ui.component.dialog;
 
+import lombok.Getter;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
@@ -7,6 +8,8 @@ import net.doge.ui.component.checkbox.CustomCheckBox;
 import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
+import net.doge.ui.component.scrollpane.CustomScrollPane;
+import net.doge.ui.component.scrollpane.ui.ScrollBarUI;
 import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -20,15 +23,21 @@ import java.awt.*;
  * @Date 2021/1/5
  */
 public class ConfirmDialog extends AbstractShadowDialog {
+    private final int MAX_WIDTH = 900;
+    private final int MAX_HEIGHT = 600;
+
     private DialogButton yes;
     private DialogButton no;
     private DialogButton cancel;
+    @Getter
     private int response;
 
     private String message;
     private CustomPanel messagePanel = new CustomPanel();
+    private CustomScrollPane messageScrollPane = new CustomScrollPane(messagePanel);
     private CustomLabel messageLabel = new CustomLabel(message);
     private boolean showCheck;
+    private CustomPanel controlPanel = new CustomPanel();
     private CustomPanel checkPanel = new CustomPanel();
     private CustomCheckBox checkBox = new CustomCheckBox();
     private CustomPanel buttonPanel = new CustomPanel();
@@ -71,6 +80,8 @@ public class ConfirmDialog extends AbstractShadowDialog {
     public void showDialog() {
         Color textColor = f.currUIStyle.getTextColor();
         Color iconColor = f.currUIStyle.getIconColor();
+        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
+
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSLUCENT);
@@ -82,22 +93,34 @@ public class ConfirmDialog extends AbstractShadowDialog {
         Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);
         checkPanel.setBorder(eb);
 
+        int thickness = messageScrollPane.getThickness();
+        Dimension d = new Dimension(MAX_WIDTH - 2 * thickness, Integer.MAX_VALUE);
+        messageLabel.setMaximumSize(d);
+        messagePanel.setMaximumSize(d);
+        messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+
         messageLabel.setText(StringUtil.textToHtml(message));
         messageLabel.setForeground(textColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);
+        messageScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
+        messageScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         FlowLayout fl = new FlowLayout();
         fl.setHgap(20);
         buttonPanel.setLayout(fl);
-
         if (StringUtil.notEmpty(yes.getPlainText())) buttonPanel.add(yes);
         if (StringUtil.notEmpty(no.getPlainText())) buttonPanel.add(no);
         if (StringUtil.notEmpty(cancel.getPlainText())) buttonPanel.add(cancel);
+
+        controlPanel.setLayout(new BorderLayout());
+        controlPanel.add(checkPanel, BorderLayout.CENTER);
+        controlPanel.add(buttonPanel, BorderLayout.SOUTH);
+
         globalPanel.setLayout(new BorderLayout());
-        globalPanel.add(messagePanel, BorderLayout.NORTH);
-        globalPanel.add(checkPanel, BorderLayout.CENTER);
-        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
-        globalPanel.setBorder(BorderFactory.createEmptyBorder(25, 55, 25, 55));
+        globalPanel.add(messageScrollPane, BorderLayout.CENTER);
+        globalPanel.add(controlPanel, BorderLayout.SOUTH);
 
         yes.addActionListener(e -> {
             response = JOptionPane.YES_OPTION;
@@ -114,6 +137,29 @@ public class ConfirmDialog extends AbstractShadowDialog {
 
         setContentPane(globalPanel);
         pack();
+        boolean wc = false, hc = false;
+        Dimension size = getSize();
+        if (size.width > MAX_WIDTH) {
+            size.width = MAX_WIDTH;
+            wc = true;
+        }
+        if (size.height > MAX_HEIGHT) {
+            size.height = MAX_HEIGHT;
+            hc = true;
+        }
+        if (wc) size.height += thickness;
+        if (hc) size.width += thickness;
+        boolean c = wc || hc;
+        int top = 30, left = c ? 35 : 55, bottom = 25, right = c ? 10 : 55;
+        globalPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+        if (c) {
+            size.width += left + right;
+            size.height += top + bottom;
+            setSize(size);
+        } else {
+            messageScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            pack();
+        }
 
         updateBlur();
 
@@ -126,9 +172,5 @@ public class ConfirmDialog extends AbstractShadowDialog {
     private void close() {
         f.currDialogs.remove(this);
         dispose();
-    }
-
-    public int getResponse() {
-        return response;
     }
 }
