@@ -43,6 +43,10 @@ public class CommentReq {
     private final String GET_HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
     // 获取最新评论 API (酷我)
     private final String GET_NEW_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
+    // 获取热门评论 API (咪咕)
+    private final String GET_HOT_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listTopComments?targetId=%s&pageNo=%s&pageSize=%s";
+    // 获取最新评论 API (咪咕)
+    private final String GET_NEW_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listComments?targetId=%s&pageNo=%s&pageSize=%s";
     // 获取电台热门评论 API (喜马拉雅)
     private final String GET_RADIO_HOT_COMMENTS_XM_API
             = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=content-score-desc&pageId=%s&pageSize=%s";
@@ -82,7 +86,8 @@ public class CommentReq {
     private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg?_=1689937314930&cv=4747474&ct=24&format=json" +
             "&inCharset=utf-8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=0&g_tk_new_20200303=5381&g_tk=5381&cmd=get_album_buy_page" +
             "&albummid=%s&albumid=0";
-    ;
+    // 歌曲信息 API (咪咕)
+    private final String SINGLE_SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
 
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
@@ -177,7 +182,7 @@ public class CommentReq {
         }
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD && StringUtil.notEmpty(typeStr[0])) {
+        if (source == NetMusicSource.NC && StringUtil.notEmpty(typeStr[0])) {
             String threadId = typeStr[0] + id;
             int sortType = hotOnly ? 2 : 3;
             String cur = "";
@@ -454,6 +459,86 @@ public class CommentReq {
                     });
 
                     res.add(rCommentInfo);
+                }
+            }
+        }
+
+        // 咪咕
+        else if (source == NetMusicSource.MG && resource instanceof NetMusicInfo) {
+            // 先根据 cid 获取 songId
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
+                    .executeAsync()
+                    .body();
+            id = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0).getString("songId");
+
+            // 评论
+            String url = hotOnly ? GET_HOT_COMMENTS_MG_API : GET_NEW_COMMENTS_MG_API;
+            String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
+                    .header(Header.REFERER, "https://music.migu.cn")
+                    .executeAsync()
+                    .body();
+            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
+            JSONObject data = commentInfoJson.getJSONObject("data");
+            if (JsonUtil.notEmpty(data)) {
+                total = data.getIntValue("itemTotal");
+                JSONArray commentArray = data.getJSONArray("items");
+                for (int i = 0, len = commentArray.size(); i < len; i++) {
+                    JSONObject commentJson = commentArray.getJSONObject(i);
+                    JSONObject author = commentJson.getJSONObject("author");
+
+                    String userId = author.getString("id");
+                    String username = author.getString("name");
+                    String profileUrl = "https:" + author.getString("avatar");
+                    String content = commentJson.getString("body");
+                    String time = TimeUtil.strToPhrase(commentJson.getString("createTime"));
+                    Integer likedCount = commentJson.getIntValue("praiseCount");
+
+                    NetCommentInfo commentInfo = new NetCommentInfo();
+                    commentInfo.setSource(NetMusicSource.MG);
+                    commentInfo.setUserId(userId);
+                    commentInfo.setUsername(username);
+                    commentInfo.setProfileUrl(profileUrl);
+                    commentInfo.setContent(content);
+                    commentInfo.setTime(time);
+                    commentInfo.setLikedCount(likedCount);
+                    String finalProfileUrl = profileUrl;
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage profile = SdkUtil.extractProfile(finalProfileUrl);
+                        commentInfo.setProfile(profile);
+                    });
+
+                    res.add(commentInfo);
+
+                    // 回复
+                    JSONArray replies = commentJson.getJSONArray("replyCommentList");
+                    for (int j = 0, s = replies.size(); j < s; j++) {
+                        JSONObject reply = replies.getJSONObject(j);
+                        author = reply.getJSONObject("author");
+
+                        userId = author.getString("id");
+                        username = author.getString("name");
+                        profileUrl = "https:" + author.getString("avatar");
+                        content = reply.getString("body");
+                        time = TimeUtil.strToPhrase(reply.getString("createTime"));
+                        likedCount = reply.getIntValue("praiseCount");
+
+                        NetCommentInfo rCommentInfo = new NetCommentInfo();
+                        rCommentInfo.setSource(NetMusicSource.MG);
+                        rCommentInfo.setSub(true);
+                        rCommentInfo.setUserId(userId);
+                        rCommentInfo.setUsername(username);
+                        rCommentInfo.setProfileUrl(profileUrl);
+                        rCommentInfo.setContent(content);
+                        rCommentInfo.setTime(time);
+                        rCommentInfo.setLikedCount(likedCount);
+                        String finalProfileUrl1 = profileUrl;
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage profile = SdkUtil.extractProfile(finalProfileUrl1);
+                            rCommentInfo.setProfile(profile);
+                        });
+
+                        res.add(rCommentInfo);
+                    }
                 }
             }
         }

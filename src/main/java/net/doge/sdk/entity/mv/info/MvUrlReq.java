@@ -54,7 +54,7 @@ public class MvUrlReq {
         boolean isMlog = mvInfo.isMlog();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             String quality;
             switch (VideoQuality.quality) {
                 case VideoQuality.UHD:

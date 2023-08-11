@@ -55,7 +55,7 @@ public class MvMenuReq {
         Integer t = 0;
 
         // 网易云(程序分页)
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_MLOG_API,
                             String.format("{\"id\":\"0\",\"type\":2,\"rcmdType\":20,\"limit\":500,\"extInfo\":\"{'songId':'%s'}\"}", id), options)
@@ -164,7 +164,7 @@ public class MvMenuReq {
         Integer t = 0;
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             // 视频
             if (isVideo || isMlog) {
                 // Mlog 需要先获取视频 id，并转为视频类型

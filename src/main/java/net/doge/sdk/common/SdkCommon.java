@@ -42,6 +42,11 @@ public class SdkCommon {
                 .header(Header.REFERER, "https://www.kuwo.cn/");
     }
 
+//    // 构造咪咕音乐搜索请求
+//    public static HttpRequest mgSearchRequest(String type, String keyword, int page, int limit) {
+//        return MiguReqBuilder.buildSearchRequest(type, keyword, page, limit);
+//    }
+
 //    /**
 //     * 生成酷狗 url
 //     *

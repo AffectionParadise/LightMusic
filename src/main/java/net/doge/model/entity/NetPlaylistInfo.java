@@ -1,7 +1,7 @@
 package net.doge.model.entity;
 
-import net.doge.constant.model.NetMusicSource;
 import lombok.Data;
+import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
 
@@ -16,7 +16,7 @@ import java.util.Objects;
 @Data
 public class NetPlaylistInfo implements NetResource {
     // 歌单来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 歌单 id
     private String id;
     // 歌单名称

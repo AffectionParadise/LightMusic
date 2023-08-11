@@ -99,7 +99,7 @@ public class ArtistMenuReq {
         int source = artistInfo.getSource();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ARTIST_ALBUMS_API, id),
                             String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit), options)
@@ -343,7 +343,7 @@ public class ArtistMenuReq {
         int source = artistInfo.getSource();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             // 歌手 MV
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_MVS_API,
@@ -574,7 +574,7 @@ public class ArtistMenuReq {
         Integer t = 0;
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_ARTIST_API, String.format("{\"artistid\":\"%s\"}", id), options)
                     .executeAsync()
@@ -686,7 +686,7 @@ public class ArtistMenuReq {
         AtomicReference<Integer> t = new AtomicReference<>(0);
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Runnable getFans = () -> {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String userInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_FANS_API,

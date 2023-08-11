@@ -75,7 +75,7 @@ public class RadioInfoReq {
 
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
-            if (source == NetMusicSource.NET_CLOUD) {
+            if (source == NetMusicSource.NC) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
                 String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
                         .executeAsync()
@@ -204,7 +204,7 @@ public class RadioInfoReq {
         boolean isGame = radioInfo.isGame();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
                     .executeAsync()
@@ -363,7 +363,7 @@ public class RadioInfoReq {
         String id = radioInfo.getId();
 
         // 网易云(接口分页)
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_PROGRAM_DETAIL_API,
                             String.format("{\"radioId\":\"%s\",\"offset\":%s,\"limit\":%s,\"asc\":false}", id, (page - 1) * limit, limit), options)

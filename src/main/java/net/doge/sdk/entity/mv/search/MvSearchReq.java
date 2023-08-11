@@ -373,9 +373,9 @@ public class MvSearchReq {
 
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchMvs));
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchVideos));
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsKg));

@@ -24,7 +24,7 @@ import java.util.Objects;
 @Data
 public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     // 来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 歌曲 id
     private String id;
     // 酷狗的歌曲 hash，这个参数与上面的 id 不同

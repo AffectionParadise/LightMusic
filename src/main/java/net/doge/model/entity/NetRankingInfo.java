@@ -16,7 +16,7 @@ import java.util.Objects;
 @Data
 public class NetRankingInfo implements NetResource {
     // 榜单来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 榜单 id
     private String id;
     // 榜单名称

@@ -930,7 +930,7 @@ public class RecommendMvReq {
 
         boolean dt = defaultTag.equals(tag);
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMv));
             taskList.add(GlobalExecutors.requestExecutor.submit(getMvRanking));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewMv));

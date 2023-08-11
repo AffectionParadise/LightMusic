@@ -432,7 +432,7 @@ public class NewRadioReq {
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewRadios));
             taskList.add(GlobalExecutors.requestExecutor.submit(getPersonalizedRadios));
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendRadios));

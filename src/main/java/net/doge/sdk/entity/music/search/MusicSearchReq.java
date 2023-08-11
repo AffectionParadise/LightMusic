@@ -519,6 +519,91 @@ public class MusicSearchReq {
 
             return new CommonResult<>(r, t);
         };
+//        // 搜歌曲
+//        Callable<CommonResult<NetMusicInfo>> searchMusicMg = () -> {
+//            List<NetMusicInfo> r = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String musicInfoBody = SdkCommon.mgSearchRequest("song", keyword, page, limit)
+//                    .executeAsync()
+//                    .body();
+//            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+//            JSONObject data = musicInfoJson.getJSONObject("songResultData");
+//            t = data.getIntValue("totalCount");
+//            JSONArray songArray = data.getJSONArray("resultList");
+//            if (JsonUtil.notEmpty(songArray)) {
+//                for (int i = 0, len = songArray.size(); i < len; i++) {
+//                    JSONArray innerArray = songArray.getJSONArray(i);
+//                    for (int j = 0, size = innerArray.size(); j < size; j++) {
+//                        JSONObject songJson = innerArray.getJSONObject(j);
+//
+//                        String songId = songJson.getString("copyrightId");
+//                        String songName = songJson.getString("songName");
+//                        String artist = SdkUtil.parseArtist(songJson);
+//                        String artistId = SdkUtil.parseArtistId(songJson);
+//                        String albumName = songJson.getString("album");
+//                        String albumId = songJson.getString("albumId");
+//                        String mvId = songJson.getString("mvId");
+//
+//                        NetMusicInfo musicInfo = new NetMusicInfo();
+//                        musicInfo.setSource(NetMusicSource.MG);
+//                        musicInfo.setId(songId);
+//                        musicInfo.setName(songName);
+//                        musicInfo.setArtist(artist);
+//                        musicInfo.setArtistId(artistId);
+//                        musicInfo.setAlbumName(albumName);
+//                        musicInfo.setAlbumId(albumId);
+//                        musicInfo.setMvId(mvId);
+//
+//                        r.add(musicInfo);
+//                    }
+//                }
+//            }
+//
+//            return new CommonResult<>(r, t);
+//        };
+//        // 搜歌词
+//        Callable<CommonResult<NetMusicInfo>> searchMusicByLyricMg = () -> {
+//            List<NetMusicInfo> r = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String musicInfoBody = SdkCommon.mgSearchRequest("lyric", keyword, page, limit)
+//                    .executeAsync()
+//                    .body();
+//            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+//            JSONObject data = musicInfoJson.getJSONObject("lyricResultData");
+//            t = data.getIntValue("totalCount");
+//            JSONArray songArray = data.getJSONArray("result");
+//            if (JsonUtil.notEmpty(songArray)) {
+//                for (int i = 0, len = songArray.size(); i < len; i++) {
+//                    JSONObject songJson = songArray.getJSONObject(i);
+//
+//                    String songId = songJson.getString("copyrightId");
+//                    String songName = songJson.getString("songName");
+//                    String artist = SdkUtil.parseArtist(songJson);
+//                    String artistId = SdkUtil.parseArtistId(songJson);
+//                    String albumName = songJson.getString("album");
+//                    String albumId = songJson.getString("albumId");
+//                    String mvId = songJson.getString("mvId");
+//                    String lrcMatch = songJson.getString("multiLyricStr").replace("\n", " / ");
+//
+//                    NetMusicInfo musicInfo = new NetMusicInfo();
+//                    musicInfo.setSource(NetMusicSource.MG);
+//                    musicInfo.setId(songId);
+//                    musicInfo.setName(songName);
+//                    musicInfo.setArtist(artist);
+//                    musicInfo.setArtistId(artistId);
+//                    musicInfo.setAlbumName(albumName);
+//                    musicInfo.setAlbumId(albumId);
+//                    musicInfo.setMvId(mvId);
+//                    musicInfo.setLrcMatch(lrcMatch);
+//
+//                    r.add(musicInfo);
+//                }
+//            }
+//
+//            return new CommonResult<>(r, t);
+//        };
 
         // 千千
         Callable<CommonResult<NetMusicInfo>> searchMusicQi = () -> {
@@ -750,7 +835,7 @@ public class MusicSearchReq {
         switch (type) {
             // 歌词
             case 1:
-                if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+                if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyric));
                 if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicByLyricKg));
@@ -762,7 +847,7 @@ public class MusicSearchReq {
             // 节目
             case 2:
                 if (dt) {
-                    if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+                    if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchVoice));
                     if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
                         taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicXm));
@@ -772,7 +857,7 @@ public class MusicSearchReq {
                 break;
             // 常规
             default:
-                if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+                if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusic));
                 if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicKg));

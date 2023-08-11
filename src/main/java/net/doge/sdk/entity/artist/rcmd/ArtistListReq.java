@@ -666,7 +666,7 @@ public class ArtistListReq {
 
         boolean dt = defaultTag.equals(tag);
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRanking));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtist));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtist));

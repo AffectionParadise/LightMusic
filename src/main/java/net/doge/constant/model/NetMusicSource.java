@@ -8,7 +8,7 @@ package net.doge.constant.model;
 public class NetMusicSource {
     public static final String[] NAMES = new String[]{"小意", "小枸", "小丘", "小窝", "小蜜", "小希", "小倩", "小猫", "小看", "小豆", "小糖", "小哔", "小磁", "小咕", "小五", "全部"};
 
-    public static final int NET_CLOUD = 0;
+    public static final int NC = 0;
     public static final int KG = 1;
     public static final int QQ = 2;
     public static final int KW = 3;

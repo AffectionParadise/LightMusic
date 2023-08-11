@@ -21,7 +21,7 @@ import java.util.Objects;
 @Data
 public class NetMvInfo implements NetResource, Downloadable {
     // MV 来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 类型 (网易云分成 MV 视频 Mlog)
     private int type;
     // 格式

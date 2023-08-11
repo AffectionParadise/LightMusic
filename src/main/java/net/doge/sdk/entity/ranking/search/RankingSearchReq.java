@@ -440,7 +440,7 @@ public class RankingSearchReq {
 
         List<Future<CommonResult<NetRankingInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankings));
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(getRankingsKg));

@@ -252,6 +252,47 @@ public class PlaylistSearchReq {
             }
             return new CommonResult<>(r, t);
         };
+//        Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsMg = () -> {
+//            List<NetPlaylistInfo> r = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String playlistInfoBody = SdkCommon.mgSearchRequest("playlist", keyword, page, limit)
+//                    .executeAsync()
+//                    .body();
+//            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+//            JSONObject data = playlistInfoJson.getJSONObject("songListResultData");
+//            t = data.getIntValue("totalCount");
+//            JSONArray playlistArray = data.getJSONArray("result");
+//            if (JsonUtil.notEmpty(playlistArray)) {
+//                for (int i = 0, len = playlistArray.size(); i < len; i++) {
+//                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+//
+//                    String playlistId = playlistJson.getString("id");
+//                    String playlistName = playlistJson.getString("name");
+//                    String creator = playlistJson.getString("userName");
+//                    String creatorId = playlistJson.getString("userId");
+//                    Long playCount = playlistJson.getLong("playNum");
+//                    Integer trackCount = playlistJson.getIntValue("musicNum");
+//                    String coverImgThumbUrl = playlistJson.getString("musicListPicUrl");
+//
+//                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+//                    playlistInfo.setSource(NetMusicSource.MG);
+//                    playlistInfo.setId(playlistId);
+//                    playlistInfo.setName(playlistName);
+//                    playlistInfo.setCreator(creator);
+//                    playlistInfo.setCreatorId(creatorId);
+//                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                    playlistInfo.setPlayCount(playCount);
+//                    playlistInfo.setTrackCount(trackCount);
+//                    GlobalExecutors.imageExecutor.execute(() -> {
+//                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                        playlistInfo.setCoverImgThumb(coverImgThumb);
+//                    });
+//                    r.add(playlistInfo);
+//                }
+//            }
+//            return new CommonResult<>(r, t);
+//        };
 
         // 5sing
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylistsFs = () -> {
@@ -297,7 +338,7 @@ public class PlaylistSearchReq {
 
         List<Future<CommonResult<NetPlaylistInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylists));
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchPlaylistsKg));

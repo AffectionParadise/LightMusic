@@ -919,7 +919,7 @@ public class HighQualityPlaylistReq {
 
         boolean dt = defaultTag.equals(tag);
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getHighQualityPlaylists));
             taskList.add(GlobalExecutors.requestExecutor.submit(getHotPickedPlaylists));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewPickedPlaylists));

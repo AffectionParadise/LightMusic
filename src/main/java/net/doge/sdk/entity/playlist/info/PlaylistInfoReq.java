@@ -74,7 +74,7 @@ public class PlaylistInfoReq {
         Integer t = 1;
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                     .executeAsync()
@@ -367,7 +367,7 @@ public class PlaylistInfoReq {
         String creatorId = playlistInfo.getCreatorId();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                     .executeAsync()
@@ -566,7 +566,7 @@ public class PlaylistInfoReq {
         String creatorId = playlistInfo.getCreatorId();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             // 歌曲列表
             Runnable getMusicInfo = () -> {
                 // 先获取 trackId 列表

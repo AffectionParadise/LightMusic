@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 public class NetUserInfo implements NetResource {
     // 用户来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 用户 id
     private String id;
     // 用户名称
@@ -79,7 +79,7 @@ public class NetUserInfo implements NetResource {
     }
 
     public boolean fromNetCloud() {
-        return source == NetMusicSource.NET_CLOUD;
+        return source == NetMusicSource.NC;
     }
 
     public boolean fromME() {

@@ -743,7 +743,7 @@ public class NewMusicReq {
 
         boolean dt = defaultTag.equals(tag);
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSong));
             taskList.add(GlobalExecutors.requestExecutor.submit(getFastNewSong));
             if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleNewSong));

@@ -466,7 +466,7 @@ public class UserSearchReq {
 
         List<Future<CommonResult<NetUserInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchUsers));
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchUsersQq));

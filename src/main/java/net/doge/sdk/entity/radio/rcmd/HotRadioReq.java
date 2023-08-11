@@ -785,7 +785,7 @@ public class HotRadioReq {
         boolean dt = defaultTag.equals(tag);
 
         if (dt) {
-            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getDailyRadios));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotRadios));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getRadiosRanking));
@@ -804,7 +804,7 @@ public class HotRadioReq {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getCatGameRadiosDb));
             }
         } else {
-            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getCatHotRadios));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getCatRecRadios));
             }

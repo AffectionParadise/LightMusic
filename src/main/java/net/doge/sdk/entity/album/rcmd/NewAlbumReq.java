@@ -821,7 +821,7 @@ public class NewAlbumReq {
         boolean dt = defaultTag.equals(tag);
 
         if (dt) {
-            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbums));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewestAlbums));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewestDiAlbums));
@@ -851,7 +851,7 @@ public class NewAlbumReq {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getTopAlbumsDb));
             }
         } else {
-            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbums));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getAllNewAlbums));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getLangDiAlbums));

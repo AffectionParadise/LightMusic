@@ -403,7 +403,7 @@ public class RecommendProgramReq {
         boolean dt = tag.equals(defaultTag);
 
         if (dt) {
-            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPrograms));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getPersonalizedPrograms));
                 taskList.add(GlobalExecutors.requestExecutor.submit(get24HoursPrograms));

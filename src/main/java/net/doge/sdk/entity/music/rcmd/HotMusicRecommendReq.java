@@ -78,9 +78,9 @@ public class HotMusicRecommendReq {
         // 网易云(榜单就是歌单，固定榜单 id 直接请求歌单音乐接口，接口分页)
         PlaylistInfoReq playlistInfoReq = new PlaylistInfoReq();
         // 飙升榜
-        Callable<CommonResult<NetMusicInfo>> getUpMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(19723756), NetMusicSource.NET_CLOUD, limit, page);
+        Callable<CommonResult<NetMusicInfo>> getUpMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(19723756), NetMusicSource.NC, limit, page);
         // 热歌榜
-        Callable<CommonResult<NetMusicInfo>> getHotMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(3778678), NetMusicSource.NET_CLOUD, limit, page);
+        Callable<CommonResult<NetMusicInfo>> getHotMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(3778678), NetMusicSource.NC, limit, page);
         // 曲风歌曲(最热)
         Callable<CommonResult<NetMusicInfo>> getStyleHotSong = () -> {
             List<NetMusicInfo> r = new LinkedList<>();
@@ -723,7 +723,7 @@ public class HotMusicRecommendReq {
         boolean dt = defaultTag.equals(tag);
 
         if (dt) {
-            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusic));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusic));
             }
@@ -757,7 +757,7 @@ public class HotMusicRecommendReq {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getRankBzSongFs));
             }
         } else {
-            if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+            if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
                 taskList.add(GlobalExecutors.requestExecutor.submit(getStyleHotSong));
             if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicHf));

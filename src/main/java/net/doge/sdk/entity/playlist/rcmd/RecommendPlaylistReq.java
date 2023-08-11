@@ -910,7 +910,7 @@ public class RecommendPlaylistReq {
 
         boolean dt = defaultTag.equals(tag);
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL) {
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getDiscoverPlaylists));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylists));
             if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStylePlaylists));

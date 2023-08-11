@@ -17,7 +17,6 @@ import net.doge.sdk.entity.music.info.trackurl.KwTrackUrlReq;
 import net.doge.sdk.entity.music.info.trackurl.QqTrackUrlReq;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
@@ -36,7 +35,8 @@ public class MusicUrlReq {
 //    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
     // 歌曲 URL 获取 API (咪咕)
-    private final String GET_SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+//    private final String GET_SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    private final String GET_SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=%s&toneFlag=%s";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
@@ -84,7 +84,7 @@ public class MusicUrlReq {
         int source = musicInfo.getSource();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             // 首选高音质接口
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/song/enhance/player/url/v1");
             // standard => 标准, higher => 较高, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, sky => 沉浸环绕声, jymaster => 超清母带
@@ -197,40 +197,64 @@ public class MusicUrlReq {
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, id))
-                    .executeAsync()
-                    .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
-            JSONArray rateFormats = data.getJSONArray("rateFormats");
-            rateFormats.addAll(data.getJSONArray("newRateFormats"));
-            String quality, urlKey;
-            String[] qs = {"SQ", "HQ", "PQ", "LQ"};
+            String quality;
             switch (AudioQuality.quality) {
                 case AudioQuality.HI_RES:
+                    quality = "ZQ";
+                    break;
                 case AudioQuality.LOSSLESS:
                     quality = "SQ";
-                    urlKey = "androidUrl";
                     break;
                 case AudioQuality.SUPER:
-                    quality = "HQ";
-                    urlKey = "url";
-                    break;
                 case AudioQuality.HIGH:
-                    quality = "PQ";
-                    urlKey = "url";
+                    quality = "HQ";
                     break;
                 default:
-                    quality = "LQ";
-                    urlKey = "url";
+                    quality = "PQ";
                     break;
             }
-            for (int i = rateFormats.size() - 1; i >= 0; i--) {
-                JSONObject urlJson = rateFormats.getJSONObject(i);
-                if (ArrayUtil.indexOf(qs, quality) > ArrayUtil.indexOf(qs, urlJson.getString("formatType"))) continue;
-                String ftp = urlJson.getString(urlKey);
-                String url = ftp.replaceFirst("ftp://[^/]+", "https://freetyst.nf.migu.cn");
-                return StringUtil.urlEncodeBlank(url);
-            }
+            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, id, quality))
+                    .header("channel", "0146951")
+                    .header("uid", "1234")
+                    .executeAsync()
+                    .body();
+            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+            if (JsonUtil.notEmpty(data)) return data.getString("url");
+//            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, id))
+//                    .executeAsync()
+//                    .body();
+//            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
+//            JSONArray rateFormats = data.getJSONArray("rateFormats");
+//            rateFormats.addAll(data.getJSONArray("newRateFormats"));
+//            String quality, urlKey;
+//            String[] qs = {"SQ", "HQ", "PQ", "LQ"};
+//            switch (AudioQuality.quality) {
+//                case AudioQuality.HI_RES:
+//                case AudioQuality.LOSSLESS:
+//                    quality = "SQ";
+//                    urlKey = "androidUrl";
+//                    break;
+//                case AudioQuality.SUPER:
+//                    quality = "HQ";
+//                    urlKey = "url";
+//                    break;
+//                case AudioQuality.HIGH:
+//                    quality = "PQ";
+//                    urlKey = "url";
+//                    break;
+//                default:
+//                    quality = "LQ";
+//                    urlKey = "url";
+//                    break;
+//            }
+//            for (int i = rateFormats.size() - 1; i >= 0; i--) {
+//                JSONObject urlJson = rateFormats.getJSONObject(i);
+//                if (ArrayUtil.indexOf(qs, quality) > ArrayUtil.indexOf(qs, urlJson.getString("formatType"))) continue;
+//                String ftp = urlJson.getString(urlKey);
+//                if (StringUtil.isEmpty(ftp)) continue;
+//                String url = ftp.replaceFirst("ftp://[^/]+", "https://freetyst.nf.migu.cn");
+//                return StringUtil.urlEncodeBlank(url);
+//            }
         }
 
         // 千千

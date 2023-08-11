@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ArtistSearchReq {
     // 关键词搜索歌手 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
+    // 关键词搜索歌手 API (酷我)
     private final String SEARCH_ARTIST_KW_API = "http://www.kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌手 API (咪咕)
     private final String SEARCH_ARTIST_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=1&keyword=%s&pgc=%s&rows=%s";
@@ -214,6 +215,45 @@ public class ArtistSearchReq {
             }
             return new CommonResult<>(r, t);
         };
+//        Callable<CommonResult<NetArtistInfo>> searchArtistsMg = () -> {
+//            List<NetArtistInfo> r = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String artistInfoBody = SdkCommon.mgSearchRequest("artist", keyword, page, limit)
+//                    .executeAsync()
+//                    .body();
+//            JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+//            JSONObject data = artistInfoJson.getJSONObject("singerResultData");
+//            t = data.getIntValue("totalCount");
+//            JSONArray artistArray = data.getJSONArray("result");
+//            if (JsonUtil.notEmpty(artistArray)) {
+//                for (int i = 0, len = artistArray.size(); i < len; i++) {
+//                    JSONObject artistJson = artistArray.getJSONObject(i);
+//
+//                    String artistId = artistJson.getString("id");
+//                    String artistName = artistJson.getString("name");
+//                    Integer songNum = artistJson.getIntValue("songCount");
+//                    Integer albumNum = artistJson.getIntValue("albumCount");
+//                    Integer mvNum = artistJson.getIntValue("mvCount");
+//                    String coverImgThumbUrl = artistJson.getJSONArray("singerPicUrl").getJSONObject(0).getString("img");
+//
+//                    NetArtistInfo artistInfo = new NetArtistInfo();
+//                    artistInfo.setSource(NetMusicSource.MG);
+//                    artistInfo.setId(artistId);
+//                    artistInfo.setName(artistName);
+//                    artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                    artistInfo.setSongNum(songNum);
+//                    artistInfo.setAlbumNum(albumNum);
+//                    artistInfo.setMvNum(mvNum);
+//                    GlobalExecutors.imageExecutor.execute(() -> {
+//                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                        artistInfo.setCoverImgThumb(coverImgThumb);
+//                    });
+//                    r.add(artistInfo);
+//                }
+//            }
+//            return new CommonResult<>(r, t);
+//        };
 
         // 千千
         Callable<CommonResult<NetArtistInfo>> searchArtistsQi = () -> {
@@ -322,7 +362,7 @@ public class ArtistSearchReq {
 
         List<Future<CommonResult<NetArtistInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchArtists));
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsQq));

@@ -326,7 +326,7 @@ public class RadioSearchReq {
 
         List<Future<CommonResult<NetRadioInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchRadios));
         if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchRadiosXm));

@@ -20944,6 +20944,8 @@ public class MainFrame extends JFrame {
         });
         // 播放器状态监听
         mp.statusProperty().addListener((observable, oldValue, newValue) -> {
+            // 排除正在销毁的 mp 对象的事件调用
+            if (mp != player.getMp()) return;
             if (player.isLoaded() && !"已就绪".equals(statusText)) updateTitle("已就绪");
             else if (player.isPlaying() && !"播放中".equals(statusText)) updateTitle("播放中");
             else if (player.isPaused() && !"暂停中".equals(statusText)) updateTitle("暂停中");

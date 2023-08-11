@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 public class NetArtistInfo implements NetResource {
     // 歌手来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 是否是社团(猫耳)
     private boolean isOrganization;
     // 歌手 id

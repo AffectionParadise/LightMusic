@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 public class NetRadioInfo implements NetResource {
     // 电台来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 类型 (豆瓣)
     private int type;
     // 电台 id

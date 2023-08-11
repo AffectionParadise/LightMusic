@@ -34,6 +34,7 @@ public class AlbumSearchReq {
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索专辑 API (酷狗)
     private final String SEARCH_ALBUM_KG_API = "http://msearch.kugou.com/api/v3/search/album?keyword=%s&page=%s&pagesize=%s";
+    // 关键词搜索专辑 API (酷我)
     private final String SEARCH_ALBUM_KW_API = "http://www.kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索专辑 API (咪咕)
     private final String SEARCH_ALBUM_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=4&keyword=%s&pgc=%s&rows=%s";
@@ -269,6 +270,43 @@ public class AlbumSearchReq {
             }
             return new CommonResult<>(r, t);
         };
+//        Callable<CommonResult<NetAlbumInfo>> searchAlbumsMg = () -> {
+//            List<NetAlbumInfo> r = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String albumInfoBody = SdkCommon.mgSearchRequest("album", keyword, page, limit)
+//                    .executeAsync()
+//                    .body();
+//            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+//            JSONObject data = albumInfoJson.getJSONObject("albumResultData");
+//            t = data.getIntValue("totalCount");
+//            JSONArray albumArray = data.getJSONArray("result");
+//            if (JsonUtil.notEmpty(albumArray)) {
+//                for (int i = 0, len = albumArray.size(); i < len; i++) {
+//                    JSONObject albumJson = albumArray.getJSONObject(i);
+//
+//                    String albumId = albumJson.getString("id");
+//                    String albumName = albumJson.getString("name");
+//                    String artist = albumJson.getString("singer");
+//                    String publishTime = albumJson.getString("publishDate");
+//                    String coverImgThumbUrl = albumJson.getJSONArray("imgItems").getJSONObject(0).getString("img");
+//
+//                    NetAlbumInfo albumInfo = new NetAlbumInfo();
+//                    albumInfo.setSource(NetMusicSource.MG);
+//                    albumInfo.setId(albumId);
+//                    albumInfo.setName(albumName);
+//                    albumInfo.setArtist(artist);
+//                    albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                    albumInfo.setPublishTime(publishTime);
+//                    GlobalExecutors.imageExecutor.execute(() -> {
+//                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                        albumInfo.setCoverImgThumb(coverImgThumb);
+//                    });
+//                    r.add(albumInfo);
+//                }
+//            }
+//            return new CommonResult<>(r, t);
+//        };
 
         // 千千
         Callable<CommonResult<NetAlbumInfo>> searchAlbumsQi = () -> {
@@ -465,7 +503,7 @@ public class AlbumSearchReq {
 
         List<Future<CommonResult<NetAlbumInfo>>> taskList = new LinkedList<>();
 
-        if (src == NetMusicSource.NET_CLOUD || src == NetMusicSource.ALL)
+        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbums));
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchAlbumsKg));

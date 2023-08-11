@@ -16,7 +16,7 @@ import java.util.Objects;
 @Data
 public class NetAlbumInfo implements NetResource {
     // 专辑来源
-    private int source = NetMusicSource.NET_CLOUD;
+    private int source = NetMusicSource.NC;
     // 专辑 id
     private String id;
     // 专辑名称

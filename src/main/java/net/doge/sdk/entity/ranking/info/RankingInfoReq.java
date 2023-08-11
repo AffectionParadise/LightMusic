@@ -50,7 +50,7 @@ public class RankingInfoReq {
         String id = rankingInfo.getId();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
         }
 
@@ -123,7 +123,7 @@ public class RankingInfoReq {
         List<NetMusicInfo> res = new LinkedList<>();
 
         // 网易云(榜单就是歌单，接口分页)
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             return new PlaylistInfoReq().getMusicInfoInPlaylist(rankingId, source, limit, page);
         }
 

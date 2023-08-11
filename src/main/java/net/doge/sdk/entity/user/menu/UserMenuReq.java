@@ -152,7 +152,7 @@ public class UserMenuReq {
         AtomicInteger total = new AtomicInteger();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, USER_PLAYLIST_API,
                             String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", id, (page - 1) * limit, limit), options)
@@ -551,7 +551,7 @@ public class UserMenuReq {
         AtomicInteger total = new AtomicInteger();
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, USER_RADIO_API, String.format("{\"userId\":\"%s\"}", id), options)
                     .executeAsync()
@@ -1099,7 +1099,7 @@ public class UserMenuReq {
         Integer t = 0;
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FOLLOWS_API, id),
                             String.format("{\"offset\":%s,\"limit\":%s,\"order\":true}", (page - 1) * limit, limit), options)
@@ -1444,7 +1444,7 @@ public class UserMenuReq {
         Integer t = 0;
 
         // 网易云
-        if (source == NetMusicSource.NET_CLOUD) {
+        if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/user/getfolloweds");
             String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FANS_API, id),
                             String.format("{\"userId\":\"%s\",\"time\":0,\"offset\":%s,\"limit\":%s,\"getcounts\":true}", id, (page - 1) * limit, limit), options)
