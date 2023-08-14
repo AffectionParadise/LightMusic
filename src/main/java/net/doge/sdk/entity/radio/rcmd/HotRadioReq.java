@@ -670,15 +670,15 @@ public class HotRadioReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(radioInfoBody);
-            Elements rs = doc.select("div.item");
+            Elements rs = doc.select(".item");
             String ts = RegexUtil.getGroup1("共(\\d+)条", doc.select("span.count").text());
             t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
             t -= t / rn * 5;
             for (int i = 0, len = rs.size(); i < len; i++) {
                 Element radio = rs.get(i);
-                Elements a = radio.select("div.hd a");
-                Elements p = radio.select("div.bd p");
-                Elements img = radio.select("div.pic img");
+                Elements a = radio.select(".hd a");
+                Elements p = radio.select(".bd p");
+                Elements img = radio.select(".pic img");
 
                 String radioId = RegexUtil.getGroup1("/subject/(\\d+)/", a.attr("href"));
                 String radioName = a.text().trim();

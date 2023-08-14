@@ -346,10 +346,10 @@ public class UserSearchReq {
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = userArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(userArray.getString(i));
-                    Elements result = doc.select("div.result");
+                    Elements result = doc.select(".result");
                     Elements a = result.select("h3 a");
                     Elements info = result.select(".title .info");
-                    Elements img = result.select("div.pic img");
+                    Elements img = result.select(".pic img");
 
                     String userId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String userName = a.text().trim();

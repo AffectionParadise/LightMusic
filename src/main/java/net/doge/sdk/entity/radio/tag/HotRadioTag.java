@@ -205,7 +205,7 @@ public class HotRadioTag {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(radioTagBody);
-            Elements tags = doc.select("div.types span a");
+            Elements tags = doc.select(".types span a");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 Element tag = tags.get(i);
 

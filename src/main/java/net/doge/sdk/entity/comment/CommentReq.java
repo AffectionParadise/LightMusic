@@ -1032,15 +1032,15 @@ public class CommentReq {
                         .body();
                 Document doc = Jsoup.parse(commentInfoBody);
                 Elements comments = doc.select("li.comment-item");
-                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#content h1").text());
+                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("#content h1").text());
                 total = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) : comments.size();
                 for (int i = 0, len = comments.size(); i < len; i++) {
                     Element comment = comments.get(i);
-                    Element a = comment.select("div.user-info a").first();
+                    Element a = comment.select(".user-info a").first();
                     Element sht = comment.select("span.short").first();
                     Element t = comment.select("span.pubtime").first();
                     Element d = comment.select("span.digg span").first();
-                    Elements rating = comment.select("div.user-info span");
+                    Elements rating = comment.select(".user-info span");
 
                     String userId = RegexUtil.getGroup1("/people/(.*?)/", a.attr("href"));
                     String username = a.text();
@@ -1077,13 +1077,13 @@ public class CommentReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(commentInfoBody);
-                Elements comments = doc.select(isRadio && !isBook ? "div.comment-item" : "li.comment-item");
+                Elements comments = doc.select(isRadio && !isBook ? ".comment-item" : "li.comment-item");
                 String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("li.is-active").text());
                 total = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) : comments.size();
                 for (int i = 0, len = comments.size(); i < len; i++) {
                     Element comment = comments.get(i);
                     Element a = comment.select("span.comment-info a").first();
-                    Element img = comment.select("div.avatar img").first();
+                    Element img = comment.select(".avatar img").first();
                     Element cnt = comment.select("p.comment-content").first();
                     Element t = comment.select(isBook ? "a.comment-time" : "span.comment-time").first();
                     Element v = comment.select("span.vote-count").first();

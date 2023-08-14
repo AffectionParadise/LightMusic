@@ -318,13 +318,13 @@ public class RecommendProgramReq {
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
                 t = StringUtil.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
-                Elements boxes = doc.select("div.vw-subcatalog-contant.fc-leftcontent-block.floatleft a[target=_player]");
+                Elements boxes = doc.select(".vw-subcatalog-contant.fc-leftcontent-block.floatleft a[target=_player]");
                 for (int i = 0, size = boxes.size(); i < size; i++) {
                     Element box = boxes.get(i);
 
                     String id = box.attr("href").replaceFirst("/sound/", "");
                     String name = box.attr("title");
-                    Double duration = TimeUtil.toSeconds(box.select("div.vw-frontsound-time.fc-hoverheight").first().text().trim());
+                    Double duration = TimeUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.ME);
@@ -349,13 +349,13 @@ public class RecommendProgramReq {
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
                 t = StringUtil.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
-                Elements boxes = doc.select("div.vw-subcatalog-contant.fc-leftcontent-block.floatleft a[target=_player]");
+                Elements boxes = doc.select(".vw-subcatalog-contant.fc-leftcontent-block.floatleft a[target=_player]");
                 for (int i = 0, size = boxes.size(); i < size; i++) {
                     Element box = boxes.get(i);
 
                     String id = box.attr("href").replaceFirst("/sound/", "");
                     String name = box.attr("title");
-                    Double duration = TimeUtil.toSeconds(box.select("div.vw-frontsound-time.fc-hoverheight").first().text().trim());
+                    Double duration = TimeUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.ME);

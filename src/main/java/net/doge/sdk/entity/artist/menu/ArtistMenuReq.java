@@ -548,7 +548,7 @@ public class ArtistMenuReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(imgInfoBody);
-            Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
+            Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");
             String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
             total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
             for (int i = 0, len = imgs.size(); i < len; i++) {
@@ -788,7 +788,7 @@ public class ArtistMenuReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
-            String ts = RegexUtil.getGroup1("（(\\d+)）", doc.select("div#content > h1").text());
+            String ts = RegexUtil.getGroup1("（(\\d+)）", doc.select("#content > h1").text());
             int tn = Integer.parseInt(ts);
             t.set(tn -= tn / rn * 15);
             Elements us = doc.select("dl.obu");
@@ -871,14 +871,14 @@ public class ArtistMenuReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
-            Elements cs = doc.select("div.partners.item");
+            Elements cs = doc.select(".partners.item");
             String ts = RegexUtil.getGroup1("共(\\d+)条", doc.select("span.count").text());
             t = StringUtil.isEmpty(ts) ? cs.size() : Integer.parseInt(ts);
             t += t / limit * 10;
             for (int i = 0, len = cs.size(); i < len; i++) {
                 Element artist = cs.get(i);
-                Element a = artist.select("div.info a").first();
-                Element img = artist.select("div.pic img").first();
+                Element a = artist.select(".info a").first();
+                Element img = artist.select(".pic img").first();
 
                 String artistId = RegexUtil.getGroup1("celebrity/(\\d+)/", a.attr("href"));
                 String artistName = a.text();
@@ -986,7 +986,7 @@ public class ArtistMenuReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
-            Elements rs = doc.select("div.grid_view > ul > li > dl");
+            Elements rs = doc.select(".grid_view > ul > li > dl");
             String ts = RegexUtil.getGroup1("共(\\d+)条", doc.select("span.count").text());
             t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
             t += t / limit * 10;

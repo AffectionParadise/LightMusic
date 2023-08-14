@@ -110,7 +110,7 @@ public class DesktopLyricDialog extends JDialog {
         else stc.setRatio(ratio);
         lyricLabel.setIcon(stc.getImageIcon());
         // Icon 对象可能不变，一定要手动重绘刷新！
-        lyricLabel.repaint();
+        mainPanel.repaint();
     }
 
     // 更新大小
@@ -134,7 +134,6 @@ public class DesktopLyricDialog extends JDialog {
 
         setTitle("桌面歌词");
         // 将桌面歌词窗口设置为固定大小与固定位置
-//        FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
         updateSize();
         updateLocation();
 
@@ -275,11 +274,12 @@ public class DesktopLyricDialog extends JDialog {
                 Point p = getLocation();
                 int nx = p.x + e.getX() - origin.x, ny = p.y + e.getY() - origin.y;
                 Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+                int w = getWidth(), h = getHeight();
                 // 不准将桌面歌词拖出窗口之外
                 if (nx < 0) nx = 0;
-                else if (nx + getWidth() > ss.width) nx = ss.width - getWidth();
+                else if (nx + w > ss.width) nx = ss.width - w;
                 if (ny < 0) ny = 0;
-                else if (ny + getHeight() > ss.height) ny = ss.height - getHeight();
+                else if (ny + h > ss.height) ny = ss.height - h;
                 setLocation(f.desktopLyricX = nx, f.desktopLyricY = ny);
             }
         });

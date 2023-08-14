@@ -410,12 +410,12 @@ public class AlbumInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
-            String info = StringUtil.getPrettyText(doc.select("div#info").first()) + "\n";
-            Element re = doc.select("div#link-report").first();
+            String info = StringUtil.getPrettyText(doc.select("#info").first()) + "\n";
+            Element re = doc.select("#link-report").first();
             Elements span = re.select("span");
             String desc = StringUtil.getPrettyText(span.isEmpty() ? re : span.last()) + "\n";
-            String tracks = StringUtil.getPrettyText(doc.select("div.track-list div div").first());
-            String coverImgUrl = doc.select("div#mainpic img").attr("src");
+            String tracks = StringUtil.getPrettyText(doc.select(".track-list div div").first());
+            String coverImgUrl = doc.select("#mainpic img").attr("src");
 
             albumInfo.setDescription(info + desc + "\n曲目：\n" + tracks);
             if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);

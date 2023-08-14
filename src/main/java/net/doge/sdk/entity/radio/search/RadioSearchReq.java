@@ -208,14 +208,14 @@ public class RadioSearchReq {
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
-                    Elements result = doc.select("div.result");
+                    Elements result = doc.select(".result");
                     Elements a = result.select("h3 a");
                     Elements span = result.select(".title h3 span");
 
                     String radioId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String radioName = a.text().trim();
                     String dj = result.select("span.subject-cast").text();
-                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String coverImgThumbUrl = result.select(".pic img").attr("src");
                     String category = RegexUtil.getGroup1("\\[(.*?)\\]", span.text());
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
@@ -251,14 +251,14 @@ public class RadioSearchReq {
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
-                    Elements result = doc.select("div.result");
+                    Elements result = doc.select(".result");
                     Elements a = result.select("h3 a");
                     Elements span = result.select(".title h3 span");
 
                     String radioId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String radioName = a.text().trim();
                     String dj = result.select("span.subject-cast").text();
-                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String coverImgThumbUrl = result.select(".pic img").attr("src");
                     String category = RegexUtil.getGroup1("\\[(.*?)\\]", span.text());
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
@@ -295,14 +295,14 @@ public class RadioSearchReq {
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
-                    Elements result = doc.select("div.result");
+                    Elements result = doc.select(".result");
                     Elements a = result.select("h3 a");
                     Elements span = result.select(".title h3 span");
 
                     String radioId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String radioName = a.text().trim();
                     String dj = result.select("span.subject-cast").text();
-                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String coverImgThumbUrl = result.select(".pic img").attr("src");
                     String category = RegexUtil.getGroup1("\\[(.*?)\\]", span.text());
 
                     NetRadioInfo radioInfo = new NetRadioInfo();

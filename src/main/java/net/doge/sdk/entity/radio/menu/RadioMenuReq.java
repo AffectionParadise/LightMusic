@@ -121,12 +121,12 @@ public class RadioMenuReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
-            Elements rs = doc.select(isBook ? "div#db-rec-section dl:not(.clear)"
-                    : isGame ? "div.list.fav-list li" : "div.recommendations-bd dl");
+            Elements rs = doc.select(isBook ? "#db-rec-section dl:not(.clear)"
+                    : isGame ? ".list.fav-list li" : ".recommendations-bd dl");
             t = rs.size();
             for (int i = 0, len = rs.size(); i < len; i++) {
                 Element radio = rs.get(i);
-                Element a = radio.select(isGame ? "div.text a" : "dd a").first();
+                Element a = radio.select(isGame ? ".text a" : "dd a").first();
                 Element img = radio.select("img").first();
 
                 String radioId = RegexUtil.getGroup1(isGame ? "game/(\\d+)/" : "subject/(\\d+)/", a.attr("href"));
@@ -237,7 +237,7 @@ public class RadioMenuReq {
             for (int i = 0, len = cs.size(); i < len; i++) {
                 Element artist = cs.get(i);
                 Element a = artist.select("span.name a").first();
-                Element img = artist.select("div.avatar").first();
+                Element img = artist.select(".avatar").first();
 
                 String artistId = RegexUtil.getGroup1("celebrity/(\\d+)/", a.attr("href"));
                 String artistName = a.text();

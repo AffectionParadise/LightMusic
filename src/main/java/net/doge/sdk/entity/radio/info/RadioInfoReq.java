@@ -303,18 +303,18 @@ public class RadioInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
-                String info = StringUtil.getPrettyText(doc.select("div#info").first()) + "\n";
-                Elements re = doc.select("div#link-report");
+                String info = StringUtil.getPrettyText(doc.select("#info").first()) + "\n";
+                Elements re = doc.select("#link-report");
                 Elements span = re.select("span");
-                Element intro = doc.select("div.intro").last();
-                Element cata = doc.select(String.format("div#dir_%s_full", id)).first();
-                Element tr = doc.select("div.subject_show.block5:not(#rec-ebook-section) div").first();
+                Element intro = doc.select(".intro").last();
+                Element cata = doc.select(String.format("#dir_%s_full", id)).first();
+                Element tr = doc.select(".subject_show.block5:not(#rec-ebook-section) div").first();
 
                 String desc = StringUtil.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
                 String authorIntro = StringUtil.getPrettyText(intro) + "\n";
                 String catalog = StringUtil.getPrettyText(cata) + "\n\n";
                 String trace = StringUtil.getPrettyText(tr);
-                String coverImgUrl = doc.select("div#mainpic img").attr("src");
+                String coverImgUrl = doc.select("#mainpic img").attr("src");
 
                 radioInfo.setDescription(info + desc + "作者简介：\n" + authorIntro + "目录：\n" + catalog + "丛书信息：\n" + trace);
                 if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
@@ -325,10 +325,10 @@ public class RadioInfoReq {
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
                 String info = StringUtil.getPrettyText(doc.select("dl.game-attr").first()) + "\n";
-                Element p = doc.select("div#link-report p").first();
+                Element p = doc.select("#link-report p").first();
 
                 String desc = StringUtil.getPrettyText(p) + "\n";
-                String coverImgUrl = doc.select("div.pic img").attr("src");
+                String coverImgUrl = doc.select(".pic img").attr("src");
 
                 radioInfo.setDescription(info + desc);
                 if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
@@ -338,12 +338,12 @@ public class RadioInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
-                String info = StringUtil.getPrettyText(doc.select("div#info").first()) + "\n";
-                Elements re = doc.select("div#link-report");
+                String info = StringUtil.getPrettyText(doc.select("#info").first()) + "\n";
+                Elements re = doc.select("#link-report");
                 Elements span = re.select("span");
 
                 String desc = StringUtil.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
-                String coverImgUrl = doc.select("div#mainpic img").attr("src");
+                String coverImgUrl = doc.select("#mainpic img").attr("src");
 
                 radioInfo.setDescription(info + desc);
                 if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
@@ -531,7 +531,7 @@ public class RadioInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(imgInfoBody);
-                Elements imgs = doc.select("div.pholist ul img");
+                Elements imgs = doc.select(".pholist ul img");
                 String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
                 total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
                 for (int i = 0, len = imgs.size(); i < len; i++) {
@@ -544,7 +544,7 @@ public class RadioInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(imgInfoBody);
-                Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
+                Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");
                 String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
                 total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
                 for (int i = 0, len = imgs.size(); i < len; i++) {
@@ -574,7 +574,7 @@ public class RadioInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(imgInfoBody);
-            Elements imgs = doc.select("ul.poster-col3.clearfix div.cover img");
+            Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");
             String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
             total = StringUtil.isEmpty(t) ? imgs.size() : Integer.parseInt(t);
             for (int i = 0, len = imgs.size(); i < len; i++) {

@@ -366,13 +366,13 @@ public class AlbumSearchReq {
                 t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(albumArray.getString(i));
-                    Elements result = doc.select("div.result");
+                    Elements result = doc.select(".result");
                     Elements a = result.select("h3 a");
 
                     String albumId = RegexUtil.getGroup1("sid: (\\d+)", a.attr("onclick"));
                     String albumName = a.text().trim();
                     String artist = result.select("span.subject-cast").text();
-                    String coverImgThumbUrl = result.select("div.pic img").attr("src");
+                    String coverImgThumbUrl = result.select(".pic img").attr("src");
 
                     NetAlbumInfo albumInfo = new NetAlbumInfo();
                     albumInfo.setSource(NetMusicSource.DB);
@@ -393,7 +393,7 @@ public class AlbumSearchReq {
 //                    .body();
 //            Document doc = Jsoup.parse(albumInfoBody);
 //            t = 4000 / lim * limit;
-//            Elements result = doc.select("div.sc-bZQynM.hrvolz.sc-bxivhb.hvEfwz");
+//            Elements result = doc.select(".sc-bZQynM.hrvolz.sc-bxivhb.hvEfwz");
 //            for (int i = 0, len = result.size(); i < len; i++) {
 //                Element album = result.get(i);
 //                Element a = album.select(".title a").first();

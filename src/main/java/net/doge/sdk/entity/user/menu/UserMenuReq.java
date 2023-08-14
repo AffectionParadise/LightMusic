@@ -464,15 +464,15 @@ public class UserMenuReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
-            Elements rs = doc.select("div.item");
-            String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
+            Elements rs = doc.select(".item");
+            String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("#db-usr-profile .info h1").text());
             total = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
             total += total / rn * 5;
             for (int i = 0, len = rs.size(); i < len; i++) {
                 Element radio = rs.get(i);
                 Element a = radio.select("li.title a").first();
                 Element intro = radio.select("li.intro").first();
-                Element img = radio.select("div.pic img").first();
+                Element img = radio.select(".pic img").first();
 
                 String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                 String radioName = a.text();
@@ -814,15 +814,15 @@ public class UserMenuReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
-                Elements rs = doc.select("div.item");
-                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
+                Elements rs = doc.select(".item");
+                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("#db-usr-profile .info h1").text());
                 t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
                 t += t / rn * 5;
                 for (int i = 0, len = rs.size(); i < len; i++) {
                     Element radio = rs.get(i);
                     Element a = radio.select("li.title a").first();
                     Element intro = radio.select("li.intro").first();
-                    Element img = radio.select("div.pic img").first();
+                    Element img = radio.select(".pic img").first();
 
                     String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                     String radioName = a.text();
@@ -857,14 +857,14 @@ public class UserMenuReq {
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
                 Elements rs = doc.select("li.subject-item");
-                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("div#db-usr-profile div.info h1").text());
+                String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("#db-usr-profile .info h1").text());
                 t = StringUtil.isEmpty(ts) ? rs.size() : Integer.parseInt(ts);
                 t += t / rn * 5;
                 for (int i = 0, len = rs.size(); i < len; i++) {
                     Element radio = rs.get(i);
-                    Element a = radio.select("div.info a").first();
-                    Element pub = radio.select("div.pub").first();
-                    Element img = radio.select("div.pic img").first();
+                    Element a = radio.select(".info a").first();
+                    Element pub = radio.select(".pub").first();
+                    Element img = radio.select(".pic img").first();
 
                     String radioId = RegexUtil.getGroup1("subject/(\\d+)/", a.attr("href"));
                     String radioName = a.text();

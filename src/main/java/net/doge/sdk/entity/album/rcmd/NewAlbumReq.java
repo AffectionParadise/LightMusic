@@ -744,8 +744,8 @@ public class NewAlbumReq {
             t -= 250 / rn * 5;
             for (int i = 0, len = as.size(); i < len; i++) {
                 Element album = as.get(i);
-                Elements a = album.select("div.pl2 a");
-                Elements pl = album.select("div.pl2 p.pl");
+                Elements a = album.select(".pl2 a");
+                Elements pl = album.select(".pl2 p.pl");
                 Elements img = album.select("td img");
 
                 String albumId = RegexUtil.getGroup1("/subject/(\\d+)/", a.attr("href"));
@@ -782,13 +782,13 @@ public class NewAlbumReq {
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
                 Elements as = doc.select("tr.item");
-                Element te = doc.select("div.paginator > a").last();
+                Element te = doc.select(".paginator > a").last();
                 String ts = te == null ? "" : te.text();
                 t = StringUtil.notEmpty(ts) ? Integer.parseInt(ts) * limit : limit;
                 for (int i = 0, len = as.size(); i < len; i++) {
                     Element album = as.get(i);
-                    Elements a = album.select("div.pl2 a");
-                    Elements pl = album.select("div.pl2 p.pl");
+                    Elements a = album.select(".pl2 a");
+                    Elements pl = album.select(".pl2 p.pl");
                     Elements img = album.select("td img");
 
                     String albumId = RegexUtil.getGroup1("/subject/(\\d+)/", a.attr("href"));

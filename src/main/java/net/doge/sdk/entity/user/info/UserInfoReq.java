@@ -194,18 +194,19 @@ public class UserInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
+                Elements level = doc.select("span.level");
+                if (level.isEmpty()) return;
+                Elements tuna = doc.select("#t_u_n_a");
+                Elements follow = doc.select(".home-follow span");
+                Elements fans = doc.select(".home-fans span");
 
-                if (!userInfo.hasLevel())
-                    userInfo.setLevel(Integer.parseInt(doc.select("span.level").first().text().replace("LV", "")));
+                if (!userInfo.hasLevel()) userInfo.setLevel(Integer.parseInt(level.text().replace("LV", "")));
                 if (!userInfo.hasGender()) userInfo.setGender("保密");
-                if (!userInfo.hasSign())
-                    userInfo.setSign(doc.select("#t_u_n_a").first().text());
-                if (!userInfo.hasFollow())
-                    userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
-                if (!userInfo.hasFan())
-                    userInfo.setFan(Integer.parseInt(doc.select(".home-fans span").first().text()));
+                if (!userInfo.hasSign()) userInfo.setSign(tuna.text());
+                if (!userInfo.hasFollow()) userInfo.setFollow(Integer.parseInt(follow.text()));
+                if (!userInfo.hasFan()) userInfo.setFan(Integer.parseInt(fans.text()));
 
-                String avatarUrl = "https:" + doc.select("div#topusermainicon img").attr("src");
+                String avatarUrl = "https:" + doc.select("#topusermainicon img").attr("src");
                 if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
                 GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
@@ -303,11 +304,11 @@ public class UserInfoReq {
             Document doc = Jsoup.parse(userInfoBody);
 
             if (!userInfo.hasAccAge()) {
-                String dt = RegexUtil.getGroup1("(\\d+\\-\\d+\\-\\d+)加入", doc.select("div.pl").text());
+                String dt = RegexUtil.getGroup1("(\\d+\\-\\d+\\-\\d+)加入", doc.select(".pl").text());
                 userInfo.setAccAge(TimeUtil.getAccAge(TimeUtil.dateToMs(dt)));
             }
             if (!userInfo.hasGender()) userInfo.setGender("保密");
-            if (!userInfo.hasArea()) userInfo.setArea(doc.select("div.user-info a").text());
+            if (!userInfo.hasArea()) userInfo.setArea(doc.select(".user-info a").text());
             if (!userInfo.hasSign())
                 userInfo.setSign(StringUtil.getPrettyText(doc.select("span#intro_display").first()));
 //            if (!userInfo.hasFollow())
@@ -315,7 +316,7 @@ public class UserInfoReq {
 //            if (!userInfo.hasFan())
 //                userInfo.setFan(Integer.parseInt(doc.select(".home-fans span").first().text()));
 
-            String avatarUrl = doc.select("div.basic-info img").attr("src");
+            String avatarUrl = doc.select(".basic-info img").attr("src");
             if (!userInfo.hasAvatarUrl()) userInfo.setAvatarUrl(avatarUrl);
             GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
             GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl("")));
@@ -328,11 +329,11 @@ public class UserInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(userInfoBody);
-            Elements a = doc.select("div.people-funs a");
+            Elements a = doc.select(".people-funs a");
 
             if (!userInfo.hasGender()) userInfo.setGender("保密");
             if (!userInfo.hasSign())
-                userInfo.setSign(doc.select("div.people-desc").text().trim());
+                userInfo.setSign(doc.select(".people-desc").text().trim());
             if (!userInfo.hasProgramCount()) {
                 String s = doc.select("ul.people-nav li a").get(1).select("u").text().trim();
                 if (StringUtil.notEmpty(s)) userInfo.setProgramCount(Integer.parseInt(s));
@@ -1024,12 +1025,12 @@ public class UserInfoReq {
                     Element tun = doc.getElementById("t_u_n");
                     // 判断账号是否已注销
                     if (tun != null) {
-                        userInfo.setName(tun.getElementsByTag("a").first().text());
-                        String avaUrl = "https:" + doc.getElementById("topusermainicon").getElementsByTag("img").first().attr("src");
+                        userInfo.setName(tun.select("a").text());
+                        String avaUrl = "https:" + doc.select("#topusermainicon img").attr("src");
                         userInfo.setAvatarThumbUrl(avaUrl);
                         userInfo.setGender("保密");
-                        userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
-                        userInfo.setFan(Integer.parseInt(doc.select(".home-fans span").first().text()));
+                        userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").text()));
+                        userInfo.setFan(Integer.parseInt(doc.select(".home-fans span").text()));
 
                         GlobalExecutors.imageExecutor.execute(() -> {
                             BufferedImage avatarThumb = SdkUtil.extractCover(avaUrl);
@@ -1144,8 +1145,8 @@ public class UserInfoReq {
                         .body();
                 Document doc = Jsoup.parse(userInfoBody);
 
-                Element h1 = doc.select("div.info > h1").first();
-                Elements img = doc.select("div.basic-info img");
+                Element h1 = doc.select(".info > h1").first();
+                Elements img = doc.select(".basic-info img");
 
                 if (h1 != null) {
                     String userName = h1.ownText();

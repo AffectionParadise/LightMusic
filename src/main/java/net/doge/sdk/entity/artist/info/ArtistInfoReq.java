@@ -518,11 +518,11 @@ public class ArtistInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
-            String info = StringUtil.getPrettyText(doc.select("#headline div.info").first()) + "\n";
-            Element bd = doc.select("#intro div.bd").first();
+            String info = StringUtil.getPrettyText(doc.select("#headline .info").first()) + "\n";
+            Element bd = doc.select("#intro .bd").first();
             Elements span = bd.select("span");
             String desc = StringUtil.getPrettyText(span.isEmpty() ? bd : span.last());
-            String coverImgUrl = doc.select("div.nbg img").attr("src");
+            String coverImgUrl = doc.select(".nbg img").attr("src");
 
             artistInfo.setDescription(info + desc);
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);

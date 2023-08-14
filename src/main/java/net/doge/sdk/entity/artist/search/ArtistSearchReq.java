@@ -334,9 +334,9 @@ public class ArtistSearchReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
-            t = Integer.parseInt(doc.select("div.rr").first().text().split("共")[1]);
+            t = Integer.parseInt(doc.select(".rr").first().text().split("共")[1]);
             t += t / 15 * 5;
-            Elements result = doc.select("div.result");
+            Elements result = doc.select(".result");
             for (int i = 0, len = result.size(); i < len; i++) {
                 Element artist = result.get(i);
                 Element a = artist.select(".content a").first();

@@ -189,7 +189,7 @@ public class StringTwoColor {
                 for (int j = 0, l = metricsHuge.length; j < l; j++) {
                     Font font = Fonts.TYPES_HUGE.get(j);
                     if (font.canDisplay(codePoint)) {
-//                        Shape shape = Fonts.TYPES_HUGE[j].createGlyphVector(metricsHuge[j].getFontRenderContext(), str).getOutline();
+//                        Shape shape = font.createGlyphVector(metricsHuge[j].getFontRenderContext(), str).getOutline();
 //                        // 文字阴影
 //                        g1.setColor(shadowColor);
 //                        g2.setColor(shadowColor);
