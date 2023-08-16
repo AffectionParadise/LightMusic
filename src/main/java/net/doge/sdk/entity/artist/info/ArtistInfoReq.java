@@ -332,7 +332,8 @@ public class ArtistInfoReq {
             JSONObject artistJson = artistInfoJson.getJSONObject("data").getJSONObject("artist");
 
             String coverImgUrl = artistJson.getString("avatar");
-            String description = artistJson.getString("briefDesc");
+            String briefDesc = artistJson.getString("briefDesc");
+            String description = StringUtil.notEmpty(briefDesc) ? briefDesc : "";
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));

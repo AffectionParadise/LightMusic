@@ -173,7 +173,7 @@ public class MiniDialog extends AbstractMiniDialog {
         initView();
 
         // Dialog 背景透明
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         setContentPane(globalPanel);
     }
 

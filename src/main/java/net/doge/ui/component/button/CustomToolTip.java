@@ -34,7 +34,7 @@ public class CustomToolTip extends JToolTip {
             jParent.setOpaque(false);
         }
         Window w = SwingUtilities.getWindowAncestor(this);
-        w.setBackground(Colors.TRANSLUCENT);
+        w.setBackground(Colors.TRANSPARENT);
     }
 
     @Override

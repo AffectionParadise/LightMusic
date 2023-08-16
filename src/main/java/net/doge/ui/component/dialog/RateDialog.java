@@ -3,11 +3,11 @@ package net.doge.ui.component.dialog;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;
-import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.button.DialogButton;
+import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
-import net.doge.ui.component.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.component.slider.ui.VSliderUI;
 
 import javax.swing.*;
@@ -66,7 +66,7 @@ public class RateDialog extends AbstractShadowDialog {
         setContentPane(globalPanel);
 
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         pack();
 
         // 调整位置使之在按钮上方

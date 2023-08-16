@@ -231,7 +231,7 @@ public class SettingDialog extends AbstractTitledDialog {
 
         setContentPane(globalPanel);
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
 
         updateBlur();

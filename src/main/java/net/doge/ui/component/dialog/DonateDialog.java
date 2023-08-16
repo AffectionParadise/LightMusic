@@ -54,7 +54,7 @@ public class DonateDialog extends AbstractTitledDialog {
 
         // Dialog 背景透明
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
 
         messageLabel.setForeground(textColor);
         weixinLabel.setForeground(textColor);

@@ -141,7 +141,7 @@ public class DesktopLyricDialog extends JDialog {
         bgColor = f.currUIStyle.getLrcColor();
         // Dialog 背景透明
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         tempLabel.setForeground(bgColor);
         tempLabel.setFont(font);
         setLyric(" ", 0);

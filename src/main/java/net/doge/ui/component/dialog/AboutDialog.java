@@ -49,7 +49,7 @@ public class AboutDialog extends AbstractTitledDialog {
 
         // Dialog 背景透明
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
 
         appLabel.setText(f.TITLE);
         appLabel.setIcon(ImageUtil.dye(appIcon, textColor));

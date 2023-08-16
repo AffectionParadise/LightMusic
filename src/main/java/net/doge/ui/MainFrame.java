@@ -887,6 +887,7 @@ public class MainFrame extends JFrame {
     // 频谱面板
     private SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
     private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
+    private List<CustomRadioButtonMenuItem> spectrumStyleButtonGroup = new LinkedList<>();
     private final String SPEC_OPACITY_MSG = "当前频谱透明度：%d%%";
     public float specOpacity;
     private CustomMenuItem spectrumOpacityMenuItem = new CustomMenuItem();
@@ -896,7 +897,6 @@ public class MainFrame extends JFrame {
             new CustomMenuItem("-10%"),
             new CustomMenuItem("-20%")
     };
-    private ButtonGroup spectrumStyleGroup = new ButtonGroup();
     // 歌词右键弹出菜单
     private CustomPopupMenu lrcPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem copyMenuItem = new CustomMenuItem("复制这句歌词");
@@ -1182,10 +1182,10 @@ public class MainFrame extends JFrame {
     private CustomButton sortToolButton = new CustomButton(sortIcon);
     // 排序按钮弹出菜单
     private CustomPopupMenu sortPopupMenu = new CustomPopupMenu(THIS);
-    private ButtonGroup sortOrderButtonGroup = new ButtonGroup();
-    private ButtonGroup sortMethodButtonGroup = new ButtonGroup();
-    private CustomRadioButtonMenuItem ascendingMenuItem = new CustomRadioButtonMenuItem("升序", currSortOrder == SortMethod.ASCENDING);
-    private CustomRadioButtonMenuItem descendingMenuItem = new CustomRadioButtonMenuItem("降序", currSortOrder == SortMethod.DESCENDING);
+    private List<CustomRadioButtonMenuItem> sortOrderButtonGroup = new LinkedList<>();
+    private List<CustomRadioButtonMenuItem> sortMethodButtonGroup = new LinkedList<>();
+    private CustomRadioButtonMenuItem ascendingMenuItem = new CustomRadioButtonMenuItem("升序");
+    private CustomRadioButtonMenuItem descendingMenuItem = new CustomRadioButtonMenuItem("降序");
     private CustomRadioButtonMenuItem sortBySongNameAndFileNameMenuItem = new CustomRadioButtonMenuItem("按曲名/文件名混合");
     private CustomRadioButtonMenuItem sortBySongNameMenuItem = new CustomRadioButtonMenuItem("按曲名");
     private CustomRadioButtonMenuItem sortByArtistNameMenuItem = new CustomRadioButtonMenuItem("按艺术家");
@@ -2659,7 +2659,6 @@ public class MainFrame extends JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             SwingUtilities.updateComponentTreeUI(THIS);
-            SwingUtilities.updateComponentTreeUI(globalPanel);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (InstantiationException e) {
@@ -2716,7 +2715,6 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-//                    SwingUtilities.updateComponentTreeUI(stylePopupMenu);
                     stylePopupMenu.show(styleToolButton, e.getX(), e.getY());
                 }
             }
@@ -2726,7 +2724,6 @@ public class MainFrame extends JFrame {
         mainMenuButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-//                SwingUtilities.updateComponentTreeUI(mainMenu);
                 mainMenu.show(mainMenuButton, e.getX(), e.getY());
             }
         });
@@ -3109,12 +3106,7 @@ public class MainFrame extends JFrame {
         currVideoRate = config.containsKey(ConfigConstants.VIDEO_RATE) ? config.getDoubleValue(ConfigConstants.VIDEO_RATE) : DEFAULT_RATE;
         // 载入频谱样式
         currSpecStyle = config.getIntValue(ConfigConstants.SPECTRUM_STYLE, SpectrumConstants.GROUND);
-        Enumeration<AbstractButton> mis = spectrumStyleGroup.getElements();
-        int ei = 0;
-        while (mis.hasMoreElements()) {
-            CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) mis.nextElement();
-            mi.setSelected(currSpecStyle == ei++);
-        }
+        updateMenuItemStatus(spectrumStyleButtonGroup, spectrumStyleButtonGroup.get(currSpecStyle));
         // 载入均衡
         currBalance = config.containsKey(ConfigConstants.BALANCE) ? config.getDoubleValue(ConfigConstants.BALANCE) : DEFAULT_BALANCE;
         // 载入音量
@@ -3144,8 +3136,7 @@ public class MainFrame extends JFrame {
         switchLrcTypeButton.setIcon(ImageUtil.dye(currLrcType == LyricType.ORIGINAL ? originalIcon : translationIcon, currUIStyle.getIconColor()));
         // 载入排序顺序
         currSortOrder = config.getIntValue(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
-        ascendingMenuItem.setSelected(currSortOrder == SortMethod.ASCENDING);
-        descendingMenuItem.setSelected(currSortOrder == SortMethod.DESCENDING);
+        updateMenuItemStatus(sortOrderButtonGroup, sortOrderButtonGroup.get(currSortOrder));
 
         // 载入歌曲目录
         JSONArray catalogJsonArray = config.getJSONArray(ConfigConstants.CATALOGS);
@@ -6132,43 +6123,36 @@ public class MainFrame extends JFrame {
                             netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
-//                            SwingUtilities.updateComponentTreeUI(netPlaylistPopupMenu);
                             netPlaylistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ALBUM) {
                             netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
-//                            SwingUtilities.updateComponentTreeUI(netAlbumPopupMenu);
                             netAlbumPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ARTIST) {
                             netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
-//                            SwingUtilities.updateComponentTreeUI(netArtistPopupMenu);
                             netArtistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RADIO) {
                             netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
-//                            SwingUtilities.updateComponentTreeUI(netRadioPopupMenu);
                             netRadioPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.MV) {
                             netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
-//                            SwingUtilities.updateComponentTreeUI(netMvPopupMenu);
                             netMvPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RANKING) {
                             netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
-//                            SwingUtilities.updateComponentTreeUI(netRankingPopupMenu);
                             netRankingPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.USER) {
                             netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
 
-//                            SwingUtilities.updateComponentTreeUI(netUserPopupMenu);
                             netUserPopupMenu.show(collectionList, e.getX(), e.getY());
                         }
                     }
@@ -6644,64 +6628,77 @@ public class MainFrame extends JFrame {
         });
         // 升序
         ascendingMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortOrderButtonGroup, ascendingMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod, currSortOrder = SortMethod.ASCENDING);
         });
         // 降序
         descendingMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortOrderButtonGroup, descendingMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod, currSortOrder = SortMethod.DESCENDING);
         });
         // 按曲名/文件名混合排序
         sortBySongNameAndFileNameMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortBySongNameAndFileNameMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SONG_AND_FILE_NAME, currSortOrder);
         });
         // 按曲名排序
         sortBySongNameMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortBySongNameMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SONG_NAME, currSortOrder);
         });
         // 按艺术家排序
         sortByArtistNameMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortByArtistNameMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_ARTIST_NAME, currSortOrder);
         });
         // 按专辑排序
         sortByAlbumNameMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortByAlbumNameMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_ALBUM_NAME, currSortOrder);
         });
         // 按文件名排序
         sortByFileNameMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortByFileNameMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_FILE_NAME, currSortOrder);
         });
         // 按时长排序
         sortByTimeMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortByTimeMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_TIME, currSortOrder);
         });
         // 按创建时间排序
         sortByCreationTimeMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortByCreationTimeMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_CREATION_TIME, currSortOrder);
         });
         // 按修改时间排序
         sortByLastModifiedTimeMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortByLastModifiedTimeMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_LAST_MODIFIED_TIME, currSortOrder);
         });
         // 按访问时间排序
         sortByLastAccessTimeMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortByLastAccessTimeMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_LAST_ACCESS_TIME, currSortOrder);
         });
         // 按大小排序
         sortBySizeMenuItem.addActionListener(e -> {
+            updateMenuItemStatus(sortMethodButtonGroup, sortBySizeMenuItem);
             updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SIZE, currSortOrder);
         });
+
         sortOrderButtonGroup.add(ascendingMenuItem);
         sortOrderButtonGroup.add(descendingMenuItem);
 
@@ -16595,8 +16592,6 @@ public class MainFrame extends JFrame {
                             netCommentList.setSelectedIndex(index);
                         }
                         netCommentSaveProfileMenuItem.setEnabled(netCommentList.getSelectedValue().hasProfileUrl());
-//                        netCommentSaveProfileMenuItem.setForeground(netCommentSaveProfileMenuItem.isEnabled() ? currUIStyle.getIconColor() : Color.LIGHT_GRAY);
-//                        SwingUtilities.updateComponentTreeUI(netCommentPopupMenu);
                         netCommentPopupMenu.show(netCommentList, e.getX(), e.getY());
                     }
                 }
@@ -20028,11 +20023,11 @@ public class MainFrame extends JFrame {
             CustomRadioButtonMenuItem mi = new CustomRadioButtonMenuItem(names[i]);
             int finalI = i;
             mi.addActionListener(e -> {
-                updateMenuItemIcon(spectrumPopupMenu);
                 currSpecStyle = finalI;
+                updateMenuItemStatus(spectrumStyleButtonGroup, mi);
+                updateMenuItemIcon(spectrumPopupMenu);
             });
-            mi.setSelected(currSpecStyle == i);
-            spectrumStyleGroup.add(mi);
+            spectrumStyleButtonGroup.add(mi);
             spectrumPopupMenu.add(mi);
         }
         spectrumPanel.addMouseListener(new MouseAdapter() {
@@ -21540,6 +21535,11 @@ public class MainFrame extends JFrame {
         spectrumTimer.stop();
         spectrumPanel.setDrawSpectrum(false);
         spectrumPanel.setVisible(false);
+    }
+
+    // 更新单选菜单项状态
+    private void updateMenuItemStatus(List<CustomRadioButtonMenuItem> buttonGroup, CustomRadioButtonMenuItem menuItem) {
+        buttonGroup.forEach(mi -> mi.setSelected(mi == menuItem));
     }
 
     // 改变所有单选菜单项图标

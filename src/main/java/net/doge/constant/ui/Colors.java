@@ -8,7 +8,7 @@ import java.awt.*;
  * @Date 2020/12/12
  */
 public class Colors {
-    public static final Color TRANSLUCENT = new Color(0, 0, 0, 0);
+    public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
     public static final Color BLACK = new Color(0, 0, 0);
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color LIGHT_GRAY = new Color(230, 230, 230);

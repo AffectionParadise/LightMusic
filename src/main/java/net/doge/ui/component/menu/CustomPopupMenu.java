@@ -40,7 +40,7 @@ public class CustomPopupMenu extends JPopupMenu {
             Window w = SwingUtilities.getWindowAncestor(this);
             w.setVisible(false);
             w.setBackground(Colors.BLACK);
-            w.setBackground(Colors.TRANSLUCENT);
+            w.setBackground(Colors.TRANSPARENT);
             w.setVisible(true);
         }
         f.currPopup = b ? this : null;

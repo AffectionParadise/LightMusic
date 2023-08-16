@@ -83,7 +83,7 @@ public class TipDialog extends AbstractShadowDialog {
         themeColor = f.currUIStyle.getTextColor();
         setUndecorated(true);
         // Dialog 背景透明
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
 
         messageLabel.setForeground(themeColor);
         messageLabel.setFont(font);

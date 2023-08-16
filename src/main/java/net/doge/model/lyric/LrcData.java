@@ -55,15 +55,20 @@ public class LrcData {
     // 初始化歌词数据
     private void initData(String lrcStr, boolean badFormat) {
         this.lrcStr = lrcStr;
-        String[] lrcArray = lrcStr.split("\n");
+        String[] lrcArray = lrcStr.split("\r?\n");
         // 不支持滚动的歌词，直接读取整行作为歌词
         if (badFormat) {
-            for (String line : lrcArray) statements.add(new Statement(handleLine(line)));
+            for (String line : lrcArray) {
+                line = handleLine(line);
+                if (StringUtil.isEmpty(line)) continue;
+                statements.add(new Statement(line));
+            }
         }
         // 解析完整的歌词
         else {
             for (String line : lrcArray) {
                 line = handleLine(line);
+                if (StringUtil.isEmpty(line)) continue;
 
                 // 解析 offset
                 String offsetStr = RegexUtil.getGroup1("\\[offset:(-?\\d+)\\]", line);

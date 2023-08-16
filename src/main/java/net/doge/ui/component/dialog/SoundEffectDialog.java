@@ -1,14 +1,14 @@
 package net.doge.ui.component.dialog;
 
-import net.doge.constant.ui.Colors;
 import net.doge.constant.player.EqualizerData;
+import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.combobox.CustomComboBox;
+import net.doge.ui.component.combobox.ui.ComboBoxUI;
+import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
-import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
-import net.doge.ui.component.combobox.ui.ComboBoxUI;
 import net.doge.ui.component.slider.ui.VSliderUI;
 
 import javax.swing.*;
@@ -98,7 +98,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
         setContentPane(globalPanel);
 
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         pack();
         setLocationRelativeTo(null);
 

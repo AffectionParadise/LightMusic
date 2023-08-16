@@ -24,7 +24,7 @@ import net.doge.ui.component.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.component.label.CustomLabel;
 import net.doge.ui.component.menu.CustomPopupMenu;
 import net.doge.ui.component.menu.CustomRadioButtonMenuItem;
-import net.doge.ui.component.menu.ui.RadioButtonMenuItemUI;
+import net.doge.ui.component.menu.ui.MenuItemUI;
 import net.doge.ui.component.panel.CustomPanel;
 import net.doge.ui.component.slider.CustomSlider;
 import net.doge.ui.component.slider.ui.SliderUI;
@@ -43,6 +43,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @Author Doge
@@ -128,7 +130,7 @@ public class VideoDialog extends AbstractTitledDialog {
     private CustomButton fobTimeButton = new CustomButton(fobTimeIcon);
     private CustomButton fullScreenButton = new CustomButton(fullScreenIcon);
     private CustomPopupMenu fobTimePopupMenu;
-    private ButtonGroup fobTimeMenuItemsButtonGroup = new ButtonGroup();
+    private List<CustomRadioButtonMenuItem> fobButtonGroup = new LinkedList<>();
     private CustomRadioButtonMenuItem[] fobTimeMenuItems = {
             new CustomRadioButtonMenuItem("5秒"),
             new CustomRadioButtonMenuItem("10秒"),
@@ -206,7 +208,7 @@ public class VideoDialog extends AbstractTitledDialog {
         updateBlur();
 
         // Dialog 背景透明
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         setContentPane(globalPanel);
     }
 
@@ -465,18 +467,19 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         // 快进/快退时间
         fobTimePopupMenu = new CustomPopupMenu(f);
+        CustomRadioButtonMenuItem selectedFobMenuItem = null;
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
             Color textColor = f.currUIStyle.getTextColor();
             menuItem.setForeground(textColor);
-            menuItem.setUI(new RadioButtonMenuItemUI(textColor));
+            menuItem.setUI(new MenuItemUI(textColor));
             int time = Integer.parseInt(menuItem.getText().replace("秒", ""));
-            menuItem.setSelected(time == f.videoForwardOrBackwardTime);
+            if (time == f.videoForwardOrBackwardTime) selectedFobMenuItem = menuItem;
             menuItem.addActionListener(e -> {
                 f.videoForwardOrBackwardTime = time;
-//                fobTimeButton.setText(menuItem.getText().replace("秒", "s"));
-                updateRadioButtonMenuItemIcon();
+                updateMenuItemStatus(menuItem);
+                updateMenuItemIcon();
             });
-            fobTimeMenuItemsButtonGroup.add(menuItem);
+            fobButtonGroup.add(menuItem);
             fobTimePopupMenu.add(menuItem);
         }
         fobTimeButton.setForeground(iconColor);
@@ -508,7 +511,8 @@ public class VideoDialog extends AbstractTitledDialog {
             }
         });
 
-        updateRadioButtonMenuItemIcon();
+        updateMenuItemStatus(selectedFobMenuItem);
+        updateMenuItemIcon();
 
         FlowLayout fl = new FlowLayout();
         fl.setHgap(3);
@@ -590,12 +594,18 @@ public class VideoDialog extends AbstractTitledDialog {
         f.multiDownloadMv(Collections.singletonList(mvInfo));
     }
 
+    // 更新单选菜单项状态
+    private void updateMenuItemStatus(CustomRadioButtonMenuItem menuItem) {
+        fobButtonGroup.forEach(mi -> mi.setSelected(mi == menuItem));
+    }
+
     // 改变所有单选菜单项图标
-    private void updateRadioButtonMenuItemIcon() {
+    private void updateMenuItemIcon() {
         Component[] components = fobTimePopupMenu.getComponents();
+        Color iconColor = f.currUIStyle.getIconColor();
         for (Component c : components) {
             CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-            if (mi.isSelected()) mi.setIcon(ImageUtil.dye(dotIcon, f.currUIStyle.getIconColor()));
+            if (mi.isSelected()) mi.setIcon(ImageUtil.dye(dotIcon, iconColor));
             else mi.setIcon(null);
         }
     }

@@ -84,7 +84,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
 
         // Dialog 背景透明
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         checkBox.setForeground(textColor);
         checkBox.setIcon(ImageUtil.dye(f.uncheckedIcon, iconColor));
         checkBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));

@@ -72,7 +72,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         setContentPane(globalPanel);
 
         setUndecorated(true);
-        setBackground(Colors.TRANSLUCENT);
+        setBackground(Colors.TRANSPARENT);
         pack();
         setLocationRelativeTo(null);
 
