@@ -2652,9 +2652,6 @@ public class MainFrame extends JFrame {
         // 格言
         updateMotto();
 
-        // 初始化托盘
-        initTray();
-
         // 更新 LAF
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -2673,6 +2670,9 @@ public class MainFrame extends JFrame {
         boolean succeed = loadConfig();
 
         setVisible(true);
+
+        // 初始化托盘
+        initTray();
 
         // 加载上一次播放的歌曲
         if (currSong > -1) {
