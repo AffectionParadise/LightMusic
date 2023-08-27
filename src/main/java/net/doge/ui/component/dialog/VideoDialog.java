@@ -72,11 +72,8 @@ public class VideoDialog extends AbstractTitledDialog {
     private final String FOB_TIME_TIP = "快进/快退时间";
     private final String FULL_SCREEN_TIP = "全屏";
 
-    // 收藏成功提示
     private final String COLLECT_SUCCESS_MSG = "收藏成功";
-    // 取消收藏成功提示
     private final String CANCEL_COLLECTION_SUCCESS_MSG = "取消收藏成功";
-    // 播放异常提示
     private final String ERROR_MSG = "播放视频时发生异常";
 
     // 选定点图标
@@ -453,9 +450,7 @@ public class VideoDialog extends AbstractTitledDialog {
         downloadButton.setDisabledIcon(ImageUtil.dye(downloadIcon, ColorUtil.darker(iconColor)));
         downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, f));
         downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + 10, downloadIcon.getIconHeight() + 10));
-        downloadButton.addActionListener(e -> {
-            downloadMv();
-        });
+        downloadButton.addActionListener(e -> downloadMv());
         rateButton.setForeground(iconColor);
         rateButton.setToolTipText(RATE_TIP);
         rateButton.setIcon(ImageUtil.dye((ImageIcon) rateButton.getIcon(), iconColor));
@@ -591,7 +586,7 @@ public class VideoDialog extends AbstractTitledDialog {
 
     // 下载 MV
     private void downloadMv() {
-        f.multiDownloadMv(Collections.singletonList(mvInfo));
+        f.multiDownloadMv(Collections.singletonList(mvInfo), true);
     }
 
     // 更新单选菜单项状态

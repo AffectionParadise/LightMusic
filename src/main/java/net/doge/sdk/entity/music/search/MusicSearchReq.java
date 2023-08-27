@@ -1,6 +1,8 @@
 package net.doge.sdk.entity.music.search;
 
-import cn.hutool.http.*;
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -39,7 +41,9 @@ public class MusicSearchReq {
     // 关键词搜索歌曲 API (搜歌词) (酷狗)
     private final String SEARCH_MUSIC_BY_LYRIC_KG_API = "http://mobileservice.kugou.com/api/v3/lyric/search?keyword=%s&page=%s&pagesize=%s";
     // 关键词搜索歌曲 API (酷我)
-    private final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&reqId=a52ed540-2fb5-11ee-bba2-0d6f963952a7&plat=web_www&from=&httpsStatus=1";
+//    private final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&reqId=a52ed540-2fb5-11ee-bba2-0d6f963952a7&plat=web_www&from=&httpsStatus=1";
+    private final String SEARCH_MUSIC_KW_API = "https://search.kuwo.cn/r.s?client=kt&all=%s&pn=%s&rn=%s&uid=794762570" +
+            "&ver=kwplayer_ar_9.2.2.1&vipver=1&show_copyright_off=1&newver=1&ft=music&cluster=0&strategy=2012&encoding=utf8&rformat=json&vermerge=1&mobi=1&issubtitle=1";
     // 关键词搜索歌曲 API (咪咕)
     private final String SEARCH_MUSIC_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=2&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索歌曲 API (搜歌词) (咪咕)
@@ -397,195 +401,107 @@ public class MusicSearchReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page, limit)).executeAsync();
-            // 有时候请求会崩，先判断是否请求成功
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
-                String musicInfoBody = resp.body();
-                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-                JSONObject data = musicInfoJson.getJSONObject("data");
-                if (JsonUtil.notEmpty(data)) {
-                    t = data.getIntValue("total");
-                    JSONArray songArray = data.getJSONArray("list");
-                    if (JsonUtil.notEmpty(songArray)) {
-                        for (int i = 0, len = songArray.size(); i < len; i++) {
-                            JSONObject songJson = songArray.getJSONObject(i);
+//            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page, limit)).executeAsync();
+//            // 有时候请求会崩，先判断是否请求成功
+//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//                String musicInfoBody = resp.body();
+//                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+//                JSONObject data = musicInfoJson.getJSONObject("data");
+//                if (JsonUtil.notEmpty(data)) {
+//                    t = data.getIntValue("total");
+//                    JSONArray songArray = data.getJSONArray("list");
+//                    if (JsonUtil.notEmpty(songArray)) {
+//                        for (int i = 0, len = songArray.size(); i < len; i++) {
+//                            JSONObject songJson = songArray.getJSONObject(i);
+//
+//                            String songId = songJson.getString("rid");
+//                            String songName = StringUtil.removeHTMLLabel(songJson.getString("name"));
+//                            String artist = StringUtil.removeHTMLLabel(songJson.getString("artist")).replace("&", "、");
+//                            String artistId = songJson.getString("artistid");
+//                            String albumName = StringUtil.removeHTMLLabel(songJson.getString("album"));
+//                            String albumId = songJson.getString("albumid");
+//                            Double duration = songJson.getDouble("duration");
+//                            String mvId = songJson.getIntValue("hasmv") == 0 ? "" : songId;
+//
+//                            NetMusicInfo musicInfo = new NetMusicInfo();
+//                            musicInfo.setSource(NetMusicSource.KW);
+//                            musicInfo.setId(songId);
+//                            musicInfo.setName(songName);
+//                            musicInfo.setArtist(artist);
+//                            musicInfo.setArtistId(artistId);
+//                            musicInfo.setAlbumName(albumName);
+//                            musicInfo.setAlbumId(albumId);
+//                            musicInfo.setDuration(duration);
+//                            musicInfo.setMvId(mvId);
+//
+//                            r.add(musicInfo);
+//                        }
+//                    }
+//                }
+//            }
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page - 1, limit))
+                    .executeAsync()
+                    .body();
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            if (JsonUtil.notEmpty(musicInfoJson)) {
+                t = musicInfoJson.getIntValue("TOTAL");
+                JSONArray songArray = musicInfoJson.getJSONArray("abslist");
+                if (JsonUtil.notEmpty(songArray)) {
+                    for (int i = 0, len = songArray.size(); i < len; i++) {
+                        JSONObject songJson = songArray.getJSONObject(i);
 
-                            String songId = songJson.getString("rid");
-                            String songName = StringUtil.removeHTMLLabel(songJson.getString("name"));
-                            String artist = StringUtil.removeHTMLLabel(songJson.getString("artist")).replace("&", "、");
-                            String artistId = songJson.getString("artistid");
-                            String albumName = StringUtil.removeHTMLLabel(songJson.getString("album"));
-                            String albumId = songJson.getString("albumid");
-                            Double duration = songJson.getDouble("duration");
-                            String mvId = songJson.getIntValue("hasmv") == 0 ? "" : songId;
+                        String songId = songJson.getString("DC_TARGETID");
+                        String songName = songJson.getString("SONGNAME");
+                        String artist = songJson.getString("ARTIST").replace("&", "、");
+                        String artistId = songJson.getString("ARTISTID");
+                        String albumName = songJson.getString("ALBUM");
+                        String albumId = songJson.getString("ALBUMID");
+                        Double duration = songJson.getDouble("DURATION");
+                        String mvId = songJson.getIntValue("MVFLAG") == 0 ? "" : songId;
 
-                            NetMusicInfo musicInfo = new NetMusicInfo();
-                            musicInfo.setSource(NetMusicSource.KW);
-                            musicInfo.setId(songId);
-                            musicInfo.setName(songName);
-                            musicInfo.setArtist(artist);
-                            musicInfo.setArtistId(artistId);
-                            musicInfo.setAlbumName(albumName);
-                            musicInfo.setAlbumId(albumId);
-                            musicInfo.setDuration(duration);
-                            musicInfo.setMvId(mvId);
+                        NetMusicInfo musicInfo = new NetMusicInfo();
+                        musicInfo.setSource(NetMusicSource.KW);
+                        musicInfo.setId(songId);
+                        musicInfo.setName(songName);
+                        musicInfo.setArtist(artist);
+                        musicInfo.setArtistId(artistId);
+                        musicInfo.setAlbumName(albumName);
+                        musicInfo.setAlbumId(albumId);
+                        musicInfo.setDuration(duration);
+                        musicInfo.setMvId(mvId);
 
-                            r.add(musicInfo);
-                        }
+                        r.add(musicInfo);
                     }
                 }
             }
+
             return new CommonResult<>(r, t);
         };
 
         // 咪咕
         // 搜歌曲
-        Callable<CommonResult<NetMusicInfo>> searchMusicMg = () -> {
-            List<NetMusicInfo> r = new LinkedList<>();
-            Integer t = 0;
-
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_MG_API, encodedKeyword, page, limit))
-                    .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
-            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            t = musicInfoJson.getIntValue("pgt");
-            JSONArray songArray = musicInfoJson.getJSONArray("musics");
-            if (JsonUtil.notEmpty(songArray)) {
-                for (int i = 0, len = songArray.size(); i < len; i++) {
-                    JSONObject songJson = songArray.getJSONObject(i);
-
-                    String songId = songJson.getString("copyrightId");
-                    String songName = songJson.getString("songName");
-                    String artist = songJson.getString("singerName").replace(", ", "、");
-                    String artistId = songJson.getString("singerId").split(", ")[0];
-                    String albumName = songJson.getString("albumName");
-                    String albumId = songJson.getString("albumId");
-                    String mvId = songJson.getString("mvCopyrightId");
-
-                    NetMusicInfo musicInfo = new NetMusicInfo();
-                    musicInfo.setSource(NetMusicSource.MG);
-                    musicInfo.setId(songId);
-                    musicInfo.setName(songName);
-                    musicInfo.setArtist(artist);
-                    musicInfo.setArtistId(artistId);
-                    musicInfo.setAlbumName(albumName);
-                    musicInfo.setAlbumId(albumId);
-                    musicInfo.setMvId(mvId);
-
-                    r.add(musicInfo);
-                }
-            }
-
-            return new CommonResult<>(r, t);
-        };
-        // 搜歌词
-        Callable<CommonResult<NetMusicInfo>> searchMusicByLyricMg = () -> {
-            List<NetMusicInfo> r = new LinkedList<>();
-            Integer t = 0;
-
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_BY_LYRIC_MG_API, encodedKeyword, page, limit))
-                    .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
-            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-            t = musicInfoJson.getIntValue("pgt");
-            JSONArray songArray = musicInfoJson.getJSONArray("songs");
-            if (JsonUtil.notEmpty(songArray)) {
-                for (int i = 0, len = songArray.size(); i < len; i++) {
-                    JSONObject songJson = songArray.getJSONObject(i);
-
-                    String songId = songJson.getString("copyrightId");
-                    String songName = songJson.getString("songName");
-                    String artist = songJson.getString("singerName").replace(", ", "、");
-                    String artistId = songJson.getString("singerId").split(", ")[0];
-                    String albumName = songJson.getString("albumName");
-                    String albumId = songJson.getString("albumId");
-                    String mvId = songJson.getString("mvCopyrightId");
-
-                    NetMusicInfo musicInfo = new NetMusicInfo();
-                    musicInfo.setSource(NetMusicSource.MG);
-                    musicInfo.setId(songId);
-                    musicInfo.setName(songName);
-                    musicInfo.setArtist(artist);
-                    musicInfo.setArtistId(artistId);
-                    musicInfo.setAlbumName(albumName);
-                    musicInfo.setAlbumId(albumId);
-                    musicInfo.setMvId(mvId);
-
-                    r.add(musicInfo);
-                }
-            }
-
-            return new CommonResult<>(r, t);
-        };
-//        // 搜歌曲
 //        Callable<CommonResult<NetMusicInfo>> searchMusicMg = () -> {
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
-//            String musicInfoBody = SdkCommon.mgSearchRequest("song", keyword, page, limit)
+//            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_MG_API, encodedKeyword, page, limit))
+//                    .header(Header.REFERER, "https://m.music.migu.cn/")
 //                    .executeAsync()
 //                    .body();
 //            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-//            JSONObject data = musicInfoJson.getJSONObject("songResultData");
-//            t = data.getIntValue("totalCount");
-//            JSONArray songArray = data.getJSONArray("resultList");
-//            if (JsonUtil.notEmpty(songArray)) {
-//                for (int i = 0, len = songArray.size(); i < len; i++) {
-//                    JSONArray innerArray = songArray.getJSONArray(i);
-//                    for (int j = 0, size = innerArray.size(); j < size; j++) {
-//                        JSONObject songJson = innerArray.getJSONObject(j);
-//
-//                        String songId = songJson.getString("copyrightId");
-//                        String songName = songJson.getString("songName");
-//                        String artist = SdkUtil.parseArtist(songJson);
-//                        String artistId = SdkUtil.parseArtistId(songJson);
-//                        String albumName = songJson.getString("album");
-//                        String albumId = songJson.getString("albumId");
-//                        String mvId = songJson.getString("mvId");
-//
-//                        NetMusicInfo musicInfo = new NetMusicInfo();
-//                        musicInfo.setSource(NetMusicSource.MG);
-//                        musicInfo.setId(songId);
-//                        musicInfo.setName(songName);
-//                        musicInfo.setArtist(artist);
-//                        musicInfo.setArtistId(artistId);
-//                        musicInfo.setAlbumName(albumName);
-//                        musicInfo.setAlbumId(albumId);
-//                        musicInfo.setMvId(mvId);
-//
-//                        r.add(musicInfo);
-//                    }
-//                }
-//            }
-//
-//            return new CommonResult<>(r, t);
-//        };
-//        // 搜歌词
-//        Callable<CommonResult<NetMusicInfo>> searchMusicByLyricMg = () -> {
-//            List<NetMusicInfo> r = new LinkedList<>();
-//            Integer t = 0;
-//
-//            String musicInfoBody = SdkCommon.mgSearchRequest("lyric", keyword, page, limit)
-//                    .executeAsync()
-//                    .body();
-//            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-//            JSONObject data = musicInfoJson.getJSONObject("lyricResultData");
-//            t = data.getIntValue("totalCount");
-//            JSONArray songArray = data.getJSONArray("result");
+//            t = musicInfoJson.getIntValue("pgt");
+//            JSONArray songArray = musicInfoJson.getJSONArray("musics");
 //            if (JsonUtil.notEmpty(songArray)) {
 //                for (int i = 0, len = songArray.size(); i < len; i++) {
 //                    JSONObject songJson = songArray.getJSONObject(i);
 //
 //                    String songId = songJson.getString("copyrightId");
 //                    String songName = songJson.getString("songName");
-//                    String artist = SdkUtil.parseArtist(songJson);
-//                    String artistId = SdkUtil.parseArtistId(songJson);
-//                    String albumName = songJson.getString("album");
+//                    String artist = songJson.getString("singerName").replace(", ", "、");
+//                    String artistId = songJson.getString("singerId").split(", ")[0];
+//                    String albumName = songJson.getString("albumName");
 //                    String albumId = songJson.getString("albumId");
-//                    String mvId = songJson.getString("mvId");
-//                    String lrcMatch = songJson.getString("multiLyricStr").replace("\n", " / ");
+//                    String mvId = songJson.getString("mvCopyrightId");
 //
 //                    NetMusicInfo musicInfo = new NetMusicInfo();
 //                    musicInfo.setSource(NetMusicSource.MG);
@@ -596,7 +512,6 @@ public class MusicSearchReq {
 //                    musicInfo.setAlbumName(albumName);
 //                    musicInfo.setAlbumId(albumId);
 //                    musicInfo.setMvId(mvId);
-//                    musicInfo.setLrcMatch(lrcMatch);
 //
 //                    r.add(musicInfo);
 //                }
@@ -604,6 +519,131 @@ public class MusicSearchReq {
 //
 //            return new CommonResult<>(r, t);
 //        };
+//        // 搜歌词
+//        Callable<CommonResult<NetMusicInfo>> searchMusicByLyricMg = () -> {
+//            List<NetMusicInfo> r = new LinkedList<>();
+//            Integer t = 0;
+//
+//            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_BY_LYRIC_MG_API, encodedKeyword, page, limit))
+//                    .header(Header.REFERER, "https://m.music.migu.cn/")
+//                    .executeAsync()
+//                    .body();
+//            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+//            t = musicInfoJson.getIntValue("pgt");
+//            JSONArray songArray = musicInfoJson.getJSONArray("songs");
+//            if (JsonUtil.notEmpty(songArray)) {
+//                for (int i = 0, len = songArray.size(); i < len; i++) {
+//                    JSONObject songJson = songArray.getJSONObject(i);
+//
+//                    String songId = songJson.getString("copyrightId");
+//                    String songName = songJson.getString("songName");
+//                    String artist = songJson.getString("singerName").replace(", ", "、");
+//                    String artistId = songJson.getString("singerId").split(", ")[0];
+//                    String albumName = songJson.getString("albumName");
+//                    String albumId = songJson.getString("albumId");
+//                    String mvId = songJson.getString("mvCopyrightId");
+//
+//                    NetMusicInfo musicInfo = new NetMusicInfo();
+//                    musicInfo.setSource(NetMusicSource.MG);
+//                    musicInfo.setId(songId);
+//                    musicInfo.setName(songName);
+//                    musicInfo.setArtist(artist);
+//                    musicInfo.setArtistId(artistId);
+//                    musicInfo.setAlbumName(albumName);
+//                    musicInfo.setAlbumId(albumId);
+//                    musicInfo.setMvId(mvId);
+//
+//                    r.add(musicInfo);
+//                }
+//            }
+//
+//            return new CommonResult<>(r, t);
+//        };
+        // 搜歌曲
+        Callable<CommonResult<NetMusicInfo>> searchMusicMg = () -> {
+            List<NetMusicInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = SdkCommon.mgSearchRequest("song", keyword, page, limit)
+                    .executeAsync()
+                    .body();
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONObject data = musicInfoJson.getJSONObject("songResultData");
+            t = data.getIntValue("totalCount");
+            JSONArray songArray = data.getJSONArray("resultList");
+            if (JsonUtil.notEmpty(songArray)) {
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    JSONArray innerArray = songArray.getJSONArray(i);
+                    for (int j = 0, size = innerArray.size(); j < size; j++) {
+                        JSONObject songJson = innerArray.getJSONObject(j);
+
+                        String songId = songJson.getString("copyrightId");
+                        String songName = songJson.getString("songName");
+                        String artist = SdkUtil.parseArtist(songJson);
+                        String artistId = SdkUtil.parseArtistId(songJson);
+                        String albumName = songJson.getString("album");
+                        String albumId = songJson.getString("albumId");
+                        String mvId = songJson.getString("mvId");
+
+                        NetMusicInfo musicInfo = new NetMusicInfo();
+                        musicInfo.setSource(NetMusicSource.MG);
+                        musicInfo.setId(songId);
+                        musicInfo.setName(songName);
+                        musicInfo.setArtist(artist);
+                        musicInfo.setArtistId(artistId);
+                        musicInfo.setAlbumName(albumName);
+                        musicInfo.setAlbumId(albumId);
+                        musicInfo.setMvId(mvId);
+
+                        r.add(musicInfo);
+                    }
+                }
+            }
+
+            return new CommonResult<>(r, t);
+        };
+        // 搜歌词
+        Callable<CommonResult<NetMusicInfo>> searchMusicByLyricMg = () -> {
+            List<NetMusicInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = SdkCommon.mgSearchRequest("lyric", keyword, page, limit)
+                    .executeAsync()
+                    .body();
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONObject data = musicInfoJson.getJSONObject("lyricResultData");
+            t = data.getIntValue("totalCount");
+            JSONArray songArray = data.getJSONArray("result");
+            if (JsonUtil.notEmpty(songArray)) {
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
+
+                    String songId = songJson.getString("copyrightId");
+                    String songName = songJson.getString("songName");
+                    String artist = SdkUtil.parseArtist(songJson);
+                    String artistId = SdkUtil.parseArtistId(songJson);
+                    String albumName = songJson.getString("album");
+                    String albumId = songJson.getString("albumId");
+                    String mvId = songJson.getString("mvId");
+                    String lrcMatch = songJson.getString("multiLyricStr").replace("\n", " / ");
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.MG);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(songName);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setMvId(mvId);
+                    musicInfo.setLrcMatch(lrcMatch);
+
+                    r.add(musicInfo);
+                }
+            }
+
+            return new CommonResult<>(r, t);
+        };
 
         // 千千
         Callable<CommonResult<NetMusicInfo>> searchMusicQi = () -> {

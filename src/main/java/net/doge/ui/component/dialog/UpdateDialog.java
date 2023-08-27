@@ -126,8 +126,7 @@ public class UpdateDialog extends AbstractShadowDialog {
             String releaseBody = HttpRequest.get(SoftInfo.RELEASE_ASSET).executeAsync().body();
             Document doc = Jsoup.parse(releaseBody);
             Element a = doc.select("li a").first();
-            // 代理链接，避免下载链接无法响应
-            String url = "https://ghdl.feizhuqwq.cf/https://github.com" + a.attr("href");
+            String url = "https://github.com" + a.attr("href");
             MusicServerUtil.download(url, dest, new DownloadListener() {
                 @Override
                 public void progress(long finishedSize, long totalSize) {

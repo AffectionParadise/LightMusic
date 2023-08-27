@@ -18,7 +18,7 @@
         <filters.version>2.0.235-1</filters.version>
         <webp-imageio.version>0.1.6</webp-imageio.version>
         <imageio-jpeg.version>3.9.4</imageio-jpeg.version>
-        <fastjson2.version>2.0.38</fastjson2.version>
+        <fastjson2.version>2.0.39</fastjson2.version>
         <jsoup.version>1.16.1</jsoup.version>
         <lombok.version>1.18.28</lombok.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>

@@ -2649,13 +2649,16 @@ public class MainFrame extends JFrame {
         // 加载全局快捷键监听器
         loadHotKeyListener();
 
+        // 初始化托盘
+        initTray();
+
         // 格言
         updateMotto();
 
         // 更新 LAF
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            SwingUtilities.updateComponentTreeUI(THIS);
+            SwingUtilities.updateComponentTreeUI(globalPanel);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (InstantiationException e) {
@@ -2671,8 +2674,12 @@ public class MainFrame extends JFrame {
 
         setVisible(true);
 
-        // 初始化托盘
-        initTray();
+        // 显示托盘
+        try {
+            SystemTray.getSystemTray().add(trayIconImg);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
 
         // 加载上一次播放的歌曲
         if (currSong > -1) {
@@ -4253,7 +4260,6 @@ public class MainFrame extends JFrame {
 
     // 初始化托盘
     private void initTray() {
-        SystemTray systemTray = SystemTray.getSystemTray();
         // 显示图片必须设置
         trayIconImg.setImageAutoSize(true);
         openMainFrameMenuItem.addActionListener(e -> {
@@ -4298,11 +4304,6 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-        try {
-            systemTray.add(trayIconImg);
-        } catch (AWTException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     // 初始主化菜单
@@ -14114,9 +14115,9 @@ public class MainFrame extends JFrame {
         // 下载 MV
         netMvDownloadMenuItem.addActionListener(e -> {
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_MV) multiDownloadMv(netMvList.getSelectedValuesList());
-            else if (selectedIndex == TabIndex.PERSONAL) multiDownloadMv(collectionList.getSelectedValuesList());
-            else multiDownloadMv(itemRecommendList.getSelectedValuesList());
+            if (selectedIndex == TabIndex.NET_MV) multiDownloadMv(netMvList.getSelectedValuesList(), false);
+            else if (selectedIndex == TabIndex.PERSONAL) multiDownloadMv(collectionList.getSelectedValuesList(), false);
+            else multiDownloadMv(itemRecommendList.getSelectedValuesList(), false);
         });
         // 查看相似 MV
         netMvSimilarMvMenuItem.addActionListener(e -> {
@@ -22920,7 +22921,7 @@ public class MainFrame extends JFrame {
     }
 
     // 下载多部 MV
-    public void multiDownloadMv(List mvList) {
+    public void multiDownloadMv(List mvList, boolean msgOnTop) {
         List<Task> tasks = new LinkedList<>();
         // 避免造成性能问题
         downloadList.setModel(emptyListModel);
@@ -22934,7 +22935,7 @@ public class MainFrame extends JFrame {
         downloadList.setModel(downloadListModel);
         for (int i = tasks.size() - 1; i >= 0; i--) tasks.get(i).start();
         tasks.clear();
-        new TipDialog(this, TASK_ADDED_MSG).showDialog();
+        new TipDialog(this, TASK_ADDED_MSG, msgOnTop).showDialog();
     }
 
     // 播放 MV

@@ -3,6 +3,7 @@ package net.doge.sdk.common;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
+import net.doge.sdk.common.builder.MiguReqBuilder;
 import net.doge.sdk.common.builder.NeteaseReqBuilder;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.util.common.CryptoUtil;
@@ -36,16 +37,16 @@ public class SdkCommon {
     // 构造酷我音乐请求
     public static HttpRequest kwRequest(String url) {
         return HttpRequest.get(url)
-                .cookie("Hm_Iuvt_cdb524f42f0cer9b268e4v7y734w5esq24=PxYRYWFn863Wk3CZFzaAJwtS47YdrKQF")
-                .header("Secret", "70c14699a0ac620443c6e10782aa4cf15c9b5d5e7d10051ff77256f758bd392903ca3835")
+                .cookie("Hm_Iuvt_cdb524f42f0cer9b268e4v7y734w5esq24=2kMXzNes3pSwzPMaTJCGyN5mnxhhdeRz")
+                .header("Secret", "12d2529383b541194880812793c942ca4eab7f584e294421ad3d67fb4e933a1501d59b6e")
                 .header(Header.HOST, "www.kuwo.cn")
                 .header(Header.REFERER, "https://www.kuwo.cn/");
     }
 
-//    // 构造咪咕音乐搜索请求
-//    public static HttpRequest mgSearchRequest(String type, String keyword, int page, int limit) {
-//        return MiguReqBuilder.buildSearchRequest(type, keyword, page, limit);
-//    }
+    // 构造咪咕音乐搜索请求
+    public static HttpRequest mgSearchRequest(String type, String keyword, int page, int limit) {
+        return MiguReqBuilder.buildSearchRequest(type, keyword, page, limit);
+    }
 
 //    /**
 //     * 生成酷狗 url

@@ -691,7 +691,7 @@ public class ImageUtil {
      */
     public static BufferedImage toGradientImage(BufferedImage img, int w, int h) {
         Color mc = ColorUtil.getBestSwatch(img);
-        Color ca = ColorUtil.rotate(mc, -10), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.3f), 10);
+        Color ca = ColorUtil.rotate(mc, 5), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.2f), -5);
         return linearGradient(w, h, ca, cb);
     }
 
