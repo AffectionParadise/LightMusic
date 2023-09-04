@@ -1,5 +1,7 @@
 package net.doge.util.ui;
 
+import net.doge.model.color.HSL;
+
 import java.awt.image.BufferedImage;
 import java.util.*;
 
@@ -332,7 +334,7 @@ public class MMCQ {
 
         private final int rgb;
         private final double proportion;
-//        private final double priority;
+        private final double priority;
 
 //        private boolean textRgbGenerated;
 //        private int titleRgb;
@@ -342,13 +344,13 @@ public class MMCQ {
             this.rgb = rgb;
             this.proportion = proportion;
             // (...) / 3d * (3 / 2d)
-//            double distance = ColorUtil.distance(rgb, Colors.WHITE.getRGB());
-//            priority = proportion * distance;
+            double distance = ColorUtil.hslDistance(ColorUtil.rgbValToHsl(rgb), new HSL(180, 50, 50));
+            priority = proportion * (1 - distance);
         }
 
         @Override
         public int compareTo(ThemeColor themeColor) {
-            return Double.compare(themeColor.proportion, proportion);
+            return Double.compare(themeColor.priority, priority);
         }
 
         public int getRgb() {

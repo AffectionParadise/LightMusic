@@ -92,6 +92,23 @@ public class ColorUtil {
         return Math.sqrt(rd * rd + gd * gd + bd * bd);
     }
 
+    /**
+     * 计算两个 HSL 值的距离
+     *
+     * @param hsl1
+     * @param hsl2
+     * @return
+     */
+    public static double hslDistance(HSL hsl1, HSL hsl2) {
+        float hd = Math.abs(hsl1.h - hsl2.h) / 360;
+        float sd = Math.abs(hsl1.s - hsl2.s) / 100;
+        float ld = Math.abs(hsl1.l - hsl2.l) / 100;
+        // 考虑色相环的周期性，取较小的角度差
+        if (hd > 0.5) hd = 1 - hd;
+        // 计算欧几里得距离
+        return Math.sqrt(hd * hd + sd * sd + ld * ld);
+    }
+
 //    /**
 //     * 设置 RGB 数值颜色透明度(0-255)
 //     *
@@ -412,6 +429,10 @@ public class ColorUtil {
         return hslToColor(hsl);
     }
 
+    public static HSL rgbValToHsl(int rgb) {
+        return rgbValToHsl(red(rgb), green(rgb), blue(rgb));
+    }
+
     /**
      * RGB 三个值转 HSL
      *
@@ -535,22 +556,22 @@ public class ColorUtil {
     public static Color getBestSwatch(BufferedImage img) {
         MMCQ mmcq = new MMCQ(img, 3);
         List<MMCQ.ThemeColor> themeColors = mmcq.quantize();
-        Color mc = new Color(themeColors.get(0).getRgb());
-        return makeBestSwatch(mc);
+        Color mc = makeBestColor(themeColors.get(0).getRgb());
+        return mc;
     }
 
     /**
      * 调整色块使之成为最佳色块
      *
-     * @param swatch
+     * @param rgb
      * @return
      */
-    private static Color makeBestSwatch(Color swatch) {
-        HSL hsl = ColorUtil.colorToHsl(swatch);
-        final float maxS = 50, minL = 50, maxL = 70;
+    private static Color makeBestColor(int rgb) {
+        HSL hsl = rgbValToHsl(rgb);
+        float maxS = 50, minL = 50, maxL = 70;
         if (hsl.s > maxS) hsl.s = maxS;
         if (hsl.l < minL) hsl.l = minL;
         else if (hsl.l > maxL) hsl.l = maxL;
-        return ColorUtil.hslToColor(hsl);
+        return hslToColor(hsl);
     }
 }

@@ -20077,8 +20077,7 @@ public class MainFrame extends JFrame {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio;
                     if (currRatio < or) ratio = (or - currRatio) / lrcPiece + currRatio;
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
-                    Statement stmt = statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc);
-                    if (stmt != null) desktopLyricDialog.setLyric(stmt.getLyric(), ratio);
+                    desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
                 } else {
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
                     desktopLyricDialog.setLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_MSG : nextLrc == NextLrc.LOADING ? LRC_LOADING_MSG : BAD_FORMAT_LRC_MSG, 0);

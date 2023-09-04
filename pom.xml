@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <mp3agic.version>0.9.1</mp3agic.version>
+        <!--        <palette.version>untagged-2e8df5cb83748d6f2aec</palette.version>-->
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <filters.version>2.0.235-1</filters.version>
         <webp-imageio.version>0.1.6</webp-imageio.version>
@@ -43,6 +44,19 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/jave-1.0.2.jar</systemPath>
         </dependency>
+
+        <!-- 图片主色调提取 -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.trickl</groupId>-->
+        <!--            <artifactId>palette</artifactId>-->
+        <!--            <version>${palette.version}</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.loyalsound</groupId>-->
+        <!--            <artifactId>iris</artifactId>-->
+        <!--            <version>1.1</version>-->
+        <!--        </dependency>-->
 
         <!-- thumbnailator 图像处理 -->
         <dependency>

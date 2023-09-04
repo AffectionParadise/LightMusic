@@ -641,10 +641,11 @@ public class ImageUtil {
         double ln = lightness(img);
         float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
         if (ln > 0.5) bn = param;
-        else if (ln > 0.3) bn = param + 0.05f;
-        else if (ln > 0.2) bn = param + 0.1f;
-        else if (ln > 0.1) bn = param + 0.15f;
-        else bn = param + 0.2f;
+        else if (ln > 0.4) bn = param + 0.05f;
+        else if (ln > 0.3) bn = param + 0.1f;
+        else if (ln > 0.2) bn = param + 0.15f;
+        else if (ln > 0.1) bn = param + 0.2f;
+        else bn = param + 0.25f;
         // 自适应亮度
         contrastFilter.setBrightness(bn);
         return contrastFilter.filter(img, null);
@@ -691,7 +692,7 @@ public class ImageUtil {
      */
     public static BufferedImage toGradientImage(BufferedImage img, int w, int h) {
         Color mc = ColorUtil.getBestSwatch(img);
-        Color ca = ColorUtil.rotate(mc, 5), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.2f), -5);
+        Color ca = ColorUtil.rotate(mc, -10), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.3f), 10);
         return linearGradient(w, h, ca, cb);
     }
 
