@@ -691,9 +691,15 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage toGradientImage(BufferedImage img, int w, int h) {
-        Color mc = ColorUtil.getBestSwatch(img);
-        Color ca = ColorUtil.rotate(mc, -10), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.3f), 10);
-        return linearGradient(w, h, ca, cb);
+        Color mc = ColorUtil.getBestColor(img);
+        double l = ColorUtil.calculateLuminance(mc.getRGB());
+        if (l >= 0.25) {
+            Color ca = ColorUtil.rotate(mc, -10), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.3f), 10);
+            return linearGradient(w, h, ca, cb);
+        } else {
+            Color ca = ColorUtil.rotate(mc, 10), cb = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.1f), -10);
+            return linearGradient(w, h, cb, ca);
+        }
     }
 
     /**

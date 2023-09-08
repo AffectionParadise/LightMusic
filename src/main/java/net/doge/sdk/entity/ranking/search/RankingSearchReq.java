@@ -16,6 +16,7 @@ import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
+import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 
 import java.awt.image.BufferedImage;
@@ -75,7 +76,8 @@ public class RankingSearchReq {
                 String rankingId = rankingJson.getString("id");
                 String rankingName = rankingJson.getString("name");
                 String coverImgUrl = rankingJson.getString("coverImgUrl");
-                String description = rankingJson.getString("description");
+                String desc = rankingJson.getString("description");
+                String description = StringUtil.isEmpty(desc) ? "" : desc;
                 Long playCount = rankingJson.getLong("playCount");
                 String updateFre = rankingJson.getString("updateFrequency");
                 String updateTime = TimeUtil.msToDate(rankingJson.getLong("trackUpdateTime"));

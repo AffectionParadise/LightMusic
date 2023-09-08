@@ -553,7 +553,7 @@ public class ColorUtil {
      * @param img
      * @return
      */
-    public static Color getBestSwatch(BufferedImage img) {
+    public static Color getBestColor(BufferedImage img) {
         MMCQ mmcq = new MMCQ(img, 3);
         List<MMCQ.ThemeColor> themeColors = mmcq.quantize();
         Color mc = makeBestColor(themeColors.get(0).getRgb());
