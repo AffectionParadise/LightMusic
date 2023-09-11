@@ -1,4 +1,4 @@
-![轻音](https://github.com/AffectionParadise/LightMusic/assets/70871914/c6d1942a-76fe-4bca-84ae-1456f8598ec9)
+![轻音](https://github.com/AffectionParadise/LightMusic/assets/70871914/cbb524c9-a1d8-4314-9f7f-c79a03f415c3)
 # 基于Swing与JavaFx的音乐播放器——轻音
 
 ## 软件特性：
