@@ -1,5 +1,5 @@
 ![轻音](https://github.com/AffectionParadise/LightMusic/assets/70871914/cb364095-e139-4719-be55-ce75bc883c4b)
-# 基于Swing与JavaFx的音乐播放器——轻音
+# 轻音——基于Swing与JavaFX的音乐播放器
 
 ## 软件特性：
 - 支持本地音乐管理
