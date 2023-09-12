@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
 
 public class HotSearchReq {
     // 热搜 API
-    private final String HOT_SEARCH_API = "https://music.163.com/weapi/search/hot";
+    private final String HOT_SEARCH_API = "https://music.163.com/api/search/chart/detail";
     // 热搜 API (酷狗)
     private final String HOT_SEARCH_KG_API = "http://gateway.kugou.com/api/v3/search/hot_tab?signature=ee44edb9d7155821412d220bcaf509dd&appid=1005&clientver=10026&plat=0";
     // 热搜 API (QQ)
@@ -47,16 +47,16 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearch = () -> {
             List<String> r = new LinkedList<>();
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApiMobile();
-            String hotSearchBody = SdkCommon.ncRequest(Method.POST, HOT_SEARCH_API, "{\"type\":1111}", options)
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/search/chart/detail");
+            String hotSearchBody = SdkCommon.ncRequest(Method.POST, HOT_SEARCH_API, "{\"id\":\"HOT_SEARCH_SONG#@#\"}", options)
                     .executeAsync()
                     .body();
             JSONObject hotSearchJson = JSONObject.parseObject(hotSearchBody);
-            JSONObject result = hotSearchJson.getJSONObject("result");
-            JSONArray hotSearchArray = result.getJSONArray("hots");
+            JSONObject data = hotSearchJson.getJSONObject("data");
+            JSONArray hotSearchArray = data.getJSONArray("itemList");
             for (int i = 0, len = hotSearchArray.size(); i < len; i++) {
                 JSONObject keywordJson = hotSearchArray.getJSONObject(i);
-                r.add(keywordJson.getString("first").trim());
+                r.add(keywordJson.getString("searchWord"));
             }
             return r;
         };

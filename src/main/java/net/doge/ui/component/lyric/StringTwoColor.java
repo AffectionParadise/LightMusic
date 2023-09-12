@@ -1,6 +1,7 @@
 package net.doge.ui.component.lyric;
 
 import lombok.Data;
+import lombok.Getter;
 import net.doge.constant.ui.Fonts;
 import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
@@ -11,7 +12,9 @@ import java.awt.image.BufferedImage;
 
 @Data
 public class StringTwoColor {
+    @Getter
     private int width;
+    @Getter
     private int height;
     private String text;
     private Font labelFont;
@@ -309,13 +312,5 @@ public class StringTwoColor {
      */
     public ImageIcon getImageIcon() {
         return imgIcon;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 }

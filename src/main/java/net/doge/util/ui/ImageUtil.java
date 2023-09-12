@@ -700,6 +700,9 @@ public class ImageUtil {
             Color ca = ColorUtil.rotate(mc, 10), cb = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.1f), -10);
             return linearGradient(w, h, cb, ca);
         }
+//        BlockFilter blockFilter = new BlockFilter();
+//        blockFilter.setBlockSize(200);
+//        return blockFilter.filter(img,null);
     }
 
     /**
