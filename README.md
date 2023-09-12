@@ -1,20 +1,25 @@
 <p align="center">
-    <a href="https://github.com/AffectionParadise/LightMusic/stargazers" style="text-decoration:none" >
+    <a href="https://github.com/AffectionParadise/LightMusic/releases">
+        <img src="https://github.com/AffectionParadise/LightMusic/assets/70871914/cb364095-e139-4719-be55-ce75bc883c4b" alt="LightMusic">
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://github.com/AffectionParadise/LightMusic/stargazers">
         <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/AffectionParadise/LightMusic">
     </a>
-    <a href="https://github.com/AffectionParadise/LightMusic/network" style="text-decoration:none" >
+    <a href="https://github.com/AffectionParadise/LightMusic/network">
         <img alt="GitHub forks" src="https://img.shields.io/github/forks/AffectionParadise/LightMusic">
     </a>
-    <a href="https://github.com/AffectionParadise/LightMusic/issues" style="text-decoration:none">
+    <a href="https://github.com/AffectionParadise/LightMusic/issues">
         <img alt="GitHub issues" src="https://img.shields.io/github/issues/AffectionParadise/LightMusic">
     </a>
-    <a href="https://github.com/AffectionParadise/LightMusic/blob/master/LICENSE" style="text-decoration:none" >
+    <a href="https://github.com/AffectionParadise/LightMusic/blob/master/LICENSE">
         <img alt="GitHub" src="https://img.shields.io/github/license/AffectionParadise/LightMusic">
     </a>
 </p>
 
-![轻音](https://github.com/AffectionParadise/LightMusic/assets/70871914/cb364095-e139-4719-be55-ce75bc883c4b)
-# 轻音——基于Swing与JavaFX的音乐播放器
+<h2 align="center">轻音——基于Swing与JavaFX的音乐播放器</h2>
 
 ## 软件特性：
 - 支持本地音乐管理
