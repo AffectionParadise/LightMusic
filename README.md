@@ -49,52 +49,25 @@
 - 自定义界面主题
 - 更多小功能等你探索~
 
-## 软件截图：
-- 音乐详情界面
-![image](https://user-images.githubusercontent.com/70871914/204016386-8b4b57d0-cc0a-4d69-9750-eeb2faaeab39.png)
-![image](https://user-images.githubusercontent.com/70871914/204016693-937e5f0c-7733-4462-b53c-23a5220b4a65.png)
-![image](https://user-images.githubusercontent.com/70871914/204016772-ce169b83-8108-4253-a0ac-f88aa82e3233.png)
-![image](https://user-images.githubusercontent.com/70871914/204016878-85fa24a4-89fe-419e-8346-a92989a0c011.png)
-![image](https://user-images.githubusercontent.com/70871914/204017000-d0c08f18-6781-4670-a7ff-fc23da2f2db5.png)
+### 软件截图
 
-- 主界面
-![image](https://user-images.githubusercontent.com/70871914/204017124-2a479c3a-7ff0-42b8-bc83-55b5355e83b5.png)
+以下截图仅供参考，实际界面效果会随着软件更新发生变化。
 
-- 音乐搜索
-![image](https://user-images.githubusercontent.com/70871914/204017297-444ea5f4-626b-4d57-a21c-17f2e9513b84.png)
+![image](https://github.com/AffectionParadise/LightMusic/assets/70871914/1f24fa96-ab2a-401d-a572-d2bb236b718d)
 
-- 歌单搜索与查看
-![image](https://user-images.githubusercontent.com/70871914/204017485-4f2d3975-1ae6-4787-bea0-5ae871164f09.png)
-![image](https://user-images.githubusercontent.com/70871914/204017518-7a0949d3-172f-4701-9447-2d2e82f05275.png)
+### 项目协议
 
-- 专辑搜索与查看
-![image](https://user-images.githubusercontent.com/70871914/204017651-f1951c0e-ab00-4dfa-9655-1d5d6d2a42f5.png)
-![image](https://user-images.githubusercontent.com/70871914/204017681-1d857df4-db32-40a5-ad4c-bf7a68ba9e13.png)
+本项目基于 [Apache License 2.0](https://github.com/AffectionParadise/LightMusic/blob/master/LICENSE) 许可证发行，以下协议是对于 Apache License 2.0 的补充，如有冲突，以以下协议为准。
 
-- 歌手搜索与查看
-![image](https://user-images.githubusercontent.com/70871914/204017848-ed4aa124-486c-4e93-a43e-e1a835d0ee3d.png)
-![image](https://user-images.githubusercontent.com/70871914/204017867-b74fa865-e7c7-497b-9bf8-5fc651af4a7b.png)
+词语约定：本协议中的“本项目”指轻音(LightMusic)项目；“使用者”指签署本协议的使用者；“官方音乐平台”指对本项目内置的所有音乐源的官方平台统称；“版权数据”指包括但不限于图像、音频、名字等在内的他人拥有所属版权的数据。
 
-- 电台搜索与查看
-![image](https://user-images.githubusercontent.com/70871914/204017956-3a5c706d-7a65-431b-a324-1902ccd4d796.png)
-![image](https://user-images.githubusercontent.com/70871914/204017997-b20f369b-f4ce-42c6-9fbd-84cfdab6859d.png)
+1. 本项目的数据来源原理是从各官方音乐平台的公开服务器中拉取数据，经过对数据简单地筛选与合并后进行展示，因此本项目不对数据的准确性负责。
+2. 使用本项目的过程中可能会产生版权数据，对于这些版权数据，本项目不拥有它们的所有权，为了避免造成侵权，使用者务必在**24小时**内清除使用本项目的过程中所产生的版权数据。
+3. 本项目内的官方音乐平台别名为本项目内对官方音乐平台的一个称呼，不包含恶意，如果官方音乐平台觉得不妥，可联系本项目更改或移除。
+4. 本项目内使用的部分包括但不限于字体、图片等资源来源于互联网，如果出现侵权可联系本项目移除。
+5. 由于使用本项目产生的包括由于本协议或由于使用或无法使用本项目而引起的任何性质的任何直接、间接、特殊、偶然或结果性损害（包括但不限于因商誉损失、停工、计算机故障或故障引起的损害赔偿，或任何及所有其他商业损害或损失）由使用者负责。
+6. 本项目完全免费，且开源发布于 GitHub 面向全世界人用作对技术的学习交流，本项目不对项目内的技术可能存在违反当地法律法规的行为作保证，**禁止在违反当地法律法规的情况下使用本项目**，对于使用者在明知或不知当地法律法规不允许的情况下使用本项目所造成的任何违法违规行为由使用者承担，本项目不承担由此造成的任何直接、间接、特殊、偶然或结果性责任。
 
-- MV 搜索与观看
-![image](https://user-images.githubusercontent.com/70871914/204018086-c1ab0e30-b1f4-4dda-815b-7f552e3448a1.png)
-![image](https://user-images.githubusercontent.com/70871914/204018170-d4c3790c-9b4c-40ef-8d88-410d3f8fa871.png)
+若你使用了本项目，将代表你接受以上协议。
 
-- 榜单
-![image](https://user-images.githubusercontent.com/70871914/204018343-2a423ebc-dbee-48ed-907a-278dc533606c.png)
-
-- 用户搜索与查看
-![image](https://user-images.githubusercontent.com/70871914/204018616-4481d9d9-5312-4ca1-af8e-eab1b49907ae.png)
-![image](https://user-images.githubusercontent.com/70871914/204018635-8eca3b35-98b9-4deb-9ffc-b520db57975f.png)
-
-- 推荐模块
-![image](https://user-images.githubusercontent.com/70871914/204018704-5ed17a34-2406-4dfe-a1eb-fa5a449b6ef1.png)
-
-- 下载管理
-![image](https://user-images.githubusercontent.com/70871914/204018782-cdce8754-b4bf-4510-9f89-119aec6beff4.png)
-
-- 播放列表
-![image](https://user-images.githubusercontent.com/70871914/204018855-4f604540-77b1-4368-9c06-f10f31255b1c.png)
+音乐平台不易，请尊重版权，支持正版。<br>
