@@ -6,7 +6,7 @@ import java.awt.*;
 
 /**
  * @Author Doge
- * @Description 列表元素标签自定义 UI
+ * @Description 文本框自定义 UI
  * @Date 2020/12/13
  */
 public class TextFieldUI extends BasicTextFieldUI {

@@ -1,11 +1,5 @@
 package net.doge.ui.component.textfield.listener;
 
-/**
- * @Author Doge
- * @Description swing 单行文本框默认文本
- * @Date 2020/12/21
- */
-
 import lombok.Data;
 import net.doge.ui.component.textfield.CustomTextField;
 import net.doge.util.common.StringUtil;
@@ -15,6 +9,11 @@ import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+/**
+ * @Author Doge
+ * @Description 文本框默认文本
+ * @Date 2020/12/21
+ */
 @Data
 public class TextFieldHintListener implements FocusListener {
     private String hintText;

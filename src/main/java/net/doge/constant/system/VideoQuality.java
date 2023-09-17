@@ -17,7 +17,7 @@ public class VideoQuality {
     // 流畅
     public static final int FLUENT = 4;
 
-    // 当前音质
+    // 当前画质
     public static int quality = FHD;
     public static final String[] NAMES = {"超清 (2K)", "全高清 (1080P)", "高清 (720P)", "标清 (480P)", "流畅 (360P)"};
 }
