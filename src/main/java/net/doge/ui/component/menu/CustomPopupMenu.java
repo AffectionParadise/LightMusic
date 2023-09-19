@@ -52,7 +52,7 @@ public class CustomPopupMenu extends JPopupMenu {
 
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(ImageUtil.getAvgRGB(f.globalPanel.getBackgroundImage()));
+        g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBackgroundImage()));
         g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 10, 10);
 
         // 画边框阴影

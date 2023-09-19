@@ -409,6 +409,8 @@ public class MainFrame extends JFrame {
     private ImageIcon mcBlurIcon = LMIconManager.getIcon("menu.pureColorBlur");
     // 线性渐变图标
     private ImageIcon lgBlurIcon = LMIconManager.getIcon("menu.linearGradient");
+    // 分形布朗图标
+    private ImageIcon fbmBlurIcon = LMIconManager.getIcon("menu.fbm");
     // 模糊关闭图标
     private ImageIcon blurOffIcon = LMIconManager.getIcon("menu.blurOff");
     // 音效图标
@@ -964,6 +966,7 @@ public class MainFrame extends JFrame {
     private CustomMenuItem cvBlurMenuItem = new CustomMenuItem("歌曲封面");
     private CustomMenuItem mcBlurMenuItem = new CustomMenuItem("纯主色调");
     private CustomMenuItem lgBlurMenuItem = new CustomMenuItem("线性渐变");
+    private CustomMenuItem fbmBlurMenuItem = new CustomMenuItem("分形布朗");
 
     // 标签页
     private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT);
@@ -3050,8 +3053,11 @@ public class MainFrame extends JFrame {
         darkerOn = config.getBooleanValue(ConfigConstants.DARKER_ON, true);
         // 载入模糊类型
         blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.OFF);
-        blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon : blurType == BlurConstants.MC ? mcBlurIcon :
-                blurType == BlurConstants.LG ? lgBlurIcon : blurOffIcon, currUIStyle.getIconColor()));
+        blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon
+                : blurType == BlurConstants.MC ? mcBlurIcon
+                : blurType == BlurConstants.LG ? lgBlurIcon
+                : blurType == BlurConstants.FBM ? fbmBlurIcon
+                : blurOffIcon, currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入歌词偏移
@@ -20361,6 +20367,7 @@ public class MainFrame extends JFrame {
         blurPopupMenu.add(cvBlurMenuItem);
         blurPopupMenu.add(mcBlurMenuItem);
         blurPopupMenu.add(lgBlurMenuItem);
+        blurPopupMenu.add(fbmBlurMenuItem);
         gsMenuItem.addActionListener(e -> {
             gsOn = !gsOn;
             doBlur();
@@ -20390,6 +20397,11 @@ public class MainFrame extends JFrame {
             blurType = BlurConstants.LG;
             doBlur();
             blurButton.setIcon(ImageUtil.dye(lgBlurIcon, currUIStyle.getIconColor()));
+        });
+        fbmBlurMenuItem.addActionListener(e -> {
+            blurType = BlurConstants.FBM;
+            doBlur();
+            blurButton.setIcon(ImageUtil.dye(fbmBlurIcon, currUIStyle.getIconColor()));
         });
         // 模糊按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
@@ -21690,6 +21702,7 @@ public class MainFrame extends JFrame {
         cvBlurMenuItem.setIcon(ImageUtil.dye(cvBlurIcon, iconColor));
         mcBlurMenuItem.setIcon(ImageUtil.dye(mcBlurIcon, iconColor));
         lgBlurMenuItem.setIcon(ImageUtil.dye(lgBlurIcon, iconColor));
+        fbmBlurMenuItem.setIcon(ImageUtil.dye(fbmBlurIcon, iconColor));
 
         saveDescCoverImgMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
         saveDescBgImgMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
@@ -23184,7 +23197,7 @@ public class MainFrame extends JFrame {
             if (blurType != BlurConstants.OFF && loadedMusicResource) {
                 img = player.getMetaMusicInfo().getAlbumImage();
                 if (img == null) img = ImageConstants.DEFAULT_IMG;
-                if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
+                if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgColorBest(img));
             } else img = currUIStyle.getImg();
 
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
@@ -23203,8 +23216,12 @@ public class MainFrame extends JFrame {
                 img = ImageUtil.cropCenter(img);
             // 消除透明度
             img = ImageUtil.eraseTransparency(img);
-            // 线性渐变
-            if (loadedMusicResource && blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, gw, gh);
+            if (loadedMusicResource) {
+                // 线性渐变
+                if (blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, gw, gh);
+                    // 分形布朗
+                else if (blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, gw, gh);
+            }
             if (gsOn) {
                 // 处理成 100 * 100 大小
                 img = ImageUtil.width(img, 100);

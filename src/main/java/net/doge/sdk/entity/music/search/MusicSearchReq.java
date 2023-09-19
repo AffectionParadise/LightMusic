@@ -287,7 +287,7 @@ public class MusicSearchReq {
                 String[] split = songJson.getString("filename").split(" - ");
                 String songName = split[split.length == 1 ? 0 : 1];
                 String artist = songJson.getString("singername");
-//                String albumName = songJson.getString("remark");
+                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getString("mvhash");
@@ -299,7 +299,7 @@ public class MusicSearchReq {
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);
-//                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);

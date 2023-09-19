@@ -42,7 +42,7 @@ public abstract class AbstractMiniDialog extends JDialog {
         if (f.blurType != BlurConstants.OFF && f.player.loadedMusicResource()) {
             img = f.player.getMetaMusicInfo().getAlbumImage();
             if (img == null) img = ImageConstants.DEFAULT_IMG;
-            if (f.blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgRGB(img));
+            if (f.blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgColorBest(img));
         } else {
             UIStyle style = f.currUIStyle;
             img = style.getImg();
@@ -58,8 +58,12 @@ public abstract class AbstractMiniDialog extends JDialog {
             img = ImageUtil.cropCenter(img);
         // 消除透明度
         img = ImageUtil.eraseTransparency(img);
-        // 线性渐变
-        if (loadedMusicResource && f.blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, dw, dh);
+        if (loadedMusicResource) {
+            // 线性渐变
+            if (f.blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, dw, dh);
+                // 分形布朗
+            else if (f.blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, dw, dh);
+        }
         if (f.gsOn) {
             // 处理成 100 * 100 大小
             img = ImageUtil.width(img, 100);

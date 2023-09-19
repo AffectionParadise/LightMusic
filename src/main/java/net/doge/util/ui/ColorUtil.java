@@ -548,14 +548,24 @@ public class ColorUtil {
     }
 
     /**
+     * 获取图像主色调 Palette
+     *
+     * @param img
+     * @return
+     */
+    public static List<MMCQ.ThemeColor> getThemeColors(BufferedImage img) {
+        MMCQ mmcq = new MMCQ(img, 3);
+        return mmcq.quantize();
+    }
+
+    /**
      * 根据图片和颜色数量生成 Palette，并找到最佳色块返回
      *
      * @param img
      * @return
      */
     public static Color getBestColor(BufferedImage img) {
-        MMCQ mmcq = new MMCQ(img, 3);
-        List<MMCQ.ThemeColor> themeColors = mmcq.quantize();
+        List<MMCQ.ThemeColor> themeColors = getThemeColors(img);
         Color mc = makeBestColor(themeColors.get(0).getRgb());
         return mc;
     }
@@ -566,7 +576,7 @@ public class ColorUtil {
      * @param rgb
      * @return
      */
-    private static Color makeBestColor(int rgb) {
+    public static Color makeBestColor(int rgb) {
         HSL hsl = rgbValToHsl(rgb);
         float maxS = 50, minL = 50, maxL = 70;
         if (hsl.s > maxS) hsl.s = maxS;

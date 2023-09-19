@@ -238,6 +238,7 @@ public class TimeUtil {
      * @return
      */
     public static double toSeconds(String s) {
+        if (StringUtil.isEmpty(s)) return 0;
         List<String> groups = RegexUtil.findAllGroup0("\\d+", s);
         double res = 0, u = 1;
         for (int i = groups.size() - 1; i >= 0; i--) {

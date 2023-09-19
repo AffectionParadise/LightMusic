@@ -146,7 +146,7 @@ public class HotMusicRecommendReq {
                 String name = songJson.getString("songname");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-//                String albumName = songJson.getString("remark");
+                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 JSONArray mvdata = songJson.getJSONArray("mvdata");
@@ -159,7 +159,7 @@ public class HotMusicRecommendReq {
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
-//                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
@@ -188,7 +188,7 @@ public class HotMusicRecommendReq {
                 String name = songJson.getString("songname");
                 String artist = SdkUtil.parseArtist(songJson);
                 String artistId = SdkUtil.parseArtistId(songJson);
-//                String albumName = songJson.getString("remark");
+                String albumName = songJson.getString("remark");
                 String albumId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 JSONArray mvdata = songJson.getJSONArray("mvdata");
@@ -201,7 +201,7 @@ public class HotMusicRecommendReq {
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
                 musicInfo.setArtistId(artistId);
-//                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);

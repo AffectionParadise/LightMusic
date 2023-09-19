@@ -1,15 +1,14 @@
 package net.doge.util.ui;
 
 import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
-import com.jhlabs.image.ContrastFilter;
-import com.jhlabs.image.GaussianFilter;
-import com.jhlabs.image.GradientFilter;
-import com.jhlabs.image.ShadowFilter;
+import com.jhlabs.image.*;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.system.Format;
 import net.doge.constant.ui.BlurConstants;
+import net.doge.constant.ui.Colors;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -30,6 +29,8 @@ import java.util.List;
 public class ImageUtil {
     // 毛玻璃(高斯模糊)过滤器
     private static final GaussianFilter gaussianFilter = new GaussianFilter();
+    // 分析布朗运动过滤器
+    private static final FBMFilter fbmFilter = new FBMFilter();
     // 对比度过滤器
     private static final ContrastFilter contrastFilter = new ContrastFilter();
     // 阴影过滤器
@@ -40,6 +41,10 @@ public class ImageUtil {
     private static final int SHADOW_THICKNESS = 30;
 
     static {
+        fbmFilter.setLacunarity(0.45f);
+        fbmFilter.setH(5);
+        fbmFilter.setBasisType(FBMFilter.RIDGED);
+
         shadowFilter.setRadius(10);
         shadowFilter.setDistance(0);
         shadowFilter.setOpacity(0.65f);
@@ -657,8 +662,18 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static Color getAvgRGB(BufferedImage img) {
-        return getAvgRGB(img, 1f);
+    public static Color getAvgColor(BufferedImage img) {
+        return getAvgColor(img, 1f, false);
+    }
+
+    /**
+     * 获取图片均值颜色，调整为最佳颜色
+     *
+     * @param img
+     * @return
+     */
+    public static Color getAvgColorBest(BufferedImage img) {
+        return getAvgColor(img, 1f, true);
     }
 
     /**
@@ -667,7 +682,7 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static Color getAvgRGB(BufferedImage img, float alpha) {
+    public static Color getAvgColor(BufferedImage img, float alpha, boolean best) {
         int w = img.getWidth(), h = img.getHeight();
         List<Float> dots = new LinkedList<>();
         for (float i = 0; i < 1; i += 0.05f) dots.add(i);
@@ -682,7 +697,22 @@ public class ImageUtil {
             }
         }
         int cn = s * s;
-        return new Color(R / cn, G / cn, B / cn, (int) (255 * alpha));
+        return best ? ColorUtil.deriveAlphaColor(ColorUtil.makeBestColor(ColorUtil.merge(R / cn, G / cn, B / cn)), alpha)
+                : new Color(R / cn, G / cn, B / cn, (int) (255 * alpha));
+    }
+
+    /**
+     * 提取图像主色调，并生成指定宽高的分形布朗运动图像
+     *
+     * @return
+     */
+    public static BufferedImage toFbmImage(BufferedImage img, int w, int h) {
+        List<MMCQ.ThemeColor> themeColors = ColorUtil.getThemeColors(img);
+        int ca = ColorUtil.makeBestColor(themeColors.get(0).getRgb()).getRGB();
+        int cb = ColorUtil.makeBestColor(themeColors.size() > 1 ? themeColors.get(1).getRgb() : Colors.THEME.getRGB()).getRGB();
+        fbmFilter.setAngle(RandomUtil.randomInt(360));
+        fbmFilter.setColormap(new LinearColormap(cb, ca));
+        return fbmFilter.filter(createTransparentImage(w, h), null);
     }
 
     /**
@@ -700,9 +730,6 @@ public class ImageUtil {
             Color ca = ColorUtil.rotate(mc, 10), cb = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.1f), -10);
             return linearGradient(w, h, cb, ca);
         }
-//        BlockFilter blockFilter = new BlockFilter();
-//        blockFilter.setBlockSize(200);
-//        return blockFilter.filter(img,null);
     }
 
     /**

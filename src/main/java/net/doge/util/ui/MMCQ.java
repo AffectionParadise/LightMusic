@@ -214,7 +214,7 @@ public class MMCQ {
         while (!pOneQueue.isEmpty()) {
             VBox vBox = pOneQueue.poll();
             double proportion = (double) vBox.pixelNum / oriVBox.pixelNum;
-            if (proportion < 0.05) continue;
+            if (proportion < 0.01) continue;
             ThemeColor themeColor = new ThemeColor(vBox.getAvgRgb(), proportion);
             themeColors.offer(themeColor);
         }
