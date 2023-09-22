@@ -14,7 +14,7 @@ public class BlurConstants {
     public static final int MC = 2;
     // 线性渐变
     public static final int LG = 3;
-    // 分形布朗
+    // 迷幻纹理
     public static final int FBM = 4;
 
     // 高斯模糊因子

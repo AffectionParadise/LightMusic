@@ -90,7 +90,6 @@ public class CustomButton extends JButton {
                 g2d.setColor(getForeground());
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
             } else {
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
                 g2d.drawImage(img, 0, 0, getWidth(), getHeight(), this);
             }
 

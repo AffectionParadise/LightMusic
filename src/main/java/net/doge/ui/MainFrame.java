@@ -409,7 +409,7 @@ public class MainFrame extends JFrame {
     private ImageIcon mcBlurIcon = LMIconManager.getIcon("menu.pureColorBlur");
     // 线性渐变图标
     private ImageIcon lgBlurIcon = LMIconManager.getIcon("menu.linearGradient");
-    // 分形布朗图标
+    // 迷幻纹理图标
     private ImageIcon fbmBlurIcon = LMIconManager.getIcon("menu.fbm");
     // 模糊关闭图标
     private ImageIcon blurOffIcon = LMIconManager.getIcon("menu.blurOff");
@@ -966,7 +966,7 @@ public class MainFrame extends JFrame {
     private CustomMenuItem cvBlurMenuItem = new CustomMenuItem("歌曲封面");
     private CustomMenuItem mcBlurMenuItem = new CustomMenuItem("纯主色调");
     private CustomMenuItem lgBlurMenuItem = new CustomMenuItem("线性渐变");
-    private CustomMenuItem fbmBlurMenuItem = new CustomMenuItem("分形布朗");
+    private CustomMenuItem fbmBlurMenuItem = new CustomMenuItem("迷幻纹理");
 
     // 标签页
     private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT);
@@ -17927,7 +17927,7 @@ public class MainFrame extends JFrame {
                     if (Tags.hotPlaylistTag.isEmpty()) MusicServerUtil.initPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.hotPlaylistTag.keySet()) {
-                        if (shouldShowTag(Tags.hotPlaylistTag, Tags.playlistMap, tag))
+                        if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistMap, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -18549,7 +18549,7 @@ public class MainFrame extends JFrame {
                 }
             } else if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
                 for (String tag : Tags.hotPlaylistTag.keySet()) {
-                    if (shouldShowTag(Tags.hotPlaylistTag, Tags.playlistMap, tag))
+                    if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistMap, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) {
@@ -23219,7 +23219,7 @@ public class MainFrame extends JFrame {
             if (loadedMusicResource) {
                 // 线性渐变
                 if (blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, gw, gh);
-                    // 分形布朗
+                    // 迷幻纹理
                 else if (blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, gw, gh);
             }
             if (gsOn) {

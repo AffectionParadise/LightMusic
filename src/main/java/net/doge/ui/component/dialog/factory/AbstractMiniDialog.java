@@ -61,7 +61,7 @@ public abstract class AbstractMiniDialog extends JDialog {
         if (loadedMusicResource) {
             // 线性渐变
             if (f.blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, dw, dh);
-                // 分形布朗
+                // 迷幻纹理
             else if (f.blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, dw, dh);
         }
         if (f.gsOn) {
