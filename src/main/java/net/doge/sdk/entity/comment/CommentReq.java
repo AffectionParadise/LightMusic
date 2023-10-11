@@ -637,6 +637,7 @@ public class CommentReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_HF_API, id, page))
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsync()
                     .body();

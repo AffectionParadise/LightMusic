@@ -1,5 +1,6 @@
 package net.doge.sdk.entity.music.menu;
 
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
@@ -140,6 +141,7 @@ public class MusicMenuReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsync()
                     .body();

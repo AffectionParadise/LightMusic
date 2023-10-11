@@ -1,5 +1,6 @@
 package net.doge.sdk.entity.user.info;
 
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
@@ -463,6 +464,7 @@ public class UserInfoReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_HF_API, id, page))
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsync()
                     .body();
@@ -932,6 +934,7 @@ public class UserInfoReq {
             // 音乐磁场
             else if (source == NetMusicSource.HF) {
                 String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_HF_API, id))
+                        .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                         .cookie(SdkCommon.HF_COOKIE)
                         .executeAsync()
                         .body();

@@ -413,6 +413,7 @@ public class NewMusicReq {
 
             if (StringUtil.notEmpty(s[4])) {
                 String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_HF_API, s[4], page))
+                        .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                         .cookie(SdkCommon.HF_COOKIE)
                         .executeAsync()
                         .body();

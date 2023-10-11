@@ -285,6 +285,7 @@ public class MusicInfoReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, songId))
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsync()
                     .body();
@@ -638,6 +639,7 @@ public class MusicInfoReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsync()
                     .body();

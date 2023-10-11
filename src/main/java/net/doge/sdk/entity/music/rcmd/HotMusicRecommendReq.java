@@ -1,9 +1,6 @@
 package net.doge.sdk.entity.music.rcmd;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
-import cn.hutool.http.Method;
+import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
@@ -425,6 +422,7 @@ public class HotMusicRecommendReq {
 
             if (StringUtil.notEmpty(s[1])) {
                 String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_HF_API, s[1], page))
+                        .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                         .cookie(SdkCommon.HF_COOKIE)
                         .executeAsync()
                         .body();
