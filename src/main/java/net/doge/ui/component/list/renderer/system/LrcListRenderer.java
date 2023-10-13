@@ -81,7 +81,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
                     || !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
                 stc = new StringTwoColor(label, lyric, highlightColor, bgColor, ratio, false, maxWidth);
             else stc.setRatio(ratio);
-            label.setIcon(stc.getImageIcon());
+            label.setIcon(stc.getImgIcon());
             label.setText("");
 //            labelUI.setDrawBg(index == hoverIndex);
         }

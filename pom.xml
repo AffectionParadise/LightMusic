@@ -19,13 +19,13 @@
         <filters.version>2.0.235-1</filters.version>
         <webp-imageio.version>0.1.6</webp-imageio.version>
         <imageio-jpeg.version>3.9.4</imageio-jpeg.version>
-        <fastjson2.version>2.0.39</fastjson2.version>
+        <fastjson2.version>2.0.41</fastjson2.version>
         <jsoup.version>1.16.1</jsoup.version>
-        <lombok.version>1.18.28</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <opencc4j.version>1.8.1</opencc4j.version>
         <moji4j.version>1.2.0</moji4j.version>
-        <hutool.version>5.8.21</hutool.version>
+        <hutool.version>5.8.22</hutool.version>
     </properties>
 
     <dependencies>
@@ -42,7 +42,7 @@
             <artifactId>jave</artifactId>
             <version>1.0.2</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/jave-1.0.2.jar</systemPath>
+            <systemPath>${project.basedir}/lib/jave-1.0.2.jar</systemPath>
         </dependency>
 
         <!-- 图片主色调提取 -->
@@ -120,7 +120,7 @@
             <artifactId>cpdetector</artifactId>
             <version>1.0.10</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/cpdetector_1.0.10.jar</systemPath>
+            <systemPath>${project.basedir}/lib/cpdetector_1.0.10.jar</systemPath>
         </dependency>
 
         <!-- cpdetector 的插件 chardet -->
@@ -129,7 +129,7 @@
             <artifactId>chardet</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/chardet-1.0.jar</systemPath>
+            <systemPath>${project.basedir}/lib/chardet-1.0.jar</systemPath>
         </dependency>
 
         <!-- cpdetector 的插件 antlr -->
@@ -138,7 +138,7 @@
             <artifactId>antlr</artifactId>
             <version>3.0b5</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/antlr-2.7.4.jar</systemPath>
+            <systemPath>${project.basedir}/lib/antlr-2.7.4.jar</systemPath>
         </dependency>
 
         <!-- lombok -->

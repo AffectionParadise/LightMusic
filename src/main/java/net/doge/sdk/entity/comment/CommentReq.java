@@ -214,6 +214,7 @@ public class CommentReq {
                 String profileUrl = user.getString("avatarUrl");
                 String content = commentJson.getString("content");
                 String time = TimeUtil.msToPhrase(commentJson.getLong("time"));
+                String location = commentJson.getJSONObject("ipLocation").getString("location");
                 Integer likedCount = commentJson.getIntValue("likedCount");
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
@@ -222,6 +223,7 @@ public class CommentReq {
                 commentInfo.setProfileUrl(profileUrl);
                 commentInfo.setContent(content);
                 commentInfo.setTime(time);
+                commentInfo.setLocation(location);
                 commentInfo.setLikedCount(likedCount);
 
                 NetCommentInfo finalCommentInfo = commentInfo;
@@ -244,6 +246,7 @@ public class CommentReq {
                     username = user.getString("nickname");
                     profileUrl = user.getString("avatarUrl");
                     content = commentJson.getString("content");
+                    location = commentJson.getJSONObject("ipLocation").getString("location");
 
                     commentInfo = new NetCommentInfo();
                     commentInfo.setSub(true);
@@ -251,6 +254,7 @@ public class CommentReq {
                     commentInfo.setUsername(username);
                     commentInfo.setProfileUrl(profileUrl);
                     commentInfo.setContent(content);
+                    commentInfo.setLocation(location);
 
                     NetCommentInfo finalCommentInfo1 = commentInfo;
                     String finalProfileUrl1 = profileUrl;
@@ -282,6 +286,7 @@ public class CommentReq {
                     String profileUrl = commentJson.getString("user_pic");
                     String content = commentJson.getString("content");
                     String time = TimeUtil.strToPhrase(commentJson.getString("addtime"));
+                    String location = commentJson.getString("location");
                     Integer likedCount = commentJson.getJSONObject("like").getIntValue("likenum");
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
@@ -290,6 +295,7 @@ public class CommentReq {
                     commentInfo.setProfileUrl(profileUrl);
                     commentInfo.setContent(content);
                     commentInfo.setTime(time);
+                    commentInfo.setLocation(location);
                     commentInfo.setLikedCount(likedCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage profile = SdkUtil.extractProfile(profileUrl);

@@ -28,6 +28,8 @@ public class NetCommentInfo {
     private String content;
     // 时间
     private String time;
+    // IP 属地
+    private String location;
     // 点赞数
     private Integer likedCount;
     // 评分
@@ -38,6 +40,10 @@ public class NetCommentInfo {
 
     public boolean hasTime() {
         return StringUtil.notEmpty(time);
+    }
+
+    public boolean hasLocation() {
+        return StringUtil.notEmpty(location);
     }
 
     public boolean hasProfileUrl() {
@@ -67,6 +73,7 @@ public class NetCommentInfo {
     public String toString() {
         return username
                 + (hasTime() ? "    " + time : "")
+                + (hasLocation() ? "    " + location : "")
                 + (hasScore() ? "    " + StringUtil.genStar(score) + " " + score + " 分" : "") + "\n"
                 + content + "\n"
                 + (hasLikedCount() ? "❤ " + StringUtil.formatNumberWithoutSuffix(likedCount) : "");
