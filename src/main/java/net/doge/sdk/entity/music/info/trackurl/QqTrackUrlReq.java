@@ -20,7 +20,7 @@ public class QqTrackUrlReq {
         String device = "MI 14 Pro Max";
         String osVersion = "13";
         long time = System.currentTimeMillis() / 1000;
-        String lowerCase = CryptoUtil.hashMD5("6d849adb2f3e00d413fe48efbb18d9bb" + time + "6562653262383463363633646364306534333668").toLowerCase();
+        String lowerCase = CryptoUtil.hashMD5("d86b856be4a7ea7a5bc9b6c4eed46f4e" + time + "6562653262383463363633646364306534333668").toLowerCase();
 
         String s6 = "{\\\"method\\\":\\\"GetMusicUrl\\\",\\\"platform\\\":\\\"" + platform + "\\\",\\\"t1\\\":\\\"" + mid + "\\\",\\\"t2\\\":\\\"" + quality + "\\\"}";
         String s7 = "{\\\"uid\\\":\\\"\\\",\\\"token\\\":\\\"\\\",\\\"deviceid\\\":\\\"84ac82836212e869dbeea73f09ebe52b\\\",\\\"appVersion\\\":\\\"4.1.2\\\"," +
@@ -30,12 +30,7 @@ public class QqTrackUrlReq {
 
         String hex = CryptoUtil.bytesToHex(s8.getBytes(StandardCharsets.UTF_8)).toUpperCase();
         byte[] compressedBytes = CryptoUtil.compress(hex.getBytes(StandardCharsets.UTF_8));
-        String[] urls = {
-                "http://gcsp.kzti.top:1030/client/cgi-bin/api.fcg",
-                "http://119.91.134.171:1030/client/cgi-bin/api.fcg",
-                "http://106.52.68.150:1030/client/cgi-bin/api.fcg"
-        };
-        String url = urls[0];
+        String url = "http://app.kzti.top/client/cgi-bin/api.fcg";
 
         try {
             HttpResponse resp = HttpRequest.post(url).body(compressedBytes).executeAsync();

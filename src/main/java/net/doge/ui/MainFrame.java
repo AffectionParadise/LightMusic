@@ -205,7 +205,8 @@ public class MainFrame extends JFrame {
             "Q5：为什么有些歌曲名字和音频不一致？\nA5：付费或无版权歌曲采用自动换源机制，不能100%%保证一致，可以尝试手动换源搜索\n\n" +
             "Q6：资源是如何获取的？\nA6：调用各大平台的 API 获取，免费使用，不可商用！\n\n" +
             "Q7：软件更新后原来的数据如何继承？\nA7：建议覆盖更新，数据文件 %s 保存在程序所在目录，保证与程序在同一目录即可\n\n" +
-            "如果还有其他的问题，欢迎在我的 Github 主页发布 issue ~", TITLE, ConfigConstants.CONFIG_FILE_NAME);
+            "如果还有其他的问题，欢迎在我的 Github 主页发布 issue ~\n" +
+            "最后，开源不易，低调使用，请勿推广！有条件还请多多支持正版！", TITLE, ConfigConstants.CONFIG_FILE_NAME);
     private final String FIRST_PAGE_MSG = "已经是第一页了";
     private final String LAST_PAGE_MSG = "已经是最后一页了";
     private final String ILLEGAL_PAGE_MSG = "请输入合法页码";

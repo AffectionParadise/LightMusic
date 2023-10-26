@@ -131,6 +131,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage readByUrl(String imgUrl) {
+        if (imgUrl.endsWith(Format.WEBP)) return readWebp(imgUrl);
         return read(getImgStream(imgUrl));
     }
 
