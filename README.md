@@ -60,6 +60,9 @@
 ### 关于源码
 使用方法：clone 后打开该项目，等待 Maven 初始化完成，运行 **net.doge.ui.MainFrame** 类
 
+以下是使用了本项目源码的开源项目墙（该墙会不间断更新），感谢这些开源项目的作者对本项目的支持：
+- [JumpAlang/Jusic-Serve-Houses](https://github.com/JumpAlang/Jusic-Serve-Houses)
+
 ### 项目协议
 
 本项目基于 [Apache License 2.0](https://github.com/AffectionParadise/LightMusic/blob/master/LICENSE) 许可证发行，以下协议是对于 Apache License 2.0 的补充，如有冲突，以以下协议为准。
