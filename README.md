@@ -58,7 +58,7 @@
 ![image](https://github.com/AffectionParadise/LightMusic/assets/70871914/1f24fa96-ab2a-401d-a572-d2bb236b718d)
 
 ### 关于源码
-使用方法：clone 后打开该项目，等待 Maven 初始化完成，运行 **net.doge.ui.MainFrame** 类
+**使用方法**：clone 后打开该项目，等待 Maven 初始化完成，运行 **net.doge.ui.MainFrame** 类
 
 以下是使用了本项目源码的开源项目墙（该墙会不间断更新），感谢这些开源项目的作者对本项目的支持：
 - [JumpAlang/Jusic-Serve-Houses](https://github.com/JumpAlang/Jusic-Serve-Houses)
