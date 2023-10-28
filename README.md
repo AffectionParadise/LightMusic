@@ -19,7 +19,7 @@
     </a>
 </p>
 
-<h2 align="center">轻音——基于Swing与JavaFX的音乐播放器</h2>
+<h2 align="center">轻音——基于Swing与JavaFX的桌面端音乐播放器</h2>
 
 ### 说明
 
@@ -56,6 +56,9 @@
 以下截图仅供参考，实际界面效果会随着软件更新发生变化。
 
 ![image](https://github.com/AffectionParadise/LightMusic/assets/70871914/1f24fa96-ab2a-401d-a572-d2bb236b718d)
+
+### 关于源码
+使用方法：clone 后打开该项目，等待 Maven 初始化完成，运行 **net.doge.ui.MainFrame** 类
 
 ### 项目协议
 
