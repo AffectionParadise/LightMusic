@@ -73,6 +73,9 @@
 - [jsososo/QQMusicApi](https://github.com/jsososo/QQMusicApi)
 - [QiuYaohong/kuwoMusicApi](https://github.com/QiuYaohong/kuwoMusicApi)
 - [jsososo/MiguMusicApi](https://github.com/jsososo/MiguMusicApi)
+- [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
+- [lyswhut/lx-music-source](https://github.com/lyswhut/lx-music-source)
+- [QiuChenlyOpenSource/MusicDownload](https://github.com/QiuChenlyOpenSource/MusicDownload)
 
 ### 项目协议
 
