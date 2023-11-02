@@ -88,7 +88,7 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_API,
                                 String.format("{\"cat\":\"%s\",\"lasttime\":0,\"limit\":%s,\"total\":true}", s[0], limit), options)
                         .executeAsync()
@@ -132,7 +132,7 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_API,
                                 String.format("{\"cat\":\"%s\",\"order\":\"hot\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
                         .executeAsync()
@@ -176,7 +176,7 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_API,
                                 String.format("{\"cat\":\"%s\",\"order\":\"new\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
                         .executeAsync()

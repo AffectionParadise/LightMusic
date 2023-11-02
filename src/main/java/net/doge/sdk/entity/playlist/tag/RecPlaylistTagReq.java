@@ -48,7 +48,7 @@ public class RecPlaylistTagReq {
         final int c = 5;
         // 网易云曲风
         Runnable initRecPlaylistTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
                     .executeAsync()
                     .body();

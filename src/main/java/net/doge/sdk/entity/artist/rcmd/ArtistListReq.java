@@ -76,7 +76,7 @@ public class ArtistListReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_RANKING_LIST_API,
                                 String.format("{\"type\":\"%s\",\"offset\":0,\"limit\":100,\"total\":true}", s[0]), options)
                         .executeAsync()
@@ -114,7 +114,7 @@ public class ArtistListReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, HOT_ARTIST_LIST_API,
                             String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit), options)
                     .executeAsync()
@@ -153,7 +153,7 @@ public class ArtistListReq {
 
             if (StringUtil.notEmpty(s[1])) {
                 String[] sp = s[1].split(" ");
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String artistInfoBody = SdkCommon.ncRequest(Method.POST, CAT_ARTIST_API,
                                 String.format("{\"type\":\"%s\",\"area\":\"%s\",\"initial\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                                         sp[0], sp[1], sp[2], (page - 1) * limit, limit), options)
@@ -193,7 +193,7 @@ public class ArtistListReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String artistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ARTIST_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
                         .executeAsync()

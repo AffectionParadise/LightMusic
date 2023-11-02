@@ -58,7 +58,7 @@ public class RadioMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_SUBSCRIBERS_API,
                             String.format("{\"id\":\"%s\",\"time\":-1,\"limit\":1000,\"total\":true}", id), options)
                     .executeAsync()

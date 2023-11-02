@@ -127,7 +127,7 @@ public class RecommendPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PLAYLIST_API, "{\"n\":1000,\"limit\":100,\"total\":true}", options)
                     .executeAsync()
                     .body();
@@ -164,7 +164,7 @@ public class RecommendPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_PLAYLIST_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[0], (page - 1) * limit, limit), options)
                         .executeAsync()

@@ -100,7 +100,7 @@ public class ArtistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ARTIST_ALBUMS_API, id),
                             String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit), options)
                     .executeAsync()
@@ -345,7 +345,7 @@ public class ArtistMenuReq {
         // 网易云
         if (source == NetMusicSource.NC) {
             // 歌手 MV
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_MVS_API,
                             String.format("{\"artistId\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", id, (page - 1) * limit, limit),
                             options)
@@ -575,7 +575,7 @@ public class ArtistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_ARTIST_API, String.format("{\"artistid\":\"%s\"}", id), options)
                     .executeAsync()
                     .body();
@@ -688,7 +688,7 @@ public class ArtistMenuReq {
         // 网易云
         if (source == NetMusicSource.NC) {
             Runnable getFans = () -> {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String userInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_FANS_API,
                                 String.format("{\"id\":\"%s\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit), options)
                         .executeAsync()
@@ -725,7 +725,7 @@ public class ArtistMenuReq {
             };
 
             Runnable getFansCnt = () -> {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String tBody = SdkCommon.ncRequest(Method.POST, ARTIST_FANS_TOTAL_API, String.format("{\"id\":\"%s\"}", id), options)
                         .executeAsync()
                         .body();

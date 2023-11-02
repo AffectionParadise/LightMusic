@@ -381,7 +381,7 @@ public class NewAlbumTagReq {
         final int c = 6;
         // 网易云曲风
         Runnable initAlbumTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
                     .executeAsync()
                     .body();

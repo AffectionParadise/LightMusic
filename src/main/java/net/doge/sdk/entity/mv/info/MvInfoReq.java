@@ -61,7 +61,7 @@ public class MvInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvBody = SdkCommon.ncRequest(Method.POST, MV_DETAIL_API, String.format("{\"id\":\"%s\"}", mvId), options)
                     .executeAsync()
                     .body();

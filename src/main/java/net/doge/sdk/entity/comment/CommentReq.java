@@ -163,7 +163,7 @@ public class CommentReq {
 
             // Mlog 需要先获取视频 id，并转为视频类型
             if (isMlog) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
                         .executeAsync()
                         .body();
@@ -194,7 +194,7 @@ public class CommentReq {
                     cur = StringUtil.isEmpty(cursor) ? "0" : cursor;
                     break;
             }
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/v2/resource/comments");
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/v2/resource/comments");
             String commentInfoBody = SdkCommon.ncRequest(Method.POST, GET_COMMENTS_API,
                             String.format("{\"threadId\":\"%s\",\"showInner\":true,\"pageNo\":%s,\"pageSize\":%s,\"cursor\":\"%s\",\"sortType\":%s}",
                                     threadId, page, limit, cur, sortType), options)

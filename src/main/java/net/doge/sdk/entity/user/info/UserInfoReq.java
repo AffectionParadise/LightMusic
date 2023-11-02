@@ -96,7 +96,7 @@ public class UserInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_API, id), "{}", options)
                     .executeAsync()
                     .body();
@@ -394,7 +394,7 @@ public class UserInfoReq {
 
         // 网易云(程序分页)
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, USER_SONGS_API,
                             String.format("{\"uid\":\"%s\",\"type\":%s}", id, recordType ^ 1), options)
                     .executeAsync()
@@ -861,7 +861,7 @@ public class UserInfoReq {
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NC) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_API, id), "{}", options)
                         .executeAsync()
                         .body();

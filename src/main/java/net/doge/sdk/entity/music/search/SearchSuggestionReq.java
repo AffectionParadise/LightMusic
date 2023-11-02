@@ -49,7 +49,7 @@ public class SearchSuggestionReq {
         Callable<List<String>> getSimpleSearchSuggestion = () -> {
             List<String> r = new LinkedList<>();
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SIMPLE_SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
                     .executeAsync()
                     .body();
@@ -69,7 +69,7 @@ public class SearchSuggestionReq {
         Callable<List<String>> getSearchSuggestion = () -> {
             List<String> r = new LinkedList<>();
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
                     .executeAsync()
                     .body();

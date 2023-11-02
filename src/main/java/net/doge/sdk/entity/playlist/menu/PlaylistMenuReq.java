@@ -43,7 +43,7 @@ public class PlaylistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApiPC();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapiPC();
             String playlistInfoBody = SdkCommon.ncRequest(Method.GET, String.format(SIMILAR_PLAYLIST_API, id), "{}", options)
                     .executeAsync()
                     .body();
@@ -94,7 +94,7 @@ public class PlaylistMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_SUBSCRIBERS_API,
                             String.format("{\"id\":\"%s\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit), options)
                     .executeAsync()

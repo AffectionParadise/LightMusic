@@ -59,7 +59,7 @@ public class NeteaseReqBuilder {
         String anonymousToken = "bf8bfeabb1aa84f9c8c3906c04a04fb864322804c83f5d607e91a04eae463c9436bd1a17ec353cf780b396507a3f7464e8a60f4bbc019437993166e004087dd32d1490298caf655c2353e58daa0bc13cc7d5c198250968580b12c1b8817e3f5c807e650dd04abd3fb8130b7ae43fcc5b";
         String body = "";
         switch (options.get(NeteaseReqOptEnum.CRYPTO)) {
-            case NeteaseReqOptConstants.WE_API:
+            case NeteaseReqOptConstants.WEAPI:
                 headers.put("X-Real-IP", "::1");
                 headers.put("X-Forwarded-For", "::1");
                 headers.put("Cookie", String.format(
@@ -68,10 +68,10 @@ public class NeteaseReqBuilder {
                         CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
                         anonymousToken
                 ));
-                body = NeteaseCrypto.weApi(data);
+                body = NeteaseCrypto.weapi(data);
                 url = url.replaceFirst("\\w*api", "weapi");
                 break;
-            case NeteaseReqOptConstants.E_API:
+            case NeteaseReqOptConstants.EAPI:
                 headers.put("X-Real-IP", "127:0:0:1");
                 headers.put("X-Forwarded-For", "127:0:0:1");
                 String requestId = System.currentTimeMillis() / 1000 + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
@@ -81,7 +81,7 @@ public class NeteaseReqBuilder {
                         requestId,
                         anonymousToken
                 ));
-                body = NeteaseCrypto.eApi(options.get(NeteaseReqOptEnum.PATH), data);
+                body = NeteaseCrypto.eapi(options.get(NeteaseReqOptEnum.PATH), data);
                 url = url.replaceFirst("\\w*api", "eapi");
                 break;
         }

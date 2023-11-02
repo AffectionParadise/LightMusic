@@ -79,7 +79,7 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_NEW_SONG_API, "{\"type\":\"recommend\",\"limit\":100,\"areaId\":0}", options)
                     .executeAsync()
                     .body();
@@ -121,7 +121,7 @@ public class NewMusicReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String musicInfoBody = SdkCommon.ncRequest(Method.POST, FAST_NEW_SONG_API, String.format("{\"areaId\":\"%s\",\"total\":true}", s[0]), options)
                         .executeAsync()
                         .body();
@@ -164,7 +164,7 @@ public class NewMusicReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_NEW_SONG_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":1}", s[1], (page - 1) * limit, limit), options)
                         .executeAsync()

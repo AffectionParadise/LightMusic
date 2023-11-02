@@ -102,7 +102,7 @@ public class HotRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, DAILY_RADIO_API, "{\"page\":0}", options)
                     .executeAsync()
                     .body();
@@ -148,7 +148,7 @@ public class HotRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_API, "{\"offset\":0,\"limit\":1000}", options)
                     .executeAsync()
                     .body();
@@ -192,7 +192,7 @@ public class HotRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_TOPLIST_API, "{\"type\":1,\"offset\":0,\"limit\":200}", options)
                     .executeAsync()
                     .body();
@@ -236,7 +236,7 @@ public class HotRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -281,7 +281,7 @@ public class HotRadioReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_HOT_RADIO_API,
                                 String.format("{\"cateId\":\"%s\",\"offset\":%s,\"limit\":%s}", s[0], (page - 1) * limit, limit), options)
                         .executeAsync()
@@ -328,7 +328,7 @@ public class HotRadioReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_REC_RADIO_API, String.format("{\"cateId\":\"%s\"}", s[1]), options)
                         .executeAsync()
                         .body();

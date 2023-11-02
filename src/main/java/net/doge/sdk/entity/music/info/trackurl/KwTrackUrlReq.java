@@ -3,7 +3,6 @@ package net.doge.sdk.entity.music.info.trackurl;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.RegexUtil;
 
@@ -237,8 +236,7 @@ public class KwTrackUrlReq {
             pSource[0] = pSource[1];
             pSource[1] = L ^ R;
         }
-        ArrayUtil.reverse(pSource);
-        out = -4294967296L & pSource[1] << 32 | 0xFFFFFFFFL & pSource[0];
+        out = -4294967296L & pSource[0] << 32 | 0xFFFFFFFFL & pSource[1];
         out = bitTransform(arrayIP_1, 64, out);
         return out;
     }
@@ -249,13 +247,6 @@ public class KwTrackUrlReq {
             l2 = (l2 & arrayLsMask[arrayLs[i]]) << 28 - arrayLs[i] | (l2 & ~arrayLsMask[arrayLs[i]]) >> arrayLs[i];
             longs[i] = bitTransform(arrayPC_2, 64, l2);
         }
-//        int j = 0;
-//        while (n == 1 && j < 8) {
-//            long t = longs[j];
-//            longs[j] = longs[15 - j];
-//            longs[15 - j] = t;
-//            j++;
-//        }
     }
 
     private long bitTransform(int[] arrInt, int n, long l) {

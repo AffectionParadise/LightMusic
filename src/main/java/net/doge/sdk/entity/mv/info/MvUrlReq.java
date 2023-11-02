@@ -74,7 +74,7 @@ public class MvUrlReq {
             if (isVideo || isMlog) {
                 // Mlog 需要先获取视频 id，并转为视频类型
                 if (isMlog) {
-                    Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                    Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                     String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", mvId), options)
                             .executeAsync()
                             .body();
@@ -83,7 +83,7 @@ public class MvUrlReq {
                     mvInfo.setType(MvInfoType.VIDEO);
                 }
 
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvBody = SdkCommon.ncRequest(Method.POST, VIDEO_URL_API, String.format("{\"ids\":\"['%s']\",\"resolution\":\"%s\"}", mvId, quality), options)
                         .executeAsync()
                         .body();
@@ -115,7 +115,7 @@ public class MvUrlReq {
 //                if (StringUtil.notEmpty(url)) return url;
 //            }
             else {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvBody = SdkCommon.ncRequest(Method.POST, MV_URL_API, String.format("{\"id\":\"%s\",\"r\":\"%s\"}", mvId, quality), options)
                         .executeAsync()
                         .body();

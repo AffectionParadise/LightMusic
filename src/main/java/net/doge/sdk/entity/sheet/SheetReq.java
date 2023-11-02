@@ -35,7 +35,7 @@ public class SheetReq {
         Integer total = 0;
 
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String sheetInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_API, String.format("{\"id\":\"%s\",\"abTest\":\"b\"}", id), options)
                     .executeAsync()
                     .body();
@@ -90,7 +90,7 @@ public class SheetReq {
         Integer total = 0;
 
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api//music/sheet/preview/info");
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api//music/sheet/preview/info");
             String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_API, id), String.format("{\"id\":\"%s\"}", id), options)
                     .executeAsync()
                     .body();

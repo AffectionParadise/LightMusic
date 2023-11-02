@@ -63,7 +63,7 @@ public class RecommendProgramReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PROGRAM_API, "{\"cateId\":\"\",\"offset\":0,\"limit\":10}", options)
                     .executeAsync()
                     .body();
@@ -104,7 +104,7 @@ public class RecommendProgramReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_PROGRAM_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -145,7 +145,7 @@ public class RecommendProgramReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_24_HOURS_TOPLIST_API, "{\"limit\":100}", options)
                     .executeAsync()
                     .body();
@@ -186,7 +186,7 @@ public class RecommendProgramReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_TOPLIST_API, "{\"offset\":0,\"limit\":200}", options)
                     .executeAsync()
                     .body();

@@ -75,7 +75,7 @@ public class PlaylistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                     .executeAsync()
                     .body();
@@ -368,7 +368,7 @@ public class PlaylistInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                     .executeAsync()
                     .body();
@@ -570,7 +570,7 @@ public class PlaylistInfoReq {
             // 歌曲列表
             Runnable getMusicInfo = () -> {
                 // 先获取 trackId 列表
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String trackIdBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                         .executeAsync()
                         .body();
@@ -614,7 +614,7 @@ public class PlaylistInfoReq {
             // 歌曲总数
             Runnable getTotal = () -> {
                 // 网易云获取歌单歌曲总数需要额外请求歌单详情接口！
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                         .executeAsync()
                         .body();

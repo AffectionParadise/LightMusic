@@ -92,7 +92,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEW_ALBUM_API,
                                 String.format("{\"area\":\"%s\",\"type\":\"new\",\"offset\":0,\"limit\":50,\"year\":%s,\"month\":%s,\"total\":false,\"rcmd\":true}",
                                         s[0], TimeUtil.currYear(), TimeUtil.currMonth()),
@@ -182,7 +182,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, ALL_NEW_ALBUM_API,
                                 String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[0], (page - 1) * limit, limit),
                                 options)
@@ -225,7 +225,7 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_ALBUM_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -265,7 +265,7 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_DI_ALBUM_API,
                             "{\"area\":\"ALL\",\"offset\":0,\"limit\":200,\"total\":true,\"type\":\"\"}", options)
                     .executeAsync()
@@ -303,7 +303,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, LANG_DI_ALBUM_API,
                                 String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit),
                                 options)
@@ -341,7 +341,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[2])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ALBUM_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
                         .executeAsync()

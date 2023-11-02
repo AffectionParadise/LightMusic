@@ -31,14 +31,14 @@ public class ArrayUtil {
         return cn.hutool.core.util.ArrayUtil.indexOf(array, val);
     }
 
-    /**
-     * 原地反转数组，返回原数组
-     *
-     * @param longs
-     */
-    public static long[] reverse(long[] longs) {
-        return cn.hutool.core.util.ArrayUtil.reverse(longs);
-    }
+//    /**
+//     * 原地反转数组，返回原数组
+//     *
+//     * @param longs
+//     */
+//    public static long[] reverse(long[] longs) {
+//        return cn.hutool.core.util.ArrayUtil.reverse(longs);
+//    }
 
     /**
      * 原地反转数组，返回原数组

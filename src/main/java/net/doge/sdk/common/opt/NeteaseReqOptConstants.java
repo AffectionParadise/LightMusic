@@ -5,8 +5,8 @@ package net.doge.sdk.common.opt;
  */
 public class NeteaseReqOptConstants {
     // 加密方式
-    public static final String WE_API = "weapi";
-    public static final String E_API = "eapi";
+    public static final String WEAPI = "weapi";
+    public static final String EAPI = "eapi";
 
     // UA
     public static final String MOBILE = "mobile";

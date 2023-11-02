@@ -60,7 +60,7 @@ public class HotPlaylistTagReq {
         // 网易云
         // 精品歌单标签
         Runnable initHighQualityPlaylistTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistTagBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_TAG_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -77,7 +77,7 @@ public class HotPlaylistTagReq {
         };
         // 网友精选碟标签
         Runnable initPickedPlaylistTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistTagBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_TAG_API, "{}", options)
                     .executeAsync()
                     .body();

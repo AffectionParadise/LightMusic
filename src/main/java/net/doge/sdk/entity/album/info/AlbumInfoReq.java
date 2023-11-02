@@ -77,7 +77,7 @@ public class AlbumInfoReq {
         if (!"0".equals(id) && StringUtil.notEmpty(id)) {
             // 网易云
             if (source == NetMusicSource.NC) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
                         .executeAsync()
                         .body();
@@ -294,7 +294,7 @@ public class AlbumInfoReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
                     .executeAsync()
                     .body();
@@ -454,7 +454,7 @@ public class AlbumInfoReq {
 
         // 网易云 (程序分页)
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
                     .executeAsync()
                     .body();

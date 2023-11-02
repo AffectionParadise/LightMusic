@@ -78,7 +78,7 @@ public class HotRadioTag {
         // 网易云
         // 分类热门电台标签
         Runnable initHotRadioTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioTagBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_TAG_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -96,7 +96,7 @@ public class HotRadioTag {
         };
         // 分类推荐电台标签
         Runnable initRecRadioTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioTagBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_TAG_API, "{}", options)
                     .executeAsync()
                     .body();

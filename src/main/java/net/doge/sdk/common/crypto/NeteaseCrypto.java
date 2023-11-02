@@ -14,7 +14,7 @@ public class NeteaseCrypto {
     private static final String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6sXqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9SdB1Ua44oncaTWz7OBGLbCiK45wIDAQAB";
     private static final String E_API_KEY = "e82ckenh8dichen8";
 
-    public static String weApi(String data) {
+    public static String weapi(String data) {
         byte[] secretKey = ArrayUtil.randomBytes(16);
         for (int i = 0, s = secretKey.length; i < s; i++)
             secretKey[i] = (byte) BASE62.charAt(secretKey[i] % 62);
@@ -39,7 +39,7 @@ public class NeteaseCrypto {
 //        return "{\"eparams\":\"" + encrypted + "\"}";
 //    }
 
-    public static String eApi(String path, String data) {
+    public static String eapi(String path, String data) {
         String message = "nobody" + path + "use" + data + "md5forencrypt";
         String digest = CryptoUtil.hashMD5(message);
         String dat = path + "-36cd479b6b5-" + data + "-36cd479b6b5-" + digest;

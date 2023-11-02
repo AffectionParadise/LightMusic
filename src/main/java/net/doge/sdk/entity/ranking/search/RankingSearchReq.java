@@ -64,7 +64,7 @@ public class RankingSearchReq {
             List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String rankingInfoBody = SdkCommon.ncRequest(Method.POST, GET_RANKING_API, "{}", options)
                     .executeAsync()
                     .body();

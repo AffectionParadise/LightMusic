@@ -55,7 +55,7 @@ public class NewRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, NEW_RADIO_API, "{\"type\":0,\"offset\":0,\"limit\":200}", options)
                     .executeAsync()
                     .body();
@@ -100,7 +100,7 @@ public class NewRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_RADIO_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -147,7 +147,7 @@ public class NewRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -192,7 +192,7 @@ public class NewRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_RADIO_API, "{\"limit\":100}", options)
                     .executeAsync()
                     .body();
@@ -234,7 +234,7 @@ public class NewRadioReq {
             List<NetRadioInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_GIFT_RADIO_API,
                             String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
                     .executeAsync()

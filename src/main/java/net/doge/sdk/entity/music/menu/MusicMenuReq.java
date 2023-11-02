@@ -57,7 +57,7 @@ public class MusicMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_SONG_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
                     .executeAsync()
                     .body();
@@ -228,7 +228,7 @@ public class MusicMenuReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_PLAYLIST_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
                     .executeAsync()
                     .body();

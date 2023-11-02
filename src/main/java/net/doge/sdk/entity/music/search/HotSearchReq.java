@@ -47,7 +47,7 @@ public class HotSearchReq {
         Callable<List<String>> getHotSearch = () -> {
             List<String> r = new LinkedList<>();
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eApi("/api/search/chart/detail");
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/search/chart/detail");
             String hotSearchBody = SdkCommon.ncRequest(Method.POST, HOT_SEARCH_API, "{\"id\":\"HOT_SEARCH_SONG#@#\"}", options)
                     .executeAsync()
                     .body();

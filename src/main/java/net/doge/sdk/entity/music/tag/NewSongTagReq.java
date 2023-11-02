@@ -65,7 +65,7 @@ public class NewSongTagReq {
         final int c = 7;
         // 网易云曲风
         Runnable initNewSongTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
                     .executeAsync()
                     .body();

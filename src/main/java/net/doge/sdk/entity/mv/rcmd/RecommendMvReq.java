@@ -84,7 +84,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, TOP_MV_API, String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                                 s[0].replace("全部", ""), (page - 1) * limit, limit), options)
                         .executeAsync()
@@ -130,7 +130,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, NEW_MV_API, String.format("{\"area\":\"%s\",\"limit\":100,\"total\":true}", s[0]), options)
                         .executeAsync()
                         .body();
@@ -169,7 +169,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[0]) || StringUtil.notEmpty(s[1])) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, ALL_MV_API,
                                 String.format("{\"tags\":\"{'area':'%s','type':'%s','order':'上升最快'}\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                                         s[0], s[1], (page - 1) * limit, limit), options)
@@ -211,7 +211,7 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_MV_API, "{}", options)
                     .executeAsync()
                     .body();
@@ -250,7 +250,7 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weApi();
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, EXCLUSIVE_MV_API,
                             String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
                     .executeAsync()
