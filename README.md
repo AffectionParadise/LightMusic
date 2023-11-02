@@ -19,7 +19,7 @@
     </a>
 </p>
 
-<h2 align="center">轻音——基于Swing与JavaFX的音乐播放器</h2>
+<h2 align="center">轻音——基于Swing与JavaFX的桌面端音乐播放器</h2>
 
 ### 说明
 
@@ -56,6 +56,42 @@
 以下截图仅供参考，实际界面效果会随着软件更新发生变化。
 
 ![image](https://github.com/AffectionParadise/LightMusic/assets/70871914/1f24fa96-ab2a-401d-a572-d2bb236b718d)
+
+### 关于源码
+#### 环境
+jdk8（**必须是最稳定的8版本**，连7、9、10、11或更高版本都不能使用，且**8自带了JavaFX开发工具包，无需额外下载**）。
+
+#### 运行
+```clone``` 后打开该项目，等待 ```Maven``` 初始化完成，运行 ```net.doge.ui.MainFrame``` 类。
+
+#### 打包
+- **主程序**：在 ```LightMusic``` 项目结构中创建工件，然后构建该工件，就会获得一个关于主程序的可执行的 jar 包，叫做 ```LightMusic.jar```。
+- **更新程序**：在 ```LightMusic-Updater``` 项目结构中创建工件，然后构建该工件，就会获得一个关于更新程序的可执行的 jar 包，叫做 ```LightMusic-Updater.jar```。
+
+#### 编译
+- 使用第三方软件将这两个 jar 包编译为可执行程序，例如 ```exe4j```。当然，不同的操作系统所使用的软件不同，需要使用者自己去研究。假设是 ```Windows``` 环境，获得了 ```LightMusic.exe``` 和 ```Updater.exe```。
+- 编译完成后，满足以下文件位置关系就可以顺利运行和使用了。
+```
+.
+├─jre：运行所需的 jvm 虚拟机环境，通常直接复制你所安装的 jre 目录。此项根据打包软件运行环境设置的不同而变化。
+├─plugin：即项目根路径下的 plugin 文件夹，里面是 ffmpeg 插件，遇到不支持的音视频格式时调用以转换格式。
+├─resource：即项目根路径下的 resource 文件夹，是程序运行所需的资源文件（包含图标、字体、主题等）。
+├─LightMusic.exe：主程序可执行程序。
+└─Updater.exe：更新程序可执行程序。
+```
+
+**注意事项**：以上环节如果有问题请发送 ```issue```，作者不定时会一一回复解决。**该源码中所有内容仅供个人学习使用，严禁用于商业用途！**
+
+### 鸣谢
+以下是为本项目提供了思路的开源项目，本人通过学习他们的源码，用自己的技术重构出一部分代码，为本项目添砖加瓦：
+- [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+- [ecitlm/Kugou-api](https://github.com/ecitlm/Kugou-api)
+- [jsososo/QQMusicApi](https://github.com/jsososo/QQMusicApi)
+- [QiuYaohong/kuwoMusicApi](https://github.com/QiuYaohong/kuwoMusicApi)
+- [jsososo/MiguMusicApi](https://github.com/jsososo/MiguMusicApi)
+- [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)
+- [lyswhut/lx-music-source](https://github.com/lyswhut/lx-music-source)
+- [QiuChenlyOpenSource/MusicDownload](https://github.com/QiuChenlyOpenSource/MusicDownload)
 
 ### 项目协议
 
