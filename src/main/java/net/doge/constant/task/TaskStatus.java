@@ -1,12 +1,20 @@
 package net.doge.constant.task;
 
+import net.doge.constant.system.I18n;
+
 /**
  * @Author Doge
  * @Description 任务状态
  * @Date 2020/12/7
  */
 public class TaskStatus {
-    public static final String[] NAMES = new String[]{"下载中", "已完成", "已中断", "失败", "等待中"};
+    public static final String[] NAMES = new String[]{
+            I18n.getText("downloading"),
+            I18n.getText("completed"),
+            I18n.getText("interrupted"),
+            I18n.getText("failed"),
+            I18n.getText("waiting")
+    };
 
     public static final int RUNNING = 0;
     public static final int FINISHED = 1;

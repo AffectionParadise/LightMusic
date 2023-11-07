@@ -1,5 +1,6 @@
 package net.doge.ui.component.dialog;
 
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.model.color.HSL;
 import net.doge.model.color.HSV;
@@ -45,12 +46,12 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     private CustomPanel prePanel = new CustomPanel();
     // 预设标签
     private CustomPanel pPanel = new CustomPanel();
-    private CustomLabel preLabel = new CustomLabel("预设");
+    private CustomLabel preLabel = new CustomLabel(I18n.getText("presets"));
 
     private Box customBox = Box.createVerticalBox();
     // 自定义标签
     private CustomPanel customPanel = new CustomPanel();
-    private CustomLabel customLabel = new CustomLabel("自定义");
+    private CustomLabel customLabel = new CustomLabel(I18n.getText("custom"));
     // r
     private CustomLabel rlb = new CustomLabel("R");
     public CustomSlider rSlider = new CustomSlider();
@@ -100,7 +101,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
 
     // 父窗口是否是模态
     public ColorChooserDialog(MainFrame f, Color color) {
-        super(f, "选择颜色");
+        super(f, I18n.getText("chooseColor"));
         this.r = color.getRed();
         this.g = color.getGreen();
         this.b = color.getBlue();
@@ -115,9 +116,9 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         this.source = color;
 
         Color textColor = f.currUIStyle.getTextColor();
-        ok = new DialogButton("确定", textColor);
-        cancel = new DialogButton("取消", textColor);
-        reset = new DialogButton("重置", textColor);
+        ok = new DialogButton(I18n.getText("ok"), textColor);
+        cancel = new DialogButton(I18n.getText("cancel"), textColor);
+        reset = new DialogButton(I18n.getText("reset"), textColor);
     }
 
     public void showDialog() {

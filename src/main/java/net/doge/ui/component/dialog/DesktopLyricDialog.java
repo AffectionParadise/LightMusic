@@ -1,6 +1,7 @@
 package net.doge.ui.component.dialog;
 
 import lombok.Getter;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.model.ui.UIStyle;
@@ -43,16 +44,16 @@ public class DesktopLyricDialog extends JDialog {
     private MainPanel mainPanel = new MainPanel();
     private CustomPanel buttonPanel = new CustomPanel();
 
-    private final String LOCK_TIP = "锁定桌面歌词";
-    private final String UNLOCK_TIP = "解锁桌面歌词";
-    private final String RESTORE_TIP = "还原桌面歌词位置";
-    private final String DESCEND_TRANS_TIP = "减少透明度";
-    private final String ASCEND_TRANS_TIP = "增加透明度";
-    private final String DECREASE_FONT_TIP = "缩小字体";
-    private final String INCREASE_FONT_TIP = "放大字体";
-    private final String ON_TOP_TIP = "置顶桌面歌词";
-    private final String CANCEL_ON_TOP_TIP = "取消置顶桌面歌词";
-    private final String CLOSE_TIP = "关闭桌面歌词";
+    private final String LOCK_TIP = I18n.getText("lockTip");
+    private final String UNLOCK_TIP = I18n.getText("unlockTip");
+    private final String RESTORE_TIP = I18n.getText("restoreTip");
+    private final String DESCEND_TRANS_TIP = I18n.getText("descendTransTip");
+    private final String ASCEND_TRANS_TIP = I18n.getText("ascendTransTip");
+    private final String DECREASE_FONT_TIP = I18n.getText("decreaseFontTip");
+    private final String INCREASE_FONT_TIP = I18n.getText("increaseFontTip");
+    private final String ON_TOP_TIP = I18n.getText("onTopTip");
+    private final String CANCEL_ON_TOP_TIP = I18n.getText("cancelOnTopTip");
+    private final String CLOSE_TIP = I18n.getText("closeTip");
     private ImageIcon lockIcon = LMIconManager.getIcon("dialog.lock");
     private ImageIcon unlockIcon = LMIconManager.getIcon("dialog.unlock");
     private ImageIcon restoreIcon = LMIconManager.getIcon("dialog.restoreLocation");
@@ -132,7 +133,7 @@ public class DesktopLyricDialog extends JDialog {
         this.style = f.currUIStyle;
         foreColor = style.getHighlightColor();
 
-        setTitle("桌面歌词");
+        setTitle(I18n.getText("desktopLyricTitle"));
         // 将桌面歌词窗口设置为固定大小与固定位置
         updateSize();
         updateLocation();

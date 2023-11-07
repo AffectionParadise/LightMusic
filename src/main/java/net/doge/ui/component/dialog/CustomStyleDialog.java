@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import net.doge.constant.system.Format;
+import net.doge.constant.system.I18n;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Colors;
 import net.doge.model.ui.UIStyle;
@@ -44,33 +45,33 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     private final int imgHeight = 120;
     private final int rectWidth = 170;
     private final int rectHeight = 30;
-    private final String STYLE_NAME_NOT_NULL_MSG = "emmm~~主题名称不能为无名氏哦";
-    private final String STYLE_NAME_DUPLICATE_MSG = "emmm~该主题名称已存在，换一个吧";
-    private final String IMG_FILE_NOT_EXIST_MSG = "选定的图片路径无效";
-    private final String IMG_NOT_VALID_MSG = "不是有效的图片文件";
+    private final String STYLE_NAME_NOT_NULL_MSG = I18n.getText("styleNameNotNullMsg");
+    private final String STYLE_NAME_DUPLICATE_MSG = I18n.getText("styleNameDuplicateMsg");
+    private final String IMG_FILE_NOT_EXIST_MSG = I18n.getText("imgFileNotExistMsg");
+    private final String IMG_NOT_VALID_MSG = I18n.getText("imgNotValidMsg");
 
     private CustomPanel centerPanel = new CustomPanel();
     private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
     private CustomPanel buttonPanel = new CustomPanel();
 
     private final CustomLabel[] labels = {
-            new CustomLabel("主题名称："),
-            new CustomLabel("背景图片："),
-            new CustomLabel("列表悬停框颜色："),
-            new CustomLabel("列表选中框颜色："),
-            new CustomLabel("歌词文字颜色："),
-            new CustomLabel("歌词高亮颜色："),
-            new CustomLabel("界面文字颜色："),
-            new CustomLabel("时间条颜色："),
-            new CustomLabel("图标颜色："),
-            new CustomLabel("滚动条颜色："),
-            new CustomLabel("音量条颜色："),
-            new CustomLabel("频谱颜色：")
+            new CustomLabel(I18n.getText("styleName")),
+            new CustomLabel(I18n.getText("bgImg")),
+            new CustomLabel(I18n.getText("foreColor")),
+            new CustomLabel(I18n.getText("selectedColor")),
+            new CustomLabel(I18n.getText("lyricTextColor")),
+            new CustomLabel(I18n.getText("lyricHighlightColor")),
+            new CustomLabel(I18n.getText("uiTextColor")),
+            new CustomLabel(I18n.getText("timeBarColor")),
+            new CustomLabel(I18n.getText("iconColor")),
+            new CustomLabel(I18n.getText("scrollBarColor")),
+            new CustomLabel(I18n.getText("volumeBarColor")),
+            new CustomLabel(I18n.getText("spectrumColor"))
     };
 
     private final Component[] components = {
             new CustomTextField(15),
-            new DialogButton("选择图片"),
+            new DialogButton(I18n.getText("browseImg")),
             new CustomLabel(),
             new CustomLabel(),
             new CustomLabel(),
@@ -97,13 +98,13 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
 
     // 父窗口，传入 OK 按钮文字，要展示的样式(添加则用当前样式，编辑则用选中样式)
     public CustomStyleDialog(MainFrame f, String okButtonText, UIStyle showedStyle) {
-        super(f, "自定义主题");
+        super(f, I18n.getText("customStyleTitle"));
         this.showedStyle = showedStyle;
 
         Color textColor = f.currUIStyle.getTextColor();
         okButton = new DialogButton(okButtonText, textColor);
-        cancelButton = new DialogButton("取消", textColor);
-        pureColor = new DialogButton("纯色", textColor);
+        cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
+        pureColor = new DialogButton(I18n.getText("solidColor"), textColor);
     }
 
     public void showDialog() {
@@ -124,7 +125,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
             }
             // 主题名称不重复
             List<UIStyle> styles = f.styles;
-            boolean isAdd = okButton.getPlainText().contains("添加");
+            boolean isAdd = okButton.getPlainText().contains(I18n.getText("addStyle"));
             for (UIStyle style : styles) {
                 // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
                 if (style.getName().equals(results[0])
@@ -247,7 +248,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 // 图片文件选择
                 component.addActionListener(e -> {
                     FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("选择图片");
+                    fileChooser.setTitle(I18n.getText("chooseImg"));
                     ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
                     // 添加可读取的图片格式
                     String allSuffix = "";
@@ -255,7 +256,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                         filters.add(new FileChooser.ExtensionFilter(suffix.toUpperCase(), "*." + suffix));
                         allSuffix += "*." + suffix + ";";
                     }
-                    filters.add(0, new FileChooser.ExtensionFilter("图片文件", allSuffix));
+                    filters.add(0, new FileChooser.ExtensionFilter(I18n.getText("imgFile"), allSuffix));
                     Platform.runLater(() -> {
                         File file = fileChooser.showOpenDialog(null);
                         if (file == null) return;

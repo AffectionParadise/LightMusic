@@ -1,5 +1,8 @@
 package net.doge.constant.config;
 
+import com.alibaba.fastjson2.JSONObject;
+import net.doge.util.lmdata.LMDataUtil;
+
 /**
  * @Author Doge
  * @Description 配置属性类
@@ -8,6 +11,8 @@ package net.doge.constant.config;
 public class ConfigConstants {
     // 配置文件名称
     public static final String CONFIG_FILE_NAME = "config.lm";
+    // 配置文件数据
+    public static final JSONObject CONFIG_DATA = LMDataUtil.read(CONFIG_FILE_NAME);
 
     // 所有自定义主题
     public static final String CUSTOM_UI_STYLES = "customUIStyles";
@@ -31,6 +36,8 @@ public class ConfigConstants {
     public static final String RECOMMEND_TAB_INDEX = "recommendTabIndex";
     // 是否自动更新
     public static final String AUTO_UPDATE = "autoUpdate";
+    // 界面语言
+    public static final String UI_LANGUAGE = "uiLanguage";
     // 关闭窗口操作
     public static final String CLOSE_WINDOW_OPTION = "closeWindowOption";
     // 窗口大小

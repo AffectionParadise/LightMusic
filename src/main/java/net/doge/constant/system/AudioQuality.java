@@ -19,5 +19,11 @@ public class AudioQuality {
 
     // 当前音质
     public static int quality = SUPER;
-    public static final String[] NAMES = {"Hi-Res (FLAC)", "无损 (FLAC)", "超高 (MP3)", "较高 (MP3)", "普通 (MP3)"};
+    public static final String[] NAMES = {
+            I18n.getText("hiRes"),
+            I18n.getText("lossless"),
+            I18n.getText("super"),
+            I18n.getText("high"),
+            I18n.getText("normal")
+    };
 }

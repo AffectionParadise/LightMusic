@@ -2,6 +2,7 @@ package net.doge.ui.component.dialog;
 
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
@@ -27,13 +28,13 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class ManageCatalogDialog extends AbstractTitledDialog {
-    private final String ASK_REMOVE_MSG = "确定删除选中的目录？";
-    private final String CATALOG_EXISTS_MSG = "目录已存在，无法重复添加";
-    private final String CATALOG_NOT_FOUND_MSG = "该目录不存在";
+    private final String ASK_REMOVE_MSG = I18n.getText("askRemoveCatalogMsg");
+    private final String CATALOG_EXISTS_MSG = I18n.getText("catalogExistsMsg");
+    private final String CATALOG_NOT_FOUND_MSG = I18n.getText("catalogNotFoundMsg");
 
     private CustomPanel centerPanel = new CustomPanel();
 
-    private CustomLabel tipLabel = new CustomLabel("重新导入歌曲时将从以下目录查找歌曲");
+    private CustomLabel tipLabel = new CustomLabel(I18n.getText("catalogTip"));
     private CustomList<File> catalogList = new CustomList<>();
     private DefaultListModel<File> catalogListModel = new DefaultListModel<>();
     private DialogButton allSelectButton;
@@ -50,15 +51,15 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
     private List<File> catalogs;
 
     public ManageCatalogDialog(MainFrame f) {
-        super(f, "管理歌曲目录");
+        super(f, I18n.getText("manageCatalogTitle"));
         this.catalogs = f.catalogs;
 
         Color textColor = f.currUIStyle.getTextColor();
-        allSelectButton = new DialogButton("全选", textColor);
-        nonSelectButton = new DialogButton("反选", textColor);
-        locateButton = new DialogButton("打开", textColor);
-        addButton = new DialogButton("添加", textColor);
-        removeButton = new DialogButton("删除", textColor);
+        allSelectButton = new DialogButton(I18n.getText("dialogAll"), textColor);
+        nonSelectButton = new DialogButton(I18n.getText("dialogInvert"), textColor);
+        locateButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
+        addButton = new DialogButton(I18n.getText("dialogAdd"), textColor);
+        removeButton = new DialogButton(I18n.getText("dialogRemove"), textColor);
     }
 
     public void showDialog() {
@@ -106,7 +107,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         // 取消全选事件
         nonSelectButton.addActionListener(e -> catalogList.clearSelection());
         DirectoryChooser dirChooser = new DirectoryChooser();
-        dirChooser.setTitle("选择歌曲文件夹");
+        dirChooser.setTitle(I18n.getText("chooseTrackFolder"));
         // 打开文件夹事件
         locateButton.addActionListener(e -> {
             try {
@@ -141,7 +142,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         // 删除事件
         removeButton.addActionListener(e -> {
             if (catalogList.getSelectedValue() == null) return;
-            ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, "是", "否");
+            ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, I18n.getText("yes"), I18n.getText("no"));
             d.showDialog();
             if (d.getResponse() != JOptionPane.YES_OPTION) return;
             List<File> cs = catalogList.getSelectedValuesList();

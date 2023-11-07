@@ -12,6 +12,7 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.window.WindowSize;
@@ -59,22 +60,22 @@ public class VideoDialog extends AbstractTitledDialog {
     private int mediaWidth;
     private int mediaHeight;
 
-    private final String FORWARD_TIP = "快进";
-    private final String BACKWARD_TIP = "快退";
-    private final String PLAY_TIP = "播放";
-    private final String PAUSE_TIP = "暂停";
-    private final String SOUND_TIP = "声音开启";
-    private final String MUTE_TIP = "静音";
-    private final String COLLECT_TIP = "收藏";
-    private final String CANCEL_COLLECTION_TIP = "取消收藏";
-    private final String DOWNLOAD_TIP = "下载";
-    private final String RATE_TIP = "倍速";
-    private final String FOB_TIME_TIP = "快进/快退时间";
-    private final String FULL_SCREEN_TIP = "全屏";
+    private final String FORWARD_TIP = I18n.getText("forwTip");
+    private final String BACKWARD_TIP = I18n.getText("backwTip");
+    private final String PLAY_TIP = I18n.getText("playTip");
+    private final String PAUSE_TIP = I18n.getText("pauseTip");
+    private final String SOUND_TIP = I18n.getText("soundTip");
+    private final String MUTE_TIP = I18n.getText("muteTip");
+    private final String COLLECT_TIP = I18n.getText("collectTip");
+    private final String COLLECTED_TIP = I18n.getText("collectedTip");
+    private final String DOWNLOAD_TIP = I18n.getText("downloadTip");
+    private final String RATE_TIP = I18n.getText("rateTip");
+    private final String FOB_TIME_TIP = I18n.getText("fobTimeTip");
+    private final String FULL_SCREEN_TIP = I18n.getText("fullScreenTip");
 
-    private final String COLLECT_SUCCESS_MSG = "收藏成功";
-    private final String CANCEL_COLLECTION_SUCCESS_MSG = "取消收藏成功";
-    private final String ERROR_MSG = "播放视频时发生异常";
+    private final String COLLECT_SUCCESS_MSG = I18n.getText("collectSuccessMsg");
+    private final String CANCEL_COLLECTION_SUCCESS_MSG = I18n.getText("cancelCollectionSuccessMsg");
+    private final String ERROR_MSG = I18n.getText("videoErrorMsg");
 
     // 选定点图标
     private ImageIcon dotIcon = LMIconManager.getIcon("menu.dot");
@@ -128,15 +129,16 @@ public class VideoDialog extends AbstractTitledDialog {
     private CustomButton fullScreenButton = new CustomButton(fullScreenIcon);
     private CustomPopupMenu fobTimePopupMenu;
     private List<CustomRadioButtonMenuItem> fobButtonGroup = new LinkedList<>();
+    private final String SECONDS = I18n.getText("seconds");
     private CustomRadioButtonMenuItem[] fobTimeMenuItems = {
-            new CustomRadioButtonMenuItem("5秒"),
-            new CustomRadioButtonMenuItem("10秒"),
-            new CustomRadioButtonMenuItem("15秒"),
-            new CustomRadioButtonMenuItem("20秒"),
-            new CustomRadioButtonMenuItem("25秒"),
-            new CustomRadioButtonMenuItem("30秒"),
-            new CustomRadioButtonMenuItem("45秒"),
-            new CustomRadioButtonMenuItem("60秒")
+            new CustomRadioButtonMenuItem("5" + SECONDS),
+            new CustomRadioButtonMenuItem("10" + SECONDS),
+            new CustomRadioButtonMenuItem("15" + SECONDS),
+            new CustomRadioButtonMenuItem("20" + SECONDS),
+            new CustomRadioButtonMenuItem("25" + SECONDS),
+            new CustomRadioButtonMenuItem("30" + SECONDS),
+            new CustomRadioButtonMenuItem("45" + SECONDS),
+            new CustomRadioButtonMenuItem("60" + SECONDS)
     };
 
     // 底部盒子
@@ -433,7 +435,7 @@ public class VideoDialog extends AbstractTitledDialog {
                 mvInfo.setInvokeLater(() -> f.updateRenderer(f.collectionList));
                 GlobalExecutors.requestExecutor.execute(() -> MusicServerUtil.fillMvDetail(mvInfo));
                 f.mvCollectionModel.add(0, mvInfo);
-                collectButton.setToolTipText(CANCEL_COLLECTION_TIP);
+                collectButton.setToolTipText(COLLECTED_TIP);
                 collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, iconColor));
                 new TipDialog(f, COLLECT_SUCCESS_MSG, true).showDialog();
             } else {
@@ -467,7 +469,7 @@ public class VideoDialog extends AbstractTitledDialog {
             Color textColor = f.currUIStyle.getTextColor();
             menuItem.setForeground(textColor);
             menuItem.setUI(new MenuItemUI(textColor));
-            int time = Integer.parseInt(menuItem.getText().replace("秒", ""));
+            int time = Integer.parseInt(menuItem.getText().replace(SECONDS, ""));
             if (time == f.videoForwardOrBackwardTime) selectedFobMenuItem = menuItem;
             menuItem.addActionListener(e -> {
                 f.videoForwardOrBackwardTime = time;

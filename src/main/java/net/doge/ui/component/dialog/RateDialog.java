@@ -1,5 +1,6 @@
 package net.doge.ui.component.dialog;
 
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;
@@ -40,7 +41,7 @@ public class RateDialog extends AbstractShadowDialog {
         this.comp = comp;
 
         Color textColor = f.currUIStyle.getTextColor();
-        reset = new DialogButton("重置", textColor);
+        reset = new DialogButton(I18n.getText("reset"), textColor);
     }
 
     public void close() {

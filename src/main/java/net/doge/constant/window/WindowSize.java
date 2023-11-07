@@ -1,5 +1,7 @@
 package net.doge.constant.window;
 
+import net.doge.constant.system.I18n;
+
 public class WindowSize {
     public static final int[][] DIMENSIONS = {
             {1182, 748},
@@ -20,5 +22,12 @@ public class WindowSize {
 
     public static final int MIDDLE = 1;
 
-    public static final String[] NAMES = {"小 (95%)", "中 (100%)", "大 (105%)", "较大 (110%)", "超大 (130%)", "巨大 (150%)"};
+    public static final String[] NAMES = {
+            I18n.getText("small") + " (95%)",
+            I18n.getText("medium") + " (100%)",
+            I18n.getText("large") + " (105%)",
+            I18n.getText("larger") + " (110%)",
+            I18n.getText("sLarge") + " (130%)",
+            I18n.getText("huge") + " (150%)"
+    };
 }

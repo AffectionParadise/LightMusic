@@ -4,6 +4,7 @@ import cn.hutool.http.HttpRequest;
 import lombok.Getter;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.meta.SoftInfo;
+import net.doge.constant.system.I18n;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
@@ -33,10 +34,10 @@ import java.io.File;
  * @Date 2020/12/15
  */
 public class UpdateDialog extends AbstractShadowDialog {
-    private final String DOWNLOAD_MSG = "正在下载更新包......";
-    private final String DOWNLOAD_FAILED_MSG = "更新包下载失败，请稍后再试";
-    private final String VALIDATING_MSG = "正在校验更新包完整性......";
-    private final String VALIDATION_FAILED_MSG = "更新包已损坏，请重新下载";
+    private final String DOWNLOAD_MSG = I18n.getText("downloadMsg");
+    private final String DOWNLOAD_FAILED_MSG = I18n.getText("downloadFailedMsg");
+    private final String VALIDATING_MSG = I18n.getText("validatingMsg");
+    private final String VALIDATION_FAILED_MSG = I18n.getText("validationFailedMsg");
 
     private CustomPanel centerPanel = new CustomPanel();
 
@@ -57,7 +58,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         this.keyMD5 = keyMD5;
 
         Color textColor = f.currUIStyle.getTextColor();
-        cancelButton = new DialogButton("取消", textColor);
+        cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
     }
 
     public void showDialog() {

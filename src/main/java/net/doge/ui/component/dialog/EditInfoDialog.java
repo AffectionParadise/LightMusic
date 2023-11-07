@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.doge.constant.system.Format;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
@@ -41,26 +42,26 @@ public class EditInfoDialog extends AbstractTitledDialog {
     private final int imgHeight = 120;
 
     // 文件正在使用提示
-    private final String FILE_BEING_USED_MSG = "文件正在被占用，无法修改";
+    private final String FILE_USED_MSG = I18n.getText("fileUsedMsg");
 
     private CustomPanel centerPanel = new CustomPanel();
     private CustomScrollPane centerScrollPane = new CustomScrollPane(centerPanel);
     private CustomPanel buttonPanel = new CustomPanel();
 
     private final CustomLabel[] labels = {
-            new CustomLabel("文件名："),
-            new CustomLabel("文件大小："),
-            new CustomLabel("创建时间："),
-            new CustomLabel("修改时间："),
-            new CustomLabel("访问时间："),
-            new CustomLabel("时长："),
-            new CustomLabel("标题："),
-            new CustomLabel("艺术家："),
-            new CustomLabel("专辑："),
-            new CustomLabel("流派："),
-            new CustomLabel("注释："),
-            new CustomLabel("版权："),
-            new CustomLabel("封面图片：")
+            new CustomLabel(I18n.getText("fileName")),
+            new CustomLabel(I18n.getText("fileSize")),
+            new CustomLabel(I18n.getText("creationTime")),
+            new CustomLabel(I18n.getText("modificationTime")),
+            new CustomLabel(I18n.getText("accessTime")),
+            new CustomLabel(I18n.getText("duration")),
+            new CustomLabel(I18n.getText("fileTitle")),
+            new CustomLabel(I18n.getText("fileArtist")),
+            new CustomLabel(I18n.getText("fileAlbum")),
+            new CustomLabel(I18n.getText("genre")),
+            new CustomLabel(I18n.getText("fileComment")),
+            new CustomLabel(I18n.getText("copyright")),
+            new CustomLabel(I18n.getText("coverImg"))
     };
 
     private CustomComboBox<String> comboBox = new CustomComboBox<>();
@@ -78,7 +79,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
             comboBox,
             new CustomTextField(columns),
             new CustomTextField(columns),
-            new DialogButton("选择图片")
+            new DialogButton(I18n.getText("browseImg"))
     };
 
     private DialogButton okButton;
@@ -91,12 +92,12 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
     // 父窗口，传入要展示的文件
     public EditInfoDialog(MainFrame f, AudioFile file) {
-        super(f, "歌曲信息");
+        super(f, I18n.getText("editInfoTitle"));
         this.file = file;
 
         Color textColor = f.currUIStyle.getTextColor();
-        okButton = new DialogButton("保存", textColor);
-        cancelButton = new DialogButton("取消", textColor);
+        okButton = new DialogButton(I18n.getText("save"), textColor);
+        cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
 
         comboBox.addItem("");
         for (String genre : ID3v1Genres.GENRES) comboBox.addItem(genre);
@@ -114,7 +115,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         globalPanel.add(centerScrollPane, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
             if (f.player.loadedAudioFile(file)) {
-                new TipDialog(f, FILE_BEING_USED_MSG, true).showDialog();
+                new TipDialog(f, FILE_USED_MSG, true).showDialog();
                 return;
             } else {
                 for (int i = 0, size = labels.length; i < size; i++) {
@@ -234,7 +235,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 // 图片文件选择
                 component.addActionListener(e -> {
                     FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("选择图片");
+                    fileChooser.setTitle(I18n.getText("chooseImg"));
                     ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
                     // 添加可读取的图片格式
                     String allSuffix = "";
@@ -242,7 +243,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                         filters.add(new FileChooser.ExtensionFilter(suffix.toUpperCase(), "*." + suffix));
                         allSuffix += "*." + suffix + ";";
                     }
-                    filters.add(0, new FileChooser.ExtensionFilter("图片文件", allSuffix));
+                    filters.add(0, new FileChooser.ExtensionFilter(I18n.getText("imgFile"), allSuffix));
                     Platform.runLater(() -> {
                         File file = fileChooser.showOpenDialog(null);
                         if (file != null) {

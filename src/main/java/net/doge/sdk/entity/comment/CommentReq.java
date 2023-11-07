@@ -8,6 +8,7 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.I18n;
 import net.doge.model.entity.*;
 import net.doge.model.entity.base.NetResource;
 import net.doge.sdk.common.CommonResult;
@@ -99,7 +100,7 @@ public class CommentReq {
         String id = null;
         String[] typeStr = null;
         Integer source = 0;
-        boolean hotOnly = "热门评论".equals(type);
+        boolean hotOnly = I18n.getText("hotComment").equals(type);
 
         boolean isRadio = false, isBook = false, isGame = false;
 

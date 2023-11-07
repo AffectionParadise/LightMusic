@@ -1,6 +1,7 @@
 package net.doge.ui.component.dialog;
 
 import net.doge.constant.player.EqualizerData;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.combobox.CustomComboBox;
@@ -26,7 +27,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
     private CustomPanel soundEffectPanel = new CustomPanel();
     private CustomPanel sliderPanel = new CustomPanel();
 
-    private CustomLabel soundEffectLabel = new CustomLabel("音效：");
+    private CustomLabel soundEffectLabel = new CustomLabel(I18n.getText("soundEffect"));
     private CustomComboBox<String> comboBox = new CustomComboBox<>();
     private final CustomPanel[] panels = {
             new CustomPanel(),
@@ -79,10 +80,10 @@ public class SoundEffectDialog extends AbstractTitledDialog {
     private boolean fitting;
 
     public SoundEffectDialog(MainFrame f) {
-        super(f, "音效");
+        super(f, I18n.getText("soundEffectTitle"));
 
         for (String se : EqualizerData.NAMES) comboBox.addItem(se);
-        comboBox.addItem("自定义");
+        comboBox.addItem(I18n.getText("custom"));
     }
 
     public void showDialog() {
@@ -162,7 +163,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
                 // 更新值
                 updateVals();
                 if (fitting) return;
-                comboBox.setSelectedItem("自定义");
+                comboBox.setSelectedItem(I18n.getText("custom"));
                 // 调整并记录当前均衡
                 f.player.adjustEqualizerBands(f.ed = getData());
             });

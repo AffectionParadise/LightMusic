@@ -138,13 +138,13 @@ import java.util.concurrent.*;
 
 public class MainFrame extends JFrame {
     private final MainFrame THIS = this;
-    public final String TITLE = "轻音";
+    public final String TITLE = I18n.getText("title");
     // 窗口宽高
     public int windowWidth;
     public int windowHeight;
-    private final String SONG_NAME_LABEL = "歌曲名：";
-    private final String ARTIST_LABEL = "艺术家：";
-    private final String ALBUM_NAME_LABEL = "专辑名：";
+    private final String SONG_NAME_LABEL = I18n.getText("songName");
+    private final String ARTIST_LABEL = I18n.getText("artist");
+    private final String ALBUM_NAME_LABEL = I18n.getText("albumName");
     // 进度条最大值
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     // 默认音量
@@ -170,29 +170,51 @@ public class MainFrame extends JFrame {
     private final double MIDDLE_ARC = 0.1;
     private final double LARGE_ARC = 0.03;
     //    private final double WIN_ARC = 0.01;
-    private final String PAGINATION_MSG = "第 %s 页，共 %s 页";
-    private final String LRC_LOADING_MSG = "加载歌词中......";
-    private final String NO_LRC_MSG = "尽情享受音乐的世界";
-    private final String BAD_FORMAT_LRC_MSG = "该歌词不支持滚动";
-    private final String LOADING_MSG = "加载中，客官请稍等......";
-    private final String LOAD_FAILED = "数据加载失败";
-    private final String ASK_DISPOSE_MSG = "你希望隐藏到托盘还是退出程序？";
-    private final String REMEMBER_CHOICE_MSG = "记住我的选择";
-    private final String[] EXIT_OPTIONS = {"隐藏到托盘", "退出程序", "取消"};
-    private final String ASK_REIMPORT_MSG = "将重新从所有歌曲目录导入歌曲，是否继续？";
-    private final String ASK_RETAIN_MUSIC_LIST_MSG = "歌曲列表已存在歌曲，您希望保留歌曲列表的歌曲吗？(选择“否”将清空原有的歌曲列表)";
-    private final String ASK_CLEAR_CACHE_MSG = "当前缓存大小为 %s，确定要清空缓存吗？";
-    private final String ASK_REMOVE_FIFE_NOT_FOUND_MSG = "该歌曲文件不存在，是否从列表中删除？";
-    private final String ASK_REMOVE_ITEMS_MSG = "是否删除选中的项目？";
-    private final String ASK_CLEAR_LIST_MSG = "是否要清空列表？";
-    private final String ASK_DUPLICATE_MSG = "是否要删除列表中重复的项目？";
-    private final String ASK_REVERSE_MSG = "是否要倒置列表顺序？";
-    private final String UPDATE_CHECKING_MSG = "检查更新中......";
-    private final String UPDATE_CHECK_FAIL_MSG = "检查更新失败，请稍后再试";
-    private final String UPDATE_MSG = "\uD83D\uDE80 新版本已发布，是否更新？\n\n最新版本：%s\n当前版本：%s\n\n";
-    private final String IGNORE_UPDATE_MSG = "当有新版本时不再提示";
-    private final String UPDATE_READY_MSG = "更新包已就绪，是否现在重启应用以完成更新？";
-    private final String LATEST_MSG = "\uD83C\uDF89 当前已是最新版本\n\n最新版本：%s\n当前版本：%s\n\n";
+    private final String PAGINATION_MSG = I18n.getText("paginationMsg");
+    private final String TOTAL_MSG = I18n.getText("totalMsg");
+    private final String LRC_LOADING_MSG = I18n.getText("lrcLoadingMsg");
+    private final String NO_LRC_MSG = I18n.getText("noLrcMsg");
+    private final String BAD_FORMAT_LRC_MSG = I18n.getText("badFormatLrcMsg");
+    private final String LOADING_MSG = I18n.getText("loadingMsg");
+    private final String LOAD_FAILED = I18n.getText("loadFailed");
+    private final String ASK_DISPOSE_MSG = I18n.getText("askDisposeMsg");
+    private final String REMEMBER_CHOICE_MSG = I18n.getText("rememberChoiceMsg");
+    private final String[] EXIT_OPTIONS = {I18n.getText("exitOption1"), I18n.getText("exitOption2"), I18n.getText("exitOption3")};
+    private final String ASK_REIMPORT_MSG = I18n.getText("askReimportMsg");
+    private final String ASK_RETAIN_MUSIC_LIST_MSG = I18n.getText("askRetainMusicListMsg");
+    private final String ASK_CLEAR_CACHE_MSG = I18n.getText("askClearCacheMsg");
+    private final String ASK_REMOVE_FIFE_NOT_FOUND_MSG = I18n.getText("askRemoveFileNotFoundMsg");
+    private final String ASK_REMOVE_ITEMS_MSG = I18n.getText("askRemoveItemsMsg");
+    private final String ASK_CLEAR_LIST_MSG = I18n.getText("askClearListMsg");
+    private final String ASK_DUPLICATE_MSG = I18n.getText("askDuplicateMsg");
+    private final String ASK_REVERSE_MSG = I18n.getText("askReverseMsg");
+    private final String UPDATE_CHECKING_MSG = I18n.getText("updateCheckingMsg");
+    private final String UPDATE_CHECK_FAILED_MSG = I18n.getText("updateCheckFailedMsg");
+    private final String UPDATE_MSG = I18n.getText("updateMsg");
+    private final String IGNORE_UPDATE_MSG = I18n.getText("ignoreUpdateMsg");
+    private final String UPDATE_INFO_MSG = I18n.getText("updateInfoMsg");
+    private final String UPDATE_READY_MSG = I18n.getText("updateReadyMsg");
+    private final String LATEST_MSG = I18n.getText("latestMsg");
+    private final String TO_RELEASE = I18n.getText("toRelease");
+    private final String RESTART_NOW = I18n.getText("restartNow");
+    private final String LATER = I18n.getText("later");
+    private final String OK = I18n.getText("ok");
+    private final String YES = I18n.getText("yes");
+    private final String NO = I18n.getText("no");
+    private final String CANCEL = I18n.getText("cancel");
+    private final String READY = I18n.getText("ready");
+    private final String PLAYING = I18n.getText("playing");
+    private final String PAUSING = I18n.getText("pausing");
+    private final String STOPPED = I18n.getText("stopped");
+    private final String LOAD_TRACK = I18n.getText("loadTrack");
+    private final String LOAD_TRACK_FAILED = I18n.getText("loadTrackFailed");
+    private final String REFRESH_URL = I18n.getText("refreshUrl");
+    private final String CHOOSE_TRACK_FILE = I18n.getText("chooseTrackFile");
+    private final String CHOOSE_TRACK_FOLDER = I18n.getText("chooseTrackFolder");
+    private final String SAVE_IMG = I18n.getText("saveImg");
+    private final String AUDIO_FILE = I18n.getText("audioFile");
+    private final String TRACK_ADDED = I18n.getText("trackAdded");
+    private final String USER_COMMENTED = I18n.getText("userCommented");
     private final String HELP_MSG = String.format("Hi，欢迎使用%s~\n\n" +
             "下面是一些常见问题解答，请仔细阅读。祝你使用愉快~\n\n" +
             "Q1：如何导入我的歌单？\nA1：无需登录，在“用户”选项卡搜索自己的用户名，右键选择“查看用户歌单”，收藏即可\n" +
@@ -207,97 +229,97 @@ public class MainFrame extends JFrame {
             "Q7：软件更新后原来的数据如何继承？\nA7：建议覆盖更新，数据文件 %s 保存在程序所在目录，保证与程序在同一目录即可\n\n" +
             "如果还有其他的问题，欢迎在我的 Github 主页发布 issue ~\n" +
             "最后，开源不易，低调使用，请勿推广！有条件还请多多支持正版！", TITLE, ConfigConstants.CONFIG_FILE_NAME);
-    private final String FIRST_PAGE_MSG = "已经是第一页了";
-    private final String LAST_PAGE_MSG = "已经是最后一页了";
-    private final String ILLEGAL_PAGE_MSG = "请输入合法页码";
-    private final String FILE_NOT_FOUND_MSG = "文件不存在";
-    private final String UNSUPPORTED_AUDIO_FILE_MSG = "不支持该格式的音频文件";
-    private final String INVALID_AUDIO_FILE_MSG = "不是有效的音频文件";
-    private final String NO_CATALOG_MSG = "歌曲目录为空";
-    private final String NO_MUSIC_MSG = "没有可以播放的歌曲";
-    private final String ALREADY_PLAYING_MSG = "当前歌曲已经在播放";
-    private final String NO_IMG_MSG = "没有可加载的图片";
-    private final String GET_RESOURCE_FAILED_MSG = "获取资源失败";
-    private final String NO_NET_MSG = "网络异常";
-    private final String TIME_OUT_MSG = "请求超时";
-    private final String API_ERROR_MSG = "接口异常，请稍后再试";
-    private final String CLEAR_CACHE_SUCCESS_MSG = "清除缓存成功";
-    private final String NEXT_PLAY_SUCCESS_MSG = "已添加到下一首";
-    private final String COLLECT_SUCCESS_MSG = "收藏成功";
-    private final String CANCEL_COLLECTION_SUCCESS_MSG = "取消收藏成功";
-    private final String REMOVE_SUCCESS_MSG = "删除成功";
-    private final String CLEAR_SUCCESS_MSG = "清空成功";
-    private final String DUPLICATE_SUCCESS_MSG = "去重成功";
-    private final String REVERSE_SUCCESS_MSG = "倒序成功";
-    private final String CHANGE_DISABLED_MSG = "已切换到播完暂停";
-    private final String CHANGE_SINGLE_MSG = "已切换到单曲循环";
-    private final String CHANGE_LIST_CYCLE_MSG = "已切换到列表循环";
-    private final String CHANGE_SEQUENCE_MSG = "已切换到顺序播放";
-    private final String CHANGE_SHUFFLE_MSG = "已切换到随机播放";
-    private final String DOWNLOAD_COMPLETED_MSG = "下载完成";
-    private final String TASK_ADDED_MSG = "已加入到下载队列";
-    private final String WAIT_FOR_TASK_COMPLETED_MSG = "请等待下载任务完成";
-    private final String ASK_REMOVE_SELECTED_TASKS_MSG = "确定要删除选中任务吗？";
-    private final String ASK_REMOVE_FILE_MSG = "同时删除文件";
-    private final String ASK_RESTART_ALL_TASKS_MSG = "是否要重新开始全部任务？";
-    private final String ASK_CANCEL_ALL_TASKS_MSG = "是否要取消全部任务？";
-    private final String ASK_REMOVE_ALL_TASKS_MSG = "确定要清空任务列表吗？";
-    private final String ASK_REMOVE_SONGS_FROM_PLAY_QUEUE_MSG = "是否从播放队列删除选中歌曲？";
-    private final String ASK_CLEAR_PLAY_QUEUE_MSG = "是否要清空播放队列？";
-    private final String LOADING_MV_MSG = "请稍候，MV 加载中......";
-    private final String COPY_SUCCESS_MSG = "复制成功";
+    private final String FIRST_PAGE_MSG = I18n.getText("firstPageMsg");
+    private final String LAST_PAGE_MSG = I18n.getText("lastPageMsg");
+    private final String ILLEGAL_PAGE_MSG = I18n.getText("illegalPageMsg");
+    private final String FILE_NOT_FOUND_MSG = I18n.getText("fileNotFoundMsg");
+    private final String UNSUPPORTED_AUDIO_FILE_MSG = I18n.getText("unsupportedAudioFileMsg");
+    private final String INVALID_AUDIO_FILE_MSG = I18n.getText("invalidAudioFileMsg");
+    private final String NO_CATALOG_MSG = I18n.getText("noCatalogMsg");
+    private final String NO_MUSIC_MSG = I18n.getText("noMusicMsg");
+    private final String ALREADY_PLAYING_MSG = I18n.getText("alreadyPlayingMsg");
+    private final String NO_IMG_MSG = I18n.getText("noImgMsg");
+    private final String GET_RESOURCE_FAILED_MSG = I18n.getText("getResourceFailedMsg");
+    private final String NO_NET_MSG = I18n.getText("noNetMsg");
+    private final String TIME_OUT_MSG = I18n.getText("timeOutMsg");
+    private final String API_ERROR_MSG = I18n.getText("apiErrorMsg");
+    private final String CLEAR_CACHE_SUCCESS_MSG = I18n.getText("clearCacheSuccessMsg");
+    private final String NEXT_PLAY_SUCCESS_MSG = I18n.getText("nextPlaySuccessMsg");
+    private final String COLLECT_SUCCESS_MSG = I18n.getText("collectSuccessMsg");
+    private final String CANCEL_COLLECTION_SUCCESS_MSG = I18n.getText("cancelCollectionSuccessMsg");
+    private final String REMOVE_SUCCESS_MSG = I18n.getText("removeSuccessMsg");
+    private final String CLEAR_SUCCESS_MSG = I18n.getText("clearSuccessMsg");
+    private final String DUPLICATE_SUCCESS_MSG = I18n.getText("duplicateSuccessMsg");
+    private final String REVERSE_SUCCESS_MSG = I18n.getText("reverseSuccessMsg");
+    private final String CHANGE_DISABLED_MSG = I18n.getText("changeDisabledMsg");
+    private final String CHANGE_SINGLE_MSG = I18n.getText("changeSingleMsg");
+    private final String CHANGE_LIST_CYCLE_MSG = I18n.getText("changeListCycleMsg");
+    private final String CHANGE_SEQUENCE_MSG = I18n.getText("changeSequenceMsg");
+    private final String CHANGE_SHUFFLE_MSG = I18n.getText("changeShuffleMsg");
+    private final String DOWNLOAD_COMPLETED_MSG = I18n.getText("downloadCompletedMsg");
+    private final String TASK_ADDED_MSG = I18n.getText("taskAddedMsg");
+    private final String WAIT_FOR_TASK_COMPLETED_MSG = I18n.getText("waitForTaskCompletedMsg");
+    private final String ASK_REMOVE_SELECTED_TASKS_MSG = I18n.getText("askRemoveSelectedTasksMsg");
+    private final String ASK_REMOVE_FILE_MSG = I18n.getText("askRemoveFileMsg");
+    private final String ASK_RESTART_ALL_TASKS_MSG = I18n.getText("askRestartAllTasksMsg");
+    private final String ASK_CANCEL_ALL_TASKS_MSG = I18n.getText("askCancelAllTasksMsg");
+    private final String ASK_REMOVE_ALL_TASKS_MSG = I18n.getText("askRemoveAllTasksMsg");
+    private final String ASK_REMOVE_SONGS_FROM_PLAY_QUEUE_MSG = I18n.getText("askRemoveSongsFromPlayQueueMsg");
+    private final String ASK_CLEAR_PLAY_QUEUE_MSG = I18n.getText("askClearPlayQueueMsg");
+    private final String LOADING_MV_MSG = I18n.getText("loadingMvMsg");
+    private final String COPY_SUCCESS_MSG = I18n.getText("copySuccessMsg");
 
     private final String DEFAULT_TIME = TimeUtil.format(0);
-    private final String PLAY_MENU_ITEM_TEXT = "播放";
-    private final String NEXT_PLAY_MENU_ITEM_TEXT = "下一首播放";
-    private final String OPEN_MENU_ITEM_TEXT = "打开";
-    private final String PLAY_ALL_MENU_ITEM_TEXT = "播放全部";
-    private final String BROWSE_ALBUM_MENU_ITEM_TEXT = "查看歌手专辑";
-    private final String BROWSE_MV_MENU_ITEM_TEXT = "查看歌手 MV";
-    private final String SIMILAR_ARTIST_MENU_ITEM_TEXT = "查看相似歌手";
-    private final String ARTIST_FANS_MENU_ITEM_TEXT = "查看歌手粉丝";
-    private final String ARTIST_BUDDY_MENU_ITEM_TEXT = "查看歌手合作人";
-    private final String ARTIST_RADIO_MENU_ITEM_TEXT = "查看歌手电台";
-    private final String ARTIST_PHOTOS_MENU_ITEM_TEXT = "查看歌手照片";
-    private final String USER_PLAYLIST_MENU_ITEM_TEXT = "查看用户歌单";
-    private final String USER_ALBUM_MENU_ITEM_TEXT = "查看用户专辑";
-    private final String USER_RADIO_MENU_ITEM_TEXT = "查看用户电台";
-    private final String USER_VIDEO_MENU_ITEM_TEXT = "查看用户视频";
-    private final String USER_FOLLOW_MENU_ITEM_TEXT = "查看用户关注";
-    private final String USER_FAN_MENU_ITEM_TEXT = "查看用户粉丝";
-    private final String RADIO_DJ_MENU_ITEM_TEXT = "查看主播";
-    private final String EDIT_INFO_MENU_ITEM_TEXT = "编辑歌曲信息";
-    private final String LOCATE_FILE_MENU_ITEM_TEXT = "打开文件所在位置";
-    private final String REMOVE_MENU_ITEM_TEXT = "从列表删除";
-    private final String COLLECT_MENU_ITEM_TEXT = "收藏";
-    private final String CANCEL_COLLECTION_MENU_ITEM_TEXT = "取消收藏";
-    private final String PLAY_MV_MENU_ITEM_TEXT = "播放 MV";
-    private final String DOWNLOAD_MENU_ITEM_TEXT = "下载";
-    private final String COMMENT_MENU_ITEM_TEXT = "查看评论";
-    private final String ALBUM_ARTIST_MENU_ITEM_TEXT = "查看歌手/作者";
-    private final String SIMILAR_ALBUM_MENU_ITEM_TEXT = "查看相似专辑";
-    private final String ALBUM_PHOTOS_MENU_ITEM_TEXT = "查看专辑照片";
-    private final String SHEET_MENU_ITEM_TEXT = "查看乐谱";
-    private final String SEARCH_SONG_MENU_ITEM_TEXT = "搜索这首歌曲";
-    private final String SIMILAR_SONG_MENU_ITEM_TEXT = "查看相似歌曲";
-    private final String RELATED_PLAYLIST_MENU_ITEM_TEXT = "查看相关歌单";
-    private final String AUTHOR_MENU_ITEM_TEXT = "查看歌手/作者";
-    private final String ALBUM_MENU_ITEM_TEXT = "查看专辑/电台";
-    private final String SIMILAR_PLAYLIST_MENU_ITEM_TEXT = "查看相似歌单";
-    private final String PLAYLIST_CREATOR_MENU_ITEM_TEXT = "查看创建者";
-    private final String PLAYLIST_SUBSCRIBER_MENU_ITEM_TEXT = "查看收藏者";
-    private final String RADIO_SUBSCRIBER_MENU_ITEM_TEXT = "查看订阅者";
-    private final String SIMILAR_RADIO_MENU_ITEM_TEXT = "查看相似电台";
-    private final String RADIO_ARTISTS_MENU_ITEM_TEXT = "查看演职员/CV";
-    private final String RADIO_PHOTOS_MENU_ITEM_TEXT = "查看电台照片";
-    private final String RADIO_POSTERS_MENU_ITEM_TEXT = "查看电台海报";
-    private final String REC_RADIO_MENU_ITEM_TEXT = "查看推荐电台";
-    private final String RELATED_MV_MENU_ITEM_TEXT = "查看相关 MV";
-    private final String SIMILAR_MV_MENU_ITEM_TEXT = "查看相似 MV";
-    private final String VIDEO_EPISODE_MENU_ITEM_TEXT = "查看视频分集";
-    private final String MV_CREATOR_MENU_ITEM_TEXT = "查看歌手/发布者";
-    private final String COPY_NAME_MENU_ITEM_TEXT = "复制名称";
-    private final String SAVE_ALBUM_IMAGE_TEXT = "导出专辑图片";
+    private final String PLAY_MENU_ITEM_TEXT = I18n.getText("playMenuItem");
+    private final String NEXT_PLAY_MENU_ITEM_TEXT = I18n.getText("nextPlayMenuItem");
+    private final String OPEN_MENU_ITEM_TEXT = I18n.getText("openMenuItem");
+    private final String PLAY_ALL_MENU_ITEM_TEXT = I18n.getText("playAllMenuItem");
+    private final String BROWSE_ALBUM_MENU_ITEM_TEXT = I18n.getText("browseAlbumMenuItem");
+    private final String BROWSE_MV_MENU_ITEM_TEXT = I18n.getText("browseMvMenuItem");
+    private final String SIMILAR_ARTIST_MENU_ITEM_TEXT = I18n.getText("similarArtistMenuItem");
+    private final String ARTIST_FANS_MENU_ITEM_TEXT = I18n.getText("artistFansMenuItem");
+    private final String ARTIST_BUDDY_MENU_ITEM_TEXT = I18n.getText("artistBuddyMenuItem");
+    private final String ARTIST_RADIO_MENU_ITEM_TEXT = I18n.getText("artistRadioMenuItem");
+    private final String ARTIST_PHOTOS_MENU_ITEM_TEXT = I18n.getText("artistPhotosMenuItem");
+    private final String USER_PLAYLIST_MENU_ITEM_TEXT = I18n.getText("userPlaylistMenuItem");
+    private final String USER_ALBUM_MENU_ITEM_TEXT = I18n.getText("userAlbumMenuItem");
+    private final String USER_RADIO_MENU_ITEM_TEXT = I18n.getText("userRadioMenuItem");
+    private final String USER_VIDEO_MENU_ITEM_TEXT = I18n.getText("userVideoMenuItem");
+    private final String USER_FOLLOW_MENU_ITEM_TEXT = I18n.getText("userFollowMenuItem");
+    private final String USER_FAN_MENU_ITEM_TEXT = I18n.getText("userFanMenuItem");
+    private final String RADIO_DJ_MENU_ITEM_TEXT = I18n.getText("radioDjMenuItem");
+    private final String EDIT_INFO_MENU_ITEM_TEXT = I18n.getText("editInfoMenuItem");
+    private final String LOCATE_FILE_MENU_ITEM_TEXT = I18n.getText("locateFileMenuItem");
+    private final String REMOVE_MENU_ITEM_TEXT = I18n.getText("removeMenuItem");
+    private final String COLLECT_MENU_ITEM_TEXT = I18n.getText("collectMenuItem");
+    private final String CANCEL_COLLECTION_MENU_ITEM_TEXT = I18n.getText("cancelCollectionMenuItem");
+    private final String PLAY_MV_MENU_ITEM_TEXT = I18n.getText("playMvMenuItem");
+    private final String DOWNLOAD_MENU_ITEM_TEXT = I18n.getText("downloadMenuItem");
+    private final String COMMENT_MENU_ITEM_TEXT = I18n.getText("commentMenuItem");
+    private final String ALBUM_ARTIST_MENU_ITEM_TEXT = I18n.getText("albumArtistMenuItem");
+    private final String SIMILAR_ALBUM_MENU_ITEM_TEXT = I18n.getText("similarAlbumMenuItem");
+    private final String ALBUM_PHOTOS_MENU_ITEM_TEXT = I18n.getText("albumPhotosMenuItem");
+    private final String SHEET_MENU_ITEM_TEXT = I18n.getText("sheetMenuItem");
+    private final String SEARCH_SONG_MENU_ITEM_TEXT = I18n.getText("searchSongMenuItem");
+    private final String SIMILAR_SONG_MENU_ITEM_TEXT = I18n.getText("similarSongMenuItem");
+    private final String RELATED_PLAYLIST_MENU_ITEM_TEXT = I18n.getText("relatedPlaylistMenuItem");
+    private final String AUTHOR_MENU_ITEM_TEXT = I18n.getText("authorMenuItem");
+    private final String ALBUM_MENU_ITEM_TEXT = I18n.getText("albumMenuItem");
+    private final String SIMILAR_PLAYLIST_MENU_ITEM_TEXT = I18n.getText("similarPlaylistMenuItem");
+    private final String PLAYLIST_CREATOR_MENU_ITEM_TEXT = I18n.getText("playlistCreatorMenuItem");
+    private final String PLAYLIST_SUBSCRIBER_MENU_ITEM_TEXT = I18n.getText("playlistSubscriberMenuItem");
+    private final String RADIO_SUBSCRIBER_MENU_ITEM_TEXT = I18n.getText("radioSubscriberMenuItem");
+    private final String SIMILAR_RADIO_MENU_ITEM_TEXT = I18n.getText("similarRadioMenuItem");
+    private final String RADIO_ARTISTS_MENU_ITEM_TEXT = I18n.getText("radioArtistsMenuItem");
+    private final String RADIO_PHOTOS_MENU_ITEM_TEXT = I18n.getText("radioPhotosMenuItem");
+    private final String RADIO_POSTERS_MENU_ITEM_TEXT = I18n.getText("radioPostersMenuItem");
+    private final String REC_RADIO_MENU_ITEM_TEXT = I18n.getText("recRadioMenuItem");
+    private final String RELATED_MV_MENU_ITEM_TEXT = I18n.getText("relatedMvMenuItem");
+    private final String SIMILAR_MV_MENU_ITEM_TEXT = I18n.getText("similarMvMenuItem");
+    private final String VIDEO_EPISODE_MENU_ITEM_TEXT = I18n.getText("videoEpisodeMenuItem");
+    private final String MV_CREATOR_MENU_ITEM_TEXT = I18n.getText("mvCreatorMenuItem");
+    private final String COPY_NAME_MENU_ITEM_TEXT = I18n.getText("copyNameMenuItem");
+    private final String SAVE_ALBUM_IMAGE_TEXT = I18n.getText("saveAlbumImage");
 
     // 托盘图标
     private ImageIcon trayIcon = LMIconManager.getIcon("tray");
@@ -610,74 +632,74 @@ public class MainFrame extends JFrame {
     private TrayIcon trayIconImg = new TrayIcon(trayIcon.getImage(), TITLE);
 
     // 悬浮帮助提示
-    private final String MINI_WINDOW_TIP = "迷你模式";
-    private final String MINIMIZE_WINDOW_TIP = "最小化";
-    private final String MAXIMIZE_WINDOW_TIP = "最大化";
-    private final String CLOSE_WINDOW_TIP = "关闭";
-    private final String CHANGE_TO_LYRIC_PANE_TIP = "切换到歌曲详情页";
-    private final String CHANGE_TO_MUSIC_PANE_TIP = "切换到列表页";
-    private final String COLLECT_TIP = "收藏";
-    private final String COLLECTED_TIP = "已收藏";
-    private final String DOWNLOAD_TIP = "下载";
-    private final String COMMENT_TIP = "评论";
-    private final String MV_TIP = "播放 MV";
-    private final String PLAY_TIP = "播放";
-    private final String PAUSE_TIP = "暂停";
-    private final String LAST_TIP = "上一首";
-    private final String NEXT_TIP = "下一首";
-    private final String BACKW_TIP = "快退";
-    private final String FORW_TIP = "快进";
-    private final String PLAY_MODE_DISABLED_TIP = "播完暂停";
-    private final String SINGLE_TIP = "单曲循环";
-    private final String SEQUENCE_TIP = "顺序播放";
-    private final String LIST_CYCLE_TIP = "列表循环";
-    private final String SHUFFLE_TIP = "随机播放";
-    private final String SOUND_TIP = "声音开启";
-    private final String MUTE_TIP = "静音";
-    private final String RATE_TIP = "倍速";
-    private final String SWITCH_SPECTRUM_TIP = "频谱";
-    private final String SWITCH_BLUR_TIP = "模糊";
-    private final String SOUND_EFFECT_TIP = "音效";
-    private final String SHEET_TIP = "乐谱";
-    private final String MENU_TIP = "主菜单";
-    private final String GO_TO_PLAY_QUEUE_TIP = "转到播放队列";
-    private final String DESKTOP_LRC_TIP = "桌面歌词";
-    private final String SWITCH_CHINESE_TIP = "歌词繁简切换";
-    private final String SWITCH_JAPANESE_TIP = "日语/罗马音歌词切换";
-    private final String SWITCH_LRC_TYPE_TIP = "歌词原文/翻译切换";
-    private final String ADD_TIP = "添加歌曲文件";
-    private final String REIMPORT_TIP = "重新从歌曲目录导入歌曲";
-    private final String MANAGE_CATALOG_TIP = "管理歌曲目录";
-    private final String REMOVE_TIP = "删除歌曲";
-    private final String CLEAR_TIP = "清空列表";
-    private final String DUPLICATE_TIP = "去重";
-    private final String REVERSE_TIP = "倒序";
-    private final String SORT_TIP = "排序";
-    private final String MOVE_UP_TIP = "上移";
-    private final String MOVE_DOWN_TIP = "下移";
-    private final String CLEAR_INPUT_TIP = "清除输入";
-    private final String STYLE_TIP = "换肤";
-    private final String HIDE_DETAIL_TIP = "隐藏歌曲详情页";
-    private final String SHOW_KEYWORD_PANEL_TIP = "显示关键词面板";
-    private final String SEARCH_TIP = "搜索";
-    private final String BACKWARD_TIP = "后退";
-    private final String PLAY_ALL_TIP = "播放全部";
-    private final String REFRESH_TIP = "刷新";
-    private final String START_PAGE_TIP = "第一页";
-    private final String LAST_PAGE_TIP = "上一页";
-    private final String GO_TIP = "跳页";
-    private final String NEXT_PAGE_TIP = "下一页";
-    private final String END_PAGE_TIP = "最后一页";
-    private final String RESTART_SELECTED_TASKS_TIP = "重新开始选中任务";
-    private final String CANCEL_SELECTED_TASKS_TIP = "取消选中任务";
-    private final String REMOVE_SELECTED_TASKS_TIP = "删除选中任务";
-    private final String RESTART_ALL_TASKS_TIP = "重新开始全部任务";
-    private final String CANCEL_ALL_TASKS_TIP = "取消全部任务";
-    private final String REMOVE_ALL_TASKS_TIP = "删除全部任务";
-    private final String REMOVE_FROM_PLAY_QUEUE_TIP = "删除选中歌曲";
-    private final String CLEAR_PLAY_QUEUE_TIP = "清空播放队列";
-    private final String CLEAR_HISTORY_SEARCH_TIP = "清空搜索历史";
-    private final String REMOVE_HISTORY_KEYWORD_TIP = "右击删除该历史";
+    private final String MINI_WINDOW_TIP = I18n.getText("miniWindowTip");
+    private final String MINIMIZE_WINDOW_TIP = I18n.getText("minimizeWindowTip");
+    private final String MAXIMIZE_WINDOW_TIP = I18n.getText("maximizeWindowTip");
+    private final String CLOSE_WINDOW_TIP = I18n.getText("closeWindowTip");
+    private final String CHANGE_TO_LYRIC_PANE_TIP = I18n.getText("changeToLyricPaneTip");
+    private final String CHANGE_TO_MUSIC_PANE_TIP = I18n.getText("changeToMusicPaneTip");
+    private final String COLLECT_TIP = I18n.getText("collectTip");
+    private final String COLLECTED_TIP = I18n.getText("collectedTip");
+    private final String DOWNLOAD_TIP = I18n.getText("downloadTip");
+    private final String COMMENT_TIP = I18n.getText("commentTip");
+    private final String MV_TIP = I18n.getText("mvTip");
+    private final String PLAY_TIP = I18n.getText("playTip");
+    private final String PAUSE_TIP = I18n.getText("pauseTip");
+    private final String LAST_TIP = I18n.getText("lastTip");
+    private final String NEXT_TIP = I18n.getText("nextTip");
+    private final String BACKW_TIP = I18n.getText("backwTip");
+    private final String FORW_TIP = I18n.getText("forwTip");
+    private final String PLAY_MODE_DISABLED_TIP = I18n.getText("playModeDisabledTip");
+    private final String SINGLE_TIP = I18n.getText("singleTip");
+    private final String SEQUENCE_TIP = I18n.getText("sequenceTip");
+    private final String LIST_CYCLE_TIP = I18n.getText("listCycleTip");
+    private final String SHUFFLE_TIP = I18n.getText("shuffleTip");
+    private final String SOUND_TIP = I18n.getText("soundTip");
+    private final String MUTE_TIP = I18n.getText("muteTip");
+    private final String RATE_TIP = I18n.getText("rateTip");
+    private final String SWITCH_SPECTRUM_TIP = I18n.getText("switchSpectrumTip");
+    private final String SWITCH_BLUR_TIP = I18n.getText("switchBlurTip");
+    private final String SOUND_EFFECT_TIP = I18n.getText("soundEffectTip");
+    private final String SHEET_TIP = I18n.getText("sheetTip");
+    private final String MENU_TIP = I18n.getText("menuTip");
+    private final String GO_TO_PLAY_QUEUE_TIP = I18n.getText("goToPlayQueueTip");
+    private final String DESKTOP_LRC_TIP = I18n.getText("desktopLrcTip");
+    private final String SWITCH_CHINESE_TIP = I18n.getText("switchChineseTip");
+    private final String SWITCH_JAPANESE_TIP = I18n.getText("switchJapaneseTip");
+    private final String SWITCH_LRC_TYPE_TIP = I18n.getText("switchLrcTypeTip");
+    private final String ADD_TIP = I18n.getText("addTip");
+    private final String REIMPORT_TIP = I18n.getText("reimportTip");
+    private final String MANAGE_CATALOG_TIP = I18n.getText("manageCatalogTip");
+    private final String REMOVE_TIP = I18n.getText("removeTip");
+    private final String CLEAR_TIP = I18n.getText("clearTip");
+    private final String DUPLICATE_TIP = I18n.getText("duplicateTip");
+    private final String REVERSE_TIP = I18n.getText("reverseTip");
+    private final String SORT_TIP = I18n.getText("sortTip");
+    private final String MOVE_UP_TIP = I18n.getText("moveUpTip");
+    private final String MOVE_DOWN_TIP = I18n.getText("moveDownTip");
+    private final String CLEAR_INPUT_TIP = I18n.getText("clearInputTip");
+    private final String STYLE_TIP = I18n.getText("styleTip");
+    private final String HIDE_DETAIL_TIP = I18n.getText("hideDetailTip");
+    private final String SHOW_KEYWORD_PANEL_TIP = I18n.getText("showKeywordPanelTip");
+    private final String SEARCH_TIP = I18n.getText("searchTip");
+    private final String BACKWARD_TIP = I18n.getText("backwardTip");
+    private final String PLAY_ALL_TIP = I18n.getText("playAllTip");
+    private final String REFRESH_TIP = I18n.getText("refreshTip");
+    private final String START_PAGE_TIP = I18n.getText("startPageTip");
+    private final String LAST_PAGE_TIP = I18n.getText("lastPageTip");
+    private final String GO_TIP = I18n.getText("goTip");
+    private final String NEXT_PAGE_TIP = I18n.getText("nextPageTip");
+    private final String END_PAGE_TIP = I18n.getText("endPageTip");
+    private final String RESTART_SELECTED_TASKS_TIP = I18n.getText("restartSelectedTasksTip");
+    private final String CANCEL_SELECTED_TASKS_TIP = I18n.getText("cancelSelectedTasksTip");
+    private final String REMOVE_SELECTED_TASKS_TIP = I18n.getText("removeSelectedTasksTip");
+    private final String RESTART_ALL_TASKS_TIP = I18n.getText("restartAllTasksTip");
+    private final String CANCEL_ALL_TASKS_TIP = I18n.getText("cancelAllTasksTip");
+    private final String REMOVE_ALL_TASKS_TIP = I18n.getText("removeAllTasksTip");
+    private final String REMOVE_FROM_PLAY_QUEUE_TIP = I18n.getText("removeFromPlayQueueTip");
+    private final String CLEAR_PLAY_QUEUE_TIP = I18n.getText("clearPlayQueueTip");
+    private final String CLEAR_HISTORY_SEARCH_TIP = I18n.getText("clearHistorySearchTip");
+    private final String REMOVE_HISTORY_KEYWORD_TIP = I18n.getText("removeHistoryKeywordTip");
 
     // 当前包含的所有歌曲目录
     public List<File> catalogs = new LinkedList<>();
@@ -848,16 +870,16 @@ public class MainFrame extends JFrame {
     // 主菜单
     private CustomButton mainMenuButton = new CustomButton(menuIcon);
     private CustomPopupMenu mainMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem settingMenuItem = new CustomMenuItem("设置");
-    private CustomMenuItem closeSong = new CustomMenuItem("关闭当前歌曲");
-    private CustomMenuItem clearCache = new CustomMenuItem("清空播放缓存");
-    private CustomMenuItem manageStyleMenuItem = new CustomMenuItem("更换主题");
-    private CustomMenuItem styleCustomMenuItem = new CustomMenuItem("添加自定义主题");
-    private CustomMenuItem donateMenuItem = new CustomMenuItem("捐赠 & 感谢");
-    private CustomMenuItem releaseMenuItem = new CustomMenuItem("发布页");
-    private CustomMenuItem updateMenuItem = new CustomMenuItem("检查更新");
-    private CustomMenuItem helpMenuItem = new CustomMenuItem("指南");
-    private CustomMenuItem aboutMenuItem = new CustomMenuItem("关于");
+    private CustomMenuItem settingMenuItem = new CustomMenuItem(I18n.getText("setting"));
+    private CustomMenuItem closeSong = new CustomMenuItem(I18n.getText("closeSong"));
+    private CustomMenuItem clearCache = new CustomMenuItem(I18n.getText("clearCache"));
+    private CustomMenuItem manageStyleMenuItem = new CustomMenuItem(I18n.getText("manageStyle"));
+    private CustomMenuItem styleCustomMenuItem = new CustomMenuItem(I18n.getText("styleCustom"));
+    private CustomMenuItem donateMenuItem = new CustomMenuItem(I18n.getText("donate"));
+    private CustomMenuItem releaseMenuItem = new CustomMenuItem(I18n.getText("release"));
+    private CustomMenuItem updateMenuItem = new CustomMenuItem(I18n.getText("update"));
+    private CustomMenuItem helpMenuItem = new CustomMenuItem(I18n.getText("help"));
+    private CustomMenuItem aboutMenuItem = new CustomMenuItem(I18n.getText("about"));
 
     // 歌名
     private CustomLabel songNameLabel = new CustomLabel();
@@ -870,9 +892,9 @@ public class MainFrame extends JFrame {
     // 歌曲信息弹出菜单
     private CustomPopupMenu leftInfoPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem saveAlbumImageMenuItem = new CustomMenuItem(SAVE_ALBUM_IMAGE_TEXT);
-    private CustomMenuItem copySongNameMenuItem = new CustomMenuItem("复制歌曲名");
-    private CustomMenuItem copyArtistMenuItem = new CustomMenuItem("复制艺术家");
-    private CustomMenuItem copyAlbumMenuItem = new CustomMenuItem("复制专辑名");
+    private CustomMenuItem copySongNameMenuItem = new CustomMenuItem(I18n.getText("copySongName"));
+    private CustomMenuItem copyArtistMenuItem = new CustomMenuItem(I18n.getText("copyArtist"));
+    private CustomMenuItem copyAlbumMenuItem = new CustomMenuItem(I18n.getText("copyAlbum"));
 
     private CustomSlider timeBar = new CustomSlider();
     private CustomLabel currTimeLabel = new CustomLabel(DEFAULT_TIME);
@@ -891,7 +913,7 @@ public class MainFrame extends JFrame {
     private SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
     private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
     private List<CustomRadioButtonMenuItem> spectrumStyleButtonGroup = new LinkedList<>();
-    private final String SPEC_OPACITY_MSG = "当前频谱透明度：%d%%";
+    private final String SPEC_OPACITY_MSG = I18n.getText("specOpacityMsg");
     public float specOpacity;
     private CustomMenuItem spectrumOpacityMenuItem = new CustomMenuItem();
     private CustomMenuItem[] calcSpectrumOpacityMenuItems = {
@@ -902,20 +924,21 @@ public class MainFrame extends JFrame {
     };
     // 歌词右键弹出菜单
     private CustomPopupMenu lrcPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem copyMenuItem = new CustomMenuItem("复制这句歌词");
-    private CustomMenuItem locateLrcMenuItem = new CustomMenuItem("定位歌词时间");
-    private CustomMenuItem browseLrcMenuItem = new CustomMenuItem("查看歌词文件");
-    private CustomMenuItem browseLrcTransMenuItem = new CustomMenuItem("查看歌词翻译文件");
-    private CustomMenuItem downloadLrcMenuItem = new CustomMenuItem("下载歌词文件");
-    private CustomMenuItem downloadLrcTransMenuItem = new CustomMenuItem("下载歌词翻译文件");
+    private CustomMenuItem copyMenuItem = new CustomMenuItem(I18n.getText("copy"));
+    private CustomMenuItem locateLrcMenuItem = new CustomMenuItem(I18n.getText("locateLrc"));
+    private CustomMenuItem browseLrcMenuItem = new CustomMenuItem(I18n.getText("browseLrc"));
+    private CustomMenuItem browseLrcTransMenuItem = new CustomMenuItem(I18n.getText("browseLrcTrans"));
+    private CustomMenuItem downloadLrcMenuItem = new CustomMenuItem(I18n.getText("downloadLrc"));
+    private CustomMenuItem downloadLrcTransMenuItem = new CustomMenuItem(I18n.getText("downloadLrcTrans"));
     private double lrcOffset;
     private final double lrcOffsetRadius = 5;
-    private final String LRC_OFFSET_MSG = "当前歌词偏移：%.1f s";
+    private final String LRC_OFFSET_MSG = I18n.getText("lrcOffsetMsg");
+    private final String RESET = I18n.getText("reset");
     private CustomMenuItem currLrcOffsetMenuItem = new CustomMenuItem();
     private CustomMenuItem[] calcLrcOffsetMenuItems = {
             new CustomMenuItem("+0.5 s"),
             new CustomMenuItem("+0.1 s"),
-            new CustomMenuItem("重置"),
+            new CustomMenuItem(RESET),
             new CustomMenuItem("-0.1 s"),
             new CustomMenuItem("-0.5 s")
     };
@@ -953,21 +976,21 @@ public class MainFrame extends JFrame {
 
     // 播放模式右键菜单
     private CustomPopupMenu playModePopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem playModeDisabledMenuItem = new CustomMenuItem("播完暂停");
-    private CustomMenuItem singleMenuItem = new CustomMenuItem("单曲循环");
-    private CustomMenuItem sequenceMenuItem = new CustomMenuItem("顺序播放");
-    private CustomMenuItem listCycleMenuItem = new CustomMenuItem("列表循环");
-    private CustomMenuItem shuffleMenuItem = new CustomMenuItem("随机播放");
+    private CustomMenuItem playModeDisabledMenuItem = new CustomMenuItem(I18n.getText("playModeDisabled"));
+    private CustomMenuItem singleMenuItem = new CustomMenuItem(I18n.getText("single"));
+    private CustomMenuItem sequenceMenuItem = new CustomMenuItem(I18n.getText("sequence"));
+    private CustomMenuItem listCycleMenuItem = new CustomMenuItem(I18n.getText("listCycle"));
+    private CustomMenuItem shuffleMenuItem = new CustomMenuItem(I18n.getText("shuffle"));
 
     // 模糊模式右键菜单
     private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem gsMenuItem = new CustomMenuItem("高斯模糊");
-    private CustomMenuItem darkerMenuItem = new CustomMenuItem("暗角滤镜");
-    private CustomMenuItem blurOffMenuItem = new CustomMenuItem("跟随主题");
-    private CustomMenuItem cvBlurMenuItem = new CustomMenuItem("歌曲封面");
-    private CustomMenuItem mcBlurMenuItem = new CustomMenuItem("纯主色调");
-    private CustomMenuItem lgBlurMenuItem = new CustomMenuItem("线性渐变");
-    private CustomMenuItem fbmBlurMenuItem = new CustomMenuItem("迷幻纹理");
+    private CustomMenuItem gsMenuItem = new CustomMenuItem(I18n.getText("gs"));
+    private CustomMenuItem darkerMenuItem = new CustomMenuItem(I18n.getText("darker"));
+    private CustomMenuItem blurOffMenuItem = new CustomMenuItem(I18n.getText("blurOff"));
+    private CustomMenuItem cvBlurMenuItem = new CustomMenuItem(I18n.getText("cvBlur"));
+    private CustomMenuItem mcBlurMenuItem = new CustomMenuItem(I18n.getText("mcBlur"));
+    private CustomMenuItem lgBlurMenuItem = new CustomMenuItem(I18n.getText("lgBlur"));
+    private CustomMenuItem fbmBlurMenuItem = new CustomMenuItem(I18n.getText("fbmBlur"));
 
     // 标签页
     private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT);
@@ -1012,28 +1035,28 @@ public class MainFrame extends JFrame {
     private CustomTabbedPane collectionTabbedPane = new CustomTabbedPane(CustomTabbedPane.TOP);
     // 音乐收藏 Tab 面板
     private CustomPanel musicCollectionPanel = new CustomPanel();
-    private CustomLabel musicCollectionLabel = new CustomLabel("歌曲", netMusicIcon);
+    private CustomLabel musicCollectionLabel = new CustomLabel(I18n.getText("musicCollection"), netMusicIcon);
     // 歌单收藏 Tab 面板
     private CustomPanel playlistCollectionPanel = new CustomPanel();
-    private CustomLabel playlistCollectionLabel = new CustomLabel("歌单", playlistIcon);
+    private CustomLabel playlistCollectionLabel = new CustomLabel(I18n.getText("playlistCollection"), playlistIcon);
     // 专辑收藏 Tab 面板
     private CustomPanel albumCollectionPanel = new CustomPanel();
-    private CustomLabel albumCollectionLabel = new CustomLabel("专辑", netAlbumIcon);
+    private CustomLabel albumCollectionLabel = new CustomLabel(I18n.getText("albumCollection"), netAlbumIcon);
     // 歌手收藏 Tab 面板
     private CustomPanel artistCollectionPanel = new CustomPanel();
-    private CustomLabel artistCollectionLabel = new CustomLabel("歌手", netArtistIcon);
+    private CustomLabel artistCollectionLabel = new CustomLabel(I18n.getText("artistCollection"), netArtistIcon);
     // 电台收藏 Tab 面板
     private CustomPanel radioCollectionPanel = new CustomPanel();
-    private CustomLabel radioCollectionLabel = new CustomLabel("电台", netRadioIcon);
+    private CustomLabel radioCollectionLabel = new CustomLabel(I18n.getText("radioCollection"), netRadioIcon);
     // MV 收藏 Tab 面板
     private CustomPanel mvCollectionPanel = new CustomPanel();
-    private CustomLabel mvCollectionLabel = new CustomLabel(" MV ", netMvIcon);
+    private CustomLabel mvCollectionLabel = new CustomLabel(I18n.getText("mvCollection"), netMvIcon);
     // 榜单收藏 Tab 面板
     private CustomPanel rankingCollectionPanel = new CustomPanel();
-    private CustomLabel rankingCollectionLabel = new CustomLabel("榜单", netRankingIcon);
+    private CustomLabel rankingCollectionLabel = new CustomLabel(I18n.getText("rankingCollection"), netRankingIcon);
     // 用户收藏 Tab 面板
     private CustomPanel userCollectionPanel = new CustomPanel();
-    private CustomLabel userCollectionLabel = new CustomLabel("用户", netUserIcon);
+    private CustomLabel userCollectionLabel = new CustomLabel(I18n.getText("userCollection"), netUserIcon);
 
     // 空 ListModel，用于其他 ListModel 的 clear 时暂时显示，防止卡顿
     private DefaultListModel emptyListModel = new DefaultListModel<>();
@@ -1042,7 +1065,7 @@ public class MainFrame extends JFrame {
     // 列表为空提示面板
     private CustomPanel emptyHintPanel = new CustomPanel();
     // 列表为空提示标签
-    private CustomLabel emptyHintLabel = new CustomLabel("列表空空如也~");
+    private CustomLabel emptyHintLabel = new CustomLabel(I18n.getText("emptyHint"));
 
     // 个人音乐歌曲列表
     private CustomList<MusicResource> musicList = new CustomList<>();
@@ -1097,7 +1120,7 @@ public class MainFrame extends JFrame {
     private DefaultComboBoxModel<String> collectionOrderComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultComboBoxModel<String> collectionSortTypeComboBoxModel = new DefaultComboBoxModel<>();
     // 收藏播放全部按钮
-    private CustomButton collectionPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton collectionPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 收藏刷新按钮
     private CustomButton collectionRefreshButton = new CustomButton(refreshIcon);
     // 收藏页数框
@@ -1156,11 +1179,11 @@ public class MainFrame extends JFrame {
     // 个人音乐工具栏
     private CustomToolBar personalMusicToolBar = new CustomToolBar();
     // 本地音乐按钮
-    private TabButton localMusicButton = new TabButton("本地音乐", localMusicIcon);
+    private TabButton localMusicButton = new TabButton(I18n.getText("localMusic"), localMusicIcon);
     // 播放历史按钮
-    private TabButton historyButton = new TabButton("播放历史", historyIcon);
+    private TabButton historyButton = new TabButton(I18n.getText("history"), historyIcon);
     // 收藏按钮
-    private TabButton collectionButton = new TabButton("收藏", collectionIcon);
+    private TabButton collectionButton = new TabButton(I18n.getText("collection"), collectionIcon);
 
     // 歌曲列表工具栏
     private CustomToolBar musicToolBar = new CustomToolBar();
@@ -1168,8 +1191,8 @@ public class MainFrame extends JFrame {
     private CustomButton addToolButton = new CustomButton(addIcon);
     // 添加按钮弹出菜单
     private CustomPopupMenu addPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem addFileMenuItem = new CustomMenuItem("添加歌曲文件");
-    private CustomMenuItem addDirMenuItem = new CustomMenuItem("添加歌曲文件夹");
+    private CustomMenuItem addFileMenuItem = new CustomMenuItem(I18n.getText("addFile"));
+    private CustomMenuItem addDirMenuItem = new CustomMenuItem(I18n.getText("addDir"));
     // 重新导入按钮
     private CustomButton reimportToolButton = new CustomButton(reimportIcon);
     // 管理歌曲目录按钮
@@ -1188,18 +1211,18 @@ public class MainFrame extends JFrame {
     private CustomPopupMenu sortPopupMenu = new CustomPopupMenu(THIS);
     private List<CustomRadioButtonMenuItem> sortOrderButtonGroup = new LinkedList<>();
     private List<CustomRadioButtonMenuItem> sortMethodButtonGroup = new LinkedList<>();
-    private CustomRadioButtonMenuItem ascendingMenuItem = new CustomRadioButtonMenuItem("升序");
-    private CustomRadioButtonMenuItem descendingMenuItem = new CustomRadioButtonMenuItem("降序");
-    private CustomRadioButtonMenuItem sortBySongNameAndFileNameMenuItem = new CustomRadioButtonMenuItem("按曲名/文件名混合");
-    private CustomRadioButtonMenuItem sortBySongNameMenuItem = new CustomRadioButtonMenuItem("按曲名");
-    private CustomRadioButtonMenuItem sortByArtistNameMenuItem = new CustomRadioButtonMenuItem("按艺术家");
-    private CustomRadioButtonMenuItem sortByAlbumNameMenuItem = new CustomRadioButtonMenuItem("按专辑");
-    private CustomRadioButtonMenuItem sortByFileNameMenuItem = new CustomRadioButtonMenuItem("按文件名");
-    private CustomRadioButtonMenuItem sortByTimeMenuItem = new CustomRadioButtonMenuItem("按时长");
-    private CustomRadioButtonMenuItem sortByCreationTimeMenuItem = new CustomRadioButtonMenuItem("按创建时间");
-    private CustomRadioButtonMenuItem sortByLastModifiedTimeMenuItem = new CustomRadioButtonMenuItem("按修改时间");
-    private CustomRadioButtonMenuItem sortByLastAccessTimeMenuItem = new CustomRadioButtonMenuItem("按访问时间");
-    private CustomRadioButtonMenuItem sortBySizeMenuItem = new CustomRadioButtonMenuItem("按大小");
+    private CustomRadioButtonMenuItem ascendingMenuItem = new CustomRadioButtonMenuItem(I18n.getText("ascending"));
+    private CustomRadioButtonMenuItem descendingMenuItem = new CustomRadioButtonMenuItem(I18n.getText("descending"));
+    private CustomRadioButtonMenuItem sortBySongNameAndFileNameMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortBySongNameAndFileName"));
+    private CustomRadioButtonMenuItem sortBySongNameMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortBySongName"));
+    private CustomRadioButtonMenuItem sortByArtistNameMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByArtist"));
+    private CustomRadioButtonMenuItem sortByAlbumNameMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByAlbumName"));
+    private CustomRadioButtonMenuItem sortByFileNameMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByFileName"));
+    private CustomRadioButtonMenuItem sortByTimeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByTime"));
+    private CustomRadioButtonMenuItem sortByCreationTimeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByCreationTime"));
+    private CustomRadioButtonMenuItem sortByLastModifiedTimeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByLastModifiedTime"));
+    private CustomRadioButtonMenuItem sortByLastAccessTimeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByLastAccessTime"));
+    private CustomRadioButtonMenuItem sortBySizeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortBySize"));
     // 上移按钮
     private CustomButton moveUpToolButton = new CustomButton(moveUpIcon);
     // 下移按钮
@@ -1269,7 +1292,7 @@ public class MainFrame extends JFrame {
     // 在线音乐搜索建议面板 内部面板1
     private CustomPanel netMusicSearchSuggestionInnerPanel1 = new CustomPanel();
     // 在线音乐搜索建议标签
-    private CustomLabel netMusicSearchSuggestionLabel = new CustomLabel("搜索建议");
+    private CustomLabel netMusicSearchSuggestionLabel = new CustomLabel(I18n.getText("searchSuggestion"));
     // 刷新搜索建议按钮
     private CustomButton netMusicRefreshSearchSuggestionButton = new CustomButton(refreshIcon);
     // 在线音乐搜索建议面板 内部面板2
@@ -1279,7 +1302,7 @@ public class MainFrame extends JFrame {
     // 在线音乐热搜面板 内部面板1
     private CustomPanel netMusicHotSearchInnerPanel1 = new CustomPanel();
     // 在线音乐热搜标签
-    private CustomLabel netMusicHotSearchLabel = new CustomLabel("热门搜索");
+    private CustomLabel netMusicHotSearchLabel = new CustomLabel(I18n.getText("hotSearch"));
     // 刷新热搜按钮
     private CustomButton netMusicRefreshHotSearchButton = new CustomButton(refreshIcon);
     // 在线音乐热搜面板 内部面板2
@@ -1289,7 +1312,7 @@ public class MainFrame extends JFrame {
     // 在线音乐搜索历史面板 内部面板1
     private CustomPanel netMusicHistorySearchInnerPanel1 = new CustomPanel();
     // 在线音乐搜索历史标签
-    private CustomLabel netMusicHistorySearchLabel = new CustomLabel("搜索历史");
+    private CustomLabel netMusicHistorySearchLabel = new CustomLabel(I18n.getText("historySearch"));
     // 清空搜索历史按钮
     private CustomButton netMusicClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 在线音乐搜索历史面板 内部面板2
@@ -1346,7 +1369,7 @@ public class MainFrame extends JFrame {
     // 返回歌单按钮
     private CustomButton netPlaylistBackwardButton = new CustomButton(backwardIcon);
     // 歌单 id
-    private CustomCheckBox netPlaylistIdCheckBox = new CustomCheckBox("歌单 ID");
+    private CustomCheckBox netPlaylistIdCheckBox = new CustomCheckBox(I18n.getText("playlistId"));
     // 歌单搜索框
     private CustomTextField netPlaylistSearchTextField = new CustomTextField(8);
     // 歌单清除输入按钮
@@ -1354,7 +1377,7 @@ public class MainFrame extends JFrame {
     // 歌单搜索按钮
     private CustomButton netPlaylistSearchButton = new CustomButton(searchIcon);
     // 歌单播放全部按钮
-    private CustomButton netPlaylistPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton netPlaylistPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 歌单刷新按钮
     private CustomButton netPlaylistRefreshButton = new CustomButton(refreshIcon);
     // 歌单页数框
@@ -1383,7 +1406,7 @@ public class MainFrame extends JFrame {
     // 歌单搜索历史面板 内部面板1
     private CustomPanel netPlaylistHistorySearchInnerPanel1 = new CustomPanel();
     // 歌单搜索历史标签
-    private CustomLabel netPlaylistHistorySearchLabel = new CustomLabel("搜索历史");
+    private CustomLabel netPlaylistHistorySearchLabel = new CustomLabel(I18n.getText("historySearch"));
     // 清空搜索历史按钮
     private CustomButton netPlaylistClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 歌单搜索历史面板 内部面板2
@@ -1426,7 +1449,7 @@ public class MainFrame extends JFrame {
     // 专辑搜索按钮
     private CustomButton netAlbumSearchButton = new CustomButton(searchIcon);
     // 专辑播放全部按钮
-    private CustomButton netAlbumPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton netAlbumPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 专辑刷新按钮
     private CustomButton netAlbumRefreshButton = new CustomButton(refreshIcon);
     // 专辑页数框
@@ -1455,7 +1478,7 @@ public class MainFrame extends JFrame {
     // 专辑搜索历史面板 内部面板1
     private CustomPanel netAlbumHistorySearchInnerPanel1 = new CustomPanel();
     // 专辑搜索历史标签
-    private CustomLabel netAlbumHistorySearchLabel = new CustomLabel("搜索历史");
+    private CustomLabel netAlbumHistorySearchLabel = new CustomLabel(I18n.getText("historySearch"));
     // 清空搜索历史按钮
     private CustomButton netAlbumClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 专辑搜索历史面板 内部面板2
@@ -1512,7 +1535,7 @@ public class MainFrame extends JFrame {
     // 歌手搜索按钮
     private CustomButton netArtistSearchButton = new CustomButton(searchIcon);
     // 歌手播放全部按钮
-    private CustomButton netArtistPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton netArtistPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 歌手刷新按钮
     private CustomButton netArtistRefreshButton = new CustomButton(refreshIcon);
     // 歌手页数框
@@ -1541,7 +1564,7 @@ public class MainFrame extends JFrame {
     // 歌手搜索历史面板 内部面板1
     private CustomPanel netArtistHistorySearchInnerPanel1 = new CustomPanel();
     // 歌手搜索历史标签
-    private CustomLabel netArtistHistorySearchLabel = new CustomLabel("搜索历史");
+    private CustomLabel netArtistHistorySearchLabel = new CustomLabel(I18n.getText("historySearch"));
     // 清空搜索历史按钮
     private CustomButton netArtistClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 歌手搜索历史面板 内部面板2
@@ -1592,7 +1615,7 @@ public class MainFrame extends JFrame {
     // 电台排序类型下拉框
     private CustomComboBox<String> netRadioSortTypeComboBox = new CustomComboBox<>();
     // 电台播放全部按钮
-    private CustomButton netRadioPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton netRadioPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 电台刷新按钮
     private CustomButton netRadioRefreshButton = new CustomButton(refreshIcon);
     // 电台页数框
@@ -1621,7 +1644,7 @@ public class MainFrame extends JFrame {
     // 电台搜索历史面板 内部面板1
     private CustomPanel netRadioHistorySearchInnerPanel1 = new CustomPanel();
     // 电台搜索历史标签
-    private CustomLabel netRadioHistorySearchLabel = new CustomLabel("搜索历史");
+    private CustomLabel netRadioHistorySearchLabel = new CustomLabel(I18n.getText("historySearch"));
     // 清空搜索历史按钮
     private CustomButton netRadioClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 电台搜索历史面板 内部面板2
@@ -1689,7 +1712,7 @@ public class MainFrame extends JFrame {
     // MV 搜索历史面板 内部面板1
     private CustomPanel netMvHistorySearchInnerPanel1 = new CustomPanel();
     // MV 搜索历史标签
-    private CustomLabel netMvHistorySearchLabel = new CustomLabel("搜索历史");
+    private CustomLabel netMvHistorySearchLabel = new CustomLabel(I18n.getText("historySearch"));
     // 清空搜索历史按钮
     private CustomButton netMvClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // MV 搜索历史面板 内部面板2
@@ -1722,7 +1745,7 @@ public class MainFrame extends JFrame {
     // 返回榜单按钮
     private CustomButton netRankingBackwardButton = new CustomButton(backwardIcon);
     // 榜单播放全部按钮
-    private CustomButton netRankingPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton netRankingPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 榜单刷新按钮
     private CustomButton netRankingRefreshButton = new CustomButton(refreshIcon);
     // 榜单页数框
@@ -1790,7 +1813,7 @@ public class MainFrame extends JFrame {
     // 用户搜索按钮
     private CustomButton netUserSearchButton = new CustomButton(searchIcon);
     // 用户播放全部按钮
-    private CustomButton netUserPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton netUserPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 用户刷新按钮
     private CustomButton netUserRefreshButton = new CustomButton(refreshIcon);
     // 用户页数框
@@ -1819,7 +1842,7 @@ public class MainFrame extends JFrame {
     // 用户搜索历史面板 内部面板1
     private CustomPanel netUserHistorySearchInnerPanel1 = new CustomPanel();
     // 用户搜索历史标签
-    private CustomLabel netUserHistorySearchLabel = new CustomLabel("搜索历史");
+    private CustomLabel netUserHistorySearchLabel = new CustomLabel(I18n.getText("historySearch"));
     // 清空搜索历史按钮
     private CustomButton netUserClearHistorySearchButton = new CustomButton(clearHistorySearchIcon);
     // 用户搜索历史面板 内部面板2
@@ -1851,25 +1874,25 @@ public class MainFrame extends JFrame {
     // 推荐工具栏
     private CustomToolBar recommendToolBar = new CustomToolBar();
     // 推荐歌单按钮
-    private TabButton playlistRecommendButton = new TabButton("推荐歌单", playlistRecommendIcon);
+    private TabButton playlistRecommendButton = new TabButton(I18n.getText("playlistRecommend"), playlistRecommendIcon);
     // 精品歌单按钮
-    private TabButton highQualityPlaylistButton = new TabButton("精品歌单", highQualityPlaylistIcon);
+    private TabButton highQualityPlaylistButton = new TabButton(I18n.getText("highQualityPlaylist"), highQualityPlaylistIcon);
     // 飙升歌曲按钮
-    private TabButton hotMusicButton = new TabButton("飙升歌曲", hotMusicIcon);
+    private TabButton hotMusicButton = new TabButton(I18n.getText("hotMusic"), hotMusicIcon);
     // 推荐单曲按钮
-    private TabButton newMusicButton = new TabButton("新歌速递", musicRecommendIcon);
+    private TabButton newMusicButton = new TabButton(I18n.getText("newMusic"), musicRecommendIcon);
     // 新碟上架按钮
-    private TabButton newAlbumRecommendButton = new TabButton("新碟上架", newAlbumRecommendIcon);
+    private TabButton newAlbumRecommendButton = new TabButton(I18n.getText("newAlbum"), newAlbumRecommendIcon);
     // 歌手排行按钮
-    private TabButton artistListRecommendButton = new TabButton("歌手排行", artistListRecommendIcon);
+    private TabButton artistListRecommendButton = new TabButton(I18n.getText("artistList"), artistListRecommendIcon);
     // 新晋电台按钮
-    private TabButton newRadioRecommendButton = new TabButton("新晋电台", newRadioRecommendIcon);
+    private TabButton newRadioRecommendButton = new TabButton(I18n.getText("newRadio"), newRadioRecommendIcon);
     // 热门电台按钮
-    private TabButton hotRadioRecommendButton = new TabButton("热门电台", hotRadioRecommendIcon);
+    private TabButton hotRadioRecommendButton = new TabButton(I18n.getText("hotRadio"), hotRadioRecommendIcon);
     // 推荐节目按钮
-    private TabButton programRecommendButton = new TabButton("推荐节目", programRecommendIcon);
+    private TabButton programRecommendButton = new TabButton(I18n.getText("programRecommend"), programRecommendIcon);
     // 推荐 MV 按钮
-    private TabButton mvRecommendButton = new TabButton("推荐 MV", mvRecommendIcon);
+    private TabButton mvRecommendButton = new TabButton(I18n.getText("mvRecommend"), mvRecommendIcon);
     // 推荐数量面板
     private CustomPanel recommendCountPanel = new CustomPanel();
     // 推荐源
@@ -1885,7 +1908,7 @@ public class MainFrame extends JFrame {
     // 推荐歌单标签下拉框
     private CustomComboBox<String> netRecommendTagComboBox = new CustomComboBox<>();
     // 推荐播放全部按钮
-    private CustomButton netRecommendPlayAllButton = new CustomButton("播放全部", playAllIcon);
+    private CustomButton netRecommendPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 推荐刷新按钮
     private CustomButton netRecommendRefreshButton = new CustomButton(refreshIcon);
     // 推荐页数框
@@ -1913,15 +1936,15 @@ public class MainFrame extends JFrame {
     // 下载右键菜单：下一首播放
     private CustomMenuItem downloadNextPlayMenuItem = new CustomMenuItem(NEXT_PLAY_MENU_ITEM_TEXT);
     // 下载右键菜单：打开文件所在位置
-    private CustomMenuItem downloadLocateFileMenuItem = new CustomMenuItem("打开文件所在位置");
+    private CustomMenuItem downloadLocateFileMenuItem = new CustomMenuItem(I18n.getText("locateFileMenuItem"));
     // 下载右键菜单：编辑歌曲信息
-    private CustomMenuItem downloadEditInfoMenuItem = new CustomMenuItem("编辑歌曲信息");
+    private CustomMenuItem downloadEditInfoMenuItem = new CustomMenuItem(I18n.getText("editInfoMenuItem"));
     // 下载右键菜单：取消任务
-    private CustomMenuItem cancelTaskMenuItem = new CustomMenuItem("取消下载");
+    private CustomMenuItem cancelTaskMenuItem = new CustomMenuItem(I18n.getText("cancelTaskMenuItem"));
     // 下载右键菜单：重新开始
-    private CustomMenuItem restartTaskMenuItem = new CustomMenuItem("重新下载");
+    private CustomMenuItem restartTaskMenuItem = new CustomMenuItem(I18n.getText("restartTaskMenuItem"));
     // 下载右键菜单：删除任务
-    private CustomMenuItem removeTaskMenuItem = new CustomMenuItem("删除任务");
+    private CustomMenuItem removeTaskMenuItem = new CustomMenuItem(I18n.getText("removeTaskMenuItem"));
     // 下载工具栏
     private CustomToolBar downloadToolBar = new CustomToolBar();
     // 重新开始选中任务按钮
@@ -1937,7 +1960,7 @@ public class MainFrame extends JFrame {
     // 删除全部任务按钮
     private CustomButton removeAllTasksButton = new CustomButton(removeAllTasksIcon);
     // 下载任务数量标签
-    private CustomLabel taskCountLabel = new CustomLabel("共 0 项任务");
+    private CustomLabel taskCountLabel = new CustomLabel(String.format(TOTAL_MSG, 0));
 
     // 播放队列
     private CustomList<MusicResource> playQueue = new CustomList<>();
@@ -1982,7 +2005,7 @@ public class MainFrame extends JFrame {
     // 播放队列右键菜单：编辑歌曲信息
     private CustomMenuItem playQueueEditInfoMenuItem = new CustomMenuItem(EDIT_INFO_MENU_ITEM_TEXT);
     // 播放队列右键菜单：删除
-    private CustomMenuItem playQueueRemoveMenuItem = new CustomMenuItem("从播放队列删除");
+    private CustomMenuItem playQueueRemoveMenuItem = new CustomMenuItem(REMOVE_MENU_ITEM_TEXT);
     // 播放队列工具栏
     private CustomToolBar playQueueToolBar = new CustomToolBar();
     // 删除选中歌曲按钮
@@ -1998,15 +2021,15 @@ public class MainFrame extends JFrame {
     // 下移按钮
     private CustomButton playQueueMoveDownToolButton = new CustomButton(moveDownIcon);
     // 歌曲数量标签
-    private CustomLabel playQueueCountLabel = new CustomLabel("共 0 首");
+    private CustomLabel playQueueCountLabel = new CustomLabel(String.format(TOTAL_MSG, 0));
 
     // 描述面板弹出菜单
     private CustomPopupMenu descriptionPanelPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem saveDescCoverImgMenuItem = new CustomMenuItem("导出封面");
-    private CustomMenuItem saveDescBgImgMenuItem = new CustomMenuItem("导出背景");
-    private CustomMenuItem copyDescNameMenuItem = new CustomMenuItem("复制名称");
-    private CustomMenuItem copyDescTagMenuItem = new CustomMenuItem("复制标签");
-    private CustomMenuItem copyDescMenuItem = new CustomMenuItem("复制描述");
+    private CustomMenuItem saveDescCoverImgMenuItem = new CustomMenuItem(I18n.getText("saveDescCover"));
+    private CustomMenuItem saveDescBgImgMenuItem = new CustomMenuItem(I18n.getText("saveDescBg"));
+    private CustomMenuItem copyDescNameMenuItem = new CustomMenuItem(I18n.getText("copyDescName"));
+    private CustomMenuItem copyDescTagMenuItem = new CustomMenuItem(I18n.getText("copyDescTag"));
+    private CustomMenuItem copyDescMenuItem = new CustomMenuItem(I18n.getText("copyDesc"));
     private CustomPanel playlistDescriptionPanel = new CustomPanel();
     private CustomPanel albumDescriptionPanel = new CustomPanel();
     private CustomPanel artistDescriptionPanel = new CustomPanel();
@@ -2155,15 +2178,15 @@ public class MainFrame extends JFrame {
     // 评论右键弹出菜单
     private CustomPopupMenu netCommentPopupMenu = new CustomPopupMenu(THIS);
     // 评论右键菜单：复制评论
-    private CustomMenuItem netCommentCopyMenuItem = new CustomMenuItem("复制评论");
+    private CustomMenuItem netCommentCopyMenuItem = new CustomMenuItem(I18n.getText("commentCopy"));
     // 评论右键菜单：导出用户头像
-    private CustomMenuItem netCommentSaveProfileMenuItem = new CustomMenuItem("导出用户头像");
+    private CustomMenuItem netCommentSaveProfileMenuItem = new CustomMenuItem(I18n.getText("saveProfile"));
     // 评论右键菜单：查看用户
-    private CustomMenuItem netCommentUserMenuItem = new CustomMenuItem("查看用户");
+    private CustomMenuItem netCommentUserMenuItem = new CustomMenuItem(I18n.getText("commentUser"));
     // 评论右键菜单：查看用户歌单
-    private CustomMenuItem netCommentPlaylistMenuItem = new CustomMenuItem("查看用户歌单");
+    private CustomMenuItem netCommentPlaylistMenuItem = new CustomMenuItem(I18n.getText("commentPlaylist"));
     // 评论右键菜单：查看用户专辑
-    private CustomMenuItem netCommentAlbumMenuItem = new CustomMenuItem("查看用户专辑");
+    private CustomMenuItem netCommentAlbumMenuItem = new CustomMenuItem(I18n.getText("commentAlbum"));
     // 评论工具栏
     private CustomToolBar netCommentToolBar = new CustomToolBar();
     // 评论返回按钮
@@ -2202,9 +2225,9 @@ public class MainFrame extends JFrame {
     // 乐谱右键弹出菜单
     private CustomPopupMenu netSheetPopupMenu = new CustomPopupMenu(THIS);
     // 乐谱右键菜单：查看乐谱
-    private CustomMenuItem netSheetBrowseMenuItem = new CustomMenuItem("查看乐谱");
+    private CustomMenuItem netSheetBrowseMenuItem = new CustomMenuItem(I18n.getText("sheetBrowse"));
     // 乐谱右键菜单：复制名称
-    private CustomMenuItem netSheetCopyNameMenuItem = new CustomMenuItem("复制名称");
+    private CustomMenuItem netSheetCopyNameMenuItem = new CustomMenuItem(I18n.getText("sheetCopy"));
     // 乐谱工具栏
     private CustomToolBar netSheetToolBar = new CustomToolBar();
     // 乐谱返回按钮
@@ -2318,17 +2341,17 @@ public class MainFrame extends JFrame {
     // 格言弹出菜单
     private CustomPopupMenu mottoPopupMenu = new CustomPopupMenu(THIS);
     // 格言右键菜单：复制格言
-    private CustomMenuItem copyMottoMenuItem = new CustomMenuItem("复制格言");
+    private CustomMenuItem copyMottoMenuItem = new CustomMenuItem(I18n.getText("copyMotto"));
     // 格言右键菜单：下一条格言
-    private CustomMenuItem nextMottoMenuItem = new CustomMenuItem("下一条格言");
+    private CustomMenuItem nextMottoMenuItem = new CustomMenuItem(I18n.getText("nextMotto"));
 
     // loading 面板
     private LoadingPanel loading = new LoadingPanel(THIS);
 
     // 托盘
     private CustomPopupMenu trayPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem openMainFrameMenuItem = new CustomMenuItem("打开主界面");
-    private CustomMenuItem exitMenuItem = new CustomMenuItem("退出" + TITLE);
+    private CustomMenuItem openMainFrameMenuItem = new CustomMenuItem(I18n.getText("openMainFrame"));
+    private CustomMenuItem exitMenuItem = new CustomMenuItem(I18n.getText("exit") + TITLE);
 
     // 频谱/歌词/背景图切换/滚动条流畅动画 Timer
     private Timer spectrumTimer;
@@ -2940,7 +2963,7 @@ public class MainFrame extends JFrame {
 
     // 加载配置
     private boolean loadConfig() {
-        JSONObject config = LMDataUtil.read(ConfigConstants.CONFIG_FILE_NAME);
+        JSONObject config = ConfigConstants.CONFIG_DATA;
         // 载入是否自动更新
         autoUpdate = config.getBooleanValue(ConfigConstants.AUTO_UPDATE, true);
         if (autoUpdate) checkUpdate(true);
@@ -3760,6 +3783,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.RECOMMEND_TAB_INDEX, currRecommendTab == -1 ? preRecommendTab : currRecommendTab);
         // 存入是否自动更新
         config.put(ConfigConstants.AUTO_UPDATE, autoUpdate);
+        // 存入界面语言
+        config.put(ConfigConstants.UI_LANGUAGE, I18n.currLang);
         // 存入关闭窗口操作
         config.put(ConfigConstants.CLOSE_WINDOW_OPTION, currCloseWindowOption);
         // 存入窗口大小
@@ -4221,7 +4246,7 @@ public class MainFrame extends JFrame {
                 StringJoiner sj = new StringJoiner("\n");
                 li.forEach(l -> sj.add("- " + l.text()));
                 String detail = sj.toString();
-                String updateInfo = StringUtil.notEmpty(detail) ? "更新说明：\n" + detail : "";
+                String updateInfo = StringUtil.notEmpty(detail) ? UPDATE_INFO_MSG + detail : "";
                 // 有新版本
                 if (latest.compareTo(now) > 0) {
                     File packageFile = new File(SimplePath.TEMP_PATH + SoftInfo.PACKAGE_FILE_NAME);
@@ -4230,7 +4255,7 @@ public class MainFrame extends JFrame {
                     if (mute && packageFileValid) startUpdate(true, keyMD5);
                     // 弹出更新提示框
                     ConfirmDialog d = new ConfirmDialog(THIS, String.format(UPDATE_MSG, latest, now) + updateInfo,
-                            "是", "否", "前往发布页", mute, IGNORE_UPDATE_MSG);
+                            YES, NO, TO_RELEASE, mute, IGNORE_UPDATE_MSG);
                     d.showDialog();
                     int response = d.getResponse();
                     boolean checked = d.isChecked();
@@ -4245,7 +4270,7 @@ public class MainFrame extends JFrame {
                         }
                         // 更新包已存在，或者下载成功，询问是否重启
                         if (ud == null || !ud.isCanceled()) {
-                            ConfirmDialog cd = new ConfirmDialog(THIS, UPDATE_READY_MSG, "立即重启", "以后再说");
+                            ConfirmDialog cd = new ConfirmDialog(THIS, UPDATE_READY_MSG, RESTART_NOW, LATER);
                             cd.showDialog();
                             int resp = cd.getResponse();
                             if (resp == JOptionPane.YES_OPTION) startUpdate(false, keyMD5);
@@ -4254,11 +4279,11 @@ public class MainFrame extends JFrame {
                 }
                 // 已是最新版
                 else if (!mute) {
-                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(LATEST_MSG, latest, now) + updateInfo, "确定");
+                    ConfirmDialog d = new ConfirmDialog(THIS, String.format(LATEST_MSG, latest, now) + updateInfo, OK);
                     d.showDialog();
                 }
             } catch (Exception ex) {
-                if (!mute) new TipDialog(THIS, UPDATE_CHECK_FAIL_MSG).showDialog();
+                if (!mute) new TipDialog(THIS, UPDATE_CHECK_FAILED_MSG).showDialog();
             } finally {
                 if (!mute) td.close();
             }
@@ -4323,7 +4348,7 @@ public class MainFrame extends JFrame {
         closeSong.addActionListener(e -> unload());
         clearCache.addActionListener(e -> {
             ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                    String.format(ASK_CLEAR_CACHE_MSG, FileUtil.getUnitString(FileUtil.size(new File(SimplePath.CACHE_PATH)))), "是", "否");
+                    String.format(ASK_CLEAR_CACHE_MSG, FileUtil.getUnitString(FileUtil.size(new File(SimplePath.CACHE_PATH)))), YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
@@ -4344,7 +4369,7 @@ public class MainFrame extends JFrame {
             }
         });
         updateMenuItem.addActionListener(e -> checkUpdate(false));
-        helpMenuItem.addActionListener(e -> new ConfirmDialog(THIS, HELP_MSG, "确定").showDialog());
+        helpMenuItem.addActionListener(e -> new ConfirmDialog(THIS, HELP_MSG, OK).showDialog());
         aboutMenuItem.addActionListener(e -> new AboutDialog(THIS).showDialog());
 
         mainMenu.add(closeSong);
@@ -4362,14 +4387,14 @@ public class MainFrame extends JFrame {
     // 打开文件
     private void initOpenFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("选择歌曲文件");
+        fileChooser.setTitle(CHOOSE_TRACK_FILE);
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
         StringBuilder allSuffix = new StringBuilder();
         for (String suffix : Format.AUDIO_TYPE_SUPPORTED) {
             filters.add(new FileChooser.ExtensionFilter(suffix.toUpperCase(), "*." + suffix));
             allSuffix.append("*.").append(suffix).append(";");
         }
-        filters.add(0, new FileChooser.ExtensionFilter("音频文件", allSuffix.toString()));
+        filters.add(0, new FileChooser.ExtensionFilter(AUDIO_FILE, allSuffix.toString()));
         // 添加歌曲菜单项也是同一个监听器
         addFileMenuItem.addActionListener(e -> {
             Platform.runLater(() -> {
@@ -4392,7 +4417,7 @@ public class MainFrame extends JFrame {
                 filterPersonalMusic();
                 if (!f) {
                     musicList.setModel(musicListModel);
-                    countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+                    countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
                 }
                 String msg = "成功添加 " + audioFileCount + " 首歌曲";
                 new TipDialog(THIS, msg).showDialog();
@@ -4403,7 +4428,7 @@ public class MainFrame extends JFrame {
     // 打开歌曲文件夹
     private void initOpenDir() {
         DirectoryChooser dirChooser = new DirectoryChooser();
-        dirChooser.setTitle("选择歌曲文件夹");
+        dirChooser.setTitle(CHOOSE_TRACK_FOLDER);
         // 添加歌曲文件夹菜单项也是同一个监听器
         addDirMenuItem.addActionListener(e -> {
             Platform.runLater(() -> {
@@ -4415,7 +4440,7 @@ public class MainFrame extends JFrame {
                 ListModel model = musicList.getModel();
                 if (musicListModel.getSize() != 0) {
                     ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                            ASK_RETAIN_MUSIC_LIST_MSG, "是", "否", "取消");
+                            ASK_RETAIN_MUSIC_LIST_MSG, YES, NO, CANCEL);
                     confirmDialog.showDialog();
                     int response = confirmDialog.getResponse();
                     if (response == JOptionPane.NO_OPTION) {
@@ -4430,24 +4455,23 @@ public class MainFrame extends JFrame {
                 int audioFileCount = 0;
                 for (File file : files) {
                     // 支持这种文件格式才添加
-                    if (player.support(FileUtil.getSuffix(file))) {
-                        audioFileCount++;
-                        AudioFile audioFile = new AudioFile(file);
-                        globalExecutor.execute(() -> {
-                            MediaUtil.fillAudioFileInfo(audioFile);
-                            musicList.repaint();
-                        });
-                        musicListModel.addElement(audioFile);
-                    }
+                    if (!player.support(FileUtil.getSuffix(file))) continue;
+                    audioFileCount++;
+                    AudioFile audioFile = new AudioFile(file);
+                    globalExecutor.execute(() -> {
+                        MediaUtil.fillAudioFileInfo(audioFile);
+                        musicList.repaint();
+                    });
+                    musicListModel.addElement(audioFile);
                 }
                 musicList.setModel(model);
                 boolean f = model == filterModel;
                 filterPersonalMusic();
                 if (!f) {
                     musicList.setModel(musicListModel);
-                    countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+                    countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
                 }
-                String msg = "成功添加 " + audioFileCount + " 首歌曲";
+                String msg = String.format(TRACK_ADDED, audioFileCount);
                 new TipDialog(THIS, msg).showDialog();
             });
         });
@@ -4479,18 +4503,18 @@ public class MainFrame extends JFrame {
         downloadManagementPanel.setPreferredSize(d);
         playQueuePanel.setPreferredSize(d);
 
-        personalMusicLabel.setText(showTabText ? "个人音乐" : "");
-        netMusicLabel.setText(showTabText ? "音乐馆" : "");
-        netPlaylistLabel.setText(showTabText ? "歌单" : "");
-        netAlbumLabel.setText(showTabText ? "专辑" : "");
-        netArtistLabel.setText(showTabText ? "歌手" : "");
-        netRadioLabel.setText(showTabText ? "电台" : "");
-        netMvLabel.setText(showTabText ? "MV" : "");
-        netRankingLabel.setText(showTabText ? "榜单" : "");
-        netUserLabel.setText(showTabText ? "用户" : "");
-        recommendLabel.setText(showTabText ? "推荐" : "");
-        downloadManagementLabel.setText(showTabText ? "下载管理" : "");
-        playQueueLabel.setText(showTabText ? "播放队列" : "");
+        personalMusicLabel.setText(showTabText ? I18n.getText("personalMusic") : "");
+        netMusicLabel.setText(showTabText ? I18n.getText("netMusic") : "");
+        netPlaylistLabel.setText(showTabText ? I18n.getText("netPlaylist") : "");
+        netAlbumLabel.setText(showTabText ? I18n.getText("netAlbum") : "");
+        netArtistLabel.setText(showTabText ? I18n.getText("netArtist") : "");
+        netRadioLabel.setText(showTabText ? I18n.getText("netRadio") : "");
+        netMvLabel.setText(showTabText ? I18n.getText("netMv") : "");
+        netRankingLabel.setText(showTabText ? I18n.getText("netRanking") : "");
+        netUserLabel.setText(showTabText ? I18n.getText("netUser") : "");
+        recommendLabel.setText(showTabText ? I18n.getText("netRecommend") : "");
+        downloadManagementLabel.setText(showTabText ? I18n.getText("downloadManagement") : "");
+        playQueueLabel.setText(showTabText ? I18n.getText("playQueue") : "");
     }
 
     // 初始化标签页
@@ -5001,7 +5025,7 @@ public class MainFrame extends JFrame {
                     musicCollectionLeftBox.remove(musicScrollPane);
                     musicCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 首", collectionModel.size()));
+                countLabel.setText(String.format(TOTAL_MSG, collectionModel.size()));
             } else if (selectedIndex == CollectionTabIndex.PLAYLIST) {
                 collectionList.setModel(playlistCollectionModel);
                 int size = playlistCollectionModel.size();
@@ -5012,7 +5036,7 @@ public class MainFrame extends JFrame {
                     playlistCollectionLeftBox.remove(collectionScrollPane);
                     playlistCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
 
                 for (int i = 0, s = playlistCollectionModel.size(); i < s; i++) {
                     int finalI = i;
@@ -5033,7 +5057,7 @@ public class MainFrame extends JFrame {
                     albumCollectionLeftBox.remove(collectionScrollPane);
                     albumCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
 
                 for (int i = 0, s = albumCollectionModel.size(); i < s; i++) {
                     int finalI = i;
@@ -5054,7 +5078,7 @@ public class MainFrame extends JFrame {
                     artistCollectionLeftBox.remove(collectionScrollPane);
                     artistCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
 
                 for (int i = 0, s = artistCollectionModel.size(); i < s; i++) {
                     int finalI = i;
@@ -5075,7 +5099,7 @@ public class MainFrame extends JFrame {
                     radioCollectionLeftBox.remove(collectionScrollPane);
                     radioCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
 
                 for (int i = 0, s = radioCollectionModel.size(); i < s; i++) {
                     int finalI = i;
@@ -5096,7 +5120,7 @@ public class MainFrame extends JFrame {
                     mvCollectionLeftBox.remove(collectionScrollPane);
                     mvCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
 
                 for (int i = 0, s = mvCollectionModel.size(); i < s; i++) {
                     int finalI = i;
@@ -5117,7 +5141,7 @@ public class MainFrame extends JFrame {
                     rankingCollectionLeftBox.remove(collectionScrollPane);
                     rankingCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
 
                 for (int i = 0, s = rankingCollectionModel.size(); i < s; i++) {
                     int finalI = i;
@@ -5138,7 +5162,7 @@ public class MainFrame extends JFrame {
                     userCollectionLeftBox.remove(collectionScrollPane);
                     userCollectionLeftBox.add(emptyHintPanel);
                 }
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
 
                 for (int i = 0, s = userCollectionModel.size(); i < s; i++) {
                     int finalI = i;
@@ -5322,12 +5346,12 @@ public class MainFrame extends JFrame {
                 });
             }
         };
-        collectionRecordTypeComboBoxModel.addElement("最近一周");
-        collectionRecordTypeComboBoxModel.addElement("所有时间");
-        collectionOrderComboBoxModel.addElement("最新发布");
-        collectionOrderComboBoxModel.addElement("最多播放");
-        collectionSortTypeComboBoxModel.addElement("正序");
-        collectionSortTypeComboBoxModel.addElement("倒序");
+        collectionRecordTypeComboBoxModel.addElement(I18n.getText("recentWeek"));
+        collectionRecordTypeComboBoxModel.addElement(I18n.getText("allTime"));
+        collectionOrderComboBoxModel.addElement(I18n.getText("latest"));
+        collectionOrderComboBoxModel.addElement(I18n.getText("mostPlayed"));
+        collectionSortTypeComboBoxModel.addElement(I18n.getText("ascend"));
+        collectionSortTypeComboBoxModel.addElement(I18n.getText("descend"));
         collectionRecordTypeComboBox.setModel(collectionRecordTypeComboBoxModel);
         // 用户听歌记录类型
         collectionRecordTypeComboBox.addItemListener(e -> {
@@ -6285,7 +6309,7 @@ public class MainFrame extends JFrame {
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(musicListModel);
             musicScrollPane.setVValue(0);
-            countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+            countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
         });
         // 播放历史事件
         historyButton.addActionListener(e -> {
@@ -6308,7 +6332,7 @@ public class MainFrame extends JFrame {
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(historyModel);
             musicScrollPane.setVValue(0);
-            countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+            countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
         });
         // 收藏事件
         collectionButton.addActionListener(e -> {
@@ -6369,8 +6393,8 @@ public class MainFrame extends JFrame {
             musicScrollPane.setVValue(0);
 
             if (selectedIndex == CollectionTabIndex.MUSIC)
-                countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
-            else countLabel.setText(String.format("共 %s 项", collectionList.getModel().getSize()));
+                countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
+            else countLabel.setText(String.format(TOTAL_MSG, collectionList.getModel().getSize()));
         });
         // 按钮悬浮和点击效果
         localMusicButton.addMouseListener(new ButtonMouseListener(localMusicButton, THIS));
@@ -6425,7 +6449,7 @@ public class MainFrame extends JFrame {
         });
         // 点击重新导入按钮事件
         reimportToolButton.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REIMPORT_MSG, "是", "否");
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REIMPORT_MSG, YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
@@ -6461,7 +6485,7 @@ public class MainFrame extends JFrame {
             filterPersonalMusic();
             if (!f) {
                 musicList.setModel(musicListModel);
-                countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+                countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
             }
             String msg = "成功添加 " + audioFileCount + " 首歌曲";
             new TipDialog(THIS, msg).showDialog();
@@ -6477,7 +6501,7 @@ public class MainFrame extends JFrame {
             if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || selectedIndex == CollectionTabIndex.MUSIC) {
                 List<MusicResource> selectedValues = musicList.getSelectedValuesList();
                 if (selectedValues.isEmpty()) return;
-                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
+                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, YES, NO);
                 confirmDialog.showDialog();
                 int response = confirmDialog.getResponse();
                 if (response != JOptionPane.YES_OPTION) return;
@@ -6505,7 +6529,7 @@ public class MainFrame extends JFrame {
             } else {
                 List<NetResource> selectedValues = collectionList.getSelectedValuesList();
                 if (selectedValues.isEmpty()) return;
-                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, "是", "否");
+                ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_ITEMS_MSG, YES, NO);
                 confirmDialog.showDialog();
                 int response = confirmDialog.getResponse();
                 if (response != JOptionPane.YES_OPTION) return;
@@ -6535,7 +6559,7 @@ public class MainFrame extends JFrame {
         });
         // 点击清空按钮事件
         clearToolButton.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_CLEAR_LIST_MSG, "是", "否");
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_CLEAR_LIST_MSG, YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
@@ -6575,7 +6599,7 @@ public class MainFrame extends JFrame {
         });
         // 去重事件
         duplicateToolButton.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_DUPLICATE_MSG, "是", "否");
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_DUPLICATE_MSG, YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
@@ -6609,7 +6633,7 @@ public class MainFrame extends JFrame {
         });
         // 倒序事件
         reverseToolButton.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REVERSE_MSG, "是", "否");
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REVERSE_MSG, YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response != JOptionPane.YES_OPTION) return;
@@ -6787,7 +6811,7 @@ public class MainFrame extends JFrame {
         stylePopupMenu.add(manageStyleMenuItem);
         stylePopupMenu.add(styleCustomMenuItem);
         // 个人音乐筛选框
-        filterTextField.addFocusListener(new TextFieldHintListener(filterTextField, "关键字筛选", currUIStyle.getForeColor()));
+        filterTextField.addFocusListener(new TextFieldHintListener(filterTextField, I18n.getText("filterByKeyword"), currUIStyle.getForeColor()));
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -6851,14 +6875,14 @@ public class MainFrame extends JFrame {
                 int selectedIndex = collectionTabbedPane.getSelectedIndex();
                 if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
                         || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
-                    countLabel.setText(String.format("共 %s 首", size));
+                    countLabel.setText(String.format(TOTAL_MSG, size));
                     musicList.setModel(model);
                     leftBox.remove(emptyHintPanel);
                     leftBox.add(musicScrollPane);
                     leftBox.repaint();
                 } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
                         && (model == collectionModel || model == filterModel)) {
-                    countLabel.setText(String.format("共 %s 首", size));
+                    countLabel.setText(String.format(TOTAL_MSG, size));
                     musicList.setModel(model);
                     musicCollectionLeftBox.remove(emptyHintPanel);
                     musicCollectionLeftBox.add(musicScrollPane);
@@ -6866,25 +6890,25 @@ public class MainFrame extends JFrame {
                 } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
                     if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
                         collectionList.setModel(model);
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
                         collectionList.setModel(model);
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
                         collectionList.setModel(model);
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
                         collectionList.setModel(model);
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
                         collectionList.setModel(model);
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
                         collectionList.setModel(model);
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
                         collectionList.setModel(model);
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     }
 
                     Box box = null;
@@ -6908,7 +6932,7 @@ public class MainFrame extends JFrame {
                 int selectedIndex = collectionTabbedPane.getSelectedIndex();
                 if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
                         || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
-                    countLabel.setText(String.format("共 %s 首", size));
+                    countLabel.setText(String.format(TOTAL_MSG, size));
                     if (size == 0) {
                         leftBox.add(emptyHintPanel);
                         leftBox.remove(musicScrollPane);
@@ -6916,7 +6940,7 @@ public class MainFrame extends JFrame {
                     }
                 } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
                         && (model == collectionModel || model == filterModel)) {
-                    countLabel.setText(String.format("共 %s 首", size));
+                    countLabel.setText(String.format(TOTAL_MSG, size));
                     if (size == 0) {
                         musicCollectionLeftBox.remove(musicScrollPane);
                         musicCollectionLeftBox.add(emptyHintPanel);
@@ -6924,19 +6948,19 @@ public class MainFrame extends JFrame {
                     }
                 } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
                     if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format("共 %s 项", size));
+                        countLabel.setText(String.format(TOTAL_MSG, size));
                     }
                     if (size == 0) {
                         Box box = null;
@@ -7414,9 +7438,9 @@ public class MainFrame extends JFrame {
             if (e.getStateChange() != ItemEvent.SELECTED) return;
             searchButton.doClick();
         });
-        netMusicSearchTypeComboBox.addItem("常规");
-        netMusicSearchTypeComboBox.addItem("歌词");
-        netMusicSearchTypeComboBox.addItem("节目");
+        netMusicSearchTypeComboBox.addItem(I18n.getText("general"));
+        netMusicSearchTypeComboBox.addItem(I18n.getText("lyric"));
+        netMusicSearchTypeComboBox.addItem(I18n.getText("program"));
         netMusicSearchTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -7687,7 +7711,7 @@ public class MainFrame extends JFrame {
                     List<NetMusicInfo> musicInfos = result.data;
                     netMusicCurrPage = netMusicMaxPage = 1;
                     // 标题
-                    netMusicTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的相似歌曲"));
+                    netMusicTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("similarTrackSuffix")));
                     netMusicToolBar.removeAll();
                     netMusicToolBar.add(netMusicBackwardButton);
                     netMusicToolBar.add(Box.createHorizontalGlue());
@@ -7755,7 +7779,7 @@ public class MainFrame extends JFrame {
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的相关歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedPlaylistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -7832,7 +7856,7 @@ public class MainFrame extends JFrame {
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的作者"));
+                        netUserTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("authorSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -7881,7 +7905,7 @@ public class MainFrame extends JFrame {
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(currArtistMusicInfo.toSimpleString() + " 的歌手"));
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(currArtistMusicInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -7960,7 +7984,7 @@ public class MainFrame extends JFrame {
                         int total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的电台"));
+                        netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("radioSuffix")));
                         netRadioToolBar.removeAll();
                         netRadioToolBar.add(netRadioBackwardButton);
                         netRadioToolBar.add(Box.createHorizontalGlue());
@@ -8010,7 +8034,7 @@ public class MainFrame extends JFrame {
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netAlbumTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的专辑"));
+                        netAlbumTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("albumSuffix")));
                         netAlbumToolBar.removeAll();
                         netAlbumToolBar.add(netAlbumBackwardButton);
                         netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -8084,7 +8108,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的推荐电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("recRadioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -8157,7 +8181,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + " 的相关 MV"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedMvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -9983,7 +10007,7 @@ public class MainFrame extends JFrame {
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + " 的相似歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + I18n.getText("similarPlaylistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -10052,7 +10076,7 @@ public class MainFrame extends JFrame {
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + " 的创建者"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + I18n.getText("creatorSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -10122,7 +10146,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + " 的收藏者"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + I18n.getText("collectorSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -10987,7 +11011,7 @@ public class MainFrame extends JFrame {
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + " 的作者"));
+                        netUserTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("authorSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -11036,7 +11060,7 @@ public class MainFrame extends JFrame {
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + " 的歌手"));
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -11106,7 +11130,7 @@ public class MainFrame extends JFrame {
                     List<NetAlbumInfo> albumInfos = result.data;
                     netAlbumCurrPage = netAlbumMaxPage = 1;
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(albumInfo.getName() + " 的相似专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(albumInfo.getName() + I18n.getText("similarAlbumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -12014,7 +12038,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -12085,7 +12109,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的 MV"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("mvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -12151,7 +12175,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的相似歌手"));
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("similarArtistSuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -12221,7 +12245,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的粉丝"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -12291,7 +12315,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的合作人"));
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("buddySuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -12360,7 +12384,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + " 的电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -12975,8 +12999,8 @@ public class MainFrame extends JFrame {
             netRadioSearchButton.doClick();
         });
 
-        netRadioSortTypeComboBox.addItem("正序");
-        netRadioSortTypeComboBox.addItem("倒序");
+        netRadioSortTypeComboBox.addItem(I18n.getText("ascend"));
+        netRadioSortTypeComboBox.addItem(I18n.getText("descend"));
         // 电台排序类型切换事件
         netRadioSortTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
@@ -13286,7 +13310,7 @@ public class MainFrame extends JFrame {
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的主播"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("djSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13356,7 +13380,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的订阅者"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("subscriberSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13426,7 +13450,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioCurrPage = netRadioMaxPage = 1;
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的相似电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("similarRadioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -13495,7 +13519,7 @@ public class MainFrame extends JFrame {
                     List<NetArtistInfo> artistInfos = result.data;
                     netArtistCurrPage = netArtistMaxPage = 1;
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + " 的演职员"));
+                    netArtistTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("castSuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -13872,9 +13896,9 @@ public class MainFrame extends JFrame {
                 });
             }
         };
-        netMvSortTypeComboBox.addItem("最新发布");
-        netMvSortTypeComboBox.addItem("最多播放");
-        netMvSortTypeComboBox.addItem("最多收藏");
+        netMvSortTypeComboBox.addItem(I18n.getText("latest"));
+        netMvSortTypeComboBox.addItem(I18n.getText("mostPlayed"));
+        netMvSortTypeComboBox.addItem(I18n.getText("mostCollected"));
         // MV 排序类型切换事件
         netMvSortTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
@@ -14142,7 +14166,7 @@ public class MainFrame extends JFrame {
                     List<NetMvInfo> mvInfos = result.data;
                     netMvCurrPage = netMvMaxPage = 1;
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + " 的相似 MV"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("similarMvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -14211,7 +14235,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + " 的分集"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("episodeSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -14281,7 +14305,7 @@ public class MainFrame extends JFrame {
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + " 的歌手"));
+                        netArtistTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -14328,7 +14352,7 @@ public class MainFrame extends JFrame {
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(mvInfo.getName() + " 的发布者"));
+                        netUserTitleLabel.setText(StringUtil.textToHtml(mvInfo.getName() + I18n.getText("publisherSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -15319,12 +15343,12 @@ public class MainFrame extends JFrame {
             });
 //            }
         };
-        recordTypeComboBoxModel.addElement("最近一周");
-        recordTypeComboBoxModel.addElement("所有时间");
-        orderComboBoxModel.addElement("最新发布");
-        orderComboBoxModel.addElement("最多播放");
-        sortTypeComboBoxModel.addElement("正序");
-        sortTypeComboBoxModel.addElement("倒序");
+        recordTypeComboBoxModel.addElement(I18n.getText("recentWeek"));
+        recordTypeComboBoxModel.addElement(I18n.getText("allTime"));
+        orderComboBoxModel.addElement(I18n.getText("latest"));
+        orderComboBoxModel.addElement(I18n.getText("mostPlayed"));
+        sortTypeComboBoxModel.addElement(I18n.getText("ascend"));
+        sortTypeComboBoxModel.addElement(I18n.getText("descend"));
         netUserRecordTypeComboBox.setModel(recordTypeComboBoxModel);
         // 用户播放记录类型
         netUserRecordTypeComboBox.addItemListener(e -> {
@@ -15827,7 +15851,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -15894,7 +15918,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -15960,7 +15984,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的电台"));
+                    netRadioTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -16030,7 +16054,7 @@ public class MainFrame extends JFrame {
                     cursor = result.cursor;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的视频"));
+                    netMvTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("videoSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -16097,7 +16121,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的关注"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("followSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -16165,7 +16189,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + " 的粉丝"));
+                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -16307,7 +16331,7 @@ public class MainFrame extends JFrame {
                 else if (resource instanceof NetRadioInfo) s = ((NetRadioInfo) resource).toSimpleString();
                 else if (resource instanceof NetMvInfo) s = ((NetMvInfo) resource).toSimpleString();
                 else if (resource instanceof NetRankingInfo) s = ((NetRankingInfo) resource).toSimpleString();
-                netCommentTitleLabel.setText(StringUtil.textToHtml(s + " 的评论"));
+                netCommentTitleLabel.setText(StringUtil.textToHtml(s + I18n.getText("commentSuffix")));
                 netCommentCountLabel.setText(String.format(PAGINATION_MSG, netCommentCurrPage, netCommentMaxPage));
                 netCommentCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16371,7 +16395,7 @@ public class MainFrame extends JFrame {
                 List<NetSheetInfo> sheetInfos = result.data;
                 netSheetCurrPage = netSheetMaxPage = 1;
                 // 更新标题和数量显示
-                netSheetTitleLabel.setText(StringUtil.textToHtml(info.toSimpleString() + " 的乐谱"));
+                netSheetTitleLabel.setText(StringUtil.textToHtml(info.toSimpleString() + I18n.getText("sheetSuffix")));
                 netSheetCountLabel.setText(String.format(PAGINATION_MSG, netSheetCurrPage, netSheetMaxPage));
                 netSheetCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16446,8 +16470,8 @@ public class MainFrame extends JFrame {
             currPane = lastPane;
         });
         // 添加评论类型
-        netCommentTypeComboBox.addItem("热门评论");
-        netCommentTypeComboBox.addItem("最新评论");
+        netCommentTypeComboBox.addItem(I18n.getText("hotComment"));
+        netCommentTypeComboBox.addItem(I18n.getText("newComment"));
         // 评论类型
         netCommentTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
@@ -16615,7 +16639,7 @@ public class MainFrame extends JFrame {
             NetCommentInfo commentInfo = netCommentList.getSelectedValue();
             if (commentInfo.hasProfileUrl()) {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("保存图片");
+                fileChooser.setTitle(SAVE_IMG);
                 ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
                 // 添加可保存的图片格式
                 for (String suffix : Format.WRITE_IMAGE_TYPE_SUPPORTED) {
@@ -16641,7 +16665,7 @@ public class MainFrame extends JFrame {
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText("发起评论的用户");
+                    netUserTitleLabel.setText(USER_COMMENTED);
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -16709,7 +16733,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + " 的歌单"));
+                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -16776,7 +16800,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + " 的专辑"));
+                    netAlbumTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -18594,8 +18618,8 @@ public class MainFrame extends JFrame {
             netRecommendRefreshButton.doClick();
         });
 
-        netRecommendSortTypeComboBox.addItem("正序");
-        netRecommendSortTypeComboBox.addItem("倒序");
+        netRecommendSortTypeComboBox.addItem(I18n.getText("ascend"));
+        netRecommendSortTypeComboBox.addItem(I18n.getText("descend"));
         // 电台排序类型切换事件
         netRecommendSortTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
@@ -19147,7 +19171,7 @@ public class MainFrame extends JFrame {
         removeSelectedTasksButton.addActionListener(e -> removeTaskMenuItem.doClick());
         // 重新开始全部任务
         restartAllTasksButton.addActionListener(e -> {
-            ConfirmDialog dialog = new ConfirmDialog(this, ASK_RESTART_ALL_TASKS_MSG, "是", "否");
+            ConfirmDialog dialog = new ConfirmDialog(this, ASK_RESTART_ALL_TASKS_MSG, YES, NO);
             dialog.showDialog();
             if (dialog.getResponse() == JOptionPane.YES_OPTION) {
                 Enumeration<Task> tasks = downloadListModel.elements();
@@ -19159,7 +19183,7 @@ public class MainFrame extends JFrame {
         });
         // 取消全部任务
         cancelAllTasksButton.addActionListener(e -> {
-            ConfirmDialog dialog = new ConfirmDialog(this, ASK_CANCEL_ALL_TASKS_MSG, "是", "否");
+            ConfirmDialog dialog = new ConfirmDialog(this, ASK_CANCEL_ALL_TASKS_MSG, YES, NO);
             dialog.showDialog();
             if (dialog.getResponse() == JOptionPane.YES_OPTION) {
                 Enumeration<Task> tasks = downloadListModel.elements();
@@ -19171,7 +19195,7 @@ public class MainFrame extends JFrame {
         });
         // 删除全部任务
         removeAllTasksButton.addActionListener(e -> {
-            ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_ALL_TASKS_MSG, "是", "否");
+            ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_ALL_TASKS_MSG, YES, NO);
             dialog.showDialog();
             if (dialog.getResponse() == JOptionPane.YES_OPTION) {
                 downloadListModel.clear();
@@ -19207,7 +19231,7 @@ public class MainFrame extends JFrame {
             @Override
             public void intervalAdded(ListDataEvent e) {
                 int size = downloadListModel.getSize();
-                taskCountLabel.setText(String.format("共 %s 项任务", size));
+                taskCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 1) {
                     downloadLeftBox.remove(emptyHintPanel);
                     downloadLeftBox.add(downloadListScrollPane);
@@ -19217,7 +19241,7 @@ public class MainFrame extends JFrame {
             @Override
             public void intervalRemoved(ListDataEvent e) {
                 int size = downloadListModel.getSize();
-                taskCountLabel.setText(String.format("共 %s 项任务", size));
+                taskCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 0) {
                     downloadLeftBox.remove(downloadListScrollPane);
                     downloadLeftBox.add(emptyHintPanel);
@@ -19350,7 +19374,7 @@ public class MainFrame extends JFrame {
         removeTaskMenuItem.addActionListener(e -> {
             List<Task> tasks = downloadList.getSelectedValuesList();
             if (tasks.isEmpty()) return;
-            ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_SELECTED_TASKS_MSG, "是", "否", true, ASK_REMOVE_FILE_MSG);
+            ConfirmDialog dialog = new ConfirmDialog(this, ASK_REMOVE_SELECTED_TASKS_MSG, YES, NO, true, ASK_REMOVE_FILE_MSG);
             dialog.showDialog();
             if (dialog.getResponse() != JOptionPane.YES_OPTION) return;
             boolean checked = dialog.isChecked();
@@ -19395,7 +19419,7 @@ public class MainFrame extends JFrame {
             List<MusicResource> selectedValues = playQueue.getSelectedValuesList();
             if (!selectedValues.isEmpty()) {
                 ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
-                        ASK_REMOVE_SONGS_FROM_PLAY_QUEUE_MSG, "是", "否");
+                        ASK_REMOVE_SONGS_FROM_PLAY_QUEUE_MSG, YES, NO);
                 confirmDialog.showDialog();
                 int response = confirmDialog.getResponse();
                 // 删除选中的歌曲
@@ -19414,7 +19438,7 @@ public class MainFrame extends JFrame {
         });
         // 清空播放队列
         playQueueClearToolButton.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_CLEAR_PLAY_QUEUE_MSG, "是", "否");
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_CLEAR_PLAY_QUEUE_MSG, YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response == JOptionPane.YES_OPTION) {
@@ -19426,7 +19450,7 @@ public class MainFrame extends JFrame {
         });
         // 去重
         playQueueDuplicateToolButton.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_DUPLICATE_MSG, "是", "否");
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_DUPLICATE_MSG, YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response == JOptionPane.YES_OPTION) {
@@ -19445,7 +19469,7 @@ public class MainFrame extends JFrame {
         });
         // 倒序
         playQueueReverseToolButton.addActionListener(e -> {
-            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REVERSE_MSG, "是", "否");
+            ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REVERSE_MSG, YES, NO);
             confirmDialog.showDialog();
             int response = confirmDialog.getResponse();
             if (response == JOptionPane.YES_OPTION) {
@@ -19513,7 +19537,7 @@ public class MainFrame extends JFrame {
             @Override
             public void intervalAdded(ListDataEvent e) {
                 int size = playQueueModel.getSize();
-                playQueueCountLabel.setText(String.format("共 %s 首", size));
+                playQueueCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 1) {
                     playQueueLeftBox.remove(emptyHintPanel);
                     playQueueLeftBox.add(playQueueScrollPane);
@@ -19523,7 +19547,7 @@ public class MainFrame extends JFrame {
             @Override
             public void intervalRemoved(ListDataEvent e) {
                 int size = playQueueModel.getSize();
-                playQueueCountLabel.setText(String.format("共 %s 首", size));
+                playQueueCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 0) {
                     playQueueLeftBox.remove(playQueueScrollPane);
                     playQueueLeftBox.add(emptyHintPanel);
@@ -19850,7 +19874,7 @@ public class MainFrame extends JFrame {
         for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
             mi.addActionListener(e -> {
                 String text = mi.getText();
-                if ("重置".equals(text)) lrcOffset = 0;
+                if (RESET.equals(text)) lrcOffset = 0;
                 else lrcOffset += Double.parseDouble(text.replaceFirst(" s", ""));
                 if (lrcOffset > lrcOffsetRadius) lrcOffset = lrcOffsetRadius;
                 else if (lrcOffset < -lrcOffsetRadius) lrcOffset = -lrcOffsetRadius;
@@ -20593,7 +20617,7 @@ public class MainFrame extends JFrame {
     private void updateTitle(String st) {
         synchronized (statusText) {
             statusText = st;
-            String title = String.format(TITLE + "（%s：%s）", st,
+            String title = String.format(TITLE + "（%s%s）", st,
                     player.loadedNetMusic() ? player.getMusicInfo().toSimpleString() : player.getAudioFile());
             titleLabel.setText(StringUtil.textToHtml(StringUtil.shorten(title, 80)));
             setTitle(title);
@@ -20603,7 +20627,7 @@ public class MainFrame extends JFrame {
     // 界面加载新文件
     private void loadUI(AudioFile file, NetMusicInfo musicInfo) {
         // 设置标题
-        updateTitle("加载中");
+        updateTitle(LOAD_TRACK);
         // 重置当前播放时间
         timeBar.setValue(0);
         // 重置总时间
@@ -20915,7 +20939,7 @@ public class MainFrame extends JFrame {
                     || type == MediaException.Type.MEDIA_UNAVAILABLE
                     || type == MediaException.Type.UNKNOWN) {
                 // 重置标题
-                updateTitle("刷新 URL 中");
+                updateTitle(REFRESH_URL);
                 playExecutor.execute(() -> {
                     musicInfo.setUrl("");
                     MusicServerUtil.fillMusicUrl(musicInfo);
@@ -20954,9 +20978,9 @@ public class MainFrame extends JFrame {
         mp.statusProperty().addListener((observable, oldValue, newValue) -> {
             // 排除正在销毁的 mp 对象的事件调用
             if (mp != player.getMp()) return;
-            if (player.isLoaded() && !"已就绪".equals(statusText)) updateTitle("已就绪");
-            else if (player.isPlaying() && !"播放中".equals(statusText)) updateTitle("播放中");
-            else if (player.isPaused() && !"暂停中".equals(statusText)) updateTitle("暂停中");
+            if (player.isLoaded() && !READY.equals(statusText)) updateTitle(READY);
+            else if (player.isPlaying() && !PLAYING.equals(statusText)) updateTitle(PLAYING);
+            else if (player.isPaused() && !PAUSING.equals(statusText)) updateTitle(PAUSING);
         });
         // 缓冲时间改变后刷新时间条
         mp.bufferProgressTimeProperty().addListener((observable, oldValue, newValue) -> timeBar.repaint());
@@ -21026,7 +21050,7 @@ public class MainFrame extends JFrame {
     // 播放载入的歌曲
     private void playLoaded(boolean replay) {
         // 播放器停止后重新播放需要手动设置标题
-        if (player.isStopped()) updateTitle("播放中");
+        if (player.isStopped()) updateTitle(PLAYING);
         if (replay) player.replay();
         else if (!player.play()) return;
         // 开始播放，若播放成功则更新 UI
@@ -21166,7 +21190,7 @@ public class MainFrame extends JFrame {
             // 文件不存在，在不允许重试情况下询问是否从列表中删除
             if (!file.exists()) {
                 if (!allowRetry) {
-                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_FIFE_NOT_FOUND_MSG, "是", "否");
+                    ConfirmDialog confirmDialog = new ConfirmDialog(THIS, ASK_REMOVE_FIFE_NOT_FOUND_MSG, YES, NO);
                     confirmDialog.showDialog();
                     int response = confirmDialog.getResponse();
                     if (response == JOptionPane.YES_OPTION) {
@@ -21279,7 +21303,7 @@ public class MainFrame extends JFrame {
             retry = 0;
             return true;
         } catch (Exception e) {
-            updateTitle("加载失败");
+            updateTitle(LOAD_TRACK_FAILED);
             if (e instanceof MediaException) new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
             else if (e instanceof IllegalArgumentException || e instanceof IllegalMediaException)
                 new TipDialog(THIS, INVALID_AUDIO_FILE_MSG).showDialog();
@@ -21345,6 +21369,7 @@ public class MainFrame extends JFrame {
         if (shuffleIndex >= shuffleList.size() || shuffleList.size() != playQueueModel.size()) {
             generateShuffleList();
         }
+        if (shuffleList.isEmpty()) return;
         // 选择随机列表下一首
         playQueue.setSelectedIndex(shuffleList.get(shuffleIndex++));
         playExecutor.execute(() -> playSelected(playQueue, true));
@@ -21531,7 +21556,7 @@ public class MainFrame extends JFrame {
         list.forEach(o -> model.addElement(o));
         list.clear();
         musicList.setModel(model);
-        countLabel.setText(String.format("共 %s 首", model.size()));
+        countLabel.setText(String.format(TOTAL_MSG, model.size()));
     }
 
     // 开启频谱
@@ -22729,7 +22754,7 @@ public class MainFrame extends JFrame {
 
     // 打开自定义主题弹窗
     private void customStyle() {
-        CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, "添加并应用", currUIStyle);
+        CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, I18n.getText("addAndApplyStyle"), currUIStyle);
         customStyleDialog.showDialog();
         if (!customStyleDialog.isConfirmed()) return;
         // 创建自定义样式并更换
@@ -22827,7 +22852,7 @@ public class MainFrame extends JFrame {
 
     // 停止播放
     private void stopPlayback() {
-        updateTitle("已停止");
+        updateTitle(STOPPED);
         player.stop();
         playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
@@ -22841,7 +22866,7 @@ public class MainFrame extends JFrame {
     private void saveImg(BufferedImage albumImage) {
         if (albumImage == null) return;
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("保存图片");
+        fileChooser.setTitle(SAVE_IMG);
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
         // 添加可保存的图片格式
         for (String suffix : Format.WRITE_IMAGE_TYPE_SUPPORTED) {
@@ -23272,7 +23297,7 @@ public class MainFrame extends JFrame {
             }
             if (useMusicList) {
                 int size = musicList.getModel().getSize();
-                countLabel.setText(String.format("共 %s 首", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
                 if (size != 0) {
                     if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION) {
                         leftBox.remove(emptyHintPanel);
@@ -23284,7 +23309,7 @@ public class MainFrame extends JFrame {
                 }
             } else {
                 int size = collectionList.getModel().getSize();
-                countLabel.setText(String.format("共 %s 项", size));
+                countLabel.setText(String.format(TOTAL_MSG, size));
                 if (size != 0) {
                     Box box = null;
                     if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
@@ -23325,10 +23350,10 @@ public class MainFrame extends JFrame {
         }
         if (useMusicList) {
             musicList.setModel(filterModel);
-            countLabel.setText(String.format("共 %s 首", musicList.getModel().getSize()));
+            countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
         } else {
             collectionList.setModel(filterModel);
-            countLabel.setText(String.format("共 %s 项", collectionList.getModel().getSize()));
+            countLabel.setText(String.format(TOTAL_MSG, collectionList.getModel().getSize()));
         }
     }
 

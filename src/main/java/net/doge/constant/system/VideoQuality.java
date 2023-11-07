@@ -19,5 +19,11 @@ public class VideoQuality {
 
     // 当前画质
     public static int quality = FHD;
-    public static final String[] NAMES = {"超清 (2K)", "全高清 (1080P)", "高清 (720P)", "标清 (480P)", "流畅 (360P)"};
+    public static final String[] NAMES = {
+            I18n.getText("uhd"),
+            I18n.getText("fhd"),
+            I18n.getText("hd"),
+            I18n.getText("sd"),
+            I18n.getText("fluent")
+    };
 }

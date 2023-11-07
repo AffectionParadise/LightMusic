@@ -1,6 +1,7 @@
 package net.doge.ui.component.dialog;
 
 import net.doge.constant.model.UIStyleConstants;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
@@ -28,19 +29,19 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class ManageCustomStyleDialog extends AbstractTitledDialog {
-    private final String IMG_LOST_MSG = "主题背景图片丢失，请重新编辑主题";
-    private final String EDIT_DENIED_MSG = "不能编辑预设的主题";
-    private final String REMOVE_DENIED_MSG = "不能删除预设的主题";
-    private final String ASK_REMOVE_MSG = "确定删除选中的主题？";
-    private final String SINGLE_SELECT_MSG = "需要编辑的主题一次只能选择一个";
+    private final String IMG_LOST_MSG = I18n.getText("bgImgLost");
+    private final String EDIT_DENIED_MSG = I18n.getText("editDenied");
+    private final String REMOVE_DENIED_MSG = I18n.getText("removeDenied");
+    private final String ASK_REMOVE_MSG = I18n.getText("askRemoveStyleMsg");
+    private final String SINGLE_SELECT_MSG = I18n.getText("singleSelectionMsg");
 
     private CustomPanel centerPanel = new CustomPanel();
 
     private CustomPanel northPanel = new CustomPanel();
     private CustomPanel tipPanel = new CustomPanel();
-    private CustomLabel tipLabel = new CustomLabel("应用、添加、编辑或删除主题（预设主题不能修改），主界面右下角可设置主题背景附加效果");
+    private CustomLabel tipLabel = new CustomLabel(I18n.getText("manageStyleTip"));
     private CustomPanel customOnlyPanel = new CustomPanel();
-    private CustomCheckBox customOnlyCheckBox = new CustomCheckBox("仅显示自定义主题");
+    private CustomCheckBox customOnlyCheckBox = new CustomCheckBox(I18n.getText("customOnly"));
     private CustomList<UIStyle> styleList = new CustomList<>();
     private CustomScrollPane styleListScrollPane = new CustomScrollPane(styleList);
     private DefaultListModel<UIStyle> styleListModel = new DefaultListModel<>();
@@ -58,20 +59,20 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
     private Box rightBox = new Box(BoxLayout.Y_AXIS);
 
     public ManageCustomStyleDialog(MainFrame f) {
-        super(f, "管理主题");
+        super(f, I18n.getText("manageStyleTitle"));
 
         Color textColor = f.currUIStyle.getTextColor();
-        allSelectButton = new DialogButton("全选", textColor);
-        nonSelectButton = new DialogButton("反选", textColor);
-        applyButton = new DialogButton("应用", textColor);
-        addButton = new DialogButton("添加", textColor);
-        editButton = new DialogButton("编辑", textColor);
-        removeButton = new DialogButton("删除", textColor);
+        allSelectButton = new DialogButton(I18n.getText("dialogAll"), textColor);
+        nonSelectButton = new DialogButton(I18n.getText("dialogInvert"), textColor);
+        applyButton = new DialogButton(I18n.getText("dialogApply"), textColor);
+        addButton = new DialogButton(I18n.getText("dialogAdd"), textColor);
+        editButton = new DialogButton(I18n.getText("dialogEdit"), textColor);
+        removeButton = new DialogButton(I18n.getText("dialogRemove"), textColor);
     }
 
     public void showDialog() {
         setResizable(false);
-        setSize(860, 700);
+        setSize(890, 720);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -145,7 +146,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         // 添加事件
         addButton.addActionListener(e -> {
             UIStyle value = styleList.getSelectedValue();
-            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, "添加", value != null ? value : f.currUIStyle);
+            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, I18n.getText("addStyle"), value != null ? value : f.currUIStyle);
             customStyleDialog.showDialog();
             if (customStyleDialog.isConfirmed()) {
                 // 创建自定义样式并更换
@@ -175,7 +176,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 new TipDialog(f, REMOVE_DENIED_MSG, true).showDialog();
                 return;
             }
-            ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, "是", "否");
+            ConfirmDialog d = new ConfirmDialog(f, ASK_REMOVE_MSG, I18n.getText("yes"), I18n.getText("no"));
             d.showDialog();
             if (d.getResponse() == JOptionPane.YES_OPTION) {
                 List<UIStyle> selectedStyles = styleList.getSelectedValuesList();
@@ -203,7 +204,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 new TipDialog(f, EDIT_DENIED_MSG, true).showDialog();
                 return;
             }
-            CustomStyleDialog dialog = new CustomStyleDialog(f, "更新", value);
+            CustomStyleDialog dialog = new CustomStyleDialog(f, I18n.getText("updateStyle"), value);
             int length = styleList.getSelectedIndices().length;
             if (length == 0) return;
             // 只能单选

@@ -1,6 +1,7 @@
 package net.doge.ui.component.list.renderer.system;
 
 import lombok.Data;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.RendererConstants;
 import net.doge.model.ui.UIStyle;
@@ -27,6 +28,10 @@ public class StyleListRenderer extends DefaultListCellRenderer {
     private Color selectedColor;
     private Color textColor;
     private int hoverIndex = -1;
+
+    private final String CUSTOM = I18n.getText("custom");
+    private final String PRESET = I18n.getText("preset");
+    private final String IN_USE = I18n.getText("inUse");
 
     private MainFrame f;
 
@@ -80,8 +85,8 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(style.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String type = StringUtil.textToHtml(style.isCustom() ? "自定义" : "预设");
-        String inUse = StringUtil.textToHtml(f.currUIStyle == style ? "使用中" : "");
+        String type = StringUtil.textToHtml(style.isCustom() ? CUSTOM : PRESET);
+        String inUse = StringUtil.textToHtml(f.currUIStyle == style ? IN_USE : "");
 
         iconLabel.setText(source);
         nameLabel.setText(name);

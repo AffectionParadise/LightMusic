@@ -1,12 +1,31 @@
 package net.doge.constant.model;
 
+import net.doge.constant.system.I18n;
+
 /**
  * @Author Doge
  * @Description 音乐来源
  * @Date 2020/12/7
  */
 public class NetMusicSource {
-    public static final String[] NAMES = new String[]{"小意", "小枸", "小丘", "小窝", "小蜜", "小希", "小倩", "小猫", "小看", "小豆", "小糖", "小哔", "小磁", "小咕", "小五", "全部"};
+    public static final String[] NAMES = new String[]{
+            I18n.getText("nc"),
+            I18n.getText("kg"),
+            I18n.getText("qq"),
+            I18n.getText("kw"),
+            I18n.getText("mg"),
+            I18n.getText("xm"),
+            I18n.getText("qi"),
+            I18n.getText("me"),
+            I18n.getText("hk"),
+            I18n.getText("db"),
+            I18n.getText("dt"),
+            I18n.getText("bi"),
+            I18n.getText("hf"),
+            I18n.getText("gg"),
+            I18n.getText("fs"),
+            I18n.getText("all")
+    };
 
     public static final int NC = 0;
     public static final int KG = 1;

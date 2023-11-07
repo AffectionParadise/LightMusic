@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.system.Format;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.sdk.common.CommonResult;
 import net.doge.ui.MainFrame;
@@ -41,25 +42,25 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private final int IMG_MAX_WIDTH = WIDTH - 100;
     private final int IMG_MAX_HEIGHT = HEIGHT - 150;
     // 加载图片提示
-    private final String LOADING_IMG_MSG = "请稍候，图片加载中......";
+    private final String LOADING_IMG_MSG = I18n.getText("saveImg");
     // 已经是第一张提示
-    private final String FIRST_PAGE_MSG = "已经是第一张了";
+    private final String FIRST_PAGE_MSG = I18n.getText("imgFirstPage");
     // 已经是最后一张提示
-    private final String LAST_PAGE_MSG = "已经是最后一张了";
+    private final String LAST_PAGE_MSG = I18n.getText("imgLastPage");
     // 非法页码提示
-    private final String ILLEGAL_PAGE_MSG = "请输入合法页码";
+    private final String ILLEGAL_PAGE_MSG = I18n.getText("imgIllegalPage");
 
-    private final String ADAPT = "缩放以适应";
-    private final String ZOOM_IN = "放大";
-    private final String ZOOM_OUT = "缩小";
-    private final String LEFT_ROTATE = "逆时针旋转 90 度";
-    private final String RIGHT_ROTATE = "顺时针旋转 90 度";
-    private final String LAST_IMG = "上一张";
-    private final String NEXT_IMG = "下一张";
-    private final String FIRST_IMG = "第一张";
-    private final String LST_IMG = "最后一张";
-    private final String SAVE_IMG = "保存图片";
-    private final String GO_TIP = "跳页";
+    private final String ADAPT = I18n.getText("adapt");
+    private final String ZOOM_IN = I18n.getText("zoomIn");
+    private final String ZOOM_OUT = I18n.getText("zoomOut");
+    private final String LEFT_ROTATE = I18n.getText("leftRotate");
+    private final String RIGHT_ROTATE = I18n.getText("rightRotate");
+    private final String LAST_IMG = I18n.getText("lastImg");
+    private final String NEXT_IMG = I18n.getText("nextImg");
+    private final String FIRST_IMG = I18n.getText("firstImg");
+    private final String LST_IMG = I18n.getText("lstImg");
+    private final String SAVE_IMG = I18n.getText("saveImg");
+    private final String GO_TIP = I18n.getText("goTip");
 
     // 适应图标
     private ImageIcon adaptIcon = LMIconManager.getIcon("dialog.adapt");
@@ -120,7 +121,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private float scale;
 
     public ImageViewDialog(MainFrame f, int limit) {
-        super(f, "图片预览");
+        super(f, I18n.getText("imageViewTitle"));
         this.limit = limit;
     }
 
@@ -329,7 +330,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private boolean showImg(BufferedImage img) {
         if (img == null) {
             imgLabel.setIcon(null);
-            imgLabel.setText("图片走丢了T_T");
+            imgLabel.setText(I18n.getText("imgLost"));
             scaleLabel.setText("");
             return false;
         }
@@ -373,7 +374,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private void saveImg() {
         if (img == null) return;
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("保存图片");
+        fileChooser.setTitle(I18n.getText("saveImg"));
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
         // 添加可保存的图片格式
         for (String suffix : Format.WRITE_IMAGE_TYPE_SUPPORTED) {

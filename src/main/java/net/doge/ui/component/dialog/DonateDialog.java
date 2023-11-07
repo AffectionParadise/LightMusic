@@ -1,5 +1,6 @@
 package net.doge.ui.component.dialog;
 
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
@@ -35,22 +36,22 @@ public class DonateDialog extends AbstractTitledDialog {
     private ImageIcon alipayIcon = LMIconManager.getIcon("dialog.alipay");
 
     private CustomPanel messagePanel = new CustomPanel();
-    private CustomLabel messageLabel = new CustomLabel("如果您觉得这款软件还不错，可以请作者喝杯咖啡~~");
+    private CustomLabel messageLabel = new CustomLabel();
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel cPanel = new CustomPanel();
     private CustomPanel leftPanel = new CustomPanel();
-    private CustomLabel weixinLabel = new CustomLabel("微信");
+    private CustomLabel weixinLabel = new CustomLabel(I18n.getText("weixin"));
     private CustomPanel rightPanel = new CustomPanel();
-    private CustomLabel alipayLabel = new CustomLabel("支付宝");
+    private CustomLabel alipayLabel = new CustomLabel(I18n.getText("alipay"));
     private CustomPanel thankPanel = new CustomPanel();
     private CustomLabel thankLabel = new CustomLabel(StringUtil.textToHtml(THANK_MSG));
     private CustomPanel buttonPanel = new CustomPanel();
 
     public DonateDialog(MainFrame f) {
-        super(f, "捐赠 & 感谢");
+        super(f, I18n.getText("donateTitle"));
 
         Color textColor = f.currUIStyle.getTextColor();
-        yes = new DialogButton("确定", textColor);
+        yes = new DialogButton(I18n.getText("ok"), textColor);
     }
 
     public void showDialog() {

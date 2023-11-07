@@ -1,6 +1,7 @@
 package net.doge.ui.component.dialog;
 
 import net.doge.constant.meta.SoftInfo;
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;
@@ -28,20 +29,20 @@ public class AboutDialog extends AbstractTitledDialog {
     private CustomPanel appPanel = new CustomPanel();
     private CustomLabel appLabel = new CustomLabel();
     private CustomPanel editionPanel = new CustomPanel();
-    private CustomLabel editionLabel = new CustomLabel("版本：" + SoftInfo.VERSION);
+    private CustomLabel editionLabel = new CustomLabel(I18n.getText("version") + SoftInfo.VERSION);
     private CustomPanel technoPanel = new CustomPanel();
-    private CustomLabel technoLabel = new CustomLabel("基于 Swing 与 JavaFX (Java 8) 构建");
+    private CustomLabel technoLabel = new CustomLabel(I18n.getText("techno"));
     private CustomPanel websitePanel = new CustomPanel();
-    private CustomLabel websiteLabel = new CustomLabel("网址：" + SoftInfo.WEBSITE);
+    private CustomLabel websiteLabel = new CustomLabel(I18n.getText("website") + SoftInfo.WEBSITE);
     private CustomPanel mailPanel = new CustomPanel();
-    private CustomLabel mailLabel = new CustomLabel("邮箱：" + SoftInfo.MAIL);
+    private CustomLabel mailLabel = new CustomLabel(I18n.getText("mail") + SoftInfo.MAIL);
     private CustomPanel buttonPanel = new CustomPanel();
 
     public AboutDialog(MainFrame f) {
-        super(f, "关于");
+        super(f, I18n.getText("aboutTitle"));
 
         Color textColor = f.currUIStyle.getTextColor();
-        yes = new DialogButton("确定", textColor);
+        yes = new DialogButton(I18n.getText("ok"), textColor);
     }
 
     public void showDialog() {

@@ -1,12 +1,23 @@
 package net.doge.constant.ui;
 
+import net.doge.constant.system.I18n;
+
 /**
  * @Author Doge
  * @Description 频谱参数
  * @Date 2020/12/14
  */
 public class SpectrumConstants {
-    public static final String[] NAMES = {"平地式", "悬空式", "折线式", "曲线式", "山峰式", "波浪式", "对称山峰式", "对称波浪式"};
+    public static final String[] NAMES = {
+            I18n.getText("flat"),
+            I18n.getText("lifted"),
+            I18n.getText("polyline"),
+            I18n.getText("curve"),
+            I18n.getText("summit"),
+            I18n.getText("wave"),
+            I18n.getText("symSummit"),
+            I18n.getText("symWave")
+    };
     // 平地式
     public static final int GROUND = 0;
     // 悬空式

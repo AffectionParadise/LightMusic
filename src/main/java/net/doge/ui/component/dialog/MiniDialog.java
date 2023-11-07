@@ -1,5 +1,6 @@
 package net.doge.ui.component.dialog;
 
+import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
@@ -28,7 +29,7 @@ public class MiniDialog extends AbstractMiniDialog {
     private final int HEIGHT = 76;
     private final int offsetX = WIDTH - 6;
     private final int offsetY = HEIGHT - 6;
-    private final String CLOSE_TIP = "关闭";
+    private final String CLOSE_TIP = I18n.getText("closeTip");
 
     // 关闭窗口图标
     private ImageIcon closeMiniIcon = LMIconManager.getIcon("dialog.close");

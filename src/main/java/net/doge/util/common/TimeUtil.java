@@ -286,10 +286,10 @@ public class TimeUtil {
         int minute = s / 60, second = s % 60;
         String milliseconds = s1.substring(s1.lastIndexOf('.'));
         sb.append("[");
-        if (minute < 10) sb.append("0").append(minute).append(":");
-        else sb.append(minute).append(":");
-        if (second < 10) sb.append("0").append(second);
-        else sb.append(second);
+        if (minute < 10) sb.append("0");
+        sb.append(minute).append(":");
+        if (second < 10) sb.append("0");
+        sb.append(second);
         sb.append(milliseconds.length() == 2 ? milliseconds + "0" : milliseconds);
         sb.append("]");
         return sb.toString();
