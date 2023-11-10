@@ -10,6 +10,17 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class RegexUtil {
+//    /**
+//     * 正则匹配，返回组 0
+//     *
+//     * @param regex
+//     * @param content
+//     * @return
+//     */
+//    public static String getGroup0(String regex, CharSequence content) {
+//        return ReUtil.getGroup0(regex, content);
+//    }
+
     /**
      * 正则匹配，返回组 1
      *

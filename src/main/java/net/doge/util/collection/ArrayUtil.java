@@ -31,6 +31,49 @@ public class ArrayUtil {
         return cn.hutool.core.util.ArrayUtil.indexOf(array, val);
     }
 
+    /**
+     * 返回子数组在原数组中的位置
+     *
+     * @param array
+     * @param subArray
+     * @return
+     */
+    public static int indexOf(byte[] array, byte[] subArray) {
+        int[] next = calculateNext(subArray);
+        int i = 0;
+        int j = 0;
+        while (i < array.length && j < subArray.length) {
+            if (array[i] == subArray[j]) {
+                i++;
+                j++;
+            } else {
+                if (j > 0) j = next[j - 1];
+                else i++;
+            }
+        }
+        if (j == subArray.length) return i - j;
+        return -1;
+    }
+
+    private static int[] calculateNext(byte[] subArray) {
+        int[] next = new int[subArray.length];
+        int i = 1;
+        int j = 0;
+        while (i < subArray.length) {
+            if (subArray[i] == subArray[j]) {
+                next[i] = j + 1;
+                i++;
+                j++;
+            } else if (j > 0) {
+                j = next[j - 1];
+            } else {
+                next[i] = 0;
+                i++;
+            }
+        }
+        return next;
+    }
+
 //    /**
 //     * 原地反转数组，返回原数组
 //     *

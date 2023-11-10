@@ -11,6 +11,8 @@ import net.doge.constant.system.SimplePath;
 import net.doge.constant.system.VideoQuality;
 import net.doge.constant.ui.BlurConstants;
 import net.doge.constant.ui.Colors;
+import net.doge.constant.ui.LyricAlignment;
+import net.doge.constant.ui.SpectrumConstants;
 import net.doge.constant.window.CloseWindowOptions;
 import net.doge.constant.window.WindowSize;
 import net.doge.constant.window.WindowState;
@@ -99,6 +101,13 @@ public class SettingDialog extends AbstractTitledDialog {
 
     private CustomPanel showTabTextPanel = new CustomPanel();
     private CustomCheckBox showTabTextCheckBox = new CustomCheckBox(I18n.getText("showTabText"));
+    private CustomPanel lrcAlignmentPanel = new CustomPanel();
+    private CustomLabel lrcAlignmentLabel = new CustomLabel(I18n.getText("lrcAlignment"));
+    private CustomComboBox<String> lrcAlignmentComboBox = new CustomComboBox<>();
+    private final int specMaxHeightLimit = 150;
+    private CustomPanel specMaxHeightPanel = new CustomPanel();
+    private CustomLabel specMaxHeightLabel = new CustomLabel(String.format(I18n.getText("specMaxHeight"), specMaxHeightLimit));
+    private CustomTextField specMaxHeightTextField = new CustomTextField(10);
     private CustomPanel gsFactorPanel = new CustomPanel();
     private CustomLabel gsFactorLabel = new CustomLabel(I18n.getText("gsFactor"));
     private CustomComboBox<String> gsFactorComboBox = new CustomComboBox<>();
@@ -327,6 +336,8 @@ public class SettingDialog extends AbstractTitledDialog {
         closeOptionPanel.setLayout(fl);
         windowSizePanel.setLayout(fl);
         showTabTextPanel.setLayout(fl);
+        lrcAlignmentPanel.setLayout(fl);
+        specMaxHeightPanel.setLayout(fl);
         gsFactorPanel.setLayout(fl);
         darkerFactorPanel.setLayout(fl);
         autoDownloadLrcPanel.setLayout(fl);
@@ -358,6 +369,8 @@ public class SettingDialog extends AbstractTitledDialog {
         closeOptionPanel.setMaximumSize(d);
         windowSizePanel.setMaximumSize(d);
         showTabTextPanel.setMaximumSize(d);
+        lrcAlignmentPanel.setMaximumSize(d);
+        specMaxHeightPanel.setMaximumSize(d);
         gsFactorPanel.setMaximumSize(d);
         darkerFactorPanel.setMaximumSize(d);
         autoDownloadLrcPanel.setMaximumSize(d);
@@ -392,6 +405,8 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setForeground(textColor);
         videoOnlyCheckBox.setForeground(textColor);
         showTabTextCheckBox.setForeground(textColor);
+        lrcAlignmentLabel.setForeground(textColor);
+        specMaxHeightLabel.setForeground(textColor);
         gsFactorLabel.setForeground(textColor);
         darkerFactorLabel.setForeground(textColor);
         autoDownloadLrcCheckBox.setForeground(textColor);
@@ -421,6 +436,11 @@ public class SettingDialog extends AbstractTitledDialog {
 
         // 文本框
         Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
+        specMaxHeightTextField.setForeground(textColor);
+        specMaxHeightTextField.setCaretColor(textColor);
+        specMaxHeightTextField.setSelectionColor(darkerTextAlphaColor);
+        SafeDocument doc = new SafeDocument(0, specMaxHeightLimit);
+        specMaxHeightTextField.setDocument(doc);
         musicDownPathTextField.setForeground(textColor);
         musicDownPathTextField.setCaretColor(textColor);
         musicDownPathTextField.setSelectionColor(darkerTextAlphaColor);
@@ -433,7 +453,7 @@ public class SettingDialog extends AbstractTitledDialog {
         maxCacheSizeTextField.setForeground(textColor);
         maxCacheSizeTextField.setCaretColor(textColor);
         maxCacheSizeTextField.setSelectionColor(darkerTextAlphaColor);
-        SafeDocument doc = new SafeDocument(0, maxCacheSizeLimit);
+        doc = new SafeDocument(0, maxCacheSizeLimit);
         maxCacheSizeTextField.setDocument(doc);
         maxHistoryCountTextField.setForeground(textColor);
         maxHistoryCountTextField.setCaretColor(textColor);
@@ -571,6 +591,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenTextField.addFocusListener(focusAdapter);
 
         // 下拉框 UI
+        lrcAlignmentComboBox.setUI(new ComboBoxUI(lrcAlignmentComboBox, f));
         gsFactorComboBox.setUI(new ComboBoxUI(gsFactorComboBox, f));
         darkerFactorComboBox.setUI(new ComboBoxUI(darkerFactorComboBox, f));
         langComboBox.setUI(new ComboBoxUI(langComboBox, f));
@@ -709,11 +730,18 @@ public class SettingDialog extends AbstractTitledDialog {
 
         showTabTextPanel.add(showTabTextCheckBox);
 
-        for (String name : BlurConstants.gaussianFactorName) gsFactorComboBox.addItem(name);
+        for (String name : LyricAlignment.NAMES) lrcAlignmentComboBox.addItem(name);
+        lrcAlignmentPanel.add(lrcAlignmentLabel);
+        lrcAlignmentPanel.add(lrcAlignmentComboBox);
+
+        specMaxHeightPanel.add(specMaxHeightLabel);
+        specMaxHeightPanel.add(specMaxHeightTextField);
+
+        for (String name : BlurConstants.GAUSSIAN_FACTOR_NAME) gsFactorComboBox.addItem(name);
         gsFactorPanel.add(gsFactorLabel);
         gsFactorPanel.add(gsFactorComboBox);
 
-        for (String name : BlurConstants.darkerFactorName) darkerFactorComboBox.addItem(name);
+        for (String name : BlurConstants.DARKER_FACTOR_NAME) darkerFactorComboBox.addItem(name);
         darkerFactorPanel.add(darkerFactorLabel);
         darkerFactorPanel.add(darkerFactorComboBox);
 
@@ -813,6 +841,10 @@ public class SettingDialog extends AbstractTitledDialog {
 
         appearanceContentBox.add(showTabTextPanel);
         appearanceContentBox.add(Box.createVerticalStrut(vGap));
+        appearanceContentBox.add(lrcAlignmentPanel);
+        appearanceContentBox.add(Box.createVerticalStrut(vGap));
+        appearanceContentBox.add(specMaxHeightPanel);
+        appearanceContentBox.add(Box.createVerticalStrut(vGap));
         appearanceContentBox.add(gsFactorPanel);
         appearanceContentBox.add(Box.createVerticalStrut(vGap));
         appearanceContentBox.add(darkerFactorPanel);
@@ -872,6 +904,8 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setSelected(f.autoUpdate);
         videoOnlyCheckBox.setSelected(f.videoOnly);
         showTabTextCheckBox.setSelected(f.showTabText);
+        lrcAlignmentComboBox.setSelectedIndex(LyricAlignment.lrcAlignmentIndex);
+        specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.barMaxHeight));
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
         autoDownloadLrcCheckBox.setSelected(f.isAutoDownloadLrc);
@@ -929,6 +963,8 @@ public class SettingDialog extends AbstractTitledDialog {
         f.showTabText = showTabTextCheckBox.isSelected();
         f.updateTabSize();
 
+        LyricAlignment.lrcAlignmentIndex = lrcAlignmentComboBox.getSelectedIndex();
+
         int gsFactorIndex = BlurConstants.gsFactorIndex;
         BlurConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();
 
@@ -947,7 +983,18 @@ public class SettingDialog extends AbstractTitledDialog {
         // 更改缓存图像路径并创建
         FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
 
-        String text = maxCacheSizeTextField.getText();
+        String text = specMaxHeightTextField.getText();
+        if (StringUtil.isEmpty(text)) {
+            new TipDialog(f, I18n.getText("invalidSpecMaxHeight"), true).showDialog();
+            return false;
+        }
+        SpectrumConstants.barMaxHeight = Integer.parseInt(text);
+        f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, SpectrumConstants.barMaxHeight));
+        f.spectrumPanel.setMinimumSize(new Dimension(1, SpectrumConstants.barMaxHeight));
+        f.spectrumPanel.setVisible(false);
+        f.spectrumPanel.setVisible(true);
+
+        text = maxCacheSizeTextField.getText();
         if (StringUtil.isEmpty(text)) {
             new TipDialog(f, I18n.getText("invalidMaxCacheSize"), true).showDialog();
             return false;

@@ -61,11 +61,13 @@ public class MusicInfoReq {
     // 歌词 API
     private final String LYRIC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
     // 歌词 API (酷狗)
-//    private final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=lrc&charset=utf8";
+//    private final String LYRIC_KG_API = "http://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=%s&hash=%s&timelength=%s";
+//    private final String LYRIC_KG_API_2 = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=krc&charset=utf8";
     // 歌词 API (QQ)
     private final String LYRIC_QQ_API = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=%s&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8¬ice=0&platform=yqq&needNewCode=0";
     // 歌词 API (酷我)
     private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
+    //    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌词 API (5sing)
@@ -77,8 +79,6 @@ public class MusicInfoReq {
 
     // 歌手图片 API (QQ)
     private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
-    // 专辑信息 API (咪咕)
-    private final String ALBUM_DETAIL_MG_API = "http://music.migu.cn/v3/music/album/%s";
 
     /**
      * 补充 NetMusicInfo 歌曲时长
@@ -481,7 +481,9 @@ public class MusicInfoReq {
 
         int source = musicInfo.getSource();
         String id = musicInfo.getId();
-//        String hash = musicInfo.getHash();
+        String hash = musicInfo.getHash();
+        String name = musicInfo.getName();
+        double duration = musicInfo.getDuration();
 
         // 网易云
         if (source == NetMusicSource.NC) {
@@ -521,12 +523,45 @@ public class MusicInfoReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-//            String songBody = HttpRequest.get(String.format(LYRIC_KG_API, id, hash))
+//            String lBody = HttpRequest.get(String.format(LYRIC_KG_API, StringUtil.urlEncodeAll(name), hash, duration))
+//                    .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
+//                    .header("KG-RC", "1")
+//                    .header("KG-THash", "expand_search_manager.cpp:852736169:451")
 //                    .executeAsync()
 //                    .body();
-//            JSONObject data = JSONObject.parseObject(songBody);
-//            String lyric = CryptoUtil.base64Decode(data.getString("content"));
-//            netMusicInfo.setLrc(lyric);
+//            JSONObject data = JSONObject.parseObject(lBody);
+//            JSONObject info = data.getJSONArray("candidates").getJSONObject(0);
+//
+//            String lrcBody = HttpRequest.get(String.format(LYRIC_KG_API_2, info.getString("id"), info.getString("accesskey")))
+//                    .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
+//                    .header("KG-RC", "1")
+//                    .header("KG-THash", "expand_search_manager.cpp:852736169:451")
+//                    .executeAsync()
+//                    .body();
+//            JSONObject lrcData = JSONObject.parseObject(lrcBody);
+//            String content = lrcData.getString("content");
+//            if (StringUtil.isEmpty(content)) {
+//                musicInfo.setLrc("");
+//                musicInfo.setTrans("");
+//                musicInfo.setRoma("");
+//                return;
+//            }
+//            byte[] encKey = new byte[]{0x40, 0x47, 0x61, 0x77, 0x5e, 0x32, 0x74, 0x47, 0x51, 0x36, 0x31, 0x2d, (byte) 0xce, (byte) 0xd2, 0x6e, 0x69};
+//            byte[] contentBytes = CryptoUtil.base64DecodeToBytes(content);
+//            contentBytes = Arrays.copyOfRange(contentBytes, 4, contentBytes.length);
+//            for (int i = 0, len = contentBytes.length; i < len; i++)
+//                contentBytes[i] = (byte) (contentBytes[i] ^ encKey[i % 16]);
+//            String result = new String(CryptoUtil.decompress(contentBytes), StandardCharsets.UTF_8);
+//
+//            // 提取酷狗歌词
+//            String headExp = "^.*\\[id:\\$\\w+\\]\\n";
+//            result = result.replace("\r", "");
+//            if (RegexUtil.test(headExp, result)) result = result.replaceAll(headExp, "");
+//            String trans = RegexUtil.getGroup0("\\[language:([\\w=\\\\/+]+)\\]", result);
+//            String lrc, tlrc;
+//            if (StringUtil.notEmpty(trans)) {
+//                result = result.replaceAll("\\[language:[\\w=\\\\/+]+\\]\\n", "");
+//            }
         }
 
         // QQ
@@ -544,6 +579,44 @@ public class MusicInfoReq {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
+//            byte[] keyBytes = "yeelion".getBytes(StandardCharsets.UTF_8);
+//            int keyLen = keyBytes.length;
+//            String params = "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_" + id + "&lrcx=1";
+//            byte[] paramsBytes = params.getBytes(StandardCharsets.UTF_8);
+//            int paramsLen = paramsBytes.length;
+//            byte[] output = new byte[paramsLen];
+//            int i = 0;
+//            while (i < paramsLen) {
+//                int j = 0;
+//                while (j < keyLen && i < paramsLen) {
+//                    output[i] = (byte) (keyBytes[j] ^ paramsBytes[i]);
+//                    i++;
+//                    j++;
+//                }
+//            }
+//            byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + CryptoUtil.base64Encode(output))
+//                    .executeAsync()
+//                    .bodyBytes();
+//            if (!"tp=content".equals(new String(bodyBytes, 0, 10))) return;
+//            int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
+//            byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
+//            byte[] lrcData = CryptoUtil.decompress(nBytes);
+////            String lrcStr = new String(lrcData, Charset.forName("gb18030"));
+//            String lrcDataStr = new String(lrcData, StandardCharsets.UTF_8);
+//            byte[] lrcBytes = CryptoUtil.base64DecodeToBytes(lrcDataStr);
+//            int lrcLen = lrcBytes.length;
+//            output = new byte[lrcLen];
+//            i = 0;
+//            while (i < lrcLen) {
+//                int j = 0;
+//                while (j < keyLen && i < lrcLen) {
+//                    output[i] = (byte) (lrcBytes[i] ^ keyBytes[j]);
+//                    i++;
+//                    j++;
+//                }
+//            }
+//            String lrcStr = new String(output, Charset.forName("gb18030"));
+
             String lrcBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
                     .executeAsync()
                     .body();

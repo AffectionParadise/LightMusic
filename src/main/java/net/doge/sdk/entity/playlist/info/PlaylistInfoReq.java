@@ -462,7 +462,8 @@ public class PlaylistInfoReq {
             JSONObject data = playlistInfoJson.getJSONArray("resource").getJSONObject(0);
 
             String coverImgUrl = data.getJSONObject("imgItem").getString("img");
-            String description = data.getString("summary");
+            String summary = data.getString("summary");
+            String description = StringUtil.isEmpty(summary) ? "" : summary;
 
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));

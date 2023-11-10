@@ -2,6 +2,7 @@ package net.doge.ui.component.list.renderer.system;
 
 import lombok.Data;
 import net.doge.constant.ui.Fonts;
+import net.doge.constant.ui.LyricAlignment;
 import net.doge.model.lyric.Statement;
 import net.doge.ui.component.label.ui.LabelUI;
 import net.doge.ui.component.list.ui.ListUI;
@@ -9,6 +10,7 @@ import net.doge.ui.component.lyric.StringTwoColor;
 import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -38,6 +40,9 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private LabelUI normalLabelUI = new LabelUI(0.4f);
     private Timer fontTimer;
 
+    private final int SPACE = 90;
+    private final Border SPACE_BORDER = BorderFactory.createEmptyBorder(1, SPACE, 1, SPACE);
+
     public LrcListRenderer() {
         fontTimer = new Timer(10, e -> {
             // 高亮行字体增大
@@ -62,8 +67,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         JLabel label = (JLabel) component;
 
-        final int maxWidth = list.getVisibleRect().width;
-        if (maxWidth == 0) return label;
+        final int maxWidth = list.getVisibleRect().width - SPACE;
+        if (maxWidth <= 0) return label;
         list.setFixedCellWidth(maxWidth);
 
         Statement statement = (Statement) value;
@@ -71,6 +76,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
         // 标签
         label.setOpaque(false);
+        label.setBorder(SPACE_BORDER);
+        label.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lrcAlignmentIndex]);
         label.setForeground(bgColor);
         label.setUI(index != row ? normalLabelUI : highlightLabelUI);
 

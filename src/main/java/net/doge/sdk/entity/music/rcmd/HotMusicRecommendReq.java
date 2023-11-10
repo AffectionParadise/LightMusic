@@ -17,6 +17,7 @@ import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.TimeUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -400,6 +401,7 @@ public class HotMusicRecommendReq {
                 String artistId = songJson.getString("singerId");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumId");
+                Double duration = TimeUtil.toSeconds(songJson.getString("length"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.MG);
@@ -409,6 +411,7 @@ public class HotMusicRecommendReq {
                 musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
 
                 r.add(musicInfo);
             }

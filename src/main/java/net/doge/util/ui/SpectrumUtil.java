@@ -15,6 +15,6 @@ public class SpectrumUtil {
      * 将其处理成 0 到 BAR_MAX_HEIGHT 表示柱状图高度的数
      */
     public static double handleMagnitude(double magnitude) {
-        return (magnitude + ABS) / ABS * SpectrumConstants.BAR_MAX_HEIGHT;
+        return (magnitude + ABS) / ABS * SpectrumConstants.barMaxHeight;
     }
 }

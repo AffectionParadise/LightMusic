@@ -46,6 +46,10 @@ public class ConfigConstants {
     public static final String VIDEO_ONLY = "videoOnly";
     // 是否显示侧边栏文字
     public static final String SHOW_TAB_TEXT = "showTabText";
+    // 歌词对齐方式
+    public static final String LRC_ALIGNMENT = "lrcAlignment";
+    // 频谱最大高度
+    public static final String SPEC_MAX_HEIGHT = "specMaxHeight";
     // 高斯模糊因子
     public static final String GS_FACTOR_INDEX = "gsFactorIndex";
     // 暗角滤镜因子

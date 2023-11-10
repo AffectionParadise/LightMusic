@@ -632,7 +632,7 @@ public class ImageUtil {
      */
     public static BufferedImage gaussianBlur(BufferedImage img) {
         if (img == null) return null;
-        gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.gaussianFactor[BlurConstants.gsFactorIndex]));
+        gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]));
         return gaussianFilter.filter(img, null);
     }
 
@@ -645,7 +645,7 @@ public class ImageUtil {
     public static BufferedImage darker(BufferedImage img) {
         if (img == null) return null;
         double ln = lightness(img);
-        float bn, param = BlurConstants.darkerFactor[BlurConstants.darkerFactorIndex];
+        float bn, param = BlurConstants.DARKER_FACTOR[BlurConstants.darkerFactorIndex];
         if (ln > 0.5) bn = param;
         else if (ln > 0.4) bn = param + 0.05f;
         else if (ln > 0.3) bn = param + 0.1f;

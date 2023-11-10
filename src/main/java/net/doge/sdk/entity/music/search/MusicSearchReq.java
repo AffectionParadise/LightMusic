@@ -45,7 +45,7 @@ public class MusicSearchReq {
     private final String SEARCH_MUSIC_KW_API = "https://search.kuwo.cn/r.s?client=kt&all=%s&pn=%s&rn=%s&uid=794762570" +
             "&ver=kwplayer_ar_9.2.2.1&vipver=1&show_copyright_off=1&newver=1&ft=music&cluster=0&strategy=2012&encoding=utf8&rformat=json&vermerge=1&mobi=1&issubtitle=1";
     // 关键词搜索歌曲 API (咪咕)
-    private final String SEARCH_MUSIC_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=2&keyword=%s&pgc=%s&rows=%s";
+//    private final String SEARCH_MUSIC_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=2&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索歌曲 API (搜歌词) (咪咕)
     private final String SEARCH_MUSIC_BY_LYRIC_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=7&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索歌曲 API (千千)
@@ -583,6 +583,7 @@ public class MusicSearchReq {
                         String artistId = SdkUtil.parseArtistId(songJson);
                         String albumName = songJson.getString("album");
                         String albumId = songJson.getString("albumId");
+                        Double duration = songJson.getDouble("duration");
                         String mvId = songJson.getString("mvId");
 
                         NetMusicInfo musicInfo = new NetMusicInfo();
@@ -593,6 +594,7 @@ public class MusicSearchReq {
                         musicInfo.setArtistId(artistId);
                         musicInfo.setAlbumName(albumName);
                         musicInfo.setAlbumId(albumId);
+                        musicInfo.setDuration(duration);
                         musicInfo.setMvId(mvId);
 
                         r.add(musicInfo);
@@ -624,6 +626,7 @@ public class MusicSearchReq {
                     String artistId = SdkUtil.parseArtistId(songJson);
                     String albumName = songJson.getString("album");
                     String albumId = songJson.getString("albumId");
+                    Double duration = songJson.getDouble("duration");
                     String mvId = songJson.getString("mvId");
                     String lrcMatch = songJson.getString("multiLyricStr").replace("\n", " / ");
 
@@ -635,6 +638,7 @@ public class MusicSearchReq {
                     musicInfo.setArtistId(artistId);
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
                     musicInfo.setMvId(mvId);
                     musicInfo.setLrcMatch(lrcMatch);
 

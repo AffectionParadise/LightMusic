@@ -33,8 +33,7 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API
     private final String GET_SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
     // 歌曲 URL 获取 API (酷我)
-//    private final String GET_SONG_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=music&br=320kmp3";
-//    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?rid=%s&format=mp3&type=convert_url";
+//    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
     // 歌曲 URL 获取 API (咪咕)
 //    private final String GET_SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
     private final String GET_SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=%s&toneFlag=%s";
@@ -166,18 +165,11 @@ public class MusicUrlReq {
 
         // 酷我(解锁付费音乐)
         else if (source == NetMusicSource.KW) {
-//            String urlBody = HttpRequest.get(String.format(GET_SONG_URL_KW_API, id))
-//                    .executeAsync()
-//                    .body();
-//            return urlBody;
-//            HttpResponse resp = SdkCommon.kwRequest(String.format(GET_SONG_URL_KW_API, id)).executeAsync();
+//            HttpResponse resp = HttpRequest.get(String.format(GET_SONG_URL_KW_API, id)).executeAsync();
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {
 //                String urlBody = resp.body();
-//                JSONObject urlJson = JSONObject.parseObject(urlBody);
-//                if (JsonUtil.notEmpty(urlJson)) {
-//                    JSONObject data = urlJson.getJSONObject("data");
-//                    if (JsonUtil.notEmpty(data)) return data.getString("url");
-//                }
+//                JSONObject data = JSONObject.parseObject(urlBody);
+//                return data.getString("url");
 //            }
             String quality;
             switch (AudioQuality.quality) {

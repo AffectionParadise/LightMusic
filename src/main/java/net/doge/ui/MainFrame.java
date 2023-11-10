@@ -910,7 +910,7 @@ public class MainFrame extends JFrame {
     private CustomScrollPane lrcScrollPane = new CustomScrollPane(lrcList);
     private DefaultListModel<Statement> lrcListModel = new DefaultListModel<>();
     // 频谱面板
-    private SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
+    public SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
     private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
     private List<CustomRadioButtonMenuItem> spectrumStyleButtonGroup = new LinkedList<>();
     private final String SPEC_OPACITY_MSG = I18n.getText("specOpacityMsg");
@@ -2476,7 +2476,7 @@ public class MainFrame extends JFrame {
                             : new RoundRectangle2D.Double(0, 0, w, h, 10, 10)));
                     // 歌词面板
                     Dimension d = new Dimension((int) (w * 0.6), h);
-                    Dimension d2 = new Dimension((int) (w * 0.6), SpectrumConstants.BAR_MAX_HEIGHT);
+                    Dimension d2 = new Dimension((int) (w * 0.6), SpectrumConstants.barMaxHeight);
                     lrcScrollPane.setPreferredSize(d);
                     spectrumPanel.setPreferredSize(d2);
                     // 时间条
@@ -3037,6 +3037,11 @@ public class MainFrame extends JFrame {
         // 是否显示侧边栏文字
         showTabText = config.getBooleanValue(ConfigConstants.SHOW_TAB_TEXT, true);
         updateTabSize();
+        // 载入歌词对齐方式
+        LyricAlignment.lrcAlignmentIndex = config.getIntValue(ConfigConstants.LRC_ALIGNMENT, LyricAlignment.lrcAlignmentIndex);
+        // 载入频谱最大高度
+        SpectrumConstants.barMaxHeight = config.getIntValue(ConfigConstants.SPEC_MAX_HEIGHT, SpectrumConstants.barMaxHeight);
+        spectrumPanel.setMinimumSize(new Dimension(1, SpectrumConstants.barMaxHeight));
         // 载入高斯模糊因子
         BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 载入暗角滤镜因子
@@ -3793,6 +3798,10 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
         // 存入是否显示侧边栏文字
         config.put(ConfigConstants.SHOW_TAB_TEXT, showTabText);
+        // 存入歌词对齐方式
+        config.put(ConfigConstants.LRC_ALIGNMENT, LyricAlignment.lrcAlignmentIndex);
+        // 存入频谱最大高度
+        config.put(ConfigConstants.SPEC_MAX_HEIGHT, SpectrumConstants.barMaxHeight);
         // 存入高斯模糊因子
         config.put(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 存入暗角滤镜因子
@@ -20069,10 +20078,6 @@ public class MainFrame extends JFrame {
                 spectrumPopupMenu.show(spectrumPanel, e.getX(), e.getY());
             }
         });
-
-        // 歌词面板最佳大小(CustomList 需要加到 CustomScrollPane 中才能调整大小！)
-        Dimension d = new Dimension(1, SpectrumConstants.BAR_MAX_HEIGHT);
-        spectrumPanel.setMinimumSize(d);
         // 初始不可见
         spectrumPanel.setVisible(false);
         lrcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -20092,7 +20097,7 @@ public class MainFrame extends JFrame {
                 double[] specs = player.specs;
                 double[] specsOrigin = player.specsOrigin;
                 double[] specsGap = player.specsGap;
-                for (int i = 0, len = SpectrumConstants.BAR_NUM; i < len; i++) {
+                for (int i = 0, len = SpectrumConstants.barNum; i < len; i++) {
                     if (specs[i] < specsOrigin[i])
                         specs[i] += Math.min(specsGap[i] / specPiece, specsOrigin[i] - specs[i]);
                     else if (specs[i] > specsOrigin[i])
@@ -20954,7 +20959,7 @@ public class MainFrame extends JFrame {
                 double[] specs = player.specs;
                 double[] specsOrigin = player.specsOrigin;
                 double[] specsGap = player.specsGap;
-                final int barNum = SpectrumConstants.BAR_NUM, nFactor = barNum - 30, numBands = SpectrumConstants.NUM_BANDS, maxHeight = SpectrumConstants.BAR_MAX_HEIGHT;
+                final int barNum = SpectrumConstants.barNum, nFactor = barNum - 30, numBands = SpectrumConstants.NUM_BANDS, maxHeight = SpectrumConstants.barMaxHeight;
                 double avg = 0;
                 for (int i = 0; i < numBands; i++) {
                     int mult = i / barNum;

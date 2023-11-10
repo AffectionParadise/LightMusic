@@ -13,6 +13,7 @@ import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.TimeUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -263,6 +264,7 @@ public class RankingInfoReq {
                 String artistId = songJson.getString("singerId");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumId");
+                Double duration = TimeUtil.toSeconds(songJson.getString("length"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.MG);
@@ -272,6 +274,7 @@ public class RankingInfoReq {
                 musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
 
                 res.add(musicInfo);
             }

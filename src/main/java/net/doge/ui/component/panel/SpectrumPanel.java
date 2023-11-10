@@ -26,7 +26,7 @@ public class SpectrumPanel extends JPanel {
             @Override
             public void componentResized(ComponentEvent e) {
                 int num = (getWidth() - space * 2 + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
-                SpectrumConstants.BAR_NUM = Math.min(num, SpectrumConstants.NUM_BANDS);
+                SpectrumConstants.barNum = Math.min(num, SpectrumConstants.NUM_BANDS);
             }
         });
     }
@@ -50,7 +50,7 @@ public class SpectrumPanel extends JPanel {
         double[] specs = f.player.getSpecs();
         int pw = getWidth(), ph = getHeight();
         if (pw == 0 || ph == 0) return;
-        int barNum = SpectrumConstants.BAR_NUM, imgX = (pw - SpectrumConstants.BAR_WIDTH * barNum - SpectrumConstants.BAR_GAP * (barNum - 1)) / 2;
+        int barNum = SpectrumConstants.barNum, imgX = (pw - SpectrumConstants.BAR_WIDTH * barNum - SpectrumConstants.BAR_GAP * (barNum - 1)) / 2;
         Graphics2D g2d = (Graphics2D) g;
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, f.specOpacity));
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

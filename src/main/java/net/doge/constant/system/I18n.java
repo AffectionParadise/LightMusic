@@ -538,6 +538,11 @@ public class I18n {
         LANG_MAP.put("closeOption", new String[]{"关闭主界面时：", "Closing option: "});
         LANG_MAP.put("windowSize", new String[]{"窗口大小：", "Window size: "});
         LANG_MAP.put("showTabText", new String[]{"显示侧边栏文字", "Show sidebar text"});
+        LANG_MAP.put("lrcAlignment", new String[]{"歌词对齐方式：", "Lyric alignment: "});
+        LANG_MAP.put("left", new String[]{"居左", "Left"});
+        LANG_MAP.put("center", new String[]{"居中", "Center"});
+        LANG_MAP.put("right", new String[]{"居右", "Right"});
+        LANG_MAP.put("specMaxHeight", new String[]{"频谱最大高度(≤%s像素)：", "Max spectrum view height(≤%s pixels): "});
         LANG_MAP.put("gsFactor", new String[]{"高斯模糊半径（半径越大越模糊）：", "Gaussian blur radius(Bigger radius, blurrier): "});
         LANG_MAP.put("darkerFactor", new String[]{"暗角滤镜因子（因子越小越暗）：", "Darker mode factor(Smaller factor, darker): "});
         LANG_MAP.put("autoDownloadLrc", new String[]{"下载歌曲时自动下载歌词", "Download lyrics while downloading tracks"});
@@ -579,6 +584,7 @@ public class I18n {
         LANG_MAP.put("invalidMusicDown", new String[]{"歌曲下载路径无效", "Invalid track download path"});
         LANG_MAP.put("invalidMvDown", new String[]{"MV 下载路径无效", "Invalid MV download path"});
         LANG_MAP.put("invalidCache", new String[]{"缓存路径无效", "Invalid cache path"});
+        LANG_MAP.put("invalidSpecMaxHeight", new String[]{"频谱最大高度无效", "Invalid max spectrum height"});
         LANG_MAP.put("invalidMaxCacheSize", new String[]{"最大缓存大小无效", "Invalid max cache size"});
         LANG_MAP.put("invalidHistoryCount", new String[]{"最大播放历史数量无效", "Invalid playback history count"});
         LANG_MAP.put("invalidSearchHistoryCount", new String[]{"最大搜索历史数量无效", "Invalid search history count"});
