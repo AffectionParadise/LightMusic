@@ -632,7 +632,7 @@ public class ImageUtil {
      */
     public static BufferedImage gaussianBlur(BufferedImage img) {
         if (img == null) return null;
-        gaussianFilter.setRadius(Math.max(1, img.getWidth() / BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]));
+        gaussianFilter.setRadius(Math.max(1, img.getWidth() * BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]));
         return gaussianFilter.filter(img, null);
     }
 

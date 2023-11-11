@@ -22,14 +22,14 @@ public class BlurConstants {
     // 高斯模糊因子
     public static int gsFactorIndex = 3;
     public static final String[] GAUSSIAN_FACTOR_NAME = {
-            I18n.getText("smaller") + " (8.3%)",
+            I18n.getText("smaller") + " (5%)",
             I18n.getText("small") + " (10%)",
-            I18n.getText("medium") + " (12.5%)",
-            I18n.getText("large") + " (16.7%)",
-            I18n.getText("larger") + " (25%)",
+            I18n.getText("medium") + " (20%)",
+            I18n.getText("large") + " (30%)",
+            I18n.getText("larger") + " (40%)",
             I18n.getText("huge") + " (50%)"
     };
-    public static final int[] GAUSSIAN_FACTOR = {12, 10, 8, 6, 4, 2};
+    public static final float[] GAUSSIAN_FACTOR = {0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f};
 
     // 暗角滤镜因子
     public static int darkerFactorIndex = 1;

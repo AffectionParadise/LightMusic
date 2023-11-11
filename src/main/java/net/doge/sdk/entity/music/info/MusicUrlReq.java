@@ -14,8 +14,8 @@ import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
-import net.doge.sdk.entity.music.info.trackurl.KwTrackUrlReq;
-import net.doge.sdk.entity.music.info.trackurl.QqTrackUrlReq;
+import net.doge.sdk.entity.music.info.tracker.KwTracker;
+import net.doge.sdk.entity.music.info.tracker.QqTracker;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.CryptoUtil;
@@ -36,7 +36,7 @@ public class MusicUrlReq {
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
     // 歌曲 URL 获取 API (咪咕)
 //    private final String GET_SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
-    private final String GET_SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=%s&toneFlag=%s";
+    private final String GET_SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.4?songId=%s&toneFlag=%s&resourceType=2";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
@@ -160,7 +160,7 @@ public class MusicUrlReq {
                     quality = "mp3";
                     break;
             }
-            return new QqTrackUrlReq().getTrackUrl(id, quality);
+            return new QqTracker().getTrackUrl(id, quality);
         }
 
         // 酷我(解锁付费音乐)
@@ -185,7 +185,7 @@ public class MusicUrlReq {
                     quality = "128k";
                     break;
             }
-            return new KwTrackUrlReq().getTrackUrl(id, quality);
+            return new KwTracker().getTrackUrl(id, quality);
         }
 
         // 咪咕
@@ -207,8 +207,14 @@ public class MusicUrlReq {
                     break;
             }
             String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, id, quality))
-                    .header("channel", "0146951")
-                    .header("uid", "1234")
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
+                    .header("aversionid", "")
+                    .header("token", "")
+                    .header("channel", "0146832")
+                    .header("language", "Chinese")
+                    .header("ua", "Android_migu")
+                    .header("mode", "android")
+                    .header("os", "Android 10")
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
