@@ -20,13 +20,13 @@ public class QqTracker {
         String device = "MI 14 Pro Max";
         String osVersion = "13";
         long time = System.currentTimeMillis() / 1000;
-        String lowerCase = CryptoUtil.hashMD5("d86b856be4a7ea7a5bc9b6c4eed46f4e" + time + "6562653262383463363633646364306534333668").toLowerCase();
+        String lowerCase = CryptoUtil.md5("d86b856be4a7ea7a5bc9b6c4eed46f4e" + time + "6562653262383463363633646364306534333668").toLowerCase();
 
         String s6 = "{\\\"method\\\":\\\"GetMusicUrl\\\",\\\"platform\\\":\\\"" + platform + "\\\",\\\"t1\\\":\\\"" + mid + "\\\",\\\"t2\\\":\\\"" + quality + "\\\"}";
         String s7 = "{\\\"uid\\\":\\\"\\\",\\\"token\\\":\\\"\\\",\\\"deviceid\\\":\\\"84ac82836212e869dbeea73f09ebe52b\\\",\\\"appVersion\\\":\\\"4.1.4\\\"," +
                 "\\\"vercode\\\":\\\"4140\\\",\\\"device\\\":\\\"" + device + "\\\",\\\"osVersion\\\":\\\"" + osVersion + "\\\"}";
         String s8 = "{\n\t\"text_1\":\t\"" + s6 + "\",\n\t\"text_2\":\t\"" + s7 + "\",\n\t\"sign_1\":\t\"" + lowerCase + "\",\n\t\"time\":\t\"" + time + "\",\n\t\"sign_2\":\t\""
-                + CryptoUtil.hashMD5(s6.replace("\\", "") + s7.replace("\\", "") + lowerCase + time + "NDRjZGIzNzliNzEe").toLowerCase() + "\"\n}";
+                + CryptoUtil.md5(s6.replace("\\", "") + s7.replace("\\", "") + lowerCase + time + "NDRjZGIzNzliNzEe").toLowerCase() + "\"\n}";
 
         String hex = CryptoUtil.bytesToHex(s8.getBytes(StandardCharsets.UTF_8)).toUpperCase();
         byte[] compressedBytes = CryptoUtil.compress(hex.getBytes(StandardCharsets.UTF_8));

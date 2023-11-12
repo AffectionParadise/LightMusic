@@ -41,7 +41,14 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private Timer fontTimer;
 
     private final int SPACE = 90;
-    private final Border SPACE_BORDER = BorderFactory.createEmptyBorder(1, SPACE, 1, SPACE);
+    private final Border[] BORDERS = {
+            // 居左
+            BorderFactory.createEmptyBorder(1, SPACE, 1, 0),
+            // 居中
+            BorderFactory.createEmptyBorder(1, 0, 1, 0),
+            // 局右
+            BorderFactory.createEmptyBorder(1, 0, 1, SPACE)
+    };
 
     public LrcListRenderer() {
         fontTimer = new Timer(10, e -> {
@@ -76,7 +83,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
         // 标签
         label.setOpaque(false);
-        label.setBorder(SPACE_BORDER);
+        label.setBorder(BORDERS[LyricAlignment.lrcAlignmentIndex]);
         label.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lrcAlignmentIndex]);
         label.setForeground(bgColor);
         label.setUI(index != row ? normalLabelUI : highlightLabelUI);

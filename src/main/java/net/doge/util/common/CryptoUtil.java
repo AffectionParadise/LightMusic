@@ -1,7 +1,7 @@
 package net.doge.util.common;
 
-import cn.hutool.core.codec.Base64Decoder;
-import cn.hutool.core.codec.Base64Encoder;
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 
 import javax.crypto.Cipher;
@@ -28,7 +28,7 @@ public class CryptoUtil {
      * @param s
      * @return
      */
-    public static String hashMD5(String s) {
+    public static String md5(String s) {
         return DigestUtil.md5Hex(s);
     }
 
@@ -38,38 +38,38 @@ public class CryptoUtil {
      * @param file
      * @return
      */
-    public static String hashMD5(File file) {
+    public static String md5(File file) {
         return DigestUtil.md5Hex(file);
     }
 
     /**
-     * Base 64 解码字符串
+     * Base 64 解码为字符串
      *
-     * @param s
+     * @param base64
      * @return
      */
-    public static String base64Decode(String s) {
-        return Base64Decoder.decodeStr(s);
+    public static String base64Decode(String base64) {
+        return Base64.decodeStr(base64);
     }
 
     /**
-     * Base 64 解码 bytes
+     * Base 64 解码为 bytes
      *
-     * @param s
+     * @param base64
      * @return
      */
-    public static byte[] base64DecodeToBytes(String s) {
-        return Base64Decoder.decode(s);
+    public static byte[] base64DecodeToBytes(String base64) {
+        return Base64.decode(base64);
     }
 
     /**
      * Base 64 编码 bytes
      *
-     * @param bytes
+     * @param data
      * @return
      */
-    public static String base64Encode(byte[] bytes) {
-        return Base64Encoder.encode(bytes);
+    public static String base64Encode(byte[] data) {
+        return Base64.encode(data);
     }
 
     /**
@@ -114,29 +114,27 @@ public class CryptoUtil {
     /**
      * bytes 转 16 进制串
      *
-     * @param bytes
+     * @param data
      * @return
      */
-    public static String bytesToHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) sb.append(String.format("%02x", b));
-        return sb.toString();
+    public static String bytesToHex(byte[] data) {
+        return HexUtil.encodeHexStr(data);
     }
 
     /**
      * zlib 压缩 bytes
      *
-     * @param input
+     * @param data
      * @return
      * @throws Exception
      */
-    public static byte[] compress(byte[] input) {
+    public static byte[] compress(byte[] data) {
         Deflater deflater = new Deflater();
-        deflater.setInput(input);
+        deflater.setInput(data);
 
         // 压缩数据
         deflater.finish();
-        byte[] compressedBytes = new byte[input.length];
+        byte[] compressedBytes = new byte[data.length];
         int compressedLength = deflater.deflate(compressedBytes);
 
         // 拷贝有效数据
@@ -146,12 +144,12 @@ public class CryptoUtil {
     /**
      * zlib 解压缩 bytes
      *
-     * @param input
+     * @param data
      * @return
      */
-    public static byte[] decompress(byte[] input) {
+    public static byte[] decompress(byte[] data) {
         Inflater inflater = new Inflater();
-        inflater.setInput(input);
+        inflater.setInput(data);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];

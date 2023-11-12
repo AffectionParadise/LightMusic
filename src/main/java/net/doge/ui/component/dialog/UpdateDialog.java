@@ -149,7 +149,7 @@ public class UpdateDialog extends AbstractShadowDialog {
             }
             // 校验更新包 MD5
             msgLabel.setText(VALIDATING_MSG);
-            if (!keyMD5.equalsIgnoreCase(CryptoUtil.hashMD5(packageFile)))
+            if (!keyMD5.equalsIgnoreCase(CryptoUtil.md5(packageFile)))
                 throw new InValidPackageFileException(VALIDATION_FAILED_MSG);
             close(false);
         } catch (Exception e) {

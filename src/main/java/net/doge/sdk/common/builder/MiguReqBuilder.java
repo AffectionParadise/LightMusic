@@ -11,7 +11,7 @@ public class MiguReqBuilder {
         String deviceId = "963B7AA0D21511ED807EE5846EC87D20";
         String signatureMD5 = "6cdc72a439cef99a3418d2a78aa28c73";
         String time = String.valueOf(System.currentTimeMillis());
-        String sign = CryptoUtil.hashMD5(keyword + signatureMD5 + "yyapp2d16148780a1dcc7408e06336b98cfd50" + deviceId + time);
+        String sign = CryptoUtil.md5(keyword + signatureMD5 + "yyapp2d16148780a1dcc7408e06336b98cfd50" + deviceId + time);
 
         String json;
         switch (type) {

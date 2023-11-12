@@ -81,13 +81,14 @@ public class MusicUrlReq {
      */
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
+//        String hash = musicInfo.getHash();
         int source = musicInfo.getSource();
 
         // 网易云
         if (source == NetMusicSource.NC) {
             // 首选高音质接口
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
-            // standard => 标准, higher => 较高, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, sky => 沉浸环绕声, jymaster => 超清母带
+            // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, jysky => 沉浸环绕声, jymaster => 超清母带
             String quality;
             switch (AudioQuality.quality) {
                 case AudioQuality.HI_RES:
@@ -97,10 +98,8 @@ public class MusicUrlReq {
                     quality = "lossless";
                     break;
                 case AudioQuality.SUPER:
-                    quality = "exhigh";
-                    break;
                 case AudioQuality.HIGH:
-                    quality = "higher";
+                    quality = "exhigh";
                     break;
                 default:
                     quality = "standard";
@@ -130,6 +129,23 @@ public class MusicUrlReq {
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             if (data.getIntValue("is_free_part") == 0) return data.getString("play_url");
+//            String quality;
+//            switch (AudioQuality.quality) {
+//                case AudioQuality.HI_RES:
+//                    quality = "flac24bit";
+//                    break;
+//                case AudioQuality.LOSSLESS:
+//                    quality = "flac";
+//                    break;
+//                case AudioQuality.SUPER:
+//                case AudioQuality.HIGH:
+//                    quality = "320k";
+//                    break;
+//                default:
+//                    quality = "128k";
+//                    break;
+//            }
+//            return new KgTracker().getTrackUrl(hash, quality);
         }
 
         // QQ(解锁付费音乐)

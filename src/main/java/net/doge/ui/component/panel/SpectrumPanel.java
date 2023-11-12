@@ -1,5 +1,6 @@
 package net.doge.ui.component.panel;
 
+import lombok.Getter;
 import net.doge.constant.ui.SpectrumConstants;
 import net.doge.ui.MainFrame;
 
@@ -10,10 +11,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.GeneralPath;
 
 public class SpectrumPanel extends JPanel {
+    @Getter
     private boolean drawSpectrum;
-
-    private final Stroke stroke = new BasicStroke(3);
-    private final int space = 90;
+    private final Stroke STROKE = new BasicStroke(3);
+    private final int SPACE = 90;
     private MainFrame f;
 
     public SpectrumPanel(MainFrame f) {
@@ -25,7 +26,7 @@ public class SpectrumPanel extends JPanel {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int num = (getWidth() - space * 2 + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                int num = (getWidth() - SPACE * 2 + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
                 SpectrumConstants.barNum = Math.min(num, SpectrumConstants.NUM_BANDS);
             }
         });
@@ -34,10 +35,6 @@ public class SpectrumPanel extends JPanel {
     public void setDrawSpectrum(boolean drawSpectrum) {
         this.drawSpectrum = drawSpectrum;
         repaint();
-    }
-
-    public boolean isDrawSpectrum() {
-        return drawSpectrum;
     }
 
     @Override
@@ -55,7 +52,7 @@ public class SpectrumPanel extends JPanel {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, f.specOpacity));
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(f.currUIStyle.getSpectrumColor());
-        g2d.setStroke(stroke);
+        g2d.setStroke(STROKE);
         int style = f.currSpecStyle;
         for (int i = 0; i < barNum; i++) {
             // 得到频谱高度并绘制
@@ -168,7 +165,6 @@ public class SpectrumPanel extends JPanel {
                     g2d.fill(path);
                     break;
             }
-
         }
     }
 }

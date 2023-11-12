@@ -70,7 +70,7 @@ public class SdkCommon {
         String params = url.substring(url.indexOf('?') + 1);
         // 将参数解码
         params = StringUtil.urlDecode(params);
-        String sign = CryptoUtil.hashMD5(params + secret);
+        String sign = CryptoUtil.md5(params + secret);
         return HttpRequest.get(url + "&sign=" + sign);
     }
 }

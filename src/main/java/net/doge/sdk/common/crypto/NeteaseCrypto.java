@@ -41,7 +41,7 @@ public class NeteaseCrypto {
 
     public static String eapi(String path, String data) {
         String message = "nobody" + path + "use" + data + "md5forencrypt";
-        String digest = CryptoUtil.hashMD5(message);
+        String digest = CryptoUtil.md5(message);
         String dat = path + "-36cd479b6b5-" + data + "-36cd479b6b5-" + digest;
         byte[] aesBytes = CryptoUtil.aesEncrypt(dat.getBytes(StandardCharsets.UTF_8), "ECB", E_API_KEY.getBytes(StandardCharsets.UTF_8), null);
         String params = CryptoUtil.bytesToHex(aesBytes).toUpperCase();

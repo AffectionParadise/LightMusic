@@ -1,5 +1,6 @@
 //package net.doge.sdk.entity.music.info.tracker;
 //
+//import cn.hutool.http.Header;
 //import cn.hutool.http.HttpRequest;
 //import com.alibaba.fastjson2.JSONArray;
 //import com.alibaba.fastjson2.JSONObject;
@@ -47,7 +48,7 @@
 //        if (StringUtil.isEmpty(albumId)) albumId = "0";
 //        if (StringUtil.isEmpty(albumAudioId)) albumAudioId = "0";
 //
-//        Map<String, Object> paramsMap = new HashMap<>();
+//        Map<String, Object> paramsMap = new TreeMap<>();
 //        paramsMap.put("album_id", albumId);
 //        paramsMap.put("userid", userid);
 //        paramsMap.put("area_code", 1);
@@ -67,20 +68,21 @@
 //        paramsMap.put("behavior", "play");
 //        paramsMap.put("clienttime", System.currentTimeMillis() / 1000);
 //        paramsMap.put("pid", 2);
-//        paramsMap.put("key", getKey(thash));
+//        paramsMap.put("key", CryptoUtil.hashMD5(thash.toLowerCase() + pidversec + appid + mid + userid));
 //        paramsMap.put("dfid", "-");
 //        paramsMap.put("pidversion", 3001);
 //
 //        paramsMap.put("quality", qualityMap.get(quality));
 //
-//        Map<String, String> headersMap = new HashMap<>();
-//        headersMap.put("User-Agent", "Android712-AndroidPhone-8983-18-0-NetMusic-wifi");
-//        headersMap.put("KG-THash", "3e5ec6b");
-//        headersMap.put("KG-Rec", "1");
-//        headersMap.put("KG-RC", "1");
-//        headersMap.put("x-router", "tracker.kugou.com");
-//
-//        String respBody = signRequest(paramsMap, headersMap).executeAsync().body();
+//        String url = "https://gateway.kugou.com/v5/url?" + buildRequestParams(paramsMap) + "&signature=" + buildSign(paramsMap);
+//        String respBody = HttpRequest.get(url)
+//                .header(Header.USER_AGENT, "Android712-AndroidPhone-8983-18-0-NetMusic-wifi")
+//                .header("KG-THash", "3e5ec6b")
+//                .header("KG-Rec", "1")
+//                .header("KG-RC", "1")
+//                .header("x-router", "tracker.kugou.com")
+//                .executeAsync()
+//                .body();
 //        JSONObject urlJson = JSONObject.parseObject(respBody);
 //        JSONArray urlArray = urlJson.getJSONArray("url");
 //        if (JsonUtil.notEmpty(urlArray)) return urlArray.getString(0);
@@ -89,15 +91,6 @@
 //
 //    public static void main(String[] args) {
 //        new KgTracker().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k");
-//    }
-//
-//    private String getKey(String hash) {
-//        return CryptoUtil.hashMD5(hash.toLowerCase() + pidversec + appid + mid + userid);
-//    }
-//
-//    private HttpRequest signRequest(Map<String, Object> paramsMap, Map<String, String> headersMap) {
-//        String url = "https://gateway.kugou.com/v5/url?" + buildRequestParams(paramsMap) + "&signature=" + sign(paramsMap);
-//        return HttpRequest.get(url).headerMap(headersMap, true);
 //    }
 //
 //    private String buildRequestParams(Map<String, Object> paramsMap) {
@@ -112,9 +105,9 @@
 //        return sb.toString();
 //    }
 //
-//    private String sign(Map<String, Object> paramsMap) {
-//        Map<String, Object> paramsTreeMap = new TreeMap<>(paramsMap);
-//        String sign = buildSignParams(paramsTreeMap);
+//    private String buildSign(Map<String, Object> paramsMap) {
+////        Map<String, Object> paramsTreeMap = new TreeMap<>(paramsMap);
+//        String sign = buildSignParams(paramsMap);
 //        return CryptoUtil.hashMD5(signKey + sign + signKey);
 //    }
 //}

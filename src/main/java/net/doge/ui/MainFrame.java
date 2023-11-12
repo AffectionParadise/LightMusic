@@ -4259,7 +4259,7 @@ public class MainFrame extends JFrame {
                 // 有新版本
                 if (latest.compareTo(now) > 0) {
                     File packageFile = new File(SimplePath.TEMP_PATH + SoftInfo.PACKAGE_FILE_NAME);
-                    boolean packageFileValid = packageFile.exists() && keyMD5.equalsIgnoreCase(CryptoUtil.hashMD5(packageFile));
+                    boolean packageFileValid = packageFile.exists() && keyMD5.equalsIgnoreCase(CryptoUtil.md5(packageFile));
                     // 启动时，若更新包存在且 MD5 值相同，直接更新
                     if (mute && packageFileValid) startUpdate(true, keyMD5);
                     // 弹出更新提示框
@@ -23614,9 +23614,9 @@ public class MainFrame extends JFrame {
     private static boolean validateData() {
         String s1 = LMIconManager.getBase64("dialog.weixin");
         String s2 = LMIconManager.getBase64("dialog.alipay");
-        if (!"e3721514976bb205b1ef917f817c6243".equals(CryptoUtil.hashMD5(s1)))
+        if (!"e3721514976bb205b1ef917f817c6243".equals(CryptoUtil.md5(s1)))
             return false;
-        if (!"5d62142f49aaa03205dc8cc7bed351d4".equals(CryptoUtil.hashMD5(s2)))
+        if (!"5d62142f49aaa03205dc8cc7bed351d4".equals(CryptoUtil.md5(s2)))
             return false;
         return true;
     }
