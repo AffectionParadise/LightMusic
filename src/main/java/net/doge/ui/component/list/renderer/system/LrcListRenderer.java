@@ -79,7 +79,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         list.setFixedCellWidth(maxWidth);
 
         Statement statement = (Statement) value;
-        String lyric = statement.getLyric();
+        String plainLyric = statement.getPlainLyric();
 
         // 标签
         label.setOpaque(false);
@@ -92,8 +92,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         if (index == row) {
             label.setFont(highlightFont);
             if (stc == null || stc.getWidthThreshold() != maxWidth || !stc.getLabelFont().equals(highlightFont)
-                    || !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
-                stc = new StringTwoColor(label, lyric, highlightColor, bgColor, ratio, false, maxWidth);
+                    || !stc.getPlainLyric().equals(plainLyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
+                stc = new StringTwoColor(label, statement, highlightColor, bgColor, ratio, false, maxWidth);
             else stc.setRatio(ratio);
             label.setIcon(stc.getImgIcon());
             label.setText("");
@@ -102,7 +102,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 其他行的样式
         else {
             label.setFont(index == row - 2 ? shrinkFont : defaultFont);
-            label.setText(StringUtil.textToHtml(StringUtil.wrapLineByWidth(lyric, maxWidth)));
+            label.setText(StringUtil.textToHtml(StringUtil.wrapLineByWidth(plainLyric, maxWidth)));
 //            labelUI.setDrawBg(index == hoverIndex && StringUtil.notEmpty(text.trim()));
             label.setIcon(null);
         }
@@ -113,7 +113,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
         // 有性能问题，停用
 //        Statement statement = (Statement) value;
-//        String lyric = statement.getLyric();
+//        String lyric = statement.getPlainLyric();
 //
 //        CustomPanel outerPanel = new CustomPanel();
 //        CustomLabel lyricLabel = new CustomLabel();

@@ -64,4 +64,15 @@ public class RegexUtil {
     public static boolean test(String regex, CharSequence content) {
         return ReUtil.isMatch(regex, content);
     }
+
+    /**
+     * 测试字符串是否部分匹配模式
+     *
+     * @param regex
+     * @param content
+     * @return
+     */
+    public static boolean contains(String regex, CharSequence content) {
+        return ReUtil.contains(regex, content);
+    }
 }

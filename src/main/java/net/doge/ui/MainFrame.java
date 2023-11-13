@@ -75,6 +75,7 @@ import net.doge.ui.component.list.renderer.entity.*;
 import net.doge.ui.component.list.renderer.system.DownloadListRenderer;
 import net.doge.ui.component.list.renderer.system.LrcListRenderer;
 import net.doge.ui.component.list.ui.ListUI;
+import net.doge.ui.component.lyric.StringTwoColor;
 import net.doge.ui.component.menu.*;
 import net.doge.ui.component.menu.ui.CheckMenuItemUI;
 import net.doge.ui.component.menu.ui.MenuItemUI;
@@ -173,9 +174,13 @@ public class MainFrame extends JFrame {
     private final String PAGINATION_MSG = I18n.getText("paginationMsg");
     private final String TOTAL_MSG = I18n.getText("totalMsg");
     private final String LRC_LOADING_MSG = I18n.getText("lrcLoadingMsg");
+    private final Statement LRC_LOADING_STMT = new Statement(LRC_LOADING_MSG);
     private final String NO_LRC_MSG = I18n.getText("noLrcMsg");
+    private final Statement NO_LRC_STMT = new Statement(NO_LRC_MSG);
     private final String BAD_FORMAT_LRC_MSG = I18n.getText("badFormatLrcMsg");
+    private final Statement BAD_FORMAT_LRC_STMT = new Statement(BAD_FORMAT_LRC_MSG);
     private final String LOADING_MSG = I18n.getText("loadingMsg");
+    private final Statement LOADING_STMT = new Statement(LOADING_MSG);
     private final String LOAD_FAILED = I18n.getText("loadFailed");
     private final String ASK_DISPOSE_MSG = I18n.getText("askDisposeMsg");
     private final String REMEMBER_CHOICE_MSG = I18n.getText("rememberChoiceMsg");
@@ -3111,7 +3116,7 @@ public class MainFrame extends JFrame {
         desktopLyricFontSize = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, Fonts.HUGE_SIZE);
         desktopLyricDialog.updateFontSize(desktopLyricFontSize);
         // 初始化桌面歌词
-        desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
+        desktopLyricDialog.updateLyric(NO_LRC_STMT, 0);
         // 载入是否显示桌面歌词
         showDesktopLyric = config.getBooleanValue(ConfigConstants.SHOW_DESKTOP_LYRIC, true);
         if (showDesktopLyric) desktopLyricDialog.setVisible(true);
@@ -19952,8 +19957,8 @@ public class MainFrame extends JFrame {
                     int index = lrcList.locationToIndex(e.getPoint());
                     if (index == -1) return;
                     lrcList.setSelectedIndex(index);
-                    String lyric = lrcListModel.get(index).getLyric();
-                    if (lyric.trim().isEmpty()) return;
+                    String plainLyric = lrcListModel.get(index).getPlainLyric();
+                    if (plainLyric.trim().isEmpty()) return;
                     // 歌曲有歌词时才能查看
                     locateLrcMenuItem.setEnabled(nextLrc >= 0);
                     browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS && nextLrc != NextLrc.LOADING);
@@ -19968,8 +19973,8 @@ public class MainFrame extends JFrame {
                 }
                 // 双击定位歌词时间
                 else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-                    String lyric = lrcList.getSelectedValue().getLyric();
-                    if (lyric.trim().isEmpty()) return;
+                    String plainLyric = lrcList.getSelectedValue().getPlainLyric();
+                    if (plainLyric.trim().isEmpty()) return;
                     if (nextLrc >= 0) locateLrcMenuItem.doClick();
                 }
                 // 拖拽释放启动歌词滚动延时动画
@@ -20106,17 +20111,18 @@ public class MainFrame extends JFrame {
                 lrcAndSpecBox.repaint();
             });
         });
-        final int LRC_TIMER_INTERVAL = 10, lrcPiece = 100 / LRC_TIMER_INTERVAL;
+        final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
             lrcExecutor.execute(() -> {
                 if (nextLrc >= 0) {
-                    double currRatio = desktopLyricDialog.getRatio(), ratio = 0, or = originalRatio;
-                    if (currRatio < or) ratio = (or - currRatio) / lrcPiece + currRatio;
+                    double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
+                    double or = originalRatio;
+                    if (currRatio < or) ratio = (or - currRatio) / LRC_PIECE + currRatio;
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
-                    desktopLyricDialog.setLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc).getLyric(), ratio);
+                    desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
                 } else {
                     ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
-                    desktopLyricDialog.setLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_MSG : nextLrc == NextLrc.LOADING ? LRC_LOADING_MSG : BAD_FORMAT_LRC_MSG, 0);
+                    desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
                 }
                 if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
             });
@@ -20490,7 +20496,8 @@ public class MainFrame extends JFrame {
             // 切换到繁体
             if (currChineseType == ChineseType.SIMPLIFIED) {
                 if (nextLrc >= 0)
-                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
+                    for (Statement stmt : statements)
+                        stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getPlainLyric()));
                 switchChineseButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
                 currChineseType = ChineseType.TRADITIONAL;
             }
@@ -20517,7 +20524,7 @@ public class MainFrame extends JFrame {
                     if (player.loadedNetMusic() && player.getMusicInfo().hasRoma()) {
                         loadLrc(player.getAudioFile(), player.getMusicInfo(), true, false);
                     } else {
-                        for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
+                        for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getPlainLyric()));
                     }
                 }
                 switchJapaneseButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
@@ -20651,7 +20658,7 @@ public class MainFrame extends JFrame {
             miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
         }
         // 重置桌面歌词
-        desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
+        desktopLyricDialog.updateLyric(NO_LRC_STMT, 0);
         // 允许“关闭当前歌曲”
         closeSong.setEnabled(true);
         // 开启频谱动画
@@ -20712,7 +20719,7 @@ public class MainFrame extends JFrame {
         // 重置播放进度条
         timeBar.setValue(0);
         // 重置桌面歌词
-        desktopLyricDialog.setLyric(NO_LRC_MSG, 0);
+        desktopLyricDialog.updateLyric(NO_LRC_STMT, 0);
         // 禁止“关闭当前歌曲”
         closeSong.setEnabled(false);
         // 关闭频谱动画
@@ -20828,14 +20835,14 @@ public class MainFrame extends JFrame {
                 throw new NoLyricException("歌词是一个空串");
             // 繁简切换，简体时不动
             if (currChineseType == ChineseType.TRADITIONAL) {
-                for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
+                for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getPlainLyric()));
             }
             // 日文/罗马音切换，日文时不动
             if (currJapaneseType == JapaneseType.ROMAJI && !loadTrans) {
                 // 使用已有的罗马音歌词
                 if (!isFile && musicInfo.hasRoma() && !romaData.isEmpty()) statements = romaData.getStatements();
                 else
-                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
+                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getPlainLyric()));
             }
             if (reload) lrcListModel.clear();
             // 添加空白充数
@@ -21016,10 +21023,16 @@ public class MainFrame extends JFrame {
                 if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() - lrcOffset)
                     originalRatio = 1;
                 else {
-                    double tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() + lrcOffset) /
-                            ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
-                                    : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
-                                    : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
+                    StringTwoColor stc = desktopLyricDialog.getStc();
+                    double tempRatio;
+                    if (stc.isByWord()) {
+                        tempRatio = stc.calcRatio(currTimeSeconds, statements.get(nextLrc - 1).getTime() - lrcOffset);
+                    } else {
+                        tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() + lrcOffset) /
+                                ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
+                                        : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
+                                        : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
+                    }
                     originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
                 }
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
@@ -23199,10 +23212,10 @@ public class MainFrame extends JFrame {
         if (nextLrc < 0) return "";
         for (int i = 0, size = statements.size(); i < size; i++) {
             if (t < statements.get(i).getTime() - lrcOffset) {
-                if (i == 0) return statements.get(i).getLyric();
-                else return statements.get(i - 1).getLyric();
+                if (i == 0) return statements.get(i).getPlainLyric();
+                else return statements.get(i - 1).getPlainLyric();
             } else if (i == size - 1) {
-                return statements.get(i).getLyric();
+                return statements.get(i).getPlainLyric();
             }
         }
         return "";

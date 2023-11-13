@@ -20,6 +20,17 @@ public class ArrayUtil {
     }
 
     /**
+     * 删除数组中所有空值
+     *
+     * @param array
+     * @param <T>
+     * @return
+     */
+    public static <T extends CharSequence> T[] removeEmpty(T[] array) {
+        return cn.hutool.core.util.ArrayUtil.removeEmpty(array);
+    }
+
+    /**
      * 返回元素在数组中的位置
      *
      * @param array

@@ -12,6 +12,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.*;
 import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
@@ -21,6 +22,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -61,13 +65,13 @@ public class MusicInfoReq {
     // 歌词 API
     private final String LYRIC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
     // 歌词 API (酷狗)
-//    private final String LYRIC_KG_API = "http://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=%s&hash=%s&timelength=%s";
-//    private final String LYRIC_KG_API_2 = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=krc&charset=utf8";
+    private final String LYRIC_KG_API = "http://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=%s&hash=%s&timelength=%s";
+    private final String LYRIC_KG_API_2 = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=krc&charset=utf8";
     // 歌词 API (QQ)
     private final String LYRIC_QQ_API = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=%s&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8¬ice=0&platform=yqq&needNewCode=0";
     // 歌词 API (酷我)
-    private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
-    //    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
+//    private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
+    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌词 API (5sing)
@@ -181,7 +185,7 @@ public class MusicInfoReq {
                     musicInfo.callback();
                 });
             }
-            if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
+//            if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
         }
 
         // QQ
@@ -494,9 +498,53 @@ public class MusicInfoReq {
                     .body();
             JSONObject lrcJson = JSONObject.parseObject(lrcBody);
             JSONObject lrc = lrcJson.getJSONObject("lrc");
+            JSONObject yrc = lrcJson.getJSONObject("yrc");
             JSONObject tLrc = lrcJson.getJSONObject("tlyric");
             JSONObject romaLrc = lrcJson.getJSONObject("romalrc");
-            if (JsonUtil.notEmpty(lrc)) {
+            // 逐字歌词
+            if (JsonUtil.notEmpty(yrc)) {
+                // 网易云歌词中包含部分 json 数据需要解析
+                String lyric = yrc.getString("lyric");
+                if (StringUtil.isEmpty(lyric)) musicInfo.setLrc("");
+                else {
+                    String[] lsp = lyric.split("\n");
+                    StringBuilder sb = new StringBuilder();
+                    for (String l : lsp) {
+                        if (JSON.isValidObject(l)) {
+                            JSONObject obj = JSONObject.parseObject(l);
+                            Double t = obj.getDouble("t");
+                            if (t != null) sb.append(TimeUtil.formatToLrcTime(t / 1000));
+                            JSONArray cArray = obj.getJSONArray("c");
+                            for (int i = 0, s = cArray.size(); i < s; i++)
+                                sb.append(cArray.getJSONObject(i).getString("tx"));
+                        } else {
+                            // 行起始时间
+                            String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
+                            int lineStart = Integer.parseInt(lineStartStr);
+                            String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
+                            sb.append(lrcTime);
+
+                            List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+,\\d+\\)", l);
+                            List<String> wordDurationList = RegexUtil.findAllGroup1("\\(\\d+,(\\d+),\\d+\\)", l);
+                            String[] sp = ArrayUtil.removeEmpty(l.split("(\\[\\d+,\\d+\\])|(\\(\\d+,\\d+,\\d+\\))"));
+                            for (int i = 0, s = wordStartList.size(); i < s; i++) {
+                                String wordStart = wordStartList.get(i);
+                                int wsi = Integer.parseInt(wordStart);
+                                sb.append("<")
+                                        .append(wsi - lineStart)
+                                        .append(",")
+                                        .append(wordDurationList.get(i))
+                                        .append(">")
+                                        .append(sp[i]);
+                            }
+                        }
+                        sb.append("\n");
+                    }
+                    musicInfo.setLrc(sb.toString());
+                }
+            }
+            // lrc 歌词
+            else if (JsonUtil.notEmpty(lrc)) {
                 // 网易云歌词中包含部分 json 数据需要解析
                 String lyric = lrc.getString("lyric");
                 if (StringUtil.isEmpty(lyric)) musicInfo.setLrc("");
@@ -523,45 +571,57 @@ public class MusicInfoReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-//            String lBody = HttpRequest.get(String.format(LYRIC_KG_API, StringUtil.urlEncodeAll(name), hash, duration))
-//                    .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
-//                    .header("KG-RC", "1")
-//                    .header("KG-THash", "expand_search_manager.cpp:852736169:451")
-//                    .executeAsync()
-//                    .body();
-//            JSONObject data = JSONObject.parseObject(lBody);
-//            JSONObject info = data.getJSONArray("candidates").getJSONObject(0);
-//
-//            String lrcBody = HttpRequest.get(String.format(LYRIC_KG_API_2, info.getString("id"), info.getString("accesskey")))
-//                    .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
-//                    .header("KG-RC", "1")
-//                    .header("KG-THash", "expand_search_manager.cpp:852736169:451")
-//                    .executeAsync()
-//                    .body();
-//            JSONObject lrcData = JSONObject.parseObject(lrcBody);
-//            String content = lrcData.getString("content");
-//            if (StringUtil.isEmpty(content)) {
-//                musicInfo.setLrc("");
-//                musicInfo.setTrans("");
-//                musicInfo.setRoma("");
-//                return;
-//            }
-//            byte[] encKey = new byte[]{0x40, 0x47, 0x61, 0x77, 0x5e, 0x32, 0x74, 0x47, 0x51, 0x36, 0x31, 0x2d, (byte) 0xce, (byte) 0xd2, 0x6e, 0x69};
-//            byte[] contentBytes = CryptoUtil.base64DecodeToBytes(content);
-//            contentBytes = Arrays.copyOfRange(contentBytes, 4, contentBytes.length);
-//            for (int i = 0, len = contentBytes.length; i < len; i++)
-//                contentBytes[i] = (byte) (contentBytes[i] ^ encKey[i % 16]);
-//            String result = new String(CryptoUtil.decompress(contentBytes), StandardCharsets.UTF_8);
-//
-//            // 提取酷狗歌词
-//            String headExp = "^.*\\[id:\\$\\w+\\]\\n";
-//            result = result.replace("\r", "");
-//            if (RegexUtil.test(headExp, result)) result = result.replaceAll(headExp, "");
-//            String trans = RegexUtil.getGroup0("\\[language:([\\w=\\\\/+]+)\\]", result);
-//            String lrc, tlrc;
-//            if (StringUtil.notEmpty(trans)) {
-//                result = result.replaceAll("\\[language:[\\w=\\\\/+]+\\]\\n", "");
-//            }
+            String lBody = HttpRequest.get(String.format(LYRIC_KG_API, StringUtil.urlEncodeAll(name), hash, duration))
+                    .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
+                    .header("KG-RC", "1")
+                    .header("KG-THash", "expand_search_manager.cpp:852736169:451")
+                    .executeAsync()
+                    .body();
+            JSONObject data = JSONObject.parseObject(lBody);
+            JSONObject info = data.getJSONArray("candidates").getJSONObject(0);
+
+            String lrcBody = HttpRequest.get(String.format(LYRIC_KG_API_2, info.getString("id"), info.getString("accesskey")))
+                    .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
+                    .header("KG-RC", "1")
+                    .header("KG-THash", "expand_search_manager.cpp:852736169:451")
+                    .executeAsync()
+                    .body();
+            JSONObject lrcData = JSONObject.parseObject(lrcBody);
+            String content = lrcData.getString("content");
+            if (StringUtil.isEmpty(content)) {
+                musicInfo.setLrc("");
+                musicInfo.setTrans("");
+                musicInfo.setRoma("");
+                return;
+            }
+            byte[] encKey = new byte[]{0x40, 0x47, 0x61, 0x77, 0x5e, 0x32, 0x74, 0x47, 0x51, 0x36, 0x31, 0x2d, (byte) 0xce, (byte) 0xd2, 0x6e, 0x69};
+            byte[] contentBytes = CryptoUtil.base64DecodeToBytes(content);
+            contentBytes = Arrays.copyOfRange(contentBytes, 4, contentBytes.length);
+            for (int i = 0, len = contentBytes.length; i < len; i++)
+                contentBytes[i] = (byte) (contentBytes[i] ^ encKey[i % 16]);
+            String result = new String(CryptoUtil.decompress(contentBytes), StandardCharsets.UTF_8);
+
+            // 提取酷狗歌词
+            String headExp = "^.*\\[id:\\$\\w+\\]\\n";
+            result = result.replace("\r", "");
+            if (RegexUtil.contains(headExp, result)) result = result.replaceAll(headExp, "");
+            String trans = RegexUtil.getGroup1("\\[language:([\\w=\\\\/+]+)\\]", result);
+            String lrc, tlrc;
+            if (StringUtil.notEmpty(trans)) result = result.replaceAll("\\[language:[\\w=\\\\/+]+\\]\\n", "");
+            String[] lsp = result.split("\n");
+            StringBuilder sb = new StringBuilder();
+            for (String l : lsp) {
+                if (RegexUtil.contains("\\[(\\d+),\\d+\\]", l)) {
+                    // 行起始时间
+                    String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
+                    int lineStart = Integer.parseInt(lineStartStr);
+                    String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
+                    sb.append(lrcTime);
+                    sb.append(l.replaceAll("\\[(\\d+),\\d+\\]", "").replaceAll("<(\\d+),(\\d+),\\d+>", "<$1,$2>"));
+                    sb.append("\n");
+                } else sb.append(l).append("\n");
+            }
+            musicInfo.setLrc(sb.toString());
         }
 
         // QQ
@@ -579,108 +639,105 @@ public class MusicInfoReq {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-//            byte[] keyBytes = "yeelion".getBytes(StandardCharsets.UTF_8);
-//            int keyLen = keyBytes.length;
-//            String params = "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_" + id + "&lrcx=1";
-//            byte[] paramsBytes = params.getBytes(StandardCharsets.UTF_8);
-//            int paramsLen = paramsBytes.length;
-//            byte[] output = new byte[paramsLen];
-//            int i = 0;
-//            while (i < paramsLen) {
-//                int j = 0;
-//                while (j < keyLen && i < paramsLen) {
-//                    output[i] = (byte) (keyBytes[j] ^ paramsBytes[i]);
-//                    i++;
-//                    j++;
-//                }
-//            }
-//            byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + CryptoUtil.base64Encode(output))
-//                    .executeAsync()
-//                    .bodyBytes();
-//            if (!"tp=content".equals(new String(bodyBytes, 0, 10))) return;
-//            int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
-//            byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
-//            byte[] lrcData = CryptoUtil.decompress(nBytes);
-////            String lrcStr = new String(lrcData, Charset.forName("gb18030"));
-//            String lrcDataStr = new String(lrcData, StandardCharsets.UTF_8);
-//            byte[] lrcBytes = CryptoUtil.base64DecodeToBytes(lrcDataStr);
-//            int lrcLen = lrcBytes.length;
-//            output = new byte[lrcLen];
-//            i = 0;
-//            while (i < lrcLen) {
-//                int j = 0;
-//                while (j < keyLen && i < lrcLen) {
-//                    output[i] = (byte) (lrcBytes[i] ^ keyBytes[j]);
-//                    i++;
-//                    j++;
-//                }
-//            }
-//            String lrcStr = new String(output, Charset.forName("gb18030"));
-
-            String lrcBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
+            byte[] keyBytes = "yeelion".getBytes(StandardCharsets.UTF_8);
+            int keyLen = keyBytes.length;
+            String params = "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_" + id + "&lrcx=1";
+            byte[] paramsBytes = params.getBytes(StandardCharsets.UTF_8);
+            int paramsLen = paramsBytes.length;
+            byte[] output = new byte[paramsLen];
+            int i = 0;
+            while (i < paramsLen) {
+                int j = 0;
+                while (j < keyLen && i < paramsLen) {
+                    output[i] = (byte) (keyBytes[j] ^ paramsBytes[i]);
+                    i++;
+                    j++;
+                }
+            }
+            byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + CryptoUtil.base64Encode(output))
                     .executeAsync()
-                    .body();
-            JSONObject data = JSONObject.parseObject(lrcBody).getJSONObject("data");
-            if (JsonUtil.isEmpty(data)) {
-                musicInfo.setLrc(null);
-                musicInfo.setTrans(null);
-                return;
+                    .bodyBytes();
+            if (!"tp=content".equals(new String(bodyBytes, 0, 10))) return;
+            int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
+            byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
+            byte[] lrcData = CryptoUtil.decompress(nBytes);
+//            String lrcStr = new String(lrcData, Charset.forName("gb18030"));
+            String lrcDataStr = new String(lrcData, StandardCharsets.UTF_8);
+            byte[] lrcBytes = CryptoUtil.base64DecodeToBytes(lrcDataStr);
+            int lrcLen = lrcBytes.length;
+            output = new byte[lrcLen];
+            i = 0;
+            while (i < lrcLen) {
+                int j = 0;
+                while (j < keyLen && i < lrcLen) {
+                    output[i] = (byte) (lrcBytes[i] ^ keyBytes[j]);
+                    i++;
+                    j++;
+                }
             }
-            try {
-                // 酷我歌词返回的是数组，需要先处理成字符串！
-                // lrclist 可能是数组也可能为 null ！
-                JSONArray lrcArray = data.getJSONArray("lrclist");
-                if (JsonUtil.notEmpty(lrcArray)) {
-                    StringBuilder sb = new StringBuilder();
-                    boolean hasTrans = false;
-                    for (int i = 0, len = lrcArray.size(); i < len; i++) {
-                        JSONObject sentenceJson = lrcArray.getJSONObject(i);
-                        JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
-                        // 歌词中带有翻译时，最后一句是翻译直接跳过
-                        if (hasTrans && JsonUtil.isEmpty(nextSentenceJson)) break;
-                        String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
-                        String nextTime = null;
-                        if (JsonUtil.notEmpty(nextSentenceJson))
-                            nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
-                        // 歌词中带有翻译，有多个 time 相同的歌词时取不重复的第二个
-                        if (!time.equals(nextTime)) {
-                            sb.append(time);
-                            String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
-                            sb.append(lineLyric);
-                            sb.append("\n");
-                        } else hasTrans = true;
-                    }
-                    musicInfo.setLrc(sb.toString());
-                } else musicInfo.setLrc(null);
+            String lrcStr = new String(output, Charset.forName("gb18030"));
+            musicInfo.setLrc(lrcStr);
 
-                // 酷我歌词返回的是数组，需要先处理成字符串！
-                // lrclist 可能是数组也可能为 null ！
-                if (JsonUtil.notEmpty(lrcArray)) {
-                    StringBuilder sb = new StringBuilder();
-                    boolean hasTrans = false;
-                    String lastTime = null;
-                    for (int i = 0, len = lrcArray.size(); i < len; i++) {
-                        JSONObject sentenceJson = lrcArray.getJSONObject(i);
-                        JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
-                        String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
-                        String nextTime = null;
-                        if (JsonUtil.notEmpty(nextSentenceJson))
-                            nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
-                        // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
-                        if (hasTrans && nextTime == null || time.equals(nextTime)) {
-                            sb.append(lastTime);
-                            String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
-                            sb.append(lineLyric);
-                            sb.append("\n");
-                            hasTrans = true;
-                        }
-                        lastTime = time;
-                    }
-                    musicInfo.setTrans(sb.toString());
-                } else musicInfo.setTrans(null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            String lrcBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
+//                    .executeAsync()
+//                    .body();
+//            JSONObject data = JSONObject.parseObject(lrcBody).getJSONObject("data");
+//            if (JsonUtil.isEmpty(data)) {
+//                musicInfo.setLrc(null);
+//                musicInfo.setTrans(null);
+//                return;
+//            }
+//            // 酷我歌词返回的是数组，需要先处理成字符串！
+//            // lrclist 可能是数组也可能为 null ！
+//            JSONArray lrcArray = data.getJSONArray("lrclist");
+//            if (JsonUtil.notEmpty(lrcArray)) {
+//                StringBuilder sb = new StringBuilder();
+//                boolean hasTrans = false;
+//                for (int i = 0, len = lrcArray.size(); i < len; i++) {
+//                    JSONObject sentenceJson = lrcArray.getJSONObject(i);
+//                    JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
+//                    // 歌词中带有翻译时，最后一句是翻译直接跳过
+//                    if (hasTrans && JsonUtil.isEmpty(nextSentenceJson)) break;
+//                    String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
+//                    String nextTime = null;
+//                    if (JsonUtil.notEmpty(nextSentenceJson))
+//                        nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
+//                    // 歌词中带有翻译，有多个 time 相同的歌词时取不重复的第二个
+//                    if (!time.equals(nextTime)) {
+//                        sb.append(time);
+//                        String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
+//                        sb.append(lineLyric);
+//                        sb.append("\n");
+//                    } else hasTrans = true;
+//                }
+//                musicInfo.setLrc(sb.toString());
+//            } else musicInfo.setLrc(null);
+//
+//            // 酷我歌词返回的是数组，需要先处理成字符串！
+//            // lrclist 可能是数组也可能为 null ！
+//            if (JsonUtil.notEmpty(lrcArray)) {
+//                StringBuilder sb = new StringBuilder();
+//                boolean hasTrans = false;
+//                String lastTime = null;
+//                for (int i = 0, len = lrcArray.size(); i < len; i++) {
+//                    JSONObject sentenceJson = lrcArray.getJSONObject(i);
+//                    JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
+//                    String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
+//                    String nextTime = null;
+//                    if (JsonUtil.notEmpty(nextSentenceJson))
+//                        nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
+//                    // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
+//                    if (hasTrans && nextTime == null || time.equals(nextTime)) {
+//                        sb.append(lastTime);
+//                        String lineLyric = StringUtil.removeHTMLLabel(sentenceJson.getString("lineLyric"));
+//                        sb.append(lineLyric);
+//                        sb.append("\n");
+//                        hasTrans = true;
+//                    }
+//                    lastTime = time;
+//                }
+//                musicInfo.setTrans(sb.toString());
+//            } else musicInfo.setTrans(null);
         }
 
         // 咪咕

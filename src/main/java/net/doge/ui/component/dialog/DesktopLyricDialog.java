@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.doge.constant.system.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
+import net.doge.model.lyric.Statement;
 import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.CustomButton;
@@ -30,9 +31,10 @@ public class DesktopLyricDialog extends JDialog {
     private final int MAX_FONT_SIZE = Fonts.HUGE_SIZE + 20;
     private Color bgColor;
     @Getter
-    private String lyric;
+    private Statement statement;
     @Getter
     private double ratio;
+    @Getter
     private StringTwoColor stc;
 
     private MainFrame f;
@@ -87,7 +89,7 @@ public class DesktopLyricDialog extends JDialog {
      */
     public void setBgColor(Color bgColor) {
         this.bgColor = bgColor;
-        setLyric(lyric, ratio);
+        updateLyric(statement, ratio);
     }
 
     /**
@@ -97,17 +99,19 @@ public class DesktopLyricDialog extends JDialog {
      */
     public void setForeColor(Color foreColor) {
         this.foreColor = foreColor;
-        setLyric(lyric, ratio);
+        updateLyric(statement, ratio);
     }
 
-    public void setLyric(String lyric, double ratio) {
-        this.lyric = lyric;
+    public void updateLyric(Statement stmt, double ratio) {
+        String plainLyric = stmt.getPlainLyric();
+
+        this.statement = stmt;
         this.ratio = ratio;
 
-        tempLabel.setText(lyric);
-        if (stc == null || !stc.getText().equals(lyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(bgColor)
+        tempLabel.setText(plainLyric);
+        if (stc == null || !stc.getPlainLyric().equals(plainLyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(bgColor)
                 || !stc.getLabelFont().equals(tempLabel.getFont()))
-            stc = new StringTwoColor(tempLabel, lyric, foreColor, bgColor, ratio, true, width);
+            stc = new StringTwoColor(tempLabel, stmt, foreColor, bgColor, ratio, true, width);
         else stc.setRatio(ratio);
         lyricLabel.setIcon(stc.getImgIcon());
         // Icon 对象可能不变，一定要手动重绘刷新！
@@ -145,7 +149,7 @@ public class DesktopLyricDialog extends JDialog {
         setBackground(Colors.TRANSPARENT);
         tempLabel.setForeground(bgColor);
         tempLabel.setFont(font);
-        setLyric(" ", 0);
+        updateLyric(new Statement(" "), 0);
         lyricLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         FlowLayout fl = new FlowLayout();

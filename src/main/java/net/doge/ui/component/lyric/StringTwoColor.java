@@ -1,29 +1,43 @@
 package net.doge.ui.component.lyric;
 
 import lombok.Data;
+import lombok.Getter;
 import net.doge.constant.ui.Fonts;
+import net.doge.model.lyric.Statement;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+import java.util.List;
 
 @Data
 public class StringTwoColor {
     private int width;
     private int height;
-    private String text;
+    private String lyric;
+    private String plainLyric;
     private Font labelFont;
     private boolean isDesktopLyric;
     private Color c1;
     private Color c2;
     private double ratio;
     private int widthThreshold;
+    // 是否逐字
+    @Getter
+    private boolean isByWord;
     private BufferedImage buffImg;
     private BufferedImage buffImg1;
     private BufferedImage buffImg2;
     private ImageIcon imgIcon;
+
+    private final int SHADOW_H_OFFSET = 3;
+
+    private FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
+    private FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
 
 //    private int dropOffset = 3;
 //    private List<CharBlock> blockList = new LinkedList<>();
@@ -48,7 +62,7 @@ public class StringTwoColor {
 //        return t < l.start ? low - 1 < 0 ? new CharBlock(0, 0) : blockList.get(low - 1) : l;
 //    }
 
-//    public static void main(String[] args) {
+    //    public static void main(String[] args) {
 //        blockList.add(new CharBlock(10, 20));
 //        blockList.add(new CharBlock(20, 20));
 //        blockList.add(new CharBlock(30, 20));
@@ -58,19 +72,31 @@ public class StringTwoColor {
 //        System.out.println(findKeyCharBlock(30));
 //        System.out.println(findKeyCharBlock(35));
 //    }
+    // 每个字(也有可能是一段)的宽度
+    private List<Integer> wordWidthList = new LinkedList<>();
+    // 每个字(也有可能是一段)相对当行的起始时间
+    private List<Integer> wordStartList = new LinkedList<>();
+    // 每个字(也有可能是一段)的持续时间
+    private List<Integer> wordDurationList = new LinkedList<>();
 
     /**
      * @param label          显示字体的标签
      * @param c1             颜色1(走过的颜色)
      * @param c2             颜色2(未走过的颜色)
-     * @param ratio          颜色1与颜色2所占部分的比值
+     * @param ratio          颜色1所占全部的比值
      * @param isDesktopLyric 是否是桌面歌词
      * @param widthThreshold 文字最大宽度
      */
-    public StringTwoColor(JLabel label, String text, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
-        if (StringUtil.isEmpty(text)) return;
+    public StringTwoColor(JLabel label, Statement stmt, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
+        String lyric = stmt.getLyric();
+        String plainLyric = stmt.getPlainLyric();
 
-        this.text = text;
+        if (stmt.isEmpty()) return;
+
+        if (RegexUtil.contains("<\\d+,\\d+>", lyric)) isByWord = true;
+
+        this.lyric = lyric;
+        this.plainLyric = plainLyric;
         this.c1 = c1;
         this.c2 = c2;
         this.isDesktopLyric = isDesktopLyric;
@@ -81,8 +107,6 @@ public class StringTwoColor {
         float fontSize = labelFont.getSize();
 
         FontMetrics metrics = label.getFontMetrics(labelFont);
-        FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
-        FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
         for (int i = 0, len = metricsBig.length; i < len; i++)
             metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i).deriveFont(fontSize));
         for (int i = 0, len = metricsHuge.length; i < len; i++)
@@ -92,33 +116,38 @@ public class StringTwoColor {
 //        int shadowXOffset = 2, shadowYOffset = 2;
 //        Color shadowColor = Colors.BLACK;
 
+        if (isByWord) {
+            List<String> startList = RegexUtil.findAllGroup1("<(\\d+),\\d+>", lyric);
+            for (String startStr : startList) wordStartList.add(Integer.parseInt(startStr));
+            List<String> durationList = RegexUtil.findAllGroup1("<\\d+,(\\d+)>", lyric);
+            for (String durationStr : durationList) wordDurationList.add(Integer.parseInt(durationStr));
+            initWordWidthList(lyric);
+        }
+
         // 计算宽度
-        for (int i = 0, len = text.length(); i < len; i++) {
-            int codePoint = text.codePointAt(i);
+        for (int i = 0, len = plainLyric.length(); i < len; i++) {
+            int codePoint = plainLyric.codePointAt(i);
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
 
             if (!isDesktopLyric) {
                 for (int j = 0, l = metricsBig.length; j < l; j++) {
-                    if (Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) {
-                        width += metricsBig[j].stringWidth(str);
-                        i += chars.length - 1;
-                        break;
-                    }
+                    if (!Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) continue;
+                    width += metricsBig[j].stringWidth(str);
+                    i += chars.length - 1;
+                    break;
                 }
             } else {
                 for (int j = 0, l = metricsHuge.length; j < l; j++) {
-                    if (Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) {
-                        width += metricsHuge[j].stringWidth(str);
-                        i += chars.length - 1;
-                        break;
-                    }
+                    if (!Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) continue;
+                    width += metricsHuge[j].stringWidth(str);
+                    i += chars.length - 1;
+                    break;
                 }
             }
         }
         // 桌面歌词阴影显示不完全解决
-        final int shadowHOffset = 3;
-        if (isDesktopLyric) width += 2 * shadowHOffset;
+        if (isDesktopLyric) width += 2 * SHADOW_H_OFFSET;
         height = metrics.getHeight();
 //        height += fontSize + dropOffset;
         height += fontSize;
@@ -158,8 +187,8 @@ public class StringTwoColor {
         // 画字符串
         if (!isDesktopLyric) {
             int widthDrawn = 0;
-            for (int i = 0, len = text.length(); i < len; i++) {
-                int codePoint = text.codePointAt(i);
+            for (int i = 0, len = plainLyric.length(); i < len; i++) {
+                int codePoint = plainLyric.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
 
@@ -180,9 +209,9 @@ public class StringTwoColor {
                 }
             }
         } else {
-            int widthDrawn = shadowHOffset;
-            for (int i = 0, len = text.length(); i < len; i++) {
-                int codePoint = text.codePointAt(i);
+            int widthDrawn = SHADOW_H_OFFSET;
+            for (int i = 0, len = plainLyric.length(); i < len; i++) {
+                int codePoint = plainLyric.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
 
@@ -235,6 +264,79 @@ public class StringTwoColor {
 
         // 按照比例清除相关的像素点
         if (ratio <= 1 && ratio >= 0) setRatio(ratio);
+    }
+
+    private void initWordWidthList(String lyric) {
+        String[] sp = lyric.split("<\\d+,\\d+>");
+        for (String partStr : sp) {
+            // 剔除空串
+            if (StringUtil.isEmpty(partStr)) continue;
+            // 计算每段的宽度
+            int w = 0;
+            for (int i = 0, len = partStr.length(); i < len; i++) {
+                int codePoint = partStr.codePointAt(i);
+                char[] chars = Character.toChars(codePoint);
+                String str = new String(chars);
+
+                if (!isDesktopLyric) {
+                    for (int j = 0, l = metricsBig.length; j < l; j++) {
+                        if (!Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) continue;
+                        w += metricsBig[j].stringWidth(str);
+                        i += chars.length - 1;
+                        break;
+                    }
+                } else {
+                    for (int j = 0, l = metricsHuge.length; j < l; j++) {
+                        if (!Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) continue;
+                        w += metricsHuge[j].stringWidth(str);
+                        i += chars.length - 1;
+                        break;
+                    }
+                }
+            }
+            wordWidthList.add(w);
+        }
+    }
+
+    private int rangeSum(List<Integer> numList, int start, int end) {
+        int sum = 0;
+        for (int i = start; i < end; i++) sum += numList.get(i);
+        return sum;
+    }
+
+    private int biSearch(List<Integer> numList, int target) {
+        int left = 0, right = numList.size() - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (numList.get(mid) == target) return mid;
+            else if (numList.get(mid) > target) right = mid - 1;
+            else left = mid + 1;
+        }
+        return left - 1;
+    }
+
+    /**
+     * 根据歌词时间计算比率
+     *
+     * @param currTime  当前播放时间
+     * @param startTime 当行歌词起始时间
+     * @return
+     */
+    public double calcRatio(double currTime, double startTime) {
+        int currTimeMs = (int) (currTime * 1000);
+        int startTimeMs = (int) (startTime * 1000);
+
+        int lineCurrTimeMs = currTimeMs - startTimeMs;
+
+        int wordStartIndex = biSearch(wordStartList, lineCurrTimeMs);
+        if (wordStartIndex < 0) return 0;
+        int wordStart = wordStartList.get(wordStartIndex);
+        // 防止单字比率超出
+        double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
+        double currWidth = rangeSum(wordWidthList, 0, wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
+        // 防止整句比率超出
+        double ratio = Math.min(1, currWidth / (width - 2 * SHADOW_H_OFFSET));
+        return ratio;
     }
 
     public void setRatio(double ratio) {

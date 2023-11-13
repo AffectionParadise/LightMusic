@@ -14,29 +14,39 @@ public class Statement {
     private double time;
     // 结束时间
     private double endTime;
-    // 歌词
+    // 歌词(可能带逐字时间轴)
     private String lyric;
+    // 纯歌词
+    private String plainLyric;
 
     public Statement(String lyric) {
-        this.lyric = lyric;
+        setLyric(lyric);
     }
 
     public Statement(double time, String lyric) {
         this.time = time;
+        setLyric(lyric);
+    }
+
+    public void setLyric(String lyric) {
         this.lyric = lyric;
+        plainLyric = lyric.replaceAll("<\\d+,\\d+>", "");
     }
 
     public boolean hasEndTime() {
         return endTime != 0;
     }
 
-    // 歌词是否不为空
     public boolean notEmpty() {
         return StringUtil.notEmpty(lyric);
     }
 
+    public boolean isEmpty() {
+        return StringUtil.isEmpty(lyric);
+    }
+
     @Override
     public String toString() {
-        return lyric;
+        return plainLyric;
     }
 }
