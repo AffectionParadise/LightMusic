@@ -38,11 +38,11 @@ public class Statement {
     }
 
     public boolean notEmpty() {
-        return StringUtil.notEmpty(lyric);
+        return StringUtil.notEmpty(plainLyric);
     }
 
     public boolean isEmpty() {
-        return StringUtil.isEmpty(lyric);
+        return StringUtil.isEmpty(plainLyric);
     }
 
     @Override

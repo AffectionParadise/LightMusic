@@ -63,7 +63,7 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     // 封面图加载后的回调函数
     private Runnable invokeLater;
 
-    private static final String separator = " - ";
+    private static final String SEPARATOR = " - ";
 
     public BufferedImage getAlbumImage() {
         File imgFile = new File(SimplePath.IMG_CACHE_PATH + toAlbumImageFileName());
@@ -180,11 +180,11 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     public String toAlbumImageFileName() {
-        return FileUtil.filterFileName(toSimpleString() + separator + id + "." + Format.JPG);
+        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + "." + Format.JPG);
     }
 
     public String toFileName() {
-        return FileUtil.filterFileName(toSimpleString() + separator + id + "." + format);
+        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + "." + format);
     }
 
     public String toSimpleFileName() {
@@ -192,7 +192,7 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     public String toLrcFileName() {
-        return FileUtil.filterFileName(toSimpleString() + separator + id + ".lrc");
+        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + ".lrc");
     }
 
     public String toSimpleLrcFileName() {
@@ -200,19 +200,19 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     public String toLrcTransFileName() {
-        return FileUtil.filterFileName(toSimpleString() + separator + id + separator + "trans.lrc");
+        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + SEPARATOR + "trans.lrc");
     }
 
     public String toSimpleLrcTransFileName() {
-        return FileUtil.filterFileName(toSimpleString() + separator + "trans.lrc");
+        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + "trans.lrc");
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + separator + toSimpleString();
+        return NetMusicSource.NAMES[source] + SEPARATOR + toSimpleString();
     }
 
     public String toSimpleString() {
-        return StringUtil.shorten(name + (StringUtil.notEmpty(artist) ? separator + artist : ""), 230);
+        return StringUtil.shorten(name + (StringUtil.notEmpty(artist) ? SEPARATOR + artist : ""), 230);
     }
 
     public String toKeywords() {

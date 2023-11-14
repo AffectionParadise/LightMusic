@@ -54,7 +54,7 @@ public class LrcData {
 
     // 初始化歌词数据
     private void initData(String lrcStr, boolean badFormat) {
-        this.lrcStr = lrcStr;
+        this.lrcStr = lrcStr.replaceAll("<\\d+,\\d+>", "");
         String[] lrcArray = lrcStr.split("\r?\n");
         // 不支持滚动的歌词，直接读取整行作为歌词
         if (badFormat) {

@@ -135,7 +135,11 @@ public class SdkUtil {
      * 连接 Json 数组中的所有字符串
      */
     public static String joinString(JSONArray array) {
-        StringJoiner sj = new StringJoiner("、");
+        return joinString(array, "、");
+    }
+
+    public static String joinString(JSONArray array, String delimiter) {
+        StringJoiner sj = new StringJoiner(delimiter);
         for (int i = 0, len = array.size(); i < len; i++) sj.add(array.getString(i));
         return sj.toString();
     }

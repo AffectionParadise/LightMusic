@@ -73,6 +73,16 @@ public class CryptoUtil {
     }
 
     /**
+     * Base 64 编码字符串
+     *
+     * @param s
+     * @return
+     */
+    public static String base64Encode(String s) {
+        return Base64.encode(s);
+    }
+
+    /**
      * AES 加密，返回 bytes
      *
      * @param data
@@ -119,6 +129,16 @@ public class CryptoUtil {
      */
     public static String bytesToHex(byte[] data) {
         return HexUtil.encodeHexStr(data);
+    }
+
+    /**
+     * 16 进制串转 bytes
+     *
+     * @param hex
+     * @return
+     */
+    public static byte[] hexToBytes(String hex) {
+        return HexUtil.decodeHex(hex);
     }
 
     /**
