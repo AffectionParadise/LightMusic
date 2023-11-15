@@ -164,6 +164,11 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         return Format.FLAC.equals(format);
     }
 
+    // 不带时间轴的歌词
+    public String getPlainLrc() {
+        return hasLrc() ? lrc.replaceAll("<\\d+,\\d+>", "") : lrc;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetMusicInfo) {

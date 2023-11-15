@@ -11,6 +11,7 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.entity.music.info.lyric.MrcDecoder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.*;
@@ -698,11 +699,12 @@ public class MusicInfoReq {
 //                                    "\"cv\":1873,\"interval\":0,\"lrc_t\":0,\"qrc\":1,\"qrc_t\":0,\"roma\":1,\"roma_t\":0,\"songID\":%s," +
 //                                    "\"trans\":1,\"trans_t\":0,\"type\":-1}}}",
 //                            songId))
-//                    .header(Header.REFERER,"https://y.qq.com")
+//                    .header(Header.REFERER, "https://y.qq.com")
 //                    .executeAsync()
 //                    .body();
 //            JSONObject data = JSONObject.parseObject(lrcBody).getJSONObject("req").getJSONObject("data");
-////            QrcParser qrcParser = new QrcParser(data.getString("lyric"));
+//            String lyric = QrcParser.parse(data.getString("lyric")).replaceAll("\\((\\d+),(\\d+)\\)", "<$1,$2>");
+//            musicInfo.setLrc(lyric);
 //            String trans = data.getString("trans");
 //            String roma = data.getString("roma");
 //            System.out.println(data);
@@ -750,29 +752,58 @@ public class MusicInfoReq {
             String lrcStr = new String(output, Charset.forName("gb18030"));
 //            lrcStr = lrcStr.replaceAll("<(\\d+),-(\\d+)>", "<$1,$2>");
             // 暂时不知道逐字歌词的参数，先去掉
-            lrcStr = lrcStr.replaceAll("<(\\d+),-?(\\d+)>", "");
+            String linetimeExp = "\\[\\d+:\\d+(?:[.:]\\d+)?\\]";
+            String[] lsp = lrcStr.split("\n");
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0, len = lsp.length; j < len; j++) {
+                List<String> s1List = RegexUtil.findAllGroup1("<(\\d+),-?\\d+>", lsp[j]);
+                if (s1List.isEmpty()) {
+                    sb.append(lsp[j]);
+                    sb.append("\n");
+                    continue;
+                }
+                List<String> s2List = RegexUtil.findAllGroup1("<\\d+,(-?\\d+)>", lsp[j]);
+                int size = s1List.size();
+                // 行时间
+                String lineTimeStr = RegexUtil.getGroup0(linetimeExp, lsp[j]);
+                sb.append(lineTimeStr);
+                String[] sp = ArrayUtil.removeEmpty(lsp[j].replaceAll(linetimeExp, "").split("<\\d+,-?\\d+>"));
+                for (int k = 0; k < size; k++) {
+                    int n1 = Integer.parseInt(s1List.get(k));
+                    int n2 = Integer.parseInt(s2List.get(k));
+                    int wordStartTime = Math.abs((n1 + n2) / 2);
+                    int wordDuration = Math.abs((n1 - n2) / 2);
+                    sb.append("<")
+                            .append(wordStartTime)
+                            .append(",")
+                            .append(wordDuration)
+                            .append(">")
+                            .append(sp[k]);
+                }
+                sb.append("\n");
+            }
+            lrcStr = sb.toString();
             // 分离歌词和翻译
             String[] sp = lrcStr.split("\n");
-            String timeExp = "\\[\\d+:\\d+(?:[.:]\\d+)?\\]";
-            StringBuilder sb = new StringBuilder();
+            sb = new StringBuilder();
             boolean hasTrans = false;
-            for (i = 0; i < sp.length; i++) {
-                String sentence = sp[i];
-                String nextSentence = i + 1 < sp.length ? sp[i + 1] : null;
+            for (int j = 0; j < sp.length; j++) {
+                String sentence = sp[j];
+                String nextSentence = j + 1 < sp.length ? sp[j + 1] : null;
                 // 歌词中带有翻译时，最后一句是翻译直接跳过
                 if (hasTrans && StringUtil.isEmpty(nextSentence)) break;
-                String time = RegexUtil.getGroup0(timeExp, sentence);
+                String time = RegexUtil.getGroup0(linetimeExp, sentence);
                 if (StringUtil.isEmpty(time)) {
                     sb.append(sentence);
                     sb.append("\n");
                     continue;
                 }
                 String nextTime = null;
-                if (StringUtil.notEmpty(nextSentence)) nextTime = RegexUtil.getGroup0(timeExp, nextSentence);
+                if (StringUtil.notEmpty(nextSentence)) nextTime = RegexUtil.getGroup0(linetimeExp, nextSentence);
                 // 歌词中带有翻译，有多个 time 相同的歌词时取不重复的第二个
                 if (!time.equals(nextTime)) {
                     sb.append(time);
-                    String lineLyric = sentence.replaceAll(timeExp, "");
+                    String lineLyric = sentence.replaceAll(linetimeExp, "");
                     sb.append(lineLyric);
                     sb.append("\n");
                 } else hasTrans = true;
@@ -785,21 +816,22 @@ public class MusicInfoReq {
             for (i = 0; i < sp.length; i++) {
                 String sentence = sp[i];
                 String nextSentence = i + 1 < sp.length ? sp[i + 1] : null;
-                String time = RegexUtil.getGroup0(timeExp, sentence);
+                String time = RegexUtil.getGroup0(linetimeExp, sentence);
                 if (StringUtil.isEmpty(time)) continue;
                 String nextTime = null;
-                if (StringUtil.notEmpty(nextSentence)) nextTime = RegexUtil.getGroup0(timeExp, nextSentence);
+                if (StringUtil.notEmpty(nextSentence)) nextTime = RegexUtil.getGroup0(linetimeExp, nextSentence);
                 // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
                 if (hasTrans && nextTime == null || time.equals(nextTime)) {
                     sb.append(lastTime);
-                    String lineLyric = sentence.replaceAll(timeExp, "");
+                    String lineLyric = sentence.replaceAll(linetimeExp, "");
                     sb.append(lineLyric);
                     sb.append("\n");
                     hasTrans = true;
                 }
                 lastTime = time;
             }
-            musicInfo.setTrans(sb.toString());
+            // 去除翻译中无用的逐字时间轴
+            musicInfo.setTrans(sb.toString().replaceAll("<\\d+,\\d+>", ""));
 
 //            String lrcBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
 //                    .executeAsync()
@@ -865,25 +897,65 @@ public class MusicInfoReq {
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-//            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
+                    .executeAsync()
+                    .body();
+            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
+            String mrcUrl = data.getString("mrcUrl");
+            // mrc 优先
+            if (StringUtil.notEmpty(mrcUrl)) {
+                String mrcStr = HttpRequest.get(mrcUrl).executeAsync().body();
+                mrcStr = MrcDecoder.decode(mrcStr);
+                String[] lsp = mrcStr.split("\n");
+                StringBuilder sb = new StringBuilder();
+                for (String l : lsp) {
+                    if (!RegexUtil.contains("\\[\\d+,\\d+\\]", l)) sb.append(l);
+                    else {
+                        // 行起始时间
+                        String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
+                        int lineStart = Integer.parseInt(lineStartStr);
+                        String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
+                        sb.append(lrcTime);
+
+                        List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+\\)", l);
+                        List<String> wordDurationList = RegexUtil.findAllGroup1("\\(\\d+,(\\d+)\\)", l);
+                        String[] sp = ArrayUtil.removeEmpty(l.split("(\\[\\d+,\\d+\\])|(\\(\\d+,\\d+\\))"));
+                        for (int i = 0, s = wordStartList.size(); i < s; i++) {
+                            String wordStart = wordStartList.get(i);
+                            int wsi = Integer.parseInt(wordStart);
+                            sb.append("<")
+                                    .append(wsi - lineStart)
+                                    .append(",")
+                                    .append(wordDurationList.get(i))
+                                    .append(">")
+                                    .append(sp[i]);
+                        }
+                    }
+                    sb.append("\n");
+                }
+                musicInfo.setLrc(sb.toString());
+                musicInfo.setTrans("");
+                musicInfo.setRoma("");
+            }
+            // lrc
+            else {
+                String lrcUrl = data.getString("lrcUrl");
+                String lrcStr = HttpRequest.get(lrcUrl).executeAsync().body();
+                musicInfo.setLrc(lrcStr);
+                musicInfo.setTrans("");
+                musicInfo.setRoma("");
+            }
+
+            // lrc
+//            String lrcBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
+//                    .header(Header.REFERER, "https://music.migu.cn/v3/music/player/audio?from=migu")
 //                    .executeAsync()
 //                    .body();
-//            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
-//            // 先获取歌词 url，再获取歌词
-//            String lrcUrl = data.getString("lrcUrl");
-//            String lrcStr = HttpRequest.get(lrcUrl).executeAsync().body();
+//            JSONObject data = JSONObject.parseObject(lrcBody);
+//            String lrcStr = data.getString("lyric").replace("\r\n", "\n");
 //            musicInfo.setLrc(lrcStr);
 //            musicInfo.setTrans("");
 //            musicInfo.setRoma("");
-            String lrcBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
-                    .header(Header.REFERER, "https://music.migu.cn/v3/music/player/audio?from=migu")
-                    .executeAsync()
-                    .body();
-            JSONObject data = JSONObject.parseObject(lrcBody);
-            String lrcStr = data.getString("lyric").replace("\r\n", "\n");
-            musicInfo.setLrc(lrcStr);
-            musicInfo.setTrans("");
-            musicInfo.setRoma("");
         }
 
         // 千千

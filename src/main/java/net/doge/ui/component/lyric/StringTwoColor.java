@@ -334,8 +334,9 @@ public class StringTwoColor {
         // 防止单字比率超出
         double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
         double currWidth = rangeSum(wordWidthList, 0, wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
+        int totalWidth = isDesktopLyric ? width - 2 * SHADOW_H_OFFSET : width;
         // 防止整句比率超出
-        double ratio = Math.min(1, currWidth / (width - 2 * SHADOW_H_OFFSET));
+        double ratio = Math.min(1, currWidth / totalWidth);
         return ratio;
     }
 

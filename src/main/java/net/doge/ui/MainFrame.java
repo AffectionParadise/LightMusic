@@ -3261,8 +3261,8 @@ public class MainFrame extends JFrame {
                         // 写入歌曲信息
                         if (musicInfo.isMp3()) MediaUtil.writeMP3Info(dest, musicInfo);
                         // 自动下载歌词
-                        if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                            FileUtil.writeStr(musicInfo.getLrc(), destLrcPath);
+                        if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getPlainLrc()))
+                            FileUtil.writeStr(musicInfo.getPlainLrc(), destLrcPath);
                     });
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
@@ -22937,8 +22937,8 @@ public class MainFrame extends JFrame {
             // 写入歌曲信息
             if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
             // 自动下载歌词
-            if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                FileUtil.writeStr(musicInfo.getLrc(), destLrcPath);
+            if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getPlainLrc()))
+                FileUtil.writeStr(musicInfo.getPlainLrc(), destLrcPath);
         });
         task.start();
         downloadListModel.add(0, task);
@@ -22964,8 +22964,8 @@ public class MainFrame extends JFrame {
                 // 写入歌曲信息
                 if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
                 // 自动下载歌词
-                if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrc()))
-                    FileUtil.writeStr(musicInfo.getLrc(), destLrcPath);
+                if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getPlainLrc()))
+                    FileUtil.writeStr(musicInfo.getPlainLrc(), destLrcPath);
             });
             tasks.add(task);
             downloadListModel.add(0, task);
@@ -23198,10 +23198,16 @@ public class MainFrame extends JFrame {
             }
             LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
             renderer.setRow(row);
-            double tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime() + lrcOffset) /
-                    ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
-                            : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
-                            : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
+            StringTwoColor stc = desktopLyricDialog.getStc();
+            double tempRatio;
+            if (stc.isByWord()) {
+                tempRatio = stc.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
+            } else {
+                tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime() + lrcOffset) /
+                        ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
+                                : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
+                                : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
+            }
             originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
             break;
         }

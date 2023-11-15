@@ -128,6 +128,32 @@ public class ArrayUtil {
     }
 
     /**
+     * byte 数组转为 int 数组
+     *
+     * @param bytes
+     * @return
+     */
+    public static int[] bytesToInts(byte[] bytes) {
+        int n = bytes.length;
+        int[] ints = new int[n];
+        for (int i = 0; i < n; i++) ints[i] = bytes[i] & 0xFF;
+        return ints;
+    }
+
+    /**
+     * int 数组转为 byte 数组
+     *
+     * @param ints
+     * @return
+     */
+    public static byte[] intsToBytes(int[] ints) {
+        int n = ints.length;
+        byte[] bytes = new byte[n];
+        for (int i = 0; i < n; i++) bytes[i] = (byte) ints[i];
+        return bytes;
+    }
+
+    /**
      * 连接多个数组
      *
      * @param arrays

@@ -302,7 +302,7 @@ public class TimeUtil {
      * @return
      */
     public static double lrcTimeToSeconds(String s) {
-        String[] sp = s.split("[.:]");
+        String[] sp = StringUtil.trimStringWith(s, '[', ']').split("[.:]");
         // xx:xx
         if (sp.length == 2) return Integer.parseInt(sp[0]) * 60 + Integer.parseInt(sp[1]);
         // xx:xx.xxx
