@@ -1,265 +1,66 @@
 package net.doge.sdk.entity.music.info.lyrichero.decoder;
 
+import net.doge.sdk.entity.music.info.lyrichero.helper.QrcDecodeHelper;
+import net.doge.util.collection.ArrayUtil;
+import net.doge.util.common.CryptoUtil;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+/**
+ * @Author Doge
+ * @Description QRC 歌词解析工具类
+ * @Date 2020/12/15
+ */
 public class QrcDecoder {
-    public static final int ENCRYPT = 1;
-    public static final int DECRYPT = 0;
-    private final byte[] sbox1 = {
-            14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
-            0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8,
-            4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0,
-            15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13
-    };
-    private final byte[] sbox2 = {
-            15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10,
-            3, 13, 4, 7, 15, 2, 8, 15, 12, 0, 1, 10, 6, 9, 11, 5,
-            0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15,
-            13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9
-    };
-    private final byte[] sbox3 = {
-            10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8,
-            13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1,
-            13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7,
-            1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12
-    };
-    private final byte[] sbox4 = {
-            7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15,
-            13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9,
-            10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4,
-            3, 15, 0, 6, 10, 10, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14
-    };
-    private final byte[] sbox5 = {
-            2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9,
-            14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6,
-            4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14,
-            11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3
-    };
-    private final byte[] sbox6 = {
-            12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11,
-            10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8,
-            9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6,
-            4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13
-    };
-    private final byte[] sbox7 = {
-            4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1,
-            13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6,
-            1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2,
-            6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12
-    };
-    private final byte[] sbox8 = {
-            13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7,
-            1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2,
-            7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8,
-            2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11
-    };
+    private static QrcDecoder instance;
 
-    private long BITNUM(int[] a, int b, int c) {
-        return ((((long) a[(b) / 32 * 4 + 3 - (b) % 32 / 8] >> (7 - (b % 8))) & 0x01) << (c));
+    private QrcDecoder() {
     }
 
-    private int BITNUMINTR(long a, int b, int c) {
-        return (int) ((((a) >> (31 - (b))) & 0x00000001) << (c));
+    public static QrcDecoder getInstance() {
+        if (instance == null) instance = new QrcDecoder();
+        return instance;
     }
 
-    private long BITNUMINTL(long a, int b, int c) {
-        return ((((a) << (b)) & 0x80000000L) >> (c));
-    }
+    private final int[] KEY1 = ArrayUtil.bytesToInts("!@#)(NHLiuy*$%^&".getBytes(StandardCharsets.UTF_8));
+    private final int[] KEY2 = ArrayUtil.bytesToInts("123ZXC!@#)(*$%^&".getBytes(StandardCharsets.UTF_8));
+    private final int[] KEY3 = ArrayUtil.bytesToInts("!@#)(*$%^&abcDEF".getBytes(StandardCharsets.UTF_8));
+    private QrcDecodeHelper qrcDecodeHelper = QrcDecodeHelper.getInstance();
 
-    private int SBOXBIT(int a) {
-        return ((a) & 0x20) | (((a) & 0x1f) >> 1) | (((a) & 0x01) << 4);
-    }
-
-    public void keySetup(int[] key, int[][] schedule, int mode) {
-        int i, j, to_gen;
-        int C, D;
-        int[] key_rnd_shift = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
-        int[] key_perm_c = {56, 48, 40, 32, 24, 16, 8, 0, 57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18, 10, 2, 59, 51, 43, 35};
-        int[] key_perm_d = {
-                62, 54, 46, 38, 30, 22, 14, 6, 61, 53, 45, 37, 29, 21,
-                13, 5, 60, 52, 44, 36, 28, 20, 12, 4, 27, 19, 11, 3
-        };
-        int[] key_compression = {
-                13, 16, 10, 23, 0, 4, 2, 27, 14, 5, 20, 9,
-                22, 18, 11, 3, 25, 7, 15, 6, 26, 19, 12, 1,
-                40, 51, 30, 36, 46, 54, 29, 39, 50, 44, 32, 47,
-                43, 48, 38, 55, 33, 52, 45, 41, 49, 35, 28, 31
-        };
-
-        // Permutated Choice #1 (copy the key in, ignoring parity bits).
-        for (i = 0, j = 31, C = 0; i < 28; ++i, --j)
-            C |= BITNUM(key, key_perm_c[i], j);
-        for (i = 0, j = 31, D = 0; i < 28; ++i, --j)
-            D |= BITNUM(key, key_perm_d[i], j);
-
-        // Generate the 16 subkeys.
-        for (i = 0; i < 16; ++i) {
-            C = ((C << key_rnd_shift[i]) | (C >> (28 - key_rnd_shift[i]))) & 0xfffffff0;
-            D = ((D << key_rnd_shift[i]) | (D >> (28 - key_rnd_shift[i]))) & 0xfffffff0;
-
-            // Decryption subkeys are reverse order of encryption subkeys so
-            // generate them in reverse if the key schedule is for decryption useage.
-            if (mode == DECRYPT)
-                to_gen = 15 - i;
-            else /*(if mode == ENCRYPT)*/
-                to_gen = i;
-            // Initialize the array
-            for (j = 0; j < 6; ++j)
-                schedule[to_gen][j] = 0;
-            for (j = 0; j < 24; ++j)
-                schedule[to_gen][j / 8] |= BITNUMINTR(C, key_compression[j], 7 - (j % 8));
-            for (; j < 48; ++j)
-                schedule[to_gen][j / 8] |= BITNUMINTR(D, key_compression[j] - 27, 7 - (j % 8));
+    private void des(int[] data, int[] key, int len) {
+        int[][] schedule = new int[16][6];
+        qrcDecodeHelper.desKeySetup(key, schedule, QrcDecodeHelper.ENCRYPT);
+        for (int i = 0; i < len; i += 8) {
+            int[] in = Arrays.copyOfRange(data, i, data.length);
+            qrcDecodeHelper.desCrypt(in, in, schedule);
+            System.arraycopy(in, 0, data, i, in.length);
         }
     }
 
-    private void IP(long[] state, int[] in) {
-        state[0] = BITNUM(in, 57, 31) | BITNUM(in, 49, 30) | BITNUM(in, 41, 29) | BITNUM(in, 33, 28) |
-                BITNUM(in, 25, 27) | BITNUM(in, 17, 26) | BITNUM(in, 9, 25) | BITNUM(in, 1, 24) |
-                BITNUM(in, 59, 23) | BITNUM(in, 51, 22) | BITNUM(in, 43, 21) | BITNUM(in, 35, 20) |
-                BITNUM(in, 27, 19) | BITNUM(in, 19, 18) | BITNUM(in, 11, 17) | BITNUM(in, 3, 16) |
-                BITNUM(in, 61, 15) | BITNUM(in, 53, 14) | BITNUM(in, 45, 13) | BITNUM(in, 37, 12) |
-                BITNUM(in, 29, 11) | BITNUM(in, 21, 10) | BITNUM(in, 13, 9) | BITNUM(in, 5, 8) |
-                BITNUM(in, 63, 7) | BITNUM(in, 55, 6) | BITNUM(in, 47, 5) | BITNUM(in, 39, 4) |
-                BITNUM(in, 31, 3) | BITNUM(in, 23, 2) | BITNUM(in, 15, 1) | BITNUM(in, 7, 0);
-
-        state[1] = BITNUM(in, 56, 31) | BITNUM(in, 48, 30) | BITNUM(in, 40, 29) | BITNUM(in, 32, 28) |
-                BITNUM(in, 24, 27) | BITNUM(in, 16, 26) | BITNUM(in, 8, 25) | BITNUM(in, 0, 24) |
-                BITNUM(in, 58, 23) | BITNUM(in, 50, 22) | BITNUM(in, 42, 21) | BITNUM(in, 34, 20) |
-                BITNUM(in, 26, 19) | BITNUM(in, 18, 18) | BITNUM(in, 10, 17) | BITNUM(in, 2, 16) |
-                BITNUM(in, 60, 15) | BITNUM(in, 52, 14) | BITNUM(in, 44, 13) | BITNUM(in, 36, 12) |
-                BITNUM(in, 28, 11) | BITNUM(in, 20, 10) | BITNUM(in, 12, 9) | BITNUM(in, 4, 8) |
-                BITNUM(in, 62, 7) | BITNUM(in, 54, 6) | BITNUM(in, 46, 5) | BITNUM(in, 38, 4) |
-                BITNUM(in, 30, 3) | BITNUM(in, 22, 2) | BITNUM(in, 14, 1) | BITNUM(in, 6, 0);
-    }
-
-    private void InvIP(long[] state, int[] in) {
-        in[3] = BITNUMINTR(state[1], 7, 7) | BITNUMINTR(state[0], 7, 6) | BITNUMINTR(state[1], 15, 5) |
-                BITNUMINTR(state[0], 15, 4) | BITNUMINTR(state[1], 23, 3) | BITNUMINTR(state[0], 23, 2) |
-                BITNUMINTR(state[1], 31, 1) | BITNUMINTR(state[0], 31, 0);
-
-        in[2] = BITNUMINTR(state[1], 6, 7) | BITNUMINTR(state[0], 6, 6) | BITNUMINTR(state[1], 14, 5) |
-                BITNUMINTR(state[0], 14, 4) | BITNUMINTR(state[1], 22, 3) | BITNUMINTR(state[0], 22, 2) |
-                BITNUMINTR(state[1], 30, 1) | BITNUMINTR(state[0], 30, 0);
-
-        in[1] = BITNUMINTR(state[1], 5, 7) | BITNUMINTR(state[0], 5, 6) | BITNUMINTR(state[1], 13, 5) |
-                BITNUMINTR(state[0], 13, 4) | BITNUMINTR(state[1], 21, 3) | BITNUMINTR(state[0], 21, 2) |
-                BITNUMINTR(state[1], 29, 1) | BITNUMINTR(state[0], 29, 0);
-
-        in[0] = BITNUMINTR(state[1], 4, 7) | BITNUMINTR(state[0], 4, 6) | BITNUMINTR(state[1], 12, 5) |
-                BITNUMINTR(state[0], 12, 4) | BITNUMINTR(state[1], 20, 3) | BITNUMINTR(state[0], 20, 2) |
-                BITNUMINTR(state[1], 28, 1) | BITNUMINTR(state[0], 28, 0);
-
-        in[7] = BITNUMINTR(state[1], 3, 7) | BITNUMINTR(state[0], 3, 6) | BITNUMINTR(state[1], 11, 5) |
-                BITNUMINTR(state[0], 11, 4) | BITNUMINTR(state[1], 19, 3) | BITNUMINTR(state[0], 19, 2) |
-                BITNUMINTR(state[1], 27, 1) | BITNUMINTR(state[0], 27, 0);
-
-        in[6] = BITNUMINTR(state[1], 2, 7) | BITNUMINTR(state[0], 2, 6) | BITNUMINTR(state[1], 10, 5) |
-                BITNUMINTR(state[0], 10, 4) | BITNUMINTR(state[1], 18, 3) | BITNUMINTR(state[0], 18, 2) |
-                BITNUMINTR(state[1], 26, 1) | BITNUMINTR(state[0], 26, 0);
-
-        in[5] = BITNUMINTR(state[1], 1, 7) | BITNUMINTR(state[0], 1, 6) | BITNUMINTR(state[1], 9, 5) |
-                BITNUMINTR(state[0], 9, 4) | BITNUMINTR(state[1], 17, 3) | BITNUMINTR(state[0], 17, 2) |
-                BITNUMINTR(state[1], 25, 1) | BITNUMINTR(state[0], 25, 0);
-
-        in[4] = BITNUMINTR(state[1], 0, 7) | BITNUMINTR(state[0], 0, 6) | BITNUMINTR(state[1], 8, 5) |
-                BITNUMINTR(state[0], 8, 4) | BITNUMINTR(state[1], 16, 3) | BITNUMINTR(state[0], 16, 2) |
-                BITNUMINTR(state[1], 24, 1) | BITNUMINTR(state[0], 24, 0);
-    }
-
-    private long F(long state, int[] key) {
-        int[] lrgstate = new int[6];
-        int t1, t2;
-
-        // Expantion Permutation
-        t1 = (int) (BITNUMINTL(state, 31, 0) | ((state & 0xf0000000L) >> 1) | BITNUMINTL(state, 4, 5) |
-                BITNUMINTL(state, 3, 6) | ((state & 0x0f000000L) >> 3) | BITNUMINTL(state, 8, 11) |
-                BITNUMINTL(state, 7, 12) | ((state & 0x00f00000L) >> 5) | BITNUMINTL(state, 12, 17) |
-                BITNUMINTL(state, 11, 18) | ((state & 0x000f0000L) >> 7) | BITNUMINTL(state, 16, 23));
-
-        t2 = (int) (BITNUMINTL(state, 15, 0) | ((state & 0x0000f000L) << 15) | BITNUMINTL(state, 20, 5) |
-                BITNUMINTL(state, 19, 6) | ((state & 0x00000f00L) << 13) | BITNUMINTL(state, 24, 11) |
-                BITNUMINTL(state, 23, 12) | ((state & 0x000000f0L) << 11) | BITNUMINTL(state, 28, 17) |
-                BITNUMINTL(state, 27, 18) | ((state & 0x0000000fL) << 9) | BITNUMINTL(state, 0, 23));
-
-        lrgstate[0] = (t1 >> 24) & 0x000000ff;
-        lrgstate[1] = (t1 >> 16) & 0x000000ff;
-        lrgstate[2] = (t1 >> 8) & 0x000000ff;
-        lrgstate[3] = (t2 >> 24) & 0x000000ff;
-        lrgstate[4] = (t2 >> 16) & 0x000000ff;
-        lrgstate[5] = (t2 >> 8) & 0x000000ff;
-
-        // Key XOR
-        lrgstate[0] ^= key[0];
-        lrgstate[1] ^= key[1];
-        lrgstate[2] ^= key[2];
-        lrgstate[3] ^= key[3];
-        lrgstate[4] ^= key[4];
-        lrgstate[5] ^= key[5];
-
-        // S-Box Permutation
-        state = (sbox1[SBOXBIT(lrgstate[0] >> 2)] << 28) |
-                (sbox2[SBOXBIT(((lrgstate[0] & 0x03) << 4) | (lrgstate[1] >> 4))] << 24) |
-                (sbox3[SBOXBIT(((lrgstate[1] & 0x0f) << 2) | (lrgstate[2] >> 6))] << 20) |
-                (sbox4[SBOXBIT(lrgstate[2] & 0x3f)] << 16) |
-                (sbox5[SBOXBIT(lrgstate[3] >> 2)] << 12) |
-                (sbox6[SBOXBIT(((lrgstate[3] & 0x03) << 4) | (lrgstate[4] >> 4))] << 8) |
-                (sbox7[SBOXBIT(((lrgstate[4] & 0x0f) << 2) | (lrgstate[5] >> 6))] << 4) |
-                sbox8[SBOXBIT(lrgstate[5] & 0x3f)];
-
-        // P-Box Permutation
-        state = BITNUMINTL(state, 15, 0) | BITNUMINTL(state, 6, 1) | BITNUMINTL(state, 19, 2) |
-                BITNUMINTL(state, 20, 3) | BITNUMINTL(state, 28, 4) | BITNUMINTL(state, 11, 5) |
-                BITNUMINTL(state, 27, 6) | BITNUMINTL(state, 16, 7) | BITNUMINTL(state, 0, 8) |
-                BITNUMINTL(state, 14, 9) | BITNUMINTL(state, 22, 10) | BITNUMINTL(state, 25, 11) |
-                BITNUMINTL(state, 4, 12) | BITNUMINTL(state, 17, 13) | BITNUMINTL(state, 30, 14) |
-                BITNUMINTL(state, 9, 15) | BITNUMINTL(state, 1, 16) | BITNUMINTL(state, 7, 17) |
-                BITNUMINTL(state, 23, 18) | BITNUMINTL(state, 13, 19) | BITNUMINTL(state, 31, 20) |
-                BITNUMINTL(state, 26, 21) | BITNUMINTL(state, 2, 22) | BITNUMINTL(state, 8, 23) |
-                BITNUMINTL(state, 18, 24) | BITNUMINTL(state, 12, 25) | BITNUMINTL(state, 29, 26) |
-                BITNUMINTL(state, 5, 27) | BITNUMINTL(state, 21, 28) | BITNUMINTL(state, 10, 29) |
-                BITNUMINTL(state, 3, 30) | BITNUMINTL(state, 24, 31);
-
-        // Return the final state value
-        return state;
-    }
-
-    public void desCrypt(int[] in, int[] out, int[][] key) {
-        long[] state = new long[2];
-        int idx;
-        long t;
-
-        IP(state, in);
-
-        for (idx = 0; idx < 15; ++idx) {
-            t = state[1];
-            state[1] = F(state[1], key[idx]) ^ state[0];
-            state[0] = t;
+    private void ddes(int[] data, int[] key, int len) {
+        int[][] schedule = new int[16][6];
+        qrcDecodeHelper.desKeySetup(key, schedule, QrcDecodeHelper.DECRYPT);
+        for (int i = 0; i < len; i += 8) {
+            int[] in = Arrays.copyOfRange(data, i, data.length);
+            qrcDecodeHelper.desCrypt(in, in, schedule);
+            System.arraycopy(in, 0, data, i, in.length);
         }
-        // Perform the final loop manually as it doesn't switch sides
-        state[0] = F(state[1], key[15]) ^ state[0];
-
-        InvIP(state, out);
     }
 
-//    public void tripleDesKeySetup(byte[] key, byte[][][] schedule, int mode) {
-//        byte[] in;
-//        if (mode == ENCRYPT) {
-//            keySetup(key, schedule[0], mode);
-//            in = Arrays.copyOfRange(key, 8, key.length);
-//            keySetup(in, schedule[1], DECRYPT);
-//            in = Arrays.copyOfRange(key, 16, key.length);
-//            keySetup(in, schedule[2], mode);
-//        } else {
-//            keySetup(key, schedule[2], mode);
-//            in = Arrays.copyOfRange(key, 8, key.length);
-//            keySetup(in, schedule[1], ENCRYPT);
-//            in = Arrays.copyOfRange(key, 16, key.length);
-//            keySetup(in, schedule[0], mode);
-//        }
-//    }
-//
-//    public void tripleDesCrypt(byte[] in, byte[] out, byte[][][] key) {
-//        desCrypt(in, out, key[0]);
-//        desCrypt(out, out, key[1]);
-//        desCrypt(out, out, key[2]);
+    public String decode(String hex) {
+        int[] data = ArrayUtil.bytesToInts(CryptoUtil.hexToBytes(hex));
+        int dataLen = data.length;
+
+        ddes(data, KEY1, dataLen);
+        des(data, KEY2, dataLen);
+        ddes(data, KEY3, dataLen);
+
+        String result = new String(CryptoUtil.decompress(ArrayUtil.intsToBytes(data)), StandardCharsets.UTF_8);
+        return result;
+    }
+
+//    public static void main(String[] args) {
+//        System.out.println(getInstance().parse("1D54B68769414E57958463319F55E99A8B6EE0C3CBBE31581471DF41A8EEB70BBAE2CD07B383E9AECDECB6BD96069EA868A23DC173399D0E076D02C1ADDE6764D5190E3567D05A1BB8AD17DDDA06C83CAC9B2B3EE671534044924DB2120AA83A5011AFB54633B4E57B9AB35E1B6E3B0B3201E00F483DBCF4B963764C3C9CCEB3F4FB6EE82464BF07753AF2E85D5F6F4E26EB39C8CE3A39A9269D76AA0DE378452CD42D01892E4F6D2255CA9C977A289F00D4363C6FA707BCDB6EA796630634FB346C95845354E47F5060AA4DE45ACBE3A4366E9B720224F20B2B711C48D5D4964320C4D5ABCF13D9A1C50CD1D652136205F4A4F84B23317169B9ACD24AFA6020D6DFA9738795FAC78D5DF398B23A55F0A70FA43ECD939F34D0D69088C29F9D9710DB6E3AFA6E1D0CB8EC0E7B60A3077F3F5BA961C5576D263DAA680B554C002A480120B8F9AB879F7C6730149D25B3399376F9E2F5A997BA29D331D6AC89664197C8C93CE9E2BE7EFC333F1309A9108A0A4E9F898101AC8421D189D09D9435CED9822ABD59CB53BDF70FAD098C7F5CD6441D0DBEB9EDBAD5771E1526AF5467BFB4E6BE19AA94E0FB4FB8B86E3B90012C679DFE61013D6332987F9BFCFD9D8B834C279A93EFDA2BC90E26B178A165F37C56260E09EC6CFB18F78D6CF28FD105F5717224DE6BAEFDDC5546A675B2CB0E8908EB8C7560D651D64DCE111CD9F75541A818D446DE74C9B3A09F094EACD938A9972CE60365E3617ADF20C425D6ED5D37B292DFDDFB2B771F5765E7759D704798F922D9B73E42E7FE95577308DB05A5DA37594098EE0D1AA576942EE86E9F7DCC00D03509B409CCD1F7BF6FC627DAD8F7CEBE05A83E7E3CC958CA87C1E0B74122658858628B5AE0DA3647F1245D397A4801E3401A403238D517B3C4E8243365EC07A512FCBB2CDECC92A714A37EF2B68E5DFF95BE1EE20C08545720080AC717892DBB8E814FE6DDDA7E7EBC1C0C3478E9C751A960F21EE32876633B353F13B0E3DB247E8BDD221D57CDF1684DD8F8162202EB96E78E37B4CDB205731165431B687DFCABF131F608A2B5AC1C0AF1C3DFB10FF1F1E123852F82C6BA7FC39099175FEB7105997C4BA500BC77032702EF3A84F52EBB7D40BE55EAF0CF864E371BFABC54FEDC7B224472EA02F77FEA4143C72F7AB4AF020C33585A1EED0148E40FAFBCF7A6CA6568B992DC7E9B763F2ED47E59016A3A48F17DC46772E8AFBC143080A42EA414773764E9A5B34CA66137E244B2604A5655D392DEFA550DACA00A8E1C3B15B34A9620B501A236D9F37B88D953BEC9FF226E50A54C62A9BE28F860DC6BEE40DEE66CFC78C809EC044A3A655366FDDA56F67F0B3ED8C9FC97C003ED12386EDC3DA38E33D2E38CBD855810EF67683AC8A2418B202DCF770A6A67EB6BF004CBF9A0683A6A3614762C50144C220FF431CA718FE8D58329949FB957A3D9728826257B3959FBC554885E88945D686E2011CB579BF08BDD3D48C6262996980AC2D019469311E19FE50D503C438D8B6E89E08C764C251A62A2E06FB7C8BB3C1E9DA3DB5D50DE35B0A0A2769B1CE6170A1D35AFC20CC131A7F1582B731D566491717BF8C24000EC36B7CCFB70F02D40B172893ED0F771A6E7ADBBCB314D1F28D689603255060953DAB1B621BD8C194E11B6E65BA1BE3882AC552EB43B95DBCFFD9811120A8F45EE5DA648F28D0B7994CBFB1EC764E23B2DA024FF3CF77EDCDA90B95629E0506B59BBA5EABCC62A5A77F30549FAA11AF32A36D0F6B2965C038680BF961ABBFE3F11D06EC2F88BAC500C9B818E0D7B5CE9B108158BEF7695F4BE3B2C4C5048266374B8E086E435B0D1A73C6D57CB57F232EA5878A33D53F05F0C42F38E9C7020C268FB235E6571C6DD33CFA4525DFDB9AD2564AF367C3649672C7872B193B85C5520E99F0C10D473BE1BCE23DACCDC77B37EEE3A9E5C18CEC9F7B5032C9B81BE8F5CA5D245D439D53A72C045F2C60E21C918FD28D7C18D2D1CE5E40D3F66321A74FB8728F798360EEF1D8C7C1551A668B6468180D62FEAD25B08E752DA2A491165C482C9487FB877D1F28FAA4DFFAC064CBBA8C9C080F2417596FDB368F722E974B6868F13EB42FF86466D7D8DC9D72FD2DA02B88C4A897046657E86BC0B91BAFE83917371EED45A2D625C87FD9A923FEC5DC0CB896653B5E05F415A9AA4C1DD440CB5EF1CB55B8FF78767CA6A86C1C26588A7D4F64EC7E4A2AAFF4DF8FF17E400A9E5E1D646D38C551BED8EA8036992413F7D85186273FEB23043BC434EE1A1C455DC1058BE490B22F59E17F2809B8F7DBD22D0D66C99592C8D811B343C337F25A79A82B1756354C8A7A4F3AD63B8B8FDFEFD3CC66AFB2095ECD3ED1D3D0815606A68E2810DD66D178034FA0A77F2ACDEFD4462BC7CCC09ABA0E1DFE929E06054D1EE15B7204CB0DFC4C669418343E4ACCA12DED2E3BA41CDCE62A99C03B615923CE07052811380D5C17982CD8A9EBA58697CE2E2CFEBC5DA25BA7DAD0098AED40B455D98756DC3437EBF4A1F17871BF4CE38220268E93A68DDD0E055D2ABFEE7F5FC0ECC77ED9D30F3A5F111B93B98D5F66E9FA6A011DCB24611AD182382DC625F0E73C0A4C09A1884FCAAF541EE6B47B5A7072BCFA3556231DE2DC85110F9A21CB4E7C5315E85BABA69249C44DDF2D220494C6348463FD94CDB6BB23E5A3F8032D2FEC538B3E4A3A969D13EE68086AEE5210D6949D0F10F0675D6B25B9F82B04EBC4A4FCBBC075A88C0CE64935D02B673A232FA0F1025D3A476214AB9E86A9FF8AC2C0D5D699E9A6D83D6B1A9BF491A3475F8F9C5D9A3B5CB6FBC03A295624AE5F6035342F34F3EF0B3ABFAAFD0F7873A7DABB09A410711476B4F32B270D952BB9CEABAEBB3ACB8549C99A30632094B4BFC4B79D00B527D7537FE12EB852ED63A39437A01B1BE5E1189BC8867773E33A043C87693A17F6109D61F5737A9565BF290C8C3AD79C0428DCF16EDF315B4FD293E964E501B5C3619FCC24C177356A7CA5931C5986558554A89DF038E8145DB25D47028CB4C7BB8C837FF0FAF78B7147BF8AFCA0E0195FA62E6390CA91567A96298D0C76FFFA88DE3EE3AADAF1C84B4A7DC8074135AAFAA745930A4D737086D472D13172A68BF30D6C1B873AE80A62D165EA608106CA07D8FDAC82EFAC0153AFA1103E35185F62BB5D91E7DE96EC72160FD577CA18511E5DC7D04B2FCE8832BD7CABCACD5989F3334885CCDF4DE4FD2841F690F71E51E32A19A5E79B395D4447D78AFE56C0999361A36B422603F6C57919B1F401907DDF1FC6E62A91FF78D490B7381802F184A2233C3B09306E31E7D57114A4D3E84D578C4C71F808A8E429BE3C7CE1DE7CDC45C28737A8D6CB3CDB15F39F1522C15F66AB6FF4672F81F1A2C45124BAEB9442DE63E6C6575C048E0156169EE10DB93A30DBE484058F023FD40AD41AAD3D29B391775711710D455F1BF58CC18D2DAF1D8BCD3291EFFD97B9EF0705AD21130C7B114741A1901CA8C9587090BFBC3A357F0CC58A85F436DA08237071B292F61F96119657E78A37DD521917CE418E90B368BBAAC7D86D5B04C1773050417AC46741FF2A8EA3A91BFB0146E99D8C58A9812EBCAD82F81FFB83EEABD67BABD6F4E751A974F012ECC9BD607B7B2670F11"));
 //    }
 }
