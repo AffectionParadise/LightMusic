@@ -33,6 +33,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MusicSearchReq {
+    private static MusicSearchReq instance;
+
+    private MusicSearchReq() {
+    }
+
+    public static MusicSearchReq getInstance() {
+        if (instance == null) instance = new MusicSearchReq();
+        return instance;
+    }
+    
     // 关键词搜索歌曲/声音/歌词 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     private final String SEARCH_VOICE_API = "https://music.163.com/api/search/voice/get";

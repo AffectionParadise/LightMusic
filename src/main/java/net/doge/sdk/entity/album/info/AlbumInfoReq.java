@@ -29,6 +29,16 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class AlbumInfoReq {
+    private static AlbumInfoReq instance;
+
+    private AlbumInfoReq() {
+    }
+
+    public static AlbumInfoReq getInstance() {
+        if (instance == null) instance = new AlbumInfoReq();
+        return instance;
+    }
+    
     // 专辑信息 API
     private final String ALBUM_DETAIL_API = "https://music.163.com/weapi/v1/album/%s";
     // 专辑信息 API (酷狗)

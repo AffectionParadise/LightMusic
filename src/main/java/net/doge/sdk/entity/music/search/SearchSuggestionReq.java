@@ -17,6 +17,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class SearchSuggestionReq {
+    private static SearchSuggestionReq instance;
+
+    private SearchSuggestionReq() {
+    }
+
+    public static SearchSuggestionReq getInstance() {
+        if (instance == null) instance = new SearchSuggestionReq();
+        return instance;
+    }
+    
     // 搜索建议(简单) API
     private final String SIMPLE_SEARCH_SUGGESTION_API = "https://music.163.com/weapi/search/suggest/keyword";
     // 搜索建议 API

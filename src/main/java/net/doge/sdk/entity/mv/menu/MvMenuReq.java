@@ -26,6 +26,16 @@ import java.util.List;
 import java.util.Map;
 
 public class MvMenuReq {
+    private static MvMenuReq instance;
+
+    private MvMenuReq() {
+    }
+
+    public static MvMenuReq getInstance() {
+        if (instance == null) instance = new MvMenuReq();
+        return instance;
+    }
+    
     // 相似 MV API
     private final String SIMILAR_MV_API = "https://music.163.com/weapi/discovery/simiMV";
     // 视频相关视频 API

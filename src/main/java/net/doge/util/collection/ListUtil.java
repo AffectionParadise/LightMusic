@@ -38,6 +38,38 @@ public class ListUtil {
     }
 
     /**
+     * list 元素范围求和
+     *
+     * @param numList
+     * @param start
+     * @param end
+     * @return
+     */
+    public static int rangeSum(List<Integer> numList, int start, int end) {
+        int sum = 0;
+        for (int i = start; i < end; i++) sum += numList.get(i);
+        return sum;
+    }
+
+    /**
+     * 二分法查找 list，如果没有，返回左边的元素
+     *
+     * @param numList
+     * @param target
+     * @return
+     */
+    public static int biSearchLeft(List<Integer> numList, int target) {
+        int left = 0, right = numList.size() - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (numList.get(mid) == target) return mid;
+            else if (numList.get(mid) > target) right = mid - 1;
+            else left = mid + 1;
+        }
+        return left - 1;
+    }
+
+    /**
      * 将 list 中的所有 l 交错合并
      *
      * @param list

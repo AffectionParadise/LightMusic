@@ -32,6 +32,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RadioSearchReq {
+    private static RadioSearchReq instance;
+
+    private RadioSearchReq() {
+    }
+
+    public static RadioSearchReq getInstance() {
+        if (instance == null) instance = new RadioSearchReq();
+        return instance;
+    }
+    
     // 关键词搜索电台 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索电台 API(喜马拉雅)

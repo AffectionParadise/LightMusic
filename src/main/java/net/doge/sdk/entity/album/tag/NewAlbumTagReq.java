@@ -22,6 +22,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class NewAlbumTagReq {
+    private static NewAlbumTagReq instance;
+
+    private NewAlbumTagReq() {
+    }
+
+    public static NewAlbumTagReq getInstance() {
+        if (instance == null) instance = new NewAlbumTagReq();
+        return instance;
+    }
+    
     // 曲风 API
     private final String STYLE_API = "https://music.163.com/api/tag/list/get";
     // 专辑标签 API (豆瓣)

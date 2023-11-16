@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.lyric;
+package net.doge.sdk.entity.music.info.lyrichero.decoder;
 
 public class QrcDecoder {
     public static final int ENCRYPT = 1;

@@ -25,6 +25,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlaylistSearchReq {
+    private static PlaylistSearchReq instance;
+
+    private PlaylistSearchReq() {
+    }
+
+    public static PlaylistSearchReq getInstance() {
+        if (instance == null) instance = new PlaylistSearchReq();
+        return instance;
+    }
+    
     // 关键词搜索歌单 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索歌单 API (酷狗)

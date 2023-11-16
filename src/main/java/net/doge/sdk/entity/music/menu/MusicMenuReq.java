@@ -27,6 +27,16 @@ import java.util.List;
 import java.util.Map;
 
 public class MusicMenuReq {
+    private static MusicMenuReq instance;
+
+    private MusicMenuReq() {
+    }
+
+    public static MusicMenuReq getInstance() {
+        if (instance == null) instance = new MusicMenuReq();
+        return instance;
+    }
+    
     // 相似歌曲 API
     private final String SIMILAR_SONG_API = "https://music.163.com/weapi/v1/discovery/simiSong";
     // 相似歌曲 API (猫耳)

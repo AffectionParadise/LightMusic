@@ -28,6 +28,16 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RadioInfoReq {
+    private static RadioInfoReq instance;
+
+    private RadioInfoReq() {
+    }
+
+    public static RadioInfoReq getInstance() {
+        if (instance == null) instance = new RadioInfoReq();
+        return instance;
+    }
+    
     // 电台信息 API
     private final String RADIO_DETAIL_API = "https://music.163.com/api/djradio/v2/get";
     // 电台节目信息 API

@@ -30,6 +30,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MvSearchReq {
+    private static MvSearchReq instance;
+
+    private MvSearchReq() {
+    }
+
+    public static MvSearchReq getInstance() {
+        if (instance == null) instance = new MvSearchReq();
+        return instance;
+    }
+    
     // 关键词搜索 MV / 视频 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索 MV API (酷狗)

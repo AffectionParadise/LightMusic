@@ -13,6 +13,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class MvTagReq {
+    private static MvTagReq instance;
+
+    private MvTagReq() {
+    }
+
+    public static MvTagReq getInstance() {
+        if (instance == null) instance = new MvTagReq();
+        return instance;
+    }
+    
     // MV 标签 API (KG)
     private final String MV_TAG_KG_API = "http://mobileservice.kugou.com/api/v5/video/recommend_channel?version=9108&type=2";
 

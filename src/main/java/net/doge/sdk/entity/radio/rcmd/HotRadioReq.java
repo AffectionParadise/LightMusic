@@ -32,6 +32,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class HotRadioReq {
+    private static HotRadioReq instance;
+
+    private HotRadioReq() {
+    }
+
+    public static HotRadioReq getInstance() {
+        if (instance == null) instance = new HotRadioReq();
+        return instance;
+    }
+    
     //    // 个性电台推荐 API
 //    private final String PERSONAL_RADIO_API = prefix + "/dj/personalize/recommend";
     // 今日优选电台 API

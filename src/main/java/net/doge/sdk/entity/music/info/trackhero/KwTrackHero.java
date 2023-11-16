@@ -1,11 +1,20 @@
-package net.doge.sdk.entity.music.info.tracker;
+package net.doge.sdk.entity.music.info.trackhero;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONObject;
 
-public class KwTracker {
+public class KwTrackHero {
+    private static KwTrackHero instance;
+
+    private KwTrackHero() {
+    }
+
+    public static KwTrackHero getInstance() {
+        if (instance == null) instance = new KwTrackHero();
+        return instance;
+    }
 //    private final String SECRET_KEY = "ylzsxkwm";
 //    private final int DES_MODE_DECRYPT = 1;
 //    private final int[] arrayE = {

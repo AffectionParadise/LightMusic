@@ -30,6 +30,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewMusicReq {
+    private static NewMusicReq instance;
+
+    private NewMusicReq() {
+    }
+
+    public static NewMusicReq getInstance() {
+        if (instance == null) instance = new NewMusicReq();
+        return instance;
+    }
+    
     // 推荐新歌 API
     private final String RECOMMEND_NEW_SONG_API = "https://music.163.com/api/personalized/newsong";
     // 曲风歌曲(最新) API

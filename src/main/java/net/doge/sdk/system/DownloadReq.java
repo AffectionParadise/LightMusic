@@ -10,6 +10,16 @@ import java.io.*;
 import java.util.Map;
 
 public class DownloadReq {
+    private static DownloadReq instance;
+
+    private DownloadReq() {
+    }
+
+    public static DownloadReq getInstance() {
+        if (instance == null) instance = new DownloadReq();
+        return instance;
+    }
+    
     /**
      * 下载文件，监听下载进度
      *

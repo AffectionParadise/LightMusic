@@ -34,6 +34,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class HighQualityPlaylistReq {
+    private static HighQualityPlaylistReq instance;
+
+    private HighQualityPlaylistReq() {
+    }
+
+    public static HighQualityPlaylistReq getInstance() {
+        if (instance == null) instance = new HighQualityPlaylistReq();
+        return instance;
+    }
+    
     // 精品歌单 API
     private final String HIGH_QUALITY_PLAYLIST_API = "https://music.163.com/api/playlist/highquality/list";
     // 网友精选碟(最热/最新) API

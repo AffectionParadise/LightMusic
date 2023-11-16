@@ -29,6 +29,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RankingSearchReq {
+    private static RankingSearchReq instance;
+
+    private RankingSearchReq() {
+    }
+
+    public static RankingSearchReq getInstance() {
+        if (instance == null) instance = new RankingSearchReq();
+        return instance;
+    }
+    
     // 获取榜单 API
     private final String GET_RANKING_API = "https://music.163.com/api/toplist";
     // 获取榜单 API (酷狗)

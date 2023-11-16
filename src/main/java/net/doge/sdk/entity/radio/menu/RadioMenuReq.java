@@ -27,6 +27,16 @@ import java.util.List;
 import java.util.Map;
 
 public class RadioMenuReq {
+    private static RadioMenuReq instance;
+
+    private RadioMenuReq() {
+    }
+
+    public static RadioMenuReq getInstance() {
+        if (instance == null) instance = new RadioMenuReq();
+        return instance;
+    }
+    
     // 电台订阅者 API
     private final String RADIO_SUBSCRIBERS_API = "https://music.163.com/api/djradio/subscriber";
 

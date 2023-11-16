@@ -30,6 +30,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendProgramReq {
+    private static RecommendProgramReq instance;
+
+    private RecommendProgramReq() {
+    }
+
+    public static RecommendProgramReq getInstance() {
+        if (instance == null) instance = new RecommendProgramReq();
+        return instance;
+    }
+    
     // 推荐节目 API
     private final String RECOMMEND_PROGRAM_API = "https://music.163.com/weapi/program/recommend/v1";
     // 推荐个性节目 API

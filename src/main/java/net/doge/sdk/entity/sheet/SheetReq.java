@@ -20,6 +20,16 @@ import java.util.List;
 import java.util.Map;
 
 public class SheetReq {
+    private static SheetReq instance;
+
+    private SheetReq() {
+    }
+
+    public static SheetReq getInstance() {
+        if (instance == null) instance = new SheetReq();
+        return instance;
+    }
+    
     // 获取乐谱 API
     private final String GET_SHEETS_API = "https://interface3.music.163.com/eapi/music/sheet/list/v1";
     // 获取乐谱图片 API

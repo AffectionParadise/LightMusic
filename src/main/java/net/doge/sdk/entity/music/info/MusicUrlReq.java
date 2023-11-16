@@ -14,8 +14,8 @@ import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
-import net.doge.sdk.entity.music.info.tracker.KwTracker;
-import net.doge.sdk.entity.music.info.tracker.QqTracker;
+import net.doge.sdk.entity.music.info.trackhero.KwTrackHero;
+import net.doge.sdk.entity.music.info.trackhero.QqTrackHero;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.CryptoUtil;
@@ -30,6 +30,16 @@ import java.util.List;
 import java.util.Map;
 
 public class MusicUrlReq {
+    private static MusicUrlReq instance;
+
+    private MusicUrlReq() {
+    }
+
+    public static MusicUrlReq getInstance() {
+        if (instance == null) instance = new MusicUrlReq();
+        return instance;
+    }
+
     // 歌曲 URL 获取 API
     private final String GET_SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
     // 歌曲 URL 获取 API (酷我)
@@ -176,7 +186,7 @@ public class MusicUrlReq {
                     quality = "mp3";
                     break;
             }
-            return new QqTracker().getTrackUrl(id, quality);
+            return QqTrackHero.getInstance().getTrackUrl(id, quality);
         }
 
         // 酷我(解锁付费音乐)
@@ -201,7 +211,7 @@ public class MusicUrlReq {
                     quality = "128k";
                     break;
             }
-            return new KwTracker().getTrackUrl(id, quality);
+            return KwTrackHero.getInstance().getTrackUrl(id, quality);
         }
 
         // 咪咕
@@ -382,10 +392,10 @@ public class MusicUrlReq {
      * @return
      */
     public void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
-        CommonResult<NetMusicInfo> result = new MusicSearchReq().searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 10, 1);
+        CommonResult<NetMusicInfo> result = MusicSearchReq.getInstance().searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 10, 1);
         List<NetMusicInfo> data = result.data;
         List<MusicCandidate> candidates = new LinkedList<>();
-        MusicInfoReq musicInfoReq = new MusicInfoReq();
+        MusicInfoReq musicInfoReq = MusicInfoReq.getInstance();
         for (NetMusicInfo info : data) {
             // 部分歌曲没有时长，先填充时长，准备判断
             if (!info.hasDuration()) musicInfoReq.fillDuration(info);

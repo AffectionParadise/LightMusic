@@ -1,5 +1,8 @@
 package net.doge.util.collection;
 
+import net.doge.util.common.StringUtil;
+
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -20,14 +23,27 @@ public class ArrayUtil {
     }
 
     /**
-     * 删除数组中所有空值
+     * 删除字符串数组中第一个位置上的空值
      *
      * @param array
-     * @param <T>
      * @return
      */
-    public static <T extends CharSequence> T[] removeEmpty(T[] array) {
-        return cn.hutool.core.util.ArrayUtil.removeEmpty(array);
+    public static String[] removeFirstEmpty(String[] array) {
+        int len = array.length;
+        if (len == 0 || StringUtil.notEmpty(array[0])) return array;
+        return Arrays.copyOfRange(array, 1, len);
+    }
+
+    /**
+     * 删除字符串数组中最后一个位置上的空值
+     *
+     * @param array
+     * @return
+     */
+    public static String[] removeLastEmpty(String[] array) {
+        int len = array.length;
+        if (len == 0 || StringUtil.notEmpty(array[len - 1])) return array;
+        return Arrays.copyOfRange(array, 0, len - 1);
     }
 
     /**

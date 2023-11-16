@@ -17,6 +17,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AlbumMenuReq {
+    private static AlbumMenuReq instance;
+
+    private AlbumMenuReq() {
+    }
+
+    public static AlbumMenuReq getInstance() {
+        if (instance == null) instance = new AlbumMenuReq();
+        return instance;
+    }
+    
     // 相似专辑 API (豆瓣)
     private final String SIMILAR_ALBUM_DB_API = "https://music.douban.com/subject/%s/";
 

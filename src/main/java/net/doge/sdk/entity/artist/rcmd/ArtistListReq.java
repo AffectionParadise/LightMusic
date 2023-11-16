@@ -25,6 +25,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ArtistListReq {
+    private static ArtistListReq instance;
+
+    private ArtistListReq() {
+    }
+
+    public static ArtistListReq getInstance() {
+        if (instance == null) instance = new ArtistListReq();
+        return instance;
+    }
+    
     // 歌手榜 API
     private final String ARTIST_RANKING_LIST_API = "https://music.163.com/weapi/toplist/artist";
     // 热门歌手 API

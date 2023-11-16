@@ -18,6 +18,16 @@ import net.doge.util.common.StringUtil;
 import java.util.Map;
 
 public class MvUrlReq {
+    private static MvUrlReq instance;
+
+    private MvUrlReq() {
+    }
+
+    public static MvUrlReq getInstance() {
+        if (instance == null) instance = new MvUrlReq();
+        return instance;
+    }
+
     // mlog id 转视频 id API
     private final String MLOG_TO_VIDEO_API = "https://music.163.com/weapi/mlog/video/convert/id";
     // MV 视频链接 API

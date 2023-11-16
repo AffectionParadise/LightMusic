@@ -32,6 +32,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class HotMusicRecommendReq {
+    private static HotMusicRecommendReq instance;
+
+    private HotMusicRecommendReq() {
+    }
+
+    public static HotMusicRecommendReq getInstance() {
+        if (instance == null) instance = new HotMusicRecommendReq();
+        return instance;
+    }
+    
     // 曲风歌曲(最热) API
     private final String STYLE_HOT_SONG_API = "https://music.163.com/api/style-tag/home/song";
     // 飙升榜 API (酷狗)
@@ -74,7 +84,7 @@ public class HotMusicRecommendReq {
         String[] s = Tags.hotSongTag.get(tag);
 
         // 网易云(榜单就是歌单，固定榜单 id 直接请求歌单音乐接口，接口分页)
-        PlaylistInfoReq playlistInfoReq = new PlaylistInfoReq();
+        PlaylistInfoReq playlistInfoReq = PlaylistInfoReq.getInstance();
         // 飙升榜
         Callable<CommonResult<NetMusicInfo>> getUpMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(19723756), NetMusicSource.NC, limit, page);
         // 热歌榜

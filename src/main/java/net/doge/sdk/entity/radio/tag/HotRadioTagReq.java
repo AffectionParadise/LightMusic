@@ -21,7 +21,17 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class HotRadioTag {
+public class HotRadioTagReq {
+    private static HotRadioTagReq instance;
+
+    private HotRadioTagReq() {
+    }
+
+    public static HotRadioTagReq getInstance() {
+        if (instance == null) instance = new HotRadioTagReq();
+        return instance;
+    }
+    
     // 分类热门电台标签 API
     private final String HOT_RADIO_TAG_API = "https://music.163.com/weapi/djradio/home/category/recommend";
     // 分类推荐电台标签 API

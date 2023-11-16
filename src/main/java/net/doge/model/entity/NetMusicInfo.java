@@ -131,13 +131,13 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         return StringUtil.notEmpty(url);
     }
 
-    // 判断歌词 + 翻译 + 罗马音是否完整
+    // 判断歌词是否完整
     public boolean isLrcIntegrated() {
-        return hasLrc() && hasTrans() && hasRoma();
+        return hasLrc();
     }
 
     public boolean hasLrc() {
-        return lrc != null;
+        return StringUtil.notEmpty(lrc);
     }
 
     public boolean hasTrans() {

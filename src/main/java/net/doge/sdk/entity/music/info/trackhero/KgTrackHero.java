@@ -11,7 +11,7 @@
 //import java.text.SimpleDateFormat;
 //import java.util.*;
 //
-//public class KgTracker {
+//public class KgTrackHero {
 //    private final String pidversec = "57ae12eb6890223e355ccfcb74edf70d";
 //    private final String clientver = "12029";
 //    private final String appid = "1005";
@@ -90,7 +90,7 @@
 //    }
 //
 //    public static void main(String[] args) {
-//        new KgTracker().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k");
+//        new net.doge.sdk.entity.music.info.tracker.KgTrackHero().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k");
 //    }
 //
 //    private String buildRequestParams(Map<String, Object> paramsMap) {

@@ -22,6 +22,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class RecPlaylistTagReq {
+    private static RecPlaylistTagReq instance;
+
+    private RecPlaylistTagReq() {
+    }
+
+    public static RecPlaylistTagReq getInstance() {
+        if (instance == null) instance = new RecPlaylistTagReq();
+        return instance;
+    }
+
     // 曲风 API
     private final String STYLE_API = "https://music.163.com/api/tag/list/get";
     // 歌单标签 API (酷狗)

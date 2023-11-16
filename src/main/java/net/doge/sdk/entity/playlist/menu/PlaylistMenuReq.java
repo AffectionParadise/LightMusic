@@ -24,6 +24,16 @@ import java.util.List;
 import java.util.Map;
 
 public class PlaylistMenuReq {
+    private static PlaylistMenuReq instance;
+
+    private PlaylistMenuReq() {
+    }
+
+    public static PlaylistMenuReq getInstance() {
+        if (instance == null) instance = new PlaylistMenuReq();
+        return instance;
+    }
+    
     // 歌单相似歌单 API
     private final String SIMILAR_PLAYLIST_API = "https://music.163.com/playlist?id=%s";
     // 歌单收藏者 API

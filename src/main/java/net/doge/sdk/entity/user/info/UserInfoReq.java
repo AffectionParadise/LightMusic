@@ -35,6 +35,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserInfoReq {
+    private static UserInfoReq instance;
+
+    private UserInfoReq() {
+    }
+
+    public static UserInfoReq getInstance() {
+        if (instance == null) instance = new UserInfoReq();
+        return instance;
+    }
+    
     // 用户信息 API
     private final String USER_DETAIL_API = "https://music.163.com/weapi/v1/user/detail/%s";
     // 用户歌曲 API

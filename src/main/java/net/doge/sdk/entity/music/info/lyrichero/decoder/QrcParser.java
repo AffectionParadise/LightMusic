@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.lyric;
+package net.doge.sdk.entity.music.info.lyrichero.decoder;
 
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;

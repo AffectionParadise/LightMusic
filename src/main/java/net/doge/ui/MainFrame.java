@@ -20497,7 +20497,7 @@ public class MainFrame extends JFrame {
             if (currChineseType == ChineseType.SIMPLIFIED) {
                 if (nextLrc >= 0)
                     for (Statement stmt : statements)
-                        stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getPlainLyric()));
+                        stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
                 switchChineseButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
                 currChineseType = ChineseType.TRADITIONAL;
             }
@@ -20524,7 +20524,7 @@ public class MainFrame extends JFrame {
                     if (player.loadedNetMusic() && player.getMusicInfo().hasRoma()) {
                         loadLrc(player.getAudioFile(), player.getMusicInfo(), true, false);
                     } else {
-                        for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getPlainLyric()));
+                        for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
                     }
                 }
                 switchJapaneseButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
@@ -20835,14 +20835,14 @@ public class MainFrame extends JFrame {
                 throw new NoLyricException("歌词是一个空串");
             // 繁简切换，简体时不动
             if (currChineseType == ChineseType.TRADITIONAL) {
-                for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getPlainLyric()));
+                for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
             }
             // 日文/罗马音切换，日文时不动
             if (currJapaneseType == JapaneseType.ROMAJI && !loadTrans) {
                 // 使用已有的罗马音歌词
                 if (!isFile && musicInfo.hasRoma() && !romaData.isEmpty()) statements = romaData.getStatements();
                 else
-                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getPlainLyric()));
+                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
             }
             if (reload) lrcListModel.clear();
             // 添加空白充数

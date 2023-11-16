@@ -29,6 +29,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendMvReq {
+    private static RecommendMvReq instance;
+
+    private RecommendMvReq() {
+    }
+
+    public static RecommendMvReq getInstance() {
+        if (instance == null) instance = new RecommendMvReq();
+        return instance;
+    }
+    
     // MV 排行 API
     private final String TOP_MV_API = "https://music.163.com/weapi/mv/toplist";
     // 最新 MV API

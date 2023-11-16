@@ -13,6 +13,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class MusicSearchTagReq {
+    private static MusicSearchTagReq instance;
+
+    private MusicSearchTagReq() {
+    }
+
+    public static MusicSearchTagReq getInstance() {
+        if (instance == null) instance = new MusicSearchTagReq();
+        return instance;
+    }
+
     // 搜索子标签 (猫耳)
     private final String PROGRAM_SEARCH_TAG_ME_API = "https://www.missevan.com/sound/getcatalogleaves";
 

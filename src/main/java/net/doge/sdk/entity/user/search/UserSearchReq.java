@@ -30,6 +30,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserSearchReq {
+    private static UserSearchReq instance;
+
+    private UserSearchReq() {
+    }
+
+    public static UserSearchReq getInstance() {
+        if (instance == null) instance = new UserSearchReq();
+        return instance;
+    }
+    
     // 关键词搜索用户 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索用户 API (喜马拉雅)

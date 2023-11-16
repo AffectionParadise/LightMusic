@@ -19,6 +19,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class HotSearchReq {
+    private static HotSearchReq instance;
+
+    private HotSearchReq() {
+    }
+
+    public static HotSearchReq getInstance() {
+        if (instance == null) instance = new HotSearchReq();
+        return instance;
+    }
+    
     // 热搜 API
     private final String HOT_SEARCH_API = "https://music.163.com/api/search/chart/detail";
     // 热搜 API (酷狗)

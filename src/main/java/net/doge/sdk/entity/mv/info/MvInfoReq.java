@@ -18,6 +18,16 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 
 public class MvInfoReq {
+    private static MvInfoReq instance;
+
+    private MvInfoReq() {
+    }
+
+    public static MvInfoReq getInstance() {
+        if (instance == null) instance = new MvInfoReq();
+        return instance;
+    }
+
     // MV 信息 API
     private final String MV_DETAIL_API = "https://music.163.com/api/v1/mv/detail";
     // MV 信息 API (酷狗)
@@ -42,7 +52,7 @@ public class MvInfoReq {
         // 信息完整直接跳过
         if (mvInfo.isIntegrated() && mvInfo.isQualityMatch()) return;
 
-        String url = new MvUrlReq().fetchMvUrl(mvInfo);
+        String url = MvUrlReq.getInstance().fetchMvUrl(mvInfo);
         mvInfo.setUrl(url);
 
         if (url.contains(".mp4")) mvInfo.setFormat(Format.MP4);

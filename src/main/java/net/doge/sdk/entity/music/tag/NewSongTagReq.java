@@ -23,6 +23,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class NewSongTagReq {
+    private static NewSongTagReq instance;
+
+    private NewSongTagReq() {
+    }
+
+    public static NewSongTagReq getInstance() {
+        if (instance == null) instance = new NewSongTagReq();
+        return instance;
+    }
+    
     // 曲风 API
     private final String STYLE_API = "https://music.163.com/api/tag/list/get";
     // 歌曲标签 API (5sing)

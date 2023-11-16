@@ -4,8 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import net.doge.constant.ui.Fonts;
 import net.doge.model.lyric.Statement;
+import net.doge.util.collection.ArrayUtil;
+import net.doge.util.collection.ListUtil;
 import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -88,15 +89,13 @@ public class StringTwoColor {
      * @param widthThreshold 文字最大宽度
      */
     public StringTwoColor(JLabel label, Statement stmt, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
-        String lyric = stmt.getLyric();
-        String plainLyric = stmt.getPlainLyric();
-
         if (stmt.isEmpty()) return;
+
+        this.lyric = stmt.getLyric();
+        this.plainLyric = stmt.getPlainLyric();
 
         if (RegexUtil.contains("<\\d+,\\d+>", lyric)) isByWord = true;
 
-        this.lyric = lyric;
-        this.plainLyric = plainLyric;
         this.c1 = c1;
         this.c2 = c2;
         this.isDesktopLyric = isDesktopLyric;
@@ -267,10 +266,8 @@ public class StringTwoColor {
     }
 
     private void initWordWidthList(String lyric) {
-        String[] sp = lyric.split("<\\d+,\\d+>");
+        String[] sp = ArrayUtil.removeFirstEmpty(lyric.split("<\\d+,\\d+>", -1));
         for (String partStr : sp) {
-            // 剔除空串
-            if (StringUtil.isEmpty(partStr)) continue;
             // 计算每段的宽度
             int w = 0;
             for (int i = 0, len = partStr.length(); i < len; i++) {
@@ -298,23 +295,6 @@ public class StringTwoColor {
         }
     }
 
-    private int rangeSum(List<Integer> numList, int start, int end) {
-        int sum = 0;
-        for (int i = start; i < end; i++) sum += numList.get(i);
-        return sum;
-    }
-
-    private int biSearch(List<Integer> numList, int target) {
-        int left = 0, right = numList.size() - 1;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            if (numList.get(mid) == target) return mid;
-            else if (numList.get(mid) > target) right = mid - 1;
-            else left = mid + 1;
-        }
-        return left - 1;
-    }
-
     /**
      * 根据歌词时间计算比率
      *
@@ -328,12 +308,12 @@ public class StringTwoColor {
 
         int lineCurrTimeMs = currTimeMs - startTimeMs;
 
-        int wordStartIndex = biSearch(wordStartList, lineCurrTimeMs);
+        int wordStartIndex = ListUtil.biSearchLeft(wordStartList, lineCurrTimeMs);
         if (wordStartIndex < 0) return 0;
         int wordStart = wordStartList.get(wordStartIndex);
         // 防止单字比率超出
         double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
-        double currWidth = rangeSum(wordWidthList, 0, wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
+        double currWidth = ListUtil.rangeSum(wordWidthList, 0, wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
         int totalWidth = isDesktopLyric ? width - 2 * SHADOW_H_OFFSET : width;
         // 防止整句比率超出
         double ratio = Math.min(1, currWidth / totalWidth);

@@ -29,6 +29,16 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class ArtistInfoReq {
+    private static ArtistInfoReq instance;
+
+    private ArtistInfoReq() {
+    }
+
+    public static ArtistInfoReq getInstance() {
+        if (instance == null) instance = new ArtistInfoReq();
+        return instance;
+    }
+    
     // 歌手信息 API
     private final String ARTIST_DETAIL_API = "https://music.163.com/api/artist/head/info/get";
     // 歌手信息 API (酷狗)

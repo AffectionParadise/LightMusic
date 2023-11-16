@@ -25,6 +25,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewRadioReq {
+    private static NewRadioReq instance;
+
+    private NewRadioReq() {
+    }
+
+    public static NewRadioReq getInstance() {
+        if (instance == null) instance = new NewRadioReq();
+        return instance;
+    }
+    
     // 新晋电台 API
     private final String NEW_RADIO_API = "https://music.163.com/api/djradio/toplist";
     // 推荐个性电台 API

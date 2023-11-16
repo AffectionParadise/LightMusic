@@ -30,6 +30,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecommendPlaylistReq {
+    private static RecommendPlaylistReq instance;
+
+    private RecommendPlaylistReq() {
+    }
+
+    public static RecommendPlaylistReq getInstance() {
+        if (instance == null) instance = new RecommendPlaylistReq();
+        return instance;
+    }
+    
     // 推荐歌单 API
     private final String RECOMMEND_PLAYLIST_API = "https://music.163.com/weapi/personalized/playlist";
     // 发现歌单 API

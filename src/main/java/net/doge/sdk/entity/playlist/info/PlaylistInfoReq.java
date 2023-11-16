@@ -28,6 +28,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlaylistInfoReq {
+    private static PlaylistInfoReq instance;
+
+    private PlaylistInfoReq() {
+    }
+
+    public static PlaylistInfoReq getInstance() {
+        if (instance == null) instance = new PlaylistInfoReq();
+        return instance;
+    }
+    
     // 歌单信息 API
     private final String PLAYLIST_DETAIL_API = "https://music.163.com/api/v6/playlist/detail";
     // 歌单歌曲 API

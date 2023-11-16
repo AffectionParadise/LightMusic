@@ -21,6 +21,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class HotPlaylistTagReq {
+    private static HotPlaylistTagReq instance;
+
+    private HotPlaylistTagReq() {
+    }
+
+    public static HotPlaylistTagReq getInstance() {
+        if (instance == null) instance = new HotPlaylistTagReq();
+        return instance;
+    }
+
     // 精品歌单标签 API
     private final String HIGH_QUALITY_PLAYLIST_TAG_API = "https://music.163.com/api/playlist/highquality/tags";
     // 网友精选碟标签 API

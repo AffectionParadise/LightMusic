@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.tracker;
+package net.doge.sdk.entity.music.info.trackhero;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -7,7 +7,17 @@ import net.doge.util.common.CryptoUtil;
 
 import java.nio.charset.StandardCharsets;
 
-public class QqTracker {
+public class QqTrackHero {
+    private static QqTrackHero instance;
+
+    private QqTrackHero() {
+    }
+
+    public static QqTrackHero getInstance() {
+        if (instance == null) instance = new QqTrackHero();
+        return instance;
+    }
+
     /**
      * 获取 QQ 音乐歌曲链接
      *

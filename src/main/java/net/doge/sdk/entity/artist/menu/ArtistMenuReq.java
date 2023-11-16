@@ -30,6 +30,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ArtistMenuReq {
+    private static ArtistMenuReq instance;
+
+    private ArtistMenuReq() {
+    }
+
+    public static ArtistMenuReq getInstance() {
+        if (instance == null) instance = new ArtistMenuReq();
+        return instance;
+    }
+    
     // 歌手专辑 API
     private final String ARTIST_ALBUMS_API = "https://music.163.com/weapi/artist/albums/%s";
     // 歌手专辑 API (酷狗)

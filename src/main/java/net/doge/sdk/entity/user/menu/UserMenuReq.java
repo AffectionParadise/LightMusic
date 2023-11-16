@@ -35,6 +35,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class UserMenuReq {
+    private static UserMenuReq instance;
+
+    private UserMenuReq() {
+    }
+
+    public static UserMenuReq getInstance() {
+        if (instance == null) instance = new UserMenuReq();
+        return instance;
+    }
+    
     // 用户歌单 API
     private final String USER_PLAYLIST_API = "https://music.163.com/api/user/playlist";
     // 用户创建歌单 API (QQ)

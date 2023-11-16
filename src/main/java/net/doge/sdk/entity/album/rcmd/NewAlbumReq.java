@@ -35,6 +35,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NewAlbumReq {
+    private static NewAlbumReq instance;
+
+    private NewAlbumReq() {
+    }
+
+    public static NewAlbumReq getInstance() {
+        if (instance == null) instance = new NewAlbumReq();
+        return instance;
+    }
+    
     // 新碟上架 API
     private final String NEW_ALBUM_API = "https://music.163.com/api/discovery/new/albums/area";
     // 新碟上架(热门) API

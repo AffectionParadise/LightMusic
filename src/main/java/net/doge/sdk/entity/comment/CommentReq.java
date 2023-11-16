@@ -33,6 +33,16 @@ import java.util.List;
 import java.util.Map;
 
 public class CommentReq {
+    private static CommentReq instance;
+
+    private CommentReq() {
+    }
+
+    public static CommentReq getInstance() {
+        if (instance == null) instance = new CommentReq();
+        return instance;
+    }
+    
     // 获取评论 API
     private final String GET_COMMENTS_API = "https://music.163.com/api/v2/resource/comments";
     // 获取评论 API (酷狗)

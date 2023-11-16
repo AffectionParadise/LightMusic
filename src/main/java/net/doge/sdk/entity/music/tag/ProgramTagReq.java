@@ -14,6 +14,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class ProgramTagReq {
+    private static ProgramTagReq instance;
+
+    private ProgramTagReq() {
+    }
+
+    public static ProgramTagReq getInstance() {
+        if (instance == null) instance = new ProgramTagReq();
+        return instance;
+    }
+    
     // 探索节目标签 API (猫耳)
     private final String EXP_PROGRAM_TAG_ME_API = "https://www.missevan.com/explore";
     // 首页子标签 API (猫耳)

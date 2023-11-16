@@ -19,6 +19,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class RankingInfoReq {
+    private static RankingInfoReq instance;
+
+    private RankingInfoReq() {
+    }
+
+    public static RankingInfoReq getInstance() {
+        if (instance == null) instance = new RankingInfoReq();
+        return instance;
+    }
+
     // 榜单信息 API (酷狗)
     private final String RANKING_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
     // 榜单信息 API (酷我)
@@ -125,7 +135,7 @@ public class RankingInfoReq {
 
         // 网易云(榜单就是歌单，接口分页)
         if (source == NetMusicSource.NC) {
-            return new PlaylistInfoReq().getMusicInfoInPlaylist(rankingId, source, limit, page);
+            return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(rankingId, source, limit, page);
         }
 
         // 酷狗
