@@ -64,12 +64,12 @@ public class KgLyricHero {
         // 提取酷狗歌词
         String headExp = "^.*\\[id:\\$\\w+\\]\\n";
         result = result.replace("\r", "");
-        if (RegexUtil.contains(headExp, result)) result = result.replaceAll(headExp, "");
+        if (RegexUtil.contains(headExp, result)) result = result.replaceFirst(headExp, "");
         String trans = RegexUtil.getGroup1("\\[language:([\\w=\\\\/+]+)\\]", result);
 
         // 处理翻译和罗马音
         if (StringUtil.notEmpty(trans)) {
-            result = result.replaceAll("\\[language:[\\w=\\\\/+]+\\]\\n", "");
+            result = result.replaceFirst("\\[language:[\\w=\\\\/+]+\\]\\n", "");
             String transBody = CryptoUtil.base64Decode(trans);
             JSONObject transJson = JSONObject.parseObject(transBody);
             JSONArray contentArray = transJson.getJSONArray("content");

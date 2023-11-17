@@ -1,6 +1,6 @@
 package net.doge.constant.ui;
 
-import net.doge.constant.system.I18n;
+import net.doge.constant.lang.I18n;
 
 /**
  * @Author Doge

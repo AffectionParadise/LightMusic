@@ -29,6 +29,7 @@ public class KwLyricHero {
     public void fillLrc(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
 
+        // 请求参数加密
         byte[] keyBytes = "yeelion".getBytes(StandardCharsets.UTF_8);
         int keyLen = keyBytes.length;
         String params = "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_" + id + "&lrcx=1";
@@ -44,7 +45,10 @@ public class KwLyricHero {
                 j++;
             }
         }
-        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + CryptoUtil.base64Encode(output))
+        params = CryptoUtil.base64Encode(output);
+
+        // 获取歌词
+        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + params)
                 .executeAsync()
                 .bodyBytes();
         if (!"tp=content".equals(new String(bodyBytes, 0, 10))) return;
@@ -52,7 +56,7 @@ public class KwLyricHero {
         byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
         byte[] lrcData = CryptoUtil.decompress(nBytes);
         // 无 lrcx 参数时，此处直接获得 lrc 歌词
-//            String lrcStr = new String(lrcData, Charset.forName("gb18030"));
+//        String lrcStr = new String(lrcData, Charset.forName("gb18030"));
         String lrcDataStr = new String(lrcData, StandardCharsets.UTF_8);
         byte[] lrcBytes = CryptoUtil.base64DecodeToBytes(lrcDataStr);
         int lrcLen = lrcBytes.length;
@@ -80,16 +84,16 @@ public class KwLyricHero {
         String lineTimeExp = "\\[\\d+:\\d+(?:[.:]\\d+)?\\]";
         String[] lsp = lrcStr.split("\n");
         StringBuilder sb = new StringBuilder();
-        for (int j = 0, len = lsp.length; j < len; j++) {
-            List<String> s1List = RegexUtil.findAllGroup1("<(\\d+),-?\\d+>", lsp[j]);
-            if (s1List.isEmpty()) sb.append(lsp[j]);
+        for (String l : lsp) {
+            List<String> s1List = RegexUtil.findAllGroup1("<(\\d+),-?\\d+>", l);
+            if (s1List.isEmpty()) sb.append(l);
             else {
-                List<String> s2List = RegexUtil.findAllGroup1("<\\d+,(-?\\d+)>", lsp[j]);
+                List<String> s2List = RegexUtil.findAllGroup1("<\\d+,(-?\\d+)>", l);
                 int size = s1List.size();
                 // 行时间
-                String lineTimeStr = RegexUtil.getGroup0(lineTimeExp, lsp[j]);
+                String lineTimeStr = RegexUtil.getGroup0(lineTimeExp, l);
                 sb.append(lineTimeStr);
-                String[] sp = ArrayUtil.removeFirstEmpty(lsp[j].replaceFirst(lineTimeExp, "").split("<\\d+,-?\\d+>", -1));
+                String[] sp = ArrayUtil.removeFirstEmpty(l.replaceFirst(lineTimeExp, "").split("<\\d+,-?\\d+>", -1));
                 for (int k = 0; k < size; k++) {
                     int n1 = Integer.parseInt(s1List.get(k));
                     int n2 = Integer.parseInt(s2List.get(k));

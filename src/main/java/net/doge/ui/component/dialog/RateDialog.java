@@ -1,6 +1,6 @@
 package net.doge.ui.component.dialog;
 
-import net.doge.constant.system.I18n;
+import net.doge.constant.lang.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;

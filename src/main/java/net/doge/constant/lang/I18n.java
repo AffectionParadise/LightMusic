@@ -1,4 +1,4 @@
-package net.doge.constant.system;
+package net.doge.constant.lang;
 
 import net.doge.constant.config.ConfigConstants;
 
@@ -202,12 +202,13 @@ public class I18n {
         LANG_MAP.put("switchBlurTip", new String[]{"模糊", "Blur"});
         LANG_MAP.put("soundEffectTip", new String[]{"音效", "Sound effect"});
         LANG_MAP.put("sheetTip", new String[]{"乐谱", "Sheet"});
+        LANG_MAP.put("originalLrcTip", new String[]{"原歌词", "Original lyric"});
+        LANG_MAP.put("translationTip", new String[]{"翻译", "Translation"});
+        LANG_MAP.put("romaTip", new String[]{"罗马音", "Roma"});
+        LANG_MAP.put("tradChineseTip", new String[]{"繁体", "Traditional Chinese"});
         LANG_MAP.put("menuTip", new String[]{"主菜单", "Main menu"});
         LANG_MAP.put("goToPlayQueueTip", new String[]{"转到播放队列", "Go to playback queue"});
         LANG_MAP.put("desktopLrcTip", new String[]{"桌面歌词", "Desktop lyric"});
-        LANG_MAP.put("switchChineseTip", new String[]{"歌词繁简切换", "Switch Simp. / Trad. Ch."});
-        LANG_MAP.put("switchJapaneseTip", new String[]{"日语/罗马音歌词切换", "Switch Japanese / Romaji"});
-        LANG_MAP.put("switchLrcTypeTip", new String[]{"歌词原文/翻译切换", "Switch original / translation"});
         LANG_MAP.put("addTip", new String[]{"添加歌曲文件", "Add tracks"});
         LANG_MAP.put("reimportTip", new String[]{"重新从歌曲目录导入歌曲", "Re-import tracks"});
         LANG_MAP.put("manageCatalogTip", new String[]{"管理歌曲目录", "Manage track catalogs"});
@@ -262,9 +263,7 @@ public class I18n {
         LANG_MAP.put("copy", new String[]{"复制这句歌词", "Copy lyric"});
         LANG_MAP.put("locateLrc", new String[]{"定位歌词时间", "Seek to lyric time"});
         LANG_MAP.put("browseLrc", new String[]{"查看歌词文件", "View lyric file"});
-        LANG_MAP.put("browseLrcTrans", new String[]{"查看歌词翻译文件", "View translation lyric file"});
         LANG_MAP.put("downloadLrc", new String[]{"下载歌词文件", "Download lyric file"});
-        LANG_MAP.put("downloadLrcTrans", new String[]{"下载歌词翻译文件", "Download translation lyric file"});
 
         LANG_MAP.put("lrcOffsetMsg", new String[]{"当前歌词偏移：%.1f s", "Current lyric offset: %.1f s"});
         LANG_MAP.put("reset", new String[]{"重置", "Reset"});
@@ -274,6 +273,11 @@ public class I18n {
         LANG_MAP.put("sequence", new String[]{"顺序播放", "Sequential playback"});
         LANG_MAP.put("listCycle", new String[]{"列表循环", "Loop all"});
         LANG_MAP.put("shuffle", new String[]{"随机播放", "Shuffle"});
+
+        LANG_MAP.put("originalLrc", new String[]{"原歌词", "Original lyric"});
+        LANG_MAP.put("translation", new String[]{"翻译", "Translation"});
+        LANG_MAP.put("roma", new String[]{"罗马音", "Roma"});
+        LANG_MAP.put("tradChinese", new String[]{"繁体", "Traditional Chinese"});
 
         LANG_MAP.put("gs", new String[]{"高斯模糊", "Gaussian blur"});
         LANG_MAP.put("darker", new String[]{"暗角滤镜", "Darker mode"});
@@ -546,6 +550,7 @@ public class I18n {
         LANG_MAP.put("gsFactor", new String[]{"高斯模糊半径（半径越大越模糊）：", "Gaussian blur radius(Bigger radius, blurrier): "});
         LANG_MAP.put("darkerFactor", new String[]{"暗角滤镜因子（因子越小越暗）：", "Darker mode factor(Smaller factor, darker): "});
         LANG_MAP.put("autoDownloadLrc", new String[]{"下载歌曲时自动下载歌词", "Download lyrics while downloading tracks"});
+//        LANG_MAP.put("verbatimTimeline", new String[]{"歌词文件添加逐字时间轴", "Lyric files add verbatim timelines"});
         LANG_MAP.put("musicDown", new String[]{"歌曲下载路径：", "Track download path: "});
         LANG_MAP.put("mvDown", new String[]{"MV 下载路径：", "MV download path: "});
         LANG_MAP.put("cache", new String[]{"缓存路径：", "Cache path: "});

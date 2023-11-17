@@ -2,7 +2,7 @@ package net.doge.ui.component.dialog;
 
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
-import net.doge.constant.system.I18n;
+import net.doge.constant.lang.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.component.button.DialogButton;

@@ -62,23 +62,23 @@ public class QrcDecodeHelper {
             2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11
     };
 
-    private long BITNUM(int[] a, int b, int c) {
-        return ((((long) a[(b) / 32 * 4 + 3 - (b) % 32 / 8] >> (7 - (b % 8))) & 0x01) << (c));
+    private long BITNUM(short[] a, int b, int c) {
+        return (long) (a[b / 32 * 4 + 3 - b % 32 / 8] >> (7 - b % 8) & 0x01) << c;
     }
 
     private int BITNUMINTR(long a, int b, int c) {
-        return (int) ((((a) >> (31 - (b))) & 0x00000001) << (c));
+        return (int) ((a >> (31 - b) & 0x00000001) << c);
     }
 
     private long BITNUMINTL(long a, int b, int c) {
-        return ((((a) << (b)) & 0x80000000L) >> (c));
+        return (a << b & 0x80000000L) >> c;
     }
 
     private int SBOXBIT(int a) {
-        return ((a) & 0x20) | (((a) & 0x1f) >> 1) | (((a) & 0x01) << 4);
+        return a & 0x20 | (a & 0x1f) >> 1 | (a & 0x01) << 4;
     }
 
-    private void IP(long[] state, int[] in) {
+    private void IP(long[] state, short[] in) {
         state[0] = BITNUM(in, 57, 31) | BITNUM(in, 49, 30) | BITNUM(in, 41, 29) | BITNUM(in, 33, 28) |
                 BITNUM(in, 25, 27) | BITNUM(in, 17, 26) | BITNUM(in, 9, 25) | BITNUM(in, 1, 24) |
                 BITNUM(in, 59, 23) | BITNUM(in, 51, 22) | BITNUM(in, 43, 21) | BITNUM(in, 35, 20) |
@@ -98,45 +98,45 @@ public class QrcDecodeHelper {
                 BITNUM(in, 30, 3) | BITNUM(in, 22, 2) | BITNUM(in, 14, 1) | BITNUM(in, 6, 0);
     }
 
-    private void InvIP(long[] state, int[] in) {
-        in[3] = BITNUMINTR(state[1], 7, 7) | BITNUMINTR(state[0], 7, 6) | BITNUMINTR(state[1], 15, 5) |
+    private void InvIP(long[] state, short[] in) {
+        in[3] = (short) (BITNUMINTR(state[1], 7, 7) | BITNUMINTR(state[0], 7, 6) | BITNUMINTR(state[1], 15, 5) |
                 BITNUMINTR(state[0], 15, 4) | BITNUMINTR(state[1], 23, 3) | BITNUMINTR(state[0], 23, 2) |
-                BITNUMINTR(state[1], 31, 1) | BITNUMINTR(state[0], 31, 0);
+                BITNUMINTR(state[1], 31, 1) | BITNUMINTR(state[0], 31, 0));
 
-        in[2] = BITNUMINTR(state[1], 6, 7) | BITNUMINTR(state[0], 6, 6) | BITNUMINTR(state[1], 14, 5) |
+        in[2] = (short) (BITNUMINTR(state[1], 6, 7) | BITNUMINTR(state[0], 6, 6) | BITNUMINTR(state[1], 14, 5) |
                 BITNUMINTR(state[0], 14, 4) | BITNUMINTR(state[1], 22, 3) | BITNUMINTR(state[0], 22, 2) |
-                BITNUMINTR(state[1], 30, 1) | BITNUMINTR(state[0], 30, 0);
+                BITNUMINTR(state[1], 30, 1) | BITNUMINTR(state[0], 30, 0));
 
-        in[1] = BITNUMINTR(state[1], 5, 7) | BITNUMINTR(state[0], 5, 6) | BITNUMINTR(state[1], 13, 5) |
+        in[1] = (short) (BITNUMINTR(state[1], 5, 7) | BITNUMINTR(state[0], 5, 6) | BITNUMINTR(state[1], 13, 5) |
                 BITNUMINTR(state[0], 13, 4) | BITNUMINTR(state[1], 21, 3) | BITNUMINTR(state[0], 21, 2) |
-                BITNUMINTR(state[1], 29, 1) | BITNUMINTR(state[0], 29, 0);
+                BITNUMINTR(state[1], 29, 1) | BITNUMINTR(state[0], 29, 0));
 
-        in[0] = BITNUMINTR(state[1], 4, 7) | BITNUMINTR(state[0], 4, 6) | BITNUMINTR(state[1], 12, 5) |
+        in[0] = (short) (BITNUMINTR(state[1], 4, 7) | BITNUMINTR(state[0], 4, 6) | BITNUMINTR(state[1], 12, 5) |
                 BITNUMINTR(state[0], 12, 4) | BITNUMINTR(state[1], 20, 3) | BITNUMINTR(state[0], 20, 2) |
-                BITNUMINTR(state[1], 28, 1) | BITNUMINTR(state[0], 28, 0);
+                BITNUMINTR(state[1], 28, 1) | BITNUMINTR(state[0], 28, 0));
 
-        in[7] = BITNUMINTR(state[1], 3, 7) | BITNUMINTR(state[0], 3, 6) | BITNUMINTR(state[1], 11, 5) |
+        in[7] = (short) (BITNUMINTR(state[1], 3, 7) | BITNUMINTR(state[0], 3, 6) | BITNUMINTR(state[1], 11, 5) |
                 BITNUMINTR(state[0], 11, 4) | BITNUMINTR(state[1], 19, 3) | BITNUMINTR(state[0], 19, 2) |
-                BITNUMINTR(state[1], 27, 1) | BITNUMINTR(state[0], 27, 0);
+                BITNUMINTR(state[1], 27, 1) | BITNUMINTR(state[0], 27, 0));
 
-        in[6] = BITNUMINTR(state[1], 2, 7) | BITNUMINTR(state[0], 2, 6) | BITNUMINTR(state[1], 10, 5) |
+        in[6] = (short) (BITNUMINTR(state[1], 2, 7) | BITNUMINTR(state[0], 2, 6) | BITNUMINTR(state[1], 10, 5) |
                 BITNUMINTR(state[0], 10, 4) | BITNUMINTR(state[1], 18, 3) | BITNUMINTR(state[0], 18, 2) |
-                BITNUMINTR(state[1], 26, 1) | BITNUMINTR(state[0], 26, 0);
+                BITNUMINTR(state[1], 26, 1) | BITNUMINTR(state[0], 26, 0));
 
-        in[5] = BITNUMINTR(state[1], 1, 7) | BITNUMINTR(state[0], 1, 6) | BITNUMINTR(state[1], 9, 5) |
+        in[5] = (short) (BITNUMINTR(state[1], 1, 7) | BITNUMINTR(state[0], 1, 6) | BITNUMINTR(state[1], 9, 5) |
                 BITNUMINTR(state[0], 9, 4) | BITNUMINTR(state[1], 17, 3) | BITNUMINTR(state[0], 17, 2) |
-                BITNUMINTR(state[1], 25, 1) | BITNUMINTR(state[0], 25, 0);
+                BITNUMINTR(state[1], 25, 1) | BITNUMINTR(state[0], 25, 0));
 
-        in[4] = BITNUMINTR(state[1], 0, 7) | BITNUMINTR(state[0], 0, 6) | BITNUMINTR(state[1], 8, 5) |
+        in[4] = (short) (BITNUMINTR(state[1], 0, 7) | BITNUMINTR(state[0], 0, 6) | BITNUMINTR(state[1], 8, 5) |
                 BITNUMINTR(state[0], 8, 4) | BITNUMINTR(state[1], 16, 3) | BITNUMINTR(state[0], 16, 2) |
-                BITNUMINTR(state[1], 24, 1) | BITNUMINTR(state[0], 24, 0);
+                BITNUMINTR(state[1], 24, 1) | BITNUMINTR(state[0], 24, 0));
     }
 
-    private long F(long state, int[] key) {
+    private long f(long state, short[] key) {
         int[] lrgstate = new int[6];
         int t1, t2;
 
-        // Expantion Permutation
+        // Expansion Permutation
         t1 = (int) (BITNUMINTL(state, 31, 0) | ((state & 0xf0000000L) >> 1) | BITNUMINTL(state, 4, 5) |
                 BITNUMINTL(state, 3, 6) | ((state & 0x0f000000L) >> 3) | BITNUMINTL(state, 8, 11) |
                 BITNUMINTL(state, 7, 12) | ((state & 0x00f00000L) >> 5) | BITNUMINTL(state, 12, 17) |
@@ -189,7 +189,7 @@ public class QrcDecodeHelper {
         return state;
     }
 
-    public void desKeySetup(int[] key, int[][] schedule, int mode) {
+    public void desKeySetup(short[] key, short[][] schedule, int mode) {
         int i, j, to_gen;
         long C, D;
         int[] key_rnd_shift = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
@@ -213,8 +213,8 @@ public class QrcDecodeHelper {
 
         // Generate the 16 subkeys.
         for (i = 0; i < 16; ++i) {
-            C = ((C << key_rnd_shift[i]) | (C >> (28 - key_rnd_shift[i]))) & 0xfffffff0;
-            D = ((D << key_rnd_shift[i]) | (D >> (28 - key_rnd_shift[i]))) & 0xfffffff0;
+            C = (C << key_rnd_shift[i] | C >> (28 - key_rnd_shift[i])) & 0xfffffff0L;
+            D = (D << key_rnd_shift[i] | D >> (28 - key_rnd_shift[i])) & 0xfffffff0L;
 
             // Decryption subkeys are reverse order of encryption subkeys so
             // generate them in reverse if the key schedule is for decryption useage.
@@ -226,13 +226,13 @@ public class QrcDecodeHelper {
             for (j = 0; j < 6; ++j)
                 schedule[to_gen][j] = 0;
             for (j = 0; j < 24; ++j)
-                schedule[to_gen][j / 8] |= BITNUMINTR(C, key_compression[j], 7 - (j % 8));
+                schedule[to_gen][j / 8] |= BITNUMINTR(C, key_compression[j], 7 - j % 8);
             for (; j < 48; ++j)
-                schedule[to_gen][j / 8] |= BITNUMINTR(D, key_compression[j] - 27, 7 - (j % 8));
+                schedule[to_gen][j / 8] |= BITNUMINTR(D, key_compression[j] - 27, 7 - j % 8);
         }
     }
 
-    public void desCrypt(int[] in, int[] out, int[][] key) {
+    public void desCrypt(short[] in, short[] out, short[][] key) {
         long[] state = new long[2];
         int idx;
         long t;
@@ -241,11 +241,11 @@ public class QrcDecodeHelper {
 
         for (idx = 0; idx < 15; ++idx) {
             t = state[1];
-            state[1] = F(state[1], key[idx]) ^ state[0];
+            state[1] = f(state[1], key[idx]) ^ state[0];
             state[0] = t;
         }
         // Perform the final loop manually as it doesn't switch sides
-        state[0] = F(state[1], key[15]) ^ state[0];
+        state[0] = f(state[1], key[15]) ^ state[0];
 
         InvIP(state, out);
     }

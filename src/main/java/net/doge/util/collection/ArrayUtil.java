@@ -144,28 +144,28 @@ public class ArrayUtil {
     }
 
     /**
-     * byte 数组转为 int 数组
+     * byte 数组转为 short 数组
      *
      * @param bytes
      * @return
      */
-    public static int[] bytesToInts(byte[] bytes) {
+    public static short[] bytesToShorts(byte[] bytes) {
         int n = bytes.length;
-        int[] ints = new int[n];
-        for (int i = 0; i < n; i++) ints[i] = bytes[i] & 0xFF;
-        return ints;
+        short[] shorts = new short[n];
+        for (int i = 0; i < n; i++) shorts[i] = (short) (bytes[i] & 0xFF);
+        return shorts;
     }
 
     /**
-     * int 数组转为 byte 数组
+     * short 数组转为 byte 数组
      *
-     * @param ints
+     * @param shorts
      * @return
      */
-    public static byte[] intsToBytes(int[] ints) {
-        int n = ints.length;
+    public static byte[] shortsToBytes(short[] shorts) {
+        int n = shorts.length;
         byte[] bytes = new byte[n];
-        for (int i = 0; i < n; i++) bytes[i] = (byte) ints[i];
+        for (int i = 0; i < n; i++) bytes[i] = (byte) shorts[i];
         return bytes;
     }
 

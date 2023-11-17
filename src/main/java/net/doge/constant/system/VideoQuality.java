@@ -1,5 +1,7 @@
 package net.doge.constant.system;
 
+import net.doge.constant.lang.I18n;
+
 /**
  * @Author Doge
  * @Description 画质

@@ -5,8 +5,8 @@ import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.lang.I18n;
 import net.doge.constant.system.AudioQuality;
-import net.doge.constant.system.I18n;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.system.VideoQuality;
 import net.doge.constant.ui.BlurConstants;
@@ -117,6 +117,8 @@ public class SettingDialog extends AbstractTitledDialog {
 
     private CustomPanel autoDownloadLrcPanel = new CustomPanel();
     private CustomCheckBox autoDownloadLrcCheckBox = new CustomCheckBox(I18n.getText("autoDownloadLrc"));
+    //    private CustomPanel verbatimTimelinePanel = new CustomPanel();
+//    private CustomCheckBox verbatimTimelineCheckBox = new CustomCheckBox(I18n.getText("verbatimTimeline"));
     private CustomPanel musicDownPanel = new CustomPanel();
     private CustomLabel musicDownLabel = new CustomLabel(I18n.getText("musicDown"));
     private CustomTextField musicDownPathTextField = new CustomTextField(20);
@@ -341,6 +343,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorPanel.setLayout(fl);
         darkerFactorPanel.setLayout(fl);
         autoDownloadLrcPanel.setLayout(fl);
+//        verbatimTimelinePanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
         mvDownPanel.setLayout(fl);
         cachePanel.setLayout(fl);
@@ -374,6 +377,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorPanel.setMaximumSize(d);
         darkerFactorPanel.setMaximumSize(d);
         autoDownloadLrcPanel.setMaximumSize(d);
+//        verbatimTimelinePanel.setMaximumSize(d);
         musicDownPanel.setMaximumSize(d);
         mvDownPanel.setMaximumSize(d);
         cachePanel.setMaximumSize(d);
@@ -410,6 +414,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorLabel.setForeground(textColor);
         darkerFactorLabel.setForeground(textColor);
         autoDownloadLrcCheckBox.setForeground(textColor);
+//        verbatimTimelineCheckBox.setForeground(textColor);
         musicDownLabel.setForeground(textColor);
         mvDownLabel.setForeground(textColor);
         cacheLabel.setForeground(textColor);
@@ -721,6 +726,8 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextCheckBox.setSelectedIcon(selectedIcon);
         autoDownloadLrcCheckBox.setIcon(icon);
         autoDownloadLrcCheckBox.setSelectedIcon(selectedIcon);
+//        verbatimTimelineCheckBox.setIcon(icon);
+//        verbatimTimelineCheckBox.setSelectedIcon(selectedIcon);
         enableKeyCheckBox.setIcon(icon);
         enableKeyCheckBox.setSelectedIcon(selectedIcon);
 
@@ -746,6 +753,8 @@ public class SettingDialog extends AbstractTitledDialog {
         darkerFactorPanel.add(darkerFactorComboBox);
 
         autoDownloadLrcPanel.add(autoDownloadLrcCheckBox);
+
+//        verbatimTimelinePanel.add(verbatimTimelineCheckBox);
 
         musicDownPanel.add(musicDownLabel);
         musicDownPanel.add(musicDownPathTextField);
@@ -852,6 +861,8 @@ public class SettingDialog extends AbstractTitledDialog {
 
         downloadAndCacheContentBox.add(autoDownloadLrcPanel);
         downloadAndCacheContentBox.add(Box.createVerticalStrut(vGap));
+//        downloadAndCacheContentBox.add(verbatimTimelinePanel);
+//        downloadAndCacheContentBox.add(Box.createVerticalStrut(vGap));
         downloadAndCacheContentBox.add(musicDownPanel);
         downloadAndCacheContentBox.add(Box.createVerticalStrut(vGap));
         downloadAndCacheContentBox.add(mvDownPanel);
@@ -909,6 +920,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
         autoDownloadLrcCheckBox.setSelected(f.isAutoDownloadLrc);
+//        verbatimTimelineCheckBox.setSelected(LyricType.verbatimTimeline);
         musicDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath());
         mvDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
         cachePathTextField.setText(new File(SimplePath.CACHE_PATH).getAbsolutePath());
@@ -975,6 +987,8 @@ public class SettingDialog extends AbstractTitledDialog {
             f.doBlur();
 
         f.isAutoDownloadLrc = autoDownloadLrcCheckBox.isSelected();
+
+//        LyricType.verbatimTimeline = verbatimTimelineCheckBox.isSelected();
 
         SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
         SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + File.separator;

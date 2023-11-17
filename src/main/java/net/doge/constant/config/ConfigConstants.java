@@ -82,6 +82,8 @@ public class ConfigConstants {
     public static final String BLUR_TYPE = "blurType";
     // 是否自动下载歌词
     public static final String AUTO_DOWNLOAD_LYRIC = "autoDownloadLyric";
+    // 是否添加逐字时间轴
+    public static final String VERBATIM_TIMELINE = "verbatimTimeline";
     // 歌词偏移
     public static final String LYRIC_OFFSET = "lyricOffset";
     // 频谱透明度
@@ -127,10 +129,6 @@ public class ConfigConstants {
     public static final String MINIX = "miniX";
     // 迷你窗口 y
     public static final String MINIY = "miniY";
-    // 中文类型
-    public static final String CHINESE_TYPE = "chineseType";
-    // 日文类型
-    public static final String JAPANESE_TYPE = "japaneseType";
     // 歌词类型
     public static final String LYRIC_TYPE = "lyricType";
     // 排序顺序

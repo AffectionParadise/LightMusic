@@ -593,7 +593,7 @@ public class MusicSearchReq {
                         String artistId = SdkUtil.parseArtistId(songJson);
                         String albumName = songJson.getString("album");
                         String albumId = songJson.getString("albumId");
-                        Double duration = songJson.getDouble("duration");
+                        double duration = songJson.getDoubleValue("duration");
                         String mvId = songJson.getString("mvId");
 
                         NetMusicInfo musicInfo = new NetMusicInfo();

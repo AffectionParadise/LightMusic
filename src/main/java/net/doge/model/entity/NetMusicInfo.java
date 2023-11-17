@@ -164,8 +164,8 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         return Format.FLAC.equals(format);
     }
 
-    // 不带时间轴的歌词
-    public String getPlainLrc() {
+    // 歌词文件内容
+    public String getLrcFileText() {
         return hasLrc() ? lrc.replaceAll("<\\d+,\\d+>", "") : lrc;
     }
 
@@ -202,14 +202,6 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
 
     public String toSimpleLrcFileName() {
         return FileUtil.filterFileName(toSimpleString() + ".lrc");
-    }
-
-    public String toLrcTransFileName() {
-        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + SEPARATOR + "trans.lrc");
-    }
-
-    public String toSimpleLrcTransFileName() {
-        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + "trans.lrc");
     }
 
     public String toString() {

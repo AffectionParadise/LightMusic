@@ -431,7 +431,7 @@ public class StringUtil {
     }
 
     /**
-     * 用 padStr 填充字符串 str 到指定长度
+     * 用 padStr 左填充字符串 str 到指定长度
      *
      * @param str
      * @param len
@@ -440,5 +440,19 @@ public class StringUtil {
      */
     public static String padPre(String str, int len, String padStr) {
         return StrUtil.padPre(str, len, padStr);
+    }
+
+    /**
+     * 用 padStr 右填充字符 str 到指定长度
+     *
+     * @param str
+     * @param len
+     * @param padChar
+     * @return
+     */
+    public static String padAfter(String str, int len, char padChar) {
+        StringBuilder sb = new StringBuilder(str);
+        while (sb.length() < len) sb.append(padChar);
+        return sb.toString();
     }
 }

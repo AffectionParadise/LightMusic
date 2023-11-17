@@ -1,6 +1,6 @@
 package net.doge.constant.window;
 
-import net.doge.constant.system.I18n;
+import net.doge.constant.lang.I18n;
 
 public class WindowSize {
     public static final int[][] DIMENSIONS = {

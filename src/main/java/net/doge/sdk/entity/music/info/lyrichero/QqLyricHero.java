@@ -44,14 +44,6 @@ public class QqLyricHero {
 //        musicInfo.setLrc(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(lyric)));
 //        musicInfo.setTrans(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(trans)));
 
-        // 先根据 mid 获取 id
-        String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                .executeAsync()
-                .body();
-        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-        id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
-
 //        // 搜索 qrc
 //        String lrcSearchBody = HttpRequest.get(String.format(SEARCH_QRC_QQ_API, StringUtil.urlEncodeAll(name), StringUtil.urlEncodeAll(artist)))
 //                .executeAsync()
@@ -84,6 +76,14 @@ public class QqLyricHero {
 //        JSONObject data = JSONObject.parseObject(lrcBody).getJSONObject("req").getJSONObject("data");
 //        String qrcStr = QrcParser.getInstance().parse(data.getString("lyric"));
 
+        // 先根据 mid 获取 id
+        String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
+                .executeAsync()
+                .body();
+        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+        id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
+        // 获取歌词
         String lrcBody = HttpRequest.get(String.format(LYRIC_QQ_API, id))
                 .executeAsync()
                 .body();
@@ -91,20 +91,16 @@ public class QqLyricHero {
         String lrcHex = doc.select("content").text();
         String transHex = doc.select("contentts").text();
         String romaHex = doc.select("contentroma").text();
-
         QrcDecoder qrcDecoder = QrcDecoder.getInstance();
-
         // qrc
         String qrcXml = qrcDecoder.decode(lrcHex);
         String lrc = parseQrcXml(qrcXml);
         musicInfo.setLrc(lrc);
-
         // 翻译
         if (StringUtil.notEmpty(transHex)) {
             String trans = qrcDecoder.decode(transHex);
             musicInfo.setTrans(trans);
         }
-
         // 罗马音
         if (StringUtil.notEmpty(romaHex)) {
             String romaXml = qrcDecoder.decode(romaHex);
