@@ -47,11 +47,11 @@ public class RankingSearchReq {
     private final String GET_RANKING_QQ_API = "https://u.y.qq.com/cgi-bin/musicu.fcg?_=1577086820633&data={%22comm%22:{%22g_tk%22:5381,%22uin%22:123456," +
             "%22format%22:%22json%22,%22inCharset%22:%22utf-8%22,%22outCharset%22:%22utf-8%22,%22notice%22:0,%22platform%22:%22h5%22,%22needNewCode%22:1," +
             "%22ct%22:23,%22cv%22:0},%22topList%22:{%22module%22:%22musicToplist.ToplistInfoServer%22,%22method%22:%22GetAll%22,%22param%22:{}}}";
-    // 获取榜单 API 2 (QQ)
+    // 获取榜单 API (QQ)
     private final String GET_RANKING_QQ_API_2
             = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5";
+    // 获取榜单 API (酷我)
     private final String GET_RANKING_KW_API = "http://www.kuwo.cn/api/www/bang/bang/bangMenu?&httpsStatus=1";
-    // 获取榜单 API 2 (酷我)
     private final String GET_RANKING_KW_API_2 = "http://qukudata.kuwo.cn/q.k?op=query&cont=tree&node=2&pn=0&rn=1000&fmt=json&level=2";
     // 获取推荐榜单 API (酷我)
 //    private final String GET_REC_RANKING_KW_API = "http://www.kuwo.cn/api/www/bang/index/bangList?&httpsStatus=1";

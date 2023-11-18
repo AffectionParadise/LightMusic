@@ -745,10 +745,6 @@ public class MainFrame extends JFrame {
     private List<Integer> shuffleList = new LinkedList<>();
     // 当前随机播放索引
     private int shuffleIndex;
-    // 当前中文歌词类型
-    private int currChineseType;
-    // 当前日文歌词类型
-    private int currJapaneseType;
     // 当前歌词类型
     private int currLrcType;
     // 歌词显示比率(源)
@@ -3895,10 +3891,6 @@ public class MainFrame extends JFrame {
         // 存入迷你窗口位置
         config.put(ConfigConstants.MINIX, miniX);
         config.put(ConfigConstants.MINIY, miniY);
-//        // 存入中文类型
-//        config.put(ConfigConstants.CHINESE_TYPE, currChineseType);
-//        // 存入日文类型
-//        config.put(ConfigConstants.JAPANESE_TYPE, currJapaneseType);
         // 存入歌词类型
         config.put(ConfigConstants.LYRIC_TYPE, currLrcType);
         // 存入排序顺序
@@ -20436,7 +20428,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = blurPopupMenu.getHeight();
-                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 239 : h));
+                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 261 : h));
             }
         });
         // 音效按钮
@@ -20758,7 +20750,9 @@ public class MainFrame extends JFrame {
         clearLrc();
 
         LrcData lrcData = null;
-        boolean isFile = musicInfo == null, isBadFormat = false, noLrc = false;
+        final int BAD_FORMAT = 0, NO_LRC = 1;
+        int state = -1;
+        boolean isFile = musicInfo == null;
 
         // 从文件读取歌词
         if (isFile) {
@@ -20766,16 +20760,17 @@ public class MainFrame extends JFrame {
             if (lrcFile.exists()) {
                 // 翻译同原歌词
                 lrcData = new LrcData(lrcFile);
-                if (lrcData.isEmpty()) statements = new LrcData(lrcFile, isBadFormat = true).getStatements();
-                else statements = lrcData.getStatements();
+                if (lrcData.isEmpty()) {
+                    statements = new LrcData(lrcFile, true).getStatements();
+                    state = BAD_FORMAT;
+                } else statements = lrcData.getStatements();
                 // 繁体转换
                 if (lyricType == LyricType.TRADITIONAL_CN)
                     for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
                     // 罗马音转换
                 else if (lyricType == LyricType.ROMA)
                     for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
-            } else noLrc = true;
-            lrcStr = null;
+            } else state = NO_LRC;
         }
         // 在线音乐歌词
         else {
@@ -20786,21 +20781,25 @@ public class MainFrame extends JFrame {
                     if (musicInfo.hasLrc()) {
                         String lrc = musicInfo.getLrc();
                         lrcData = new LrcData(lrc);
-                        if (lrcData.isEmpty()) statements = new LrcData(lrc, isBadFormat = true).getStatements();
-                        else statements = lrcData.getStatements();
+                        if (lrcData.isEmpty()) {
+                            statements = new LrcData(lrc, true).getStatements();
+                            state = BAD_FORMAT;
+                        } else statements = lrcData.getStatements();
                         // 繁体转换
                         if (lyricType == LyricType.TRADITIONAL_CN)
                             for (Statement stmt : statements)
                                 stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
-                    } else noLrc = true;
+                    } else state = NO_LRC;
                     break;
                 // 翻译
                 case LyricType.TRANSLATION:
                     if (musicInfo.hasTrans()) {
                         String trans = musicInfo.getTrans();
                         lrcData = new LrcData(trans);
-                        if (lrcData.isEmpty()) statements = new LrcData(trans, isBadFormat = true).getStatements();
-                        else statements = lrcData.getStatements();
+                        if (lrcData.isEmpty()) {
+                            statements = new LrcData(trans, true).getStatements();
+                            state = BAD_FORMAT;
+                        } else statements = lrcData.getStatements();
                     }
                     // 无翻译时，加载原歌词
                     else {
@@ -20813,34 +20812,39 @@ public class MainFrame extends JFrame {
                     if (musicInfo.hasRoma()) {
                         String roma = musicInfo.getRoma();
                         lrcData = new LrcData(roma);
-                        if (lrcData.isEmpty()) statements = new LrcData(roma, isBadFormat = true).getStatements();
-                        else statements = lrcData.getStatements();
+                        if (lrcData.isEmpty()) {
+                            statements = new LrcData(roma, true).getStatements();
+                            state = BAD_FORMAT;
+                        } else statements = lrcData.getStatements();
                     }
                     // 无罗马音时，使用原歌词进行转换
                     else if (musicInfo.hasLrc()) {
                         String lrc = musicInfo.getLrc();
                         lrcData = new LrcData(lrc);
-                        if (lrcData.isEmpty()) statements = new LrcData(lrc, isBadFormat = true).getStatements();
-                        else statements = lrcData.getStatements();
+                        if (lrcData.isEmpty()) {
+                            statements = new LrcData(lrc, true).getStatements();
+                            state = BAD_FORMAT;
+                        } else statements = lrcData.getStatements();
                         for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
-                    } else noLrc = true;
+                    } else state = NO_LRC;
                     break;
             }
-            lrcStr = lrcData == null ? null : lrcData.getLrcStr();
         }
+        lrcStr = lrcData == null ? "" : lrcData.getLrcStr();
+        if (StringUtil.isEmpty(StringUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
         // 添加空白充数
         Statement empty = new Statement(0, " ");
         for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
-        if (isBadFormat) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
-        else if (noLrc) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
+        if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
+        else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
         for (Statement stmt : statements) {
             lrcListModel.addElement(empty);
             lrcListModel.addElement(stmt);
         }
         for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
         // 标记为无歌词 / 不支持滚动
-        nextLrc = isBadFormat ? NextLrc.BAD_FORMAT : noLrc ? NextLrc.NOT_EXISTS : 0;
-        row = isBadFormat || noLrc ? LRC_INDEX : LRC_INDEX - 1;
+        nextLrc = state == BAD_FORMAT ? NextLrc.BAD_FORMAT : state == NO_LRC ? NextLrc.NOT_EXISTS : 0;
+        row = state == BAD_FORMAT || state == NO_LRC ? LRC_INDEX : LRC_INDEX - 1;
 
         originalRatio = 0;
         lrcScrollPane.setVValue(currScrollVal = 0);

@@ -1,7 +1,6 @@
 package net.doge.ui.component.lyric;
 
 import lombok.Data;
-import lombok.Getter;
 import net.doge.constant.ui.Fonts;
 import net.doge.model.lyric.Statement;
 import net.doge.util.collection.ArrayUtil;
@@ -28,7 +27,6 @@ public class StringTwoColor {
     private double ratio;
     private int widthThreshold;
     // 是否逐字
-    @Getter
     private boolean isByWord;
     private BufferedImage buffImg;
     private BufferedImage buffImg1;
@@ -363,11 +361,9 @@ public class StringTwoColor {
 
     // 清除图像区域为透明
     private void clearRect(BufferedImage img, int x, int y, int width, int height) {
-        for (int i = x, w = x + width; i < w; i++) {
-            for (int j = y, h = y + height; j < h; j++) {
+        for (int i = x, w = x + width; i < w; i++)
+            for (int j = y, h = y + height; j < h; j++)
                 img.setRGB(i, j, 0);
-            }
-        }
     }
 
     // 裁剪图片使之宽度不超过阈值

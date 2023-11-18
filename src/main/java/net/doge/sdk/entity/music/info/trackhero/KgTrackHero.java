@@ -1,4 +1,4 @@
-//package net.doge.sdk.entity.music.info.tracker;
+//package net.doge.sdk.entity.music.info.trackhero;
 //
 //import cn.hutool.http.Header;
 //import cn.hutool.http.HttpRequest;
@@ -12,13 +12,24 @@
 //import java.util.*;
 //
 //public class KgTrackHero {
-//    private final String pidversec = "57ae12eb6890223e355ccfcb74edf70d";
-//    private final String clientver = "12029";
+//    private static KgTrackHero instance;
+//
+//    private KgTrackHero() {
+//    }
+//
+//    public static KgTrackHero getInstance() {
+//        if (instance == null) instance = new KgTrackHero();
+//        return instance;
+//    }
+//
 //    private final String appid = "1005";
-//    private final String mid = "114514";
-//    private final String userid = "0";
-//    private final String token = "";
+//    private final String clientver = "12029";
+//    private final String pidversec = "57ae12eb6890223e355ccfcb74edf70d";
 //    private final String signKey = "OIlwieks28dk2k092lksi2UIkp";
+//    // 会员信息
+//    private final String token = "";
+//    private final String userid = "0";
+//    private final String mid = "114514";
 //
 //    /**
 //     * 获取酷狗歌曲 url
@@ -68,7 +79,7 @@
 //        paramsMap.put("behavior", "play");
 //        paramsMap.put("clienttime", System.currentTimeMillis() / 1000);
 //        paramsMap.put("pid", 2);
-//        paramsMap.put("key", CryptoUtil.hashMD5(thash.toLowerCase() + pidversec + appid + mid + userid));
+//        paramsMap.put("key", CryptoUtil.md5(thash.toLowerCase() + pidversec + appid + mid + userid));
 //        paramsMap.put("dfid", "-");
 //        paramsMap.put("pidversion", 3001);
 //
@@ -89,10 +100,6 @@
 //        return "";
 //    }
 //
-//    public static void main(String[] args) {
-//        new net.doge.sdk.entity.music.info.tracker.KgTrackHero().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k");
-//    }
-//
 //    private String buildRequestParams(Map<String, Object> paramsMap) {
 //        StringJoiner sj = new StringJoiner("&");
 //        for (String k : paramsMap.keySet()) sj.add(k + "=" + paramsMap.get(k));
@@ -108,6 +115,10 @@
 //    private String buildSign(Map<String, Object> paramsMap) {
 ////        Map<String, Object> paramsTreeMap = new TreeMap<>(paramsMap);
 //        String sign = buildSignParams(paramsMap);
-//        return CryptoUtil.hashMD5(signKey + sign + signKey);
+//        return CryptoUtil.md5(signKey + sign + signKey);
+//    }
+//
+//    public static void main(String[] args) {
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k"));
 //    }
 //}

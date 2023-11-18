@@ -414,6 +414,16 @@ public class StringUtil {
     }
 
     /**
+     * 去除歌词字符串中无用的字符
+     *
+     * @param lrcStr
+     * @return
+     */
+    public static String cleanLrcStr(String lrcStr) {
+        return StringUtil.trimStringWith(lrcStr.replaceAll("[\t\r\n]", ""), ' ', ' ', '　');
+    }
+
+    /**
      * 去除字符串前后指定字符
      *
      * @param str

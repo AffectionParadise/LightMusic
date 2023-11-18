@@ -7,6 +7,7 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.SimplePath;
+import net.doge.constant.ui.ImageConstants;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.NeteaseReqOptEnum;
@@ -41,7 +42,7 @@ public class MusicInfoReq {
         if (instance == null) instance = new MusicInfoReq();
         return instance;
     }
-    
+
     // 歌曲信息 API (单首)
     private final String SINGLE_SONG_DETAIL_API = "https://music.163.com/api/v3/song/detail";
     // 节目信息 API
@@ -208,9 +209,9 @@ public class MusicInfoReq {
                     // QQ 的歌曲专辑图片需要额外请求接口获得！
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(String.format(SINGLE_SONG_IMG_QQ_API, album.getString("mid")));
                     // 有的歌曲没有专辑，先找备份专辑图片，如果还没有就将歌手的图片作为封面
-                    if (albumImage == null)
+                    if (albumImage == ImageConstants.DEFAULT_IMG)
                         albumImage = SdkUtil.getImageFromUrl(String.format(SINGLE_SONG_IMG_QQ_API, album.getString("pmid")));
-                    if (albumImage == null)
+                    if (albumImage == ImageConstants.DEFAULT_IMG)
                         albumImage = SdkUtil.getImageFromUrl(String.format(ARTIST_IMG_QQ_API, SdkUtil.parseArtistId(trackInfo)));
                     FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());

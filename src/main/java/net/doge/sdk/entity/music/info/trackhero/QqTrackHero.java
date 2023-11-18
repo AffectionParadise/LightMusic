@@ -54,6 +54,6 @@ public class QqTrackHero {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(new QqTrackUrlReq().getTrackUrl("0039MnYb0qxYhV", "sq"));
+//        System.out.println(getInstance().getTrackUrl("0039MnYb0qxYhV", "sq"));
 //    }
 }

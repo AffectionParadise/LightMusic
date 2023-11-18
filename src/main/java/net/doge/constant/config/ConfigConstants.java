@@ -82,8 +82,8 @@ public class ConfigConstants {
     public static final String BLUR_TYPE = "blurType";
     // 是否自动下载歌词
     public static final String AUTO_DOWNLOAD_LYRIC = "autoDownloadLyric";
-    // 是否添加逐字时间轴
-    public static final String VERBATIM_TIMELINE = "verbatimTimeline";
+    //    // 是否添加逐字时间轴
+//    public static final String VERBATIM_TIMELINE = "verbatimTimeline";
     // 歌词偏移
     public static final String LYRIC_OFFSET = "lyricOffset";
     // 频谱透明度

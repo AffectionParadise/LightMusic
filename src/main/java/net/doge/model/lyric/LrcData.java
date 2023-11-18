@@ -46,12 +46,6 @@ public class LrcData {
         initData(lrcStr, badFormat);
     }
 
-    // 处理一行数据中的字符
-    private String handleLine(String line) {
-        // 把 tab 先移除，去掉两边空格(包含特殊空格)
-        return StringUtil.trimStringWith(line.replace("\t", ""), ' ', ' ', '　');
-    }
-
     // 初始化歌词数据
     private void initData(String lrcStr, boolean badFormat) {
         this.lrcStr = lrcStr.replaceAll("<\\d+,\\d+>", "");
@@ -59,7 +53,7 @@ public class LrcData {
         // 不支持滚动的歌词，直接读取整行作为歌词
         if (badFormat) {
             for (String line : lrcArray) {
-                line = handleLine(line);
+                line = StringUtil.cleanLrcStr(line);
                 if (StringUtil.isEmpty(line)) continue;
                 statements.add(new Statement(line));
             }
@@ -67,7 +61,7 @@ public class LrcData {
         // 解析完整的歌词
         else {
             for (String line : lrcArray) {
-                line = handleLine(line);
+                line = StringUtil.cleanLrcStr(line);
                 if (StringUtil.isEmpty(line)) continue;
 
                 // 解析 offset
