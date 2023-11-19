@@ -23591,7 +23591,7 @@ public class MainFrame extends JFrame {
         return true;
     }
 
-    public static void main(String[] args) {
+    public static void launch() {
         GlobalExecutors.requestExecutor.execute(() -> {
             if (validateData()) return;
             System.exit(-1);
