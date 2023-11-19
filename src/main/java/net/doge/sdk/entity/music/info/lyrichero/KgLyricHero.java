@@ -94,10 +94,10 @@ public class KgLyricHero {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0, s = romaArray.size(); i < s; i++) {
                     JSONArray array = romaArray.getJSONArray(i);
-                    sb.append(SdkUtil.joinString(array, ""));
+                    sb.append(SdkUtil.joinString(array, "").trim());
                     sb.append("\n");
                 }
-                musicInfo.setRoma(StringUtil.shortenBlank(sb.toString()).trim());
+                musicInfo.setRoma(StringUtil.shortenBlank(sb.toString()));
             }
         }
 

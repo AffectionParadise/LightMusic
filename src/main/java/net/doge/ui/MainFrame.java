@@ -2368,7 +2368,7 @@ public class MainFrame extends JFrame {
     private ExecutorService spectrumExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService blurExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService playExecutor = Executors.newSingleThreadExecutor();
-    private ExecutorService lrcExecutor = Executors.newSingleThreadExecutor();
+    //    private ExecutorService lrcExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
 
     // 其他需要多线程的操作提交给该线程池
@@ -20094,19 +20094,19 @@ public class MainFrame extends JFrame {
         });
         final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
-            lrcExecutor.execute(() -> {
-                if (nextLrc >= 0) {
-                    double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
-                    double or = originalRatio;
-                    if (currRatio < or) ratio = (or - currRatio) / LRC_PIECE + currRatio;
-                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
-                    desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
-                } else {
-                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
-                    desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
-                }
-                if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
-            });
+//            lrcExecutor.execute(() -> {
+            if (nextLrc >= 0) {
+                double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
+                double or = originalRatio;
+                if (currRatio < or) ratio = (or - currRatio) / LRC_PIECE + currRatio;
+                ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
+                desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
+            } else {
+                ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
+                desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
+            }
+            if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
+//            });
             if (lrcScrollAnimation) {
                 // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
 //                lrcScrollExecutor.execute(() -> {
@@ -20986,19 +20986,7 @@ public class MainFrame extends JFrame {
                 // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
                 if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() - lrcOffset)
                     originalRatio = 1;
-                else {
-                    StringTwoColor stc = desktopLyricDialog.getStc();
-                    double tempRatio;
-                    if (stc.isByWord()) {
-                        tempRatio = stc.calcRatio(currTimeSeconds, statements.get(nextLrc - 1).getTime() - lrcOffset);
-                    } else {
-                        tempRatio = nextLrc > 0 ? (currTimeSeconds - statements.get(nextLrc - 1).getTime() + lrcOffset) /
-                                ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
-                                        : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
-                                        : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
-                    }
-                    originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
-                }
+                else updateOriginalRatio(currTimeSeconds);
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
 
             }
@@ -21027,6 +21015,24 @@ public class MainFrame extends JFrame {
                     break;
             }
         });
+    }
+
+    // 更新歌词比率
+    private void updateOriginalRatio(double t) {
+        StringTwoColor stc = desktopLyricDialog.getStc();
+        double tempRatio = 0;
+        if (nextLrc > 0) {
+            if (stc.isByWord()) {
+                tempRatio = stc.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
+            } else {
+                Statement ls = statements.get(nextLrc - 1), ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
+                tempRatio = (t - ls.getTime() + lrcOffset) /
+                        ((ls.hasEndTime() ? ls.getEndTime() - lrcOffset
+                                : (ns != null ? ns.getTime() - lrcOffset
+                                : player.getDurationSeconds())) - ls.getTime() + lrcOffset);
+            }
+        }
+        originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
     }
 
     // 播放载入的歌曲
@@ -23153,17 +23159,7 @@ public class MainFrame extends JFrame {
             }
             LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
             renderer.setRow(row);
-            StringTwoColor stc = desktopLyricDialog.getStc();
-            double tempRatio;
-            if (stc.isByWord()) {
-                tempRatio = stc.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
-            } else {
-                tempRatio = nextLrc > 0 ? (t - statements.get(nextLrc - 1).getTime() + lrcOffset) /
-                        ((statements.get(nextLrc - 1).hasEndTime() ? statements.get(nextLrc - 1).getEndTime() - lrcOffset
-                                : (nextLrc < statements.size() ? statements.get(nextLrc).getTime() - lrcOffset
-                                : player.getDurationSeconds())) - statements.get(nextLrc - 1).getTime() + lrcOffset) : 0;
-            }
-            originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
+            updateOriginalRatio(t);
             break;
         }
     }

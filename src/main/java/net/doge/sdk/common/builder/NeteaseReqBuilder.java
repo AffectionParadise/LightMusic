@@ -68,7 +68,7 @@ public class NeteaseReqBuilder {
                         CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
                         anonymousToken
                 ));
-                body = NeteaseCrypto.weapi(data);
+                body = NeteaseCrypto.getInstance().weapi(data);
                 url = url.replaceFirst("\\w*api", "weapi");
                 break;
             case NeteaseReqOptConstants.EAPI:
@@ -81,7 +81,7 @@ public class NeteaseReqBuilder {
                         requestId,
                         anonymousToken
                 ));
-                body = NeteaseCrypto.eapi(options.get(NeteaseReqOptEnum.PATH), data);
+                body = NeteaseCrypto.getInstance().eapi(options.get(NeteaseReqOptEnum.PATH), data);
                 url = url.replaceFirst("\\w*api", "eapi");
                 break;
         }

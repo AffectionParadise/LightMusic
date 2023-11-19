@@ -6,72 +6,82 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class BvAvConverter {
-    public static final Map<Character, String> charMap;
-    public static final BigInteger base = new BigInteger("58");
-    public static final BigInteger subV = new BigInteger("100618342136696320");
-    public static final BigInteger xorV = new BigInteger("1010100100111011001100100100", 2);
-    public static final int[] power = {6, 2, 4, 8, 5, 9, 3, 7, 1, 0};
+    private static BvAvConverter instance;
 
-    static {
-        charMap = new HashMap<>();
-        charMap.put('1', "13");
-        charMap.put('2', "12");
-        charMap.put('3', "46");
-        charMap.put('4', "31");
-        charMap.put('5', "43");
-        charMap.put('6', "18");
-        charMap.put('7', "40");
-        charMap.put('8', "28");
-        charMap.put('9', "5");
-        charMap.put('A', "54");
-        charMap.put('B', "20");
-        charMap.put('C', "15");
-        charMap.put('D', "8");
-        charMap.put('E', "39");
-        charMap.put('F', "57");
-        charMap.put('G', "45");
-        charMap.put('H', "36");
-        charMap.put('J', "38");
-        charMap.put('K', "51");
-        charMap.put('L', "42");
-        charMap.put('M', "49");
-        charMap.put('N', "52");
-        charMap.put('P', "53");
-        charMap.put('Q', "7");
-        charMap.put('R', "4");
-        charMap.put('S', "9");
-        charMap.put('T', "50");
-        charMap.put('U', "10");
-        charMap.put('V', "44");
-        charMap.put('W', "34");
-        charMap.put('X', "6");
-        charMap.put('Y', "25");
-        charMap.put('Z', "1");
-        charMap.put('a', "26");
-        charMap.put('b', "29");
-        charMap.put('c', "56");
-        charMap.put('d', "3");
-        charMap.put('e', "24");
-        charMap.put('f', "0");
-        charMap.put('g', "47");
-        charMap.put('h', "27");
-        charMap.put('i', "22");
-        charMap.put('j', "41");
-        charMap.put('k', "16");
-        charMap.put('m', "11");
-        charMap.put('n', "37");
-        charMap.put('o', "2");
-        charMap.put('p', "35");
-        charMap.put('q', "21");
-        charMap.put('r', "17");
-        charMap.put('s', "33");
-        charMap.put('t', "30");
-        charMap.put('u', "48");
-        charMap.put('v', "23");
-        charMap.put('w', "55");
-        charMap.put('x', "32");
-        charMap.put('y', "14");
-        charMap.put('z', "19");
+    private BvAvConverter() {
+        initCharMap();
+    }
+
+    public static BvAvConverter getInstance() {
+        if (instance == null) instance = new BvAvConverter();
+        return instance;
+    }
+
+    public final Map<Character, String> CHAR_MAP = new HashMap<>();
+    public final BigInteger BASE = new BigInteger("58");
+    public final BigInteger SUB_V = new BigInteger("100618342136696320");
+    public final BigInteger XOR_V = new BigInteger("1010100100111011001100100100", 2);
+    public final int[] POWER = {6, 2, 4, 8, 5, 9, 3, 7, 1, 0};
+
+    private void initCharMap() {
+        CHAR_MAP.put('1', "13");
+        CHAR_MAP.put('2', "12");
+        CHAR_MAP.put('3', "46");
+        CHAR_MAP.put('4', "31");
+        CHAR_MAP.put('5', "43");
+        CHAR_MAP.put('6', "18");
+        CHAR_MAP.put('7', "40");
+        CHAR_MAP.put('8', "28");
+        CHAR_MAP.put('9', "5");
+        CHAR_MAP.put('A', "54");
+        CHAR_MAP.put('B', "20");
+        CHAR_MAP.put('C', "15");
+        CHAR_MAP.put('D', "8");
+        CHAR_MAP.put('E', "39");
+        CHAR_MAP.put('F', "57");
+        CHAR_MAP.put('G', "45");
+        CHAR_MAP.put('H', "36");
+        CHAR_MAP.put('J', "38");
+        CHAR_MAP.put('K', "51");
+        CHAR_MAP.put('L', "42");
+        CHAR_MAP.put('M', "49");
+        CHAR_MAP.put('N', "52");
+        CHAR_MAP.put('P', "53");
+        CHAR_MAP.put('Q', "7");
+        CHAR_MAP.put('R', "4");
+        CHAR_MAP.put('S', "9");
+        CHAR_MAP.put('T', "50");
+        CHAR_MAP.put('U', "10");
+        CHAR_MAP.put('V', "44");
+        CHAR_MAP.put('W', "34");
+        CHAR_MAP.put('X', "6");
+        CHAR_MAP.put('Y', "25");
+        CHAR_MAP.put('Z', "1");
+        CHAR_MAP.put('a', "26");
+        CHAR_MAP.put('b', "29");
+        CHAR_MAP.put('c', "56");
+        CHAR_MAP.put('d', "3");
+        CHAR_MAP.put('e', "24");
+        CHAR_MAP.put('f', "0");
+        CHAR_MAP.put('g', "47");
+        CHAR_MAP.put('h', "27");
+        CHAR_MAP.put('i', "22");
+        CHAR_MAP.put('j', "41");
+        CHAR_MAP.put('k', "16");
+        CHAR_MAP.put('m', "11");
+        CHAR_MAP.put('n', "37");
+        CHAR_MAP.put('o', "2");
+        CHAR_MAP.put('p', "35");
+        CHAR_MAP.put('q', "21");
+        CHAR_MAP.put('r', "17");
+        CHAR_MAP.put('s', "33");
+        CHAR_MAP.put('t', "30");
+        CHAR_MAP.put('u', "48");
+        CHAR_MAP.put('v', "23");
+        CHAR_MAP.put('w', "55");
+        CHAR_MAP.put('x', "32");
+        CHAR_MAP.put('y', "14");
+        CHAR_MAP.put('z', "19");
     }
 
     /**
@@ -80,16 +90,16 @@ public class BvAvConverter {
      * @param bv
      * @return
      */
-    public static String convertBv2Av(String bv) {
+    public String convertBv2Av(String bv) {
         bv = bv.substring(2);
         BigInteger temp = new BigInteger("0");
-        for (int i = 0; i < power.length; i++) {
-            BigInteger part = new BigInteger(charMap.get(bv.charAt(i)));
-            part = part.multiply(base.pow(power[i]));
+        for (int i = 0; i < POWER.length; i++) {
+            BigInteger part = new BigInteger(CHAR_MAP.get(bv.charAt(i)));
+            part = part.multiply(BASE.pow(POWER[i]));
             temp = temp.add(part);
         }
-        temp = temp.subtract(subV);
-        temp = temp.xor(xorV);
+        temp = temp.subtract(SUB_V);
+        temp = temp.xor(XOR_V);
         return temp.toString();
     }
 
@@ -99,15 +109,15 @@ public class BvAvConverter {
      * @param av
      * @return
      */
-    public static String convertAv2Bv(String av) {
+    public String convertAv2Bv(String av) {
         av = av.substring(2);
         BigInteger temp = new BigInteger(av);
-        temp = temp.xor(xorV);
-        temp = temp.add(subV);
+        temp = temp.xor(XOR_V);
+        temp = temp.add(SUB_V);
         StringBuilder res = new StringBuilder("bv");
-        for (int p : power) {
-            String t = temp.divide(base.pow(p)).mod(base).toString();
-            for (Entry<Character, String> entry : charMap.entrySet()) {
+        for (int p : POWER) {
+            String t = temp.divide(BASE.pow(p)).mod(BASE).toString();
+            for (Entry<Character, String> entry : CHAR_MAP.entrySet()) {
                 if (entry.getValue().equals(t)) res.append(entry.getKey());
             }
         }

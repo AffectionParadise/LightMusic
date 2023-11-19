@@ -42,7 +42,7 @@ public class CommentReq {
         if (instance == null) instance = new CommentReq();
         return instance;
     }
-    
+
     // 获取评论 API
     private final String GET_COMMENTS_API = "https://music.163.com/api/v2/resource/comments";
     // 获取评论 API (酷狗)
@@ -1140,7 +1140,7 @@ public class CommentReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             int lim = Math.min(20, limit);
-            String url = resource instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
+            String url = resource instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.getInstance().convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
                     : String.format(GET_SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, lim);
             String commentInfoBody = HttpRequest.get(url)
                     .cookie(SdkCommon.BI_COOKIE)
