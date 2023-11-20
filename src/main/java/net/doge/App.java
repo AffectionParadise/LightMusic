@@ -7,7 +7,7 @@ import net.doge.ui.MainFrame;
  * @Description 启动类
  * @Date 2020/12/12
  */
-public class Launcher {
+public class App {
     public static void main(String[] args) {
         MainFrame.launch();
     }
