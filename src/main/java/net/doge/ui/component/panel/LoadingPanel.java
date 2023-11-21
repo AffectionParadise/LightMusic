@@ -260,19 +260,19 @@ public class LoadingPanel extends JComponent implements MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        // ...
-        LoadingPanel glasspane = new LoadingPanel((MainFrame) null);
-
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        glasspane.setBounds(100, 100, (dimension.width) / 2, (dimension.height) / 2);
-        frame.setGlassPane(glasspane);
-        glasspane.setText("Loading data, Please wait ...");
-        glasspane.start();//开始动画加载效果
-        frame.setVisible(true);
-
-        // Later, to disable,在合适的地方关闭动画效果
-//      glasspane.stop();
-    }
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame();
+//        // ...
+//        LoadingPanel glasspane = new LoadingPanel((MainFrame) null);
+//
+//        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+//        glasspane.setBounds(100, 100, (dimension.width) / 2, (dimension.height) / 2);
+//        frame.setGlassPane(glasspane);
+//        glasspane.setText("Loading data, Please wait ...");
+//        glasspane.start();//开始动画加载效果
+//        frame.setVisible(true);
+//
+//        // Later, to disable,在合适的地方关闭动画效果
+////      glasspane.stop();
+//    }
 }

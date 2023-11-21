@@ -136,6 +136,9 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class MainFrame extends JFrame {
+    private MainFrame() {
+    }
+
     private final MainFrame THIS = this;
     public final String TITLE = I18n.getText("title");
     // 窗口宽高
@@ -2368,7 +2371,7 @@ public class MainFrame extends JFrame {
     private ExecutorService spectrumExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService blurExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService playExecutor = Executors.newSingleThreadExecutor();
-    //    private ExecutorService lrcExecutor = Executors.newSingleThreadExecutor();
+    private ExecutorService lrcExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
 
     // 其他需要多线程的操作提交给该线程池
@@ -20094,19 +20097,19 @@ public class MainFrame extends JFrame {
         });
         final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
-//            lrcExecutor.execute(() -> {
-            if (nextLrc >= 0) {
-                double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
-                double or = originalRatio;
-                if (currRatio < or) ratio = (or - currRatio) / LRC_PIECE + currRatio;
-                ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
-                desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
-            } else {
-                ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
-                desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
-            }
-            if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
-//            });
+            lrcExecutor.execute(() -> {
+                if (nextLrc >= 0) {
+                    double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
+                    double or = originalRatio;
+                    if (currRatio < or) ratio = (or - currRatio) / LRC_PIECE + currRatio;
+                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
+                    desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
+                } else {
+                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
+                    desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
+                }
+                if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
+            });
             if (lrcScrollAnimation) {
                 // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
 //                lrcScrollExecutor.execute(() -> {

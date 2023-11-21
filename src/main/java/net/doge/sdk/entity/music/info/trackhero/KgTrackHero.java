@@ -53,17 +53,17 @@
 //
 //        String body = HttpRequest.get("https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=" + sid).executeAsync().body();
 //        JSONObject bodyJson = JSONObject.parseObject(body);
-//        String thash = bodyJson.getJSONObject("extra").getString(qualityHashMap.get(quality));
+//        String thash = bodyJson.getJSONObject("extra").getString(qualityHashMap.get(quality)).toLowerCase();
 //        String albumId = bodyJson.getString("albumid");
 //        String albumAudioId = bodyJson.getString("album_audio_id");
-//        if (StringUtil.isEmpty(albumId)) albumId = "0";
-//        if (StringUtil.isEmpty(albumAudioId)) albumAudioId = "0";
+//        if (StringUtil.isEmpty(albumId)) albumId = "";
+//        if (StringUtil.isEmpty(albumAudioId)) albumAudioId = "";
 //
 //        Map<String, Object> paramsMap = new TreeMap<>();
 //        paramsMap.put("album_id", albumId);
 //        paramsMap.put("userid", userid);
 //        paramsMap.put("area_code", 1);
-//        paramsMap.put("hash", thash.toLowerCase());
+//        paramsMap.put("hash", thash);
 //        paramsMap.put("module", "");
 //        paramsMap.put("mid", mid);
 //        paramsMap.put("appid", appid);
@@ -79,7 +79,7 @@
 //        paramsMap.put("behavior", "play");
 //        paramsMap.put("clienttime", System.currentTimeMillis() / 1000);
 //        paramsMap.put("pid", 2);
-//        paramsMap.put("key", CryptoUtil.md5(thash.toLowerCase() + pidversec + appid + mid + userid));
+//        paramsMap.put("key", CryptoUtil.md5(thash + pidversec + appid + mid + userid));
 //        paramsMap.put("dfid", "-");
 //        paramsMap.put("pidversion", 3001);
 //
@@ -119,6 +119,6 @@
 //    }
 //
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k"));
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "320k"));
 //    }
 //}

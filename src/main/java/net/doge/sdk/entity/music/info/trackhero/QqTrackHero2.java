@@ -33,7 +33,7 @@
 //     * 获取 QQ 音乐歌曲链接
 //     *
 //     * @param mid     歌曲 id
-//     * @param quality 品质(128k 320k flac flac24bit)
+//     * @param quality 品质(128k 320k flac flac24bit dolby master)
 //     * @return
 //     */
 //    public String getTrackUrl(String mid, String quality) {
@@ -42,12 +42,16 @@
 //        hMap.put("320k", "M800");
 //        hMap.put("flac", "F000");
 //        hMap.put("flac24bit", "RS01");
+//        hMap.put("dolby", "Q000");
+//        hMap.put("master", "AI00");
 //
 //        Map<String, String> eMap = new HashMap<>();
 //        eMap.put("128k", ".mp3");
 //        eMap.put("320k", ".mp3");
 //        eMap.put("flac", ".flac");
 //        eMap.put("flac24bit", ".flac");
+//        hMap.put("dolby", ".flac");
+//        hMap.put("master", ".flac");
 //
 //        String infoReqBody = String.format("{\"comm\":{\"ct\":\"19\",\"cv\":\"1859\",\"uin\":\"0\"},\"req\":{\"module\":\"music.pf_song_detail_svr\"," +
 //                "\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\"}}}", mid);

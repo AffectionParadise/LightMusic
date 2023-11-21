@@ -26,6 +26,7 @@ public class StringTwoColor {
     private Color c2;
     private double ratio;
     private int widthThreshold;
+    private int shadowHOffset;
     // 是否逐字
     private boolean isByWord;
     private BufferedImage buffImg;
@@ -33,7 +34,6 @@ public class StringTwoColor {
     private BufferedImage buffImg2;
     private ImageIcon imgIcon;
 
-    private final int SHADOW_H_OFFSET = 3;
 
     private FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
     private FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
@@ -98,6 +98,7 @@ public class StringTwoColor {
         this.c2 = c2;
         this.isDesktopLyric = isDesktopLyric;
         this.widthThreshold = widthThreshold;
+        this.shadowHOffset = isDesktopLyric ? 3 : 0;
 
         // 获取字符串的宽（显示在屏幕上所占的像素 px）
         labelFont = label.getFont();
@@ -144,7 +145,7 @@ public class StringTwoColor {
             }
         }
         // 桌面歌词阴影显示不完全解决
-        if (isDesktopLyric) width += 2 * SHADOW_H_OFFSET;
+        width += 2 * shadowHOffset;
         height = metrics.getHeight();
 //        height += fontSize + dropOffset;
         height += fontSize;
@@ -206,7 +207,7 @@ public class StringTwoColor {
                 }
             }
         } else {
-            int widthDrawn = SHADOW_H_OFFSET;
+            int widthDrawn = shadowHOffset;
             for (int i = 0, len = plainLyric.length(); i < len; i++) {
                 int codePoint = plainLyric.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
@@ -312,7 +313,7 @@ public class StringTwoColor {
         // 防止单字比率超出
         double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
         double currWidth = ListUtil.rangeSum(wordWidthList, 0, wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
-        int totalWidth = isDesktopLyric ? width - 2 * SHADOW_H_OFFSET : width;
+        int totalWidth = width - 2 * shadowHOffset;
         // 防止整句比率超出
         double ratio = Math.min(1, currWidth / totalWidth);
         return ratio;
@@ -321,7 +322,7 @@ public class StringTwoColor {
     public void setRatio(double ratio) {
         if (width == 0 || height == 0) return;
 
-        int t = (int) (width * ratio + 0.5);
+        int pw = width - 2 * shadowHOffset, t = (int) (shadowHOffset + pw * ratio + 0.5);
 //        CharBlock kcb = findKeyCharBlock(t);
 //        int dOff = dropOffset - (int) (((double) t - kcb.start) / kcb.duration * dropOffset);
         if (width > widthThreshold || buffImg == null) {
@@ -332,16 +333,16 @@ public class StringTwoColor {
 //            g2d.drawImage(buffImg2, t, dOff, kcb.start + kcb.duration, dOff + height - dropOffset, t, 0, kcb.start + kcb.duration, height - dropOffset, null);
 //            g2d.drawImage(buffImg2, kcb.start + kcb.duration, dropOffset, width, height, kcb.start + kcb.duration, 0, width, height - dropOffset, null);
             // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
-            g2d.drawImage(buffImg1, 0, 0, t, height, 0, 0, t, height, null);
+            g2d.drawImage(buffImg1, shadowHOffset, 0, t, height, shadowHOffset, 0, t, height, null);
 //            g2d.drawImage(buffImg1, 0, 0, t, height - dropOffset, 0, 0, t, height - dropOffset, null);
             // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
-            g2d.drawImage(buffImg2, t, 0, width, height, t, 0, width, height, null);
+            g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
 //            g2d.drawImage(buffImg2, t, 0, width, height - dropOffset, t, 0, width, height - dropOffset, null);
             g2d.dispose();
             cropImg();
             makeIcon();
         } else {
-            int o = (int) (width * this.ratio + 0.5);
+            int o = (int) (shadowHOffset + pw * this.ratio + 0.5);
             Graphics2D g2d = buffImg.createGraphics();
             if (this.ratio < ratio) {
                 // 将 buffImg 的需要更新的部分用 buffImg1 的对应部分替换
@@ -369,10 +370,10 @@ public class StringTwoColor {
     // 裁剪图片使之宽度不超过阈值
     private void cropImg() {
         if (width <= widthThreshold) return;
-        int foreWidth = (int) (width * ratio + 0.5);
-        if (foreWidth <= widthThreshold / 2) buffImg = ImageUtil.region(buffImg, 0, 0, widthThreshold, height);
-        else if (width - foreWidth > widthThreshold / 2)
-            buffImg = ImageUtil.region(buffImg, foreWidth - widthThreshold / 2, 0, widthThreshold, height);
+        int pw = (int) (width * ratio + 0.5);
+        if (pw <= widthThreshold / 2) buffImg = ImageUtil.region(buffImg, 0, 0, widthThreshold, height);
+        else if (width - pw > widthThreshold / 2)
+            buffImg = ImageUtil.region(buffImg, pw - widthThreshold / 2, 0, widthThreshold, height);
         else buffImg = ImageUtil.region(buffImg, width - widthThreshold, 0, widthThreshold, height);
     }
 
