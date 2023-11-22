@@ -15,6 +15,7 @@
 //    private static KgTrackHero instance;
 //
 //    private KgTrackHero() {
+//        initMap();
 //    }
 //
 //    public static KgTrackHero getInstance() {
@@ -31,6 +32,21 @@
 //    private final String userid = "0";
 //    private final String mid = "114514";
 //
+//    private Map<String, String> qualityHashMap = new HashMap<>();
+//    private Map<String, String> qualityMap = new HashMap<>();
+//
+//    private void initMap() {
+//        qualityHashMap.put("128k", "128hash");
+//        qualityHashMap.put("320k", "320hash");
+//        qualityHashMap.put("flac", "sqhash");
+//        qualityHashMap.put("flac24bit", "highhash");
+//
+//        qualityMap.put("128k", "128");
+//        qualityMap.put("320k", "320");
+//        qualityMap.put("flac", "flac");
+//        qualityMap.put("flac24bit", "high");
+//    }
+//
 //    /**
 //     * 获取酷狗歌曲 url
 //     *
@@ -39,18 +55,6 @@
 //     * @return
 //     */
 //    public String getTrackUrl(String sid, String quality) {
-//        Map<String, String> qualityHashMap = new HashMap<>();
-//        qualityHashMap.put("128k", "128hash");
-//        qualityHashMap.put("320k", "320hash");
-//        qualityHashMap.put("flac", "sqhash");
-//        qualityHashMap.put("flac24bit", "highhash");
-//
-//        Map<String, String> qualityMap = new HashMap<>();
-//        qualityMap.put("128k", "128");
-//        qualityMap.put("320k", "320");
-//        qualityMap.put("flac", "flac");
-//        qualityMap.put("flac24bit", "high");
-//
 //        String body = HttpRequest.get("https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=" + sid).executeAsync().body();
 //        JSONObject bodyJson = JSONObject.parseObject(body);
 //        String thash = bodyJson.getJSONObject("extra").getString(qualityHashMap.get(quality)).toLowerCase();

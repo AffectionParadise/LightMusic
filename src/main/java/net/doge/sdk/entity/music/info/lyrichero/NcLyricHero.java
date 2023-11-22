@@ -19,8 +19,6 @@ import java.util.Map;
 
 public class NcLyricHero {
     private static NcLyricHero instance;
-    // 歌词 API
-    private final String LYRIC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
 
     private NcLyricHero() {
     }
@@ -29,6 +27,9 @@ public class NcLyricHero {
         if (instance == null) instance = new NcLyricHero();
         return instance;
     }
+
+    // 歌词 API
+    private final String LYRIC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
 
     public void fillLrc(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();

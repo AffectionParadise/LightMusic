@@ -9,6 +9,16 @@
 //
 //public class QqTrackHero2 {
 //    private static QqTrackHero2 instance;
+//
+//    private QqTrackHero2() {
+//        initMap();
+//    }
+//
+//    public static QqTrackHero2 getInstance() {
+//        if (instance == null) instance = new QqTrackHero2();
+//        return instance;
+//    }
+//
 //    private final String guid = "114514";
 //    private final String uin = "10086";
 //    // 从 Cookie 中/客户端的请求体中(comm.authst)获取
@@ -16,12 +26,23 @@
 //    // QQ 号
 //    private final String loginuin = "";
 //
-//    private QqTrackHero2() {
-//    }
+//    private Map<String, String> hMap = new HashMap<>();
+//    private Map<String, String> eMap = new HashMap<>();
 //
-//    public static QqTrackHero2 getInstance() {
-//        if (instance == null) instance = new QqTrackHero2();
-//        return instance;
+//    private void initMap() {
+//        hMap.put("128k", "M500");
+//        hMap.put("320k", "M800");
+//        hMap.put("flac", "F000");
+//        hMap.put("flac24bit", "RS01");
+//        hMap.put("dolby", "Q000");
+//        hMap.put("master", "AI00");
+//
+//        eMap.put("128k", ".mp3");
+//        eMap.put("320k", ".mp3");
+//        eMap.put("flac", ".flac");
+//        eMap.put("flac24bit", ".flac");
+//        hMap.put("dolby", ".flac");
+//        hMap.put("master", ".flac");
 //    }
 //
 //    private HttpRequest signRequest(String body) {
@@ -37,22 +58,6 @@
 //     * @return
 //     */
 //    public String getTrackUrl(String mid, String quality) {
-//        Map<String, String> hMap = new HashMap<>();
-//        hMap.put("128k", "M500");
-//        hMap.put("320k", "M800");
-//        hMap.put("flac", "F000");
-//        hMap.put("flac24bit", "RS01");
-//        hMap.put("dolby", "Q000");
-//        hMap.put("master", "AI00");
-//
-//        Map<String, String> eMap = new HashMap<>();
-//        eMap.put("128k", ".mp3");
-//        eMap.put("320k", ".mp3");
-//        eMap.put("flac", ".flac");
-//        eMap.put("flac24bit", ".flac");
-//        hMap.put("dolby", ".flac");
-//        hMap.put("master", ".flac");
-//
 //        String infoReqBody = String.format("{\"comm\":{\"ct\":\"19\",\"cv\":\"1859\",\"uin\":\"0\"},\"req\":{\"module\":\"music.pf_song_detail_svr\"," +
 //                "\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\"}}}", mid);
 //        String infoBody = signRequest(infoReqBody).executeAsync().body();

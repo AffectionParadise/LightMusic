@@ -14,9 +14,6 @@ import java.util.List;
 
 public class KwLyricHero {
     private static KwLyricHero instance;
-    // 歌词 API (酷我)
-//    private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
-    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
 
     private KwLyricHero() {
     }
@@ -25,6 +22,10 @@ public class KwLyricHero {
         if (instance == null) instance = new KwLyricHero();
         return instance;
     }
+
+    // 歌词 API (酷我)
+//    private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
+    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
 
     public void fillLrc(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();

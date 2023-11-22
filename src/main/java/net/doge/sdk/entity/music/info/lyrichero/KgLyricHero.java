@@ -13,9 +13,6 @@ import java.util.Arrays;
 
 public class KgLyricHero {
     private static KgLyricHero instance;
-    // 歌词 API (酷狗)
-    private final String SEARCH_LYRIC_KG_API = "http://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=%s&hash=%s&timelength=%s";
-    private final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=krc&charset=utf8";
 
     private KgLyricHero() {
     }
@@ -24,6 +21,10 @@ public class KgLyricHero {
         if (instance == null) instance = new KgLyricHero();
         return instance;
     }
+
+    // 歌词 API (酷狗)
+    private final String SEARCH_LYRIC_KG_API = "http://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=%s&hash=%s&timelength=%s";
+    private final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=krc&charset=utf8";
 
     public void fillLrc(NetMusicInfo musicInfo) {
         String hash = musicInfo.getHash();

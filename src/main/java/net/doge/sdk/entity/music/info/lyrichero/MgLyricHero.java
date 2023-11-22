@@ -13,9 +13,6 @@ import java.util.List;
 
 public class MgLyricHero {
     private static MgLyricHero instance;
-    // 歌词 API (咪咕)
-    private final String LYRIC_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
-//    private final String LYRIC_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=%s";
 
     private MgLyricHero() {
     }
@@ -24,6 +21,10 @@ public class MgLyricHero {
         if (instance == null) instance = new MgLyricHero();
         return instance;
     }
+
+    // 歌词 API (咪咕)
+    private final String LYRIC_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+//    private final String LYRIC_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=%s";
 
     public void fillLrc(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
