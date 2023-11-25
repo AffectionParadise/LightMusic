@@ -2,7 +2,6 @@ package net.doge.sdk.entity.music.info;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.model.NetMusicSource;
@@ -12,8 +11,6 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.music.info.trackhero.KwTrackHero;
 import net.doge.sdk.entity.music.info.trackhero.QqTrackHero;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
@@ -27,7 +24,6 @@ import org.jsoup.nodes.Document;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class MusicUrlReq {
     private static MusicUrlReq instance;
@@ -41,7 +37,8 @@ public class MusicUrlReq {
     }
 
     // 歌曲 URL 获取 API
-    private final String GET_SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+//    private final String GET_SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+    private final String GET_SONG_URL_API = "https://csm.sayqz.com/api/?type=apiSongUrlV1&id=%s&level=%s";
     // 歌曲 URL 获取 API (酷我)
 //    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
     // 歌曲 URL 获取 API (咪咕)
@@ -94,10 +91,10 @@ public class MusicUrlReq {
 //        String hash = musicInfo.getHash();
         int source = musicInfo.getSource();
 
-        // 网易云
+        // 网易云(解锁付费音乐)
         if (source == NetMusicSource.NC) {
             // 首选高音质接口
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
+//            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
             // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, jysky => 沉浸环绕声, jymaster => 超清母带
             String quality;
             switch (AudioQuality.quality) {
@@ -115,8 +112,11 @@ public class MusicUrlReq {
                     quality = "standard";
                     break;
             }
-            String songBody = SdkCommon.ncRequest(Method.POST, GET_SONG_URL_API,
-                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
+//            String songBody = SdkCommon.ncRequest(Method.POST, GET_SONG_URL_API,
+//                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
+//                    .executeAsync()
+//                    .body();
+            String songBody = HttpRequest.get(String.format(GET_SONG_URL_API, id, quality))
                     .executeAsync()
                     .body();
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");

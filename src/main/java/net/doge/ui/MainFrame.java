@@ -20098,14 +20098,15 @@ public class MainFrame extends JFrame {
         final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
             lrcExecutor.execute(() -> {
+                LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
                 if (nextLrc >= 0) {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
                     double or = originalRatio;
-                    if (currRatio < or) ratio = (or - currRatio) / LRC_PIECE + currRatio;
-                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(ratio);
+                    if (currRatio < or || currRatio - or < 0.8) ratio = (or - currRatio) / LRC_PIECE + currRatio;
+                    renderer.setRatio(ratio);
                     desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
                 } else {
-                    ((LrcListRenderer) lrcList.getCellRenderer()).setRatio(0);
+                    renderer.setRatio(0);
                     desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
                 }
                 if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
@@ -20840,9 +20841,11 @@ public class MainFrame extends JFrame {
         for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
         if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
         else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
-        for (Statement stmt : statements) {
-            lrcListModel.addElement(empty);
-            lrcListModel.addElement(stmt);
+        if (ListUtil.notEmpty(statements)) {
+            for (Statement stmt : statements) {
+                lrcListModel.addElement(empty);
+                lrcListModel.addElement(stmt);
+            }
         }
         for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
         // 标记为无歌词 / 不支持滚动
@@ -20855,7 +20858,7 @@ public class MainFrame extends JFrame {
         LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
         renderer.setRow(row);
         lrcList.setModel(lrcListModel);
-        seekLrc(player.getCurrTimeSeconds());
+//        seekLrc(player.getCurrTimeSeconds());
     }
 
     private void resetMp() {

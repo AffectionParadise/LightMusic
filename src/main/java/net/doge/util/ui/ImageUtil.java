@@ -259,11 +259,7 @@ public class ImageUtil {
      * 创建透明图片
      */
     public static BufferedImage createTransparentImage(int w, int h) {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        GraphicsConfiguration gc = gd.getDefaultConfiguration();
-        BufferedImage outputImg = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT);
-        return outputImg;
+        return new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
     }
 
     /**
@@ -312,7 +308,7 @@ public class ImageUtil {
      */
     public static BufferedImage dye(Image img, Color color) {
         int w = img.getWidth(null), h = img.getHeight(null);
-        BufferedImage outputImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage outputImg = createTransparentImage(w, h);
         Graphics2D g = outputImg.createGraphics();
         g.drawImage(img, 0, 0, null);
         g.setComposite(AlphaComposite.SrcAtop);

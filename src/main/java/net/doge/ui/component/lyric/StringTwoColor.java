@@ -26,9 +26,11 @@ public class StringTwoColor {
     private Color c2;
     private double ratio;
     private int widthThreshold;
+    // 阴影水平偏移
     private int shadowHOffset;
     // 是否逐字
     private boolean isByWord;
+
     private BufferedImage buffImg;
     private BufferedImage buffImg1;
     private BufferedImage buffImg2;
@@ -154,8 +156,8 @@ public class StringTwoColor {
         width = Math.max(1, width);
 
         // 构造一个具有指定尺寸及类型为预定义图像类型之一的 BufferedImage
-        buffImg1 = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-        buffImg2 = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+        buffImg1 = ImageUtil.createTransparentImage(width, height);
+        buffImg2 = ImageUtil.createTransparentImage(width, height);
 //        buffImg1 = new BufferedImage(width, height - dropOffset, BufferedImage.TYPE_4BYTE_ABGR);
 //        buffImg2 = new BufferedImage(width, height - dropOffset, BufferedImage.TYPE_4BYTE_ABGR);
 
@@ -326,7 +328,7 @@ public class StringTwoColor {
 //        CharBlock kcb = findKeyCharBlock(t);
 //        int dOff = dropOffset - (int) (((double) t - kcb.start) / kcb.duration * dropOffset);
         if (width > widthThreshold || buffImg == null) {
-            buffImg = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+            buffImg = ImageUtil.createTransparentImage(width, height);
             Graphics2D g2d = buffImg.createGraphics();
 //            g2d.drawImage(buffImg1, 0, 0, kcb.start, height - dropOffset, 0, 0, kcb.start, height - dropOffset, null);
 //            g2d.drawImage(buffImg1, kcb.start, dOff, t, dOff + height - dropOffset, kcb.start, 0, t, height - dropOffset, null);

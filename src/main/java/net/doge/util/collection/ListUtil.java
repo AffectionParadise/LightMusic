@@ -8,6 +8,15 @@ import java.util.*;
  * @Date 2020/12/15
  */
 public class ListUtil {
+    /**
+     * 判断 list 是否不为空
+     *
+     * @param list
+     * @return
+     */
+    public static <T> boolean notEmpty(List<T> list) {
+        return list != null && !list.isEmpty();
+    }
 
     /**
      * 查找元素位置，找不到返回 -1
