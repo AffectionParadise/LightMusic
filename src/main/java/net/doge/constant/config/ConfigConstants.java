@@ -78,6 +78,8 @@ public class ConfigConstants {
     public static final String GS_ON = "gsOn";
     // 是否暗化
     public static final String DARKER_ON = "darkerOn";
+    // 是否律动
+    public static final String GROOVE_ON = "grooveOn";
     // 模糊类型
     public static final String BLUR_TYPE = "blurType";
     // 是否自动下载歌词

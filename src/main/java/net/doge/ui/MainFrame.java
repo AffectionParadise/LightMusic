@@ -814,6 +814,8 @@ public class MainFrame extends JFrame {
     public boolean gsOn;
     // 是否暗化
     public boolean darkerOn;
+    // 是否律动
+    public boolean grooveOn;
     // 模糊类型
     public int blurType;
     // 是否显示频谱
@@ -986,6 +988,7 @@ public class MainFrame extends JFrame {
     private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem gsMenuItem = new CustomMenuItem(I18n.getText("gs"));
     private CustomMenuItem darkerMenuItem = new CustomMenuItem(I18n.getText("darker"));
+    private CustomMenuItem grooveMenuItem = new CustomMenuItem(I18n.getText("groove"));
     private CustomMenuItem blurOffMenuItem = new CustomMenuItem(I18n.getText("blurOff"));
     private CustomMenuItem cvBlurMenuItem = new CustomMenuItem(I18n.getText("cvBlur"));
     private CustomMenuItem mcBlurMenuItem = new CustomMenuItem(I18n.getText("mcBlur"));
@@ -3080,6 +3083,8 @@ public class MainFrame extends JFrame {
         gsOn = config.getBooleanValue(ConfigConstants.GS_ON, false);
         // 载入是否暗化
         darkerOn = config.getBooleanValue(ConfigConstants.DARKER_ON, true);
+        // 载入是否律动
+        grooveOn = config.getBooleanValue(ConfigConstants.GROOVE_ON, false);
         // 载入模糊类型
         blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.OFF);
         blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon
@@ -3844,6 +3849,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.GS_ON, gsOn);
         // 存入是否暗化
         config.put(ConfigConstants.DARKER_ON, darkerOn);
+        // 存入是否律动
+        config.put(ConfigConstants.GROOVE_ON, grooveOn);
         // 存入模糊类型
         config.put(ConfigConstants.BLUR_TYPE, blurType);
         // 存入是否自动下载歌词
@@ -20086,13 +20093,17 @@ public class MainFrame extends JFrame {
                 double[] specs = player.specs;
                 double[] specsOrigin = player.specsOrigin;
                 double[] specsGap = player.specsGap;
+                double avg = 0;
                 for (int i = 0, len = SpectrumConstants.barNum; i < len; i++) {
                     if (specs[i] < specsOrigin[i])
                         specs[i] += Math.min(specsGap[i] / specPiece, specsOrigin[i] - specs[i]);
                     else if (specs[i] > specsOrigin[i])
                         specs[i] -= Math.min(specsGap[i] / specPiece, specs[i] - specsOrigin[i]);
+                    avg += specs[i];
                 }
-                lrcAndSpecBox.repaint();
+                avg /= SpectrumConstants.barNum;
+                if (grooveOn) globalPanel.setScale(1 + 0.5f * (float) (avg / SpectrumConstants.barMaxHeight));
+                else lrcAndSpecBox.repaint();
             });
         });
         final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
@@ -20109,7 +20120,8 @@ public class MainFrame extends JFrame {
                     renderer.setRatio(0);
                     desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
                 }
-                if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
+                if (spectrumTimer.isRunning()) return;
+                lrcAndSpecBox.repaint();
             });
             if (lrcScrollAnimation) {
                 // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
@@ -20383,6 +20395,7 @@ public class MainFrame extends JFrame {
         // 模糊菜单
         blurPopupMenu.add(gsMenuItem);
         blurPopupMenu.add(darkerMenuItem);
+        blurPopupMenu.add(grooveMenuItem);
         blurPopupMenu.addSeparator();
         blurPopupMenu.add(blurOffMenuItem);
         blurPopupMenu.add(cvBlurMenuItem);
@@ -20398,6 +20411,11 @@ public class MainFrame extends JFrame {
             darkerOn = !darkerOn;
             doBlur();
             darkerMenuItem.setIcon(darkerOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+        });
+        grooveMenuItem.addActionListener(e -> {
+            grooveOn = !grooveOn;
+            doBlur();
+            grooveMenuItem.setIcon(grooveOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurConstants.OFF;
@@ -20432,7 +20450,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = blurPopupMenu.getHeight();
-                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 261 : h));
+                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 291 : h));
             }
         });
         // 音效按钮
@@ -21718,6 +21736,7 @@ public class MainFrame extends JFrame {
 
         if (gsOn) gsMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
         if (darkerOn) darkerMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
+        if (grooveOn) grooveMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
         blurOffMenuItem.setIcon(ImageUtil.dye(blurOffIcon, iconColor));
         cvBlurMenuItem.setIcon(ImageUtil.dye(cvBlurIcon, iconColor));
         mcBlurMenuItem.setIcon(ImageUtil.dye(mcBlurIcon, iconColor));
