@@ -186,6 +186,8 @@ public class ConfigConstants {
     public static final String NET_MUSIC_ALBUM_ID = "albumId";
     // 在线音乐 MV ID
     public static final String NET_MUSIC_MV_ID = "mvId";
+    // 在线音乐音质类型
+    public static final String NET_MUSIC_QUALITY_TYPE = "qualityType";
 
     // 歌单来源
     public static final String NET_PLAYLIST_SOURCE = "source";

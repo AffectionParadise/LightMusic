@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
@@ -38,7 +39,7 @@ public class AlbumInfoReq {
         if (instance == null) instance = new AlbumInfoReq();
         return instance;
     }
-    
+
     // 专辑信息 API
     private final String ALBUM_DETAIL_API = "https://music.163.com/weapi/v1/album/%s";
     // 专辑信息 API (酷狗)
@@ -483,6 +484,12 @@ public class AlbumInfoReq {
                 String albumId = albumJson.getString("id");
                 Double duration = songJson.getDouble("dt") / 1000;
                 String mvId = songJson.getString("mv");
+                int qualityType = AudioQuality.UNKNOWN;
+                if (JsonUtil.notEmpty(songJson.getJSONObject("hr"))) qualityType = AudioQuality.HR;
+                else if (JsonUtil.notEmpty(songJson.getJSONObject("sq"))) qualityType = AudioQuality.SQ;
+                else if (JsonUtil.notEmpty(songJson.getJSONObject("h"))) qualityType = AudioQuality.HQ;
+                else if (JsonUtil.notEmpty(songJson.getJSONObject("m"))) qualityType = AudioQuality.MQ;
+                else if (JsonUtil.notEmpty(songJson.getJSONObject("l"))) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setId(songId);
@@ -493,6 +500,7 @@ public class AlbumInfoReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
+                musicInfo.setQualityType(qualityType);
 
                 res.add(musicInfo);
             }
@@ -519,6 +527,10 @@ public class AlbumInfoReq {
                 String alId = songJson.getString("album_id");
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getString("mvhash");
+                int qualityType = AudioQuality.UNKNOWN;
+                if (songJson.getLong("sqfilesize") != 0) qualityType = AudioQuality.SQ;
+                else if (songJson.getLong("320filesize") != 0) qualityType = AudioQuality.HQ;
+                else if (songJson.getLong("filesize") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -530,6 +542,7 @@ public class AlbumInfoReq {
                 musicInfo.setAlbumId(alId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
+                musicInfo.setQualityType(qualityType);
 
                 res.add(musicInfo);
             }
@@ -549,6 +562,7 @@ public class AlbumInfoReq {
             for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i).getJSONObject("songInfo");
                 JSONObject albumJson = songJson.getJSONObject("album");
+                JSONObject fileJson = songJson.getJSONObject("file");
 
                 String songId = songJson.getString("mid");
                 String name = songJson.getString("title");
@@ -558,6 +572,11 @@ public class AlbumInfoReq {
                 String albumId = albumJson.getString("mid");
                 Double duration = songJson.getDouble("interval");
                 String mvId = songJson.getJSONObject("mv").getString("vid");
+                int qualityType = AudioQuality.UNKNOWN;
+                if (fileJson.getLong("size_hires") != 0) qualityType = AudioQuality.HR;
+                else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
+                else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
+                else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.QQ);
@@ -569,6 +588,7 @@ public class AlbumInfoReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
+                musicInfo.setQualityType(qualityType);
 
                 res.add(musicInfo);
             }
@@ -594,6 +614,9 @@ public class AlbumInfoReq {
                 String albumId = songJson.getString("albumid");
                 Double duration = songJson.getDouble("duration");
                 String mvId = songJson.getIntValue("hasmv") == 0 ? "" : songId;
+                int qualityType;
+                if (songJson.getBoolean("hasLossless")) qualityType = AudioQuality.SQ;
+                else qualityType = AudioQuality.HQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KW);
@@ -605,6 +628,7 @@ public class AlbumInfoReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
+                musicInfo.setQualityType(qualityType);
 
                 res.add(musicInfo);
             }
@@ -638,6 +662,12 @@ public class AlbumInfoReq {
 //                String albumName = albumInfo.getName();
 //                String albumId = id;
                 String mvId = fa.isEmpty() ? "" : RegexUtil.getGroup1("/v3/video/mv/(.*)", fa.attr("href"));
+                int qualityType;
+                if (!song.select("i.flag.flag-bit24").isEmpty()) qualityType = AudioQuality.HR;
+                else if (!song.select("i.flag.flag-sq").isEmpty() || !song.select("i.flag.flag-d3").isEmpty())
+                    qualityType = AudioQuality.SQ;
+                else if (!song.select("i.flag.flag-hq").isEmpty()) qualityType = AudioQuality.HQ;
+                else qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.MG);
@@ -649,6 +679,7 @@ public class AlbumInfoReq {
 //                musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
+                musicInfo.setQualityType(qualityType);
 
                 res.add(musicInfo);
             }
@@ -706,6 +737,11 @@ public class AlbumInfoReq {
                 String albumName = data.getString("title");
                 String albumId = data.getString("albumAssetCode");
                 Double duration = songJson.getDouble("duration");
+                int qualityType = AudioQuality.UNKNOWN;
+                JSONObject rateFileInfo = songJson.getJSONObject("rateFileInfo");
+                if (rateFileInfo.containsKey("3000")) qualityType = AudioQuality.SQ;
+                else if (rateFileInfo.containsKey("320")) qualityType = AudioQuality.HQ;
+                else if (rateFileInfo.containsKey("128")) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.QI);
@@ -716,6 +752,7 @@ public class AlbumInfoReq {
                 musicInfo.setAlbumName(albumName);
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
+                musicInfo.setQualityType(qualityType);
 
                 res.add(musicInfo);
             }

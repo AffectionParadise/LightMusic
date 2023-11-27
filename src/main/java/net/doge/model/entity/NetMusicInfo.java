@@ -39,7 +39,9 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     private String format = Format.MP3;
     // 时长(秒)
     private double duration;
-    // 音质
+    // 音质类型
+    private int qualityType = AudioQuality.UNKNOWN;
+    // 当前使用的音质
     private int quality;
     // 歌曲名称
     private String name;
@@ -125,6 +127,10 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
 
     public boolean hasMv() {
         return StringUtil.notEmpty(mvId) && !"0".equals(mvId);
+    }
+
+    public boolean hasQualityType() {
+        return qualityType != AudioQuality.UNKNOWN;
     }
 
     public boolean hasUrl() {

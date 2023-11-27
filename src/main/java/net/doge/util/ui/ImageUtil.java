@@ -9,6 +9,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.system.Format;
 import net.doge.constant.ui.BlurConstants;
 import net.doge.constant.ui.Colors;
+import net.doge.util.common.StringUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -131,6 +132,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage readByUrl(String imgUrl) {
+        if (StringUtil.isEmpty(imgUrl)) return null;
         if (imgUrl.endsWith(Format.WEBP)) return readWebp(imgUrl);
         return read(getImgStream(imgUrl));
     }

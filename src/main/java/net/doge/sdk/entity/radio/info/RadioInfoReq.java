@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
@@ -425,6 +426,7 @@ public class RadioInfoReq {
                 for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                     JSONObject songJson = songArray.getJSONObject(i);
                     JSONObject albumJson = songJson.getJSONObject("album");
+                    JSONObject fileJson = songJson.getJSONObject("file");
 
                     String songId = songJson.getString("mid");
                     String name = songJson.getString("title");
@@ -433,6 +435,12 @@ public class RadioInfoReq {
                     String albumName = albumJson.getString("title");
                     String albumId = albumJson.getString("mid");
                     Double duration = songJson.getDouble("interval");
+                    String mvId = songJson.getJSONObject("mv").getString("vid");
+                    int qualityType = AudioQuality.UNKNOWN;
+                    if (fileJson.getLong("size_hires") != 0) qualityType = AudioQuality.HR;
+                    else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
+                    else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
+                    else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.QQ);
@@ -443,6 +451,9 @@ public class RadioInfoReq {
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
+                    musicInfo.setQualityType(qualityType);
+
                     res.add(musicInfo);
                 }
             }

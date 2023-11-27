@@ -7,6 +7,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
@@ -424,6 +425,13 @@ public class UserInfoReq {
                     String albumName = albumJson.getString("name");
                     String albumId = albumJson.getString("id");
                     Double duration = songJson.getDouble("dt") / 1000;
+                    String mvId = songJson.getString("mv");
+                    int qualityType = AudioQuality.UNKNOWN;
+                    if (JsonUtil.notEmpty(songJson.getJSONObject("hr"))) qualityType = AudioQuality.HR;
+                    else if (JsonUtil.notEmpty(songJson.getJSONObject("sq"))) qualityType = AudioQuality.SQ;
+                    else if (JsonUtil.notEmpty(songJson.getJSONObject("h"))) qualityType = AudioQuality.HQ;
+                    else if (JsonUtil.notEmpty(songJson.getJSONObject("m"))) qualityType = AudioQuality.MQ;
+                    else if (JsonUtil.notEmpty(songJson.getJSONObject("l"))) qualityType = AudioQuality.LQ;
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setId(songId);
@@ -433,6 +441,9 @@ public class UserInfoReq {
                     musicInfo.setAlbumName(albumName);
                     musicInfo.setAlbumId(albumId);
                     musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
+                    musicInfo.setQualityType(qualityType);
+
                     res.add(musicInfo);
                 }
             }

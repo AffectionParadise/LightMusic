@@ -660,6 +660,12 @@ public class I18n {
         LANG_MAP.put("high", new String[]{"高 (MP3)", "High (MP3)"});
         LANG_MAP.put("normal", new String[]{"普通 (MP3)", "Normal (MP3)"});
 
+        LANG_MAP.put("hr", new String[]{"HR", "HR"});
+        LANG_MAP.put("sq", new String[]{"SQ", "SQ"});
+        LANG_MAP.put("hq", new String[]{"HQ", "HQ"});
+        LANG_MAP.put("mq", new String[]{"MQ", "MQ"});
+        LANG_MAP.put("lq", new String[]{"LQ", "LQ"});
+
         LANG_MAP.put("uhd", new String[]{"超清 (2K)", "UHD (2K)"});
         LANG_MAP.put("fhd", new String[]{"全高清 (1080P)", "FHD (1080P)"});
         LANG_MAP.put("hd", new String[]{"高清 (720P)", "HD (720P)"});

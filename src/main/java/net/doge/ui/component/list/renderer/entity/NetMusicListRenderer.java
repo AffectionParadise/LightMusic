@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.AudioQuality;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
@@ -100,7 +101,8 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         innerPanel.add(durationLabel);
 
         final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * layout.getHgap()) / innerPanel.getComponentCount();
-        String source = StringUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]);
+        String source = StringUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]
+                + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
         String artist = musicInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
                 StringUtil.shorten(musicInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";

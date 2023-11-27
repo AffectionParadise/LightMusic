@@ -3238,6 +3238,7 @@ public class MainFrame extends JFrame {
                     musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
                     musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
                     musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
+                    musicInfo.setQualityType(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_QUALITY_TYPE, AudioQuality.UNKNOWN));
                     historyModel.addElement(musicInfo);
                 }
             }
@@ -3326,6 +3327,7 @@ public class MainFrame extends JFrame {
                     musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
                     musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
                     musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
+                    musicInfo.setQualityType(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_QUALITY_TYPE, AudioQuality.UNKNOWN));
                     playQueueModel.addElement(musicInfo);
                 }
             }
@@ -3608,6 +3610,7 @@ public class MainFrame extends JFrame {
                     musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
                     musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
                     musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
+                    musicInfo.setQualityType(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_QUALITY_TYPE, AudioQuality.UNKNOWN));
                     collectionModel.addElement(musicInfo);
                 }
             }
@@ -3937,6 +3940,7 @@ public class MainFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_QUALITY_TYPE, musicInfo.getQualityType());
                 historyJsonArray.add(jsonObject);
             }
         }
@@ -4006,6 +4010,7 @@ public class MainFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_QUALITY_TYPE, musicInfo.getQualityType());
                 playQueueJsonArray.add(jsonObject);
             }
         }
@@ -4110,6 +4115,7 @@ public class MainFrame extends JFrame {
                 jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
                 jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
                 jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
+                jsonObject.put(ConfigConstants.NET_MUSIC_QUALITY_TYPE, musicInfo.getQualityType());
                 collectionJsonArray.add(jsonObject);
             }
         }
