@@ -166,7 +166,6 @@ public class MusicInfoReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            // 酷狗接口请求需要带上 cookie ！
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, songId))
                     .cookie(SdkCommon.COOKIE)
                     .executeAsync()

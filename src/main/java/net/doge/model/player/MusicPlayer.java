@@ -11,6 +11,7 @@ import javafx.util.Duration;
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.player.EqualizerData;
 import net.doge.constant.player.PlayerStatus;
 import net.doge.constant.system.Format;
 import net.doge.constant.ui.ImageConstants;
@@ -346,8 +347,8 @@ public class MusicPlayer {
         for (int i = 0, size = bands.size(); i < size; i++) {
             EqualizerBand band = bands.get(i);
             double val = ds[i];
-            val = Math.min(val, EqualizerBand.MAX_GAIN);
-            val = Math.max(val, EqualizerBand.MIN_GAIN);
+            val = Math.min(val, EqualizerData.MAX_GAIN);
+            val = Math.max(val, EqualizerData.MIN_GAIN);
             band.setGain(val);
         }
     }

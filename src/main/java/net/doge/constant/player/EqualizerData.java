@@ -1,5 +1,6 @@
 package net.doge.constant.player;
 
+import javafx.scene.media.EqualizerBand;
 import net.doge.constant.lang.I18n;
 
 /**
@@ -9,8 +10,8 @@ import net.doge.constant.lang.I18n;
  */
 public class EqualizerData {
     public static final int BAND_NUM = 10;
-    public static final int MAX_GAIN = 12;
-    public static final int MIN_GAIN = -12;
+    public static final double MAX_GAIN = EqualizerBand.MAX_GAIN;
+    public static final double MIN_GAIN = -12;
 
     public static final double[] OFF = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     public static final double[] POP = {4, 2, 0, -3, -6, -6, -3, 0, 1, 3};
