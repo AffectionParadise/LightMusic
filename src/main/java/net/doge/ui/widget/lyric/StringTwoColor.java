@@ -170,6 +170,7 @@ public class StringTwoColor {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int dy = height - (int) fontSize;
+        if (!isDesktopLyric) dy += 5;
 //        int dy = height - (int) fontSize - dropOffset;
 
         g1.setColor(c1);
@@ -364,6 +365,7 @@ public class StringTwoColor {
 
     // 清除图像区域为透明
     private void clearRect(BufferedImage img, int x, int y, int width, int height) {
+        if (x < 0) return;
         for (int i = x, w = x + width; i < w; i++)
             for (int j = y, h = y + height; j < h; j++)
                 img.setRGB(i, j, 0);

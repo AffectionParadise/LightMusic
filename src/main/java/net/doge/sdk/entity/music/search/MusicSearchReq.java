@@ -69,7 +69,7 @@ public class MusicSearchReq {
     // 关键词搜索歌曲 API (5sing)
     private final String SEARCH_MUSIC_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=0&type=0";
     // 关键词搜索节目 API (喜马拉雅)
-    private final String SEARCH_MUSIC_XM_API
+    private final String SEARCH_PROGRAM_XM_API
             = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&device=iPhone&core=track&fq=&paidFilter=false";
     // 关键词搜索节目 API (猫耳)
     private final String SEARCH_PROGRAM_ME_API = "https://www.missevan.com/sound/getsearch?cid=%s&s=%s&p=%s&type=3&page_size=%s";
@@ -928,7 +928,7 @@ public class MusicSearchReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_XM_API, encodedKeyword, page, limit))
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_XM_API, encodedKeyword, page, limit))
                     .executeAsync()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

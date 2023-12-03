@@ -49,15 +49,19 @@ public class QrcDecoder {
     }
 
     public String decode(String hex) {
-        short[] data = ArrayUtil.bytesToShorts(CryptoUtil.hexToBytes(hex));
-        int dataLen = data.length;
+        try {
+            short[] data = ArrayUtil.bytesToShorts(CryptoUtil.hexToBytes(hex));
+            int dataLen = data.length;
 
-        ddes(data, KEY1, dataLen);
-        des(data, KEY2, dataLen);
-        ddes(data, KEY3, dataLen);
+            ddes(data, KEY1, dataLen);
+            des(data, KEY2, dataLen);
+            ddes(data, KEY3, dataLen);
 
-        String result = new String(CryptoUtil.decompress(ArrayUtil.shortsToBytes(data)), StandardCharsets.UTF_8);
-        return result;
+            String result = new String(CryptoUtil.decompress(ArrayUtil.shortsToBytes(data)), StandardCharsets.UTF_8);
+            return result;
+        } catch (Exception e) {
+            return "";
+        }
     }
 
 //    public static void main(String[] args) {

@@ -8,8 +8,9 @@ public class CustomPanel extends JPanel {
     // 是否无动画画背景
     private boolean bluntDrawBg;
     private Timer drawBgTimer;
-    private float alpha;
-    private final float destAlpha = 0.1f;
+    // 背景不透明度
+    private float bgAlpha;
+    private final float destBgAlpha = 0.1f;
 
     public CustomPanel() {
         this(new FlowLayout());
@@ -24,9 +25,9 @@ public class CustomPanel extends JPanel {
         setOpaque(false);
 
         drawBgTimer = new Timer(2, e -> {
-            if (drawBg) alpha = Math.min(destAlpha, alpha + 0.005f);
-            else alpha = Math.max(0, alpha - 0.005f);
-            if (alpha <= 0 || alpha >= destAlpha) drawBgTimer.stop();
+            if (drawBg) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
+            else bgAlpha = Math.max(0, bgAlpha - 0.005f);
+            if (bgAlpha <= 0 || bgAlpha >= destBgAlpha) drawBgTimer.stop();
             repaint();
         });
     }
@@ -39,7 +40,7 @@ public class CustomPanel extends JPanel {
         if (this.drawBg == drawBg) return;
         this.drawBg = drawBg;
         if (bluntDrawBg) {
-            alpha = destAlpha;
+            bgAlpha = destBgAlpha;
             repaint();
         } else {
             if (drawBgTimer.isRunning()) return;
@@ -53,7 +54,7 @@ public class CustomPanel extends JPanel {
         // 画背景
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(getForeground());
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bgAlpha));
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 

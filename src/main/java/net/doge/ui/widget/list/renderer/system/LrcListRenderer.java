@@ -113,7 +113,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
         // 有性能问题，停用
 //        Statement statement = (Statement) value;
-//        String lyric = statement.getPlainLyric();
+//        String plainLyric = statement.getPlainLyric();
 //
 //        CustomPanel outerPanel = new CustomPanel();
 //        CustomLabel lyricLabel = new CustomLabel();
@@ -135,15 +135,15 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //        if (index == row) {
 //            lyricLabel.setFont(highlightFont);
 //            if (stc == null || stc.getWidthThreshold() != maxWidth || !stc.getLabelFont().equals(highlightFont)
-//                    || !stc.getText().equals(lyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
-//                stc = new StringTwoColor(lyricLabel, lyric, highlightColor, bgColor, ratio, false, maxWidth);
+//                    || !stc.getPlainLyric().equals(plainLyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
+//                stc = new StringTwoColor(lyricLabel, statement, highlightColor, bgColor, ratio, false, maxWidth);
 //            else stc.setRatio(ratio);
-//            lyricLabel.setIcon(stc.getImageIcon());
+//            lyricLabel.setIcon(stc.getImgIcon());
 //        }
 //        // 其他行的样式
 //        else {
 //            lyricLabel.setFont(index == row - 2 ? shrinkFont : defaultFont);
-//            lyricLabel.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(lyric, maxWidth)));
+//            lyricLabel.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(plainLyric, maxWidth)));
 //        }
 //
 //        Dimension ps = lyricLabel.getPreferredSize();
