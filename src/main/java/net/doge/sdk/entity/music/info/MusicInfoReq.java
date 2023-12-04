@@ -72,6 +72,13 @@ public class MusicInfoReq {
     private final String SONG_ALBUM_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdramabysound?sound_id=%s";
     // 歌曲信息 API (哔哩哔哩)
     private final String SINGLE_SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
+    // 歌曲信息 API (发姐)
+    private final String SINGLE_SONG_DETAIL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit" +
+            "&musicset=remote%23%3A72%2C71%2C70%2C89%2C88%2C87%2C86%2C85%2C84%2C83%2C82%2C81%2C80%2C79%2C76" +
+            "%2C75%2C74%2C73%2C69%2C68%2C67%2C66%2C65%2C64%2C63%2C62%2C61%2C60%2C59%2C58%2C57%2C56%2C55%2C54" +
+            "%2C53%2C52%2C51%2C50%2C49%2C48%2C47%2C46%2C45%2C44%2C43%2C42%2C41%2C40%2C39%2C38%2C37%2C36%2C35" +
+            "%2C34%2C33%2C32%2C31%2C30%2C29%2C28%2C27%2C26%2C25%2C24%2C23%2C22%2C21%2C20%2C19%2C18%2C17%2C16" +
+            "%2C15%2C14%2C13%2C12%2C11%2C10%2C9%2C8%2C7%2C6%2C5%2C4%2C3%2C2%2C1&_nonce=55024627dc";
 
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
@@ -81,6 +88,8 @@ public class MusicInfoReq {
     private final String DM_ME_API = "https://www.missevan.com/sound/getdm?soundid=%s";
     // 歌词 API (哔哩哔哩)
     private final String LYRIC_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/lyric?sid=%s";
+    // 歌词 API (发姐)
+    private final String LYRIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&scope=remote_lyric&id=%s";
 
     // 歌手图片 API (QQ)
     private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
@@ -475,6 +484,30 @@ public class MusicInfoReq {
                 });
             }
         }
+
+        // 发姐
+        else if (source == NetMusicSource.FA) {
+            String songInfoBody = HttpRequest.get(SINGLE_SONG_DETAIL_FA_API)
+                    .executeAsync()
+                    .body();
+            JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
+            JSONObject data = songInfoJson.getJSONObject("msg");
+            JSONArray songArray = data.getJSONArray("songs");
+            for (int i = 0, s = songArray.size(); i < s; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
+                if (!songId.equals(songJson.getString("id"))) continue;
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(songJson.getString("author"));
+                if (!musicInfo.hasAlbumImage()) {
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage albumImage = SdkUtil.getImageFromUrl(songJson.getString("pic"));
+                        FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
+                        ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                        musicInfo.callback();
+                    });
+                }
+                break;
+            }
+        }
     }
 
     /**
@@ -608,7 +641,20 @@ public class MusicInfoReq {
             musicInfo.setLrc(lrcJson.getString("data"));
             musicInfo.setTrans("");
             musicInfo.setRoma("");
-        } else {
+        }
+
+        // 发姐
+        else if (source == NetMusicSource.FA) {
+            String lrcBody = HttpRequest.get(String.format(LYRIC_FA_API, id))
+                    .executeAsync()
+                    .body();
+            musicInfo.setLrc(lrcBody);
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
+        }
+
+        // 其他
+        else {
             musicInfo.setLrc("");
             musicInfo.setTrans("");
             musicInfo.setRoma("");

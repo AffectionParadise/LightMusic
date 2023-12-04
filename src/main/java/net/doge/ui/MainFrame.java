@@ -20511,25 +20511,25 @@ public class MainFrame extends JFrame {
         // 歌词类型弹出菜单
         originalLrcMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.ORIGINAL) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ORIGINAL);
+            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ORIGINAL, true);
             switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(ORIGINAL_LRC_TIP);
         });
         translationMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.TRANSLATION) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRANSLATION);
+            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRANSLATION, true);
             switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(TRANSLATION_TIP);
         });
         romaMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.ROMA) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ROMA);
+            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ROMA, true);
             switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(ROMA_TIP);
         });
         tradChineseMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.TRADITIONAL_CN) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRADITIONAL_CN);
+            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRADITIONAL_CN, true);
             switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(TRAD_CHINESE_TIP);
         });
@@ -20773,7 +20773,7 @@ public class MainFrame extends JFrame {
     }
 
     // 加载歌词
-    private void loadLrc(AudioFile file, NetMusicInfo musicInfo, int lyricType) {
+    private void loadLrc(AudioFile file, NetMusicInfo musicInfo, int lyricType, boolean reload) {
         if (player.isEmpty()) return;
         clearLrc();
 
@@ -20831,7 +20831,7 @@ public class MainFrame extends JFrame {
                     }
                     // 无翻译时，加载原歌词
                     else {
-                        loadLrc(file, musicInfo, LyricType.ORIGINAL);
+                        loadLrc(file, musicInfo, LyricType.ORIGINAL, reload);
                         return;
                     }
                     break;
@@ -20882,7 +20882,7 @@ public class MainFrame extends JFrame {
         LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
         renderer.setRow(row);
         lrcList.setModel(lrcListModel);
-//        seekLrc(player.getCurrTimeSeconds());
+        if (reload) seekLrc(player.getCurrTimeSeconds());
     }
 
     private void resetMp() {
@@ -21254,7 +21254,7 @@ public class MainFrame extends JFrame {
 
             // 本地音乐直接加载歌词，在线音乐等待歌词缓冲完成再加载 url
             if (isAudioFile) {
-                loadLrc(file, null, currLrcType);
+                loadLrc(file, null, currLrcType, false);
             } else {
                 if (!musicInfo.hasLrc()) lrcLoading();
                 NetMusicInfo finalMusicInfo = musicInfo;
@@ -21265,7 +21265,7 @@ public class MainFrame extends JFrame {
 
                     } finally {
                         if (!finalMusicInfo.equals(player.getMusicInfo())) return;
-                        loadLrc(null, finalMusicInfo, currLrcType);
+                        loadLrc(null, finalMusicInfo, currLrcType, false);
                     }
                 });
 

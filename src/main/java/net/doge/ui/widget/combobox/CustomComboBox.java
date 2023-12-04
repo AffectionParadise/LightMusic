@@ -1,5 +1,6 @@
 package net.doge.ui.widget.combobox;
 
+import lombok.Getter;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.combobox.ui.ComboBoxUI;
@@ -14,13 +15,14 @@ public class CustomComboBox<T> extends JComboBox<T> {
     protected Timer drawBgTimer;
     protected final float startAlpha = 0.15f;
     protected final float destAlpha = 0.3f;
+    @Getter
     protected float alpha = startAlpha;
 
     public CustomComboBox() {
         setOpaque(false);
         setFocusable(false);
         setLightWeightPopupEnabled(false);
-        setMaximumRowCount(16);
+        setMaximumRowCount(15);
         setFont(Fonts.NORMAL);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -54,14 +56,6 @@ public class CustomComboBox<T> extends JComboBox<T> {
         this.entered = entered;
         if (drawBgTimer.isRunning()) return;
         drawBgTimer.start();
-    }
-
-    public boolean isEntered() {
-        return entered;
-    }
-
-    public float getAlpha() {
-        return alpha;
     }
 
     public CustomButton getArrowButton() {
