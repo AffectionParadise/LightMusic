@@ -31,6 +31,8 @@ public class KgLyricHero {
         String name = musicInfo.getName();
         double duration = musicInfo.getDuration();
 
+        String lrcId, accessKey;
+
         // 搜索歌词
         String lBody = HttpRequest.get(String.format(SEARCH_LYRIC_KG_API, StringUtil.urlEncodeAll(name), hash, duration))
                 .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
@@ -38,13 +40,22 @@ public class KgLyricHero {
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")
                 .executeAsync()
                 .body();
-        JSONObject data = JSONObject.parseObject(lBody);
-        JSONArray candidates = data.getJSONArray("candidates");
-        if (JsonUtil.isEmpty(candidates)) return;
-        JSONObject info = candidates.getJSONObject(0);
+        // 部分响应体 json 格式有误，直接用正则表达式提取
+        if (JsonUtil.isValidObject(lBody)) {
+            JSONObject data = JSONObject.parseObject(lBody);
+            JSONArray candidates = data.getJSONArray("candidates");
+            if (JsonUtil.isEmpty(candidates)) return;
+            JSONObject info = candidates.getJSONObject(0);
+            lrcId = info.getString("id");
+            accessKey = info.getString("accesskey");
+        } else {
+            lrcId = RegexUtil.getGroup1("\"id\":\"(\\d+)\"", lBody);
+            accessKey = RegexUtil.getGroup1("\"accesskey\":\"([0-9A-Z]+)\"", lBody);
+        }
+        if (StringUtil.isEmpty(lrcId) || StringUtil.isEmpty(accessKey)) return;
 
         // 获取歌词
-        String lrcBody = HttpRequest.get(String.format(LYRIC_KG_API, info.getString("id"), info.getString("accesskey")))
+        String lrcBody = HttpRequest.get(String.format(LYRIC_KG_API, lrcId, accessKey))
                 .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")

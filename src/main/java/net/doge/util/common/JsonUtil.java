@@ -1,5 +1,6 @@
 package net.doge.util.common;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
@@ -52,6 +53,16 @@ public class JsonUtil {
      */
     public static boolean notEmpty(JSONArray array) {
         return array != null && !array.isEmpty();
+    }
+
+    /**
+     * 判断字符串是否为合法的 Json
+     *
+     * @param s
+     * @return
+     */
+    public static boolean isValidObject(String s) {
+        return JSON.isValidObject(s);
     }
 
     /**

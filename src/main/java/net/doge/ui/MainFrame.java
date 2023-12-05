@@ -3,7 +3,6 @@ package net.doge.ui;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.http.HttpException;
 import cn.hutool.http.HttpRequest;
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
@@ -3217,7 +3216,7 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = historyJsonArray.size(); i < len; i++) {
                 String s = historyJsonArray.getString(i);
                 // 判断是否为文件路径
-                if (!JSON.isValidObject(s)) {
+                if (!JsonUtil.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.execute(() -> {
                         MediaUtil.fillAudioFileInfo(audioFile);
@@ -3306,7 +3305,7 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = playQueueJsonArray.size(); i < len; i++) {
                 String s = playQueueJsonArray.getString(i);
                 // 判断是否为文件路径
-                if (!JSON.isValidObject(s)) {
+                if (!JsonUtil.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.execute(() -> {
                         MediaUtil.fillAudioFileInfo(audioFile);
@@ -3589,7 +3588,7 @@ public class MainFrame extends JFrame {
             for (int i = 0, len = collectionJsonArray.size(); i < len; i++) {
                 String s = collectionJsonArray.getString(i);
                 // 判断是否为文件路径
-                if (!JSON.isValidObject(s)) {
+                if (!JsonUtil.isValidObject(s)) {
                     AudioFile audioFile = new AudioFile(s);
                     globalExecutor.execute(() -> {
                         MediaUtil.fillAudioFileInfo(audioFile);

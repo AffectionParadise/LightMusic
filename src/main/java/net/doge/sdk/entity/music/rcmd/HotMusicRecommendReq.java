@@ -75,13 +75,8 @@ public class HotMusicRecommendReq {
     private final String HOT_BZ_MUSIC_FS_API = "http://5sing.kugou.com/bz/rmsong/more_%s.shtml";
     // 下载排行(伴奏) API (5sing)
     private final String RANK_BZ_MUSIC_FS_API = "http://5sing.kugou.com/bz/xzsong/more_%s.shtml";
-    // 发姐歌曲 API (5sing)
-    private final String HOT_MUSIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit" +
-            "&musicset=remote%23%3A72%2C71%2C70%2C89%2C88%2C87%2C86%2C85%2C84%2C83%2C82%2C81%2C80%2C79%2C76" +
-            "%2C75%2C74%2C73%2C69%2C68%2C67%2C66%2C65%2C64%2C63%2C62%2C61%2C60%2C59%2C58%2C57%2C56%2C55%2C54" +
-            "%2C53%2C52%2C51%2C50%2C49%2C48%2C47%2C46%2C45%2C44%2C43%2C42%2C41%2C40%2C39%2C38%2C37%2C36%2C35" +
-            "%2C34%2C33%2C32%2C31%2C30%2C29%2C28%2C27%2C26%2C25%2C24%2C23%2C22%2C21%2C20%2C19%2C18%2C17%2C16" +
-            "%2C15%2C14%2C13%2C12%2C11%2C10%2C9%2C8%2C7%2C6%2C5%2C4%2C3%2C2%2C1&_nonce=55024627dc";
+    // 发姐歌曲 API (发姐)
+    private final String HOT_MUSIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
 
     /**
      * 获取飙升歌曲
@@ -790,7 +785,16 @@ public class HotMusicRecommendReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String songInfoBody = HttpRequest.get(HOT_MUSIC_FA_API)
+            // 获取发姐请求参数
+            String body = HttpRequest.get(SdkCommon.FA_RADIO_API)
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(body);
+            Elements ap = doc.select("#aplayer2");
+            String musicSet = StringUtil.urlEncodeAll(ap.attr("data-songs"));
+            String _nonce = ap.attr("data-_nonce");
+
+            String songInfoBody = HttpRequest.get(String.format(HOT_MUSIC_FA_API, musicSet, _nonce))
                     .executeAsync()
                     .body();
             JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);

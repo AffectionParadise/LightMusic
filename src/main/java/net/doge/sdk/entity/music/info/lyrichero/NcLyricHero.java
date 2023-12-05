@@ -1,7 +1,6 @@
 package net.doge.sdk.entity.music.info.lyrichero;
 
 import cn.hutool.http.Method;
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.model.entity.NetMusicInfo;
@@ -53,7 +52,7 @@ public class NcLyricHero {
                 String[] lsp = lyric.split("\n");
                 StringBuilder sb = new StringBuilder();
                 for (String l : lsp) {
-                    if (JSON.isValidObject(l)) {
+                    if (JsonUtil.isValidObject(l)) {
                         JSONObject obj = JSONObject.parseObject(l);
                         Double t = obj.getDouble("t");
                         if (t != null) sb.append(TimeUtil.formatToLrcTime(t / 1000));
@@ -95,7 +94,7 @@ public class NcLyricHero {
                 String[] lsp = lyric.split("\n");
                 StringBuilder sb = new StringBuilder();
                 for (String l : lsp) {
-                    if (JSON.isValidObject(l)) {
+                    if (JsonUtil.isValidObject(l)) {
                         JSONObject obj = JSONObject.parseObject(l);
                         Double t = obj.getDouble("t");
                         if (t != null) sb.append(TimeUtil.formatToLrcTime(t / 1000));

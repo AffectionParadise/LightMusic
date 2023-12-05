@@ -25,9 +25,11 @@ public class SdkCommon {
     public static final String HK_COOKIE = "BIDUPSID=BE696A0D51D343798228BD61F26D5647; PSTM=1658997928; BAIDUID=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; Hm_lvt_4aadd610dfd2f5972f1efee2653a2bc5=1659086001; BAIDUID_BFESS=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; delPer=0; PSINO=1; BA_HECTOR=20ag2g0ha42galagaga7ko601hgorth16; ZFY=gy2NQKWk6ZhA6AuDxoMpPQs6Og5GSSS7oA7XUkOHKeg:C; PC_TAB_LOG=video_details_page; COMMON_LID=2c19ef6811cbc39c8bbfaafcfcaeba64; BDRCVFR[fb3VbsUruOn]=I67x6TjHwwYf0; hkpcSearch=%u7FDF%u8000%24%24%24hello; H_PS_PSSID=36561_36461_36979_36885_37267_37135_26350_37205; ariaDefaultTheme=undefined; RT=\"z=1&dm=baidu.com&si=fxuvi7wxq45&ss=l7egnei6&sl=17&tt=19ph&bcn=https%3A%2F%2Ffclog.baidu.com%2Flog%2Fweirwood%3Ftype%3Dperf&ld=1xs54&cl=1xt27&ul=1xt6x&hd=1xtb4\"";
     public static final String HF_COOKIE = "bbs_sid=8njuj0o2l21meohocgqj3s1lsk; c04498263b2624f231048f8aea520744=7715e2ac312b8351036f8633cd15e584";
     public static final String BI_COOKIE = "buvid3=F51EB532-B946-AA99-7E6B-3F0766C74A0129044infoc; i-wanna-go-back=-1; b_ut=5; CURRENT_PID=073ebfd0-eb4f-11ed-a6e3-637f2da26e5c; rpdid=|(um~RRuY|R)0J'uY)JkmY|u~; _uuid=7EB1D5C2-A8410-BD5D-B1110-2510576A922F948945infoc; PVID=1; nostalgia_conf=-1; hit-new-style-dyn=1; hit-dyn-v2=1; CURRENT_BLACKGAP=0; buvid_fp_plain=undefined; header_theme_version=CLOSE; CURRENT_FNVAL=4048; LIVE_BUVID=AUTO5916858943957456; CURRENT_QUALITY=0; home_feed_column=5; b_nut=1688888249; FEED_LIVE_VERSION=V8; browser_resolution=1920-961; fingerprint=b1f0ae562778f00b57f419220ad917b2; b_lsid=995D171B_1899044A92B; bp_video_offset_381984701=822494857193849000; buvid4=DF7111A0-432B-2B2D-EFE0-145ACFD72A0C51011-023050609-OERiKVBwTOo/uOaoDaaP2Q%3D%3D; buvid_fp=b1f0ae562778f00b57f419220ad917b2; sid=g8l6jwgm";
-
+    // 小丘
     public static final String QQ_MAIN_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     public static final String QQ_SEARCH_JSON = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
+    // 发姐
+    public static final String FA_RADIO_API = "https://www.chatcyf.com/radio/";
 
     // 构造网易云音乐请求
     public static HttpRequest ncRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
