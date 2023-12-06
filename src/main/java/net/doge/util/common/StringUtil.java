@@ -214,13 +214,16 @@ public class StringUtil {
     }
 
     /**
-     * 解析数字 例如 7.6万 -> 76000
+     * 解析数字（关键词：k、w、千、万、亿）例如 7.6万 -> 76000，1.25k -> 1250
      *
      * @param s
      * @return
      */
     public static long parseNumber(String s) {
-        if (s.contains("万")) return (long) (Double.parseDouble(s.replace("万", "").trim()) * 10000);
+        if (s.contains("k") || s.contains("千"))
+            return (long) (Double.parseDouble(s.replaceAll("[k千]", "").trim()) * 1000);
+        else if (s.contains("w") || s.contains("万"))
+            return (long) (Double.parseDouble(s.replaceAll("[w万]", "").trim()) * 10000);
         else if (s.contains("亿")) return (long) (Double.parseDouble(s.replace("亿", "").trim()) * 100000000);
         return Long.parseLong(s.trim());
     }
@@ -241,7 +244,7 @@ public class StringUtil {
     }
 
     /**
-     * 从元素提取文本，替换 <br> 为 \n
+     * 从元素提取文本，替换 <br><li><p><dd> 为 \n
      *
      * @param parentElement
      * @return
@@ -252,8 +255,7 @@ public class StringUtil {
         for (Node child : parentElement.childNodes()) {
             if (child instanceof TextNode) {
                 sb.append(((TextNode) child).text());
-            }
-            if (child instanceof Element) {
+            } else if (child instanceof Element) {
                 Element childElement = (Element) child;
                 sb.append(getPrettyText(childElement));
                 String s = childElement.tag().getName().toLowerCase();

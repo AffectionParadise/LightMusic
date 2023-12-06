@@ -16,8 +16,13 @@ import net.doge.sdk.common.opt.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -38,7 +43,7 @@ public class RecommendMvReq {
         if (instance == null) instance = new RecommendMvReq();
         return instance;
     }
-    
+
     // MV 排行 API
     private final String TOP_MV_API = "https://music.163.com/weapi/mv/toplist";
     // 最新 MV API
@@ -76,6 +81,12 @@ public class RecommendMvReq {
     private final String CAT_RANK_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/ranking/region?rid=%s";
     // 分区最新视频 API (哔哩哔哩)
     private final String CAT_NEW_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
+    // 视频 API (发姐)
+    private final String VIDEO_FA_API = "https://www.chatcyf.com/video/page/%s/?c2=%s&c3&c4&t";
+    // 直播 API (发姐)
+    private final String LIVE_FA_API = "https://www.chatcyf.com/teaparty/page/%s/?c2=%s&c3&c4&t";
+    // 视频 API (李志)
+    private final String VIDEO_LZ_API = "https://www.lizhinb.com/live-category/%s/";
 
     /**
      * 获取 MV 排行 + 最新 MV + 推荐 MV
@@ -936,6 +947,159 @@ public class RecommendMvReq {
             return new CommonResult<>(r, t);
         };
 
+        // 发姐
+        // 视频
+        Callable<CommonResult<NetMvInfo>> getVideoFa = () -> {
+            List<NetMvInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            String[] sp = s[9].split(" ", -1);
+            if (StringUtil.notEmpty(sp[0]) || StringUtil.isEmpty(sp[1])) {
+                String mvInfoBody = HttpRequest.get(String.format(VIDEO_FA_API, page, sp[0]))
+                        .setFollowRedirects(true)
+                        .executeAsync()
+                        .body();
+                Document doc = Jsoup.parse(mvInfoBody);
+                Elements as = doc.select(".pagination ul li a");
+                if (as.isEmpty()) t = limit;
+                else {
+                    String ts = as.get(as.size() - 2).text();
+                    if (StringUtil.isNumber(ts)) t = Integer.parseInt(ts) * limit;
+                    else t = Integer.parseInt(as.get(as.size() - 3).text()) * limit;
+                }
+                Elements mvArray = doc.select(".post.list");
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    Element mv = mvArray.get(i);
+                    Elements a = mv.select(".con h3 a");
+                    Elements author = mv.select(".author a");
+                    Elements img = mv.select(".img img");
+                    Elements views = mv.select(".views");
+                    Elements time = mv.select(".time");
+
+                    String id = RegexUtil.getGroup1("topics/(\\d+)/", a.attr("href"));
+                    String mvName = a.text();
+                    String artistName = author.text();
+                    String coverImgUrl = img.attr("src");
+                    Long playCount = StringUtil.parseNumber(views.text());
+                    String pubTime = time.text().trim();
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(NetMusicSource.FA);
+                    mvInfo.setId(id);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    r.add(mvInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
+        // 直播
+        Callable<CommonResult<NetMvInfo>> getLiveFa = () -> {
+            List<NetMvInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            String[] sp = s[9].split(" ", -1);
+            if (StringUtil.notEmpty(sp[1]) || StringUtil.isEmpty(sp[0])) {
+                String mvInfoBody = HttpRequest.get(String.format(LIVE_FA_API, page, sp[1]))
+                        .setFollowRedirects(true)
+                        .executeAsync()
+                        .body();
+                Document doc = Jsoup.parse(mvInfoBody);
+                Elements as = doc.select(".pagination ul li a");
+                if (as.isEmpty()) t = limit;
+                else {
+                    String ts = as.get(as.size() - 2).text();
+                    if (StringUtil.isNumber(ts)) t = Integer.parseInt(ts) * limit;
+                    else t = Integer.parseInt(as.get(as.size() - 3).text()) * limit;
+                }
+                Elements mvArray = doc.select(".post.list");
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    Element mv = mvArray.get(i);
+                    Elements a = mv.select(".con h3 a");
+                    Elements author = mv.select(".author a");
+                    Elements img = mv.select(".img img");
+                    Elements views = mv.select(".views");
+                    Elements time = mv.select(".time");
+
+                    String id = RegexUtil.getGroup1("topics/(\\d+)/", a.attr("href"));
+                    String mvName = a.text();
+                    String artistName = author.text();
+                    String coverImgUrl = img.attr("src");
+                    Long playCount = StringUtil.parseNumber(views.text());
+                    String pubTime = time.text().trim();
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(NetMusicSource.FA);
+                    mvInfo.setId(id);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setPubTime(pubTime);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    r.add(mvInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
+
+        // 李志
+        Callable<CommonResult<NetMvInfo>> getVideoLz = () -> {
+            List<NetMvInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.notEmpty(s[10])) {
+                String mvInfoBody = HttpRequest.get(String.format(VIDEO_LZ_API, s[10]))
+                        .executeAsync()
+                        .body();
+                Document doc = Jsoup.parse(mvInfoBody);
+                Elements mvArray = doc.select(".tile-content");
+                t = mvArray.size();
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    Element mv = mvArray.get(i);
+                    Elements a = mv.select(".tile-link.ajax-link");
+                    Elements hl = mv.select(".tile-headline");
+                    Elements img = mv.select("img");
+                    Elements time = mv.select(".tile-date");
+
+                    String id = RegexUtil.getGroup1("live/(.*?)/", a.attr("href"));
+                    String mvName = hl.text();
+                    String artistName = "李志";
+                    String coverImgUrl = img.attr("srcset").split(" ")[0];
+                    if (StringUtil.isEmpty(coverImgUrl)) coverImgUrl = img.attr("data-src");
+                    String pubTime = time.text();
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(NetMusicSource.LZ);
+                    mvInfo.setId(id);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    mvInfo.setPubTime(pubTime);
+                    String finalCoverImgUrl = coverImgUrl;
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractMvCover(finalCoverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    r.add(mvInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
+
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
 
         boolean dt = defaultTag.equals(tag);
@@ -974,6 +1138,13 @@ public class RecommendMvReq {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotVideoBi));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatRankVideoBi));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatNewVideoBi));
+        }
+        if (src == NetMusicSource.FA || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getVideoFa));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getLiveFa));
+        }
+        if (src == NetMusicSource.LZ || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getVideoLz));
         }
 
         List<List<NetMvInfo>> rl = new LinkedList<>();

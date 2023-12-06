@@ -61,6 +61,10 @@ public class AlbumInfoReq {
     private final String ALBUM_DETAIL_DB_API = "https://music.douban.com/subject/%s/";
     // 专辑信息 API (堆糖)
     private final String ALBUM_DETAIL_DT_API = "https://www.duitang.com/napi/album/detail/?album_id=%s";
+    // 专辑信息 API (李志)
+    private final String ALBUM_DETAIL_LZ_API = "https://www.lizhinb.com/%s/";
+    // 专辑歌曲 API (李志)
+    private final String ALBUM_SONGS_LZ_API = "https://www.lizhinb.com/?audioigniter_playlist_id=%s";
 
     // 获取专辑照片 API (堆糖)
     private final String GET_ALBUMS_IMG_DT_API = "https://www.duitang.com/napi/vienna/blog/by_album/?album_id=%s&after_id=%s&limit=%s&_=%s";
@@ -451,6 +455,20 @@ public class AlbumInfoReq {
             GlobalExecutors.imageExecutor.execute(() -> albumInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             albumInfo.setDescription(description);
         }
+
+        // 李志
+        else if (source == NetMusicSource.LZ) {
+            String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_LZ_API, id))
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(albumInfoBody);
+            Element tc = doc.select(".zaxu-alert-tips-content").first();
+
+            String description = StringUtil.getPrettyText(tc);
+
+            GlobalExecutors.imageExecutor.execute(() -> albumInfo.setCoverImg(SdkUtil.getImageFromUrl(albumInfo.getCoverImgThumbUrl())));
+            albumInfo.setDescription(description);
+        }
     }
 
     /**
@@ -753,6 +771,43 @@ public class AlbumInfoReq {
                 musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setQualityType(qualityType);
+
+                res.add(musicInfo);
+            }
+        }
+
+        // 李志
+        else if (source == NetMusicSource.LZ) {
+            String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_LZ_API, id))
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(albumInfoBody);
+            Elements ai = doc.select(".audioigniter-root");
+            String aid = RegexUtil.getGroup1("audioigniter-(\\d+)", ai.attr("id"));
+
+            String albumSongBody = HttpRequest.get(String.format(ALBUM_SONGS_LZ_API, aid))
+                    .executeAsync()
+                    .body();
+            JSONArray songArray = JSONArray.parseArray(albumSongBody);
+            total = songArray.size();
+            // 获取专辑歌曲同时填充专辑歌曲数
+            if (!albumInfo.hasSongNum()) albumInfo.setSongNum(total);
+            for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
+
+                String songId = String.valueOf(i);
+                String name = songJson.getString("title");
+                String artist = "李志";
+                String albumName = albumInfo.getName();
+                String albumId = aid;
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.LZ);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
 
                 res.add(musicInfo);
             }

@@ -14,6 +14,9 @@ import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.util.Map;
 
@@ -52,6 +55,10 @@ public class MvUrlReq {
     private final String VIDEO_CID_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
     // MV 视频链接获取 API (哔哩哔哩)
     private final String VIDEO_URL_BI_API = "https://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=%s";
+    // 视频链接获取 API (发姐)
+    private final String VIDEO_URL_FA_API = "https://www.chatcyf.com/topics/%s/";
+    // 视频链接获取 API (李志)
+    private final String VIDEO_URL_LZ_API = "https://www.lizhinb.com/live/%s/";
 
     /**
      * 根据 MV id 获取 MV 视频链接
@@ -338,6 +345,27 @@ public class MvUrlReq {
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             JSONArray urlArray = data.getJSONArray("durl");
             return urlArray.getJSONObject(0).getString("url");
+        }
+
+        // 发姐
+        else if (source == NetMusicSource.FA) {
+            String mvBody = HttpRequest.get(String.format(VIDEO_URL_FA_API, mvId))
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(mvBody);
+            Elements vs = doc.select("video source");
+            if (vs.isEmpty()) vs = doc.select("video");
+            if (!vs.isEmpty()) return StringUtil.urlEncodeBlank(vs.attr("src"));
+        }
+
+        // 李志
+        else if (source == NetMusicSource.LZ) {
+            String mvBody = HttpRequest.get(String.format(VIDEO_URL_LZ_API, mvId))
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(mvBody);
+            Elements video = doc.select("video");
+            return video.attr("src");
         }
 
         return "";

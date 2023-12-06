@@ -73,6 +73,8 @@ public class MusicInfoReq {
     private final String SINGLE_SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
     // 歌曲信息 API (发姐)
     private final String SINGLE_SONG_DETAIL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
+    // 歌曲信息 API (李志)
+    private final String SINGLE_SONG_DETAIL_LZ_API = "https://www.lizhinb.com/?audioigniter_playlist_id=%s";
 
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
@@ -114,6 +116,7 @@ public class MusicInfoReq {
         if (musicInfo.isIntegrated()) return;
 
         String songId = musicInfo.getId();
+        String albumId = musicInfo.getAlbumId();
         int source = musicInfo.getSource();
         boolean isProgram = musicInfo.isProgram();
 
@@ -511,6 +514,23 @@ public class MusicInfoReq {
                 break;
             }
         }
+
+        // 李志
+        else if (source == NetMusicSource.LZ) {
+            String albumSongBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_LZ_API, albumId))
+                    .executeAsync()
+                    .body();
+            JSONArray songArray = JSONArray.parseArray(albumSongBody);
+            JSONObject songJson = songArray.getJSONObject(Integer.parseInt(songId));
+            if (!musicInfo.hasAlbumImage()) {
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage albumImage = SdkUtil.getImageFromUrl(songJson.getString("cover"));
+                    FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
+                    ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                    musicInfo.callback();
+                });
+            }
+        }
     }
 
     /**
@@ -521,6 +541,7 @@ public class MusicInfoReq {
 
         int source = musicInfo.getSource();
         String id = musicInfo.getId();
+        String albumId = musicInfo.getAlbumId();
 
         // 网易云
         if (source == NetMusicSource.NC) {
@@ -652,6 +673,18 @@ public class MusicInfoReq {
                     .executeAsync()
                     .body();
             musicInfo.setLrc(lrcBody);
+            musicInfo.setTrans("");
+            musicInfo.setRoma("");
+        }
+
+        // 李志
+        else if (source == NetMusicSource.LZ) {
+            String albumSongBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_LZ_API, albumId))
+                    .executeAsync()
+                    .body();
+            JSONArray songArray = JSONArray.parseArray(albumSongBody);
+            JSONObject lrcJson = songArray.getJSONObject(Integer.parseInt(id));
+            musicInfo.setLrc(lrcJson.getString("lyrics").replace("\r\n", "\n"));
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }

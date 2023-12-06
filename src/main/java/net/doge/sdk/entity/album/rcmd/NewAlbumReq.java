@@ -44,7 +44,7 @@ public class NewAlbumReq {
         if (instance == null) instance = new NewAlbumReq();
         return instance;
     }
-    
+
     // 新碟上架 API
     private final String NEW_ALBUM_API = "https://music.163.com/api/discovery/new/albums/area";
     // 新碟上架(热门) API
@@ -81,6 +81,8 @@ public class NewAlbumReq {
     private final String TOP_ALBUM_DB_API = "https://music.douban.com/top250?start=%s";
     // 分类专辑 API (豆瓣)
     private final String CAT_ALBUM_DB_API = "https://music.douban.com/tag/%s?start=%s&type=T";
+    // 专辑 API (李志)
+    private final String ALBUM_LZ_API = "https://www.lizhinb.com/yy/";
 
     // 歌曲封面信息 API (QQ)
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
@@ -746,10 +748,10 @@ public class NewAlbumReq {
             Integer t = 0;
             final int rn = 25;
 
-            String radioInfoBody = HttpRequest.get(String.format(TOP_ALBUM_DB_API, (page - 1) * rn))
+            String albumInfoBody = HttpRequest.get(String.format(TOP_ALBUM_DB_API, (page - 1) * rn))
                     .executeAsync()
                     .body();
-            Document doc = Jsoup.parse(radioInfoBody);
+            Document doc = Jsoup.parse(albumInfoBody);
             Elements as = doc.select("tr.item");
             t -= 250 / rn * 5;
             for (int i = 0, len = as.size(); i < len; i++) {
@@ -787,10 +789,10 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[4])) {
-                String radioInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[4], (page - 1) * limit))
+                String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[4], (page - 1) * limit))
                         .executeAsync()
                         .body();
-                Document doc = Jsoup.parse(radioInfoBody);
+                Document doc = Jsoup.parse(albumInfoBody);
                 Elements as = doc.select("tr.item");
                 Element te = doc.select(".paginator > a").last();
                 String ts = te == null ? "" : te.text();
@@ -822,6 +824,46 @@ public class NewAlbumReq {
 
                     r.add(albumInfo);
                 }
+            }
+            return new CommonResult<>(r, t);
+        };
+
+        // 李志
+        Callable<CommonResult<NetAlbumInfo>> getAlbumsLz = () -> {
+            List<NetAlbumInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            String albumInfoBody = HttpRequest.get(ALBUM_LZ_API)
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(albumInfoBody);
+            Elements albums = doc.select(".wp-block-image.size-large");
+            t = albums.size();
+            for (int i = (page - 1) * limit, len = Math.min(page * limit, albums.size()); i < len; i++) {
+                Element album = albums.get(i);
+                Elements a = album.select("a");
+                Elements cap = album.select(".wp-element-caption");
+                Elements img = album.select("img");
+
+                String albumId = RegexUtil.getGroup1("/(.*?)/", a.attr("href"));
+                String albumName = cap.text();
+                String artist = "李志";
+                String coverImgThumbUrl = img.attr("srcset").split(" ")[0];
+                if (StringUtil.isEmpty(coverImgThumbUrl)) coverImgThumbUrl = img.attr("data-src");
+
+                NetAlbumInfo albumInfo = new NetAlbumInfo();
+                albumInfo.setSource(NetMusicSource.LZ);
+                albumInfo.setId(albumId);
+                albumInfo.setName(albumName);
+                albumInfo.setArtist(artist);
+                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                String finalCoverImgThumbUrl = coverImgThumbUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractCover(finalCoverImgThumbUrl);
+                    albumInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                r.add(albumInfo);
             }
             return new CommonResult<>(r, t);
         };
@@ -859,6 +901,10 @@ public class NewAlbumReq {
 
             if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getTopAlbumsDb));
+            }
+
+            if (src == NetMusicSource.LZ || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getAlbumsLz));
             }
         } else {
             if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {

@@ -38,23 +38,25 @@ public class MusicUrlReq {
     }
 
     // 歌曲 URL 获取 API
-//    private final String GET_SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
-    private final String GET_SONG_URL_API = "https://csm.sayqz.com/api/?type=apiSongUrlV1&id=%s&level=%s";
+//    private final String SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+    private final String SONG_URL_API = "https://csm.sayqz.com/api/?type=apiSongUrlV1&id=%s&level=%s";
     // 歌曲 URL 获取 API (酷我)
-//    private final String GET_SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
+//    private final String SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
     // 歌曲 URL 获取 API (咪咕)
-//    private final String GET_SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
-    private final String GET_SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.4?songId=%s&toneFlag=%s&resourceType=2";
+//    private final String SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    private final String SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.4?songId=%s&toneFlag=%s&resourceType=2";
     // 歌曲 URL 获取 API (千千)
-    private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
+    private final String SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
-    private final String GET_SONG_URL_XM_API = "https://www.ximalaya.com/revision/play/v1/audio?id=%s&ptype=1";
+    private final String SONG_URL_XM_API = "https://www.ximalaya.com/revision/play/v1/audio?id=%s&ptype=1";
     // 歌曲 URL 获取 API (哔哩哔哩)
-    private final String GET_SONG_URL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/url?sid=%s";
+    private final String SONG_URL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/url?sid=%s";
     // 歌曲 URL 获取 API (5sing)
-    private final String GET_SONG_URL_FS_API = "http://service.5sing.kugou.com/song/getsongurl?songtype=%s&songid=%s";
+    private final String SONG_URL_FS_API = "http://service.5sing.kugou.com/song/getsongurl?songtype=%s&songid=%s";
     // 歌曲 URL 获取 API (发姐)
-    private final String GET_SONG_URL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
+    private final String SONG_URL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
+    // 歌曲 URL 获取 API (李志)
+    private final String SONG_URL_LZ_API = "https://www.lizhinb.com/?audioigniter_playlist_id=%s";
 
     // 歌曲信息 API (酷狗)
     private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
@@ -91,6 +93,7 @@ public class MusicUrlReq {
      */
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
+        String albumId = musicInfo.getAlbumId();
 //        String hash = musicInfo.getHash();
         int source = musicInfo.getSource();
 
@@ -115,11 +118,11 @@ public class MusicUrlReq {
                     quality = "standard";
                     break;
             }
-//            String songBody = SdkCommon.ncRequest(Method.POST, GET_SONG_URL_API,
+//            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
 //                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
 //                    .executeAsync()
 //                    .body();
-            String songBody = HttpRequest.get(String.format(GET_SONG_URL_API, id, quality))
+            String songBody = HttpRequest.get(String.format(SONG_URL_API, id, quality))
                     .executeAsync()
                     .body();
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
@@ -194,7 +197,7 @@ public class MusicUrlReq {
 
         // 酷我(解锁付费音乐)
         else if (source == NetMusicSource.KW) {
-//            HttpResponse resp = HttpRequest.get(String.format(GET_SONG_URL_KW_API, id)).executeAsync();
+//            HttpResponse resp = HttpRequest.get(String.format(SONG_URL_KW_API, id)).executeAsync();
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {
 //                String urlBody = resp.body();
 //                JSONObject data = JSONObject.parseObject(urlBody);
@@ -235,7 +238,7 @@ public class MusicUrlReq {
                     quality = "PQ";
                     break;
             }
-            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, id, quality))
+            String songBody = HttpRequest.get(String.format(SONG_URL_MG_API, id, quality))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .header("aversionid", "")
                     .header("token", "")
@@ -248,7 +251,7 @@ public class MusicUrlReq {
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             if (JsonUtil.notEmpty(data)) return data.getString("url");
-//            String songBody = HttpRequest.get(String.format(GET_SONG_URL_MG_API, id))
+//            String songBody = HttpRequest.get(String.format(SONG_URL_MG_API, id))
 //                    .executeAsync()
 //                    .body();
 //            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
@@ -287,7 +290,7 @@ public class MusicUrlReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, id, System.currentTimeMillis()))
+            String playUrlBody = SdkCommon.qiRequest(String.format(SONG_URL_QI_API, id, System.currentTimeMillis()))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(playUrlBody).getJSONObject("data");
@@ -346,7 +349,7 @@ public class MusicUrlReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             String[] sp = id.split("_");
-            String songBody = HttpRequest.get(String.format(GET_SONG_URL_FS_API, sp[0], sp[1]))
+            String songBody = HttpRequest.get(String.format(SONG_URL_FS_API, sp[0], sp[1]))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
@@ -358,7 +361,7 @@ public class MusicUrlReq {
 
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
-            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_XM_API, id))
+            String playUrlBody = HttpRequest.get(String.format(SONG_URL_XM_API, id))
                     .executeAsync()
                     .body();
 
@@ -377,7 +380,7 @@ public class MusicUrlReq {
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String playUrlBody = HttpRequest.get(String.format(GET_SONG_URL_BI_API, id))
+            String playUrlBody = HttpRequest.get(String.format(SONG_URL_BI_API, id))
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsync()
                     .body();
@@ -396,7 +399,7 @@ public class MusicUrlReq {
             String musicSet = StringUtil.urlEncodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
-            String songInfoBody = HttpRequest.get(String.format(GET_SONG_URL_FA_API, musicSet, _nonce))
+            String songInfoBody = HttpRequest.get(String.format(SONG_URL_FA_API, musicSet, _nonce))
                     .executeAsync()
                     .body();
             JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
@@ -407,6 +410,16 @@ public class MusicUrlReq {
                 if (!id.equals(songJson.getString("id"))) continue;
                 return StringUtil.urlEncodeBlank(songJson.getString("url"));
             }
+        }
+
+        // 李志
+        else if (source == NetMusicSource.LZ) {
+            String albumSongBody = HttpRequest.get(String.format(SONG_URL_LZ_API, albumId))
+                    .executeAsync()
+                    .body();
+            JSONArray songArray = JSONArray.parseArray(albumSongBody);
+            JSONObject urlJson = songArray.getJSONObject(Integer.parseInt(id));
+            return StringUtil.urlEncodeBlank(urlJson.getString("audio"));
         }
 
         return "";
