@@ -43,53 +43,55 @@ public class CommentReq {
         return instance;
     }
 
-    // 获取评论 API
-    private final String GET_COMMENTS_API = "https://music.163.com/api/v2/resource/comments";
-    // 获取评论 API (酷狗)
-    private final String GET_COMMENTS_KG_API
+    // 评论 API
+    private final String COMMENTS_API = "https://music.163.com/api/v2/resource/comments";
+    // 评论 API (酷狗)
+    private final String COMMENTS_KG_API
             = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=%s&p=%s&pagesize=%s";
-    // 获取评论 API (QQ)
-    private final String GET_COMMENTS_QQ_API = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg?biztype=%s&topid=%s&loginUin=0&cmd=%s&pagenum=%s&pagesize=%s";
-    // 获取热门评论 API (酷我)
-    private final String GET_HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
-    // 获取最新评论 API (酷我)
-    private final String GET_NEW_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
-    // 获取热门评论 API (咪咕)
-    private final String GET_HOT_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listTopComments?targetId=%s&pageNo=%s&pageSize=%s";
-    // 获取最新评论 API (咪咕)
-    private final String GET_NEW_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listComments?targetId=%s&pageNo=%s&pageSize=%s";
-    // 获取电台热门评论 API (喜马拉雅)
-    private final String GET_RADIO_HOT_COMMENTS_XM_API
+    // 评论 API (QQ)
+    private final String COMMENTS_QQ_API = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg?biztype=%s&topid=%s&loginUin=0&cmd=%s&pagenum=%s&pagesize=%s";
+    // 热门评论 API (酷我)
+    private final String HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
+    // 最新评论 API (酷我)
+    private final String NEW_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
+    // 热门评论 API (咪咕)
+    private final String HOT_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listTopComments?targetId=%s&pageNo=%s&pageSize=%s";
+    // 最新评论 API (咪咕)
+    private final String NEW_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listComments?targetId=%s&pageNo=%s&pageSize=%s";
+    // 电台热门评论 API (喜马拉雅)
+    private final String RADIO_HOT_COMMENTS_XM_API
             = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=content-score-desc&pageId=%s&pageSize=%s";
-    // 获取电台最新评论 API (喜马拉雅)
-    private final String GET_RADIO_NEW_COMMENTS_XM_API
+    // 电台最新评论 API (喜马拉雅)
+    private final String RADIO_NEW_COMMENTS_XM_API
             = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=time-desc&pageId=%s&pageSize=%s";
-    // 获取节目评论 API (喜马拉雅)
-    private final String GET_COMMENTS_XM_API = "https://www.ximalaya.com/revision/comment/queryComments?trackId=%s&page=%s&pageSize=%s";
-    // 获取评论 API (音乐磁场)
-    private final String GET_COMMENTS_HF_API = "https://www.hifini.com/thread-%s-%s.htm?sort=desc";
-    // 获取评论 API (咕咕咕音乐)
-    private final String GET_COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm?sort=desc";
-    // 获取评论 API (5sing)
-    private final String GET_COMMENTS_FS_API = "http://service.5sing.kugou.com/%s/comments/list1?rootId=%s&page=%s&limit=%s";
-    // 获取 MV 评论 API (5sing)
-    private final String GET_MV_COMMENTS_FS_API = "http://service.5sing.kugou.com/mv/CommentList?mvId=%s&page=%s";
-    // 获取节目评论 API (猫耳)
-    private final String GET_COMMENTS_ME_API = "https://www.missevan.com/site/getcomment?type=%s&order=%s&eId=%s&p=%s&pagesize=%s";
-    // 获取评论 API (好看)
-    private final String GET_COMMENTS_HK_API = "https://haokan.baidu.com/videoui/api/commentget?url_key=%s&pn=%s&rn=%s&child_rn=1";
-    // 获取电台评论 API (豆瓣)
-    private final String GET_RADIO_COMMENTS_DB_API = "https://movie.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
-    // 获取图书电台评论 API (豆瓣)
-    private final String GET_BOOK_RADIO_COMMENTS_DB_API = "https://book.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
-    // 获取游戏电台评论 API (豆瓣)
-    private final String GET_GAME_RADIO_COMMENTS_DB_API = "https://www.douban.com/game/%s/comments?sort=%s&start=%s";
-    // 获取专辑评论 API (豆瓣)
-    private final String GET_ALBUM_COMMENTS_DB_API = "https://music.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
-    // 获取视频评论 API (哔哩哔哩)
-    private final String GET_VIDEO_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
-    // 获取音频评论 API (哔哩哔哩)
-    private final String GET_SONG_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
+    // 节目评论 API (喜马拉雅)
+    private final String COMMENTS_XM_API = "https://www.ximalaya.com/revision/comment/queryComments?trackId=%s&page=%s&pageSize=%s";
+    // 评论 API (音乐磁场)
+    private final String COMMENTS_HF_API = "https://www.hifini.com/thread-%s-%s.htm?sort=desc";
+    // 评论 API (咕咕咕音乐)
+    private final String COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm?sort=desc";
+    // 评论 API (5sing)
+    private final String COMMENTS_FS_API = "http://service.5sing.kugou.com/%s/comments/list1?rootId=%s&page=%s&limit=%s";
+    //  MV 评论 API (5sing)
+    private final String MV_COMMENTS_FS_API = "http://service.5sing.kugou.com/mv/CommentList?mvId=%s&page=%s";
+    // 节目评论 API (猫耳)
+    private final String COMMENTS_ME_API = "https://www.missevan.com/site/getcomment?type=%s&order=%s&eId=%s&p=%s&pagesize=%s";
+    // 评论 API (好看)
+    private final String COMMENTS_HK_API = "https://haokan.baidu.com/videoui/api/commentget?url_key=%s&pn=%s&rn=%s&child_rn=1";
+    // 电台评论 API (豆瓣)
+    private final String RADIO_COMMENTS_DB_API = "https://movie.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    // 图书电台评论 API (豆瓣)
+    private final String BOOK_RADIO_COMMENTS_DB_API = "https://book.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    // 游戏电台评论 API (豆瓣)
+    private final String GAME_RADIO_COMMENTS_DB_API = "https://www.douban.com/game/%s/comments?sort=%s&start=%s";
+    // 专辑评论 API (豆瓣)
+    private final String ALBUM_COMMENTS_DB_API = "https://music.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    // 视频评论 API (哔哩哔哩)
+    private final String VIDEO_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
+    // 音频评论 API (哔哩哔哩)
+    private final String SONG_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
+    // 评论 API (李志)
+    private final String COMMENTS_LZ_API = "https://www.lizhinb.com/wp-admin/admin-ajax.php";
 
     // mlog id 转视频 id API
     private final String MLOG_TO_VIDEO_API = "https://music.163.com/weapi/mlog/video/convert/id";
@@ -99,6 +101,10 @@ public class CommentReq {
             "&albummid=%s&albumid=0";
     // 歌曲信息 API (咪咕)
     private final String SINGLE_SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    // 专辑信息 API (李志)
+    private final String ALBUM_DETAIL_LZ_API = "https://www.lizhinb.com/%s/";
+    // 视频信息 API (李志)
+    private final String VIDEO_DETAIL_LZ_API = "https://www.lizhinb.com/live/%s/";
 
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
@@ -206,7 +212,7 @@ public class CommentReq {
                     break;
             }
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/v2/resource/comments");
-            String commentInfoBody = SdkCommon.ncRequest(Method.POST, GET_COMMENTS_API,
+            String commentInfoBody = SdkCommon.ncRequest(Method.POST, COMMENTS_API,
                             String.format("{\"threadId\":\"%s\",\"showInner\":true,\"pageNo\":%s,\"pageSize\":%s,\"cursor\":\"%s\",\"sortType\":%s}",
                                     threadId, page, limit, cur, sortType), options)
                     .executeAsync()
@@ -281,7 +287,7 @@ public class CommentReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG && resource instanceof NetMusicInfo) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_KG_API, id, page, limit))
+            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_KG_API, id, page, limit))
                     // 注意此处必须加 header 才能请求到正确的数据！
                     .header(Header.USER_AGENT, "Android712-AndroidPhone-8983-18-0-COMMENT-wifi")
                     .executeAsync()
@@ -328,7 +334,7 @@ public class CommentReq {
             cmd.put("4", new int[]{8, 9});
             cmd.put("5", new int[]{8, 6});
             String bizType = typeStr[1];
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_QQ_API, bizType, id, cmd.get(bizType)[hotOnly ? 1 : 0], page - 1, lim))
+            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_QQ_API, bizType, id, cmd.get(bizType)[hotOnly ? 1 : 0], page - 1, lim))
                     .executeAsync()
                     .body();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
@@ -415,7 +421,7 @@ public class CommentReq {
                     ref = "http://www.kuwo.cn/rankList/" + StringUtil.urlEncodeAll(id);
                     break;
             }
-            String url = hotOnly ? GET_HOT_COMMENTS_KW_API : GET_NEW_COMMENTS_KW_API;
+            String url = hotOnly ? HOT_COMMENTS_KW_API : NEW_COMMENTS_KW_API;
             // 最新评论
             String commentInfoBody = SdkCommon.kwRequest(String.format(url, typeStr[2], id, page, limit))
                     .header(Header.REFERER, ref)
@@ -489,7 +495,7 @@ public class CommentReq {
             id = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0).getString("songId");
 
             // 评论
-            String url = hotOnly ? GET_HOT_COMMENTS_MG_API : GET_NEW_COMMENTS_MG_API;
+            String url = hotOnly ? HOT_COMMENTS_MG_API : NEW_COMMENTS_MG_API;
             String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
                     .header(Header.REFERER, "https://music.migu.cn")
                     .executeAsync()
@@ -564,7 +570,7 @@ public class CommentReq {
         else if (source == NetMusicSource.XM) {
             JSONArray commentArray;
             if (isRadio) {
-                String url = hotOnly ? GET_RADIO_HOT_COMMENTS_XM_API : GET_RADIO_NEW_COMMENTS_XM_API;
+                String url = hotOnly ? RADIO_HOT_COMMENTS_XM_API : RADIO_NEW_COMMENTS_XM_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
                         .executeAsync()
                         .body();
@@ -574,7 +580,7 @@ public class CommentReq {
                 total = comments.getIntValue("totalCount");
                 commentArray = comments.getJSONArray("list");
             } else {
-                String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_XM_API, id, page, limit))
+                String commentInfoBody = HttpRequest.get(String.format(COMMENTS_XM_API, id, page, limit))
                         .executeAsync()
                         .body();
                 JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
@@ -653,7 +659,7 @@ public class CommentReq {
 
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_HF_API, id, page))
+            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HF_API, id, page))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsync()
@@ -724,7 +730,7 @@ public class CommentReq {
 
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_GG_API, id, page))
+            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_GG_API, id, page))
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(commentInfoBody);
@@ -796,11 +802,11 @@ public class CommentReq {
             String url = "";
             if (resource instanceof NetMusicInfo) {
                 String[] sp = id.split("_");
-                url = String.format(GET_COMMENTS_FS_API, sp[0], sp[1], page, limit);
+                url = String.format(COMMENTS_FS_API, sp[0], sp[1], page, limit);
             } else if (resource instanceof NetPlaylistInfo) {
-                url = String.format(GET_COMMENTS_FS_API, "dynamicSongList", id, page, limit);
+                url = String.format(COMMENTS_FS_API, "dynamicSongList", id, page, limit);
             } else if (isMv) {
-                url = String.format(GET_MV_COMMENTS_FS_API, id, page);
+                url = String.format(MV_COMMENTS_FS_API, id, page);
             }
             String commentInfoBody = HttpRequest.get(url)
                     .executeAsync()
@@ -905,7 +911,7 @@ public class CommentReq {
 
         // 猫耳
         else if (source == NetMusicSource.ME && StringUtil.notEmpty(typeStr[3])) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_ME_API, typeStr[3], hotOnly ? 3 : 1, id, page, limit))
+            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_ME_API, typeStr[3], hotOnly ? 3 : 1, id, page, limit))
                     .executeAsync()
                     .body();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
@@ -973,7 +979,7 @@ public class CommentReq {
 
         // 好看
         else if (source == NetMusicSource.HK) {
-            String commentInfoBody = HttpRequest.get(String.format(GET_COMMENTS_HK_API, id, page, limit))
+            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HK_API, id, page, limit))
                     .executeAsync()
                     .body();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
@@ -1043,7 +1049,7 @@ public class CommentReq {
         // 豆瓣
         else if (source == NetMusicSource.DB) {
             if (isGame) {
-                String url = GET_GAME_RADIO_COMMENTS_DB_API;
+                String url = GAME_RADIO_COMMENTS_DB_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "score" : "time", (page - 1) * limit, limit))
                         .setFollowRedirects(true)
                         .executeAsync()
@@ -1087,9 +1093,9 @@ public class CommentReq {
             } else {
                 String url;
                 if (isRadio) {
-                    if (isBook) url = GET_BOOK_RADIO_COMMENTS_DB_API;
-                    else url = GET_RADIO_COMMENTS_DB_API;
-                } else url = GET_ALBUM_COMMENTS_DB_API;
+                    if (isBook) url = BOOK_RADIO_COMMENTS_DB_API;
+                    else url = RADIO_COMMENTS_DB_API;
+                } else url = ALBUM_COMMENTS_DB_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "new_score" : "time", (page - 1) * limit, limit))
                         .setFollowRedirects(true)
                         .executeAsync()
@@ -1140,8 +1146,8 @@ public class CommentReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             int lim = Math.min(20, limit);
-            String url = resource instanceof NetMvInfo ? String.format(GET_VIDEO_COMMENTS_BI_API, BvAvConverter.getInstance().convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
-                    : String.format(GET_SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, lim);
+            String url = resource instanceof NetMvInfo ? String.format(VIDEO_COMMENTS_BI_API, BvAvConverter.getInstance().convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
+                    : String.format(SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, lim);
             String commentInfoBody = HttpRequest.get(url)
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsync()
@@ -1215,6 +1221,67 @@ public class CommentReq {
                         res.add(ci);
                     }
                 }
+            }
+        }
+
+        // 李志
+        else if (source == NetMusicSource.LZ) {
+            boolean isAlbum = resource instanceof NetAlbumInfo;
+            // 获取 post-id
+            String albumInfoBody = HttpRequest.get(String.format(isAlbum ? ALBUM_DETAIL_LZ_API : VIDEO_DETAIL_LZ_API, id))
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(albumInfoBody);
+            Elements ct = doc.select(".comments.tabbar");
+            String pid = ct.attr("data-post_id");
+
+            Map<String, Object> formMap = new HashMap<>();
+            formMap.put("action", "zaxu_ajax_comment_rc");
+            formMap.put("post_id", pid);
+            formMap.put("page", page);
+            String commentInfoBody = HttpRequest.post(COMMENTS_LZ_API)
+                    .form(formMap)
+                    .executeAsync()
+                    .body();
+            doc = Jsoup.parse(commentInfoBody);
+            Elements commentArray = doc.select("#comments-list li");
+            // 获取评论数量
+            total = limit;
+//            formMap.remove("page");
+//            formMap.put("action", "zaxu_ajax_get_comment_count_rc");
+//            String commentCountBody = HttpRequest.post(COMMENTS_LZ_API)
+//                    .form(formMap)
+//                    .executeAsync()
+//                    .body();
+//            total = Integer.parseInt(commentCountBody);
+            for (int i = 0, len = commentArray.size(); i < len; i++) {
+                Element comment = commentArray.get(i);
+                Element title = comment.select(".comment-title").first();
+                Element img = comment.select(".comment-avatar img").first();
+                Element p = comment.select(".comment-text p").first();
+                Element date = comment.select(".comment-date").first();
+
+                String username = title.text().trim();
+                String profileUrl = img.attr("srcset").split(" ")[0];
+                if (StringUtil.isEmpty(profileUrl)) profileUrl = img.attr("src");
+                String content = p.text().trim();
+                String time = TimeUtil.strToPhrase(date.text().trim());
+
+                NetCommentInfo commentInfo = new NetCommentInfo();
+                commentInfo.setSource(NetMusicSource.LZ);
+                commentInfo.setSub(!comment.hasClass("depth-1"));
+                commentInfo.setUsername(username);
+                commentInfo.setProfileUrl(profileUrl);
+                commentInfo.setContent(content);
+                commentInfo.setTime(time);
+
+                String finalProfileUrl = profileUrl;
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage profile = SdkUtil.extractProfile(finalProfileUrl);
+                    commentInfo.setProfile(profile);
+                });
+
+                res.add(commentInfo);
             }
         }
 

@@ -785,31 +785,33 @@ public class AlbumInfoReq {
             Elements ai = doc.select(".audioigniter-root");
             String aid = RegexUtil.getGroup1("audioigniter-(\\d+)", ai.attr("id"));
 
-            String albumSongBody = HttpRequest.get(String.format(ALBUM_SONGS_LZ_API, aid))
-                    .executeAsync()
-                    .body();
-            JSONArray songArray = JSONArray.parseArray(albumSongBody);
-            total = songArray.size();
-            // 获取专辑歌曲同时填充专辑歌曲数
-            if (!albumInfo.hasSongNum()) albumInfo.setSongNum(total);
-            for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
-                JSONObject songJson = songArray.getJSONObject(i);
+            if (StringUtil.notEmpty(aid)) {
+                String albumSongBody = HttpRequest.get(String.format(ALBUM_SONGS_LZ_API, aid))
+                        .executeAsync()
+                        .body();
+                JSONArray songArray = JSONArray.parseArray(albumSongBody);
+                total = songArray.size();
+                // 获取专辑歌曲同时填充专辑歌曲数
+                if (!albumInfo.hasSongNum()) albumInfo.setSongNum(total);
+                for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
 
-                String songId = String.valueOf(i);
-                String name = songJson.getString("title");
-                String artist = "李志";
-                String albumName = albumInfo.getName();
-                String albumId = aid;
+                    String songId = aid + "_" + i;
+                    String name = songJson.getString("title");
+                    String artist = "李志";
+                    String albumName = albumInfo.getName();
+                    String albumId = id;
 
-                NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.LZ);
-                musicInfo.setId(songId);
-                musicInfo.setName(name);
-                musicInfo.setArtist(artist);
-                musicInfo.setAlbumName(albumName);
-                musicInfo.setAlbumId(albumId);
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.LZ);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
 
-                res.add(musicInfo);
+                    res.add(musicInfo);
+                }
             }
         }
 

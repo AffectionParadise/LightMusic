@@ -93,7 +93,6 @@ public class MusicUrlReq {
      */
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String albumId = musicInfo.getAlbumId();
 //        String hash = musicInfo.getHash();
         int source = musicInfo.getSource();
 
@@ -414,11 +413,12 @@ public class MusicUrlReq {
 
         // 李志
         else if (source == NetMusicSource.LZ) {
-            String albumSongBody = HttpRequest.get(String.format(SONG_URL_LZ_API, albumId))
+            String[] sp = id.split("_");
+            String albumSongBody = HttpRequest.get(String.format(SONG_URL_LZ_API, sp[0]))
                     .executeAsync()
                     .body();
             JSONArray songArray = JSONArray.parseArray(albumSongBody);
-            JSONObject urlJson = songArray.getJSONObject(Integer.parseInt(id));
+            JSONObject urlJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
             return StringUtil.urlEncodeBlank(urlJson.getString("audio"));
         }
 
