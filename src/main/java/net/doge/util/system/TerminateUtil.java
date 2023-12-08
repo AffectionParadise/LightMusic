@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
 /**
  * @Author Doge
- * @Description cmd 工具类
+ * @Description 终端工具类
  * @Date 2020/12/15
  */
 public class TerminateUtil {
@@ -88,13 +88,10 @@ public class TerminateUtil {
         public void run() {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
                 String line;
-                while ((line = reader.readLine()) != null) {
-                    if (error) {
-                        System.out.println(line);
-                    }
-                }
+                while ((line = reader.readLine()) != null)
+                    if (error) System.out.println(line);
             } catch (IOException e) {
-                e.printStackTrace();
+                LogUtil.error(e);
             }
         }
     }

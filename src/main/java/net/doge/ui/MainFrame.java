@@ -103,6 +103,7 @@ import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.media.MediaUtil;
 import net.doge.util.system.FileUtil;
 import net.doge.util.system.KeyUtil;
+import net.doge.util.system.LogUtil;
 import net.doge.util.system.TerminateUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
@@ -2684,18 +2685,13 @@ public class MainFrame extends JFrame {
         // 格言
         updateMotto();
 
-        // 更新 LAF
+        // 由于多个 OS 的 UI 适配难度大，统一使用 Windows 的 LAF，避免界面元素混乱
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             SwingUtilities.updateComponentTreeUI(globalPanel);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedLookAndFeelException e) {
-            throw new RuntimeException(e);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException e) {
+            LogUtil.error(e);
         }
 
         // 加载配置
@@ -2707,7 +2703,7 @@ public class MainFrame extends JFrame {
         try {
             SystemTray.getSystemTray().add(trayIconImg);
         } catch (AWTException e) {
-            e.printStackTrace();
+            LogUtil.error(e);
         }
 
         // 加载上一次播放的歌曲
@@ -7402,11 +7398,8 @@ public class MainFrame extends JFrame {
                         // 请求超时
                         new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                     } catch (JSONException jsonException) {
-                        jsonException.printStackTrace();
                         // 接口异常
                         new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
                     }
                 });
             }
@@ -7788,7 +7781,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -7859,7 +7851,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -7986,7 +7977,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -8115,7 +8105,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -8189,7 +8178,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -10086,7 +10074,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -10156,7 +10143,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -10226,7 +10212,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -10460,7 +10445,6 @@ public class MainFrame extends JFrame {
                         // 请求超时
                         new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                     } catch (JSONException jsonException) {
-                        jsonException.printStackTrace();
                         // 接口异常
                         new TipDialog(THIS, API_ERROR_MSG).showDialog();
                     }
@@ -10518,7 +10502,6 @@ public class MainFrame extends JFrame {
                         // 请求超时
                         new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                     } catch (JSONException jsonException) {
-                        jsonException.printStackTrace();
                         // 接口异常
                         new TipDialog(THIS, API_ERROR_MSG).showDialog();
                     }
@@ -11141,7 +11124,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -11209,7 +11191,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -11486,7 +11467,6 @@ public class MainFrame extends JFrame {
                         // 请求超时
                         new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                     } catch (JSONException jsonException) {
-                        jsonException.printStackTrace();
                         // 接口异常
                         new TipDialog(THIS, API_ERROR_MSG).showDialog();
                     }
@@ -11548,7 +11528,6 @@ public class MainFrame extends JFrame {
                         // 请求超时
                         new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                     } catch (JSONException jsonException) {
-                        jsonException.printStackTrace();
                         // 接口异常
                         new TipDialog(THIS, API_ERROR_MSG).showDialog();
                     }
@@ -12117,7 +12096,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -12254,7 +12232,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -12325,7 +12302,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -12394,7 +12370,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -12464,7 +12439,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -13390,7 +13364,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -13460,7 +13433,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -13530,7 +13502,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -13598,7 +13569,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -14099,7 +14069,6 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, TIME_OUT_MSG).showDialog();
             } catch (JSONException jsonException) {
                 // 接口异常
-                jsonException.printStackTrace();
                 new TipDialog(THIS, API_ERROR_MSG).showDialog();
             }
         };
@@ -14245,7 +14214,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -14314,7 +14282,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -14433,7 +14400,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -15930,7 +15896,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -15997,7 +15962,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -16064,7 +16028,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -16133,7 +16096,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -16201,7 +16163,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -16269,7 +16230,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -16410,7 +16370,6 @@ public class MainFrame extends JFrame {
                 // 请求超时
                 new TipDialog(THIS, TIME_OUT_MSG).showDialog();
             } catch (JSONException jsonException) {
-                jsonException.printStackTrace();
                 // 接口异常
                 new TipDialog(THIS, API_ERROR_MSG).showDialog();
             }
@@ -16748,7 +16707,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -16815,7 +16773,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -16882,7 +16839,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -17968,7 +17924,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -18439,7 +18394,6 @@ public class MainFrame extends JFrame {
                     // 请求超时
                     new TipDialog(THIS, TIME_OUT_MSG).showDialog();
                 } catch (JSONException jsonException) {
-                    jsonException.printStackTrace();
                     // 接口异常
                     new TipDialog(THIS, API_ERROR_MSG).showDialog();
                 }
@@ -21460,7 +21414,7 @@ public class MainFrame extends JFrame {
                     } else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
                     return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    LogUtil.error(e);
                 }
                 return 0;
             });
@@ -21474,7 +21428,7 @@ public class MainFrame extends JFrame {
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
                     return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    LogUtil.error(e);
                 }
                 return 0;
             });
@@ -21488,7 +21442,7 @@ public class MainFrame extends JFrame {
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getArtist();
                     return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    LogUtil.error(e);
                 }
                 return 0;
             });
@@ -21502,7 +21456,7 @@ public class MainFrame extends JFrame {
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getAlbumName();
                     return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    LogUtil.error(e);
                 }
                 return 0;
             });
@@ -21516,7 +21470,7 @@ public class MainFrame extends JFrame {
                 try {
                     return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    e.printStackTrace();
+                    LogUtil.error(e);
                     return 0;
                 }
             });
@@ -21530,7 +21484,7 @@ public class MainFrame extends JFrame {
                     d1 = ((AudioFile) o1).getDuration();
                     d2 = ((AudioFile) o2).getDuration();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LogUtil.error(e);
                     return 0;
                 }
                 return order == SortMethod.ASCENDING ? Double.compare(d1, d2) : Double.compare(d2, d1);
@@ -23597,7 +23551,7 @@ public class MainFrame extends JFrame {
                 runnable.run();
                 Thread.sleep(28);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LogUtil.error(ex);
             } finally {
                 loading.stop();
             }

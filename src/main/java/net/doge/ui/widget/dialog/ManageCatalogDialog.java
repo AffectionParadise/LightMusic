@@ -13,6 +13,7 @@ import net.doge.ui.widget.list.renderer.system.CatalogListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.util.system.LogUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,7 +120,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
                 }
                 Desktop.getDesktop().open(dir);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                LogUtil.error(ex);
             }
         });
         // 添加事件

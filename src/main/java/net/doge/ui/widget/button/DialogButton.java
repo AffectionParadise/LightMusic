@@ -6,6 +6,7 @@ import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -23,6 +24,7 @@ public class DialogButton extends JButton implements MouseListener {
     private final float startAlpha = 0.2f;
     private final float destAlpha = 0.4f;
     private float alpha = startAlpha;
+    private static final Border BORDER = BorderFactory.createEmptyBorder(4, 16, 4, 16);
 
     public DialogButton() {
         this(null, Colors.WHITE);
@@ -46,6 +48,7 @@ public class DialogButton extends JButton implements MouseListener {
         setContentAreaFilled(false);
         setFocusable(false);
         setFocusPainted(false);
+        setBorder(BORDER);
         setFont(Fonts.NORMAL);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 

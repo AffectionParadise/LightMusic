@@ -3,6 +3,7 @@ package net.doge.util.common;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import net.doge.util.system.LogUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -183,7 +184,7 @@ public class CryptoUtil {
             inflater.end();
             outputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.error(e);
         }
 
         return outputStream.toByteArray();

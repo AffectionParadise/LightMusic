@@ -10,6 +10,7 @@ import net.doge.constant.system.Format;
 import net.doge.constant.ui.BlurConstants;
 import net.doge.constant.ui.Colors;
 import net.doge.util.common.StringUtil;
+import net.doge.util.system.LogUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -163,11 +164,7 @@ public class ImageUtil {
      * @return
      */
     public static void toFile(String imgUrl, String dest) {
-        try {
-            Thumbnails.of(getImgStream(imgUrl)).scale(1).toFile(dest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        toFile(imgUrl, new File(dest));
     }
 
     /**
@@ -181,7 +178,7 @@ public class ImageUtil {
         try {
             Thumbnails.of(getImgStream(imgUrl)).scale(1).toFile(outputFile);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.error(e);
         }
     }
 
@@ -196,7 +193,7 @@ public class ImageUtil {
         try {
             Thumbnails.of(img).scale(1).toFile(dest);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.error(e);
         }
     }
 

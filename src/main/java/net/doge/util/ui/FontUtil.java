@@ -1,6 +1,7 @@
 package net.doge.util.ui;
 
 import net.doge.util.common.CryptoUtil;
+import net.doge.util.system.LogUtil;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -29,6 +30,7 @@ public class FontUtil {
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(dynamicFontPt);
             return dynamicFontPt;
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }

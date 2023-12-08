@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 import net.doge.util.system.FileUtil;
+import net.doge.util.system.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,11 +112,11 @@ public class JsonUtil {
      */
     public static boolean toFile(JSONObject obj, File file) {
         try {
-            String jsonStr = obj.toString(JSONWriter.Feature.PrettyFormat, JSONWriter.Feature.WriteMapNullValue);
+            String jsonStr = obj.toString(JSONWriter.Feature.WriteMapNullValue);
             FileUtil.writeStr(jsonStr, file);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.error(e);
             return false;
         }
     }

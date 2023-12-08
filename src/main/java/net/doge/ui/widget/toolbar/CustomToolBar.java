@@ -6,5 +6,6 @@ public class CustomToolBar extends JToolBar {
     public CustomToolBar() {
         setOpaque(false);
         setFloatable(false);
+        setBorder(null);
     }
 }

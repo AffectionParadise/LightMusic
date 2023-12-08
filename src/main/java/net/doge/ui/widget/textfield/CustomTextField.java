@@ -25,6 +25,7 @@ public class CustomTextField extends JTextField {
         setMaximumSize(new Dimension(3000, 30));
         setFont(Fonts.NORMAL);
         Insets insets = getMargin();
+        insets.top = insets.bottom = 2;
         insets.left = insets.right = 5;
 
         addMouseListener(new MouseAdapter() {

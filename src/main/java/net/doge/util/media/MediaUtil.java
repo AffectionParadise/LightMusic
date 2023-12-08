@@ -11,6 +11,7 @@ import net.doge.model.entity.MediaInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.util.common.StringUtil;
 import net.doge.util.system.FileUtil;
+import net.doge.util.system.LogUtil;
 import net.doge.util.system.TerminateUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -81,7 +82,7 @@ public class MediaUtil {
             // 退出时将临时文件删除
             tempFile.deleteOnExit();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.error(e);
         }
     }
 
@@ -120,7 +121,7 @@ public class MediaUtil {
             mp3file.setId3v2Tag(tag);
             mp3file.save(destFile.getAbsolutePath());
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.error(e);
         }
     }
 
