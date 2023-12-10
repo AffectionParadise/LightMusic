@@ -44,11 +44,13 @@
 //        qualityHashMap.put("320k", "hash_320");
 //        qualityHashMap.put("flac", "hash_flac");
 //        qualityHashMap.put("flac24bit", "hash_high");
+//        qualityHashMap.put("master", "hash_128");
 //
 //        qualityMap.put("128k", "128");
 //        qualityMap.put("320k", "320");
 //        qualityMap.put("flac", "flac");
 //        qualityMap.put("flac24bit", "high");
+//        qualityMap.put("master", "viper_atmos");
 //    }
 //
 //    /**

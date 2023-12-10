@@ -32,7 +32,7 @@ public class VSliderUI extends BasicSliderUI {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.setColor(thumbColor);
-        g2d.fillOval(thumbRect.x + 4, thumbRect.y - 2, thumbRect.width - 4, thumbRect.width - 4);
+        g2d.fillOval(thumbRect.x + (thumbRect.width - thumbRect.height) / 2 + 2, thumbRect.y, thumbRect.height, thumbRect.height);
     }
 
     /**

@@ -365,7 +365,7 @@ public class MvUrlReq {
                     .body();
             Document doc = Jsoup.parse(mvBody);
             Elements video = doc.select("video");
-            return video.attr("src");
+            return StringUtil.urlEncodeBlank(video.attr("src"));
         }
 
         return "";

@@ -159,8 +159,6 @@ public class MainFrame extends JFrame {
     private final double DEFAULT_RATE = 1;
     // 默认均衡
     private final double DEFAULT_BALANCE = 0;
-    // 歌词高亮位置
-    private final int LRC_INDEX = 8;
     // 历史记录最大条数
     public int maxHistoryCount;
     // 搜索历史最大条数
@@ -2426,12 +2424,6 @@ public class MainFrame extends JFrame {
         add(jfxPanel);
     }
 
-    // 初始化 UI 管理器配置
-    private void initUIManager() {
-        // 列表不按照行块为单位滚动，提升动画流畅性
-        UIManager.put("List.lockToPositionOnScroll", false);
-    }
-
     private void initUI() {
         // 主界面
         setTitle(TITLE);
@@ -2549,9 +2541,6 @@ public class MainFrame extends JFrame {
 
         // 初始化 JavaFX 组件
         initJavaFX();
-
-        // 初始化 UI 管理器配置
-        initUIManager();
 
         // 初始化标题栏
         initTitleBar();
@@ -2684,15 +2673,6 @@ public class MainFrame extends JFrame {
 
         // 格言
         updateMotto();
-
-        // 由于多个 OS 的 UI 适配难度大，统一使用 Windows 的 LAF，避免界面元素混乱
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            SwingUtilities.updateComponentTreeUI(globalPanel);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException e) {
-            LogUtil.error(e);
-        }
 
         // 加载配置
         boolean succeed = loadConfig();
@@ -4731,17 +4711,9 @@ public class MainFrame extends JFrame {
                 if (netMusicListModel.isEmpty() && netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
                     netLeftBox.remove(netMusicScrollPane);
                     netLeftBox.add(netMusicKeywordsPanelScrollPane);
-                    globalExecutor.execute(() -> {
-                        updateHotSearch();
-                        // 更新 LAF，防止组件样式不正确
-                        SwingUtilities.updateComponentTreeUI(netMusicRefreshHotSearchButton);
-                    });
+                    globalExecutor.execute(() -> updateHotSearch());
                 } else if (netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
-                    globalExecutor.execute(() -> {
-                        updateHotSearch();
-                        // 更新 LAF，防止组件样式不正确
-                        SwingUtilities.updateComponentTreeUI(netMusicRefreshHotSearchButton);
-                    });
+                    globalExecutor.execute(() -> updateHotSearch());
                 } else if (!netMusicListModel.isEmpty()) {
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                     netLeftBox.add(netMusicScrollPane);
@@ -5606,11 +5578,8 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌单歌曲数量显示
-//                                currcollectionLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
-                            javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
-                            SwingUtilities.updateComponentTreeUI(collectionCountPanel);
                             collectionItemListCountBox.add(netMusicScrollPane);
                             collectionItemListBox.add(collectionItemListCountBox);
                             // 歌单列表切换到在线音乐列表
@@ -5618,8 +5587,6 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.add(collectionItemListBox);
                             // 收藏工具栏添加，需要更新 LAF
                             collectionLeftBox.add(musicCollectionToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
-                            collectionRecordTypeComboBox.setUI(ui);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForPlaylistCollectionModel.clear();
@@ -5699,11 +5666,8 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新专辑歌曲数量显示
-//                                currcollectionLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
-                            javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
-                            SwingUtilities.updateComponentTreeUI(collectionCountPanel);
                             collectionItemListCountBox.add(netMusicScrollPane);
                             collectionItemListBox.add(collectionItemListCountBox);
                             // 专辑列表切换到在线音乐列表
@@ -5711,8 +5675,6 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.add(collectionItemListBox);
                             // 收藏工具栏添加，需要更新 LAF
                             collectionLeftBox.add(musicCollectionToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
-                            collectionRecordTypeComboBox.setUI(ui);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForAlbumCollectionModel.clear();
@@ -5795,11 +5757,8 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌手歌曲数量显示
-//                                currcollectionLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
-                            javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
-                            SwingUtilities.updateComponentTreeUI(collectionCountPanel);
                             collectionItemListCountBox.add(netMusicScrollPane);
                             collectionItemListBox.add(collectionItemListCountBox);
                             // 歌手列表切换到在线音乐列表
@@ -5807,8 +5766,6 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.add(collectionItemListBox);
                             // 收藏工具栏添加，需要更新 LAF
                             collectionLeftBox.add(musicCollectionToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
-                            collectionRecordTypeComboBox.setUI(ui);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForArtistCollectionModel.clear();
@@ -5893,11 +5850,8 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新电台歌曲数量显示
-//                                currcollectionLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
-                            javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
-                            SwingUtilities.updateComponentTreeUI(collectionCountPanel);
                             collectionItemListCountBox.add(netMusicScrollPane);
                             collectionItemListBox.add(collectionItemListCountBox);
                             // 电台列表切换到在线音乐列表
@@ -5905,8 +5859,6 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.add(collectionItemListBox);
                             // 收藏工具栏添加，需要更新 LAF
                             collectionLeftBox.add(musicCollectionToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
-                            collectionRecordTypeComboBox.setUI(ui);
                             collectionRecordTypeComboBox.setVisible(radioInfo.fromXM());
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
@@ -5990,8 +5942,6 @@ public class MainFrame extends JFrame {
                             // 更新榜单歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
-                            javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
-                            SwingUtilities.updateComponentTreeUI(collectionCountPanel);
                             collectionItemListCountBox.add(netMusicScrollPane);
                             collectionItemListBox.add(collectionItemListCountBox);
                             // 榜单列表切换到在线音乐列表
@@ -5999,8 +5949,6 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.add(collectionItemListBox);
                             // 收藏工具栏添加，需要更新 LAF
                             collectionLeftBox.add(musicCollectionToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
-                            collectionRecordTypeComboBox.setUI(ui);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRankingCollectionModel.clear();
@@ -6105,8 +6053,6 @@ public class MainFrame extends JFrame {
                             // 更新用户歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
-                            javax.swing.plaf.ComboBoxUI ui = collectionRecordTypeComboBox.getUI();
-                            SwingUtilities.updateComponentTreeUI(collectionCountPanel);
                             collectionItemListCountBox.add(netMusicScrollPane);
                             collectionItemListBox.add(collectionItemListCountBox);
                             // 用户列表切换到在线音乐列表
@@ -6114,8 +6060,6 @@ public class MainFrame extends JFrame {
                             collectionLeftBox.add(collectionItemListBox);
                             // 收藏工具栏添加，需要更新 LAF
                             collectionLeftBox.add(musicCollectionToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicCollectionToolBar);
-                            collectionRecordTypeComboBox.setUI(ui);
                             collectionRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromXM() || userInfo.fromBI());
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
@@ -7348,8 +7292,6 @@ public class MainFrame extends JFrame {
                 int c = netMusicHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netMusicHistorySearchInnerPanel2.remove(c - 1);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netMusicClearHistorySearchButton);
                 netMusicHistorySearchPanel.repaint();
 
                 loadingAndRun(() -> {
@@ -9394,8 +9336,6 @@ public class MainFrame extends JFrame {
                 int c = netPlaylistHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netPlaylistHistorySearchInnerPanel2.remove(c - 1);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netPlaylistClearHistorySearchButton);
                 netPlaylistHistorySearchPanel.repaint();
 
                 loadingAndRun(() -> {
@@ -10396,8 +10336,6 @@ public class MainFrame extends JFrame {
                 int c = netAlbumHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netAlbumHistorySearchInnerPanel2.remove(c - 1);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netAlbumClearHistorySearchButton);
                 netAlbumHistorySearchPanel.repaint();
 
                 loadingAndRun(() -> {
@@ -11418,8 +11356,6 @@ public class MainFrame extends JFrame {
                 int c = netArtistHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netArtistHistorySearchInnerPanel2.remove(c - 1);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netArtistClearHistorySearchButton);
                 netArtistHistorySearchPanel.repaint();
 
                 loadingAndRun(() -> {
@@ -12668,8 +12604,6 @@ public class MainFrame extends JFrame {
                 int c = netRadioHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netRadioHistorySearchInnerPanel2.remove(c - 1);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netRadioClearHistorySearchButton);
                 netRadioHistorySearchPanel.repaint();
 
                 loadingAndRun(() -> {
@@ -13786,8 +13720,6 @@ public class MainFrame extends JFrame {
                 int c = netMvHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netMvHistorySearchInnerPanel2.remove(c - 1);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netMvClearHistorySearchButton);
                 netMvHistorySearchPanel.repaint();
 
                 loadingAndRun(() -> {
@@ -15177,8 +15109,6 @@ public class MainFrame extends JFrame {
                 int c = netUserHistorySearchInnerPanel2.getComponentCount();
                 if (c > maxSearchHistoryCount)
                     netUserHistorySearchInnerPanel2.remove(c - 1);
-                // 更新 LAF，防止按钮样式不正确
-                SwingUtilities.updateComponentTreeUI(netUserClearHistorySearchButton);
                 netUserHistorySearchPanel.repaint();
 
                 loadingAndRun(() -> {
@@ -16349,10 +16279,6 @@ public class MainFrame extends JFrame {
                 }
                 netCommentScrollPane.setVValue(0);
                 if (first) {
-                    SwingUtilities.updateComponentTreeUI(netCommentToolBar);
-                    javax.swing.plaf.ComboBoxUI ui = netCommentTypeComboBox.getUI();
-                    SwingUtilities.updateComponentTreeUI(netCommentCountPanel);
-                    netCommentTypeComboBox.setUI(ui);
                     // 删除 Tab 面板、歌词面板、乐谱面板，加入评论面板
                     globalPanel.remove(infoAndLrcBox);
                     globalPanel.remove(tabbedPane);
@@ -16412,8 +16338,6 @@ public class MainFrame extends JFrame {
                 }
                 netSheetScrollPane.setVValue(0);
                 if (first) {
-                    SwingUtilities.updateComponentTreeUI(netSheetToolBar);
-                    SwingUtilities.updateComponentTreeUI(netSheetCountPanel);
                     // 删除 Tab 面板、歌词面板、评论面板，加入乐谱面板
                     globalPanel.remove(infoAndLrcBox);
                     globalPanel.remove(tabbedPane);
@@ -18724,7 +18648,6 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌单歌曲数量显示
-//                                currItemRecommendLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
@@ -18734,7 +18657,6 @@ public class MainFrame extends JFrame {
                             recommendLeftBox.add(recommendItemListBox);
                             // 推荐工具栏添加，需要更新 LAF
                             recommendLeftBox.add(musicRecommendToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicRecommendToolBar);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForPlaylistRecommendModel.clear();
@@ -18817,7 +18739,6 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新专辑歌曲数量显示
-//                                currItemRecommendLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
@@ -18827,7 +18748,6 @@ public class MainFrame extends JFrame {
                             recommendLeftBox.add(recommendItemListBox);
                             // 推荐工具栏添加，需要更新 LAF
                             recommendLeftBox.add(musicRecommendToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicRecommendToolBar);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForAlbumRecommendModel.clear();
@@ -18913,7 +18833,6 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新歌手歌曲数量显示
-//                                currItemRecommendLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
@@ -18923,7 +18842,6 @@ public class MainFrame extends JFrame {
                             recommendLeftBox.add(recommendItemListBox);
                             // 推荐工具栏添加，需要更新 LAF
                             recommendLeftBox.add(musicRecommendToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicRecommendToolBar);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForArtistRecommendModel.clear();
@@ -19010,7 +18928,6 @@ public class MainFrame extends JFrame {
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                             // 更新电台歌曲数量显示
-//                                currItemRecommendLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
                             recommendItemListBox.add(recommendItemListCountBox);
@@ -19020,7 +18937,6 @@ public class MainFrame extends JFrame {
                             recommendLeftBox.add(recommendItemListBox);
                             // 推荐工具栏添加，需要更新 LAF
                             recommendLeftBox.add(musicRecommendToolBar, 0);
-                            SwingUtilities.updateComponentTreeUI(musicRecommendToolBar);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
                             netMusicListForRadioRecommendModel.clear();
@@ -19944,10 +19860,12 @@ public class MainFrame extends JFrame {
         // 绑定数据 Model
         lrcList.setModel(lrcListModel);
 
-        // 歌词面板大小变化后对齐高亮歌词
+        // 歌词面板大小变化后调整歌词列表占位高度，对齐高亮歌词
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
+                int ph = lrcScrollPane.getHeight() / 2 + 20;
+                lrcList.setBorder(BorderFactory.createEmptyBorder(ph, 0, ph, 0));
                 if (nextLrc < 0) return;
                 currScrollVal = vs.getValue();
                 lrcScrollAnimation = true;
@@ -20709,13 +20627,9 @@ public class MainFrame extends JFrame {
     // 歌词加载中
     private void lrcLoading() {
         clearLrc();
-
-        Statement empty = new Statement(0, " ");
-        for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
         lrcListModel.addElement(new Statement(0, LRC_LOADING_MSG));
-        for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
 
-        row = LRC_INDEX;
+        row = 0;
         nextLrc = NextLrc.LOADING;
         originalRatio = 0;
         lrcScrollPane.setVValue(currScrollVal = 0);
@@ -20815,19 +20729,17 @@ public class MainFrame extends JFrame {
         if (StringUtil.isEmpty(StringUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
         // 添加空白充数
         Statement empty = new Statement(0, " ");
-        for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
         if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
         else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
         if (ListUtil.notEmpty(statements)) {
-            for (Statement stmt : statements) {
-                lrcListModel.addElement(empty);
-                lrcListModel.addElement(stmt);
+            for (int i = 0, s = statements.size(); i < s; i++) {
+                lrcListModel.addElement(statements.get(i));
+                if (i != s - 1) lrcListModel.addElement(empty);
             }
         }
-        for (int i = 0; i < LRC_INDEX; i++) lrcListModel.addElement(empty);
         // 标记为无歌词 / 不支持滚动
         nextLrc = state == BAD_FORMAT ? NextLrc.BAD_FORMAT : state == NO_LRC ? NextLrc.NOT_EXISTS : 0;
-        row = state == BAD_FORMAT || state == NO_LRC ? LRC_INDEX : LRC_INDEX - 1;
+        row = state == BAD_FORMAT || state == NO_LRC ? 0 : -1;
 
         originalRatio = 0;
         lrcScrollPane.setVValue(currScrollVal = 0);
@@ -20954,7 +20866,7 @@ public class MainFrame extends JFrame {
                 // 判断是否该高亮下一行歌词，每次时间更新可能跳过多行歌词
                 boolean wrapped = false;
                 while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() - lrcOffset) {
-                    row = LRC_INDEX + 1 + nextLrc * 2;
+                    row = nextLrc * 2;
                     if (!lrcScrollAnimation && !lrcScrollWaiting) {
                         currScrollVal = lrcScrollPane.getVValue();
                         if (!lrcDelayScrollTimer.isRunning()) lrcDelayScrollTimer.start();
@@ -21849,11 +21761,11 @@ public class MainFrame extends JFrame {
         browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, darkerIconColor));
         downloadLrcMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
         downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
-        spectrumOpacityMenuItem.setDisabledIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, darkerIconColor));
+        spectrumOpacityMenuItem.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
             mi.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, iconColor));
         }
-        currLrcOffsetMenuItem.setDisabledIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, darkerIconColor));
+        currLrcOffsetMenuItem.setIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
             mi.setIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, iconColor));
         }
@@ -22637,7 +22549,7 @@ public class MainFrame extends JFrame {
         lrcListRenderer.setBgColor(lrcColor);
         lrcListRenderer.setHighlightColor(highlightColor);
         lrcList.setCellRenderer(lrcListRenderer);
-        lrcList.setUI(new ListUI(LRC_INDEX - 1));  // 歌词禁用字体透明，需要用到自定义 List
+        lrcList.setUI(new ListUI(-1));  // 歌词禁用字体透明，需要用到自定义 List
 
         lrcScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
 
@@ -23008,6 +22920,7 @@ public class MainFrame extends JFrame {
                 }
             } finally {
                 dialog.close();
+                if (videoOnly) setVisible(true);
             }
         }
         // 播放搜索/下载/收藏列表的 MV
@@ -23077,6 +22990,7 @@ public class MainFrame extends JFrame {
                 }
             } finally {
                 dialog.close();
+                if (videoOnly) setVisible(true);
             }
         }
     }
@@ -23136,7 +23050,7 @@ public class MainFrame extends JFrame {
             if (t < statements.get(i).getTime() - lrcOffset) nextLrc = i;
             else if (i == size - 1) nextLrc = size;
             else continue;
-            row = LRC_INDEX + 1 + (nextLrc - 1) * 2;
+            row = (nextLrc - 1) * 2;
             if (!lrcScrollAnimation) {
                 currScrollVal = lrcScrollPane.getVValue();
                 lrcScrollAnimation = true;
@@ -23344,7 +23258,6 @@ public class MainFrame extends JFrame {
                 Set<String> suggestions = MusicServerUtil.getSearchSuggestion(part);
                 if (!suggestions.isEmpty()) {
                     if (!netMusicSearchSuggestionPanel.isShowing()) {
-                        SwingUtilities.updateComponentTreeUI(netMusicRefreshSearchSuggestionButton);
                         // 显示 “搜索建议” 面板
                         netMusicKeywordsPanel.add(netMusicSearchSuggestionPanel, 0);
                     }
@@ -23558,12 +23471,6 @@ public class MainFrame extends JFrame {
         });
     }
 
-    // 全局字体抗锯齿，必须在初始化 JFrame 之前调用！
-    private static void enableAntiAliasing() {
-        System.setProperty("awt.useSystemAAFontSettings", "on");
-        System.setProperty("swing.aatext", "true");
-    }
-
     // 验证数据
     private static boolean validateData() {
         String s1 = LMIconManager.getBase64("dialog.weixin");
@@ -23580,7 +23487,7 @@ public class MainFrame extends JFrame {
             if (validateData()) return;
             System.exit(-1);
         });
-        enableAntiAliasing();
+        UIPreProcessor.process();
         new MainFrame().initUI();
     }
 }

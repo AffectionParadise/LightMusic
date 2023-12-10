@@ -28,6 +28,7 @@ public class CustomCheckMenuItem extends JCheckBoxMenuItem {
     }
 
     private void init() {
+        setOpaque(false);
         setFont(Fonts.NORMAL);
         createBorder();
         initResponse();

@@ -1,11 +1,14 @@
 package net.doge.ui.widget.panel;
 
+import lombok.Setter;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class CustomPanel extends JPanel {
     private boolean drawBg;
     // 是否无动画画背景
+    @Setter
     private boolean bluntDrawBg;
     private Timer drawBgTimer;
     // 背景不透明度
@@ -30,10 +33,6 @@ public class CustomPanel extends JPanel {
             if (bgAlpha <= 0 || bgAlpha >= destBgAlpha) drawBgTimer.stop();
             repaint();
         });
-    }
-
-    public void setBluntDrawBg(boolean bluntDrawBg) {
-        this.bluntDrawBg = bluntDrawBg;
     }
 
     public void setDrawBg(boolean drawBg) {
@@ -64,9 +63,8 @@ public class CustomPanel extends JPanel {
     // 返回组件索引，找不到返回 -1
     public int getComponentIndex(Component comp) {
         Component[] components = getComponents();
-        for (int i = 0, len = components.length; i < len; i++) {
+        for (int i = 0, len = components.length; i < len; i++)
             if (components[i] == comp) return i;
-        }
         return -1;
     }
 }

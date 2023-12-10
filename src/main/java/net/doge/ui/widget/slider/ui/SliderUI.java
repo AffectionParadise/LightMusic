@@ -101,7 +101,7 @@ public class SliderUI extends BasicSliderUI {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.setColor(thumbColor);
-        g2d.fillOval(thumbRect.x, thumbRect.y + 4, 12, 12);
+        g2d.fillOval(thumbRect.x, thumbRect.y + (thumbRect.height - thumbRect.width) / 2, thumbRect.width, thumbRect.width);
     }
 
     /**
@@ -126,21 +126,19 @@ public class SliderUI extends BasicSliderUI {
                     : (int) (mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width + 0.5);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
             g2d.fillRoundRect(
-                    thx,
-                    thy,
+                    thx, thy,
                     // 缓冲长度没超过已填充长度时可以不画；缓冲长度超出轨道长度时取轨道长度
-                    Math.min(Math.max(w - thx + trackRect.x, 0), trackRect.width - thx + trackRect.x),
-                    height, arc, arc
+                    Math.min(Math.max(w - thx + trackRect.x, 0), trackRect.width - thx + trackRect.x), height,
+                    arc, arc
             );
         }
         // 画已填充部分
         g2d.setColor(trackColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.fillRoundRect(
-                trackRect.x,
-                thy,
-                thumbRect.x - trackRect.x + thumbRect.width / 2,
-                height, arc, arc
+                trackRect.x, thy,
+                thumbRect.x - trackRect.x + thumbRect.width / 2, height,
+                arc, arc
         );
     }
 

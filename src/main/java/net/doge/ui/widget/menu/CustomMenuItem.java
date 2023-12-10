@@ -3,6 +3,7 @@ package net.doge.ui.widget.menu;
 import net.doge.constant.ui.Fonts;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,6 +18,7 @@ public class CustomMenuItem extends JMenuItem {
     private Timer drawBgTimer;
     private float alpha;
     private final float destAlpha = 0.1f;
+    private static final Border BORDER = BorderFactory.createEmptyBorder(6, 0, 6, -10);
 
     public CustomMenuItem() {
         this(null);
@@ -28,8 +30,10 @@ public class CustomMenuItem extends JMenuItem {
     }
 
     private void init() {
+        setOpaque(false);
         setFont(Fonts.NORMAL);
-        createBorder();
+        setIconTextGap(10);
+        setBorder(BORDER);
         initResponse();
     }
 
@@ -66,10 +70,6 @@ public class CustomMenuItem extends JMenuItem {
         this.drawBg = drawBg;
         if (drawBgTimer.isRunning()) return;
         drawBgTimer.start();
-    }
-
-    private void createBorder() {
-        setBorder(BorderFactory.createEmptyBorder(4, 5, 4, 0));
     }
 
     @Override

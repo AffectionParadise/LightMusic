@@ -21,10 +21,8 @@ public class ChangePaneButtonUI extends BasicButtonUI {
     protected float alpha;
     protected final float destAlpha = 0.3f;
     public static BufferedImage frameImg = LMIconManager.getImage("control.frame");
-    private MainFrame f;
 
     public ChangePaneButtonUI(MainFrame f) {
-        this.f = f;
         frameImg = ImageUtil.dye(frameImg, f.currUIStyle.getIconColor());
 
         drawMaskTimer = new Timer(2, e -> {
